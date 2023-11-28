@@ -873,9 +873,6 @@
     <Compile Include="Controls\Overlay\OverlayAnimationV3Control.xaml.cs">
       <DependentUpon>OverlayAnimationV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayItemContainerV3Control.xaml.cs">
-      <DependentUpon>OverlayItemContainerV3Control.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Overlay\OverlayLabelV3Control.xaml.cs">
       <DependentUpon>OverlayLabelV3Control.xaml</DependentUpon>
     </Compile>
@@ -1774,10 +1771,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayAnimationV3Control.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlayItemContainerV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

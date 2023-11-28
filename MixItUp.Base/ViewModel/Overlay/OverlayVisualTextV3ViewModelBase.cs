@@ -189,9 +189,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public void AssignProperties(OverlayVisualTextV3ModelBase item)
         {
-            item.HTML = this.HTML;
-            item.CSS = this.CSS;
-            item.Javascript = this.Javascript;
             item.Text = this.Text;
             item.FontSize = this.FontSize;
             item.FontName = this.FontName;

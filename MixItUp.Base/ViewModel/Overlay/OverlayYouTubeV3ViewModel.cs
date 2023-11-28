@@ -5,6 +5,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayYouTubeV3ViewModel : OverlayItemV3ViewModelBase
     {
+        public override string DefaultHTML { get { return OverlayYouTubeV3Model.DefaultHTML; } }
+        public override string DefaultCSS { get { return OverlayYouTubeV3Model.DefaultCSS; } }
+        public override string DefaultJavascript { get { return OverlayYouTubeV3Model.DefaultJavascript; } }
+
         public string VideoID
         {
             get { return this.videoID; }
@@ -96,10 +100,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             OverlayYouTubeV3Model result = new OverlayYouTubeV3Model()
             {
-                HTML = this.HTML,
-                CSS = this.CSS,
-                Javascript = this.Javascript,
-
                 VideoID = videoID,
                 StartTime = this.StartTime,
                 Width = this.width,

@@ -8,14 +8,13 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayHTMLV3ViewModel(OverlayHTMLV3Model item) : base(item) { }
 
+        public override string DefaultHTML { get { return OverlayHTMLV3Model.DefaultHTML; } }
+        public override string DefaultCSS { get { return OverlayHTMLV3Model.DefaultCSS; } }
+        public override string DefaultJavascript { get { return OverlayHTMLV3Model.DefaultJavascript; } }
+
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
-            return new OverlayHTMLV3Model()
-            {
-                HTML = this.HTML,
-                CSS = this.CSS,
-                Javascript = this.Javascript,
-            };
+            return new OverlayHTMLV3Model();
         }
     }
 }

@@ -19,11 +19,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <TextBlock Grid.Row="0" Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,10" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Static resx:Resources.EnableOverlay}"/>
+
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
@@ -31,7 +34,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox Grid.Column="0" x:Name="ActionTypeComboBox" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="ActionTypeComboBox_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -39,70 +42,95 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBlock Grid.Column="2" Grid.ColumnSpan="2" Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Static resx:Resources.EnableOverlay}"/>
-
-            <ComboBox Grid.Column="2" Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-            <TextBlock Grid.Column="3" Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
+            <ComboBox Grid.Column="2" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <TextBlock Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Hyperlink NavigateUri="https://wiki.mixitupapp.com/special-identifiers" RequestNavigate="Hyperlink_RequestNavigate">
                     <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
                 </Hyperlink>
             </TextBlock>
         </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding TextItemViewModel}">
-                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-                    <OverlayControls:OverlayTextV3Control />
-                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            </OverlayControls:OverlayItemContainerV3Control>
-        </Grid>
+        <Grid Grid.Row="3" Visibility="{Binding ShowItem, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Style="{StaticResource DefaultBorder}">
+                <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                    <TabItem Header="{x:Static resx:Resources.Details}" HorizontalAlignment="Stretch">
+                        <ContentControl x:Name="InnerContent" Margin="10" />
+                    </TabItem>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding ImageItemViewModel}">
-                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-                    <OverlayControls:OverlayImageV3Control />
-                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            </OverlayControls:OverlayItemContainerV3Control>
-        </Grid>
+                    <TabItem Header="{x:Static resx:Resources.Position}" HorizontalContentAlignment="Stretch">
+                        <OverlayControls:OverlayPositionV3Control x:Name="Position" DataContext="{Binding Position}" Margin="10" />
+                    </TabItem>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding VideoItemViewModel}">
-                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-                    <OverlayControls:OverlayVideoV3Control />
-                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            </OverlayControls:OverlayItemContainerV3Control>
-        </Grid>
+                    <TabItem Header="{x:Static resx:Resources.Animation}">
+                        <Grid HorizontalAlignment="Center" Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding YouTubeItemViewModel}">
-                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-                    <OverlayControls:OverlayYouTubeV3Control />
-                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            </OverlayControls:OverlayItemContainerV3Control>
-        </Grid>
+                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding HTMLItemViewModel}">
-                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-                    <OverlayControls:OverlayHTMLV3Control />
-                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            </OverlayControls:OverlayItemContainerV3Control>
-        </Grid>
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EntranceAnimation}" TextDecorations="Underline" />
+                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
+                            </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowTimerItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding TimerItemViewModel}">
-                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-                    <OverlayControls:OverlayTimerV3Control />
-                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            </OverlayControls:OverlayItemContainerV3Control>
-        </Grid>
+                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowTwitchClipItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding TwitchClipItemViewModel}">
-                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-                    <OverlayControls:OverlayTwitchClipV3Control />
-                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            </OverlayControls:OverlayItemContainerV3Control>
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.ExitAnimation}" TextDecorations="Underline" />
+                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="{x:Static resx:Resources.HTML}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource DefaultBorder}">
+                                <TextBox Text="{Binding HTML}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
+                            </Border>
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="{x:Static resx:Resources.CSS}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource DefaultBorder}">
+                                <TextBox Text="{Binding CSS}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
+                            </Border>
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="{x:Static resx:Resources.Javascript}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource DefaultBorder}">
+                                <TextBox Text="{Binding Javascript}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
+                            </Border>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+
+            </Border>
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

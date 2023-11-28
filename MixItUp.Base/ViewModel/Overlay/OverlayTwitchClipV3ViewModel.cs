@@ -7,6 +7,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayTwitchClipV3ViewModel : OverlayItemV3ViewModelBase
     {
+        public override string DefaultHTML { get { return OverlayTwitchClipV3Model.DefaultHTML; } }
+        public override string DefaultCSS { get { return OverlayTwitchClipV3Model.DefaultCSS; } }
+        public override string DefaultJavascript { get { return OverlayTwitchClipV3Model.DefaultJavascript; } }
+
         public IEnumerable<OverlayTwitchClipV3ClipType> ClipTypes { get; set; } = EnumHelper.GetEnumList<OverlayTwitchClipV3ClipType>();
 
         public OverlayTwitchClipV3ClipType SelectedClipType
@@ -128,10 +132,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             OverlayTwitchClipV3Model result = new OverlayTwitchClipV3Model()
             {
-                HTML = this.HTML,
-                CSS = this.CSS,
-                Javascript = this.Javascript,
-
                 ClipType = this.SelectedClipType,
                 ClipReferenceID = typeID,
                 Width = this.width,

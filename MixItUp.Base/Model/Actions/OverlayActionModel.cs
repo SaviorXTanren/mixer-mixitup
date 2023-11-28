@@ -193,7 +193,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     else
                     {
-                        if (this.OverlayItemV3 is OverlayVideoV3Model)
+                        if (this.OverlayItemV3.Type == OverlayItemV3Type.Video || this.OverlayItemV3.Type == OverlayItemV3Type.YouTube || this.OverlayItemV3.Type == OverlayItemV3Type.TwitchClip)
                         {
                             // TODO
                             return;

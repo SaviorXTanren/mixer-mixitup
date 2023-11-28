@@ -100,7 +100,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private int xMaximumPosition;
+        private int xMaximumPosition = 1920;
 
         public int YMaximumPosition
         {
@@ -111,7 +111,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private int yMaximumPosition;
+        private int yMaximumPosition = 1080;
 
         public int Layer
         {

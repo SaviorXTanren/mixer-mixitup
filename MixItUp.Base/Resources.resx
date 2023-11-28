@@ -1617,7 +1617,7 @@
     <value>Port Name</value>
   </data>
   <data name="Position" xml:space="preserve">
-    <value>Pos</value>
+    <value>Position</value>
     <comment>Manual</comment>
   </data>
   <data name="PreMade" xml:space="preserve">
@@ -9769,5 +9769,11 @@ namespace CustomNamespace
   </data>
   <data name="OverlayPositionRandomMinimumsCantBeGreaterThanMaximums" xml:space="preserve">
     <value>Random position minimums can't be greater than position maximums</value>
+  </data>
+  <data name="Pos" xml:space="preserve">
+    <value>Pos</value>
+  </data>
+  <data name="PoundSign" xml:space="preserve">
+    <value>#</value>
   </data>
 </root>

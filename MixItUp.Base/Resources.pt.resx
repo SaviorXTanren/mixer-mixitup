@@ -1629,10 +1629,6 @@ Fuzzy</comment>
   <data name="PortName" xml:space="preserve">
     <value>Nome da porta</value>
   </data>
-  <data name="Position" xml:space="preserve">
-    <value>Pos</value>
-    <comment>Manual</comment>
-  </data>
   <data name="PreMade" xml:space="preserve">
     <value>Padrão</value>
     <comment>Manual</comment>

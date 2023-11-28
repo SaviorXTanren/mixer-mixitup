@@ -18,7 +18,6 @@ namespace MixItUp.Base.ViewModel.Actions
         Video,
         YouTube,
         HTML,
-        WebPage,
         Timer,
         TwitchClip,
     }
@@ -34,17 +33,46 @@ namespace MixItUp.Base.ViewModel.Actions
             get { return this.selectedActionType; }
             set
             {
-                this.selectedActionType = value;
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged(nameof(OverlayNotEnabled));
-                this.NotifyPropertyChanged(nameof(OverlayEnabled));
-                this.NotifyPropertyChanged(nameof(ShowTextItem));
-                this.NotifyPropertyChanged(nameof(ShowImageItem));
-                this.NotifyPropertyChanged(nameof(ShowVideoItem));
-                this.NotifyPropertyChanged(nameof(ShowYouTubeItem));
-                this.NotifyPropertyChanged(nameof(ShowHTMLItem));
-                this.NotifyPropertyChanged(nameof(ShowTimerItem));
-                this.NotifyPropertyChanged(nameof(ShowTwitchClipItem));
+                if (this.selectedActionType != value)
+                {
+                    this.selectedActionType = value;
+                    this.NotifyPropertyChanged();
+                    this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));
+                    this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
+                    this.NotifyPropertyChanged(nameof(this.ShowItem));
+
+                    if (this.ShowItem)
+                    {
+                        if (this.SelectedActionType == OverlayActionTypeEnum.Text)
+                        {
+                            this.Item = new OverlayTextV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.Image)
+                        {
+                            this.Item = new OverlayImageV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.Video)
+                        {
+                            this.Item = new OverlayVideoV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.YouTube)
+                        {
+                            this.Item = new OverlayYouTubeV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.HTML)
+                        {
+                            this.Item = new OverlayHTMLV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.Timer)
+                        {
+                            this.Item = new OverlayTimerV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.TwitchClip)
+                        {
+                            this.Item = new OverlayTwitchClipV3ViewModel();
+                        }
+                    }
+                }
             }
         }
         private OverlayActionTypeEnum selectedActionType;
@@ -74,96 +102,115 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayEndpointV3Model selectedOverlayEndpoint;
 
-        public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
-
-        public OverlayTextV3ViewModel TextItemViewModel
+        public bool ShowItem
         {
-            get { return this.textItemViewModel; }
+            get
+            {
+                return this.SelectedActionType == OverlayActionTypeEnum.Text || this.SelectedActionType == OverlayActionTypeEnum.Image ||
+                    this.SelectedActionType == OverlayActionTypeEnum.Video || this.SelectedActionType == OverlayActionTypeEnum.YouTube ||
+                    this.SelectedActionType == OverlayActionTypeEnum.HTML || this.SelectedActionType == OverlayActionTypeEnum.Timer ||
+                    this.SelectedActionType == OverlayActionTypeEnum.TwitchClip;
+            }
+        }
+
+        public OverlayItemV3ViewModelBase Item
+        {
+            get { return this.item; }
             set
             {
-                this.textItemViewModel = value;
+                this.item = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayTextV3ViewModel textItemViewModel = new OverlayTextV3ViewModel();
+        private OverlayItemV3ViewModelBase item;
 
-        public bool ShowImageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Image; } }
-
-        public OverlayImageV3ViewModel ImageItemViewModel
+        public OverlayPositionV3ViewModel Position
         {
-            get { return this.imageItemViewModel; }
+            get { return this.position; }
             set
             {
-                this.imageItemViewModel = value;
+                this.position = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayImageV3ViewModel imageItemViewModel = new OverlayImageV3ViewModel();
+        private OverlayPositionV3ViewModel position = new OverlayPositionV3ViewModel();
 
-        public bool ShowVideoItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Video; } }
-
-        public OverlayVideoV3ViewModel VideoItemViewModel
+        public string Duration
         {
-            get { return this.videoItemViewModel; }
+            get { return this.duration; }
             set
             {
-                this.videoItemViewModel = value;
+                this.duration = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayVideoV3ViewModel videoItemViewModel = new OverlayVideoV3ViewModel();
+        private string duration;
 
-        public bool ShowYouTubeItem { get { return this.SelectedActionType == OverlayActionTypeEnum.YouTube; } }
-
-        public OverlayYouTubeV3ViewModel YouTubeItemViewModel
+        public OverlayAnimationV3ViewModel EntranceAnimation
         {
-            get { return this.youTubeItemViewModel; }
+            get { return this.entranceAnimation; }
             set
             {
-                this.youTubeItemViewModel = value;
+                this.entranceAnimation = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayYouTubeV3ViewModel youTubeItemViewModel = new OverlayYouTubeV3ViewModel();
+        private OverlayAnimationV3ViewModel entranceAnimation;
 
-        public bool ShowHTMLItem { get { return this.SelectedActionType == OverlayActionTypeEnum.HTML; } }
-
-        public OverlayHTMLV3ViewModel HTMLItemViewModel
+        public OverlayAnimationV3ViewModel ExitAnimation
         {
-            get { return this.htmlItemViewModel; }
+            get { return this.exitAnimation; }
             set
             {
-                this.htmlItemViewModel = value;
+                this.exitAnimation = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayHTMLV3ViewModel htmlItemViewModel = new OverlayHTMLV3ViewModel();
+        private OverlayAnimationV3ViewModel exitAnimation;
 
-        public bool ShowTimerItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Timer; } }
-
-        public OverlayTimerV3ViewModel TimerItemViewModel
+        public string ItemDuration
         {
-            get { return this.timerItemViewModel; }
+            get { return this.itemDuration; }
             set
             {
-                this.timerItemViewModel = value;
+                this.itemDuration = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayTimerV3ViewModel timerItemViewModel = new OverlayTimerV3ViewModel();
+        private string itemDuration;
 
-        public bool ShowTwitchClipItem { get { return this.SelectedActionType == OverlayActionTypeEnum.TwitchClip; } }
-
-        public OverlayTwitchClipV3ViewModel TwitchClipItemViewModel
+        public string HTML
         {
-            get { return this.twitchClipItemViewModel; }
+            get { return this.html; }
             set
             {
-                this.twitchClipItemViewModel = value;
+                this.html = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayTwitchClipV3ViewModel twitchClipItemViewModel = new OverlayTwitchClipV3ViewModel();
+        private string html;
+
+        public string CSS
+        {
+            get { return this.css; }
+            set
+            {
+                this.css = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string css;
+
+        public string Javascript
+        {
+            get { return this.javascript; }
+            set
+            {
+                this.javascript = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string javascript;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
@@ -179,38 +226,47 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (action.OverlayItemV3.Type == OverlayItemV3Type.Text)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Text;
-                    this.TextItemViewModel = new OverlayTextV3ViewModel((OverlayTextV3Model)action.OverlayItemV3);
+                    this.Item = new OverlayTextV3ViewModel((OverlayTextV3Model)action.OverlayItemV3);
                 }
                 else if (action.OverlayItemV3.Type == OverlayItemV3Type.Image)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Image;
-                    this.ImageItemViewModel = new OverlayImageV3ViewModel((OverlayImageV3Model)action.OverlayItemV3);
+                    this.Item = new OverlayImageV3ViewModel((OverlayImageV3Model)action.OverlayItemV3);
                 }
                 else if (action.OverlayItemV3.Type == OverlayItemV3Type.Video)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Video;
-                    this.VideoItemViewModel = new OverlayVideoV3ViewModel((OverlayVideoV3Model)action.OverlayItemV3);
+                    this.Item = new OverlayVideoV3ViewModel((OverlayVideoV3Model)action.OverlayItemV3);
                 }
                 else if (action.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.YouTube;
-                    this.YouTubeItemViewModel = new OverlayYouTubeV3ViewModel((OverlayYouTubeV3Model)action.OverlayItemV3);
+                    this.Item = new OverlayYouTubeV3ViewModel((OverlayYouTubeV3Model)action.OverlayItemV3);
                 }
                 else if (action.OverlayItemV3.Type == OverlayItemV3Type.HTML)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.HTML;
-                    this.HTMLItemViewModel = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)action.OverlayItemV3);
+                    this.Item = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)action.OverlayItemV3);
                 }
                 else if (action.OverlayItemV3.Type == OverlayItemV3Type.Timer)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Timer;
-                    this.TimerItemViewModel = new OverlayTimerV3ViewModel((OverlayTimerV3Model)action.OverlayItemV3);
+                    this.Item = new OverlayTimerV3ViewModel((OverlayTimerV3Model)action.OverlayItemV3);
                 }
                 else if (action.OverlayItemV3.Type == OverlayItemV3Type.TwitchClip)
                 {
-                    this.SelectedActionType = OverlayActionTypeEnum.Text;
-                    this.TwitchClipItemViewModel = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)action.OverlayItemV3);
+                    this.SelectedActionType = OverlayActionTypeEnum.TwitchClip;
+                    this.Item = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)action.OverlayItemV3);
                 }
+
+                this.Position = new OverlayPositionV3ViewModel(action.OverlayItemV3.Position);
+                this.Duration = action.Duration;
+                this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, action.EntranceAnimation);
+                this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, action.ExitAnimation);
+
+                this.HTML = action.OverlayItemV3.HTML;
+                this.CSS = action.OverlayItemV3.CSS;
+                this.Javascript = action.OverlayItemV3.Javascript;
             }
         }
 
@@ -218,38 +274,56 @@ namespace MixItUp.Base.ViewModel.Actions
             : base()
         {
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+            this.SelectedActionType = OverlayActionTypeEnum.Text;
+            this.Item = new OverlayTextV3ViewModel();
 
-            this.TextItemViewModel.AddOverlayActionAnimations();
-            this.ImageItemViewModel.AddOverlayActionAnimations();
-            this.VideoItemViewModel.AddOverlayActionAnimations();
-            this.YouTubeItemViewModel.AddOverlayActionAnimations();
-            this.HTMLItemViewModel.AddOverlayActionAnimations();
-            this.TimerItemViewModel.AddOverlayActionAnimations();
-            this.TwitchClipItemViewModel.AddOverlayActionAnimations();
+            this.Duration = "5";
+            this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance);
+            this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit);
+
+            this.HTML = this.Item.DefaultHTML;
+            this.CSS = this.Item.DefaultCSS;
+            this.Javascript = this.Item.DefaultJavascript;
+
+            this.SetPositionWrappedHTML(this.HTML);
+            this.SetPositionWrappedCSS(this.CSS);
+        }
+
+        public void SetPositionWrappedHTML(string innerHTML)
+        {
+            if (!string.IsNullOrEmpty(innerHTML))
+            {
+                this.HTML = OverlayV3Service.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, innerHTML);
+            }
+        }
+
+        public void SetPositionWrappedCSS(string innerCSS)
+        {
+            if (!string.IsNullOrEmpty(innerCSS))
+            {
+                this.CSS = OverlayItemV3ModelBase.PositionedCSS + Environment.NewLine + Environment.NewLine + innerCSS;
+            }
         }
 
         public override Task<Result> Validate()
         {
-            if (false)
+            if (this.ShowItem)
             {
-
-            }
-            else
-            {
-                OverlayItemV3ViewModelBase itemViewModel = this.GetItemViewModel();
-                if (itemViewModel != null)
+                Result result = this.Item.Validate();
+                if (!result.Success)
                 {
-                    Result result = itemViewModel.Validate();
-                    if (!result.Success)
-                    {
-                        return Task.FromResult<Result>(new Result(Resources.OverlayActionValidationErrorHeader + result.Message));
-                    }
+                    return Task.FromResult<Result>(new Result(Resources.OverlayActionValidationErrorHeader + result.Message));
+                }
 
-                    result = itemViewModel.Position.Validate();
-                    if (!result.Success)
-                    {
-                        return Task.FromResult<Result>(result);
-                    }
+                if (string.IsNullOrWhiteSpace(this.Duration))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.OverlayActionDurationInvalid));
+                }
+
+                result = this.Position.Validate();
+                if (!result.Success)
+                {
+                    return Task.FromResult<Result>(result);
                 }
             }
 
@@ -258,56 +332,19 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (false)
+            if (this.ShowItem)
             {
-
-            }
-            else
-            {
-                OverlayItemV3ViewModelBase itemViewModel = this.GetItemViewModel();
-                if (itemViewModel != null)
+                OverlayItemV3ModelBase item = this.Item.GetItem();
+                if (item != null)
                 {
-                    OverlayItemV3ModelBase item = itemViewModel.GetItem();
-                    if (item != null)
-                    {
-                        return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint.ID, item, itemViewModel.Duration, new OverlayAnimationV3Model() { AnimateCSSAnimation = OverlayAnimateCSSAnimationType.None }, new OverlayAnimationV3Model() { AnimateCSSAnimation = OverlayAnimateCSSAnimationType.None }));
-                    }
+                    item.HTML = this.HTML;
+                    item.CSS = this.CSS;
+                    item.Javascript = this.Javascript;
+                    item.Position = this.Position.GetPosition();
+                    return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint.ID, item, this.Duration, this.EntranceAnimation.GetAnimation(), this.ExitAnimation.GetAnimation()));
                 }
             }
             return Task.FromResult<ActionModelBase>(null);
-        }
-
-        private OverlayItemV3ViewModelBase GetItemViewModel()
-        {
-            if (this.SelectedActionType == OverlayActionTypeEnum.Text)
-            {
-                return this.TextItemViewModel;
-            }
-            else if (this.SelectedActionType == OverlayActionTypeEnum.Image)
-            {
-                return this.ImageItemViewModel;
-            }
-            else if (this.SelectedActionType == OverlayActionTypeEnum.Video)
-            {
-                return this.VideoItemViewModel;
-            }
-            else if (this.SelectedActionType == OverlayActionTypeEnum.YouTube)
-            {
-                return this.YouTubeItemViewModel;
-            }
-            else if (this.SelectedActionType == OverlayActionTypeEnum.HTML)
-            {
-                return this.HTMLItemViewModel;
-            }
-            else if (this.SelectedActionType == OverlayActionTypeEnum.Timer)
-            {
-                return this.TimerItemViewModel;
-            }
-            else if (this.SelectedActionType == OverlayActionTypeEnum.TwitchClip)
-            {
-                return this.TwitchClipItemViewModel;
-            }
-            return null;
         }
     }
 }

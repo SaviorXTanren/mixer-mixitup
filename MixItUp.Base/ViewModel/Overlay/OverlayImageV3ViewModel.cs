@@ -8,6 +8,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayImageV3ViewModel : OverlayItemV3ViewModelBase
     {
+        public override string DefaultHTML { get { return OverlayImageV3Model.DefaultHTML; } }
+        public override string DefaultCSS { get { return OverlayImageV3Model.DefaultCSS; } }
+        public override string DefaultJavascript { get { return OverlayImageV3Model.DefaultJavascript; } }
+
         public string FilePath
         {
             get { return this.filePath; }
@@ -73,10 +77,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             OverlayImageV3Model result = new OverlayImageV3Model()
             {
-                HTML = this.HTML,
-                CSS = this.CSS,
-                Javascript = this.Javascript,
-
                 FilePath = this.FilePath,
                 Width = this.width,
                 Height = this.height,

@@ -43,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Overlay.Widget
                         break;
                 }
 
-                this.Item.SetPositionWrappedHTML(newHTML);
+                //this.Item.SetPositionWrappedHTML(newHTML);
 
                 this.NotifyPropertyChanged(nameof(this.CounterTypeSelected));
             }

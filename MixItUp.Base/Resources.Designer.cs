@@ -15210,6 +15210,15 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to Pos.
         /// </summary>
+        public static string Pos {
+            get {
+                return ResourceManager.GetString("Pos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position.
+        /// </summary>
         public static string Position {
             get {
                 return ResourceManager.GetString("Position", resourceCulture);
@@ -15231,6 +15240,15 @@ namespace MixItUp.Base {
         public static string PositionPercentageFromTop {
             get {
                 return ResourceManager.GetString("PositionPercentageFromTop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #.
+        /// </summary>
+        public static string PoundSign {
+            get {
+                return ResourceManager.GetString("PoundSign", resourceCulture);
             }
         }
         

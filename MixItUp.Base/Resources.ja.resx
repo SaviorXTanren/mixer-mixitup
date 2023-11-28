@@ -1616,10 +1616,6 @@
   <data name="PortName" xml:space="preserve">
     <value>ポート名</value>
   </data>
-  <data name="Position" xml:space="preserve">
-    <value>ポス</value>
-    <comment>Manual</comment>
-  </data>
   <data name="PreMade" xml:space="preserve">
     <value>事前に作られた</value>
     <comment>Manual</comment>

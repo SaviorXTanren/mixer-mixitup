@@ -5,6 +5,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayTimerV3ViewModel : OverlayVisualTextV3ViewModelBase
     {
+        public override string DefaultHTML { get { return OverlayTimerV3Model.DefaultHTML; } }
+        public override string DefaultCSS { get { return OverlayTimerV3Model.DefaultCSS; } }
+        public override string DefaultJavascript { get { return OverlayTimerV3Model.DefaultJavascript; } }
+
         public string DisplayFormat
         {
             get { return this.displayFormat; }

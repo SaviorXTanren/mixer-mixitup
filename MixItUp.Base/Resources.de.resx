@@ -1616,10 +1616,6 @@
   <data name="PortName" xml:space="preserve">
     <value>Portname</value>
   </data>
-  <data name="Position" xml:space="preserve">
-    <value>Pos</value>
-    <comment>Manual</comment>
-  </data>
   <data name="PreMade" xml:space="preserve">
     <value>Vorgefertigt</value>
     <comment>Manual</comment>
