@@ -71,6 +71,10 @@ namespace MixItUp.Base.ViewModel.Actions
                         {
                             this.Item = new OverlayTwitchClipV3ViewModel();
                         }
+
+                        this.SetPositionWrappedHTML(this.Item.DefaultHTML);
+                        this.SetPositionWrappedCSS(this.Item.DefaultCSS);
+                        this.Javascript = this.Item.DefaultJavascript;
                     }
                 }
             }
@@ -275,18 +279,15 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
             this.SelectedActionType = OverlayActionTypeEnum.Text;
+
             this.Item = new OverlayTextV3ViewModel();
+            this.SetPositionWrappedHTML(this.Item.DefaultHTML);
+            this.SetPositionWrappedCSS(this.Item.DefaultCSS);
+            this.Javascript = this.Item.DefaultJavascript;
 
             this.Duration = "5";
             this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance);
             this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit);
-
-            this.HTML = this.Item.DefaultHTML;
-            this.CSS = this.Item.DefaultCSS;
-            this.Javascript = this.Item.DefaultJavascript;
-
-            this.SetPositionWrappedHTML(this.HTML);
-            this.SetPositionWrappedCSS(this.CSS);
         }
 
         public void SetPositionWrappedHTML(string innerHTML)
