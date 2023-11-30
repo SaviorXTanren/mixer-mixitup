@@ -38,11 +38,6 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayPositionV3Model Position { get; set; }
 
         [DataMember]
-        public int XTranslation { get; set; }
-        [DataMember]
-        public int YTranslation { get; set; }
-
-        [DataMember]
         public int Width { get; set; }
         [DataMember]
         public int Height { get; set; }
@@ -55,8 +50,6 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, string> properties = new Dictionary<string, string>();
             properties[nameof(this.ID)] = (this.ID == Guid.Empty) ? Guid.NewGuid().ToString() : this.ID.ToString();
-            properties[nameof(this.XTranslation)] = this.XTranslation.ToString();
-            properties[nameof(this.YTranslation)] = this.YTranslation.ToString();
             properties[nameof(this.Width)] = (this.Width > 0) ? $"{this.Width}px" : "auto";
             properties[nameof(this.Height)] = (this.Height > 0) ? $"{this.Height}px" : "auto";
             this.Position.SetPositionProperties(properties);
