@@ -72,10 +72,37 @@
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <TextBox Text="{Binding XPosition}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PositionPercentageFromLeft}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.PositionPercentageFromLeft}" TextDecorations="Underline" />
 
-            <TextBox Text="{Binding YPosition}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PositionPercentageFromTop}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <Grid Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Slider Value="{Binding XPosition}" Grid.Column="0" Minimum="0" Maximum="100" Width="100" Style="{StaticResource MaterialDesignDiscreteSlider}" VerticalAlignment="Center" />
+                <TextBox Text="{Binding XPosition}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.XPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="75" />
+            </Grid>
+
+            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.PositionPercentageFromTop}" TextDecorations="Underline" />
+
+            <Grid Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Slider Value="{Binding YPosition}" Grid.Column="0" Minimum="0" Maximum="100" Width="100" Style="{StaticResource MaterialDesignDiscreteSlider}" VerticalAlignment="Center" />
+                <TextBox Text="{Binding YPosition}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="75" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsPixelPosition, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -84,10 +111,17 @@
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <TextBox Text="{Binding XPosition}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LeftPixelPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.LeftPixelPosition}" TextDecorations="Underline" />
+            <TextBox Text="{Binding XPosition}" Grid.Column="0" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.XPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
 
-            <TextBox Text="{Binding YPosition}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TopPixelPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.TopPixelPosition}" TextDecorations="Underline" />
+            <TextBox Text="{Binding YPosition}" Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
         </Grid>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsRandomPosition, Converter={StaticResource BooleanToVisibilityConverter}}">
