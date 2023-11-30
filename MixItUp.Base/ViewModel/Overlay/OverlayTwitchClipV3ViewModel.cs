@@ -59,6 +59,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string clipID;
 
+        public int Volume
+        {
+            get { return this.volume; }
+            set
+            {
+                this.volume = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int volume = 100;
+
         public string Width
         {
             get { return this.width > 0 ? this.width.ToString() : string.Empty; }
@@ -95,6 +106,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.Username = item.ClipReferenceID;
             }
+            this.Volume = (int)(item.Volume * 100);
             this.width = item.Width;
             this.height = item.Height;
         }
@@ -134,6 +146,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 ClipType = this.SelectedClipType,
                 ClipReferenceID = typeID,
+                Volume = ((double)this.Volume) / 100.0,
                 Width = this.width,
                 Height = this.height,
             };

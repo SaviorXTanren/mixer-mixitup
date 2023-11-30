@@ -861,9 +861,6 @@
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayEventListV3Control.xaml.cs">
-      <DependentUpon>OverlayEventListV3Control.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Overlay\OverlayHTMLV3Control.xaml.cs">
       <DependentUpon>OverlayHTMLV3Control.xaml</DependentUpon>
     </Compile>
@@ -1755,10 +1752,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\UsersControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlayEventListV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

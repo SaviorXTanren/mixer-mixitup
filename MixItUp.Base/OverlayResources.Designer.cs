@@ -640,28 +640,53 @@ namespace MixItUp.Base {
         ///    padding: 0;
         ///}.
         /// </summary>
-        public static string OverlayTwitchClipDefaultCSS {
+        public static string OverlayTwitchClipEmbedDefaultCSS {
             get {
-                return ResourceManager.GetString("OverlayTwitchClipDefaultCSS", resourceCulture);
+                return ResourceManager.GetString("OverlayTwitchClipEmbedDefaultCSS", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;iframe id=&quot;clip&quot; class=&quot;clip&quot;&gt;&lt;/iframe&gt;.
         /// </summary>
-        public static string OverlayTwitchClipDefaultHTML {
+        public static string OverlayTwitchClipEmbedDefaultHTML {
             get {
-                return ResourceManager.GetString("OverlayTwitchClipDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayTwitchClipEmbedDefaultHTML", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to var clip = document.getElementById(&quot;clip&quot;);
-        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}&quot;);.
+        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}&quot;);
+        ///
+        ///.
         /// </summary>
-        public static string OverlayTwitchClipDefaultJavascript {
+        public static string OverlayTwitchClipEmbedDefaultJavascript {
             get {
-                return ResourceManager.GetString("OverlayTwitchClipDefaultJavascript", resourceCulture);
+                return ResourceManager.GetString("OverlayTwitchClipEmbedDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .video {
+        ///    width: {Width};
+        ///    height: {Height};
+        ///}.
+        /// </summary>
+        public static string OverlayTwitchClipVideoDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayTwitchClipVideoDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay&gt;
+        ///    &lt;source src=&quot;{ClipDirectLink}&quot; /&gt;
+        ///&lt;/video&gt;.
+        /// </summary>
+        public static string OverlayTwitchClipVideoDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayTwitchClipVideoDefaultHTML", resourceCulture);
             }
         }
         
@@ -685,6 +710,18 @@ namespace MixItUp.Base {
         public static string OverlayVideoDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayVideoDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to var video = document.getElementById(&quot;video&quot;);
+        ///video.addEventListener(&quot;ended&quot;, (event) =&gt; {
+        ///    {PostEvent}
+        ///});.
+        /// </summary>
+        public static string OverlayVideoNoDurationJavascript {
+            get {
+                return ResourceManager.GetString("OverlayVideoNoDurationJavascript", resourceCulture);
             }
         }
         
@@ -734,6 +771,15 @@ namespace MixItUp.Base {
         public static string OverlayYouTubeDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to event.target.destroy();.
+        /// </summary>
+        public static string OverlayYouTubeIFrameDestroyJavascript {
+            get {
+                return ResourceManager.GetString("OverlayYouTubeIFrameDestroyJavascript", resourceCulture);
             }
         }
         

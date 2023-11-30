@@ -30,8 +30,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" x:Name="ActionTypeComboBox" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="ActionTypeComboBox_SelectionChanged">
@@ -42,12 +41,17 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-            <TextBlock Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/special-identifiers" RequestNavigate="Hyperlink_RequestNavigate">
-                    <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
-                </Hyperlink>
-            </TextBlock>
+            <Grid Grid.Column="2" Visibility="{Binding ShowItem, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox Grid.Column="0" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                <TextBox Grid.Column="2" Text="{Binding Duration}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="3" Visibility="{Binding ShowItem, Converter={StaticResource BooleanToVisibilityConverter}}">

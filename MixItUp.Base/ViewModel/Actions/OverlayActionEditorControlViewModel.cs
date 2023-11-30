@@ -285,7 +285,6 @@ namespace MixItUp.Base.ViewModel.Actions
             this.SetPositionWrappedCSS(this.Item.DefaultCSS);
             this.Javascript = this.Item.DefaultJavascript;
 
-            this.Duration = "5";
             this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance);
             this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit);
         }
@@ -318,7 +317,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 if (string.IsNullOrWhiteSpace(this.Duration))
                 {
-                    return Task.FromResult<Result>(new Result(Resources.OverlayActionDurationInvalid));
+                    if (this.SelectedActionType != OverlayActionTypeEnum.Video && this.SelectedActionType != OverlayActionTypeEnum.YouTube &&
+                        this.SelectedActionType != OverlayActionTypeEnum.TwitchClip)
+                    {
+                        return Task.FromResult<Result>(new Result(Resources.OverlayActionDurationInvalid));
+                    }
                 }
 
                 result = this.Position.Validate();

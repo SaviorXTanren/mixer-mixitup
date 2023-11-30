@@ -949,7 +949,7 @@ else {
     timerLoop({Duration}, 0, "{DisplayFormat}");
 }</value>
   </data>
-  <data name="OverlayTwitchClipDefaultCSS" xml:space="preserve">
+  <data name="OverlayTwitchClipEmbedDefaultCSS" xml:space="preserve">
     <value>.clip {
     width: {ClipWidth};
     height: {ClipHeight};
@@ -958,12 +958,25 @@ else {
     padding: 0;
 }</value>
   </data>
-  <data name="OverlayTwitchClipDefaultHTML" xml:space="preserve">
+  <data name="OverlayTwitchClipEmbedDefaultHTML" xml:space="preserve">
     <value>&lt;iframe id="clip" class="clip"&gt;&lt;/iframe&gt;</value>
   </data>
-  <data name="OverlayTwitchClipDefaultJavascript" xml:space="preserve">
+  <data name="OverlayTwitchClipEmbedDefaultJavascript" xml:space="preserve">
     <value>var clip = document.getElementById("clip");
-clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.location.hostname + "&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}");</value>
+clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.location.hostname + "&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}");
+
+</value>
+  </data>
+  <data name="OverlayTwitchClipVideoDefaultCSS" xml:space="preserve">
+    <value>.video {
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayTwitchClipVideoDefaultHTML" xml:space="preserve">
+    <value>&lt;video id="video" class="video" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay&gt;
+    &lt;source src="{ClipDirectLink}" /&gt;
+&lt;/video&gt;</value>
   </data>
   <data name="OverlayVideoDefaultCSS" xml:space="preserve">
     <value>.video {
@@ -975,6 +988,12 @@ clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.locati
     <value>&lt;video id="video" class="video" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
     &lt;source src="{FilePath}" /&gt;
 &lt;/video&gt;</value>
+  </data>
+  <data name="OverlayVideoNoDurationJavascript" xml:space="preserve">
+    <value>var video = document.getElementById("video");
+video.addEventListener("ended", (event) =&gt; {
+    {PostEvent}
+});</value>
   </data>
   <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
     <value>&lt;iframe frameborder="0" width="{Width}" height="{Height}" src="{URL}" /&gt;</value>
@@ -1003,7 +1022,7 @@ clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.locati
             },
             'onStateChange': function (event) {
                 if (event.data == YT.PlayerState.ENDED) {
-                    event.target.destroy();
+                    {PostEvent}
                 }
             }
         }
@@ -1014,6 +1033,9 @@ var youtubePlayerScript = document.createElement('script');
 youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);</value>
+  </data>
+  <data name="OverlayYouTubeIFrameDestroyJavascript" xml:space="preserve">
+    <value>event.target.destroy();</value>
   </data>
   <data name="videoCSS" xml:space="preserve">
     <value>@charset "UTF-8";

@@ -17,6 +17,8 @@ namespace MixItUp.Base.Model.Actions
     {
         private const string MainDivElementID = "maindiv";
 
+        private const string PostEventReplacementText = "PostEvent";
+
         [DataMember]
         [Obsolete]
         public string OverlayName { get; set; }
@@ -177,33 +179,59 @@ namespace MixItUp.Base.Model.Actions
 
                             overlayTwitchClipItemV3.ClipID = clip.id;
                             overlayTwitchClipItemV3.ClipDuration = clip.duration;
+                            overlayTwitchClipItemV3.SetDirectLinkFromThumbnailURL(clip.thumbnail_url);
                         }
                     }
 
                     Dictionary<string, string> properties = this.OverlayItemV3.GetGenerationProperties();
 
-                    string javascript = this.OverlayItemV3.Javascript;
                     double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), out double duration);
-                    if (duration > 0.0)
+                    if (duration <= 0.0)
                     {
-                        string removeJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayItemHideAndSendParentMessageRemoveJavascript, nameof(this.OverlayItemV3.ID), properties[nameof(this.OverlayItemV3.ID)]);
-                        string exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, preTimeout: duration, postAnimation: removeJavascript);
-                        string entranceAndExitJavascript = this.EntranceAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: exitJavascript);
-                        javascript = javascript + "\n\n" + entranceAndExitJavascript;
-                    }
-                    else
-                    {
-                        if (this.OverlayItemV3.Type == OverlayItemV3Type.Video || this.OverlayItemV3.Type == OverlayItemV3Type.YouTube || this.OverlayItemV3.Type == OverlayItemV3Type.TwitchClip)
-                        {
-                            // TODO
-                            return;
-                        }
-                        else
+                        if (this.OverlayItemV3.Type != OverlayItemV3Type.Video && this.OverlayItemV3.Type != OverlayItemV3Type.YouTube &&
+                            this.OverlayItemV3.Type != OverlayItemV3Type.TwitchClip)
                         {
                             // Invalid item to have 0 duration on
                             return;
                         }
                     }
+
+                    string javascript = this.OverlayItemV3.Javascript;
+                    string removeJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayItemHideAndSendParentMessageRemoveJavascript, nameof(this.OverlayItemV3.ID), properties[nameof(this.OverlayItemV3.ID)]);
+
+                    string exitJavascript = string.Empty;
+                    if (duration > 0.0)
+                    {
+                        exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, preTimeoutSeconds: duration, postAnimation: removeJavascript);
+                    }
+                    else
+                    {
+                        if (this.OverlayItemV3.Type == OverlayItemV3Type.Video)
+                        {
+                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: removeJavascript);
+                            exitJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayVideoNoDurationJavascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
+                        }
+                        else if (this.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
+                        {
+                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: OverlayResources.OverlayYouTubeIFrameDestroyJavascript + "\n" + removeJavascript);
+                            javascript = OverlayV3Service.ReplaceProperty(javascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
+                            exitJavascript = string.Empty;
+                        }
+                        else if (this.OverlayItemV3.Type == OverlayItemV3Type.TwitchClip)
+                        {
+                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: removeJavascript);
+                            exitJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayVideoNoDurationJavascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
+
+                            // For use with Embed-based clip displaying
+                            //OverlayTwitchClipV3Model overlayTwitchClipItemV3 = (OverlayTwitchClipV3Model)this.OverlayItemV3;
+                            //exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, preTimeoutSeconds: overlayTwitchClipItemV3.ClipDuration, postAnimation: removeJavascript);
+                            //javascript = javascript + "\n\n" + exitJavascript + "\n\n";
+                            //exitJavascript = string.Empty;
+                        }
+                    }
+
+                    string entranceAndExitJavascript = this.EntranceAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: exitJavascript);
+                    javascript = javascript + "\n\n" + entranceAndExitJavascript;
 
                     string iframeHTML = overlay.GetItemIFrameHTML();
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.HTML), this.OverlayItemV3.HTML);
@@ -215,6 +243,9 @@ namespace MixItUp.Base.Model.Actions
                     {
                         iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
                     }
+
+                    // Replace any lingering {PostEvent} properties
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, OverlayActionModel.PostEventReplacementText, string.Empty);
 
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
 

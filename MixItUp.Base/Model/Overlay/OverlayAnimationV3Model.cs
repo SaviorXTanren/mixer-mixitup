@@ -192,7 +192,7 @@ namespace MixItUp.Base.Model.Overlay
         //    return output;
         //}
 
-        public string GenerateAnimationJavascript(string animationElementID, double preTimeout = 0.0, string postAnimation = "")
+        public string GenerateAnimationJavascript(string animationElementID, double preTimeoutSeconds = 0.0, string postAnimation = "")
         {
             string output = string.Empty;
             if (this.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
@@ -210,10 +210,10 @@ namespace MixItUp.Base.Model.Overlay
             }
             output = OverlayV3Service.ReplaceProperty(output, AnimationElementID, animationElementID);
 
-            if (preTimeout > 0.0)
+            if (preTimeoutSeconds > 0.0)
             {
                 output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayTimeoutWrapperJavascript, PostTimeout, output);
-                output = OverlayV3Service.ReplaceProperty(output, MillisecondTiming, ((int)Math.Round(preTimeout * 1000)).ToString());
+                output = OverlayV3Service.ReplaceProperty(output, MillisecondTiming, ((int)Math.Round(preTimeoutSeconds * 1000)).ToString());
             }
 
             return output;

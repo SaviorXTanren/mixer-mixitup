@@ -68,13 +68,6 @@ namespace MixItUp.Base.Model.Overlay
                 output.ID = Guid.NewGuid();
             }
 
-            //string animationJavascript = string.Empty;
-            //foreach (var animation in this.Animations)
-            //{
-            //    result.Animations.Add(animation);
-            //}
-            //result.Javascript = animationJavascript + "\n\n" + result.Javascript;
-
             output.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.HTML, parameters);
             output.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.CSS, parameters);
             output.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.Javascript, parameters);

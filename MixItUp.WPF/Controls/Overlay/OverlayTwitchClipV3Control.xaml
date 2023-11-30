@@ -27,7 +27,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding ClipTypes}" SelectedItem="{Binding SelectedClipType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
@@ -45,13 +45,20 @@
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Text="{Binding Width}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Text="{Binding Height}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{x:Static resx:Resources.VolumeHeader}"/>
+            <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="6" Width="120" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="{x:Static resx:Resources.Volume}" />
         </Grid>
     </Grid>
 </Controls:LoadingControlBase>
