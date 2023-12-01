@@ -516,57 +516,51 @@ namespace MixItUp.Base.Services.YouTube
                         }
                         else if (SuperChatEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatUserData] = user.ID;
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString;
+                            YouTubeSuperChatViewModel superChat = new YouTubeSuperChatViewModel(liveChatMessage.Snippet.SuperChatDetails, user);
 
-                            double amount = Math.Round((double)liveChatMessage.Snippet.SuperChatDetails.AmountMicros.GetValueOrDefault() / 1000000.0, 2);
-                            int amountDigits = (int)amount * 100;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatUserData] = user.ID;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = superChat.AmountDisplay;
 
                             CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
-                            parameters.SpecialIdentifiers["amountnumberdigits"] = amountDigits.ToString();
-                            parameters.SpecialIdentifiers["amountnumber"] = amount.ToString();
-                            parameters.SpecialIdentifiers["amount"] = liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString;
-                            parameters.SpecialIdentifiers["tier"] = liveChatMessage.Snippet.SuperChatDetails.Tier.GetValueOrDefault().ToString();
-                            parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.SuperChatDetails.UserComment;
+                            superChat.SetCommandParameterSpecialIdentifiers(parameters);
 
                             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                             {
                                 if (parameters.User.MeetsRole(streamPass.UserPermission))
                                 {
-                                    streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.DonationBonus * amount));
+                                    streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.DonationBonus * superChat.Amount));
                                 }
                             }
 
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelSuperChat, parameters);
 
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertYouTubeSuperChat, user.FullDisplayName, liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString), ChannelSession.Settings.AlertYouTubeSuperChatColor));
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertYouTubeSuperChat, user.FullDisplayName, superChat.AmountDisplay), ChannelSession.Settings.AlertYouTubeSuperChatColor));
+
+                            EventService.YouTubeSuperChatOccurred(superChat);
                         }
                         else if (SuperStickerEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatUserData] = user.ID;
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString;
+                            YouTubeSuperChatViewModel superChat = new YouTubeSuperChatViewModel(liveChatMessage.Snippet.SuperChatDetails, user);
 
-                            double amount = Math.Round((double)liveChatMessage.Snippet.SuperStickerDetails.AmountMicros.GetValueOrDefault() / 1000000.0, 2);
-                            int amountDigits = (int)amount * 100;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatUserData] = user.ID;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = superChat.AmountDisplay;
 
                             CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
-                            parameters.SpecialIdentifiers["amountnumberdigits"] = amountDigits.ToString();
-                            parameters.SpecialIdentifiers["amountnumber"] = amount.ToString();
-                            parameters.SpecialIdentifiers["amount"] = liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString;
-                            parameters.SpecialIdentifiers["tier"] = liveChatMessage.Snippet.SuperStickerDetails.Tier.GetValueOrDefault().ToString();
-                            parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.SuperStickerDetails.SuperStickerMetadata.AltText;
+                            superChat.SetCommandParameterSpecialIdentifiers(parameters);
 
                             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                             {
                                 if (parameters.User.MeetsRole(streamPass.UserPermission))
                                 {
-                                    streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.DonationBonus * amount));
+                                    streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.DonationBonus * superChat.Amount));
                                 }
                             }
 
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelSuperChat, parameters);
 
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertYouTubeSuperChat, user.FullDisplayName, liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString), ChannelSession.Settings.AlertYouTubeSuperChatColor));
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertYouTubeSuperChat, user.FullDisplayName, superChat.AmountDisplay), ChannelSession.Settings.AlertYouTubeSuperChatColor));
+
+                            EventService.YouTubeSuperChatOccurred(superChat);
                         }
                         else if (MessageDeletedEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {

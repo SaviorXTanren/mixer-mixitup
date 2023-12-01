@@ -9300,8 +9300,8 @@ namespace CustomNamespace
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>A valid counter must be selected</value>
   </data>
-  <data name="LastestFollower" xml:space="preserve">
-    <value>Lastest Follower</value>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Latest Follower</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Latest Donation</value>
@@ -9775,5 +9775,14 @@ namespace CustomNamespace
   </data>
   <data name="PoundSign" xml:space="preserve">
     <value>#</value>
+  </data>
+  <data name="LatestYouTubeSuperChat" xml:space="preserve">
+    <value>Latest YouTube Super Chat</value>
+  </data>
+  <data name="OverlayLabelErrorAtLeastOneDisplayTypeMustBeEnabled" xml:space="preserve">
+    <value>At least one display type must be enabled</value>
+  </data>
+  <data name="OverlayLabelErrorDisplayRotationMustBePositiveNumber" xml:space="preserve">
+    <value>Display rotation must be a positive number</value>
   </data>
 </root>

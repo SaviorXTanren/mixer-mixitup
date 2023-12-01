@@ -82,8 +82,8 @@ namespace MixItUp.Base.ViewModel.Overlay.Widget
                 //    this.WidgetViewModel = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)item); break;
                 //case OverlayItemV3Type.Timer:
                 //    this.WidgetViewModel = new OverlayTimerV3ViewModel((OverlayTimerV3Model)item); break;
-                case OverlayItemV3Type.Label:
-                    this.WidgetViewModel = new OverlayLabelWidgetV3ViewModel((OverlayLabelWidgetV3Model)widget); break;
+                //case OverlayItemV3Type.Label:
+                //    this.WidgetViewModel = new OverlayLabelWidgetV3ViewModel((OverlayLabelWidgetV3Model)widget); break;
             }
         }
 
@@ -103,8 +103,8 @@ namespace MixItUp.Base.ViewModel.Overlay.Widget
                 //    this.WidgetViewModel = new OverlayHTMLV3ViewModel(); break;
                 //case OverlayItemV3Type.Timer:
                 //    this.WidgetViewModel = new OverlayTimerV3ViewModel(); break;
-                case OverlayItemV3Type.Label:
-                    this.WidgetViewModel = new OverlayLabelWidgetV3ViewModel(); break;
+                //case OverlayItemV3Type.Label:
+                //    this.WidgetViewModel = new OverlayLabelWidgetV3ViewModel(); break;
             }
 
             this.IsTypeSelected = true;
@@ -122,9 +122,9 @@ namespace MixItUp.Base.ViewModel.Overlay.Widget
             {
                 if (oldWidget != null)
                 {
-                    await ServiceManager.Get<OverlayV3Service>().RemoveWidget(oldWidget);
+                    //await ServiceManager.Get<OverlayV3Service>().RemoveWidget(oldWidget);
                 }
-                await ServiceManager.Get<OverlayV3Service>().AddWidget(widget);
+                //await ServiceManager.Get<OverlayV3Service>().AddWidget(widget);
             }
         }
 

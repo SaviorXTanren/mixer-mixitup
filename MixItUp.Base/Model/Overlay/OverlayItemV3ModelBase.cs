@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
@@ -58,21 +59,29 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters) { return Task.CompletedTask; }
 
-        public async Task<OverlayOutputV3Model> GenerateOutput(CommandParametersModel parameters)
-        {
-            OverlayOutputV3Model output = new OverlayOutputV3Model();
+        public virtual Task WidgetEnable() { return Task.CompletedTask; }
 
-            output.ID = this.ID;
-            if (output.ID == Guid.Empty)
+        public virtual Task WidgetDisable() { return Task.CompletedTask; }
+
+        protected async Task CallFunction(string functionName, CommandParametersModel parameters, Dictionary<string, string> data)
+        {
+            Dictionary<string, string> dataParameters = new Dictionary<string, string>();
+            if (data != null)
             {
-                output.ID = Guid.NewGuid();
+                foreach (var kvp in data)
+                {
+                    if (kvp.Value != null)
+                    {
+                        dataParameters[kvp.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Value, parameters);
+                    }
+                }
             }
 
-            output.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.HTML, parameters);
-            output.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.CSS, parameters);
-            output.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.Javascript, parameters);
-
-            return output;
+            //OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(OverlayEndpointID);
+            //if (overlay != null)
+            //{
+                //await overlay.Function(this.Item, functionName, dataParameters);
+            //}
         }
     }
 }

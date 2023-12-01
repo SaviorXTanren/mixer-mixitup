@@ -431,11 +431,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;amount&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
+        ///   Looks up a localized string similar to $labelamount.
         /// </summary>
-        public static string OverlayLabelAmountDefaultHTML {
+        public static string OverlayLabelAmountDefaultFormat {
             get {
-                return ResourceManager.GetString("OverlayLabelAmountDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayLabelAmountDefaultFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;span id=&quot;text&quot; class=&quot;text&quot;&gt;{Label}&lt;/span&gt;.
+        /// </summary>
+        public static string OverlayLabelDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayLabelDefaultHTML", resourceCulture);
             }
         }
         
@@ -462,22 +471,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;username&quot; class=&quot;text&quot;&gt;&lt;/p&gt;
-        /// - 
-        ///&lt;p id=&quot;amount&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
+        ///   Looks up a localized string similar to $userdisplayname - $labelamount.
         /// </summary>
-        public static string OverlayLabelUsernameAmountDefaultHTML {
+        public static string OverlayLabelUsernameAmountDefaultFormat {
             get {
-                return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;username&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
+        ///   Looks up a localized string similar to $userdisplayname.
         /// </summary>
-        public static string OverlayLabelUsernameDefaultHTML {
+        public static string OverlayLabelUsernameDefaultFormat {
             get {
-                return ResourceManager.GetString("OverlayLabelUsernameDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayLabelUsernameDefaultFormat", resourceCulture);
             }
         }
         

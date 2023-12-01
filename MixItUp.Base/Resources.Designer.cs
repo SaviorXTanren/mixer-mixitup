@@ -11163,15 +11163,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lastest Follower.
-        /// </summary>
-        public static string LastestFollower {
-            get {
-                return ResourceManager.GetString("LastestFollower", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Last Quote.
         /// </summary>
         public static string LastQuote {
@@ -11217,6 +11208,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Latest Follower.
+        /// </summary>
+        public static string LatestFollower {
+            get {
+                return ResourceManager.GetString("LatestFollower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latest Raid.
         /// </summary>
         public static string LatestRaid {
@@ -11258,6 +11258,15 @@ namespace MixItUp.Base {
         public static string LatestTwitchBits {
             get {
                 return ResourceManager.GetString("LatestTwitchBits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest YouTube Super Chat.
+        /// </summary>
+        public static string LatestYouTubeSuperChat {
+            get {
+                return ResourceManager.GetString("LatestYouTubeSuperChat", resourceCulture);
             }
         }
         
@@ -14160,6 +14169,24 @@ namespace MixItUp.Base {
         public static string OverlayLabelCounterNotSelected {
             get {
                 return ResourceManager.GetString("OverlayLabelCounterNotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one display type must be enabled.
+        /// </summary>
+        public static string OverlayLabelErrorAtLeastOneDisplayTypeMustBeEnabled {
+            get {
+                return ResourceManager.GetString("OverlayLabelErrorAtLeastOneDisplayTypeMustBeEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display rotation must be a positive number.
+        /// </summary>
+        public static string OverlayLabelErrorDisplayRotationMustBePositiveNumber {
+            get {
+                return ResourceManager.GetString("OverlayLabelErrorDisplayRotationMustBePositiveNumber", resourceCulture);
             }
         }
         

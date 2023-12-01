@@ -158,52 +158,6 @@ namespace MixItUp.Base.Services
             this.batchPackets.Clear();
         }
 
-        public async Task SendItem(OverlayItemV3ModelBase item, CommandParametersModel parameters)
-        {
-            try
-            {
-                if (item != null)
-                {
-                    if (item.Type == OverlayItemV3Type.YouTube)
-                    {
-                        OverlayOutputV3Model processedItem = await item.GenerateOutput(parameters);
-                        JObject jobj = JObject.FromObject(item);
-                        jobj.Merge(JObject.FromObject(processedItem), new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Replace });
-                        await PerformTextReplacements(jobj, parameters);
-
-                        await this.SendPacket("YouTube", jobj);
-                    }
-                    else
-                    {
-                        await this.SendItem("Basic", item, parameters);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public async Task SendItem(string type, OverlayItemV3ModelBase item, CommandParametersModel parameters)
-        {
-            try
-            {
-                if (item != null)
-                {
-                    OverlayOutputV3Model processedItem = await item.GenerateOutput(parameters);
-                    if (processedItem != null)
-                    {
-                        await this.SendPacket(type, JObject.FromObject(processedItem));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
         public async Task SendJObject(string type, string id, JObject jobj, CommandParametersModel parameters)
         {
             try

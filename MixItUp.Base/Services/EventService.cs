@@ -5,6 +5,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -174,6 +175,9 @@ namespace MixItUp.Base.Services
 
         public static event EventHandler<TrovoChatSpellViewModel> OnTrovoSpellCastOccurred = delegate { };
         public static void TrovoSpellCastOccurred(TrovoChatSpellViewModel spell) { OnTrovoSpellCastOccurred(null, spell); }
+
+        public static event EventHandler<YouTubeSuperChatViewModel> OnYouTubeSuperChatOccurred = delegate { };
+        public static void YouTubeSuperChatOccurred(YouTubeSuperChatViewModel superchat) { OnYouTubeSuperChatOccurred(null, superchat); }
 
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {

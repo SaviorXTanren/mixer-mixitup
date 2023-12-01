@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -97,6 +96,30 @@ namespace MixItUp.Base.Services
             this.ID = id;
             this.FunctionName = functionName;
             this.Parameters = parameters;
+        }
+    }
+
+    [DataContract]
+    public abstract class NEWOverlayWidgetV3ModelBase<T> where T : OverlayItemV3ModelBase
+    {
+        [DataMember]
+        public OverlayItemV3ModelBase Item { get; set; }
+
+        [DataMember]
+        public Guid OverlayEndpointID { get; set; }
+
+        [DataMember]
+        public int RefreshTime { get; set; }
+        [DataMember]
+        public bool IsEnabled { get; set; }
+
+        public Guid ID { get { return this.Item.ID; } }
+        public string Name { get { return this.Item.Name; } }
+        public OverlayItemV3Type Type { get { return this.Item.Type; } }
+
+        public NEWOverlayWidgetV3ModelBase(T item)
+        {
+            this.Item = item;
         }
     }
 
@@ -254,20 +277,6 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public async Task AddWidget(OverlayWidgetV3ModelBase item)
-        {
-            ChannelSession.Settings.OverlayWidgetsV3.Add(item);
-            await item.Enable();
-        }
-
-        public async Task RemoveWidget(OverlayWidgetV3ModelBase item)
-        {
-            await item.Disable();
-            ChannelSession.Settings.OverlayWidgetsV3.Remove(item);
-        }
-
-        public IEnumerable<OverlayWidgetV3ModelBase> GetWidgets() { return ChannelSession.Settings.OverlayWidgetsV3.ToList(); }
-
         public string GetURLForFile(string filePath, string fileType) { return this.GetDefaultOverlayEndpointService().GetURLForFile(filePath, fileType); }
 
         public void SetLocalFile(string id, string filePath) { this.GetDefaultOverlayEndpointService().SetLocalFile(id, filePath); }
@@ -281,13 +290,13 @@ namespace MixItUp.Base.Services
             try
             {
                 overlay.StartBatching();
-                foreach (OverlayWidgetV3ModelBase widget in this.GetWidgets())
-                {
-                    if (widget.IsEnabled && widget.OverlayEndpointID == overlay.ID)
-                    {
-                        //await overlay.Add(widget.Item, new CommandParametersModel());
-                    }
-                }
+                //foreach (OverlayWidgetV3ModelBase widget in this.GetWidgets())
+                //{
+                //    if (widget.IsEnabled && widget.OverlayEndpointID == overlay.ID)
+                //    {
+                //        //await overlay.Add(widget.Item, new CommandParametersModel());
+                //    }
+                //}
                 await overlay.EndBatching();
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -362,7 +371,7 @@ namespace MixItUp.Base.Services
 
                     if (this.ID == Guid.Empty && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
                     {
-                        string overlayServerAddress = string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber);
+                        string overlayServerAddress = string.Format(OverlayEndpointV3Service.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber);
                         if (ServiceManager.Get<IOBSStudioService>().IsConnected)
                         {
                             await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);

@@ -567,8 +567,11 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
 &lt;/body&gt;
 &lt;/html&gt;</value>
   </data>
-  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="amount" class="text"&gt;&lt;/p&gt;</value>
+  <data name="OverlayLabelAmountDefaultFormat" xml:space="preserve">
+    <value>$labelamount</value>
+  </data>
+  <data name="OverlayLabelDefaultHTML" xml:space="preserve">
+    <value>&lt;span id="text" class="text"&gt;{Label}&lt;/span&gt;</value>
   </data>
   <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
     <value>function update(data)
@@ -586,13 +589,11 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
 
 update({Username: '{Username}', Amount: {Amount}})</value>
   </data>
-  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="username" class="text"&gt;&lt;/p&gt;
- - 
-&lt;p id="amount" class="text"&gt;&lt;/p&gt;</value>
+  <data name="OverlayLabelUsernameAmountDefaultFormat" xml:space="preserve">
+    <value>$userdisplayname - $labelamount</value>
   </data>
-  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="username" class="text"&gt;&lt;/p&gt;</value>
+  <data name="OverlayLabelUsernameDefaultFormat" xml:space="preserve">
+    <value>$userdisplayname</value>
   </data>
   <data name="OverlayMainHTML" xml:space="preserve">
     <value>&lt;!DOCTYPE html&gt;

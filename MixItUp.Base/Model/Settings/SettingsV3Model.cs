@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
@@ -466,8 +465,6 @@ namespace MixItUp.Base.Model.Settings
         public string OverlaySourceName { get; set; }
         [DataMember]
         public List<OverlayEndpointV3Model> OverlayEndpointsV3 { get; set; } = new List<OverlayEndpointV3Model>();
-        [DataMember]
-        public List<OverlayWidgetV3ModelBase> OverlayWidgetsV3 { get; set; } = new List<OverlayWidgetV3ModelBase>();
 
         [DataMember]
         [Obsolete]

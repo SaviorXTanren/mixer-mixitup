@@ -55,9 +55,9 @@ namespace MixItUp.WPF.Controls.MainControls
             OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
             if (widget != null)
             {
-                OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget.Widget);
-                window.Closed += Window_Closed;
-                window.Show();
+                //OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget.Widget);
+                //window.Closed += Window_Closed;
+                //window.Show();
             }
         }
 
