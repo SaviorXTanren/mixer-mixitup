@@ -197,7 +197,6 @@ namespace MixItUp.Base.Services.External
 
         private TiltifyUser user;
 
-        private int currentCampaign = 0;
         private TiltifyCampaign campaign = null;
         private Dictionary<int, TiltifyDonation> donationsReceived = new Dictionary<int, TiltifyDonation>();
 
@@ -356,7 +355,11 @@ namespace MixItUp.Base.Services.External
 
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            if (ChannelSession.Settings.TiltifyCampaign != currentCampaign)
+            if (ChannelSession.Settings.TiltifyCampaign == 0)
+            {
+                campaign = null;
+            }
+            else if (campaign == null || ChannelSession.Settings.TiltifyCampaign != this.campaign.ID)
             {
                 donationsReceived.Clear();
                 campaign = await this.GetCampaign(ChannelSession.Settings.TiltifyCampaign);

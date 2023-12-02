@@ -88,18 +88,26 @@ namespace MixItUp.Base.Services.External
         {
             Logger.Log(LogLevel.Debug, "VTube Studio Packet Sent - " + JSONSerializerHelper.SerializeToString(packet));
 
-            this.responses.Remove(packet.requestID);
-
-            await this.Send(JSONSerializerHelper.SerializeToString(packet));
-
-            int cycles = delaySeconds * 10;
-            for (int i = 0; i < cycles && !this.responses.ContainsKey(packet.requestID); i++)
+            try
             {
-                await Task.Delay(100);
-            }
+                this.responses.Remove(packet.requestID);
 
-            this.responses.TryGetValue(packet.requestID, out VTubeStudioWebSocketResponsePacket response);
-            return response;
+                await this.Send(JSONSerializerHelper.SerializeToString(packet));
+
+                int cycles = delaySeconds * 10;
+                for (int i = 0; i < cycles && !this.responses.ContainsKey(packet.requestID); i++)
+                {
+                    await Task.Delay(100);
+                }
+
+                this.responses.TryGetValue(packet.requestID, out VTubeStudioWebSocketResponsePacket response);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return null;
         }
 
         protected override Task ProcessReceivedPacket(string packet)
