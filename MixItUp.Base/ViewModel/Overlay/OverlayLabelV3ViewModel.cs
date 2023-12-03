@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -33,6 +35,19 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string format;
 
+        public ObservableCollection<CounterModel> Counters = new ObservableCollection<CounterModel>();
+
+        public CounterModel SelectedCounter
+        {
+            get { return this.selectedCounter; }
+            set
+            {
+                this.selectedCounter = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CounterModel selectedCounter;
+
         public OverlayLabelDisplayV3Model Model { get; private set; }
 
         public OverlayLabelDisplayV3ViewModel(OverlayLabelDisplayV3TypeEnum type)
@@ -61,6 +76,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.Format = OverlayResources.OverlayLabelUsernameAmountDefaultFormat;
                     break;
             }
+
+            this.LoadCounters();
         }
 
         public OverlayLabelDisplayV3ViewModel(OverlayLabelDisplayV3Model model)
@@ -70,6 +87,23 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Type = model.Type;
             this.IsEnabled = model.IsEnabled;
             this.Format = model.Format;
+
+            this.LoadCounters();
+            if (this.Type == OverlayLabelDisplayV3TypeEnum.Counter && !string.IsNullOrEmpty(this.Model.CounterName))
+            {
+                this.SelectedCounter = this.Counters.FirstOrDefault(c => string.Equals(c.Name, this.Model.CounterName, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        private void LoadCounters()
+        {
+            if (this.Type == OverlayLabelDisplayV3TypeEnum.Counter)
+            {
+                foreach (var counter in ChannelSession.Settings.Counters)
+                {
+                    this.Counters.Add(counter.Value);
+                }
+            }
         }
     }
 
@@ -92,9 +126,21 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public ObservableCollection<OverlayLabelDisplayV3ViewModel> Displays { get; set; } = new ObservableCollection<OverlayLabelDisplayV3ViewModel>();
 
-        public OverlayLabelV3ViewModel() : base(OverlayItemV3Type.Label) { }
+        public OverlayLabelV3ViewModel()
+            : base(OverlayItemV3Type.Label)
+        {
+            this.Initialize();
+        }
 
-        public OverlayLabelV3ViewModel(OverlayLabelV3Model item) : base(item) { }
+        public OverlayLabelV3ViewModel(OverlayLabelV3Model item)
+            : base(item)
+        {
+            foreach (var display in item.Displays)
+            {
+                this.Displays.Add(new OverlayLabelDisplayV3ViewModel(display.Value));
+            }
+            this.Initialize();
+        }
 
         public override Result Validate()
         {
@@ -127,11 +173,24 @@ namespace MixItUp.Base.ViewModel.Overlay
                     Format = display.Format,
 
                     UserID = display.Model?.UserID ?? Guid.Empty,
-                    Amount = display.Model?.Amount ?? 0
+                    Amount = display.Model?.Amount ?? 0,
+
+                    CounterName = display.SelectedCounter?.Name ?? null
                 };
             }
 
             return result;
+        }
+
+        private void Initialize()
+        {
+            foreach (OverlayLabelDisplayV3TypeEnum labelType in EnumHelper.GetEnumList<OverlayLabelDisplayV3TypeEnum>())
+            {
+                if (!this.Displays.Any(d => d.Type == labelType))
+                {
+                    this.Displays.Add(new OverlayLabelDisplayV3ViewModel(labelType));
+                }
+            }
         }
     }
 }

@@ -63,6 +63,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayLabelV3Model : OverlayVisualTextV3ModelBase
     {
+        public const string LabelAdds = "LabelAdds";
+
         public static readonly string DefaultHTML = OverlayResources.OverlayLabelDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayLabelDefaultJavascript;
@@ -120,7 +122,28 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestFollower].IsEnabled)
                 {
-                    // TODO
+                    UserV2ViewModel user = null;
+                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    {
+                        var followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
+                        if (followers != null)
+                        {
+                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: followers.First().user_id, performPlatformSearch: true);
+                        }
+                    }
+                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                    {
+                        var followers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, maxResults: 1);
+                        if (followers != null)
+                        {
+                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: followers.First().user_id, platformUsername: followers.First().nickname, performPlatformSearch: true);
+                        }
+                    }
+
+                    if (user != null)
+                    {
+                        this.Displays[OverlayLabelDisplayV3TypeEnum.LatestFollower].UserID = user.ID;
+                    }
                 }
 
                 if (this.Displays[OverlayLabelDisplayV3TypeEnum.TotalFollowers].IsEnabled)
@@ -132,7 +155,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                     else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
                     {
-                        amount = (await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TwitchSessionService>().ChannelID, int.MaxValue)).Count();
+                        amount = (await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, int.MaxValue)).Count();
                     }
                     this.Displays[OverlayLabelDisplayV3TypeEnum.TotalFollowers].Amount = amount;
                 }
@@ -151,7 +174,21 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled)
                 {
-                    // TODO
+                    UserV2ViewModel user = null;
+                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    {
+                        var subscribers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
+                        if (subscribers != null)
+                        {
+                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: subscribers.First().user_id, performPlatformSearch: true);
+                        }
+                    }
+
+                    if (user != null)
+                    {
+                        this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = user.ID;
+                        this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].AmountText = " ";
+                    }
                 }
 
                 if (this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].IsEnabled)
@@ -165,7 +202,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                     else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
                     {
-                        amount = (await ServiceManager.Get<TrovoSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().ChannelID, int.MaxValue)).Count();
+                        amount = (await ServiceManager.Get<TrovoSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TrovoSessionService>().ChannelID, int.MaxValue)).Count();
                     }
                     this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount = amount;
                 }
@@ -194,11 +231,14 @@ namespace MixItUp.Base.Model.Overlay
             if (this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].IsEnabled)
             {
                 CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
-                if (ChannelSession.Settings.Counters.TryGetValue(this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].CounterName, out CounterModel counter))
+                if (!string.IsNullOrEmpty(this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].CounterName) &&
+                    ChannelSession.Settings.Counters.TryGetValue(this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].CounterName, out CounterModel counter))
                 {
                     this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].Amount = counter.Amount;
                 }
             }
+
+            await this.SendWidget();
         }
 
         public override async Task WidgetDisable()
@@ -216,6 +256,27 @@ namespace MixItUp.Base.Model.Overlay
             EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
             EventService.OnYouTubeSuperChatOccurred -= EventService_OnYouTubeSuperChatOccurred;
             CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
+        {
+            await base.ProcessGenerationProperties(properties, parameters);
+
+            List<string> labelAdds = new List<string>();
+            foreach (var display in this.Displays)
+            {
+                if (display.Value.IsEnabled)
+                {
+                    string labelAdd = OverlayResources.OverlayLabelAddJavascript;
+                    foreach (var kvp in await this.GetLabelDisplayProperties(display.Value))
+                    {
+                        labelAdd = OverlayV3Service.ReplaceProperty(labelAdd, kvp.Key, kvp.Value);
+                    }
+                    labelAdds.Add(labelAdd);
+                }
+            }
+
+            properties["LabelAdds"] = string.Join("\n", labelAdds);
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
@@ -344,31 +405,42 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task SendUpdate(OverlayLabelDisplayV3TypeEnum type)
         {
-            if (this.Displays[type].IsEnabled)
+            OverlayLabelDisplayV3Model display = this.Displays[type];
+            if (display.IsEnabled)
             {
-                Dictionary<string, string> data = new Dictionary<string, string>();
-
-                UserV2ViewModel user = null;
-                if (this.Displays[type].UserFallback != null)
-                {
-                    user = new UserV2ViewModel(this.Displays[type].UserFallback);
-                }
-                else if (this.Displays[type].UserID != Guid.Empty)
-                {
-                    user = await ServiceManager.Get<UserService>().GetUserByID(this.Displays[type].UserID);
-                }
-
-                string amount = this.Displays[type].Amount.ToString();
-                if (!string.IsNullOrEmpty(this.Displays[type].AmountText))
-                {
-                    amount = this.Displays[type].AmountText;
-                }
-
-                CommandParametersModel parameters = new CommandParametersModel(user: user);
-                parameters.SpecialIdentifiers["labelamount"] = amount;
-
-                await this.CallFunction("update", parameters, data);
+                Dictionary<string, string> data = await this.GetLabelDisplayProperties(display);
+                await this.CallFunction("update", data);
             }
+        }
+
+        private async Task<Dictionary<string, string>> GetLabelDisplayProperties(OverlayLabelDisplayV3Model display)
+        {
+            UserV2ViewModel user = null;
+            if (display.UserFallback != null)
+            {
+                user = new UserV2ViewModel(display.UserFallback);
+            }
+            else if (display.UserID != Guid.Empty)
+            {
+                user = await ServiceManager.Get<UserService>().GetUserByID(display.UserID);
+            }
+
+            string amount = display.Amount.ToString();
+            if (!string.IsNullOrEmpty(display.AmountText))
+            {
+                amount = display.AmountText;
+            }
+
+            CommandParametersModel parameters = new CommandParametersModel(user: user);
+            parameters.SpecialIdentifiers["labelamount"] = amount;
+
+            string result = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(display.Format, parameters);
+
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data[nameof(display.Type)] = display.Type.ToString();
+            data[nameof(display.Format)] = result;
+
+            return data;
         }
     }
 }

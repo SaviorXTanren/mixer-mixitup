@@ -207,6 +207,11 @@ namespace MixItUp.Base.Services.Twitch
             return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.CheckIfFollowing(channel, userToCheck));
         }
 
+        public async Task<IEnumerable<SubscriptionModel>> GetSubscribers(UserModel channel, int maxResult = 1)
+        {
+            return await this.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscriptions(channel, maxResult));
+        }
+
         public async Task<GameModel> GetNewAPIGameByID(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
 
         public async Task<IEnumerable<GameModel>> GetNewAPIGamesByName(string name) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByName(name)); }

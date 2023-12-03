@@ -431,6 +431,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to addLabelDisplay(&quot;{Type}&quot;, &quot;{Format}&quot;);.
+        /// </summary>
+        public static string OverlayLabelAddJavascript {
+            get {
+                return ResourceManager.GetString("OverlayLabelAddJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to $labelamount.
         /// </summary>
         public static string OverlayLabelAmountDefaultFormat {
@@ -440,7 +449,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;span id=&quot;text&quot; class=&quot;text&quot;&gt;{Label}&lt;/span&gt;.
+        ///   Looks up a localized string similar to &lt;div id=&quot;labels&quot;&gt;&lt;/div&gt;
+        ///
+        ///&lt;template id=&quot;labeldisplay&quot;&gt;
+        ///    &lt;span class=&quot;text&quot;&gt;&lt;/span&gt;
+        ///&lt;/template&gt;.
         /// </summary>
         public static string OverlayLabelDefaultHTML {
             get {
@@ -449,20 +462,26 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function update(data)
-        ///{
-        ///    var usernameElement = document.getElementById(&quot;username&quot;);
-        ///    if (usernameElement != null) {
-        ///        usernameElement.innerHTML = data.Username;
-        ///    }
+        ///   Looks up a localized string similar to var labels = document.getElementById(&quot;labels&quot;);
+        ///
+        ///{LabelAdds}
+        ///
+        ///if (labels.children.length &gt; 1) {
+        ///    for (const labelDisplay of labels.children) {
         ///    
-        ///    var amountElement = document.getElementById(&quot;amount&quot;);
-        ///    if (amountElement != null) {
-        ///        amountElement.innerHTML = data.Amount;
         ///    }
         ///}
+        ///else {
+        ///    labels.children[0].style.visibility = &quot;visible&quot;;
+        ///}
         ///
-        ///update({Username: &apos;{Username}&apos;, Amount: {Amount}}).
+        ///function addLabelDisplay(type, format)
+        ///{
+        ///    var labelDisplayTemplate = document.getElementById(&quot;labeldisplay&quot;);
+        ///    const labelDisplay = labelDisplayTemplate.content.cloneNode(true);
+        ///    const labelText = labelDisplay.querySelector(&quot;.text&quot;);
+        ///    labelText.id = type;
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayLabelDefaultJavascript {
             get {

@@ -567,27 +567,51 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
 &lt;/body&gt;
 &lt;/html&gt;</value>
   </data>
+  <data name="OverlayLabelAddJavascript" xml:space="preserve">
+    <value>addLabelDisplay("{Type}", "{Format}");</value>
+  </data>
   <data name="OverlayLabelAmountDefaultFormat" xml:space="preserve">
     <value>$labelamount</value>
   </data>
   <data name="OverlayLabelDefaultHTML" xml:space="preserve">
-    <value>&lt;span id="text" class="text"&gt;{Label}&lt;/span&gt;</value>
+    <value>&lt;div id="labels"&gt;&lt;/div&gt;
+
+&lt;template id="labeldisplay"&gt;
+    &lt;span class="text"&gt;&lt;/span&gt;
+&lt;/template&gt;</value>
   </data>
   <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function update(data)
-{
-    var usernameElement = document.getElementById("username");
-    if (usernameElement != null) {
-        usernameElement.innerHTML = data.Username;
-    }
+    <value>var labels = document.getElementById("labels");
+
+{LabelAdds}
+
+if (labels.children.length &gt; 1) {
+    for (const labelDisplay of labels.children) {
     
-    var amountElement = document.getElementById("amount");
-    if (amountElement != null) {
-        amountElement.innerHTML = data.Amount;
     }
 }
+else {
+    labels.children[0].style.visibility = "visible";
+}
 
-update({Username: '{Username}', Amount: {Amount}})</value>
+function addLabelDisplay(type, format)
+{
+    var labelDisplayTemplate = document.getElementById("labeldisplay");
+    const labelDisplay = labelDisplayTemplate.content.cloneNode(true);
+    const labelText = labelDisplay.querySelector(".text");
+    labelText.id = type;
+    labelText.innerHTML = format;
+    labelText.style.visibility = 'hidden';
+    labels.appendChild(labelDisplay);
+}
+
+function update(data)
+{
+    var typeElement = document.getElementById(data.Type);
+    if (typeElement != null) {
+        typeElement.innerHTML = data.Format;
+    }
+}</value>
   </data>
   <data name="OverlayLabelUsernameAmountDefaultFormat" xml:space="preserve">
     <value>$userdisplayname - $labelamount</value>

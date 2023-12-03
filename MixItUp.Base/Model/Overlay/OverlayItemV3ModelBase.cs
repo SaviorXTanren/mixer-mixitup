@@ -1,4 +1,5 @@
 ﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -63,25 +64,41 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task WidgetDisable() { return Task.CompletedTask; }
 
-        protected async Task CallFunction(string functionName, CommandParametersModel parameters, Dictionary<string, string> data)
+        protected async Task SendWidget()
         {
-            Dictionary<string, string> dataParameters = new Dictionary<string, string>();
-            if (data != null)
+            // TODO: Change to support different overlay endpoints or direct URLs
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+            if (overlay != null)
             {
-                foreach (var kvp in data)
-                {
-                    if (kvp.Value != null)
-                    {
-                        dataParameters[kvp.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Value, parameters);
-                    }
-                }
-            }
+                Dictionary<string, string> properties = this.GetGenerationProperties();
 
-            //OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(OverlayEndpointID);
-            //if (overlay != null)
-            //{
-                //await overlay.Function(this.Item, functionName, dataParameters);
-            //}
+                string iframeHTML = overlay.GetItemIFrameHTML();
+                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.HTML), this.HTML);
+                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.CSS), this.CSS);
+                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Javascript), this.Javascript);
+
+                CommandParametersModel parametersModel = new CommandParametersModel();
+
+                await this.ProcessGenerationProperties(properties, parametersModel);
+                foreach (var property in properties)
+                {
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
+                }
+
+                iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parametersModel);
+
+                await overlay.Add(this.ID.ToString(), iframeHTML);
+            }
+        }
+
+        protected async Task CallFunction(string functionName, Dictionary<string, string> data)
+        {
+            // TODO: Change to support different overlay endpoints or direct URLs
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+            if (overlay != null)
+            {
+                await overlay.Function(this.ID.ToString(), functionName, data);
+            }
         }
     }
 }
