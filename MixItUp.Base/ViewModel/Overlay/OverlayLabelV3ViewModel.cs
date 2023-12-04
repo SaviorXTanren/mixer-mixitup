@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -12,6 +13,10 @@ namespace MixItUp.Base.ViewModel.Overlay
     public class OverlayLabelDisplayV3ViewModel : UIViewModelBase
     {
         public OverlayLabelDisplayV3TypeEnum Type { get; private set; }
+
+        public string TypeString { get { return Resources.ResourceManager.GetSafeString(this.Type.ToString()); } }
+
+        public bool IsCounterType { get { return this.Type == OverlayLabelDisplayV3TypeEnum.Counter; } }
 
         public bool IsEnabled
         {
@@ -35,7 +40,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string format;
 
-        public ObservableCollection<CounterModel> Counters = new ObservableCollection<CounterModel>();
+        public ObservableCollection<CounterModel> Counters { get; set; } = new ObservableCollection<CounterModel>();
 
         public CounterModel SelectedCounter
         {
@@ -64,11 +69,11 @@ namespace MixItUp.Base.ViewModel.Overlay
                     break;
 
                 case OverlayLabelDisplayV3TypeEnum.LatestFollower:
+                case OverlayLabelDisplayV3TypeEnum.LatestSubscriber:
                     this.Format = OverlayResources.OverlayLabelUsernameDefaultFormat;
                     break;
 
                 case OverlayLabelDisplayV3TypeEnum.LatestRaid:
-                case OverlayLabelDisplayV3TypeEnum.LatestSubscriber:
                 case OverlayLabelDisplayV3TypeEnum.LatestDonation:
                 case OverlayLabelDisplayV3TypeEnum.LatestTwitchBits:
                 case OverlayLabelDisplayV3TypeEnum.LatestTrovoElixir:
@@ -95,6 +100,26 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
 
+        public Result Validate()
+        {
+            if (!this.IsEnabled)
+            {
+                return new Result();
+            }
+
+            if (string.IsNullOrEmpty(this.Format))
+            {
+                return new Result(Resources.OverlayLabelDisplayFormatMustHaveValidValue);
+            }
+
+            if (this.Type == OverlayLabelDisplayV3TypeEnum.Counter && this.SelectedCounter == null)
+            {
+                return new Result(Resources.OverlayLabelCounterNotSelected);
+            }
+
+            return new Result();
+        }
+
         private void LoadCounters()
         {
             if (this.Type == OverlayLabelDisplayV3TypeEnum.Counter)
@@ -112,6 +137,22 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultHTML { get { return OverlayLabelV3Model.DefaultHTML; } }
         public override string DefaultCSS { get { return OverlayLabelV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayLabelV3Model.DefaultJavascript; } }
+
+        public IEnumerable<OverlayLabelDisplayV3SettingTypeEnum> DisplaySettings { get; private set; } = EnumHelper.GetEnumList<OverlayLabelDisplayV3SettingTypeEnum>();
+
+        public OverlayLabelDisplayV3SettingTypeEnum SelectedDisplaySetting
+        {
+            get { return this.selectedDisplaySetting; }
+            set
+            {
+                this.selectedDisplaySetting = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.IsRotationDisplaySetting));
+            }
+        }
+        private OverlayLabelDisplayV3SettingTypeEnum selectedDisplaySetting;
+
+        public bool IsRotationDisplaySetting { get { return this.SelectedDisplaySetting == OverlayLabelDisplayV3SettingTypeEnum.RotatingDisplays; } }
 
         public int DisplayRotationSeconds
         {
@@ -154,6 +195,15 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return new Result(Resources.OverlayLabelErrorAtLeastOneDisplayTypeMustBeEnabled);
             }
 
+            foreach (var display in this.Displays)
+            {
+                Result result = display.Validate();
+                if (!result.Success)
+                {
+                    return result;
+                }
+            }
+
             return new Result();
         }
 
@@ -162,6 +212,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             OverlayLabelV3Model result = new OverlayLabelV3Model();
 
             this.AssignProperties(result);
+
+            result.DisplaySetting = this.SelectedDisplaySetting;
             result.DisplayRotationSeconds = this.DisplayRotationSeconds;
 
             foreach (OverlayLabelDisplayV3ViewModel display in this.Displays)

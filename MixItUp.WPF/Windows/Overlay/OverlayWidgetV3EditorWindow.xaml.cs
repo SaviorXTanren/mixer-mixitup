@@ -1,10 +1,9 @@
-﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Overlay.Widget;
+﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Overlay;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Windows.Overlay
 {
@@ -13,34 +12,31 @@ namespace MixItUp.WPF.Windows.Overlay
     /// </summary>
     public partial class OverlayWidgetV3EditorWindow : LoadingWindowBase
     {
-        private OverlayWidgetV3EditorWindowViewModel viewModel;
+        private OverlayWidgetV3ViewModel viewModel;
 
         public OverlayWidgetV3EditorWindow()
         {
-            this.viewModel = new OverlayWidgetV3EditorWindowViewModel();
+            this.ViewModel = this.viewModel = new OverlayWidgetV3ViewModel(OverlayItemV3Type.Label);
 
             InitializeComponent();
 
-            this.Initialize(this.StatusBar);
+            this.Initialize();
         }
 
-        //public OverlayWidgetV3EditorWindow(OverlayWidgetV3ModelBase item)
-        //{
-        //    this.viewModel = new OverlayWidgetV3EditorWindowViewModel(item);
-        //
-        //    InitializeComponent();
-        //
-        //    this.Initialize(this.StatusBar);
-        //}
+        public OverlayWidgetV3EditorWindow(OverlayWidgetV3Model item)
+        {
+            this.ViewModel = this.viewModel = new OverlayWidgetV3ViewModel(item);
+
+            InitializeComponent();
+
+            this.Initialize();
+        }
 
         protected override async Task OnLoaded()
         {
             this.DataContext = this.viewModel;
 
-            if (this.viewModel.IsTypeSelected)
-            {
-                this.AssignOverlayTypeControl(this.viewModel.SelectedType);
-            }
+            this.AssignOverlayTypeControl(this.viewModel.Item.Type);
 
             await this.viewModel.OnOpen();
             await base.OnLoaded();
@@ -48,69 +44,30 @@ namespace MixItUp.WPF.Windows.Overlay
 
         private void AssignOverlayTypeControl(OverlayItemV3Type type)
         {
-            switch (type)
+            UserControl overlayControl = null;
+            if (type == OverlayItemV3Type.Label)
             {
-                case OverlayItemV3Type.Text:
-                    this.InnerContent.Content = new OverlayTextV3Control();
-                    break;
-                case OverlayItemV3Type.Image:
-                    this.InnerContent.Content = new OverlayImageV3Control();
-                    break;
-                case OverlayItemV3Type.Video:
-                    this.InnerContent.Content = new OverlayVideoV3Control();
-                    break;
-                case OverlayItemV3Type.YouTube:
-                    this.InnerContent.Content = new OverlayYouTubeV3Control();
-                    break;
-                case OverlayItemV3Type.HTML:
-                    this.InnerContent.Content = new OverlayHTMLV3Control();
-                    break;
-                case OverlayItemV3Type.Timer:
-                    this.InnerContent.Content = new OverlayTimerV3Control();
-                    break;
-                case OverlayItemV3Type.Label:
-                    this.InnerContent.Content = new OverlayLabelV3Control();
-                    break;
+                overlayControl = new OverlayLabelV3Control();
+            }
+
+            if (overlayControl != null)
+            {
+                this.InnerContent.Content = overlayControl;
             }
         }
 
-        private async void TypeSelectedButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Initialize()
         {
-            await this.viewModel.TypeSelected();
-            this.AssignOverlayTypeControl(this.viewModel.SelectedType);
+            this.Initialize(this.StatusBar);
+
+            this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+            this.viewModel.OnCloseRequested += ViewModel_OnCloseRequested;
         }
 
-        private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void ViewModel_OnCloseRequested(object sender, System.EventArgs e)
         {
-            Result result = this.viewModel.Validate();
-            if (!result.Success)
-            {
-                await DialogHelper.ShowFailedResult(result);
-                return;
-            }
-
-            await this.viewModel.Save();
-
             this.Close();
-        }
-
-        private async void TestButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Result result = this.viewModel.Validate();
-            if (!result.Success)
-            {
-                await DialogHelper.ShowFailedResult(result);
-                return;
-            }
-
-            CommandParametersModel parameters = CommandParametersModel.GetTestParameters(new Dictionary<string, string>());
-            parameters = await DialogHelper.ShowEditTestCommandParametersDialog(parameters);
-            if (parameters == null)
-            {
-                return;
-            }
-
-            await this.viewModel.Test(parameters);
         }
     }
 }

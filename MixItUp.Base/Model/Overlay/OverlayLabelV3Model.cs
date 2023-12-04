@@ -23,15 +23,21 @@ namespace MixItUp.Base.Model.Overlay
         ChatterCount,
         LatestFollower,
         TotalFollowers,
-        LatestRaid,
         LatestSubscriber,
         TotalSubscribers,
+        LatestRaid,
         LatestDonation,
         LatestTwitchBits,
         LatestTrovoElixir,
         LatestYouTubeSuperChat,
 
         Counter = 100,
+    }
+
+    public enum OverlayLabelDisplayV3SettingTypeEnum
+    {
+        RotatingDisplays,
+        NewestOnly,
     }
 
     [DataContract]
@@ -70,6 +76,9 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultJavascript = OverlayResources.OverlayLabelDefaultJavascript;
 
         [DataMember]
+        public OverlayLabelDisplayV3SettingTypeEnum DisplaySetting { get; set; }
+
+        [DataMember]
         public int DisplayRotationSeconds { get; set; }
 
         [DataMember]
@@ -79,9 +88,30 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLabelV3Model() : base(OverlayItemV3Type.Label) { }
 
-        public override async Task WidgetEnable()
+        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
         {
-            await base.WidgetEnable();
+            await base.ProcessGenerationProperties(properties, parameters);
+
+            List<string> labelAdds = new List<string>();
+            foreach (var display in this.Displays)
+            {
+                if (display.Value.IsEnabled)
+                {
+                    string labelAdd = OverlayResources.OverlayLabelAddJavascript;
+                    foreach (var kvp in await this.GetLabelDisplayProperties(display.Value))
+                    {
+                        labelAdd = OverlayV3Service.ReplaceProperty(labelAdd, kvp.Key, kvp.Value);
+                    }
+                    labelAdds.Add(labelAdd);
+                }
+            }
+
+            properties["LabelAdds"] = string.Join("\n", labelAdds);
+        }
+
+        protected override async Task WidgetEnableInternal()
+        {
+            await base.WidgetEnableInternal();
 
             if (this.Displays[OverlayLabelDisplayV3TypeEnum.ViewerCount].IsEnabled || this.Displays[OverlayLabelDisplayV3TypeEnum.ChatterCount].IsEnabled)
             {
@@ -237,13 +267,11 @@ namespace MixItUp.Base.Model.Overlay
                     this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].Amount = counter.Amount;
                 }
             }
-
-            await this.SendWidget();
         }
 
-        public override async Task WidgetDisable()
+        protected override async Task WidgetDisableInternal()
         {
-            await base.WidgetDisable();
+            await base.WidgetDisableInternal();
 
             EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
             EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
@@ -256,27 +284,6 @@ namespace MixItUp.Base.Model.Overlay
             EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
             EventService.OnYouTubeSuperChatOccurred -= EventService_OnYouTubeSuperChatOccurred;
             CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
-        }
-
-        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
-        {
-            await base.ProcessGenerationProperties(properties, parameters);
-
-            List<string> labelAdds = new List<string>();
-            foreach (var display in this.Displays)
-            {
-                if (display.Value.IsEnabled)
-                {
-                    string labelAdd = OverlayResources.OverlayLabelAddJavascript;
-                    foreach (var kvp in await this.GetLabelDisplayProperties(display.Value))
-                    {
-                        labelAdd = OverlayV3Service.ReplaceProperty(labelAdd, kvp.Key, kvp.Value);
-                    }
-                    labelAdds.Add(labelAdd);
-                }
-            }
-
-            properties["LabelAdds"] = string.Join("\n", labelAdds);
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)

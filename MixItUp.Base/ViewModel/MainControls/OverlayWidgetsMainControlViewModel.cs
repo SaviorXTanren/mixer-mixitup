@@ -1,46 +1,37 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
     public class OverlayWidgetViewModel : UIViewModelBase
     {
-        //public OverlayWidgetV3ModelBase Widget { get; set; }
+        public OverlayWidgetV3Model Widget { get; set; }
 
-        //public OverlayItemV3ModelBase Item { get { return this.Widget.Item; } }
+        public OverlayItemV3ModelBase Item { get { return this.Widget.Item; } }
 
-        //public string Name { get { return this.Item.Name; } }
+        public string Name { get { return this.Widget.Name; } }
 
-        public string OverlayName
+        public bool IsEnabled
         {
-            get
+            get { return this.Widget.IsEnabled; }
+            set
             {
-                //OverlayEndpointV3Model endpointService = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(this.Widget.OverlayEndpointID);
-                //if (endpointService != null)
-                //{
-                //    return endpointService.Name;
-                //}
-                return null;
+                this.Widget.IsEnabled = value;
+                this.NotifyPropertyChanged();
             }
         }
 
-        //public bool IsEnabled
-        //{
-        //    get { return this.Widget.IsEnabled; }
-        //    set
-        //    {
-        //        this.Widget.IsEnabled = value;
-        //        this.NotifyPropertyChanged();
-        //    }
-        //}
-
-        //public OverlayWidgetViewModel(OverlayWidgetV3ModelBase widget)
-        //{
-        //    this.Widget = widget;
-        //}
+        public OverlayWidgetViewModel(OverlayWidgetV3Model widget)
+        {
+            this.Widget = widget;
+        }
     }
 
     public class OverlayWidgetsMainControlViewModel : WindowControlViewModelBase
@@ -50,11 +41,13 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ThreadSafeObservableCollection<OverlayWidgetViewModel> OverlayWidgets { get; private set; } = new ThreadSafeObservableCollection<OverlayWidgetViewModel>();
 
-        public OverlayWidgetsMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
+        public OverlayWidgetsMainControlViewModel(MainWindowViewModel windowViewModel)
+            : base(windowViewModel)
+        { }
 
         public void Refresh()
         {
-            //this.OverlayWidgets.ClearAndAddRange(ServiceManager.Get<OverlayV3Service>().GetWidgets().Select(w => new OverlayWidgetViewModel(w)));
+            this.OverlayWidgets.ClearAndAddRange(ServiceManager.Get<OverlayV3Service>().GetWidgets().Select(w => new OverlayWidgetViewModel(w)));
             this.NotifyPropertyChanges();
         }
 
@@ -75,31 +68,31 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (widget != null)
             {
                 this.OverlayWidgets.Remove(widget);
-                //await ServiceManager.Get<OverlayV3Service>().RemoveWidget(widget.Widget);
+                await ServiceManager.Get<OverlayV3Service>().RemoveWidget(widget.Widget);
                 await ChannelSession.SaveSettings();
             }
         }
 
         public async Task EnableWidget(OverlayWidgetViewModel widget)
         {
-            //if (widget != null && !widget.IsEnabled)
-            //{
-                //await widget.Widget.Enable();
-            //}
+            if (widget != null && !widget.IsEnabled)
+            {
+                await widget.Widget.Enable();
+            }
         }
 
         public async Task DisableWidget(OverlayWidgetViewModel widget)
         {
-            //if (widget != null && widget.IsEnabled)
-            //{
-                //await widget.Widget.Disable();
-            //}
+            if (widget != null && widget.IsEnabled)
+            {
+                await widget.Widget.Disable();
+            }
         }
 
-        protected override Task OnOpenInternal()
+        protected override async Task OnOpenInternal()
         {
             this.Refresh();
-            return base.OnVisibleInternal();
+            await base.OnVisibleInternal();
         }
 
         protected override Task OnVisibleInternal()

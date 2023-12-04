@@ -979,6 +979,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A name must be specified.
+        /// </summary>
+        public static string ANameMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ANameMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A new update is available for Mix It Up!.
         /// </summary>
         public static string ANewUpdateIsAvailableForMixItUp {
@@ -5199,6 +5208,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display Rotation (Secs).
+        /// </summary>
+        public static string DisplayRotationSeconds {
+            get {
+                return ResourceManager.GetString("DisplayRotationSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;&gt; Contains.
         /// </summary>
         public static string DoesNotContain {
@@ -7069,6 +7087,15 @@ namespace MixItUp.Base {
         public static string FontSize {
             get {
                 return ResourceManager.GetString("FontSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format.
+        /// </summary>
+        public static string Format {
+            get {
+                return ResourceManager.GetString("Format", resourceCulture);
             }
         }
         
@@ -13109,6 +13136,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Newest Only.
+        /// </summary>
+        public static string NewestOnly {
+            get {
+                return ResourceManager.GetString("NewestOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Followers.
         /// </summary>
         public static string NewFollowers {
@@ -14169,6 +14205,15 @@ namespace MixItUp.Base {
         public static string OverlayLabelCounterNotSelected {
             get {
                 return ResourceManager.GetString("OverlayLabelCounterNotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label format must have a valid value.
+        /// </summary>
+        public static string OverlayLabelDisplayFormatMustHaveValidValue {
+            get {
+                return ResourceManager.GetString("OverlayLabelDisplayFormatMustHaveValidValue", resourceCulture);
             }
         }
         
@@ -17155,6 +17200,15 @@ namespace MixItUp.Base {
         public static string RotateOutUpRight {
             get {
                 return ResourceManager.GetString("RotateOutUpRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rotating Displays.
+        /// </summary>
+        public static string RotatingDisplays {
+            get {
+                return ResourceManager.GetString("RotatingDisplays", resourceCulture);
             }
         }
         

@@ -14,148 +14,133 @@
         Title="{x:Static resx:Resources.OverlayWidgetEditor}"
         Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <Util:LocalizationConverter x:Key="LocalizationConverter" />
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Windows:LoadingWindowBase.Resources>
 
     <Grid>
-        <Grid Visibility="{Binding IsTypeNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,40">
-            <Grid HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <ScrollViewer Grid.Row="0">
+            <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="40" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="40" />
-                    <RowDefinition Height="300" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWidgetEditorInstructions}"/>
+                <Grid Grid.Row="0">
+                    <TextBox Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
 
-                <ComboBox Grid.Row="2" ItemsSource="{Binding Types}" SelectedItem="{Binding SelectedType}" HorizontalAlignment="Center" Width="200" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">
+                    <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                        <TabItem Header="{x:Static resx:Resources.Details}" HorizontalAlignment="Stretch">
+                            <ContentControl x:Name="InnerContent" Margin="10" DataContext="{Binding Item}" />
+                        </TabItem>
 
-                <TextBlock Grid.Row="4" Text="{Binding TypeDescription}" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap" />
-            </Grid>
+                        <TabItem Header="{x:Static resx:Resources.Position}" HorizontalContentAlignment="Stretch">
+                            <OverlayControls:OverlayPositionV3Control x:Name="Position" DataContext="{Binding Position}" Margin="10" />
+                        </TabItem>
 
-            <Button x:Name="TypeSelectedButton" MinWidth="80" Margin="0,0,60,20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="{x:Static resx:Resources.Next}" Click="TypeSelectedButton_Click" />
-        </Grid>
-        
-        <Grid Visibility="{Binding IsTypeSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+                        <TabItem Header="{x:Static resx:Resources.Animation}">
+                            <!--<Grid HorizontalAlignment="Center" Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-            <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
-
-            <ScrollViewer Grid.Row="0">
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox Text="{Binding Name}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <ComboBox Grid.Column="2" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-                    </Grid>
-
-                    <TabControl Grid.Row="2" DataContext="{Binding Item}" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
-                        <TabItem Header="{x:Static resx:Resources.Details}">
-                            <Grid>
+                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <Border Grid.Row="0" Style="{StaticResource DefaultBorder}">
-                                    <ContentControl x:Name="InnerContent" Margin="10,15" />
-                                </Border>
-
-                                <Grid Grid.Row="1" x:Name="AdditionalOptionsGrid">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
-                                        <OverlayControls:OverlayPositionV3Control x:Name="Position" DataContext="{Binding Position}" Margin="10" />
-                                    </Border>
-
-                                    <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
-                                        <TabControl ItemsSource="{Binding Animations}" Visibility="{Binding HasAnimations, Converter={StaticResource BooleanToVisibilityConverter}}" SelectedIndex="0" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
-                                            <TabControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding DisplayName}" />
-                                                </DataTemplate>
-                                            </TabControl.ItemTemplate>
-                                            <TabControl.ContentTemplate>
-                                                <DataTemplate>
-                                                    <OverlayControls:OverlayAnimationV3Control Margin="10" DataContext="{Binding}" />
-                                                </DataTemplate>
-                                            </TabControl.ContentTemplate>
-                                        </TabControl>
-                                    </Border>
-                                </Grid>
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EntranceAnimation}" TextDecorations="Underline" />
+                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
                             </Grid>
+
+                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.ExitAnimation}" TextDecorations="Underline" />
+                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
+                            </Grid>
+                        </Grid>-->
                         </TabItem>
 
                         <TabItem Header="{x:Static resx:Resources.HTML}">
                             <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
                                 <Border Style="{StaticResource DefaultBorder}">
-                                    <TextBox Text="{Binding HTML}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="250" />
+                                    <TextBox Text="{Binding HTML}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
                                 </Border>
                             </Grid>
                         </TabItem>
 
                         <TabItem Header="{x:Static resx:Resources.CSS}">
                             <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
                                 <Border Style="{StaticResource DefaultBorder}">
-                                    <TextBox Text="{Binding CSS}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="250" />
+                                    <TextBox Text="{Binding CSS}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
                                 </Border>
                             </Grid>
                         </TabItem>
 
                         <TabItem Header="{x:Static resx:Resources.Javascript}">
                             <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
                                 <Border Style="{StaticResource DefaultBorder}">
-                                    <TextBox Text="{Binding Javascript}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="250" />
+                                    <TextBox Text="{Binding Javascript}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
                                 </Border>
                             </Grid>
                         </TabItem>
                     </TabControl>
 
-                    <Grid Grid.Row="4" HorizontalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                </Border>
+            </Grid>
+        </ScrollViewer>
 
-                        <Controls:IconButton x:Name="SaveButton" Grid.Column="0" Click="SaveButton_Click" Width="50" Icon="ContentSave" />
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-                        <Controls:IconButton x:Name="TestButton" Grid.Column="2" Click="TestButton_Click" Width="50" Icon="Play" />
-                    </Grid>
-                </Grid>
-            </ScrollViewer>
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <Controls:IconButton Grid.Column="0" ToolTip="{x:Static resx:Resources.Save}" Icon="ContentSave" Command="{Binding SaveCommand}" />
 
-            <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+                <Controls:IconButton Grid.Column="2" ToolTip="{x:Static resx:Resources.ExportData}" Icon="Export" Command="{Binding ExportCommand}" />
+            </Grid>
+
+            <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
         </Grid>
     </Grid>
 </Windows:LoadingWindowBase>

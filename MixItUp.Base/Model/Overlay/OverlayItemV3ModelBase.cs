@@ -1,6 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
@@ -30,8 +28,26 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string PositionedHTML = OverlayResources.OverlayPositionedItemDefaultHTML;
         public static readonly string PositionedCSS = OverlayResources.OverlayPositionedItemDefaultCSS;
 
+        public static string GetPositionWrappedHTML(string innerHTML)
+        {
+            if (!string.IsNullOrEmpty(innerHTML))
+            {
+                return OverlayV3Service.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, innerHTML);
+            }
+            return innerHTML;
+        }
+
+        public static string GetPositionWrappedCSS(string innerCSS)
+        {
+            if (!string.IsNullOrEmpty(innerCSS))
+            {
+                return OverlayItemV3ModelBase.PositionedCSS + Environment.NewLine + Environment.NewLine + innerCSS;
+            }
+            return innerCSS;
+        }
+
         [DataMember]
-        public string Name { get; set; }
+        public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
         public OverlayItemV3Type Type { get; set; }
@@ -60,14 +76,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters) { return Task.CompletedTask; }
 
-        public virtual Task WidgetEnable() { return Task.CompletedTask; }
-
-        public virtual Task WidgetDisable() { return Task.CompletedTask; }
-
-        protected async Task SendWidget()
+        public async Task WidgetEnable()
         {
-            // TODO: Change to support different overlay endpoints or direct URLs
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+            await this.WidgetEnableInternal();
+
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
                 Dictionary<string, string> properties = this.GetGenerationProperties();
@@ -91,10 +104,25 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
+        public async Task WidgetDisable()
+        {
+            await this.WidgetDisableInternal();
+
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
+            if (overlay != null)
+            {
+                await overlay.Remove(this.ID.ToString());
+            }
+        }
+
+        protected virtual Task WidgetEnableInternal() { return Task.CompletedTask; }
+
+        protected virtual Task WidgetDisableInternal() { return Task.CompletedTask; }
+
         protected async Task CallFunction(string functionName, Dictionary<string, string> data)
         {
             // TODO: Change to support different overlay endpoints or direct URLs
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
                 await overlay.Function(this.ID.ToString(), functionName, data);

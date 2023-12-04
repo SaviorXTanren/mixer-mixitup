@@ -72,8 +72,8 @@ namespace MixItUp.Base.ViewModel.Actions
                             this.Item = new OverlayTwitchClipV3ViewModel();
                         }
 
-                        this.SetPositionWrappedHTML(this.Item.DefaultHTML);
-                        this.SetPositionWrappedCSS(this.Item.DefaultCSS);
+                        this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
+                        this.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(this.Item.DefaultCSS);
                         this.Javascript = this.Item.DefaultJavascript;
                     }
                 }
@@ -172,17 +172,6 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayAnimationV3ViewModel exitAnimation;
 
-        public string ItemDuration
-        {
-            get { return this.itemDuration; }
-            set
-            {
-                this.itemDuration = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string itemDuration;
-
         public string HTML
         {
             get { return this.html; }
@@ -219,14 +208,16 @@ namespace MixItUp.Base.ViewModel.Actions
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(action.OverlayEndpointID);
-            if (this.SelectedOverlayEndpoint == null)
-            {
-                this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
-            }
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
 
             if (action.OverlayItemV3 != null)
             {
+                OverlayEndpointV3Model overlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(action.OverlayItemV3.OverlayEndpointID);
+                if (overlayEndpoint != null)
+                {
+                    this.SelectedOverlayEndpoint = overlayEndpoint;
+                }
+
                 if (action.OverlayItemV3.Type == OverlayItemV3Type.Text)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Text;
@@ -281,28 +272,12 @@ namespace MixItUp.Base.ViewModel.Actions
             this.SelectedActionType = OverlayActionTypeEnum.Text;
 
             this.Item = new OverlayTextV3ViewModel();
-            this.SetPositionWrappedHTML(this.Item.DefaultHTML);
-            this.SetPositionWrappedCSS(this.Item.DefaultCSS);
+            this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
+            this.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(this.Item.DefaultCSS);
             this.Javascript = this.Item.DefaultJavascript;
 
             this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance);
             this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit);
-        }
-
-        public void SetPositionWrappedHTML(string innerHTML)
-        {
-            if (!string.IsNullOrEmpty(innerHTML))
-            {
-                this.HTML = OverlayV3Service.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, innerHTML);
-            }
-        }
-
-        public void SetPositionWrappedCSS(string innerCSS)
-        {
-            if (!string.IsNullOrEmpty(innerCSS))
-            {
-                this.CSS = OverlayItemV3ModelBase.PositionedCSS + Environment.NewLine + Environment.NewLine + innerCSS;
-            }
         }
 
         public override Task<Result> Validate()
@@ -341,11 +316,12 @@ namespace MixItUp.Base.ViewModel.Actions
                 OverlayItemV3ModelBase item = this.Item.GetItem();
                 if (item != null)
                 {
+                    item.OverlayEndpointID = this.SelectedOverlayEndpoint.ID;
                     item.HTML = this.HTML;
                     item.CSS = this.CSS;
                     item.Javascript = this.Javascript;
                     item.Position = this.Position.GetPosition();
-                    return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint.ID, item, this.Duration, this.EntranceAnimation.GetAnimation(), this.ExitAnimation.GetAnimation()));
+                    return Task.FromResult<ActionModelBase>(new OverlayActionModel(item, this.Duration, this.EntranceAnimation.GetAnimation(), this.ExitAnimation.GetAnimation()));
                 }
             }
             return Task.FromResult<ActionModelBase>(null);

@@ -28,8 +28,6 @@ namespace MixItUp.Base.Model.Actions
         public OverlayItemModelBase OverlayItem { get; set; }
 
         [DataMember]
-        public Guid OverlayEndpointID { get; set; }
-        [DataMember]
         public OverlayItemV3ModelBase OverlayItemV3 { get; set; }
         [DataMember]
         public string Duration { get; set; }
@@ -44,7 +42,7 @@ namespace MixItUp.Base.Model.Actions
         public bool ShowWidget { get; set; }
 
         [Obsolete]
-        public OverlayActionModel(Guid overlayEndpointID, OverlayItemModelBase overlayItem)
+        public OverlayActionModel(OverlayItemModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
         {
             //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
@@ -57,11 +55,10 @@ namespace MixItUp.Base.Model.Actions
             //    this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
             //}
 
-            this.OverlayEndpointID = overlayEndpointID;
             this.OverlayItem = overlayItem;
         }
 
-        public OverlayActionModel(Guid overlayEndpointID, OverlayItemV3ModelBase overlayItem, string duration, OverlayAnimationV3Model entranceAnimation, OverlayAnimationV3Model exitAnimation)
+        public OverlayActionModel(OverlayItemV3ModelBase overlayItem, string duration, OverlayAnimationV3Model entranceAnimation, OverlayAnimationV3Model exitAnimation)
             : base(ActionTypeEnum.Overlay)
         {
             //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
@@ -74,7 +71,6 @@ namespace MixItUp.Base.Model.Actions
             //    this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
             //}
 
-            this.OverlayEndpointID = overlayEndpointID;
             this.OverlayItemV3 = overlayItem;
             this.Duration = duration;
             this.EntranceAnimation = entranceAnimation;
@@ -112,7 +108,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
+                OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayItemV3.OverlayEndpointID);
                 if (overlay != null)
                 {
                     if (this.OverlayItemV3 is OverlayTwitchClipV3Model)

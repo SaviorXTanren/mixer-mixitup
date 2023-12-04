@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -96,30 +97,6 @@ namespace MixItUp.Base.Services
             this.ID = id;
             this.FunctionName = functionName;
             this.Parameters = parameters;
-        }
-    }
-
-    [DataContract]
-    public abstract class NEWOverlayWidgetV3ModelBase<T> where T : OverlayItemV3ModelBase
-    {
-        [DataMember]
-        public OverlayItemV3ModelBase Item { get; set; }
-
-        [DataMember]
-        public Guid OverlayEndpointID { get; set; }
-
-        [DataMember]
-        public int RefreshTime { get; set; }
-        [DataMember]
-        public bool IsEnabled { get; set; }
-
-        public Guid ID { get { return this.Item.ID; } }
-        public string Name { get { return this.Item.Name; } }
-        public OverlayItemV3Type Type { get { return this.Item.Type; } }
-
-        public NEWOverlayWidgetV3ModelBase(T item)
-        {
-            this.Item = item;
         }
     }
 
@@ -220,6 +197,23 @@ namespace MixItUp.Base.Services
             {
                 await overlay.EndBatching();
             }
+        }
+
+        public IEnumerable<OverlayWidgetV3Model> GetWidgets()
+        {
+            return ChannelSession.Settings.OverlayWidgetsV3;
+        }
+        
+        public async Task AddWidget(OverlayWidgetV3Model widget)
+        {
+            ChannelSession.Settings.OverlayWidgetsV3.Add(widget);
+            await widget.Enable();
+        }
+
+        public async Task RemoveWidget(OverlayWidgetV3Model widget)
+        {
+            ChannelSession.Settings.OverlayWidgetsV3.Remove(widget);
+            await widget.Disable();
         }
 
         public async Task<bool> AddOverlayEndpoint(OverlayEndpointV3Model overlayEndpoint)
