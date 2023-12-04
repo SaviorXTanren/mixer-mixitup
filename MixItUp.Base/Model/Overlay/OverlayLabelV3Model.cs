@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string LabelAdds = "LabelAdds";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayLabelDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
+        public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS + "\n\n" + OverlayResources.OverlayLabelDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayLabelDefaultJavascript;
 
         [DataMember]
@@ -87,6 +87,14 @@ namespace MixItUp.Base.Model.Overlay
         private CancellationTokenSource refreshCancellationTokenSource;
 
         public OverlayLabelV3Model() : base(OverlayItemV3Type.Label) { }
+
+        public override Dictionary<string, string> GetGenerationProperties()
+        {
+            Dictionary<string, string> properties = base.GetGenerationProperties();
+            properties[nameof(this.DisplaySetting)] = this.DisplaySetting.ToString();
+            properties[nameof(this.DisplayRotationSeconds)] = this.DisplayRotationSeconds.ToString();
+            return properties;
+        }
 
         public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
         {

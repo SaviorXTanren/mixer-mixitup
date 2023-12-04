@@ -68,8 +68,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, string> properties = new Dictionary<string, string>();
             properties[nameof(this.ID)] = (this.ID == Guid.Empty) ? Guid.NewGuid().ToString() : this.ID.ToString();
-            properties[nameof(this.Width)] = (this.Width > 0) ? $"{this.Width}px" : "auto";
-            properties[nameof(this.Height)] = (this.Height > 0) ? $"{this.Height}px" : "auto";
+            properties[nameof(this.Width)] = (this.Width > 0) ? $"{this.Width}px" : "max-content";
+            properties[nameof(this.Height)] = (this.Height > 0) ? $"{this.Height}px" : "max-content";
             this.Position.SetPositionProperties(properties);
             return properties;
         }

@@ -449,10 +449,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .labelDisplay
+        ///{
+        ///    position: absolute;
+        ///    transform: translate({XTranslation}%, {YTranslation}%);
+        ///    width: {Width};
+        ///}.
+        /// </summary>
+        public static string OverlayLabelDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayLabelDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;div id=&quot;labels&quot;&gt;&lt;/div&gt;
         ///
         ///&lt;template id=&quot;labeldisplay&quot;&gt;
-        ///    &lt;span class=&quot;text&quot;&gt;&lt;/span&gt;
+        ///    &lt;div class=&quot;text labelDisplay&quot;&gt;&lt;/div&gt;
         ///&lt;/template&gt;.
         /// </summary>
         public static string OverlayLabelDefaultHTML {
@@ -466,22 +480,23 @@ namespace MixItUp.Base {
         ///
         ///{LabelAdds}
         ///
-        ///if (labels.children.length &gt; 1) {
-        ///    for (const labelDisplay of labels.children) {
-        ///    
-        ///    }
+        ///var displaySettings = &quot;{DisplaySetting}&quot;;
+        ///var displayRotationSeconds = {DisplayRotationSeconds};
+        ///var displayRotationIndex = 0;
+        ///
+        ///if (displaySettings == &quot;RotatingDisplays&quot;)
+        ///{
+        ///    rotateLabelDisplay();
         ///}
-        ///else {
+        ///else
+        ///{
         ///    labels.children[0].style.visibility = &quot;visible&quot;;
         ///}
         ///
         ///function addLabelDisplay(type, format)
         ///{
         ///    var labelDisplayTemplate = document.getElementById(&quot;labeldisplay&quot;);
-        ///    const labelDisplay = labelDisplayTemplate.content.cloneNode(true);
-        ///    const labelText = labelDisplay.querySelector(&quot;.text&quot;);
-        ///    labelText.id = type;
-        ///    [rest of string was truncated]&quot;;.
+        ///    const labelDisplay = labelDisplayTemplate.content [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayLabelDefaultJavascript {
             get {
@@ -586,7 +601,7 @@ namespace MixItUp.Base {
         ///    text-decoration: {TextDecoration};
         ///    font-style: {FontStyle};
         ///    text-align: {TextAlignment};
-        ///    text-shadow: {Shadow};
+        ///    text-shadow: {ShadowColor};
         ///    margin-block-start: 0px;
         ///    margin-block-end: 0px;
         ///    margin-inline-start: 0px;

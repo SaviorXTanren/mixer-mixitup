@@ -573,11 +573,19 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="OverlayLabelAmountDefaultFormat" xml:space="preserve">
     <value>$labelamount</value>
   </data>
+  <data name="OverlayLabelDefaultCSS" xml:space="preserve">
+    <value>.labelDisplay
+{
+    position: absolute;
+    transform: translate({XTranslation}%, {YTranslation}%);
+    width: {Width};
+}</value>
+  </data>
   <data name="OverlayLabelDefaultHTML" xml:space="preserve">
     <value>&lt;div id="labels"&gt;&lt;/div&gt;
 
 &lt;template id="labeldisplay"&gt;
-    &lt;span class="text"&gt;&lt;/span&gt;
+    &lt;div class="text labelDisplay"&gt;&lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
@@ -585,12 +593,16 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
 
 {LabelAdds}
 
-if (labels.children.length &gt; 1) {
-    for (const labelDisplay of labels.children) {
-    
-    }
+var displaySettings = "{DisplaySetting}";
+var displayRotationSeconds = {DisplayRotationSeconds};
+var displayRotationIndex = 0;
+
+if (displaySettings == "RotatingDisplays")
+{
+    rotateLabelDisplay();
 }
-else {
+else
+{
     labels.children[0].style.visibility = "visible";
 }
 
@@ -605,11 +617,38 @@ function addLabelDisplay(type, format)
     labels.appendChild(labelDisplay);
 }
 
+function rotateLabelDisplay()
+{
+    if (displayRotationIndex &gt;= labels.children.length)
+    {
+        displayRotationIndex = 0;
+    }
+
+    for (const labelDisplay of labels.children) {
+        labelDisplay.style.visibility = 'hidden';
+    }
+
+    var label = labels.children[displayRotationIndex];
+    label.style.visibility = 'visible';
+
+    displayRotationIndex++;
+
+    setTimeout(() =&gt; { rotateLabelDisplay(); }, (displayRotationSeconds * 1000));
+}
+
 function update(data)
 {
     var typeElement = document.getElementById(data.Type);
     if (typeElement != null) {
         typeElement.innerHTML = data.Format;
+
+        if (displaySettings == "NewestOnly")
+        {
+            for (const labelDisplay of labels.children) {
+                labelDisplay.style.visibility = 'hidden';
+            }
+            typeElement.style.visibility = 'visible';
+        }
     }
 }</value>
   </data>
@@ -892,7 +931,7 @@ function update(data)
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
     text-align: {TextAlignment};
-    text-shadow: {Shadow};
+    text-shadow: {ShadowColor};
     margin-block-start: 0px;
     margin-block-end: 0px;
     margin-inline-start: 0px;
