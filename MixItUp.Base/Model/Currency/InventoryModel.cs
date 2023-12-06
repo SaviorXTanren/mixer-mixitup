@@ -98,6 +98,14 @@ namespace MixItUp.Base.Model.Currency
         [JsonIgnore]
         public string SpecialIdentifier { get { return SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.Name); } }
 
+        [JsonIgnore]
+        public string MaxAmountSpecialIdentifier { get { return string.Format("{0}maxamount", this.SpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string ShopBuyPriceSpecialIdentifier { get { return string.Format("{0}buyprice", this.SpecialIdentifier); } }
+        [JsonIgnore]
+        public string ShopSellPriceSpecialIdentifier { get { return string.Format("{0}sellprice", this.SpecialIdentifier); } }
+
         public override bool Equals(object obj)
         {
             if (obj is InventoryItemModel)

@@ -848,8 +848,12 @@ namespace MixItUp.Base.Util
                                 userItems[item.Name] = quantity;
                             }
 
-                            string itemSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
-                            this.ReplaceSpecialIdentifier(itemSpecialIdentifier, quantity.ToString());
+                            string itemHeaderSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader;
+
+                            this.ReplaceSpecialIdentifier(itemHeaderSpecialIdentifier + item.MaxAmountSpecialIdentifier, item.MaxAmount.ToString());
+                            this.ReplaceSpecialIdentifier(itemHeaderSpecialIdentifier + item.ShopBuyPriceSpecialIdentifier, item.BuyAmount.ToString());
+                            this.ReplaceSpecialIdentifier(itemHeaderSpecialIdentifier + item.ShopSellPriceSpecialIdentifier, item.SellAmount.ToString());
+                            this.ReplaceSpecialIdentifier(itemHeaderSpecialIdentifier + item.SpecialIdentifier, quantity.ToString());
                         }
 
                         if (userItems.Count > 0)
