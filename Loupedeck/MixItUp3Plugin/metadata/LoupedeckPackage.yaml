@@ -6,7 +6,7 @@
 type: plugin4
 
 # Name of the plugin.
-name: MixItUp
+name: MixItUp3
 
 # Name that is displayed in the Loupedeck configuration application.
 displayName: Mix It Up
@@ -15,7 +15,7 @@ displayName: Mix It Up
 pluginFileName: MixItUp.LoupedeckPlugin.dll
 
 # Plugin version.
-version: 0.3
+version: 0.3.1
 
 # Author of the plugin. The author can be a company or an individual developer.
 author: Blazing Cacti LLC
@@ -47,13 +47,14 @@ supportedDevices:
 # List of plugin capabilities.
 pluginCapabilities:
     # Uncomment the following line if this plugin is an application plugin.
-    - HasApplication
+    #- HasApplication
 
     # Uncomment the following line if the plugin sends keyboard shortcuts to the target application.
     #- ActivatesApplication
 
 # Minimum Loupedeck version supported by the plugin.
 minimumLoupedeckVersion: 5.7
+
 
 # ==================================================================================================
 # LOUPEDECK MARKETPLACE SETTINGS

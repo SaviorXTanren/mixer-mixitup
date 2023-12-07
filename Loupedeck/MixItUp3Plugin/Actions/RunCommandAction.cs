@@ -1,34 +1,50 @@
-using Loupedeck;
+﻿using Loupedeck;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.LoupedeckPlugin
+namespace Loupedeck.MixItUp3Plugin.Actions
 {
     public class RunCommandAction : PluginDynamicCommand
     {
         private CancellationTokenSource cancellationTokenSource;
+
+        protected override Boolean OnLoad()
+        {
+            this.cancellationTokenSource = new CancellationTokenSource();
+            _ = this.BackgroundRefreshAsync(this.cancellationTokenSource.Token);
+            return base.OnLoad();
+        }
+
+        protected override Boolean OnUnload()
+        {
+            this.cancellationTokenSource.Cancel();
+            this.cancellationTokenSource.Dispose();
+            return base.OnUnload();
+        }
+
+        //protected override bool OnLoad()
+        //{
+        //    //this.cancellationTokenSource = new CancellationTokenSource();
+        //    //_ = BackgroundRefreshAsync(this.cancellationTokenSource.Token);
+        //    return true;
+        //}
+
+        //protected override bool OnUnload()
+        //{
+        //    //this.cancellationTokenSource.Cancel();
+        //    //this.cancellationTokenSource.Dispose();
+        //    return true;
+        //}
+
+        // This method is called when the user executes the command.
         protected override async void RunCommand(String actionParameter)
         {
             if (Guid.TryParse(actionParameter, out var commandId))
             {
                 await MixItUp.API.Commands.RunCommandAsync(commandId);
             }
-        }
-
-        protected override bool OnLoad()
-        {
-            this.cancellationTokenSource = new CancellationTokenSource();
-            _ = BackgroundRefreshAsync(this.cancellationTokenSource.Token);
-            return true;
-        }
-
-        protected override bool OnUnload()
-        {
-            this.cancellationTokenSource.Cancel();
-            this.cancellationTokenSource.Dispose();
-            return true;
         }
 
         private async Task BackgroundRefreshAsync(CancellationToken cancellationToken)

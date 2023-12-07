@@ -1,15 +1,16 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Mix It Up Plugin for Loupedeck")]
+[assembly: AssemblyTitle("MixItUp3 plugin for Loupedeck")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Blazing Cacti LLC")]
-[assembly: AssemblyProduct("Blazing Cacti LLC")]
-[assembly: AssemblyCopyright("Copyright (c) 2022 Blazing Cacti LLC. All rights reserved.")]
+[assembly: AssemblyCompany("LoupeDeck Oy")]
+[assembly: AssemblyProduct("Loupedeck2")]
+[assembly: AssemblyCopyright("Copyright ? 2018-YYYY LoupeDeck Oy. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7CB897C2-1EE5-46D1-AB72-15FDFC77B325")]
+[assembly: Guid("60026364-C93F-45D0-A8B9-89D239C63C3F")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -30,4 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("5.3.1.14222")]
+// [assembly: AssemblyVersion("5.8.0.17786")]
+[assembly: AssemblyVersion("5.8.0.17786")]

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7CB897C2-1EE5-46D1-AB72-15FDFC77B325}</ProjectGuid>
+    <ProjectGuid>{60026364-C93F-45D0-A8B9-89D239C63C3F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MixItUp.LoupedeckPlugin</RootNamespace>
@@ -20,8 +20,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath Condition="$(OS) == 'Windows_NT'">$(LocalAppData)\Loupedeck\Plugins\MixItUp\win\</OutputPath>
-    <OutputPath Condition="$(OS) != 'Windows_NT'">$(HOME)/.local/share/Loupedeck/Plugins/MixItUp/mac/</OutputPath>
+    <OutputPath Condition="$(OS) == 'Windows_NT'">$(LocalAppData)\Loupedeck\Plugins\MixItUp3\win\</OutputPath>
+    <OutputPath Condition="$(OS) != 'Windows_NT'">$(HOME)/.local/share/Loupedeck/Plugins/MixItUp3/mac/</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -52,10 +52,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MixItUpApplication.cs" />
-    <Compile Include="MixItUpPlugin.cs" />
     <Compile Include="Actions\RunCommandAction.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MixItUp3Application.cs" />
+    <Compile Include="MixItUp3Plugin.cs" />
+    <Compile Include="Helpers\PluginLog.cs" />
+    <Compile Include="Helpers\PluginResources.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="metadata\LoupedeckPackage.yaml" />
@@ -64,16 +66,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\APIs\MixItUp.API\MixItUp.API.csproj">
-      <Project>{6ead4ad5-3606-42b0-a2da-13848a0d4076}</Project>
+    <ProjectReference Include="E:\Git\SaviorXTanren\mixer-mixitup\APIs\MixItUp.API\MixItUp.API.csproj">
+      <Project>{08804e20-737e-4b04-aa66-1813f7720a40}</Project>
       <Name>MixItUp.API</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="metadata\Icon16x16.png" />
-    <Content Include="metadata\Icon256x256.png" />
-    <Content Include="metadata\Icon32x32.png" />
-    <Content Include="metadata\Icon48x48.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
