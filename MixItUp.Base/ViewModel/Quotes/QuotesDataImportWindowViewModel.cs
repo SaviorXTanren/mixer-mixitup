@@ -139,10 +139,16 @@ namespace MixItUp.Base.ViewModel.Quotes
                         string fileContents = await ServiceManager.Get<IFileService>().ReadFile(this.QuotesDataFilePath);
                         if (!string.IsNullOrEmpty(fileContents))
                         {
+                            char separator = ',';
+                            if (fileContents.Contains('\t'))
+                            {
+                                separator = '\t';
+                            }    
+
                             foreach (string line in fileContents.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 List<string> splits = new List<string>();
-                                foreach (string split in line.Split(new char[] { '\t' }))
+                                foreach (string split in line.Split(new char[] { separator }))
                                 {
                                     splits.Add(split);
                                 }

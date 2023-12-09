@@ -793,11 +793,26 @@ namespace MixItUp.Base.Model.Settings
             }
 
             // Clear out unused Cooldown Groups and Command Groups
-            var allUsedCooldownGroupNames = this.Commands.Values.ToList().Select(c => c.Requirements?.Cooldown?.GroupName).Distinct();
-            var allUnusedCooldownGroupNames = this.CooldownGroupAmounts.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.CurrentCulture));
-            foreach (var unused in allUnusedCooldownGroupNames)
+            var unusedCooldownGroupNames = this.CooldownGroupAmounts.Select(c => c.Key).ToList();
+            foreach (var command in this.Commands.Values.ToList())
             {
-                this.CooldownGroupAmounts.Remove(unused.Key);
+                if (!string.IsNullOrEmpty(command.Requirements?.Cooldown?.GroupName))
+                {
+                    unusedCooldownGroupNames.Remove(command.Requirements?.Cooldown?.GroupName);
+                }
+            }
+
+            foreach (var product in this.RedemptionStoreProducts)
+            {
+                if (!string.IsNullOrEmpty(product.Value.Requirements?.Cooldown?.GroupName))
+                {
+                    unusedCooldownGroupNames.Remove(product.Value.Requirements?.Cooldown?.GroupName);
+                }
+            }
+
+            foreach (var unused in unusedCooldownGroupNames)
+            {
+                this.CooldownGroupAmounts.Remove(unused);
             }
 
             var allUsedCommandGroupNames = this.Commands.Values.ToList().Select(c => c.GroupName).Distinct();

@@ -20,6 +20,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
         None,
         Chat,
         Alerts,
+        [Obsolete]
         Statistics,
         GameQueue,
         [Obsolete]
