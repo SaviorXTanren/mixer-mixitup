@@ -3,6 +3,6 @@ Mix It Up: A top-tier stream bot with versatile tools for audience interaction, 
 
 Mix It Up is a feature-packed stream bot that offers versatile tools to enhance your stream. Our community-driven approach makes us a comprehensive stream bot.
 
-We support Twitch, Trovo, and Glimesh with a user-friendly interface for creating appealing and interactive streams.
+We support Twitch, Trovo, and YouTube with a user-friendly interface for creating appealing and interactive streams.
 
 Open-source and transparent data practices ensure your data is safe. Add custom commands, chat games, and interactive features. Try it out and discover why we're the go-to stream bot for streamers worldwide.
