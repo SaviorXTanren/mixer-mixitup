@@ -45,7 +45,7 @@
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.24" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.76" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.77" />
     <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.21" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
