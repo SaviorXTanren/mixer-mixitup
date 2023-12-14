@@ -97,9 +97,8 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["message"] = "Test Message";
                     break;
                 case EventTypeEnum.TwitchChannelAdUpcoming:
-                    specialIdentifiers["adduration"] = "60";
-                    specialIdentifiers["adprerollduration"] = "90";
                     specialIdentifiers["adsnoozecount"] = "3";
+                    specialIdentifiers["adnextduration"] = "60";
                     specialIdentifiers["adnextminutes"] = "30";
                     specialIdentifiers["adnexttime"] = DateTimeOffset.Now.ToFriendlyTimeString();
                     break;
