@@ -26,6 +26,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericTextSettingsOptionControlViewModel DelimitedArgumentSeparator { get; set; }
 
         public GenericToggleSettingsOptionControlViewModel TwitchReplyToCommandChatMessages { get; set; }
+        public GenericNumberSettingsOptionControlViewModel TwitchUpcomingAdCommandTriggerAmount { get; set; }
 
         public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>();
 
@@ -55,6 +56,8 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.TwitchReplyToCommandChatMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchReplyToCommandChatMessages, ChannelSession.Settings.TwitchReplyToCommandChatMessages,
                 (value) => { ChannelSession.Settings.TwitchReplyToCommandChatMessages = value; });
+            this.TwitchUpcomingAdCommandTriggerAmount = new GenericNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchUpcomingAdCommandTriggerAmount, ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount,
+                (value) => { ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount = value; });
 
             List<ActionTypeEnum> actions = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
             actions.Remove(ActionTypeEnum.Custom);

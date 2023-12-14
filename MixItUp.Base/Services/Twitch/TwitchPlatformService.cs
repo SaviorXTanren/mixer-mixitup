@@ -36,6 +36,7 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.channel__edit__commercial,
 
+            OAuthClientScopeEnum.channel__manage__ads,
             OAuthClientScopeEnum.channel__manage__broadcast,
             OAuthClientScopeEnum.channel__manage__moderators,
             OAuthClientScopeEnum.channel__manage__polls,
@@ -46,6 +47,7 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.channel__moderate,
 
+            OAuthClientScopeEnum.channel__read__ads,
             OAuthClientScopeEnum.channel__read__charity,
             OAuthClientScopeEnum.channel__read__editors,
             OAuthClientScopeEnum.channel__read__goals,
@@ -325,5 +327,9 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<IEnumerable<StreamModel>> GetTopStreams(int maxResults) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetTopStreams(maxResults)); }
 
         public async Task<IEnumerable<StreamModel>> GetFollowedStreams(UserModel broadcaster, int maxResults) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetFollowedStreams(broadcaster, maxResults)); }
+
+        public async Task<AdScheduleModel> GetAdSchedule(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Ads.GetAdSchedule(broadcaster)); }
+
+        public async Task<AdSnoozeResponseModel> SnoozeNextAd(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Ads.SnoozeNextAd(broadcaster)); }
     }
 }

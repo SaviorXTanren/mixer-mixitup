@@ -5,14 +5,12 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI;
 using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
 using Twitch.Base.Models.NewAPI.Channels;
@@ -52,6 +50,7 @@ namespace MixItUp.Base.Model.Actions
         SendChatAnnouncement,
         SendShoutout,
         SetContentClassificationLabels,
+        SnoozeNextAd,
     }
 
     public enum TwitchAnnouncementColor
@@ -714,6 +713,10 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, cclIdsToAdd: cclIdsToAdd, cclIdsToRemove: cclIdsToRemove);
+                }
+                else if (this.ActionType == TwitchActionType.SnoozeNextAd)
+                {
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.SnoozeNextAd(ServiceManager.Get<TwitchSessionService>().User);
                 }
             }
         }

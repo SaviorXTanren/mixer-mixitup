@@ -315,6 +315,8 @@ namespace MixItUp.Base.Services.Twitch
             { ChannelFollowEventSubSubscription, "2" },
             { ChannelRaidEventSubSubscription, null },
 
+            { "channel.ad_break.begin", null },
+
             { "channel.hype_train.begin", null },
             { "channel.hype_train.progress", null },
             { "channel.hype_train.end", null },
@@ -411,35 +413,45 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void EventSub_OnNotificationMessageReceived(object sender, NotificationMessage message)
         {
-            switch (message.Metadata.SubscriptionType)
+            try
             {
-                case "stream.online":
-                    await HandleOnline(message.Payload.Event);
-                    break;
-                case "stream.offline":
-                    await HandleOffline(message.Payload.Event);
-                    break;
-                case "channel.update":
-                    await HandleChannelUpdate(message.Payload.Event);
-                    break;
-                case ChannelFollowEventSubSubscription:
-                    await HandleFollow(message.Payload.Event);
-                    break;
-                case ChannelRaidEventSubSubscription:
-                    await HandleRaid(message.Payload.Event);
-                    break;
-                case "channel.hype_train.begin":
-                    await HandleHypeTrainBegin(message.Payload.Event);
-                    break;
-                case "channel.hype_train.progress":
-                    await HandleHypeTrainProgress(message.Payload.Event);
-                    break;
-                case "channel.hype_train.end":
-                    await HandleHypeTrainEnd(message.Payload.Event);
-                    break;
-                case "channel.charity_campaign.donate":
-                    await HandleCharityCampaignDonation(message.Payload.Event);
-                    break;
+                switch (message.Metadata.SubscriptionType)
+                {
+                    case "stream.online":
+                        await HandleOnline(message.Payload.Event);
+                        break;
+                    case "stream.offline":
+                        await HandleOffline(message.Payload.Event);
+                        break;
+                    case "channel.update":
+                        await HandleChannelUpdate(message.Payload.Event);
+                        break;
+                    case ChannelFollowEventSubSubscription:
+                        await HandleFollow(message.Payload.Event);
+                        break;
+                    case ChannelRaidEventSubSubscription:
+                        await HandleRaid(message.Payload.Event);
+                        break;
+                    case "channel.ad_break.begin":
+                        await HandleChannelAdBreakBegin(message.Payload.Event);
+                        break;
+                    case "channel.hype_train.begin":
+                        await HandleHypeTrainBegin(message.Payload.Event);
+                        break;
+                    case "channel.hype_train.progress":
+                        await HandleHypeTrainProgress(message.Payload.Event);
+                        break;
+                    case "channel.hype_train.end":
+                        await HandleHypeTrainEnd(message.Payload.Event);
+                        break;
+                    case "channel.charity_campaign.donate":
+                        await HandleCharityCampaignDonation(message.Payload.Event);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
@@ -549,6 +561,35 @@ namespace MixItUp.Base.Services.Twitch
             parameters.SpecialIdentifiers["streamgame"] = payload["category_name"].ToString();
 
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUpdated, parameters);
+        }
+
+        private async Task HandleChannelAdBreakBegin(JObject payload)
+        {
+            int.TryParse(payload["duration_seconds"].Value<string>(), out int duration);
+            bool.TryParse(payload["is_automatic"].Value<string>(), out bool isAutomatic);
+
+            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+            eventCommandSpecialIdentifiers["adduration"] = duration.ToString();
+            eventCommandSpecialIdentifiers["adisautomatic"] = isAutomatic.ToString();
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdStarted, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
+
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.AlertTwitchAdStarted, duration), ChannelSession.Settings.AlertTwitchAdsColor));
+
+            if (duration > 0)
+            {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunAsyncBackground(async (token) =>
+                {
+                    await Task.Delay(duration * 1000);
+
+                    eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                    eventCommandSpecialIdentifiers["adduration"] = duration.ToString();
+                    eventCommandSpecialIdentifiers["adisautomatic"] = isAutomatic.ToString();
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdEnded, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
+
+                }, CancellationToken.None);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
         }
 
         private async Task HandleHypeTrainBegin(JObject payload)

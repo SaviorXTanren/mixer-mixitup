@@ -67,6 +67,10 @@ namespace MixItUp.Base.Services
         TwitchChannelSubscriptionGifted = 222,
         TwitchChannelMassSubscriptionsGifted = 223,
 
+        TwitchChannelAdUpcoming = 250,
+        TwitchChannelAdStarted = 251,
+        TwitchChannelAdEnded = 252,
+
         TwitchChannelBitsCheered = 270,
         TwitchChannelPointsRedeemed = 271,
         TwitchChannelCharityDonation = 272,

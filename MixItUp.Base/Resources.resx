@@ -10322,4 +10322,26 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="IgnoreUsageRequirements" xml:space="preserve">
     <value>Ignore Usage Requirements</value>
   </data>
+  <data name="TwitchChannelAdEnded" xml:space="preserve">
+    <value>Twitch Channel Ad Ended</value>
+  </data>
+  <data name="TwitchChannelAdStarted" xml:space="preserve">
+    <value>Twitch Channel Ad Started</value>
+  </data>
+  <data name="TwitchChannelAdUpcoming" xml:space="preserve">
+    <value>Twitch Channel Ad Upcoming</value>
+  </data>
+  <data name="ShowTwitchAds" xml:space="preserve">
+    <value>Show Twitch Ads</value>
+  </data>
+  <data name="AlertTwitchAdStarted" xml:space="preserve">
+    <value>Twitch Ad Started - Duration {0} Seconds</value>
+    <comment>{0} = The amount of seconds of the ad</comment>
+  </data>
+  <data name="SnoozeNextAd" xml:space="preserve">
+    <value>Snooze Next Ad</value>
+  </data>
+  <data name="TwitchUpcomingAdCommandTriggerAmount" xml:space="preserve">
+    <value>Twitch Upcoming Ad Command Amount (Minutes)</value>
+  </data>
 </root>

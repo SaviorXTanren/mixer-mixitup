@@ -817,6 +817,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Ad Started - Duration {0} Seconds.
+        /// </summary>
+        public static string AlertTwitchAdStarted {
+            get {
+                return ResourceManager.GetString("AlertTwitchAdStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Cheered {1} Bits.
         /// </summary>
         public static string AlertTwitchBitsCheered {
@@ -18882,6 +18891,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Twitch Ads.
+        /// </summary>
+        public static string ShowTwitchAds {
+            get {
+                return ResourceManager.GetString("ShowTwitchAds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Twitch Bits Cheered.
         /// </summary>
         public static string ShowTwitchBitsCheered {
@@ -19067,6 +19085,15 @@ namespace MixItUp.Base {
         public static string Slow {
             get {
                 return ResourceManager.GetString("Slow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Snooze Next Ad.
+        /// </summary>
+        public static string SnoozeNextAd {
+            get {
+                return ResourceManager.GetString("SnoozeNextAd", resourceCulture);
             }
         }
         
@@ -22297,6 +22324,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Ad Ended.
+        /// </summary>
+        public static string TwitchChannelAdEnded {
+            get {
+                return ResourceManager.GetString("TwitchChannelAdEnded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Ad Started.
+        /// </summary>
+        public static string TwitchChannelAdStarted {
+            get {
+                return ResourceManager.GetString("TwitchChannelAdStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Ad Upcoming.
+        /// </summary>
+        public static string TwitchChannelAdUpcoming {
+            get {
+                return ResourceManager.GetString("TwitchChannelAdUpcoming", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Channel Bits Cheered.
         /// </summary>
         public static string TwitchChannelBitsCheered {
@@ -22788,6 +22842,15 @@ namespace MixItUp.Base {
         public static string TwitchTurbo {
             get {
                 return ResourceManager.GetString("TwitchTurbo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Upcoming Ad Command Amount (Minutes).
+        /// </summary>
+        public static string TwitchUpcomingAdCommandTriggerAmount {
+            get {
+                return ResourceManager.GetString("TwitchUpcomingAdCommandTriggerAmount", resourceCulture);
             }
         }
         
