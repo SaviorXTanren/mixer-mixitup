@@ -17,7 +17,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             get
             {
                 CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsPrimary && !c.IsRank);
-                if (currency != null)
+                if (currency == null)
                 {
                     currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank);
                 }

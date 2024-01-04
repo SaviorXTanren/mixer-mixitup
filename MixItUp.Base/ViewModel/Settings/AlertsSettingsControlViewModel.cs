@@ -18,6 +18,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericColorComboBoxSettingsOptionControlViewModel TwitchBitsCheered { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel TwitchChannelPoints { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel TwitchHypeTrain { get; set; }
+        public GenericColorComboBoxSettingsOptionControlViewModel TwitchAds { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel YouTubeSuperChat { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel TrovoSpellCast { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel Donation { get; set; }
@@ -39,6 +40,7 @@ namespace MixItUp.Base.ViewModel.Settings
             this.TwitchBitsCheered = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowTwitchBitsCheered, ChannelSession.Settings.AlertTwitchBitsCheeredColor, (value) => { ChannelSession.Settings.AlertTwitchBitsCheeredColor = value; });
             this.TwitchChannelPoints = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowTwitchChannelPoints, ChannelSession.Settings.AlertTwitchChannelPointsColor, (value) => { ChannelSession.Settings.AlertTwitchChannelPointsColor = value; });
             this.TwitchHypeTrain = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowTwitchHypeTrain, ChannelSession.Settings.AlertTwitchHypeTrainColor, (value) => { ChannelSession.Settings.AlertTwitchHypeTrainColor = value; });
+            this.TwitchAds = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowTwitchAds, ChannelSession.Settings.AlertTwitchAdsColor, (value) => { ChannelSession.Settings.AlertTwitchAdsColor = value; });
             this.YouTubeSuperChat = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowYouTubeSuperChat, ChannelSession.Settings.AlertYouTubeSuperChatColor, (value) => { ChannelSession.Settings.AlertYouTubeSuperChatColor = value; });
             this.TrovoSpellCast = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowTrovoSpellCast, ChannelSession.Settings.AlertTrovoSpellCastColor, (value) => { ChannelSession.Settings.AlertTrovoSpellCastColor = value; });
             this.Donation = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowDonations, ChannelSession.Settings.AlertDonationColor, (value) => { ChannelSession.Settings.AlertDonationColor = value; });

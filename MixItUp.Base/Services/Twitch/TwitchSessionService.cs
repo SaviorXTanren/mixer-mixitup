@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Models.NewAPI.Streams;
@@ -22,7 +24,9 @@ namespace MixItUp.Base.Services.Twitch
         public UserModel Bot { get; set; }
         public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
-        public List<ChannelContentClassificationLabelModel> ContentClassificationLabels = new List<ChannelContentClassificationLabelModel>();
+        public List<ChannelContentClassificationLabelModel> ContentClassificationLabels { get; private set; } = new List<ChannelContentClassificationLabelModel>();
+        public AdScheduleModel AdSchedule { get; set; }
+        public DateTimeOffset NextAdTimestamp { get; set; } = DateTimeOffset.MinValue;
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -376,6 +380,32 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.game_name);
                     }
+
+                    AdScheduleModel adSchedule = await this.UserConnection.GetAdSchedule(this.User);
+                    if (adSchedule != null)
+                    {
+                        this.AdSchedule = adSchedule;
+                    }
+
+                    if (this.AdSchedule != null)
+                    {
+                        DateTimeOffset nextAd = adSchedule.NextAdTimestamp();
+                        if (nextAd > this.NextAdTimestamp)
+                        {
+                            int nextAdMinutes = this.AdSchedule.NextAdMinutesFromNow();
+                            if (nextAdMinutes <= ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount)
+                            {
+                                this.NextAdTimestamp = nextAd;
+
+                                Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                                eventCommandSpecialIdentifiers["adsnoozecount"] = this.AdSchedule.snooze_count.ToString();
+                                eventCommandSpecialIdentifiers["adnextduration"] = this.AdSchedule.duration.ToString();
+                                eventCommandSpecialIdentifiers["adnextminutes"] = nextAdMinutes.ToString();
+                                eventCommandSpecialIdentifiers["adnexttime"] = nextAd.ToFriendlyTimeString();
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdUpcoming, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -436,6 +466,28 @@ namespace MixItUp.Base.Services.Twitch
         public static bool IsGlobalMod(this UserModel twitchUser)
         {
             return string.Equals(twitchUser.type, "global_mod", StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    public static class TwitchNewAPIAdScheduleExtensions
+    {
+        public static DateTimeOffset NextAdTimestamp(this AdScheduleModel schedule)
+        {
+            if (long.TryParse(schedule.next_ad_at, out long seconds) && seconds > 0)
+            {
+                return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
+            }
+            return DateTimeOffset.MinValue;
+        }
+
+        public static int NextAdMinutesFromNow(this AdScheduleModel schedule)
+        {
+            DateTimeOffset nextAd = schedule.NextAdTimestamp();
+            if (nextAd != DateTimeOffset.MinValue)
+            {
+                return (int)(nextAd - DateTimeOffset.Now).TotalMinutes;
+            }
+            return 0;
         }
     }
 }

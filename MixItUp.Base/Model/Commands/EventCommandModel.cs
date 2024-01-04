@@ -95,6 +95,17 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["rewardcost"] = "100";
                     specialIdentifiers["message"] = "Test Message";
                     break;
+                case EventTypeEnum.TwitchChannelAdUpcoming:
+                    specialIdentifiers["adsnoozecount"] = "3";
+                    specialIdentifiers["adnextduration"] = "60";
+                    specialIdentifiers["adnextminutes"] = "30";
+                    specialIdentifiers["adnexttime"] = DateTimeOffset.Now.ToFriendlyTimeString();
+                    break;
+                case EventTypeEnum.TwitchChannelAdStarted:
+                case EventTypeEnum.TwitchChannelAdEnded:
+                    specialIdentifiers["adduration"] = "60";
+                    specialIdentifiers["adisautomatic"] = "true";
+                    break;
                 case EventTypeEnum.TwitchChannelHypeChat:
                     specialIdentifiers["hypechatamountnumberdigits"] = "123";
                     specialIdentifiers["hypechatamountnumber"] = "1.23";

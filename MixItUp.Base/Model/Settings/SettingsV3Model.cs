@@ -233,6 +233,8 @@ namespace MixItUp.Base.Model.Settings
         public int TwitchMassGiftedSubsFilterAmount { get; set; } = 1;
         [DataMember]
         public bool TwitchReplyToCommandChatMessages { get; set; }
+        [DataMember]
+        public int TwitchUpcomingAdCommandTriggerAmount { get; set; } = 5;
 
         [DataMember]
         public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();
@@ -271,6 +273,8 @@ namespace MixItUp.Base.Model.Settings
         public string AlertTwitchChannelPointsColor { get; set; }
         [DataMember]
         public string AlertTwitchHypeTrainColor { get; set; }
+        [DataMember]
+        public string AlertTwitchAdsColor { get; set; }
         [DataMember]
         public string AlertYouTubeSuperChatColor { get; set; }
         [DataMember]

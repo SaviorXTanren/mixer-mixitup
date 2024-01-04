@@ -58,6 +58,7 @@ namespace MixItUp.Base.Model.Actions
         SendChatAnnouncement,
         SendShoutout,
         SetContentClassificationLabels,
+        SnoozeNextAd,
         SetChatSettings,
     }
 
@@ -805,6 +806,10 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, cclIdsToAdd: cclIdsToAdd, cclIdsToRemove: cclIdsToRemove);
+                }
+                else if (this.ActionType == TwitchActionType.SnoozeNextAd)
+                {
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.SnoozeNextAd(ServiceManager.Get<TwitchSessionService>().User);
                 }
             }
         }
