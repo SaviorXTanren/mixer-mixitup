@@ -62,7 +62,7 @@ namespace MixItUp.Base.Model.Actions
     }
 
     [DataContract]
-    public class ConditionalActionModel : ActionModelBase
+    public class ConditionalActionModel : ActionWithSubActionsModelBase
     {
         [DataMember]
         public bool CaseSensitive { get; set; }
@@ -76,9 +76,6 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public Guid CommandID { get; set; }
-
-        [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
         public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, bool repeatWhileTrue, IEnumerable<ConditionalClauseModel> clauses, IEnumerable<ActionModelBase> actions)
             : base(ActionTypeEnum.Conditional)

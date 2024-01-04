@@ -72,17 +72,7 @@ namespace MixItUp.WPF.Windows.Commands
                     }
 
                     this.uploadCommand.Tags.Clear();
-                    foreach (ActionModelBase action in this.command.Actions)
-                    {
-                        if (action is ConditionalActionModel)
-                        {
-                            foreach (ActionModelBase subAction in ((ConditionalActionModel)action).Actions)
-                            {
-                                this.uploadCommand.Tags.Add((CommunityCommandTagEnum)subAction.Type);
-                            }
-                        }
-                        this.uploadCommand.Tags.Add((CommunityCommandTagEnum)action.Type);
-                    }
+                    this.SetActionTags(this.uploadCommand.Tags, this.command.Actions);
 
                     switch (this.command.Type)
                     {
@@ -131,6 +121,18 @@ namespace MixItUp.WPF.Windows.Commands
             catch (Exception ex)
             {
                 Logger.Log(ex);
+            }
+        }
+
+        private void SetActionTags(HashSet<CommunityCommandTagEnum> tags, IEnumerable<ActionModelBase> actions)
+        {
+            foreach (ActionModelBase action in actions)
+            {
+                if (action is ActionWithSubActionsModelBase)
+                {
+                    this.SetActionTags(tags, ((ActionWithSubActionsModelBase)action).Actions);
+                }
+                this.uploadCommand.Tags.Add((CommunityCommandTagEnum)action.Type);
             }
         }
 

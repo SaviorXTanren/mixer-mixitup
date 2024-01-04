@@ -32,6 +32,7 @@ namespace MixItUp.Base.Model.Store
         Discord,
         [Obsolete]
         Translation,
+        [Obsolete]
         Twitter,
         Conditional,
         StreamingSoftware,
@@ -48,8 +49,13 @@ namespace MixItUp.Base.Model.Store
         YouTube,
         Trovo,
         PolyPop,
+        SAMMI,
+        InfiniteAlbum,
+        TITS,
+        MusicPlayer,
+        LumiaStream,
+        Random,
         Script,
-        InfniteAlbum,
 
         // Command Tags
         ChatCommand = 1000,

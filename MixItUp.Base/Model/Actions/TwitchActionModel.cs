@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Actions
     }
 
     [DataContract]
-    public class TwitchActionModel : ActionModelBase
+    public class TwitchActionModel : ActionWithSubActionsModelBase
     {
         public const string ClipURLSpecialIdentifier = "clipurl";
         public const string PollChoiceSpecialIdentifier = "pollchoice";
@@ -293,9 +293,6 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string TimeLength { get; set; }
-
-        [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
         [DataMember]
         public string Message { get; set; }

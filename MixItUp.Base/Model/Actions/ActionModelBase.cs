@@ -136,4 +136,16 @@ namespace MixItUp.Base.Model.Actions
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
+
+    [DataContract]
+    public abstract class ActionWithSubActionsModelBase : ActionModelBase
+    {
+        [DataMember]
+        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
+
+        public ActionWithSubActionsModelBase(ActionTypeEnum type) : base(type) { }
+
+        [Obsolete]
+        public ActionWithSubActionsModelBase() { }
+    }
 }

@@ -76,9 +76,6 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public int Amount { get; set; }
 
-        [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
-
         private TrovoActionModel(TrovoActionType type)
             : base(ActionTypeEnum.Trovo)
         {

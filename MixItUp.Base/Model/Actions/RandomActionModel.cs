@@ -9,16 +9,13 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
 {
-    public class RandomActionModel : ActionModelBase
+    public class RandomActionModel : ActionWithSubActionsModelBase
     {
         [DataMember]
         public string Amount { get; set; }
 
         [DataMember]
         public bool NoDuplicates { get; set; }
-
-        [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
         public RandomActionModel(string amount, bool noDuplicates, IEnumerable<ActionModelBase> actions)
             : base(ActionTypeEnum.Random)

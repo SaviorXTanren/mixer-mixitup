@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -43,9 +42,6 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public int Amount { get; set; }
-
-        [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
         private YouTubeActionModel(YouTubeActionType type)
             : base(ActionTypeEnum.YouTube)
