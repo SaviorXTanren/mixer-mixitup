@@ -5,14 +5,12 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI;
 using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
 using Twitch.Base.Models.NewAPI.Channels;
@@ -38,13 +36,21 @@ namespace MixItUp.Base.Model.Actions
         UpdateChannelPointReward,
         CreatePoll,
         CreatePrediction,
+        [Obsolete]
         EnableEmoteOnly,
+        [Obsolete]
         DisableEmoteOnly,
+        [Obsolete]
         EnableFollowersOnly,
+        [Obsolete]
         DisableFollowersOnly,
+        [Obsolete]
         EnableSlowChat,
+        [Obsolete]
         DisableSlowChat,
+        [Obsolete]
         EnableSubscribersChat,
+        [Obsolete]
         DisableSubscriberChat,
         SetTitle,
         SetGame,
@@ -52,6 +58,7 @@ namespace MixItUp.Base.Model.Actions
         SendChatAnnouncement,
         SendShoutout,
         SetContentClassificationLabels,
+        SetChatSettings,
     }
 
     public enum TwitchAnnouncementColor
@@ -190,6 +197,18 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
+        public static TwitchActionModel CreateSetChatSettingsAction(int? slowModeDuration, int? followerModeDuration, bool? subscriberMode, bool? emoteMode, bool? uniqueChatMode, int? nonModeratorChatDuration)
+        {
+            TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.SetChatSettings);
+            actionModel.ChatSettingsSlowModeDuration = slowModeDuration;
+            actionModel.ChatSettingsFollowerModeDuration = followerModeDuration;
+            actionModel.ChatSettingsSubscriberMode = subscriberMode;
+            actionModel.ChatSettingsEmoteMode = emoteMode;
+            actionModel.ChatSettingsUniqueChatMode = uniqueChatMode;
+            actionModel.ChatSettingsNonModeratorChatDuration = nonModeratorChatDuration;
+            return actionModel;
+        }
+
         public static TwitchActionModel CreateAction(TwitchActionType type)
         {
             return new TwitchActionModel(type);
@@ -289,6 +308,19 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public List<string> ContentClassificationLabelIDs = new List<string>();
 
+        [DataMember]
+        public int? ChatSettingsSlowModeDuration = null;
+        [DataMember]
+        public int? ChatSettingsFollowerModeDuration = null;
+        [DataMember]
+        public bool? ChatSettingsSubscriberMode = null;
+        [DataMember]
+        public bool? ChatSettingsEmoteMode = null;
+        [DataMember]
+        public bool? ChatSettingsUniqueChatMode = null;
+        [DataMember]
+        public int? ChatSettingsNonModeratorChatDuration = null; 
+
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
         {
@@ -298,10 +330,59 @@ namespace MixItUp.Base.Model.Actions
         [Obsolete]
         public TwitchActionModel() { }
 
+        public void UpdateSetChatSettingsProperties()
+        {
+            #pragma warning disable CS0612 // Type or member is obsolete
+            int.TryParse(this.TimeLength, out int timeLength);
+
+            if (this.ActionType == TwitchActionType.EnableSlowChat)
+            {
+                this.ChatSettingsSlowModeDuration = timeLength;
+            }
+            else if (this.ActionType == TwitchActionType.DisableSlowChat)
+            {
+                this.ChatSettingsSlowModeDuration = 0;
+            }
+            else if (this.ActionType == TwitchActionType.EnableFollowersOnly)
+            {
+                this.ChatSettingsFollowerModeDuration = timeLength;
+            }
+            else if (this.ActionType == TwitchActionType.DisableFollowersOnly)
+            {
+                this.ChatSettingsFollowerModeDuration = 0;
+            }
+            else if (this.ActionType == TwitchActionType.EnableEmoteOnly)
+            {
+                this.ChatSettingsEmoteMode = true;
+            }
+            else if (this.ActionType == TwitchActionType.DisableEmoteOnly)
+            {
+                this.ChatSettingsEmoteMode = false;
+            }
+            else if (this.ActionType == TwitchActionType.EnableSubscribersChat)
+            {
+                this.ChatSettingsSubscriberMode = true;
+            }
+            else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
+            {
+                this.ChatSettingsSubscriberMode = false;
+            }
+            else
+            {
+                return;
+            }
+
+            this.ActionType = TwitchActionType.SetChatSettings;
+
+            #pragma warning restore CS0612 // Type or member is obsolete
+        }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
+                this.UpdateSetChatSettingsProperties();
+
                 if (this.ActionType == TwitchActionType.Raid)
                 {
                     string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
@@ -599,53 +680,63 @@ namespace MixItUp.Base.Model.Actions
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
-                else if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.DisableSlowChat ||
-                    this.ActionType == TwitchActionType.EnableEmoteOnly || this.ActionType == TwitchActionType.DisableEmoteOnly ||
-                    this.ActionType == TwitchActionType.EnableFollowersOnly || this.ActionType == TwitchActionType.DisableFollowersOnly ||
-                    this.ActionType == TwitchActionType.EnableSubscribersChat || this.ActionType == TwitchActionType.DisableSubscriberChat)
+                else if (this.ActionType == TwitchActionType.SetChatSettings)
                 {
                     ChatSettingsModel settings = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChatSettings(ServiceManager.Get<TwitchSessionService>().User);
                     if (settings != null)
                     {
-                        if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.EnableFollowersOnly)
+                        if (this.ChatSettingsSlowModeDuration != null)
                         {
-                            if (int.TryParse(await ReplaceStringWithSpecialModifiers(this.TimeLength, parameters), out int timeLength) && timeLength > 0)
+                            if (this.ChatSettingsSlowModeDuration > 0)
                             {
-                                if (this.ActionType == TwitchActionType.EnableSlowChat)
-                                {
-                                    settings.slow_mode = true;
-                                    settings.slow_mode_wait_time = timeLength;
-                                }
-                                else if (this.ActionType == TwitchActionType.EnableFollowersOnly)
-                                {
-                                    settings.follower_mode = true;
-                                    settings.follower_mode_duration = timeLength;
-                                }
+                                settings.slow_mode = true;
+                                settings.slow_mode_wait_time = this.ChatSettingsSlowModeDuration.GetValueOrDefault();
+                            }
+                            else
+                            {
+                                settings.slow_mode = false;
                             }
                         }
-                        else if (this.ActionType == TwitchActionType.DisableSlowChat)
+
+                        if (this.ChatSettingsFollowerModeDuration != null)
                         {
-                            settings.slow_mode = false;
+                            if (this.ChatSettingsFollowerModeDuration > 0)
+                            {
+                                settings.follower_mode = true;
+                                settings.follower_mode_duration = this.ChatSettingsFollowerModeDuration.GetValueOrDefault();
+                            }
+                            else
+                            {
+                                settings.follower_mode = false;
+                            }
                         }
-                        else if (this.ActionType == TwitchActionType.DisableFollowersOnly)
+
+                        if (this.ChatSettingsEmoteMode != null)
                         {
-                            settings.follower_mode = false;
+                            settings.emote_mode = this.ChatSettingsEmoteMode.GetValueOrDefault();
                         }
-                        else if (this.ActionType == TwitchActionType.EnableEmoteOnly)
+
+                        if (this.ChatSettingsSubscriberMode != null)
                         {
-                            settings.emote_mode = true;
+                            settings.subscriber_mode = this.ChatSettingsSubscriberMode.GetValueOrDefault();
                         }
-                        else if (this.ActionType == TwitchActionType.DisableEmoteOnly)
+
+                        if (this.ChatSettingsUniqueChatMode != null)
                         {
-                            settings.emote_mode = false;
+                            settings.unique_chat_mode = this.ChatSettingsUniqueChatMode.GetValueOrDefault();
                         }
-                        else if (this.ActionType == TwitchActionType.EnableSubscribersChat)
+
+                        if (this.ChatSettingsNonModeratorChatDuration != null)
                         {
-                            settings.subscriber_mode = true;
-                        }
-                        else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
-                        {
-                            settings.subscriber_mode = false;
+                            if (this.ChatSettingsNonModeratorChatDuration > 0)
+                            {
+                                settings.non_moderator_chat_delay = true;
+                                settings.non_moderator_chat_delay_duration = this.ChatSettingsNonModeratorChatDuration.GetValueOrDefault();
+                            }
+                            else
+                            {
+                                settings.non_moderator_chat_delay = false;
+                            }
                         }
 
                         await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChatSettings(ServiceManager.Get<TwitchSessionService>().User, settings);

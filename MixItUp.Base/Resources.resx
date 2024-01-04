@@ -9803,4 +9803,25 @@ namespace CustomNamespace
   <data name="RotatingDisplays" xml:space="preserve">
     <value>Rotating Displays</value>
   </data>
+  <data name="SetChatSettings" xml:space="preserve">
+    <value>Set Chat Settings</value>
+  </data>
+  <data name="EmoteMode" xml:space="preserve">
+    <value>Emote Mode</value>
+  </data>
+  <data name="FollowerMode" xml:space="preserve">
+    <value>Follower Mode</value>
+  </data>
+  <data name="NonModeratorChatDelay" xml:space="preserve">
+    <value>Non-Moderator Chat Delay</value>
+  </data>
+  <data name="SlowMode" xml:space="preserve">
+    <value>Slow Mode</value>
+  </data>
+  <data name="SubscriberMode" xml:space="preserve">
+    <value>Subscriber Mode</value>
+  </data>
+  <data name="UniqueChatMode" xml:space="preserve">
+    <value>Unique Chat Mode</value>
+  </data>
 </root>

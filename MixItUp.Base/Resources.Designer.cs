@@ -5541,6 +5541,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Emote Mode.
+        /// </summary>
+        public static string EmoteMode {
+            get {
+                return ResourceManager.GetString("EmoteMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Emotions.
         /// </summary>
         public static string Emotions {
@@ -7006,6 +7015,15 @@ namespace MixItUp.Base {
         public static string Follower {
             get {
                 return ResourceManager.GetString("Follower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Follower Mode.
+        /// </summary>
+        public static string FollowerMode {
+            get {
+                return ResourceManager.GetString("FollowerMode", resourceCulture);
             }
         }
         
@@ -13298,6 +13316,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Non-Moderator Chat Delay.
+        /// </summary>
+        public static string NonModeratorChatDelay {
+            get {
+                return ResourceManager.GetString("NonModeratorChatDelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Rank.
         /// </summary>
         public static string NoRank {
@@ -18023,6 +18050,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Chat Settings.
+        /// </summary>
+        public static string SetChatSettings {
+            get {
+                return ResourceManager.GetString("SetChatSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Command Cooldown.
         /// </summary>
         public static string SetCommandCooldown {
@@ -18696,6 +18732,15 @@ namespace MixItUp.Base {
         public static string Slow {
             get {
                 return ResourceManager.GetString("Slow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Slow Mode.
+        /// </summary>
+        public static string SlowMode {
+            get {
+                return ResourceManager.GetString("SlowMode", resourceCulture);
             }
         }
         
@@ -20076,6 +20121,15 @@ namespace MixItUp.Base {
         public static string SubscriberBonusZeroOrMore {
             get {
                 return ResourceManager.GetString("SubscriberBonusZeroOrMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subscriber Mode.
+        /// </summary>
+        public static string SubscriberMode {
+            get {
+                return ResourceManager.GetString("SubscriberMode", resourceCulture);
             }
         }
         
@@ -22687,6 +22741,15 @@ namespace MixItUp.Base {
         public static string Ungrouped {
             get {
                 return ResourceManager.GetString("Ungrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unique Chat Mode.
+        /// </summary>
+        public static string UniqueChatMode {
+            get {
+                return ResourceManager.GetString("UniqueChatMode", resourceCulture);
             }
         }
         

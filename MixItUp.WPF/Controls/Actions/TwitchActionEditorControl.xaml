@@ -243,14 +243,6 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowFollowersGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBox Text="{Binding TimeLength}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        </Grid>
-
-        <Grid Grid.Row="2" Visibility="{Binding ShowSlowChatGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBox Text="{Binding TimeLength}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Seconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        </Grid>
-
         <Grid Grid.Row="2" Visibility="{Binding ShowSendAnnouncementGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -284,6 +276,66 @@
 
         <Grid Grid.Row="2" Visibility="{Binding ShowSetContentClassificationLabelsGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TwitchControls:TwitchContentClassificationLabelsEditorControl DataContext="{Binding ContentClassificationLabelsEditor}" />
+        </Grid>
+
+        <Grid Grid.Row="2" Visibility="{Binding ShowSetChatSettingsGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="45" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="45" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.EmoteMode}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" IsThreeState="True" IsChecked="{Binding ChatSettingsEmoteMode}" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UniqueChatMode}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" IsThreeState="True" IsChecked="{Binding ChatSettingsUniqueChatMode}" />
+
+                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SubscriberMode}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" IsThreeState="True" IsChecked="{Binding ChatSettingsSubscriberMode}" />
+            </Grid>
+
+            <Grid Grid.Column="1" HorizontalAlignment="Left">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="45" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="45" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SlowMode}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" IsThreeState="True" IsChecked="{Binding ChatSettingsSlowMode}" />
+                <TextBox Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Text="{Binding ChatSettingsSlowModeDuration}" IsEnabled="{Binding ChatSettingsSlowModeEnabled}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Seconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FollowerMode}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" IsThreeState="True" IsChecked="{Binding ChatSettingsFollowerMode}" />
+                <TextBox Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Text="{Binding ChatSettingsFollowerModeDuration}" IsEnabled="{Binding ChatSettingsFollowerModeEnabled}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.NonModeratorChatDelay}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" IsThreeState="True" IsChecked="{Binding ChatSettingsNonModeratorChat}" />
+                <ComboBox Grid.Row="4" Grid.Column="4" ItemsSource="{Binding ChatSettingsNonModeratorChatDurations}" SelectedItem="{Binding SelectedChatSettingsNonModeratorChatDuration}" IsEnabled="{Binding ChatSettingsNonModeratorChatEnabled}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Seconds}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            </Grid>
         </Grid>
 
         <ActionControls:SubActionContainerControl Grid.Row="3" Visibility="{Binding ShowSubActions, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0" />
