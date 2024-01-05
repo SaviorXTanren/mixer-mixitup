@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
@@ -151,6 +152,40 @@ namespace MixItUp.Base.Services
         CrowdControlEffectRedeemed = 1110,
     }
 
+    public class SubscriptionDetailsModel
+    {
+        public UserV2ViewModel User { get; set; }
+        public StreamingPlatformTypeEnum Platform { get; set; }
+        public int Months { get; set; }
+
+        public int TwitchSubscriptionTier { get; set; }
+        public string YouTubeMembershipTier { get; set; }
+
+        public UserV2ViewModel Gifter { get; set; }
+
+        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, int months = 1, int? twitchSubscriptionTier = null, string youTubeMembershipTier = null)
+        {
+            this.Platform = platform;
+            this.User = user;
+            this.Months = months;
+
+            if (twitchSubscriptionTier != null)
+            {
+                this.TwitchSubscriptionTier = twitchSubscriptionTier.GetValueOrDefault();
+            }
+            if (!string.IsNullOrEmpty(youTubeMembershipTier))
+            {
+                this.YouTubeMembershipTier = youTubeMembershipTier;
+            }
+        }
+
+        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, UserV2ViewModel gifter, int months = 1, int? twitchSubscriptionTier = null, string youTubeMembershipTier = null)
+            : this(platform, user, months, twitchSubscriptionTier, youTubeMembershipTier)
+        {
+            this.Gifter = gifter;
+        }
+    }
+
     public class EventService
     {
         public static event EventHandler<UserV2ViewModel> OnFollowOccurred = delegate { };
@@ -159,17 +194,17 @@ namespace MixItUp.Base.Services
         public static event EventHandler<Tuple<UserV2ViewModel, int>> OnRaidOccurred = delegate { };
         public static void RaidOccurred(UserV2ViewModel user, int viewers) { OnRaidOccurred(null, new Tuple<UserV2ViewModel, int>(user, viewers)); }
 
-        public static event EventHandler<UserV2ViewModel> OnSubscribeOccurred = delegate { };
-        public static void SubscribeOccurred(UserV2ViewModel user) { OnSubscribeOccurred(null, user); }
+        public static event EventHandler<SubscriptionDetailsModel> OnSubscribeOccurred = delegate { };
+        public static void SubscribeOccurred(SubscriptionDetailsModel subscription) { OnSubscribeOccurred(null, subscription); }
 
-        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnResubscribeOccurred = delegate { };
-        public static void ResubscribeOccurred(UserV2ViewModel user, int months) { OnResubscribeOccurred(null, new Tuple<UserV2ViewModel, int>(user, months)); }
+        public static event EventHandler<SubscriptionDetailsModel> OnResubscribeOccurred = delegate { };
+        public static void ResubscribeOccurred(SubscriptionDetailsModel subscription) { OnResubscribeOccurred(null, subscription); }
 
-        public static event EventHandler<Tuple<UserV2ViewModel, UserV2ViewModel>> OnSubscriptionGiftedOccurred = delegate { };
-        public static void SubscriptionGiftedOccurred(UserV2ViewModel gifter, UserV2ViewModel receiver) { OnSubscriptionGiftedOccurred(null, new Tuple<UserV2ViewModel, UserV2ViewModel>(gifter, receiver)); }
+        public static event EventHandler<SubscriptionDetailsModel> OnSubscriptionGiftedOccurred = delegate { };
+        public static void SubscriptionGiftedOccurred(SubscriptionDetailsModel subscription) { OnSubscriptionGiftedOccurred(null, subscription); }
 
-        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnMassSubscriptionsGiftedOccurred = delegate { };
-        public static void MassSubscriptionsGiftedOccurred(UserV2ViewModel gifter, int amount) { OnMassSubscriptionsGiftedOccurred(null, new Tuple<UserV2ViewModel, int>(gifter, amount)); }
+        public static event EventHandler<IEnumerable<SubscriptionDetailsModel>> OnMassSubscriptionsGiftedOccurred = delegate { };
+        public static void MassSubscriptionsGiftedOccurred(IEnumerable<SubscriptionDetailsModel> subscriptions) { OnMassSubscriptionsGiftedOccurred(null, subscriptions); }
 
         public static event EventHandler<UserDonationModel> OnDonationOccurred = delegate { };
         public static void DonationOccurred(UserDonationModel donation) { OnDonationOccurred(null, donation); }

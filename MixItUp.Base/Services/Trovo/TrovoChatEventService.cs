@@ -532,12 +532,12 @@ namespace MixItUp.Base.Services.Trovo
 
                         if (subMessage.IsResub)
                         {
-                            EventService.ResubscribeOccurred(user, 1);
+                            EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user, months: subMessage.Months));
                             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribed, user.DisplayName, subMessage.Months), ChannelSession.Settings.AlertSubColor));
                         }
                         else
                         {
-                            EventService.SubscribeOccurred(user);
+                            EventService.SubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user));
                             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                         }
                     }
@@ -556,7 +556,13 @@ namespace MixItUp.Base.Services.Trovo
                         parameters.SpecialIdentifiers["isanonymous"] = false.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
 
-                        EventService.MassSubscriptionsGiftedOccurred(user, totalGifted);
+                        List<SubscriptionDetailsModel> subscriptions = new List<SubscriptionDetailsModel>();
+                        for (int i = 0; i < totalGifted; i++)
+                        {
+                            subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user));
+                        }
+
+                        EventService.MassSubscriptionsGiftedOccurred(subscriptions);
                     }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGifted, user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
                 }
@@ -607,7 +613,7 @@ namespace MixItUp.Base.Services.Trovo
 
                         await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscriptionGifted, user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
 
-                        EventService.SubscriptionGiftedOccurred(user, giftee);
+                        EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, giftee, user));
                     }
                 }
                 else if (message.type == ChatMessageTypeEnum.WelcomeMessageFromRaid)

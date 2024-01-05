@@ -175,9 +175,9 @@ namespace MixItUp.Base.Model.Overlay
 
                 await this.UpdateSubscribers();
 
-                EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
-                EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
-                EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+                //EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
+                //EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                //EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Donations)
             {
@@ -191,9 +191,9 @@ namespace MixItUp.Base.Model.Overlay
         {
             this.lastItems.Clear();
 
-            EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
+            //EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            //EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            //EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
 
             await base.Disable();

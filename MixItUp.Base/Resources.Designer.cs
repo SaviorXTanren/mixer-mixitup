@@ -18754,20 +18754,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Snooze Next Ad.
-        /// </summary>
-        public static string SnoozeNextAd {
-            get {
-                return ResourceManager.GetString("SnoozeNextAd", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Slow Mode.
         /// </summary>
         public static string SlowMode {
             get {
                 return ResourceManager.GetString("SlowMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Snooze Next Ad.
+        /// </summary>
+        public static string SnoozeNextAd {
+            get {
+                return ResourceManager.GetString("SnoozeNextAd", resourceCulture);
             }
         }
         

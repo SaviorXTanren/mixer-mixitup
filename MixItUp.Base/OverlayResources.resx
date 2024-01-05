@@ -922,6 +922,131 @@ function update(data)
 &lt;/div&gt;
 &lt;/div&gt;</value>
   </data>
+  <data name="OverlayStreamBossDefaultCSS" xml:space="preserve">
+    <value>.mainContainer {
+  display: flex;
+  border-style: solid;
+  border-width: 5px;
+  border-color: {BorderColor};
+  background-color: {BackgroundColor};
+  width: 450px;
+  height: 125px;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+.healthBarDamage {
+  background-color: {DamageColor};
+  height: 100%;
+}
+
+.healthRemainingBar {
+  background-color: {HealthColor};
+  height: 100%;
+}
+
+.imageContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2%;
+}
+
+.infoContainer {
+  flex: 3;
+  padding: 20px;
+}
+
+.infoContainerVerticalSplit {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.verticalFlexAuto {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.flexAuto {
+  flex: auto;
+}</value>
+  </data>
+  <data name="OverlayStreamBossDefaultHTML" xml:space="preserve">
+    <value>&lt;div class="mainContainer"&gt;
+  &lt;div class="imageContainer"&gt;
+    &lt;img id="bossImage" class="image"&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="infoContainer"&gt;
+    &lt;div class="infoContainerVerticalSplit"&gt;
+      &lt;div class="verticalFlexAuto"&gt;
+        &lt;div style="display: flex;"&gt;
+          &lt;span id="bossName" class="text flexAuto"&gt;&lt;/span&gt;
+
+          &lt;span class="text"&gt;
+            &lt;span id="bossHealth"&gt;&lt;/span&gt;
+            &lt;span&gt; / &lt;/span&gt;
+            &lt;span id="bossMaxHealth"&gt;&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      &lt;div class="verticalFlexAuto"&gt;
+        &lt;div class="healthBarDamage"&gt;
+          &lt;div id="bossHealthBarRemaining" class="healthRemainingBar" /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="OverlayStreamBossDefaultJavascript" xml:space="preserve">
+    <value>let bossImage = document.getElementById("bossImage");
+let bossName = document.getElementById("bossName");
+let bossHealth = document.getElementById("bossHealth");
+let bossMaxHealth = document.getElementById("bossMaxHealth");
+let bossHealthBarRemaining = document.getElementById("bossHealthBarRemaining");
+
+function damage(data)
+{
+    bossHealth.innerHTML = data.BossHealth;
+    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + "%";
+    {DamageAnimation}
+}
+
+function heal(data)
+{
+    bossHealth.innerHTML = data.BossHealth;
+    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + "%";
+    {HealingAnimation}
+}
+
+function newboss(data)
+{
+    bossImage.src = data.BossImage;
+    bossName.innerHTML = data.BossName;
+    bossHealth.innerHTML = data.BossHealth;
+    bossMaxHealth.innerHTML = data.BossMaxHealth;
+    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + "%";
+    {NewBossAnimation}
+}
+
+newboss({
+    "BossImage": "{BossImage}",
+    "BossName": "{BossName}",
+    "BossHealth": "{BossHealth}",
+    "BossMaxHealth": "{BossMaxHealth}",
+    "BossHealthBarRemaining": "{BossHealthBarRemaining}",
+});</value>
+  </data>
   <data name="OverlayTextDefaultCSS" xml:space="preserve">
     <value>.text {
     font-size: {FontSize}px;

@@ -101,9 +101,9 @@ namespace MixItUp.Base.Model.Overlay
             }
             if (this.SubscriberBonus > 0.0)
             {
-                EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
-                EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
-                EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+                //EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
+                //EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                //EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             if (this.DonationBonus > 0.0)
             {
@@ -129,9 +129,9 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task Disable()
         {
             EventService.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
+            //EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            //EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            //EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             EventService.OnTwitchBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
 

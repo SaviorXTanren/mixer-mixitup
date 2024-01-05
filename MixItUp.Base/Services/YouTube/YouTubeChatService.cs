@@ -388,7 +388,7 @@ namespace MixItUp.Base.Services.YouTube
                                     }
                                 }
 
-                                EventService.SubscribeOccurred(user);
+                                EventService.SubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.YouTube, user, youTubeMembershipTier: liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName));
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                             }
                         }
@@ -427,7 +427,7 @@ namespace MixItUp.Base.Services.YouTube
                                     }
                                 }
 
-                                EventService.ResubscribeOccurred(user, months);
+                                EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.YouTube, user, months: months, youTubeMembershipTier: liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberLevelName));
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribed, user.DisplayName, months), ChannelSession.Settings.AlertSubColor));
                             }
                         }
@@ -511,7 +511,7 @@ namespace MixItUp.Base.Services.YouTube
                                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMembershipGifted, parameters);
 
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(gifter, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, gifter.FullDisplayName, liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName, receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
-                                EventService.SubscriptionGiftedOccurred(gifter, user);
+                                EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.YouTube, user, gifter, youTubeMembershipTier: liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName));
                             }
                         }
                         else if (SuperChatEventMessageType.Equals(liveChatMessage.Snippet.Type))

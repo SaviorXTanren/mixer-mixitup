@@ -114,7 +114,7 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
 
-            properties["LabelAdds"] = string.Join("\n", labelAdds);
+            properties[LabelAdds] = string.Join("\n", labelAdds);
         }
 
         protected override async Task WidgetEnableInternal()
@@ -316,11 +316,11 @@ namespace MixItUp.Base.Model.Overlay
             await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestRaid);
         }
 
-        private async void EventService_OnSubscribeOccurred(object sender, UserV2ViewModel user)
+        private async void EventService_OnSubscribeOccurred(object sender, SubscriptionDetailsModel subscription)
         {
             if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled)
             {
-                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = user.ID;
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscription.User.ID;
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = 1;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriber);
             }
@@ -332,12 +332,12 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void EventService_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> resubscribe)
+        private async void EventService_OnResubscribeOccurred(object sender, SubscriptionDetailsModel subscription)
         {
             if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled)
             {
-                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = resubscribe.Item1.ID;
-                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = resubscribe.Item2;
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscription.User.ID;
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = subscription.Months;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriber);
             }
 
@@ -348,11 +348,11 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void EventService_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> subscriptionGifted)
+        private async void EventService_OnSubscriptionGiftedOccurred(object sender, SubscriptionDetailsModel subscription)
         {
             if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled)
             {
-                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscriptionGifted.Item2.ID;
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscription.User.ID;
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = 1;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriber);
             }
@@ -364,9 +364,9 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, Tuple<UserV2ViewModel, int> massSubscriptionsGifted)
+        private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
         {
-            this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount += massSubscriptionsGifted.Item2;
+            this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount += subscriptions.Count();
             await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
         }
 

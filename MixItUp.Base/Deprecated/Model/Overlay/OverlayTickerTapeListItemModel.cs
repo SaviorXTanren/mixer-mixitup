@@ -81,9 +81,9 @@ namespace MixItUp.Base.Model.Overlay
             }
             if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Subscribers)
             {
-                EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
-                EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
-                EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+                //EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
+                //EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                //EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Donations)
             {
@@ -101,8 +101,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             EventService.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             EventService.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
-            EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            //EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            //EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             EventService.OnTwitchBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
 

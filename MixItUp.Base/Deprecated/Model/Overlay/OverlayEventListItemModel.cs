@@ -85,9 +85,9 @@ namespace MixItUp.Base.Model.Overlay
             }
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Subscribers))
             {
-                EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
-                EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
-                EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+                //EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
+                //EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                //EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Donations))
             {
@@ -106,9 +106,9 @@ namespace MixItUp.Base.Model.Overlay
         {
             EventService.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             EventService.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
-            EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
+            //EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            //EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            //EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             StreamlootsService.OnStreamlootsPurchaseOccurred -= GlobalEvents_OnStreamlootsPurchaseOccurred;
             EventService.OnTwitchBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;

@@ -593,6 +593,95 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .mainContainer {
+        ///  display: flex;
+        ///  border-style: solid;
+        ///  border-width: 5px;
+        ///  border-color: {BorderColor};
+        ///  background-color: {BackgroundColor};
+        ///  width: 450px;
+        ///  height: 125px;
+        ///}
+        ///
+        ///.image {
+        ///  width: 100%;
+        ///  height: auto;
+        ///  display: block;
+        ///  margin: 0;
+        ///}
+        ///
+        ///.healthBarDamage {
+        ///  background-color: {DamageColor};
+        ///  height: 100%;
+        ///}
+        ///
+        ///.healthRemainingBar {
+        ///  background-color: {HealthColor};
+        ///  height: 100%;
+        ///}
+        ///
+        ///.imageContainer {
+        ///  flex: 1;
+        ///  display: flex;
+        ///  align-items: center;
+        ///  jus [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayStreamBossDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayStreamBossDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;mainContainer&quot;&gt;
+        ///  &lt;div class=&quot;imageContainer&quot;&gt;
+        ///    &lt;img id=&quot;bossImage&quot; class=&quot;image&quot;&gt;
+        ///  &lt;/div&gt;
+        ///  
+        ///  &lt;div class=&quot;infoContainer&quot;&gt;
+        ///    &lt;div class=&quot;infoContainerVerticalSplit&quot;&gt;
+        ///      &lt;div class=&quot;verticalFlexAuto&quot;&gt;
+        ///        &lt;div style=&quot;display: flex;&quot;&gt;
+        ///          &lt;span id=&quot;bossName&quot; class=&quot;text flexAuto&quot;&gt;&lt;/span&gt;
+        ///
+        ///          &lt;span class=&quot;text&quot;&gt;
+        ///            &lt;span id=&quot;bossHealth&quot;&gt;&lt;/span&gt;
+        ///            &lt;span&gt; / &lt;/span&gt;
+        ///            &lt;span id=&quot;bossMaxHealth&quot;&gt;&lt;/span&gt;
+        ///          &lt;/span&gt;
+        ///        &lt;/di [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayStreamBossDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayStreamBossDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to let bossImage = document.getElementById(&quot;bossImage&quot;);
+        ///let bossName = document.getElementById(&quot;bossName&quot;);
+        ///let bossHealth = document.getElementById(&quot;bossHealth&quot;);
+        ///let bossMaxHealth = document.getElementById(&quot;bossMaxHealth&quot;);
+        ///let bossHealthBarRemaining = document.getElementById(&quot;bossHealthBarRemaining&quot;);
+        ///
+        ///function damage(data)
+        ///{
+        ///    bossHealth.innerHTML = data.BossHealth;
+        ///    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + &quot;%&quot;;
+        ///    {DamageAnimation}
+        ///}
+        ///
+        ///function heal(data)
+        ///{
+        ///  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayStreamBossDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayStreamBossDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .text {
         ///    font-size: {FontSize}px;
         ///    color: {FontColor};

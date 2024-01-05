@@ -15,8 +15,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class OverlayActionModel : ActionModelBase
     {
-        private const string MainDivElementID = "maindiv";
-
         private const string PostEventReplacementText = "PostEvent";
 
         [DataMember]
@@ -198,24 +196,24 @@ namespace MixItUp.Base.Model.Actions
                     string exitJavascript = string.Empty;
                     if (duration > 0.0)
                     {
-                        exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, preTimeoutSeconds: duration, postAnimation: removeJavascript);
+                        exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID, preTimeoutSeconds: duration, postAnimation: removeJavascript);
                     }
                     else
                     {
                         if (this.OverlayItemV3.Type == OverlayItemV3Type.Video)
                         {
-                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: removeJavascript);
+                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID, postAnimation: removeJavascript);
                             exitJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayVideoNoDurationJavascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
                         }
                         else if (this.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
                         {
-                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: OverlayResources.OverlayYouTubeIFrameDestroyJavascript + "\n" + removeJavascript);
+                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID, postAnimation: OverlayResources.OverlayYouTubeIFrameDestroyJavascript + "\n" + removeJavascript);
                             javascript = OverlayV3Service.ReplaceProperty(javascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
                             exitJavascript = string.Empty;
                         }
                         else if (this.OverlayItemV3.Type == OverlayItemV3Type.TwitchClip)
                         {
-                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: removeJavascript);
+                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID, postAnimation: removeJavascript);
                             exitJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayVideoNoDurationJavascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
 
                             // For use with Embed-based clip displaying
@@ -226,7 +224,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
 
-                    string entranceAndExitJavascript = this.EntranceAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: exitJavascript);
+                    string entranceAndExitJavascript = this.EntranceAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID, postAnimation: exitJavascript);
                     javascript = javascript + "\n\n" + entranceAndExitJavascript;
 
                     string iframeHTML = overlay.GetItemIFrameHTML();

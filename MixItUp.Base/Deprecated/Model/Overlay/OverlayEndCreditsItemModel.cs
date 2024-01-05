@@ -275,19 +275,19 @@ namespace MixItUp.Base.Model.Overlay
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Raids))
             {
-                EventService.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
+                //EventService.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
             {
-                EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
+                //EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Resubscribers))
             {
-                EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                //EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.GiftedSubs))
             {
-                EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+                //EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Donations))
             {
@@ -305,9 +305,9 @@ namespace MixItUp.Base.Model.Overlay
             ChatService.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
             EventService.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             EventService.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
-            EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
+            //EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            //EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            //EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             EventService.OnTwitchBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
             return Task.CompletedTask;

@@ -18,11 +18,14 @@ namespace MixItUp.Base.Model.Overlay
         Timer,
         Label,
         TwitchClip,
+        StreamBoss,
     }
 
     [DataContract]
     public abstract class OverlayItemV3ModelBase : OverlayOutputV3Model
     {
+        public const string MainDivElementID = "maindiv";
+
         public const string InnerHTMLProperty = "InnerHTML";
 
         public static readonly string PositionedHTML = OverlayResources.OverlayPositionedItemDefaultHTML;
