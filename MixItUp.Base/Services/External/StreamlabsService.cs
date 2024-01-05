@@ -59,10 +59,10 @@ namespace MixItUp.Base.Services.External
 
     public class StreamlabsService : OAuthExternalServiceBase
     {
-        private const string BaseAddress = "https://streamlabs.com/api/v1.0/";
+        private const string BaseAddress = "https://streamlabs.com/api/v2.0/";
 
-        private const string ClientID = "ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX";
-        private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write+credits.write";
+        private const string ClientID = "9b044090-8eb3-4293-80eb-5b2195bb881b";
+        private const string AuthorizationUrl = "https://streamlabs.com/api/v2.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write+credits.write&state=123456";
 
         private ISocketIOConnection socket;
 
