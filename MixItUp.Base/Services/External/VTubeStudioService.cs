@@ -215,14 +215,21 @@ namespace MixItUp.Base.Services.External
 
         public async Task<VTubeStudioModel> GetCurrentModel()
         {
-            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("CurrentModelRequest"));
-            if (response != null && response.data != null)
+            try
             {
-                VTubeStudioModel result = response.data.ToObject<VTubeStudioModel>();
-                if (result != null && result.modelLoaded)
+                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("CurrentModelRequest"));
+                if (response != null && response.data != null)
                 {
-                    return result;
+                    VTubeStudioModel result = response.data.ToObject<VTubeStudioModel>();
+                    if (result != null && result.modelLoaded)
+                    {
+                        return result;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
             return null;
         }
@@ -230,19 +237,24 @@ namespace MixItUp.Base.Services.External
         public async Task<IEnumerable<VTubeStudioModel>> GetAllModels()
         {
             List<VTubeStudioModel> results = new List<VTubeStudioModel>();
-
-            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("AvailableModelsRequest"));
-            if (response != null && response.data != null && response.data.TryGetValue("availableModels", out JToken models) && models is JArray)
+            try
             {
-                foreach (VTubeStudioModel model in ((JArray)models).ToTypedArray<VTubeStudioModel>())
+                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("AvailableModelsRequest"));
+                if (response != null && response.data != null && response.data.TryGetValue("availableModels", out JToken models) && models is JArray)
                 {
-                    if (model != null)
+                    foreach (VTubeStudioModel model in ((JArray)models).ToTypedArray<VTubeStudioModel>())
                     {
-                        results.Add(model);
+                        if (model != null)
+                        {
+                            results.Add(model);
+                        }
                     }
                 }
             }
-
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
             return results;
         }
 
@@ -251,11 +263,19 @@ namespace MixItUp.Base.Services.External
             JObject data = new JObject();
             data["modelID"] = modelID;
 
-            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("ModelLoadRequest", data));
-            if (response != null && response.data != null && response.data.ContainsKey("modelID"))
+            try
             {
-                return true;
+                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("ModelLoadRequest", data));
+                if (response != null && response.data != null && response.data.ContainsKey("modelID"))
+                {
+                    return true;
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+
             return false;
         }
 
@@ -269,11 +289,19 @@ namespace MixItUp.Base.Services.External
             if (rotation.HasValue) { data["rotation"] = rotation; }
             if (size.HasValue) { data["size"] = size; }
 
-            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("MoveModelRequest", data));
-            if (response != null && response.data != null)
+            try
             {
-                return true;
+                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("MoveModelRequest", data));
+                if (response != null && response.data != null)
+                {
+                    return true;
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+
             return false;
         }
 
@@ -288,16 +316,23 @@ namespace MixItUp.Base.Services.External
                 packet.data["modelID"] = modelID;
             }
 
-            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(packet);
-            if (response != null && response.data != null && response.data.TryGetValue("availableHotkeys", out JToken hotKeys) && hotKeys is JArray)
+            try
             {
-                foreach (VTubeStudioHotKey hotKey in ((JArray)hotKeys).ToTypedArray<VTubeStudioHotKey>())
+                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(packet);
+                if (response != null && response.data != null && response.data.TryGetValue("availableHotkeys", out JToken hotKeys) && hotKeys is JArray)
                 {
-                    if (hotKey != null)
+                    foreach (VTubeStudioHotKey hotKey in ((JArray)hotKeys).ToTypedArray<VTubeStudioHotKey>())
                     {
-                        results.Add(hotKey);
+                        if (hotKey != null)
+                        {
+                            results.Add(hotKey);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            { 
+                Logger.Log(ex);
             }
 
             return results;
@@ -308,11 +343,19 @@ namespace MixItUp.Base.Services.External
             JObject data = new JObject();
             data["hotkeyID"] = hotKeyID;
 
-            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("HotkeyTriggerRequest", data));
-            if (response != null && response.data != null && response.data.ContainsKey("hotkeyID"))
+            try
             {
-                return true;
+                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("HotkeyTriggerRequest", data));
+                if (response != null && response.data != null && response.data.ContainsKey("hotkeyID"))
+                {
+                    return true;
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+
             return false;
         }
 
