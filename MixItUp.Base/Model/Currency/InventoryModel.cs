@@ -623,7 +623,10 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (this.tradeReceiver == null && arguments.Count() >= 2)
                     {
-                        UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatform(user.Platform, platformUsername: arguments.First());
+                        CommandParametersModel parameters = new CommandParametersModel(user.Platform, arguments);
+                        parameters.ParseArguments();
+
+                        UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatform(user.Platform, platformUsername: parameters.Arguments.First());
                         if (targetUser == null)
                         {
                             await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, user.Platform);
@@ -631,7 +634,7 @@ namespace MixItUp.Base.Model.Currency
                         }
 
                         int amount = 1;
-                        IEnumerable<string> itemArgs = arguments.Skip(1);
+                        IEnumerable<string> itemArgs = parameters.Arguments.Skip(1);
                         InventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
 
                         if (item == null && itemArgs.Count() > 1)
@@ -640,7 +643,7 @@ namespace MixItUp.Base.Model.Currency
                             item = this.GetItem(string.Join(" ", itemArgs));
                             if (item != null)
                             {
-                                if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
+                                if (!int.TryParse(parameters.Arguments.Last(), out amount) || amount <= 0)
                                 {
                                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ValidAmountGreaterThan0MustBeSpecified, user.Platform);
                                     return;
