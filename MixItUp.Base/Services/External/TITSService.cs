@@ -152,21 +152,30 @@ namespace MixItUp.Base.Services.External
         public async Task<IEnumerable<TITSItem>> GetAllItems()
         {
             List<TITSItem> results = new List<TITSItem>();
-            TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSItemListRequest"));
-            if (response != null && response.data != null && response.data.TryGetValue("items", out JToken items) && items is JArray)
+
+            try
             {
-                foreach (TITSItem item in ((JArray)items).ToTypedArray<TITSItem>())
+                TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSItemListRequest"));
+                if (response != null && response.data != null && response.data.TryGetValue("items", out JToken items) && items is JArray)
                 {
-                    if (item != null)
+                    foreach (TITSItem item in ((JArray)items).ToTypedArray<TITSItem>())
                     {
-                        results.Add(item);
+                        if (item != null)
+                        {
+                            results.Add(item);
+                        }
                     }
                 }
+                else
+                {
+                    Logger.Log(LogLevel.Error, "TITS - No Response Packet Received - GetAllItems");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, "TITS - No Response Packet Received - GetAllItems");
+                Logger.Log(ex);
             }
+
             return results;
         }
 
@@ -177,15 +186,23 @@ namespace MixItUp.Base.Services.External
             data["delayTime"] = delayTime;
             data["amountOfThrows"] = amount;
 
-            TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSThrowItemsRequest", data));
-            if (response != null && response.data != null && response.data.ContainsKey("numberOfThrownItems"))
+            try
             {
-                return true;
+                TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSThrowItemsRequest", data));
+                if (response != null && response.data != null && response.data.ContainsKey("numberOfThrownItems"))
+                {
+                    return true;
+                }
+                else
+                {
+                    Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - ThrowItem - {itemID}");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - ThrowItem - {itemID}");
+                Logger.Log(ex);
             }
+
             return false;
         }
 
@@ -193,20 +210,29 @@ namespace MixItUp.Base.Services.External
         {
             List<TITSTrigger> results = new List<TITSTrigger>();
             TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSTriggerListRequest"));
-            if (response != null && response.data != null && response.data.TryGetValue("triggers", out JToken triggers) && triggers is JArray)
+
+            try
             {
-                foreach (TITSTrigger trigger in ((JArray)triggers).ToTypedArray<TITSTrigger>())
+                if (response != null && response.data != null && response.data.TryGetValue("triggers", out JToken triggers) && triggers is JArray)
                 {
-                    if (trigger != null)
+                    foreach (TITSTrigger trigger in ((JArray)triggers).ToTypedArray<TITSTrigger>())
                     {
-                        results.Add(trigger);
+                        if (trigger != null)
+                        {
+                            results.Add(trigger);
+                        }
                     }
                 }
+                else
+                {
+                    Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - GetAllTriggers");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - GetAllTriggers");
+                Logger.Log(ex);
             }
+
             return results;
         }
 
@@ -215,15 +241,23 @@ namespace MixItUp.Base.Services.External
             JObject data = new JObject();
             data["triggerID"] = triggerID;
 
-            TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSTriggerActivateRequest", data));
-            if (response != null && response.data != null && response.messageType.Equals("TITSTriggerActivateResponse"))
+            try
             {
-                return true;
+                TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSTriggerActivateRequest", data));
+                if (response != null && response.data != null && response.messageType.Equals("TITSTriggerActivateResponse"))
+                {
+                    return true;
+                }
+                else
+                {
+                    Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - ActivateTrigger - {triggerID}");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - ActivateTrigger - {triggerID}");
+                Logger.Log(ex);
             }
+
             return false;
         }
 
