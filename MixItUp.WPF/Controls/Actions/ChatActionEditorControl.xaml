@@ -48,7 +48,7 @@
         </Grid>
 
         <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">
-            <TextBox Text="{Binding ChatText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChatMessage}" Height="100" TextWrapping="Wrap" />
+            <TextBox Text="{Binding ChatText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChatMessage}" Height="70" TextWrapping="Wrap" />
         </Border>
     </Grid>
 </local:ActionEditorControlBase>
