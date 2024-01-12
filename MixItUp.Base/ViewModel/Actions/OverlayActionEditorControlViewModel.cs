@@ -1,11 +1,13 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,6 +22,7 @@ namespace MixItUp.Base.ViewModel.Actions
         HTML,
         Timer,
         TwitchClip,
+        DamageStreamBoss,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -40,6 +43,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));
                     this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
                     this.NotifyPropertyChanged(nameof(this.ShowItem));
+                    this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
 
                     if (this.ShowItem)
                     {
@@ -205,6 +209,45 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string javascript;
 
+        public bool ShowDamageStreamBoss { get { return this.SelectedActionType == OverlayActionTypeEnum.DamageStreamBoss; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> StreamBosses { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedStreamBoss
+        {
+            get { return this.selectedStreamBoss; }
+            set
+            {
+                this.selectedStreamBoss = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayWidgetV3Model selectedStreamBoss;
+
+        public string StreamBossDamageAmount
+        {
+            get { return this.streamBossDamageAmount; }
+            set
+            {
+                this.streamBossDamageAmount = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string streamBossDamageAmount;
+
+        public bool StreamBossForceDamage
+        {
+            get { return this.streamBossForceDamage; }
+            set
+            {
+                this.streamBossForceDamage = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool streamBossForceDamage = true;
+
+        private Guid streamBossID;
+
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
@@ -263,6 +306,14 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.CSS = action.OverlayItemV3.CSS;
                 this.Javascript = action.OverlayItemV3.Javascript;
             }
+
+            if (action.StreamBossID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.DamageStreamBoss;
+                this.streamBossID = action.StreamBossID;
+                this.StreamBossDamageAmount = action.StreamBossDamageAmount;
+                this.StreamBossForceDamage = action.StreamBossForceDamage;
+            }
         }
 
         public OverlayActionEditorControlViewModel()
@@ -305,8 +356,38 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(result);
                 }
             }
+            else if (this.ShowDamageStreamBoss)
+            {
+                if (this.SelectedStreamBoss == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.StreamBossDamageAmount))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
 
             return Task.FromResult(new Result());
+        }
+
+        protected override async Task OnOpenInternal()
+        {
+            await base.OnOpenInternal();
+
+            foreach (OverlayWidgetV3Model widget in ChannelSession.Settings.OverlayWidgetsV3)
+            {
+                if (widget.Type == OverlayItemV3Type.StreamBoss)
+                {
+                    this.StreamBosses.Add(widget);
+                }
+            }
+
+            if (this.ShowDamageStreamBoss)
+            {
+                this.SelectedStreamBoss = this.StreamBosses.FirstOrDefault(w => w.ID.Equals(this.streamBossID));
+            }
         }
 
         protected override Task<ActionModelBase> GetActionInternal()
@@ -323,6 +404,10 @@ namespace MixItUp.Base.ViewModel.Actions
                     item.Position = this.Position.GetPosition();
                     return Task.FromResult<ActionModelBase>(new OverlayActionModel(item, this.Duration, this.EntranceAnimation.GetAnimation(), this.ExitAnimation.GetAnimation()));
                 }
+            }
+            else if (this.ShowDamageStreamBoss)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedStreamBoss, this.StreamBossDamageAmount, this.StreamBossForceDamage));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

@@ -16,7 +16,7 @@ namespace MixItUp.WPF.Windows.Overlay
 
         public OverlayWidgetV3EditorWindow()
         {
-            this.ViewModel = this.viewModel = new OverlayWidgetV3ViewModel(OverlayItemV3Type.Label);
+            this.ViewModel = this.viewModel = new OverlayWidgetV3ViewModel(OverlayItemV3Type.StreamBoss);
 
             InitializeComponent();
 
@@ -48,6 +48,10 @@ namespace MixItUp.WPF.Windows.Overlay
             if (type == OverlayItemV3Type.Label)
             {
                 overlayControl = new OverlayLabelV3Control();
+            }
+            else if (type == OverlayItemV3Type.StreamBoss)
+            {
+                overlayControl = new OverlayStreamBossV3Control();
             }
 
             if (overlayControl != null)

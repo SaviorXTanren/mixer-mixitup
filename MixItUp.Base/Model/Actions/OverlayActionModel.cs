@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -38,6 +39,13 @@ namespace MixItUp.Base.Model.Actions
         public Guid WidgetID { get; set; }
         [DataMember]
         public bool ShowWidget { get; set; }
+
+        [DataMember]
+        public Guid StreamBossID { get; set; }
+        [DataMember]
+        public string StreamBossDamageAmount { get; set; }
+        [DataMember]
+        public bool StreamBossForceDamage { get; set; }
 
         [Obsolete]
         public OverlayActionModel(OverlayItemModelBase overlayItem)
@@ -82,6 +90,14 @@ namespace MixItUp.Base.Model.Actions
             this.ShowWidget = showWidget;
         }
 
+        public OverlayActionModel(OverlayWidgetV3Model streamBoss, string damageAmount, bool streamBossForceDamage)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.StreamBossID = streamBoss.ID;
+            this.StreamBossDamageAmount = damageAmount;
+            this.StreamBossForceDamage = streamBossForceDamage;
+        }
+
         [Obsolete]
         public OverlayActionModel() { }
 
@@ -103,6 +119,17 @@ namespace MixItUp.Base.Model.Actions
                     }
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
+            }
+            else if (this.StreamBossID != Guid.Empty)
+            {
+                OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.StreamBossID));
+                if (widget != null && widget.Type == OverlayItemV3Type.StreamBoss)
+                {
+                    if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.StreamBossDamageAmount, parameters), out double damage))
+                    {
+                        await ((OverlayStreamBossV3Model)widget.Item).DealDamage(parameters.User, damage, this.StreamBossForceDamage);
+                    }
+                }
             }
             else
             {

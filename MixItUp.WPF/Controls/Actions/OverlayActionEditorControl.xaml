@@ -133,8 +133,26 @@
                         </Grid>
                     </TabItem>
                 </TabControl>
-
             </Border>
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowDamageStreamBoss, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding StreamBosses}" SelectedItem="{Binding SelectedStreamBoss}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox Grid.Column="2" Text="{Binding StreamBossDamageAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ForceDamage}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="6" IsChecked="{Binding StreamBossForceDamage}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

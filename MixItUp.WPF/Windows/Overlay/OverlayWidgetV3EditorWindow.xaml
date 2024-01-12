@@ -49,35 +49,20 @@
                         </TabItem>
 
                         <TabItem Header="{x:Static resx:Resources.Animation}">
-                            <!--<Grid HorizontalAlignment="Center" Margin="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="40" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}" >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EntranceAnimation}" TextDecorations="Underline" />
-                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
-                            </Grid>
-
-                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}" >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.ExitAnimation}" TextDecorations="Underline" />
-                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
-                            </Grid>
-                        </Grid>-->
+                            <ItemsControl Margin="10" ItemsSource="{Binding Animations}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <GroupBox Margin="10" Header="{Binding Name}">
+                                            <OverlayControls:OverlayAnimationV3Control Margin="10" />
+                                        </GroupBox>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </TabItem>
 
                         <TabItem Header="{x:Static resx:Resources.HTML}">

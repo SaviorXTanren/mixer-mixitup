@@ -6,6 +6,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
@@ -91,6 +92,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayPositionV3ViewModel position = new OverlayPositionV3ViewModel();
 
+        public ObservableCollection<OverlayAnimationV3ViewModel> Animations { get; set; } = new ObservableCollection<OverlayAnimationV3ViewModel>();
+
         public string HTML
         {
             get { return this.html; }
@@ -142,11 +145,19 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Label:
                     this.Item = new OverlayLabelV3ViewModel();
                     break;
+                case OverlayItemV3Type.StreamBoss:
+                    this.Item = new OverlayStreamBossV3ViewModel();
+                    break;
             }
 
             this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
             this.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(this.Item.DefaultCSS);
             this.Javascript = this.Item.DefaultJavascript;
+
+            foreach (OverlayAnimationV3ViewModel animation in this.Item.Animations)
+            {
+                this.Animations.Add(animation);
+            }
 
             this.SetupCommands();
         }
@@ -164,6 +175,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 case OverlayItemV3Type.Label:
                     this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)widget.Item);
+                    break;
+                case OverlayItemV3Type.StreamBoss:
+                    this.Item = new OverlayStreamBossV3ViewModel((OverlayStreamBossV3Model)widget.Item);
                     break;
             }
 
@@ -253,6 +267,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayWidgetV3Model GetWidget()
         {
             OverlayItemV3ModelBase item = this.Item.GetItem();
+            item.ID = this.ID;
             item.OverlayEndpointID = this.SelectedOverlayEndpoint.ID;
             item.HTML = this.HTML;
             item.CSS = this.CSS;

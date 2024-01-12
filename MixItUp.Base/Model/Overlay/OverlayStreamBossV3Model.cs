@@ -28,6 +28,13 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultJavascript = OverlayResources.OverlayStreamBossDefaultJavascript;
 
         [DataMember]
+        public Guid CurrentBoss { get; set; }
+        [DataMember]
+        public int CurrentHealth { get; set; }
+        [DataMember]
+        public int CurrentMaxHealth { get; set; }
+
+        [DataMember]
         public string BorderColor { get; set; }
         [DataMember]
         public string BackgroundColor { get; set; }
@@ -37,55 +44,46 @@ namespace MixItUp.Base.Model.Overlay
         public string DamageColor { get; set; }
 
         [DataMember]
-        public Guid CurrentBoss { get; set; }
-        [DataMember]
-        public int CurrentHealth { get; set; }
-        [DataMember]
-        public int CurrentMaxHealth { get; set; }
-
-        [DataMember]
         public int BaseHealth { get; set; }
         [DataMember]
         public int KillBonusHealth { get; set; }
         [DataMember]
-        public int OverkillBonusMultiplier { get; set; }
+        public double OverkillBonusHealthMultiplier { get; set; }
+        [DataMember]
+        public double SelfHealingMultiplier { get; set; }
 
         [DataMember]
-        public double BossSelfHealingMultiplier { get; set; }
+        public int FollowDamage { get; set; }
 
         [DataMember]
-        public double FollowDamage { get; set; }
-
-        [DataMember]
-        public double RaidTotalDamage { get; set; }
+        public int RaidDamage { get; set; }
         [DataMember]
         public double RaidPerViewDamage { get; set; }
 
         [DataMember]
-        public Dictionary<int, double> TwitchSubscriptionsDamage { get; set; }
+        public Dictionary<int, int> TwitchSubscriptionsDamage { get; set; } = new Dictionary<int, int>();
         [DataMember]
-        public Dictionary<string, double> YouTubeMembershipsDamage { get; set; }
+        public double TwitchBitsDamage { get; set; }
+
         [DataMember]
-        public double TrovoSubscriptionDamage { get; set; }
+        public Dictionary<string, int> YouTubeMembershipsDamage { get; set; } = new Dictionary<string, int>();
+        [DataMember]
+        public double YouTubeSuperChatDamage { get; set; }
+
+        [DataMember]
+        public Dictionary<int, int> TrovoSubscriptionsDamage { get; set; } = new Dictionary<int, int>();
+        [DataMember]
+        public double TrovoElixirSpellDamage { get; set; }
 
         [DataMember]
         public double DonationDamage { get; set; }
 
         [DataMember]
-        public double TwitchBitsDamage { get; set; }
-
+        public OverlayAnimationV3Model DamageAnimation { get; set; } = new OverlayAnimationV3Model();
         [DataMember]
-        public double YouTubeSuperChatDamage { get; set; }
-
+        public OverlayAnimationV3Model HealingAnimation { get; set; } = new OverlayAnimationV3Model();
         [DataMember]
-        public double TrovoSpellDamage { get; set; }
-
-        [DataMember]
-        public OverlayAnimationV3Model DamageAnimation { get; set; }
-        [DataMember]
-        public OverlayAnimationV3Model HealingAnimation { get; set; }
-        [DataMember]
-        public OverlayAnimationV3Model NewBossAnimation { get; set; }
+        public OverlayAnimationV3Model NewBossAnimation { get; set; } = new OverlayAnimationV3Model();
 
         [DataMember]
         public Guid DamageOccurredCommandID { get; set; }
@@ -95,9 +93,49 @@ namespace MixItUp.Base.Model.Overlay
         public Guid NewBossCommandID { get; set; }
 
         [JsonIgnore]
-        public int HealthRemainingPercentage { get { return Math.Max(Math.Min((int)Math.Round((this.CurrentHealth / this.CurrentMaxHealth) * 100.0), 100), 0); } }
+        public int HealthRemainingPercentage { get { return Math.Max(Math.Min((int)Math.Round(((double)this.CurrentHealth / this.CurrentMaxHealth) * 100.0), 100), 0); } }
 
         public OverlayStreamBossV3Model() : base(OverlayItemV3Type.StreamBoss) { }
+
+        public async Task DealDamage(UserV2ViewModel user, double amount, bool forceDamage = false)
+        {
+            if (amount > 0)
+            {
+                int damage = (int)Math.Round(amount);
+
+                if (!forceDamage && this.CurrentBoss == user.ID && this.SelfHealingMultiplier > 0)
+                {
+                    this.CurrentHealth = Math.Min(damage + this.CurrentHealth, this.CurrentMaxHealth);
+                    await this.CallFunction("heal", this.GetDataProperties());
+
+                    await ServiceManager.Get<CommandService>().Queue(this.HealingOccurredCommandID, new CommandParametersModel(user));
+                }
+                else
+                {
+                    this.CurrentHealth -= damage;
+                    if (this.CurrentHealth > 0)
+                    {
+                        await this.CallFunction("damage", this.GetDataProperties());
+
+                        await ServiceManager.Get<CommandService>().Queue(this.DamageOccurredCommandID, new CommandParametersModel(user));
+                    }
+                    else
+                    {
+                        this.CurrentMaxHealth += this.KillBonusHealth;
+                        this.CurrentMaxHealth += (int)Math.Round(Math.Abs(this.CurrentHealth) * this.OverkillBonusHealthMultiplier);
+                        this.CurrentHealth = this.CurrentMaxHealth;
+
+                        Dictionary<string, string> properties = this.GetDataProperties();
+                        properties[BossImageProperty] = user.AvatarLink;
+                        properties[BossNameProperty] = user.DisplayName;
+                        properties[BossMaxHealthProperty] = this.CurrentMaxHealth.ToString();
+                        await this.CallFunction("newboss", properties);
+
+                        await ServiceManager.Get<CommandService>().Queue(this.NewBossCommandID, new CommandParametersModel(user));
+                    }
+                }
+            }
+        }
 
         public override Dictionary<string, string> GetGenerationProperties()
         {
@@ -147,12 +185,12 @@ namespace MixItUp.Base.Model.Overlay
                 EventService.OnFollowOccurred += EventService_OnFollowOccurred;
             }
 
-            if (this.RaidTotalDamage > 0 || this.RaidPerViewDamage > 0)
+            if (this.RaidDamage > 0 || this.RaidPerViewDamage > 0)
             {
                 EventService.OnRaidOccurred += EventService_OnRaidOccurred;
             }
 
-            if (this.TwitchSubscriptionsDamage.Count > 0 || this.YouTubeMembershipsDamage.Count > 0 || this.TrovoSubscriptionDamage > 0)
+            if (this.TwitchSubscriptionsDamage.Any(d => d.Value > 0) || this.YouTubeMembershipsDamage.Any(d => d.Value > 0) || this.TrovoSubscriptionsDamage.Any(d => d.Value > 0))
             {
                 EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
                 EventService.OnResubscribeOccurred += EventService_OnSubscribeOccurred;
@@ -175,7 +213,7 @@ namespace MixItUp.Base.Model.Overlay
                 EventService.OnYouTubeSuperChatOccurred += EventService_OnYouTubeSuperChatOccurred;
             }
 
-            if (this.TrovoSpellDamage > 0)
+            if (this.TrovoElixirSpellDamage > 0)
             {
                 EventService.OnTrovoSpellCastOccurred += EventService_OnTrovoSpellCastOccurred;
             }
@@ -204,28 +242,31 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
         {
-            await this.DealDamage(raid.Item1, this.RaidTotalDamage + (this.RaidPerViewDamage * raid.Item2));
+            await this.DealDamage(raid.Item1, this.RaidDamage + (this.RaidPerViewDamage * raid.Item2));
         }
 
         private async void EventService_OnSubscribeOccurred(object sender, SubscriptionDetailsModel subscription)
         {
             if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                if (this.TwitchSubscriptionsDamage.TryGetValue(subscription.TwitchSubscriptionTier, out double damage))
+                if (this.TwitchSubscriptionsDamage.TryGetValue(subscription.TwitchSubscriptionTier, out int damage))
                 {
                     await this.DealDamage(subscription.User, damage);
                 }
             }
             else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
             {
-                if (this.YouTubeMembershipsDamage.TryGetValue(subscription.YouTubeMembershipTier, out double damage))
+                if (this.YouTubeMembershipsDamage.TryGetValue(subscription.YouTubeMembershipTier, out int damage))
                 {
                     await this.DealDamage(subscription.User, damage);
                 }
             }
             else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
             {
-                await this.DealDamage(subscription.User, this.TrovoSubscriptionDamage);
+                if (this.TrovoSubscriptionsDamage.TryGetValue(1, out int damage))
+                {
+                    await this.DealDamage(subscription.User, damage);
+                }
             }
         }
 
@@ -238,21 +279,24 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        if (this.TwitchSubscriptionsDamage.TryGetValue(subscription.TwitchSubscriptionTier, out double damage))
+                        if (this.TwitchSubscriptionsDamage.TryGetValue(subscription.TwitchSubscriptionTier, out int damage))
                         {
                             totalDamage += damage;
                         }
                     }
                     else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
-                        if (this.YouTubeMembershipsDamage.TryGetValue(subscription.YouTubeMembershipTier, out double damage))
+                        if (this.YouTubeMembershipsDamage.TryGetValue(subscription.YouTubeMembershipTier, out int damage))
                         {
                             totalDamage += damage;
                         }
                     }
                     else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
-                        totalDamage += this.TrovoSubscriptionDamage;
+                        if (this.TrovoSubscriptionsDamage.TryGetValue(1, out int damage))
+                        {
+                            totalDamage += damage;
+                        }
                     }
                 }
 
@@ -279,50 +323,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (spell.IsElixir)
             {
-                await this.DealDamage(spell.User, this.TrovoSpellDamage * spell.ValueTotal);
-            }
-        }
-
-        private async Task DealDamage(UserV2ViewModel user, double amount)
-        {
-            if (amount > 0)
-            {
-                int damage = (int)Math.Round(amount);
-
-                if (this.CurrentBoss == user.ID && this.BossSelfHealingMultiplier > 0)
-                {
-                    this.CurrentHealth += damage;
-                    await this.CallFunction("heal", this.GetDataProperties());
-
-                    await ServiceManager.Get<CommandService>().Queue(this.HealingOccurredCommandID, new CommandParametersModel(user));
-                }
-                else
-                {
-                    this.CurrentHealth -= damage;
-                    if (this.CurrentHealth > 0)
-                    {
-                        await this.CallFunction("damage", this.GetDataProperties());
-
-                        await ServiceManager.Get<CommandService>().Queue(this.DamageOccurredCommandID, new CommandParametersModel(user));
-                    }
-                    else
-                    {
-                        this.CurrentMaxHealth += this.KillBonusHealth;
-                        this.CurrentMaxHealth += Math.Abs(this.CurrentHealth) * this.OverkillBonusMultiplier;
-                        this.CurrentHealth = this.CurrentMaxHealth;
-
-                        await this.CallFunction("newboss", new Dictionary<string, string>()
-                        {
-                            { BossImageProperty, user.AvatarLink },
-                            { BossNameProperty, user.DisplayName },
-                            { BossHealthProperty, this.CurrentMaxHealth.ToString() },
-                            { BossMaxHealthProperty, this.CurrentMaxHealth.ToString() },
-                            { BossHealthBarRemainingProperty, "100" },
-                        });
-
-                        await ServiceManager.Get<CommandService>().Queue(this.NewBossCommandID, new CommandParametersModel(user));
-                    }
-                }
+                await this.DealDamage(spell.User, this.TrovoElixirSpellDamage * spell.ValueTotal);
             }
         }
 

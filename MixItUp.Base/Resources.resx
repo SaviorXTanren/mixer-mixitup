@@ -9846,4 +9846,64 @@ namespace CustomNamespace
   <data name="UniqueChatMode" xml:space="preserve">
     <value>Unique Chat Mode</value>
   </data>
+  <data name="DamageColor" xml:space="preserve">
+    <value>Damage Color</value>
+  </data>
+  <data name="HealthColor" xml:space="preserve">
+    <value>Health Color</value>
+  </data>
+  <data name="BaseHealth" xml:space="preserve">
+    <value>Base Health</value>
+  </data>
+  <data name="Damage" xml:space="preserve">
+    <value>Damage</value>
+  </data>
+  <data name="DamageAmount" xml:space="preserve">
+    <value>Damage Amount</value>
+  </data>
+  <data name="DamageMultiplier" xml:space="preserve">
+    <value>Damage Multipler</value>
+  </data>
+  <data name="DamageOccurred" xml:space="preserve">
+    <value>Damage Occurred</value>
+  </data>
+  <data name="HealingOccurred" xml:space="preserve">
+    <value>Healing Occurred</value>
+  </data>
+  <data name="KillBonusHealth" xml:space="preserve">
+    <value>Kill Bonus Health</value>
+  </data>
+  <data name="NewBoss" xml:space="preserve">
+    <value>New Boss</value>
+  </data>
+  <data name="OverkillBonusHealthMultiplier" xml:space="preserve">
+    <value>Overkill Bonus Health Multiplier</value>
+  </data>
+  <data name="SelfHealingMultiplier" xml:space="preserve">
+    <value>Self Healing Multiplier</value>
+  </data>
+  <data name="TrovoElixirSpells" xml:space="preserve">
+    <value>Trovo Elixir Spells</value>
+  </data>
+  <data name="TrovoSubscriptions" xml:space="preserve">
+    <value>Trovo Subscriptions</value>
+  </data>
+  <data name="TwitchSubscriptions" xml:space="preserve">
+    <value>Twitch Subscriptions</value>
+  </data>
+  <data name="YouTubeMemberships" xml:space="preserve">
+    <value>YouTube Memberships</value>
+  </data>
+  <data name="YouTubeSuperChat" xml:space="preserve">
+    <value>YouTube Super Chat</value>
+  </data>
+  <data name="DamageStreamBoss" xml:space="preserve">
+    <value>Damage Stream Boss</value>
+  </data>
+  <data name="ValidValueMustBeSpecified" xml:space="preserve">
+    <value>A valid value must be specified</value>
+  </data>
+  <data name="ForceDamage" xml:space="preserve">
+    <value>Force Damage</value>
+  </data>
 </root>

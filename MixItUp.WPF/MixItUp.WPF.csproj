@@ -876,6 +876,9 @@
     <Compile Include="Controls\Overlay\OverlayPositionV3Control.xaml.cs">
       <DependentUpon>OverlayPositionV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayStreamBossV3Control.xaml.cs">
+      <DependentUpon>OverlayStreamBossV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayTextV3Control.xaml.cs">
       <DependentUpon>OverlayTextV3Control.xaml</DependentUpon>
     </Compile>
@@ -884,6 +887,9 @@
     </Compile>
     <Compile Include="Controls\Overlay\OverlayTwitchClipV3Control.xaml.cs">
       <DependentUpon>OverlayTwitchClipV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\CustomCommandListingControl.xaml.cs">
+      <DependentUpon>CustomCommandListingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayVideoV3Control.xaml.cs">
       <DependentUpon>OverlayVideoV3Control.xaml</DependentUpon>
@@ -1775,6 +1781,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Overlay\OverlayStreamBossV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Overlay\OverlayTextV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1784,6 +1794,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayTwitchClipV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\CustomCommandListingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
