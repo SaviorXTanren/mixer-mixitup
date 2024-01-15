@@ -158,20 +158,20 @@ namespace MixItUp.Base.Services
         public StreamingPlatformTypeEnum Platform { get; set; }
         public int Months { get; set; }
 
-        public int TwitchSubscriptionTier { get; set; }
+        public int Tier { get; set; } = 1;
         public string YouTubeMembershipTier { get; set; }
 
         public UserV2ViewModel Gifter { get; set; }
 
-        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, int months = 1, int? twitchSubscriptionTier = null, string youTubeMembershipTier = null)
+        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, int months = 1, int? tier = 1, string youTubeMembershipTier = null)
         {
             this.Platform = platform;
             this.User = user;
             this.Months = months;
 
-            if (twitchSubscriptionTier != null)
+            if (tier != null)
             {
-                this.TwitchSubscriptionTier = twitchSubscriptionTier.GetValueOrDefault();
+                this.Tier = tier.GetValueOrDefault();
             }
             if (!string.IsNullOrEmpty(youTubeMembershipTier))
             {

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using Microsoft.AspNetCore.SignalR.Protocol;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
@@ -532,18 +533,20 @@ namespace MixItUp.Base.Services.Trovo
 
                         if (subMessage.IsResub)
                         {
-                            EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user, months: subMessage.Months));
+                            EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user, months: subMessage.Months, tier: subMessage.Tier));
                             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribed, user.DisplayName, subMessage.Months), ChannelSession.Settings.AlertSubColor));
                         }
                         else
                         {
-                            EventService.SubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user));
+                            EventService.SubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user, tier: subMessage.Tier));
                             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                         }
                     }
                 }
                 else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionSentMessage)
                 {
+                    TrovoSubscriptionMessageModel subMessage = new TrovoSubscriptionMessageModel(message);
+
                     int totalGifted = 1;
                     int.TryParse(message.content, out totalGifted);
 
@@ -553,13 +556,14 @@ namespace MixItUp.Base.Services.Trovo
                     {
                         CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Trovo);
                         parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
+                        parameters.SpecialIdentifiers["usersubplan"] = $"{MixItUp.Base.Resources.Tier} {subMessage.Tier}";
                         parameters.SpecialIdentifiers["isanonymous"] = false.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
 
                         List<SubscriptionDetailsModel> subscriptions = new List<SubscriptionDetailsModel>();
                         for (int i = 0; i < totalGifted; i++)
                         {
-                            subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user));
+                            subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, user, tier: subMessage.Tier));
                         }
 
                         EventService.MassSubscriptionsGiftedOccurred(subscriptions);

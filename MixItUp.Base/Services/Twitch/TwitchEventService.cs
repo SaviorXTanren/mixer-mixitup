@@ -1012,7 +1012,7 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelSubscribed, parameters);
             }
 
-            EventService.SubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, subEvent.User, twitchSubscriptionTier: subEvent.PlanTierNumber));
+            EventService.SubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, subEvent.User, tier: subEvent.PlanTierNumber));
 
             if (subEvent.IsGiftedUpgrade)
             {
@@ -1211,7 +1211,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }
 
-                EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, user, months: months, twitchSubscriptionTier: user.SubscriberTier));
+                EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, user, months: months, tier: user.SubscriberTier));
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribedTier, user.FullDisplayName, months, planTier), ChannelSession.Settings.AlertSubColor));
             }
         }
