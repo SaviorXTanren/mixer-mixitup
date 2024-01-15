@@ -19,6 +19,7 @@ namespace MixItUp.Base.Model.Overlay
         Label,
         TwitchClip,
         StreamBoss,
+        Goal,
     }
 
     [DataContract]
@@ -67,9 +68,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
-        public virtual Dictionary<string, string> GetGenerationProperties()
+        public virtual Dictionary<string, object> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = new Dictionary<string, string>();
+            Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[nameof(this.ID)] = (this.ID == Guid.Empty) ? Guid.NewGuid().ToString() : this.ID.ToString();
             properties[nameof(this.Width)] = (this.Width > 0) ? $"{this.Width}px" : "max-content";
             properties[nameof(this.Height)] = (this.Height > 0) ? $"{this.Height}px" : "max-content";
@@ -77,7 +78,7 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public virtual Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters) { return Task.CompletedTask; }
+        public virtual Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters) { return Task.CompletedTask; }
 
         public async Task WidgetEnable()
         {
@@ -86,7 +87,7 @@ namespace MixItUp.Base.Model.Overlay
             OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                Dictionary<string, string> properties = this.GetGenerationProperties();
+                Dictionary<string, object> properties = this.GetGenerationProperties();
 
                 string iframeHTML = overlay.GetItemIFrameHTML();
                 iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.HTML), this.HTML);

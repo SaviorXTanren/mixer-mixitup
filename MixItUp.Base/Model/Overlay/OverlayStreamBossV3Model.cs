@@ -137,14 +137,18 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public override Dictionary<string, string> GetGenerationProperties()
+        public override Dictionary<string, object> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = base.GetGenerationProperties();
+            Dictionary<string, object> properties = base.GetGenerationProperties();
 
-            properties[nameof(this.BorderColor)] = this.BorderColor.ToString();
-            properties[nameof(this.BackgroundColor)] = this.BackgroundColor.ToString();
-            properties[nameof(this.HealthColor)] = this.HealthColor.ToString();
-            properties[nameof(this.DamageColor)] = this.DamageColor.ToString();
+            properties[BossHealthProperty] = this.CurrentHealth;
+            properties[BossMaxHealthProperty] = this.CurrentMaxHealth;
+            properties[BossHealthBarRemainingProperty] = this.HealthRemainingPercentage;
+
+            properties[nameof(this.BorderColor)] = this.BorderColor;
+            properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
+            properties[nameof(this.HealthColor)] = this.HealthColor;
+            properties[nameof(this.DamageColor)] = this.DamageColor;
 
             properties[nameof(this.DamageAnimation)] = this.DamageAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID);
             properties[nameof(this.HealingAnimation)] = this.HealingAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID);
@@ -153,7 +157,7 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
         {
             await base.ProcessGenerationProperties(properties, parameters);
 
@@ -165,9 +169,6 @@ namespace MixItUp.Base.Model.Overlay
 
             properties[BossImageProperty] = boss.AvatarLink;
             properties[BossNameProperty] = boss.DisplayName;
-            properties[BossHealthProperty] = this.CurrentHealth.ToString();
-            properties[BossMaxHealthProperty] = this.CurrentMaxHealth.ToString();
-            properties[BossHealthBarRemainingProperty] = this.HealthRemainingPercentage.ToString();
         }
 
         protected override async Task WidgetEnableInternal()

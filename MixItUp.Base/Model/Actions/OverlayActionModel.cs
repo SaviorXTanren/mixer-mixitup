@@ -204,7 +204,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
 
-                    Dictionary<string, string> properties = this.OverlayItemV3.GetGenerationProperties();
+                    Dictionary<string, object> properties = this.OverlayItemV3.GetGenerationProperties();
 
                     double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), out double duration);
                     if (duration <= 0.0)
@@ -270,7 +270,7 @@ namespace MixItUp.Base.Model.Actions
 
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
 
-                    await overlay.Add(properties[nameof(this.OverlayItemV3.ID)], iframeHTML);
+                    await overlay.Add(properties[nameof(this.OverlayItemV3.ID)].ToString(), iframeHTML);
                 }
             }
         }

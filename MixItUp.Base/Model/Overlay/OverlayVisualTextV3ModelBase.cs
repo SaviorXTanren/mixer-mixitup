@@ -45,11 +45,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayVisualTextV3ModelBase(OverlayItemV3Type type) : base(type) { }
 
-        public override Dictionary<string, string> GetGenerationProperties()
+        public override Dictionary<string, object> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = base.GetGenerationProperties();
+            Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.Text)] = this.Text;
-            properties[nameof(this.FontSize)] = this.FontSize.ToString();
+            properties[nameof(this.FontSize)] = this.FontSize;
             properties[nameof(this.FontFamily)] = this.FontFamily;
             properties[nameof(this.FontColor)] = this.FontColor;
             properties[nameof(this.FontWeight)] = this.FontWeight;

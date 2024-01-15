@@ -39,21 +39,21 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public int YTranslation { get { return this.PositionTypeIsPercentage ? -50 : 0; } }
 
-        public virtual void SetPositionProperties(Dictionary<string, string> properties) { this.SetPositionPropertiesInternal(properties, this.XPosition, this.YPosition); }
+        public virtual void SetPositionProperties(Dictionary<string, object> properties) { this.SetPositionPropertiesInternal(properties, this.XPosition, this.YPosition); }
 
-        protected void SetPositionPropertiesInternal(Dictionary<string, string> properties, int x, int y)
+        protected void SetPositionPropertiesInternal(Dictionary<string, object> properties, int x, int y)
         {
             if (this.Layer == 0)
             {
                 zIndexCounter++;
             }
 
-            properties[nameof(this.XPosition)] = x.ToString();
-            properties[nameof(this.YPosition)] = y.ToString();
+            properties[nameof(this.XPosition)] = x;
+            properties[nameof(this.YPosition)] = y;
             properties[nameof(this.PositionType)] = this.PositionType;
-            properties[nameof(this.XTranslation)] = this.XTranslation.ToString();
-            properties[nameof(this.YTranslation)] = this.YTranslation.ToString();
-            properties[nameof(this.Layer)] = (this.Layer == 0) ? zIndexCounter.ToString() : this.Layer.ToString();
+            properties[nameof(this.XTranslation)] = this.XTranslation;
+            properties[nameof(this.YTranslation)] = this.YTranslation;
+            properties[nameof(this.Layer)] = (this.Layer == 0) ? zIndexCounter : this.Layer;
         }
     }
 
@@ -77,7 +77,7 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int YMaximum { get; set; }
 
-        public override void SetPositionProperties(Dictionary<string, string> properties)
+        public override void SetPositionProperties(Dictionary<string, object> properties)
         {
             int x = RandomHelper.GenerateRandomNumber(this.XMinimum, this.XMaximum);
             int y = RandomHelper.GenerateRandomNumber(this.YMinimum, this.YMaximum);

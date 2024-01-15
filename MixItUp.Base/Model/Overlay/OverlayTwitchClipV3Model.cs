@@ -41,9 +41,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayTwitchClipV3Model() : base(OverlayItemV3Type.TwitchClip) { }
 
-        public override Dictionary<string, string> GetGenerationProperties()
+        public override Dictionary<string, object> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = base.GetGenerationProperties();
+            Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.ClipID)] = this.ClipID;
             properties[nameof(this.ClipDirectLink)] = this.ClipDirectLink;
             properties[nameof(this.Volume)] = this.Volume.ToString();

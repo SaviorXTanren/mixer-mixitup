@@ -30,9 +30,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayYouTubeV3Model() : base(OverlayItemV3Type.YouTube) { }
 
-        public override Dictionary<string, string> GetGenerationProperties()
+        public override Dictionary<string, object> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = base.GetGenerationProperties();
+            Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.VideoID)] = this.VideoID;
             properties[nameof(this.StartTime)] = this.StartTime.ToString();
             properties[nameof(this.Volume)] = this.Volume.ToString();
@@ -41,16 +41,16 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
         {
-            properties[nameof(this.VideoID)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.VideoID)], parameters);
-            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Replace("https://www.youtube.com/watch?v=", "");
-            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Replace("www.youtube.com/watch?v=", "");
-            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Replace("youtube.com/watch?v=", "");
-            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Replace("https://youtu.be/", "");
-            if (properties[nameof(this.VideoID)].Contains("&"))
+            properties[nameof(this.VideoID)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.VideoID)].ToString(), parameters);
+            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://www.youtube.com/watch?v=", "");
+            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("www.youtube.com/watch?v=", "");
+            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("youtube.com/watch?v=", "");
+            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtu.be/", "");
+            if (properties[nameof(this.VideoID)].ToString().Contains("&"))
             {
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Substring(0, properties[nameof(this.VideoID)].IndexOf("&"));
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Substring(0, properties[nameof(this.VideoID)].ToString().IndexOf("&"));
             }
         }
     }

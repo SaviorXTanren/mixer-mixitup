@@ -88,15 +88,15 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLabelV3Model() : base(OverlayItemV3Type.Label) { }
 
-        public override Dictionary<string, string> GetGenerationProperties()
+        public override Dictionary<string, object> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = base.GetGenerationProperties();
+            Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.DisplaySetting)] = this.DisplaySetting.ToString();
-            properties[nameof(this.DisplayRotationSeconds)] = this.DisplayRotationSeconds.ToString();
+            properties[nameof(this.DisplayRotationSeconds)] = this.DisplayRotationSeconds;
             return properties;
         }
 
-        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
         {
             await base.ProcessGenerationProperties(properties, parameters);
 

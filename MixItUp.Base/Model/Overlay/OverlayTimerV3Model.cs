@@ -31,9 +31,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayTimerV3Model() : base(OverlayItemV3Type.Timer) { }
 
-        public override Dictionary<string, string> GetGenerationProperties()
+        public override Dictionary<string, object> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = base.GetGenerationProperties();
+            Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.CountUp)] = this.CountUp.ToString().ToLower();
             properties[nameof(this.DisplayFormat)] = this.DisplayFormat;
             return properties;

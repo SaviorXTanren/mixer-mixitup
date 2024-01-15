@@ -25,19 +25,19 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayVideoV3Model() : base(OverlayItemV3Type.Video) { }
 
-        public override Dictionary<string, string> GetGenerationProperties()
+        public override Dictionary<string, object> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = base.GetGenerationProperties();
+            Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.FilePath)] = RandomHelper.PickRandomFileFromDelimitedString(this.FilePath);
             properties[nameof(this.Volume)] = this.Volume.ToString();
             properties[nameof(this.Loop)] = this.Loop ? "loop" : string.Empty;
             return properties;
         }
 
-        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
         {
-            properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)], parameters);
-            properties[nameof(this.FilePath)] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)], "video");
+            properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)].ToString(), parameters);
+            properties[nameof(this.FilePath)] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)].ToString(), "video");
         }
     }
 }

@@ -102,7 +102,10 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3Service : IExternalService
     {
-        public static string ReplaceProperty(string text, string name, string value) { return text.Replace($"{{{name}}}", value ?? string.Empty); }
+        public static string ReplaceProperty(string text, string name, object value)
+        {
+            return text.Replace($"{{{name}}}", (value != null) ? value.ToString() : string.Empty);
+        }
 
         public static string ReplaceScriptTag(string text, string fileName, string contents)
         {
