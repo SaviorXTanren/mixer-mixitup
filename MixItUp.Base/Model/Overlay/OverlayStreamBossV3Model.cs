@@ -94,7 +94,7 @@ namespace MixItUp.Base.Model.Overlay
                         this.CurrentMaxHealth += (int)Math.Round(Math.Abs(this.CurrentHealth) * this.OverkillBonusHealthMultiplier);
                         this.CurrentHealth = this.CurrentMaxHealth;
 
-                        Dictionary<string, string> properties = this.GetDataProperties();
+                        Dictionary<string, object> properties = this.GetDataProperties();
                         properties[BossImageProperty] = user.AvatarLink;
                         properties[BossNameProperty] = user.DisplayName;
                         properties[BossMaxHealthProperty] = this.CurrentMaxHealth.ToString();
@@ -115,9 +115,10 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
-            properties[BossHealthProperty] = this.CurrentHealth;
-            properties[BossMaxHealthProperty] = this.CurrentMaxHealth;
-            properties[BossHealthBarRemainingProperty] = this.HealthRemainingPercentage;
+            foreach (var kvp in this.GetDataProperties())
+            {
+                properties[kvp.Key] = kvp.Value;
+            }
 
             properties[nameof(this.BorderColor)] = this.BorderColor;
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
@@ -156,11 +157,12 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private Dictionary<string, string> GetDataProperties()
+        private Dictionary<string, object> GetDataProperties()
         {
-            Dictionary<string, string> data = new Dictionary<string, string>();
-            data[BossHealthProperty] = this.CurrentHealth.ToString();
-            data[BossHealthBarRemainingProperty] = this.HealthRemainingPercentage.ToString();
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data[BossHealthProperty] = this.CurrentHealth;
+            data[BossMaxHealthProperty] = this.CurrentMaxHealth;
+            data[BossHealthBarRemainingProperty] = this.HealthRemainingPercentage;
             return data;
         }
     }

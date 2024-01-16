@@ -90,9 +90,9 @@ namespace MixItUp.Base.Services
         [DataMember]
         public string FunctionName { get; set; }
         [DataMember]
-        public Dictionary<string, string> Parameters { get; set; }
+        public Dictionary<string, object> Parameters { get; set; }
 
-        public OverlayFunctionV3Model(string id, string functionName, Dictionary<string, string> parameters)
+        public OverlayFunctionV3Model(string id, string functionName, Dictionary<string, object> parameters)
         {
             this.ID = id;
             this.FunctionName = functionName;
@@ -442,7 +442,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task Function(string id, string functionName, Dictionary<string, string> parameters)
+        public async Task Function(string id, string functionName, Dictionary<string, object> parameters)
         {
             try
             {

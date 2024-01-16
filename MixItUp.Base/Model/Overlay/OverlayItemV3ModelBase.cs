@@ -123,7 +123,7 @@ namespace MixItUp.Base.Model.Overlay
 
         protected virtual Task WidgetDisableInternal() { return Task.CompletedTask; }
 
-        protected async Task CallFunction(string functionName, Dictionary<string, string> data)
+        protected async Task CallFunction(string functionName, Dictionary<string, object> data)
         {
             // TODO: Change to support different overlay endpoints or direct URLs
             OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);

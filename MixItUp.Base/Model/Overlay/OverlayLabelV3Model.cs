@@ -423,12 +423,12 @@ namespace MixItUp.Base.Model.Overlay
             OverlayLabelDisplayV3Model display = this.Displays[type];
             if (display.IsEnabled)
             {
-                Dictionary<string, string> data = await this.GetLabelDisplayProperties(display);
+                Dictionary<string, object> data = await this.GetLabelDisplayProperties(display);
                 await this.CallFunction("update", data);
             }
         }
 
-        private async Task<Dictionary<string, string>> GetLabelDisplayProperties(OverlayLabelDisplayV3Model display)
+        private async Task<Dictionary<string, object>> GetLabelDisplayProperties(OverlayLabelDisplayV3Model display)
         {
             UserV2ViewModel user = null;
             if (display.UserFallback != null)
@@ -451,7 +451,7 @@ namespace MixItUp.Base.Model.Overlay
 
             string result = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(display.Format, parameters);
 
-            Dictionary<string, string> data = new Dictionary<string, string>();
+            Dictionary<string, object> data = new Dictionary<string, object>();
             data[nameof(display.Type)] = display.Type.ToString();
             data[nameof(display.Format)] = result;
 

@@ -383,14 +383,15 @@ namespace MixItUp.Base {
         ///
         ///function update(data)
         ///{
-        ///  goalBarCompleted.style.width = data.GoalBarCompletionPercentage + &quot;%&quot;;
         ///  goalAmount.innerHTML = data.GoalAmount;
+        ///  adjustProgress(data);
         ///}
         ///
         ///function reset(data)
         ///{
         ///  goalName.innerHTML = data.GoalName;
-        ///  goa [rest of string was truncated]&quot;;.
+        ///  goalEnd.innerHTML = data.GoalEnd;
+        ///  goalAmount.inne [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultJavascript {
             get {
@@ -692,13 +693,14 @@ namespace MixItUp.Base {
         ///function damage(data)
         ///{
         ///    bossHealth.innerHTML = data.BossHealth;
-        ///    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + &quot;%&quot;;
+        ///    adjustProgress(data);
         ///    {DamageAnimation}
         ///}
         ///
         ///function heal(data)
         ///{
-        ///  [rest of string was truncated]&quot;;.
+        ///    bossHealth.innerHTML = data.BossHealth;
+        ///    ad [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayStreamBossDefaultJavascript {
             get {

@@ -111,7 +111,8 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.CurrentAmount < this.CurrentSegment.Amount || this.CurrentSegment == this.Segments.Last())
                 {
-                    await this.CallFunction("update", this.GetDataProperties());
+                    Dictionary<string, object> properties = this.GetDataProperties();
+                    await this.CallFunction("update", properties);
 
                     await ServiceManager.Get<CommandService>().Queue(this.ProgressOccurredCommandID, new CommandParametersModel(user));
                 }
@@ -119,7 +120,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.ProgressSegments();
 
-                    Dictionary<string, string> properties = this.GetDataProperties();
+                    Dictionary<string, object> properties = this.GetDataProperties();
                     await this.CallFunction("reset", properties);
 
                     await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, new CommandParametersModel(user));
@@ -131,11 +132,10 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
-            properties[GoalNameProperty] = this.CurrentSegment.Name;
-            properties[GoalEndProperty] = this.GoalEndText;
-            properties[GoalAmountProperty] = this.TotalAmount;
-            properties[GoalMaxAmountProperty] = this.CurrentSegment.Amount;
-            properties[GoalBarCompletionPercentageProperty] = this.GoalBarCompletionPercentage.ToString();
+            foreach (var kvp in this.GetDataProperties())
+            {
+                properties[kvp.Key] = kvp.Value;
+            }
 
             properties[nameof(this.BorderColor)] = this.BorderColor;
             properties[nameof(this.GoalColor)] = this.GoalColor;
@@ -181,11 +181,14 @@ namespace MixItUp.Base.Model.Overlay
             await base.WidgetEnableInternal();
         }
 
-        private Dictionary<string, string> GetDataProperties()
+        private Dictionary<string, object> GetDataProperties()
         {
-            Dictionary<string, string> data = new Dictionary<string, string>();
-            data[GoalAmountProperty] = this.TotalAmount.ToString();
-            data[GoalBarCompletionPercentageProperty] = this.GoalBarCompletionPercentage.ToString();
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data[GoalNameProperty] = this.CurrentSegment.Name;
+            data[GoalEndProperty] = this.GoalEndText;
+            data[GoalAmountProperty] = this.CurrentAmount;
+            data[GoalMaxAmountProperty] = this.CurrentSegment.Amount;
+            data[GoalBarCompletionPercentageProperty] = this.GoalBarCompletionPercentage;
             return data;
         }
 

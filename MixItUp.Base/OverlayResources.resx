@@ -477,6 +477,22 @@ function removeOldest()
 .goalEnd {
   text-align: center;
   margin-top: 10px;
+}
+
+@keyframes fillProgressAnimation {
+  from {
+    width: var(--startPercentage);
+  }
+  to {
+    width: var(--endPercentage);
+  }
+}
+
+.fillProgressBar {
+  --startPercentage: 0%;
+  --endPercentage: 0%;
+  animation-name: fillProgressAnimation;
+  animation-duration: 2s;
 }</value>
   </data>
   <data name="OverlayGoalDefaultHTML" xml:space="preserve">
@@ -513,17 +529,28 @@ let goalMaxAmount = document.getElementById("goalMaxAmount");
 
 function update(data)
 {
-  goalBarCompleted.style.width = data.GoalBarCompletionPercentage + "%";
   goalAmount.innerHTML = data.GoalAmount;
+  adjustProgress(data);
 }
 
 function reset(data)
 {
   goalName.innerHTML = data.GoalName;
   goalEnd.innerHTML = data.GoalEnd;
-  goalBarCompleted.style.width = data.GoalBarCompletionPercentage + "%";
   goalAmount.innerHTML = data.GoalAmount;
   goalMaxAmount.innerHTML = data.GoalMaxAmount;
+  adjustProgress(data);
+}
+
+function adjustProgress(data)
+{
+  goalBarCompleted.style.setProperty("--startPercentage", goalBarCompleted.style.width);
+  goalBarCompleted.style.setProperty("--endPercentage", data.GoalBarCompletionPercentage + "%");
+  goalBarCompleted.style.width = data.GoalBarCompletionPercentage + "%";
+  goalBarCompleted.classList.add("fillProgressBar");
+  setTimeout(() =&gt; {
+    goalBarCompleted.classList.remove("fillProgressBar");
+  }, 2000);
 }
 
 reset({
@@ -1013,6 +1040,22 @@ function update(data)
 
 .flexAuto {
   flex: auto;
+}
+
+@keyframes adjustHealthAnimation {
+  from {
+    width: var(--startPercentage);
+  }
+  to {
+    width: var(--endPercentage);
+  }
+}
+
+.adjustHealth {
+  --startPercentage: 0%;
+  --endPercentage: 0%;
+  animation-name: adjustHealthAnimation;
+  animation-duration: 2s;
 }</value>
   </data>
   <data name="OverlayStreamBossDefaultHTML" xml:space="preserve">
@@ -1054,14 +1097,14 @@ let bossHealthBarRemaining = document.getElementById("bossHealthBarRemaining");
 function damage(data)
 {
     bossHealth.innerHTML = data.BossHealth;
-    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + "%";
+    adjustProgress(data);
     {DamageAnimation}
 }
 
 function heal(data)
 {
     bossHealth.innerHTML = data.BossHealth;
-    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + "%";
+    adjustProgress(data);
     {HealingAnimation}
 }
 
@@ -1071,8 +1114,19 @@ function newboss(data)
     bossName.innerHTML = data.BossName;
     bossHealth.innerHTML = data.BossHealth;
     bossMaxHealth.innerHTML = data.BossMaxHealth;
-    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + "%";
+    adjustProgress(data);
     {NewBossAnimation}
+}
+
+function adjustProgress(data)
+{
+    bossHealthBarRemaining.style.setProperty("--startPercentage", bossHealthBarRemaining.style.width);
+    bossHealthBarRemaining.style.setProperty("--endPercentage", data.BossHealthBarRemaining + "%");
+    bossHealthBarRemaining.style.width = data.BossHealthBarRemaining + "%";
+    bossHealthBarRemaining.classList.add("adjustHealth");
+    setTimeout(() =&gt; {
+        bossHealthBarRemaining.classList.remove("adjustHealth");
+    }, 2000);
 }
 
 newboss({
