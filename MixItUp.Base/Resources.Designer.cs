@@ -556,6 +556,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add To Goal.
+        /// </summary>
+        public static string AddToGoal {
+            get {
+                return ResourceManager.GetString("AddToGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add to specific user.
         /// </summary>
         public static string AddToSpecificUser {
@@ -5892,6 +5901,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End Date.
+        /// </summary>
+        public static string EndDate {
+            get {
+                return ResourceManager.GetString("EndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The End Date must be after the Start Date..
         /// </summary>
         public static string EndDateInvalid {
@@ -9786,11 +9804,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Goal.
+        /// </summary>
+        public static string Goal {
+            get {
+                return ResourceManager.GetString("Goal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Goal Amount.
         /// </summary>
         public static string GoalAmount {
             get {
                 return ResourceManager.GetString("GoalAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Goal Color.
+        /// </summary>
+        public static string GoalColor {
+            get {
+                return ResourceManager.GetString("GoalColor", resourceCulture);
             }
         }
         
@@ -14290,6 +14326,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least one segment must be added.
+        /// </summary>
+        public static string OverlayGoalAtLeastOneSegmentMustBeAdded {
+            get {
+                return ResourceManager.GetString("OverlayGoalAtLeastOneSegmentMustBeAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height must be a valid value.
         /// </summary>
         public static string OverlayHeightMustBeValidValue {
@@ -15829,6 +15874,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Progress Amount.
+        /// </summary>
+        public static string ProgressAmount {
+            get {
+                return ResourceManager.GetString("ProgressAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Goal/Progress Bar.
         /// </summary>
         public static string ProgressBar {
@@ -15852,6 +15906,24 @@ namespace MixItUp.Base {
         public static string ProgressColor {
             get {
                 return ResourceManager.GetString("ProgressColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Progress Multiplier.
+        /// </summary>
+        public static string ProgressMultiplier {
+            get {
+                return ResourceManager.GetString("ProgressMultiplier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Progress Occurred.
+        /// </summary>
+        public static string ProgressOccurred {
+            get {
+                return ResourceManager.GetString("ProgressOccurred", resourceCulture);
             }
         }
         
@@ -16889,6 +16961,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset Cadence.
+        /// </summary>
+        public static string ResetCadence {
+            get {
+                return ResourceManager.GetString("ResetCadence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do you want to reset all {0} points?.
         /// </summary>
         public static string ResetCurrencyRankPointsPrompt {
@@ -17875,6 +17956,24 @@ namespace MixItUp.Base {
         public static string SectionType {
             get {
                 return ResourceManager.GetString("SectionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Segment Completed.
+        /// </summary>
+        public static string SegmentCompleted {
+            get {
+                return ResourceManager.GetString("SegmentCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Segments.
+        /// </summary>
+        public static string Segments {
+            get {
+                return ResourceManager.GetString("Segments", resourceCulture);
             }
         }
         

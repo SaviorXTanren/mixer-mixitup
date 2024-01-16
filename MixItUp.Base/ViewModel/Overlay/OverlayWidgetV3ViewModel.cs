@@ -148,6 +148,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.StreamBoss:
                     this.Item = new OverlayStreamBossV3ViewModel();
                     break;
+                case OverlayItemV3Type.Goal:
+                    this.Item = new OverlayGoalV3ViewModel();
+                    break;
             }
 
             this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
@@ -178,6 +181,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                     break;
                 case OverlayItemV3Type.StreamBoss:
                     this.Item = new OverlayStreamBossV3ViewModel((OverlayStreamBossV3Model)widget.Item);
+                    break;
+                case OverlayItemV3Type.Goal:
+                    this.Item = new OverlayGoalV3ViewModel((OverlayGoalV3Model)widget.Item);
                     break;
             }
 

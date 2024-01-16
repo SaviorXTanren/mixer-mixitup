@@ -439,64 +439,100 @@ function removeOldest()
 }</value>
   </data>
   <data name="OverlayGoalDefaultCSS" xml:space="preserve">
-    <value>.background
-{
-    position: absolute;
-    background-color: {BackgroundColor};
-    width: {Width}px;
-    height: {Height}px;
+    <value>.mainContainer {
+  width: {Width};
 }
 
-.progress
-{
-    position: absolute;
-    background-color: {ProgressColor};
-    height: {Height}px;
+.goalName {
+  text-align: center;
+  margin-bottom: 5px;
 }
 
-.text {
-    position: absolute;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: '{FontFamily}';
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-    left: 50%;
-    top: 50%;
-    margin: auto;
-    transform: translate(-50%, -50%);
-    margin-block-start: 0px;
-    margin-block-end: 0px;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
+.goalContainer {
+  position: relative;
+  border-style: solid;
+  border-width: 5px;
+  border-color: {BorderColor};
+  height: {Height};
+}
+
+.goalBar {
+  background-color: {GoalColor};
+  height: 100%;
+}
+
+.goalBarCompleted {
+  background-color: {ProgressColor};
+  height: 100%;
+  width: 50%;
+}
+
+.goalBarText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.goalEnd {
+  text-align: center;
+  margin-top: 10px;
 }</value>
   </data>
   <data name="OverlayGoalDefaultHTML" xml:space="preserve">
-    <value>&lt;div class="background"&gt;
-  &lt;div id="progress" class="progress" /&gt;
-&lt;/div&gt;
-&lt;p id="text" class="text" /&gt;</value>
+    <value>&lt;div class="mainContainer"&gt;
+  &lt;div class="goalName"&gt;
+    &lt;span id="goalName" class="text"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="goalContainer"&gt;
+    &lt;div class="goalBar"&gt;
+      &lt;div id="goalBarCompleted" class="goalBarCompleted" /&gt;
+    &lt;/div&gt;
+
+    &lt;div class="goalBarText"&gt;
+      &lt;span class="text"&gt;
+        &lt;span id="goalAmount"&gt;&lt;/span&gt;
+        &lt;span&gt; / &lt;/span&gt;
+        &lt;span id="goalMaxAmount"&gt;&lt;/span&gt;
+      &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="goalEnd"&gt;
+    &lt;span id="goalEnd" class="text"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</value>
   </data>
   <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
-    <value>function update(amount, goal, width)
-{
-    var percentage = (amount / goal)
+    <value>let goalName = document.getElementById("goalName");
+let goalEnd = document.getElementById("goalEnd");
+let goalBarCompleted = document.getElementById("goalBarCompleted");
+let goalAmount = document.getElementById("goalAmount");
+let goalMaxAmount = document.getElementById("goalMaxAmount");
 
-    var textElement = document.getElementById("text");
-    if (textElement != null) {
-        textElement.innerHTML = amount + " (" + Math.round(percentage * 100) + "%)"; 
-    }
-    
-    var progressElement = document.getElementById("progress");
-    if (progressElement != null) {
-        progressElement.style.width = Math.min(Math.round(percentage * width), width) + "px";
-    }
+function update(data)
+{
+  goalBarCompleted.style.width = data.GoalBarCompletionPercentage + "%";
+  goalAmount.innerHTML = data.GoalAmount;
 }
 
-update({CurrentAmount}, {GoalAmount}, {Width});</value>
+function reset(data)
+{
+  goalName.innerHTML = data.GoalName;
+  goalEnd.innerHTML = data.GoalEnd;
+  goalBarCompleted.style.width = data.GoalBarCompletionPercentage + "%";
+  goalAmount.innerHTML = data.GoalAmount;
+  goalMaxAmount.innerHTML = data.GoalMaxAmount;
+}
+
+reset({
+  "GoalName": "{GoalName}",
+  "GoalEnd": "{GoalEnd}",
+  "GoalBarCompletionPercentage": {GoalBarCompletionPercentage},
+  "GoalAmount": {GoalAmount},
+  "GoalMaxAmount": {GoalMaxAmount},
+});</value>
   </data>
   <data name="OverlayImageDefaultCSS" xml:space="preserve">
     <value>.image {
@@ -1042,9 +1078,9 @@ function newboss(data)
 newboss({
     "BossImage": "{BossImage}",
     "BossName": "{BossName}",
-    "BossHealth": "{BossHealth}",
-    "BossMaxHealth": "{BossMaxHealth}",
-    "BossHealthBarRemaining": "{BossHealthBarRemaining}",
+    "BossHealth": {BossHealth},
+    "BossMaxHealth": {BossMaxHealth},
+    "BossHealthBarRemaining": {BossHealthBarRemaining},
 });</value>
   </data>
   <data name="OverlayTextDefaultCSS" xml:space="preserve">

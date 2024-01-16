@@ -47,6 +47,11 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool StreamBossForceDamage { get; set; }
 
+        [DataMember]
+        public Guid GoalID { get; set; }
+        [DataMember]
+        public string GoalAmount { get; set; }
+
         [Obsolete]
         public OverlayActionModel(OverlayItemModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
@@ -90,12 +95,19 @@ namespace MixItUp.Base.Model.Actions
             this.ShowWidget = showWidget;
         }
 
-        public OverlayActionModel(OverlayWidgetV3Model streamBoss, string damageAmount, bool streamBossForceDamage)
+        public OverlayActionModel(OverlayStreamBossV3Model streamBoss, string damageAmount, bool streamBossForceDamage)
             : base(ActionTypeEnum.Overlay)
         {
             this.StreamBossID = streamBoss.ID;
             this.StreamBossDamageAmount = damageAmount;
             this.StreamBossForceDamage = streamBossForceDamage;
+        }
+
+        public OverlayActionModel(OverlayGoalV3Model goal, string goalAmount)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.GoalID = goal.ID;
+            this.GoalAmount = goalAmount;
         }
 
         [Obsolete]
@@ -128,6 +140,17 @@ namespace MixItUp.Base.Model.Actions
                     if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.StreamBossDamageAmount, parameters), out double damage))
                     {
                         await ((OverlayStreamBossV3Model)widget.Item).DealDamage(parameters.User, damage, this.StreamBossForceDamage);
+                    }
+                }
+            }
+            else if (this.GoalID != Guid.Empty)
+            {
+                OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.GoalID));
+                if (widget != null && widget.Type == OverlayItemV3Type.Goal)
+                {
+                    if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.GoalAmount, parameters), out double amount))
+                    {
+                        await ((OverlayGoalV3Model)widget.Item).ProcessEvent(parameters.User, amount);
                     }
                 }
             }

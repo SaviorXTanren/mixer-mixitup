@@ -9906,4 +9906,37 @@ namespace CustomNamespace
   <data name="ForceDamage" xml:space="preserve">
     <value>Force Damage</value>
   </data>
+  <data name="AddToGoal" xml:space="preserve">
+    <value>Add To Goal</value>
+  </data>
+  <data name="Goal" xml:space="preserve">
+    <value>Goal</value>
+  </data>
+  <data name="ProgressOccurred" xml:space="preserve">
+    <value>Progress Occurred</value>
+  </data>
+  <data name="SegmentCompleted" xml:space="preserve">
+    <value>Segment Completed</value>
+  </data>
+  <data name="GoalColor" xml:space="preserve">
+    <value>Goal Color</value>
+  </data>
+  <data name="ProgressAmount" xml:space="preserve">
+    <value>Progress Amount</value>
+  </data>
+  <data name="ProgressMultiplier" xml:space="preserve">
+    <value>Progress Multiplier</value>
+  </data>
+  <data name="Segments" xml:space="preserve">
+    <value>Segments</value>
+  </data>
+  <data name="OverlayGoalAtLeastOneSegmentMustBeAdded" xml:space="preserve">
+    <value>At least one segment must be added</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="ResetCadence" xml:space="preserve">
+    <value>Reset Cadence</value>
+  </data>
 </root>

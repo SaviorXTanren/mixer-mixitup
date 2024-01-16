@@ -23,6 +23,7 @@ namespace MixItUp.Base.ViewModel.Actions
         Timer,
         TwitchClip,
         DamageStreamBoss,
+        AddToGoal,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -44,6 +45,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
                     this.NotifyPropertyChanged(nameof(this.ShowItem));
                     this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
+                    this.NotifyPropertyChanged(nameof(this.ShowAddGoal));
 
                     if (this.ShowItem)
                     {
@@ -246,7 +248,33 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool streamBossForceDamage = true;
 
-        private Guid streamBossID;
+        public bool ShowAddGoal { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToGoal; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> Goals { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedGoal
+        {
+            get { return this.selectedGoal; }
+            set
+            {
+                this.selectedGoal = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayWidgetV3Model selectedGoal;
+
+        public string GoalAmount
+        {
+            get { return this.goalAmount; }
+            set
+            {
+                this.goalAmount = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string goalAmount;
+
+        private Guid widgetID;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
@@ -310,9 +338,15 @@ namespace MixItUp.Base.ViewModel.Actions
             if (action.StreamBossID != Guid.Empty)
             {
                 this.SelectedActionType = OverlayActionTypeEnum.DamageStreamBoss;
-                this.streamBossID = action.StreamBossID;
+                this.widgetID = action.StreamBossID;
                 this.StreamBossDamageAmount = action.StreamBossDamageAmount;
                 this.StreamBossForceDamage = action.StreamBossForceDamage;
+            }
+            else if (action.GoalID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.AddToGoal;
+                this.widgetID = action.StreamBossID;
+                this.GoalAmount = action.GoalAmount;
             }
         }
 
@@ -368,6 +402,18 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
+            else if (this.ShowAddGoal)
+            {
+                if (this.SelectedGoal == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.GoalAmount))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
 
             return Task.FromResult(new Result());
         }
@@ -382,11 +428,19 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.StreamBosses.Add(widget);
                 }
+                else if (widget.Type == OverlayItemV3Type.Goal)
+                {
+                    this.Goals.Add(widget);
+                }
             }
 
             if (this.ShowDamageStreamBoss)
             {
-                this.SelectedStreamBoss = this.StreamBosses.FirstOrDefault(w => w.ID.Equals(this.streamBossID));
+                this.SelectedStreamBoss = this.StreamBosses.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowAddGoal)
+            {
+                this.SelectedGoal = this.Goals.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
         }
 
@@ -407,7 +461,11 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowDamageStreamBoss)
             {
-                return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedStreamBoss, this.StreamBossDamageAmount, this.StreamBossForceDamage));
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayStreamBossV3Model)this.SelectedStreamBoss.Item, this.StreamBossDamageAmount, this.StreamBossForceDamage));
+            }
+            else if (this.ShowAddGoal)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayGoalV3Model)this.SelectedGoal.Item, this.GoalAmount));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

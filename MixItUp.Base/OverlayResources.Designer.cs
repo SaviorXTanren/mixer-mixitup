@@ -305,31 +305,39 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .background
-        ///{
-        ///    position: absolute;
-        ///    background-color: {BackgroundColor};
-        ///    width: {Width}px;
-        ///    height: {Height}px;
+        ///   Looks up a localized string similar to .mainContainer {
+        ///  width: {Width};
         ///}
         ///
-        ///.progress
-        ///{
-        ///    position: absolute;
-        ///    background-color: {ProgressColor};
-        ///    height: {Height}px;
+        ///.goalName {
+        ///  text-align: center;
+        ///  margin-bottom: 5px;
         ///}
         ///
-        ///.text {
-        ///    position: absolute;
-        ///    font-size: {FontSize}px;
-        ///    color: {FontColor};
-        ///    font-family: &apos;{FontFamily}&apos;;
-        ///    font-weight: {FontWeight};
-        ///    text-decoration: {TextDecoration};
-        ///    font-style: {FontStyle};
-        ///    text-align: {TextAlignment};
-        ///    text [rest of string was truncated]&quot;;.
+        ///.goalContainer {
+        ///  position: relative;
+        ///  border-style: solid;
+        ///  border-width: 5px;
+        ///  border-color: {BorderColor};
+        ///  height: {Height};
+        ///}
+        ///
+        ///.goalBar {
+        ///  background-color: {GoalColor};
+        ///  height: 100%;
+        ///}
+        ///
+        ///.goalBarCompleted {
+        ///  background-color: {ProgressColor};
+        ///  height: 100%;
+        ///  width: 50%;
+        ///}
+        ///
+        ///.goalBarText {
+        ///  position: absolute;
+        ///  top: 50%;
+        ///  left: 50%;
+        ///  transform: translate(-50%, -5 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultCSS {
             get {
@@ -338,10 +346,27 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;background&quot;&gt;
-        ///  &lt;div id=&quot;progress&quot; class=&quot;progress&quot; /&gt;
-        ///&lt;/div&gt;
-        ///&lt;p id=&quot;text&quot; class=&quot;text&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;div class=&quot;mainContainer&quot;&gt;
+        ///  &lt;div class=&quot;goalName&quot;&gt;
+        ///    &lt;span id=&quot;goalName&quot; class=&quot;text&quot;&gt;&lt;/span&gt;
+        ///  &lt;/div&gt;
+        ///  
+        ///  &lt;div class=&quot;goalContainer&quot;&gt;
+        ///    &lt;div class=&quot;goalBar&quot;&gt;
+        ///      &lt;div id=&quot;goalBarCompleted&quot; class=&quot;goalBarCompleted&quot; /&gt;
+        ///    &lt;/div&gt;
+        ///
+        ///    &lt;div class=&quot;goalBarText&quot;&gt;
+        ///      &lt;span class=&quot;text&quot;&gt;
+        ///        &lt;span id=&quot;goalAmount&quot;&gt;&lt;/span&gt;
+        ///        &lt;span&gt; / &lt;/span&gt;
+        ///        &lt;span id=&quot;goalMaxAmount&quot;&gt;&lt;/span&gt;
+        ///      &lt;/span&gt;
+        ///    &lt;/div&gt;
+        ///  &lt;/div&gt;
+        ///  
+        ///  &lt;div class=&quot;goalEnd&quot;&gt;
+        ///    &lt;span id=&quot;goalEnd&quot; class=&quot;te [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultHTML {
             get {
@@ -350,22 +375,22 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function update(amount, goal, width)
-        ///{
-        ///    var percentage = (amount / goal)
+        ///   Looks up a localized string similar to let goalName = document.getElementById(&quot;goalName&quot;);
+        ///let goalEnd = document.getElementById(&quot;goalEnd&quot;);
+        ///let goalBarCompleted = document.getElementById(&quot;goalBarCompleted&quot;);
+        ///let goalAmount = document.getElementById(&quot;goalAmount&quot;);
+        ///let goalMaxAmount = document.getElementById(&quot;goalMaxAmount&quot;);
         ///
-        ///    var textElement = document.getElementById(&quot;text&quot;);
-        ///    if (textElement != null) {
-        ///        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
-        ///    }
-        ///    
-        ///    var progressElement = document.getElementById(&quot;progress&quot;);
-        ///    if (progressElement != null) {
-        ///        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
-        ///    }
+        ///function update(data)
+        ///{
+        ///  goalBarCompleted.style.width = data.GoalBarCompletionPercentage + &quot;%&quot;;
+        ///  goalAmount.innerHTML = data.GoalAmount;
         ///}
         ///
-        ///update({CurrentAmount}, {GoalAmount} [rest of string was truncated]&quot;;.
+        ///function reset(data)
+        ///{
+        ///  goalName.innerHTML = data.GoalName;
+        ///  goa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultJavascript {
             get {

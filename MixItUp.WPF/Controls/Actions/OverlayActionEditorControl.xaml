@@ -154,5 +154,17 @@
             <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ForceDamage}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="6" IsChecked="{Binding StreamBossForceDamage}" />
         </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowAddGoal, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoal}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox Grid.Column="2" Text="{Binding GoalAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

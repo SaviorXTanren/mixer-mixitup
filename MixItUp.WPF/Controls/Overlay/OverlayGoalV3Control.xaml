@@ -1,4 +1,4 @@
-﻿<Controls:LoadingControlBase x:Class="MixItUp.WPF.Controls.Overlay.OverlayStreamBossV3Control"
+﻿<Controls:LoadingControlBase x:Class="MixItUp.WPF.Controls.Overlay.OverlayGoalV3Control"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -75,54 +75,94 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding BorderColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BorderColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding Height}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding Width}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding HealthColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HealthColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding BorderColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BorderColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding DamageColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding GoalColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GoalColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Text="{Binding ProgressColor}" Grid.Column="8" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Rectangle VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="4" Fill="{DynamicResource PrimaryHueMidBrush}" Height="4" />
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <CommandControls:CustomCommandListingControl Grid.Column="0" DataContext="{Binding DamageOccurredCommand}" Header="{x:Static resx:Resources.DamageOccurred}" />
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.EndDate}">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </GroupBox>
 
-            <CommandControls:CustomCommandListingControl Grid.Column="2" DataContext="{Binding HealingOccurredCommand}" Header="{x:Static resx:Resources.HealingOccurred}" />
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.ResetCadence}">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </GroupBox>
 
-            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding NewBossCommand}" Header="{x:Static resx:Resources.NewBoss}" />
+            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
+
+            <CommandControls:CustomCommandListingControl Grid.Column="6" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
         </Grid>
-        
-        <Grid Grid.Row="8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding BaseHealth}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BaseHealth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <GroupBox Grid.Row="8" Header="{x:Static resx:Resources.Segments}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <TextBox Text="{Binding KillBonusHealth}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.KillBonusHealth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Row="0" Command="{Binding AddSegmentCommand}" Content="{x:Static resx:Resources.Add}" Width="100" />
 
-            <TextBox Text="{Binding OverkillBonusHealthMultiplier}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverkillBonusHealthMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <ItemsControl Grid.Row="2" ItemsSource="{Binding Segments}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding SelfHealingMultiplier}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SelfHealingMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        </Grid>
+                                <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <Controls:IconButton Grid.Column="4" Command="{Binding DeleteCommand}" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </GroupBox>
 
         <Grid Grid.Row="10">
             <Grid.ColumnDefinitions>
@@ -155,7 +195,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Text="{Binding FollowAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" Text="{Binding FollowAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
             </GroupBox>
 
@@ -174,9 +214,9 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Column="0" Text="{Binding RaidAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="0" Text="{Binding RaidAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="2" Text="{Binding RaidPerViewAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="2" Text="{Binding RaidPerViewAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
                     <TextBlock Grid.Row="2" Text="{Binding RaidEquation}" />
@@ -195,13 +235,13 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Tier1}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Bottom" Margin="0,0,10,5" />
-                    <TextBox Grid.Column="1" Text="{Binding TwitchSubscriptionTier1Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="1" Text="{Binding TwitchSubscriptionTier1Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.Tier2}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Bottom" Margin="10,0,10,5" />
-                    <TextBox Grid.Column="3" Text="{Binding TwitchSubscriptionTier2Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="3" Text="{Binding TwitchSubscriptionTier2Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Tier3}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Bottom" Margin="10,0,10,5" />
-                    <TextBox Grid.Column="5" Text="{Binding TwitchSubscriptionTier3Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="5" Text="{Binding TwitchSubscriptionTier3Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
             </GroupBox>
 
@@ -222,7 +262,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Bottom" Margin="0,0,5,0" />
-                                <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -241,13 +281,13 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Tier1}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Bottom" Margin="0,0,10,5" />
-                    <TextBox Grid.Column="1" Text="{Binding TrovoSubscriptionTier1Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="1" Text="{Binding TrovoSubscriptionTier1Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.Tier2}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Bottom" Margin="10,0,10,5" />
-                    <TextBox Grid.Column="3" Text="{Binding TrovoSubscriptionTier2Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="3" Text="{Binding TrovoSubscriptionTier2Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Tier3}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Bottom" Margin="10,0,10,5" />
-                    <TextBox Grid.Column="5" Text="{Binding TrovoSubscriptionTier3Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="5" Text="{Binding TrovoSubscriptionTier3Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
             </GroupBox>
 
@@ -262,7 +302,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0" Text="{Binding TwitchBitsAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Row="0" Text="{Binding TwitchBitsAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBlock Grid.Row="2" Text="{Binding TwitchBitsEquation}" />
                 </Grid>
@@ -279,7 +319,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0" Text="{Binding YouTubeSuperChatAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Row="0" Text="{Binding YouTubeSuperChatAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBlock Grid.Row="2" Text="{Binding YouTubeSuperChatEquation}" />
                 </Grid>
@@ -296,7 +336,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0" Text="{Binding TrovoElixirSpellAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Row="0" Text="{Binding TrovoElixirSpellAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBlock Grid.Row="2" Text="{Binding TrovoElixirSpellEquation}" />
                 </Grid>
@@ -313,7 +353,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0" Text="{Binding DonationAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Row="0" Text="{Binding DonationAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBlock Grid.Row="2" Text="{Binding DonationEquation}" />
                 </Grid>
