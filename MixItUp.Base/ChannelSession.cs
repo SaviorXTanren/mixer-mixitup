@@ -494,7 +494,7 @@ namespace MixItUp.Base
 
         public static void ReconnectionOccurred(string serviceName)
         {
-            Logger.Log(LogLevel.Error, serviceName + " Service reconnection successful");
+            Logger.ForceLog(LogLevel.Information, serviceName + " Service reconnection successful");
             ServiceManager.ServiceReconnect(serviceName);
         }
 
