@@ -449,6 +449,8 @@ namespace MixItUp.Base.Services.External
                 using (NamedPipeClientStream namedPipeClient = new NamedPipeClientStream(ConnectionString))
                 {
                     string requestString = requestJObj.ToString(Formatting.None);
+                    Logger.Log(requestString);
+
                     byte[] requestBytes = Encoding.UTF8.GetBytes(requestString);
 
                     await Task.WhenAny(Task.Run(async () =>
