@@ -267,7 +267,7 @@ namespace MixItUp.Base.Services.YouTube
         {
             if (ServiceManager.Get<YouTubeSessionService>().IsLive)
             {
-                LiveChatBan ban = await this.GetConnection(sendAsStreamer: true).TimeoutChatUser(ServiceManager.Get<YouTubeSessionService>().Broadcast, new Channel() { Id = user.PlatformID }, duration);
+                LiveChatBan ban = await this.GetConnection(sendAsStreamer: true).BanChatUser(ServiceManager.Get<YouTubeSessionService>().Broadcast, new Channel() { Id = user.PlatformID });
                 if (ban != null)
                 {
                     user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).BanID = ban.Id;
