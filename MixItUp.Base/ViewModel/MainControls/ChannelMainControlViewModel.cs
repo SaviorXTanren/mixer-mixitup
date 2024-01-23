@@ -1,7 +1,9 @@
-﻿using MixItUp.Base.Model;
+﻿using Google.Apis.YouTube.v3.Data;
+using MixItUp.Base.Model;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Twitch;
 using MixItUp.Base.ViewModels;
@@ -199,6 +201,64 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
     }
 
+    public class YouTubeChannelControlViewModel : PlatformChannelControlViewModelBase
+    {
+        public string Description
+        {
+            get { return this.description; }
+            set
+            {
+                this.description = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string description;
+
+        public Video Video { get; private set; }
+
+        public YouTubeChannelControlViewModel() { this.Platform = StreamingPlatformTypeEnum.YouTube; }
+
+        protected override async Task OnOpenInternal()
+        {
+            await base.OnOpenInternal();
+
+            this.Video = ServiceManager.Get<YouTubeSessionService>().Video;
+            if (this.Video != null)
+            {
+                if (!string.IsNullOrEmpty(ServiceManager.Get<YouTubeSessionService>().Video.Snippet.Title))
+                {
+                    this.Title = ServiceManager.Get<YouTubeSessionService>().Video.Snippet.Title;
+                }
+
+                if (!string.IsNullOrEmpty(ServiceManager.Get<YouTubeSessionService>().Video.Snippet.Description))
+                {
+                    this.Description = ServiceManager.Get<YouTubeSessionService>().Video.Snippet.Description;
+                }
+            }
+        }
+
+        protected override Task RefreshChannelInformation() { return Task.CompletedTask; }
+
+        protected override async Task<Result> UpdateChannelInformation()
+        {
+            Video video = await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(this.Video, this.Title, this.Description);
+            if (video == null)
+            {
+                return new Result(MixItUp.Base.Resources.FailedToUpdateChannelInformation);
+            }
+
+            this.Video = video;
+            this.UpdateRecentData();
+
+            return new Result();
+        }
+
+        protected override Task SearchChannelsToRaid()
+        {
+            return Task.CompletedTask;
+        }
+    }
+
     public class TrovoChannelControlViewModel : PlatformChannelControlViewModelBase
     {
         public enum TrovoSearchFindChannelToRaidTypeEnum
@@ -221,11 +281,6 @@ namespace MixItUp.Base.ViewModel.MainControls
         private TrovoSearchFindChannelToRaidTypeEnum selectedSearchFindChannelToRaidOption;
 
         public TrovoChannelControlViewModel() { this.Platform = StreamingPlatformTypeEnum.Trovo; }
-
-        protected override async Task OnOpenInternal()
-        {
-            await base.OnOpenInternal();
-        }
 
         protected override async Task SearchChannelsToRaid()
         {
@@ -419,6 +474,13 @@ namespace MixItUp.Base.ViewModel.MainControls
                 return new Result(MixItUp.Base.Resources.FailedToUpdateChannelInformation);
             }
 
+            this.UpdateRecentData();
+
+            return new Result();
+        }
+
+        protected void UpdateRecentData()
+        {
             ChannelSession.Settings.RecentStreamTitles.Insert(0, this.Title);
             while (ChannelSession.Settings.RecentStreamTitles.Count > 10)
             {
@@ -432,8 +494,6 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.PastTitles.ClearAndAddRange(ChannelSession.Settings.RecentStreamTitles);
             this.PastCategories.ClearAndAddRange(ChannelSession.Settings.RecentStreamCategories);
-
-            return new Result();
         }
 
         protected abstract Task SearchChannelsToRaid();
@@ -443,9 +503,13 @@ namespace MixItUp.Base.ViewModel.MainControls
     {
         public TwitchChannelControlViewModel Twitch { get; set; } = new TwitchChannelControlViewModel();
 
+        public YouTubeChannelControlViewModel YouTube { get; set; } = new YouTubeChannelControlViewModel();
+
         public TrovoChannelControlViewModel Trovo { get; set; } = new TrovoChannelControlViewModel();
 
         public bool IsTwitchConnected { get { return ServiceManager.Get<TwitchSessionService>().IsConnected; } }
+
+        public bool IsYouTubeConnected { get { return ServiceManager.Get<YouTubeSessionService>().IsConnected; } }
 
         public bool IsTrovoConnected { get { return ServiceManager.Get<TrovoSessionService>().IsConnected; } }
 
@@ -456,6 +520,11 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (this.IsTwitchConnected)
             {
                 await this.Twitch.OnOpen();
+            }
+
+            if (this.IsYouTubeConnected)
+            {
+                await this.YouTube.OnOpen();
             }
 
             if (this.IsTrovoConnected)
@@ -471,6 +540,11 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (this.IsTwitchConnected)
             {
                 await this.Twitch.OnVisible();
+            }
+
+            if (this.IsYouTubeConnected)
+            {
+                await this.YouTube.OnVisible();
             }
 
             if (this.IsTrovoConnected)
