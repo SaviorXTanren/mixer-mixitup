@@ -18,6 +18,12 @@ namespace MixItUp.Base.Model.User.Platform
         [DataMember]
         public HashSet<string> MemberLevels { get; set; } = new HashSet<string>();
 
+        [DataMember]
+        public string ModeratorID { get; set; }
+
+        [DataMember]
+        public string BanID { get; set; }
+
         private bool initialRefreshCompleted = false;
 
         public YouTubeUserPlatformV2Model(Channel channel)

@@ -134,5 +134,7 @@ namespace MixItUp.Base.Services.YouTube
         public async Task<LiveChatBan> TimeoutChatUser(LiveBroadcast broadcast, Channel user, ulong duration) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.TimeoutUser(broadcast, user, duration)); }
 
         public async Task<LiveChatBan> BanChatUser(LiveBroadcast broadcast, Channel user) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.BanUser(broadcast, user)); }
+
+        public async Task UnbanChatUser(LiveChatBan ban) { await AsyncRunner.RunAsync(this.Connection.LiveChat.UnbanUser(ban)); }
     }
 }

@@ -232,9 +232,26 @@ namespace MixItUp.Base.Services.YouTube
         {
             if (ServiceManager.Get<YouTubeSessionService>().IsLive)
             {
-                await this.GetConnection(sendAsStreamer: true).ModChatUser(ServiceManager.Get<YouTubeSessionService>().Broadcast, new Channel() { Id = user.PlatformID });
+                LiveChatModerator moderator = await this.GetConnection(sendAsStreamer: true).ModChatUser(ServiceManager.Get<YouTubeSessionService>().Broadcast, new Channel() { Id = user.PlatformID });
+                if (moderator != null)
+                {
+                    user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).ModeratorID = moderator.Id;
+                }
             }
             return null;
+        }
+
+        public async Task UnmodUser(UserV2ViewModel user)
+        {
+            if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+            {
+                string moderatorID = user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube)?.ModeratorID;
+                if (!string.IsNullOrWhiteSpace(moderatorID))
+                {
+                    await this.GetConnection(sendAsStreamer: true).UnmodChatUser(new LiveChatModerator() { Id = moderatorID });
+                    user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).ModeratorID = null;
+                }
+            }
         }
 
         public async Task<LiveChatBan> TimeoutUser(UserV2ViewModel user, ulong duration)
@@ -250,9 +267,26 @@ namespace MixItUp.Base.Services.YouTube
         {
             if (ServiceManager.Get<YouTubeSessionService>().IsLive)
             {
-                await this.GetConnection(sendAsStreamer: true).BanChatUser(ServiceManager.Get<YouTubeSessionService>().Broadcast, new Channel() { Id = user.PlatformID });
+                LiveChatBan ban = await this.GetConnection(sendAsStreamer: true).BanChatUser(ServiceManager.Get<YouTubeSessionService>().Broadcast, new Channel() { Id = user.PlatformID });
+                if (ban != null)
+                {
+                    user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).BanID = ban.Id;
+                }
             }
             return null;
+        }
+
+        public async Task UnbanUser(UserV2ViewModel user)
+        {
+            if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+            {
+                string banID = user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube)?.BanID;
+                if (!string.IsNullOrWhiteSpace(banID))
+                {
+                    await this.GetConnection(sendAsStreamer: true).UnbanChatUser(new LiveChatBan() { Id = banID });
+                    user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).BanID = null;
+                }
+            }
         }
 
         public async Task<IEnumerable<YouTubeChatEmoteModel>> GetChatEmotes()
