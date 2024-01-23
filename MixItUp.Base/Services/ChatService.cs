@@ -302,6 +302,11 @@ namespace MixItUp.Base.Services
                 await ServiceManager.Get<TwitchChatService>().UnmodUser(user);
             }
 
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+            {
+                await ServiceManager.Get<YouTubeChatService>().UnmodUser(user);
+            }
+
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
                 await ServiceManager.Get<TrovoChatEventService>().UnmodUser(user.Username);
@@ -331,6 +336,11 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
             {
                 await ServiceManager.Get<TwitchChatService>().UnbanUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+            {
+                await ServiceManager.Get<YouTubeChatService>().UnbanUser(user);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
