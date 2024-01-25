@@ -59,6 +59,15 @@ namespace MixItUp.Base.Model.Actions
                     }
                     return Task.FromResult(text);
                 });
+                replacementText = await this.ProcessStringFunction(replacementText, "count", (text) =>
+                {
+                    string[] splits = text.Split(new char[] { ',' });
+                    if (splits != null && splits.Length == 2)
+                    {
+                        return Task.FromResult(Regex.Matches(splits[0], splits[1]).Count.ToString());
+                    }
+                    return Task.FromResult(text);
+                });
             }
 
             if (this.ShouldProcessMath)
