@@ -169,13 +169,13 @@ namespace MixItUp.Base.Services.External
             return new XSplitWebSocketServer(listenerContext);
         }
 
-        private void XSplitService_OnConnectedOccurred(object sender, EventArgs e)
+        private void XSplitService_OnConnectedOccurred(object sender, WebSocketServerBase e)
         {
             ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.XSplit);
-            this.Connected(sender, e);
+            this.Connected(sender, new EventArgs());
         }
 
-        private void XSplitService_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void XSplitService_OnDisconnectOccurred(WebSocketServerBase sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.XSplit);
             this.Disconnected(sender, new EventArgs());

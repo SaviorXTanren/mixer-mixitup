@@ -298,12 +298,12 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)
+        private void WebSocketServer_OnConnectedOccurred(object sender, WebSocketServerBase e)
         {
             this.OnWebSocketConnectedOccurred(this, new EventArgs());
         }
 
-        private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus closeStatus)
+        private void WebSocketServer_OnDisconnectOccurred(WebSocketServerBase sender, WebSocketCloseStatus closeStatus)
         {
             this.OnWebSocketDisconnectedOccurred(this, closeStatus);
         }

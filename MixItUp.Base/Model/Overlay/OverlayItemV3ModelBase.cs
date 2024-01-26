@@ -79,10 +79,10 @@ namespace MixItUp.Base.Model.Overlay
         {
             get
             {
-                OverlayWidgetEndpointV3Service widgetEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayWidgetEndpointService(this.ID);
+                OverlayEndpointV3Service widgetEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.ID);
                 if (widgetEndpoint != null)
                 {
-                    return widgetEndpoint.HttpListenerServerAddress;
+                    return widgetEndpoint.HttpAddress;
                 }
                 return null;
             }
@@ -186,7 +186,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
             {
-                return ServiceManager.Get<OverlayV3Service>().GetOverlayWidgetEndpointService(this.ID);
+                return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.ID);
             }
             return null;
         }

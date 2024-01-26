@@ -33,6 +33,6 @@ namespace MixItUp.Base.Model.Overlay
             this.Name = name;
         }
 
-        public string Address { get { return string.Format(OverlayEndpointV3Service.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
+        public string Address { get { return string.Format(OverlayV3Service.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
     }
 }

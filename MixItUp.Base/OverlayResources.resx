@@ -817,8 +817,6 @@ function update(data)
         }
     &lt;/script&gt;
 
-    &lt;script src="https://www.youtube.com/iframe_api"&gt;&lt;/script&gt;
-
     &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
 
     &lt;script src="https://code.responsivevoice.org/responsivevoice.js?key=PkwySfvE"&gt;&lt;/script&gt;
@@ -948,7 +946,7 @@ function update(data)
             logToSessionStorage(err);
         }
 
-        openWebsocketConnection("/overlay/ws/");
+        openWebsocketConnection("{WebSocketConnectionURL}");
 
         window.onmessage = function (message) {
             if (message != null &amp;&amp; message.data != null &amp;&amp; message.data.length &gt; 0) {

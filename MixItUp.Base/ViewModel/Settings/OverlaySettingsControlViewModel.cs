@@ -37,22 +37,22 @@ namespace MixItUp.Base.ViewModel.Settings
                 {
                     if (!this.viewModel.Endpoints.Any(e => e.PortNumber == this.PortNumber && e.ID != this.ID))
                     {
-                        Task.Run(async () =>
-                        {
-                            await ServiceManager.Get<OverlayV3Service>().RemoveOverlayEndpoint(this.ID);
+                        //Task.Run(async () =>
+                        //{
+                        //    ServiceManager.Get<OverlayV3Service>().DisconnectOverlayEndpointService(this.ID);
 
-                            int oldPortNumber = this.model.PortNumber;
-                            this.model.PortNumber = value;
+                        //    int oldPortNumber = this.model.PortNumber;
+                        //    this.model.PortNumber = value;
 
-                            if (await ServiceManager.Get<OverlayV3Service>().AddOverlayEndpoint(this.model))
-                            {
-                                this.NotifyPropertyChanged();
-                            }
-                            else
-                            {
-                                this.model.PortNumber = oldPortNumber;
-                            }
-                        });
+                        //    if (ServiceManager.Get<OverlayV3Service>().ConnectOverlayEndpointService(this.model))
+                        //    {
+                        //        this.NotifyPropertyChanged();
+                        //    }
+                        //    else
+                        //    {
+                        //        this.model.PortNumber = oldPortNumber;
+                        //    }
+                        //});
                     }
                 }
             }
@@ -119,11 +119,11 @@ namespace MixItUp.Base.ViewModel.Settings
                     {
                         OverlayEndpointV3Model overlayEndpoint = new OverlayEndpointV3Model(this.NewEndpointPortNumber, this.NewEndpointName);
 
-                        if (await ServiceManager.Get<OverlayV3Service>().AddOverlayEndpoint(overlayEndpoint))
-                        {
-                            ChannelSession.Settings.OverlayEndpointsV3.Add(overlayEndpoint);
-                            this.Endpoints.Add(new OverlayEndpointListingViewModel(this, overlayEndpoint));
-                        }
+                        //if (await ServiceManager.Get<OverlayV3Service>().ConnectOverlayEndpointService(overlayEndpoint))
+                        //{
+                        //    ChannelSession.Settings.OverlayEndpointsV3.Add(overlayEndpoint);
+                        //    this.Endpoints.Add(new OverlayEndpointListingViewModel(this, overlayEndpoint));
+                        //}
                     }
                 }
                 this.NewEndpointName = string.Empty;

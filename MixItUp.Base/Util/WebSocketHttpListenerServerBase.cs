@@ -9,8 +9,10 @@ namespace MixItUp.Base.Util
 {
     public abstract class WebSocketHttpListenerServerBase : LocalHttpListenerServer
     {
-        public event EventHandler OnConnectedOccurred = delegate { };
-        public event EventHandler<WebSocketCloseStatus> OnDisconnectOccurred = delegate { };
+        public delegate void DisconnectHandler(WebSocketServerBase webSocketServer, WebSocketCloseStatus status);
+
+        public event EventHandler<WebSocketServerBase> OnConnectedOccurred = delegate { };
+        public event DisconnectHandler OnDisconnectOccurred = delegate { };
 
         private LockedList<WebSocketServerBase> webSocketServers = new LockedList<WebSocketServerBase>();
 
@@ -93,13 +95,13 @@ namespace MixItUp.Base.Util
 
         private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)
         {
-            this.OnConnectedOccurred(sender, e);
+            this.OnConnectedOccurred(sender, (WebSocketServerBase)sender);
         }
 
         private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             this.webSocketServers.Remove((WebSocketServerBase)sender);
-            this.OnDisconnectOccurred(sender, e);
+            this.OnDisconnectOccurred((WebSocketServerBase)sender, e);
         }
     }
 }

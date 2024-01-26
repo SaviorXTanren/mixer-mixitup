@@ -102,13 +102,13 @@ namespace MixItUp.Base.Services.External
             return new PolyPopWebSocketServer(listenerContext);
         }
 
-        private void PolyPopService_OnConnectedOccurred(object sender, EventArgs e)
+        private void PolyPopService_OnConnectedOccurred(object sender, WebSocketServerBase e)
         {
             ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.PolyPop);
-            this.Connected(sender, e);
+            this.Connected(sender, new EventArgs());
         }
 
-        private void PolyPopService_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void PolyPopService_OnDisconnectOccurred(WebSocketServerBase sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.PolyPop);
             this.Disconnected(sender, new EventArgs());

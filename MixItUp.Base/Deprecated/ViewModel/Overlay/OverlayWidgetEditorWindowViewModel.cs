@@ -82,7 +82,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private string selectedOverlayEndpoint;
+        private string selectedOverlayEndpoint = null;
 
         public string RefreshTimeString
         {

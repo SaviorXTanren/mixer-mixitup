@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -77,7 +78,7 @@ namespace MixItUp.Base.Services
         public OverlayItemDataV3Model(string id)
         {
             this.ID = id;
-            this.URL = $"{OverlayV3HttpListenerServer.OverlayDataPrefix}/{this.ID}";
+            this.URL = $"/{OverlayV3HttpListenerServer.OverlayDataPrefix}/{this.ID}";
         }
     }
 
@@ -101,6 +102,14 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3Service : IExternalService
     {
+        public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/";
+        public const string RegularOverlayWebSocketServerAddressFormat = "http://localhost:{0}/ws/";
+
+        public const string AdministratorOverlayHttpListenerServerAddressFormat = "http://*:{0}/";
+        public const string AdministratorOverlayWebSocketServerAddressFormat = "http://*:{0}/ws/";
+
+        public event EventHandler<OverlayV3Packet> OnPacketReceived = delegate { };
+
         public static string ReplaceProperty(string text, string name, object value)
         {
             return text.Replace($"{{{name}}}", (value != null) ? value.ToString() : string.Empty);
@@ -127,12 +136,18 @@ namespace MixItUp.Base.Services
         }
 
         public string Name { get { return Resources.Overlay; } }
+        public int PortNumber { get { return ChannelSession.Settings.OverlayPortNumber; } }
 
         public bool IsConnected { get; private set; }
+        public int TotalConnectedClients { get { return this.webSocketListenerServer.TotalConnectedClients; } }
+
+        public string HttpListenerServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
+        public string WebSocketServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.PortNumber); } }
+
+        private OverlayV3HttpListenerServer httpListenerServer;
+        private OverlayV3WebSocketHttpListenerServer webSocketListenerServer;
 
         private Dictionary<Guid, OverlayEndpointV3Service> overlayEndpoints = new Dictionary<Guid, OverlayEndpointV3Service>();
-
-        private Dictionary<Guid, OverlayWidgetEndpointV3Service> widgetEndpoints = new Dictionary<Guid, OverlayWidgetEndpointV3Service>();
 
         public Task<Result> Enable()
         {
@@ -145,48 +160,69 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
-                {
-                    if (!await this.AddOverlayEndpoint(overlayEndpoint))
-                    {
-                        await this.Disconnect();
-                        return new Result(string.Format(Resources.OverlayAddFailed, overlayEndpoint.Name));
-                    }
-                }
+                this.httpListenerServer = new OverlayV3HttpListenerServer();
+                this.webSocketListenerServer = new OverlayV3WebSocketHttpListenerServer();
 
-                foreach (OverlayWidgetV3Model widget in this.GetWidgets())
+                this.httpListenerServer.Start(this.HttpListenerServerAddress);
+                if (this.webSocketListenerServer.Start(this.WebSocketServerAddress))
                 {
-                    if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
+                    this.webSocketListenerServer.OnConnectedOccurred += WebSocketListenerServer_OnConnectedOccurred;
+                    this.webSocketListenerServer.OnDisconnectOccurred += WebSocketListenerServer_OnDisconnectOccurred;
+                    this.webSocketListenerServer.OnPacketReceived += WebSocketListenerServer_OnPacketReceived;
+
+                    if (ServiceManager.Get<IOBSStudioService>().IsConnected)
                     {
-                        if (!await this.AddOverlayWidgetEndpoint(widget))
+                        await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
+                        await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
+                    }
+
+                    if (ServiceManager.Get<XSplitService>().IsConnected)
+                    {
+                        await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
+                        await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
+                    }
+
+                    if (ServiceManager.Get<StreamlabsDesktopService>().IsConnected)
+                    {
+                        await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
+                        await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
+                    }
+
+                    ServiceManager.Get<ITelemetryService>().TrackService("Overlay");
+
+                    foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
+                    {
+                        this.ConnectOverlayEndpointService(overlayEndpoint);
+                    }
+
+                    foreach (OverlayWidgetV3Model widget in this.GetWidgets())
+                    {
+                        if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
                         {
-                            await this.Disconnect();
-                            return new Result(string.Format(Resources.OverlayAddFailed, widget.Name));
+                            this.ConnectOverlayWidgetEndpointService(widget);
                         }
                     }
-                }
 
-                ServiceManager.Get<ITelemetryService>().TrackService("Overlay");
-                return new Result();
+                    return new Result();
+                }
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-                return new Result(ex);
-            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return new Result(string.Format(Resources.OverlayAddFailed, Resources.Default));
         }
 
         public async Task Disconnect()
         {
             foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
             {
-                await this.RemoveOverlayEndpoint(overlayEndpoint.ID);
+                this.DisconnectOverlayEndpointService(overlayEndpoint.ID);
             }
 
-            foreach (var widgetEndpont in this.widgetEndpoints)
-            {
-                await this.RemoveOverlayWidgetEndpoint(widgetEndpont.Key);
-            }
+            this.webSocketListenerServer.OnConnectedOccurred -= WebSocketListenerServer_OnConnectedOccurred;
+            this.webSocketListenerServer.OnDisconnectOccurred -= WebSocketListenerServer_OnDisconnectOccurred;
+            this.webSocketListenerServer.OnPacketReceived -= WebSocketListenerServer_OnPacketReceived;
+
+            this.httpListenerServer.Stop();
+            await this.webSocketListenerServer.Stop();
         }
 
         public Task<Result> Disable()
@@ -195,73 +231,7 @@ namespace MixItUp.Base.Services
             return Task.FromResult(new Result());
         }
 
-        public async Task<int> TestConnections()
-        {
-            int count = 0;
-            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values)
-            {
-                count += await overlay.TestConnection();
-            }
-
-            foreach (OverlayEndpointV3Service overlay in this.widgetEndpoints.Values)
-            {
-                count += await overlay.TestConnection();
-            }
-            return count;
-        }
-
-        public void StartBatching()
-        {
-            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values)
-            {
-                overlay.StartBatching();
-            }
-
-            foreach (OverlayEndpointV3Service overlay in this.widgetEndpoints.Values)
-            {
-                overlay.StartBatching();
-            }
-        }
-
-        public async Task EndBatching()
-        {
-            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values)
-            {
-                await overlay.EndBatching();
-            }
-
-            foreach (OverlayEndpointV3Service overlay in this.widgetEndpoints.Values)
-            {
-                await overlay.EndBatching();
-            }
-        }
-
-        public async Task<bool> AddOverlayEndpoint(OverlayEndpointV3Model overlayEndpoint)
-        {
-            OverlayEndpointV3Service overlay = new OverlayEndpointV3Service(overlayEndpoint);
-            if (await overlay.Initialize())
-            {
-                overlay.OnWebSocketConnectedOccurred += Overlay_OnWebSocketConnectedOccurred;
-                overlay.OnWebSocketDisconnectedOccurred += Overlay_OnWebSocketDisconnectedOccurred;
-                this.overlayEndpoints[overlayEndpoint.ID] = overlay;
-                return true;
-            }
-            await this.RemoveOverlayEndpoint(overlayEndpoint.ID);
-            return false;
-        }
-
-        public async Task RemoveOverlayEndpoint(Guid id)
-        {
-            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService(id);
-            if (overlay != null)
-            {
-                overlay.OnWebSocketConnectedOccurred -= Overlay_OnWebSocketConnectedOccurred;
-                overlay.OnWebSocketDisconnectedOccurred -= Overlay_OnWebSocketDisconnectedOccurred;
-
-                await overlay.Disconnect();
-                this.overlayEndpoints.Remove(id);
-            }
-        }
+        #region Endpoints
 
         public IEnumerable<OverlayEndpointV3Model> GetOverlayEndpoints() { return ChannelSession.Settings.OverlayEndpointsV3.ToList(); }
 
@@ -271,6 +241,17 @@ namespace MixItUp.Base.Services
         }
 
         public OverlayEndpointV3Model GetDefaultOverlayEndpoint() { return this.GetOverlayEndpoint(Guid.Empty); }
+
+        public void ConnectOverlayEndpointService(OverlayEndpointV3Model overlayEndpoint)
+        {
+            OverlayEndpointV3Service overlay = new OverlayEndpointV3Service(overlayEndpoint);
+            this.overlayEndpoints[overlayEndpoint.ID] = overlay;
+        }
+
+        public void DisconnectOverlayEndpointService(Guid id)
+        {
+            this.overlayEndpoints.Remove(id);
+        }
 
         public OverlayEndpointV3Service GetDefaultOverlayEndpointService()
         {
@@ -291,6 +272,10 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        #endregion Endpoints
+
+        #region Widgets
+
         public IEnumerable<OverlayWidgetV3Model> GetWidgets()
         {
             return ChannelSession.Settings.OverlayWidgetsV3;
@@ -300,7 +285,7 @@ namespace MixItUp.Base.Services
         {
             if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
             {
-                await this.AddOverlayWidgetEndpoint(widget);
+                this.ConnectOverlayWidgetEndpointService(widget);
             }
 
             ChannelSession.Settings.OverlayWidgetsV3.Add(widget);
@@ -314,188 +299,178 @@ namespace MixItUp.Base.Services
 
             if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
             {
-                await this.RemoveOverlayWidgetEndpoint(widget.ID);
+                this.DisconnectOverlayEndpointService(widget.ID);
             }
         }
 
-        public async Task<bool> AddOverlayWidgetEndpoint(OverlayWidgetV3Model widget)
+        public void ConnectOverlayWidgetEndpointService(OverlayWidgetV3Model widget)
         {
-            OverlayWidgetEndpointV3Service widgetEndpoint = this.GetOverlayWidgetEndpointService(widget.ID);
-            if (widgetEndpoint != null)
+            OverlayEndpointV3Service endpointService = this.GetOverlayEndpointService(widget.ID);
+            if (endpointService == null)
             {
-                return true;
-            }
-
-            widgetEndpoint = new OverlayWidgetEndpointV3Service(widget);
-            if (await widgetEndpoint.Initialize())
-            {
-                widgetEndpoint.OnWebSocketConnectedOccurred += Overlay_OnWebSocketConnectedOccurred;
-                widgetEndpoint.OnWebSocketDisconnectedOccurred += Overlay_OnWebSocketDisconnectedOccurred;
-                this.widgetEndpoints[widgetEndpoint.ID] = widgetEndpoint;
-                return true;
-            }
-            await this.RemoveOverlayWidgetEndpoint(widgetEndpoint.ID);
-            return false;
-        }
-
-        public async Task RemoveOverlayWidgetEndpoint(Guid id)
-        {
-            OverlayWidgetEndpointV3Service widgetEndpoint = this.GetOverlayWidgetEndpointService(id);
-            if (widgetEndpoint != null)
-            {
-                widgetEndpoint.OnWebSocketConnectedOccurred -= Overlay_OnWebSocketConnectedOccurred;
-                widgetEndpoint.OnWebSocketDisconnectedOccurred -= Overlay_OnWebSocketDisconnectedOccurred;
-
-                await widgetEndpoint.Disconnect();
-                this.widgetEndpoints.Remove(id);
+                OverlayWidgetEndpointV3Service widgetEndpoint = new OverlayWidgetEndpointV3Service(widget);
+                this.overlayEndpoints[widgetEndpoint.ID] = widgetEndpoint;
             }
         }
 
-        public OverlayWidgetEndpointV3Service GetOverlayWidgetEndpointService(Guid id)
+        #endregion Widgets
+
+        public async Task<int> TestConnections()
         {
-            if (this.widgetEndpoints.ContainsKey(id))
-            {
-                return this.widgetEndpoints[id];
-            }
-            return null;
+            return await this.webSocketListenerServer.TestConnection();
         }
 
-        public string GetURLForFile(string filePath, string fileType) { return this.GetDefaultOverlayEndpointService().GetURLForFile(filePath, fileType); }
-
-        public void SetLocalFile(string id, string filePath) { this.GetDefaultOverlayEndpointService().SetLocalFile(id, filePath); }
-
-        private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
+        public void StartBatching()
         {
-            OverlayEndpointV3Service overlay = (OverlayEndpointV3Service)sender;
-
-            Logger.Log("Client connected to Overlay Endpoint - " + overlay.Name);
-
-            try
+            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values)
             {
                 overlay.StartBatching();
-                //foreach (OverlayWidgetV3ModelBase widget in this.GetWidgets())
-                //{
-                //    if (widget.IsEnabled && widget.OverlayEndpointID == overlay.ID)
-                //    {
-                //        //await overlay.Add(widget.Item, new CommandParametersModel());
-                //    }
-                //}
+            }
+        }
+
+        public async Task EndBatching()
+        {
+            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values)
+            {
                 await overlay.EndBatching();
             }
-            catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private void Overlay_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus closeStatus)
+        public void SetHTMLData(string id, string html)
         {
-            OverlayEndpointV3Service overlay = (OverlayEndpointV3Service)sender;
-
-            Logger.Log("Client disconnect from Overlay Endpoint - " + overlay.Name);
+            try
+            {
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
+                {
+                    this.httpListenerServer.SetHTMLData(id, html);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
+
+        public string GetURLForFile(string filePath, string fileType) { return this.httpListenerServer.GetURLForFile(filePath, fileType); }
+
+        public void SetLocalFile(string id, string filePath) { this.httpListenerServer.SetLocalFile(id, filePath); }
+
+        private void WebSocketListenerServer_OnConnectedOccurred(object sender, WebSocketServerBase webSocketServer)
+        {
+            if (webSocketServer is OverlayV3WebSocketServer)
+            {
+                OverlayV3WebSocketServer server = (OverlayV3WebSocketServer)webSocketServer;
+                OverlayEndpointV3Service endpointService = this.GetOverlayEndpointService(server.WebSocketEndpointID);
+                if (endpointService != null)
+                {
+                    endpointService.AddWebsocketServer(server);
+                }
+            }
+        }
+
+        private void WebSocketListenerServer_OnDisconnectOccurred(WebSocketServerBase webSocketServer, WebSocketCloseStatus closeStatus)
+        {
+
+        }
+
+        protected virtual void WebSocketListenerServer_OnPacketReceived(object sender, OverlayV3Packet packet)
+        {
+//            this.PacketReceived(packet);
+
+//            if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
+//            {
+//                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
+//                {
+//                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint && this.ID == widget.OverlayEndpointID)
+//                    {
+//#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+//                        widget.SendInitial();
+//#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+//                    }
+//                }
+//            }
+        }
+
+        //private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
+        //{
+        //    OverlayEndpointV3Service overlay = (OverlayEndpointV3Service)sender;
+
+        //    Logger.Log("Client connected to Overlay Endpoint - " + overlay.Name);
+
+        //    try
+        //    {
+        //        overlay.StartBatching();
+        //        //foreach (OverlayWidgetV3ModelBase widget in this.GetWidgets())
+        //        //{
+        //        //    if (widget.IsEnabled && widget.OverlayEndpointID == overlay.ID)
+        //        //    {
+        //        //        //await overlay.Add(widget.Item, new CommandParametersModel());
+        //        //    }
+        //        //}
+        //        await overlay.EndBatching();
+        //    }
+        //    catch (Exception ex) { Logger.Log(ex); }
+        //}
+
+        //private void Overlay_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus closeStatus)
+        //{
+        //    OverlayEndpointV3Service overlay = (OverlayEndpointV3Service)sender;
+
+        //    Logger.Log("Client disconnect from Overlay Endpoint - " + overlay.Name);
+        //}
     }
 
     public class OverlayEndpointV3Service
     {
         public const string WebSocketConnectionStartInitialPacket = "ConnectionStart";
 
-        public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
-        public const string RegularOverlayWebSocketServerAddressFormat = "http://localhost:{0}/overlay/ws/";
-
-        public const string AdministratorOverlayHttpListenerServerAddressFormat = "http://*:{0}/overlay/";
-        public const string AdministratorOverlayWebSocketServerAddressFormat = "http://*:{0}/overlay/ws/";
-
-        public const string OverlayWebSocketConnectionURL = "/overlay/ws/";
-
-        public event EventHandler OnWebSocketConnectedOccurred = delegate { };
-        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred = delegate { };
-
         public event EventHandler<OverlayV3Packet> OnPacketReceived = delegate { };
 
         public OverlayEndpointV3Model Model { get; private set; }
 
         public virtual Guid ID { get { return this.Model.ID; } }
-        public virtual int PortNumber { get { return this.Model.PortNumber; } }
         public virtual string Name { get { return this.Model.Name; } }
 
-        public virtual string HttpListenerServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
-        public virtual string WebSocketServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.PortNumber); } }
-        public virtual string WebSocketConnectionURL { get { return OverlayWebSocketConnectionURL; } }
-
-        public int TotalConnectedClients { get { return this.webSocketServer.TotalConnectedClients; } }
-
-        private OverlayV3HttpListenerServer httpListenerServer;
-        private OverlayV3WebSocketHttpListenerServer webSocketServer;
+        public string HttpAddress
+        {
+            get
+            {
+                if (this.ID == Guid.Empty)
+                {
+                    return ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress;
+                }
+                return ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress + this.ID.ToString();
+            }
+        }
+        public virtual string WebSocketConnectionURL { get { return $"/ws/{this.ID}/"; } }
 
         private List<OverlayV3Packet> batchPackets = new List<OverlayV3Packet>();
         private bool isBatching = false;
 
+        private string mainHTML;
         private string itemIFrameHTML;
+
+        private List<OverlayV3WebSocketServer> webSocketServers = new List<OverlayV3WebSocketServer>();
 
         public OverlayEndpointV3Service(OverlayEndpointV3Model model)
         {
             this.Model = model;
+
+            this.mainHTML = OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayMainHTML);
+            this.mainHTML = OverlayV3Service.ReplaceProperty(this.mainHTML, nameof(WebSocketConnectionURL), WebSocketConnectionURL);
+
+            this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML; //OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayItemIFrameHTML);
         }
 
-        public async Task<bool> Initialize()
+        public void AddWebsocketServer(OverlayV3WebSocketServer webSocketServer)
         {
-            try
-            {
-                string webPageInstance = OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayMainHTML);
-                webPageInstance = OverlayV3Service.ReplaceProperty(webPageInstance, nameof(WebSocketConnectionURL), WebSocketConnectionURL);
+            this.webSocketServers.Add(webSocketServer);
 
-                this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML; //OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayItemIFrameHTML);
-
-                this.httpListenerServer = new OverlayV3HttpListenerServer(webPageInstance);
-                this.webSocketServer = new OverlayV3WebSocketHttpListenerServer();
-
-                this.httpListenerServer.Start(this.HttpListenerServerAddress);
-                if (this.webSocketServer.Start(this.WebSocketServerAddress))
-                {
-                    this.webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
-                    this.webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
-                    this.webSocketServer.OnPacketReceived += WebSocketServer_OnPacketReceived;
-
-                    if (this.ID == Guid.Empty && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
-                    {
-                        string overlayServerAddress = string.Format(OverlayEndpointV3Service.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber);
-                        if (ServiceManager.Get<IOBSStudioService>().IsConnected)
-                        {
-                            await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ServiceManager.Get<IOBSStudioService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
-                            await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
-                        }
-
-                        if (ServiceManager.Get<XSplitService>().IsConnected)
-                        {
-                            await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ServiceManager.Get<XSplitService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
-                            await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
-                        }
-
-                        if (ServiceManager.Get<StreamlabsDesktopService>().IsConnected)
-                        {
-                            await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ServiceManager.Get<StreamlabsDesktopService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
-                            await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
-                        }
-                    }
-                    return true;
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return false;
+            webSocketServer.OnPacketReceived += WebSocketServer_OnPacketReceived;
+            webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
         }
 
-        public async Task Disconnect()
-        {
-            this.webSocketServer.OnConnectedOccurred -= WebSocketServer_OnConnectedOccurred;
-            this.webSocketServer.OnDisconnectOccurred -= WebSocketServer_OnDisconnectOccurred;
-            this.webSocketServer.OnPacketReceived -= WebSocketServer_OnPacketReceived;
-
-            this.httpListenerServer.Stop();
-            await this.webSocketServer.Stop();
-        }
-
-        public async Task<int> TestConnection() { return await this.webSocketServer.TestConnection(); }
+        public string GetMainHTML() { return this.mainHTML; }
 
         public string GetItemIFrameHTML() { return this.itemIFrameHTML; }
 
@@ -505,7 +480,7 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
-                    this.httpListenerServer.SetHTMLData(id, html);
+                    ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
                     await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)));
                 }
             }
@@ -582,19 +557,17 @@ namespace MixItUp.Base.Services
             this.isBatching = false;
             if (this.batchPackets.Count > 0)
             {
-                await this.webSocketServer.Send(this.batchPackets.ToList());
+                foreach (var webSocketServer in this.webSocketServers)
+                {
+                    await webSocketServer.Send(this.batchPackets.ToList());
+                }
                 this.batchPackets.Clear();
             }
         }
 
-        public string GetURLForFile(string filePath, string fileType) { return this.httpListenerServer.GetURLForFile(filePath, fileType); }
+        public string GetURLForFile(string filePath, string fileType) { return ServiceManager.Get<OverlayV3Service>().GetURLForFile(filePath, fileType); }
 
-        public void SetLocalFile(string id, string filePath) { this.httpListenerServer.SetLocalFile(id, filePath); }
-
-        protected void PacketReceived(OverlayV3Packet packet)
-        {
-            this.OnPacketReceived(this, packet);
-        }
+        public void SetLocalFile(string id, string filePath) { ServiceManager.Get<OverlayV3Service>().SetLocalFile(id, filePath); }
 
         private async Task Send(OverlayV3Packet packet)
         {
@@ -604,7 +577,10 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await this.webSocketServer.Send(packet);
+                foreach (var webSocketServer in this.webSocketServers)
+                {
+                    await webSocketServer.Send(packet);
+                }
             }
         }
 
@@ -617,53 +593,31 @@ namespace MixItUp.Base.Services
             return content;
         }
 
-        private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)
+        private void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
         {
-            this.OnWebSocketConnectedOccurred(this, new EventArgs());
+            this.OnPacketReceived(this, packet);
         }
 
-        private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus closeStatus)
+        private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            this.OnWebSocketDisconnectedOccurred(this, closeStatus);
-        }
-
-        protected virtual void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
-        {
-            this.PacketReceived(packet);
-
-            if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
+            if (sender is OverlayV3WebSocketServer)
             {
-                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
-                {
-                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint && this.ID == widget.OverlayEndpointID)
-                    {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        widget.SendInitial();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    }
-                }
+                OverlayV3WebSocketServer webSocketServer = (OverlayV3WebSocketServer)sender;
+
+                webSocketServer.OnPacketReceived -= WebSocketServer_OnPacketReceived;
+                webSocketServer.OnDisconnectOccurred -= WebSocketServer_OnDisconnectOccurred;
+
+                this.webSocketServers.Remove(webSocketServer);
             }
         }
     }
 
     public class OverlayWidgetEndpointV3Service : OverlayEndpointV3Service
     {
-        public const string RegularOverlayWidgetHttpListenerServerAddressFormat = "http://localhost:{0}/widget/{1}/";
-        public const string RegularOverlayWidgetWebSocketServerAddressFormat = "http://localhost:{0}/widget/{1}/ws/";
-
-        public const string AdministratorOverlayWidgetHttpListenerServerAddressFormat = "http://*:{0}/widget/{1}/";
-        public const string AdministratorOverlayWidgetWebSocketServerAddressFormat = "http://*:{0}/widget/{1}/ws/";
-
-        public const string OverlayWidgetWebSocketConnectionURL = "/widget/{0}/ws/";
-
         public OverlayWidgetV3Model Widget { get; set; }
 
         public override Guid ID { get { return this.Widget.ID; } }
         public override string Name { get { return this.Widget.Name; } }
-
-        public override string HttpListenerServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayWidgetHttpListenerServerAddressFormat : RegularOverlayWidgetHttpListenerServerAddressFormat, this.PortNumber, this.ID); } }
-        public override string WebSocketServerAddress { get { return string.Format(ChannelSession.IsElevated ? RegularOverlayWidgetWebSocketServerAddressFormat : AdministratorOverlayWidgetWebSocketServerAddressFormat, this.PortNumber, this.ID); } }
-        public override string WebSocketConnectionURL { get { return string.Format(OverlayWidgetWebSocketConnectionURL, this.ID); } }
 
         public OverlayWidgetEndpointV3Service(OverlayWidgetV3Model widget)
             : base(ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint())
@@ -671,44 +625,35 @@ namespace MixItUp.Base.Services
             this.Widget = widget;
         }
 
-        protected override void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
-        {
-            this.PacketReceived(packet);
+//        protected override void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
+//        {
+//            this.PacketReceived(packet);
 
-            if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
-            {
-                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
-                {
-                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL && this.ID == widget.ID)
-                    {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        widget.SendInitial();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    }
-                }
-            }
-        }
+//            if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
+//            {
+//                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
+//                {
+//                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL && this.ID == widget.ID)
+//                    {
+//#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+//                        widget.SendInitial();
+//#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+//                    }
+//                }
+//            }
+//        }
     }
 
     public class OverlayV3HttpListenerServer : LocalHttpListenerServer
     {
         public const string OverlayPathPrefix = "overlay";
-
         public const string OverlayDataPrefix = "data";
-        private static readonly string OverlayDataFullPath = $"{OverlayPathPrefix}/{OverlayDataPrefix}/";
-
         public const string OverlayFilesPrefix = "files";
-        private static readonly string OverlayFilesFullPath = $"{OverlayPathPrefix}/{OverlayFilesPrefix}/";
-
-        private string webPageInstance;
 
         private Dictionary<string, string> localFiles = new Dictionary<string, string>();
         private Dictionary<string, string> htmlData = new Dictionary<string, string>();
 
-        public OverlayV3HttpListenerServer(string webPageInstance)
-        {
-            this.webPageInstance = webPageInstance;
-        }
+        public OverlayV3HttpListenerServer() { }
 
         public string GetURLForFile(string filePath, string fileType)
         {
@@ -720,7 +665,7 @@ namespace MixItUp.Base.Services
             string id = Guid.NewGuid().ToString();
             this.localFiles[id] = filePath;
 
-            return string.Format("/{0}{1}/{2}?nonce={3}", OverlayFilesFullPath, fileType, id, Guid.NewGuid());
+            return $"/{OverlayFilesPrefix}/{fileType}/{id}?nonce={Guid.NewGuid()}";
         }
 
         public void SetLocalFile(string id, string filePath)
@@ -748,22 +693,42 @@ namespace MixItUp.Base.Services
                 string url = listenerContext.Request.Url.LocalPath;
                 url = url.Trim(new char[] { '/' });
 
-                if (url.Equals(OverlayPathPrefix))
+                if (url.StartsWith(OverlayPathPrefix))
                 {
-                    await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
+                    Guid pathID = Guid.Empty;
+                    if (!url.Equals(OverlayPathPrefix))
+                    {
+                        if (!Guid.TryParse(url.Replace(OverlayPathPrefix + "/", ""), out pathID))
+                        {
+                            await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "Invalid Overlay ID specified");
+                            return;
+                        }
+                    }
+
+                    OverlayEndpointV3Service endpointService = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(pathID);
+                    if (endpointService != null)
+                    {
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, endpointService.GetMainHTML());
+                        return;
+                    }
+
+                    await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "Invalid Overlay ID specified");
                 }
-                else if (url.StartsWith(OverlayDataFullPath))
+                else if (url.StartsWith(OverlayDataPrefix))
                 {
-                    string id = url.Replace(OverlayDataFullPath, string.Empty);
+                    string id = url.Replace(OverlayDataPrefix, string.Empty);
+                    id = id.Trim(new char[] { '/' });
                     if (this.htmlData.TryGetValue(id, out string data))
                     {
                         //this.htmlData.Remove(id);
                         await this.CloseConnection(listenerContext, HttpStatusCode.OK, data);
                     }
                 }
-                else if (url.StartsWith(OverlayFilesFullPath))
+                else if (url.StartsWith(OverlayFilesPrefix))
                 {
-                    string fileID = url.Replace(OverlayFilesFullPath, "");
+                    string fileID = url.Replace(OverlayFilesPrefix, string.Empty);
+                    fileID = fileID.Trim(new char[] { '/' });
+
                     string[] splits = fileID.Split(new char[] { '/', '\\' });
                     if (splits.Length == 2)
                     {
@@ -857,19 +822,35 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3WebSocketServer : WebSocketServerBase
     {
+        public event EventHandler<OverlayV3Packet> OnPacketReceived = delegate { };
+
+        public Guid WebSocketEndpointID { get; private set; }
+
         private OverlayV3WebSocketHttpListenerServer server;
 
         public OverlayV3WebSocketServer(OverlayV3WebSocketHttpListenerServer server, HttpListenerContext listenerContext)
             : base(listenerContext)
         {
             this.server = server;
+
+            string[] splits = listenerContext.Request.Url.LocalPath.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            if (splits.Length == 2 && Guid.TryParse(splits[1], out Guid id))
+            {
+                this.WebSocketEndpointID = id;
+            }
         }
+
+        public async Task Send(IEnumerable<OverlayV3Packet> packets) { await base.Send(JSONSerializerHelper.SerializeToString(packets)); }
+
+        public async Task Send(OverlayV3Packet packet) { await base.Send(JSONSerializerHelper.SerializeToString(packet)); }
 
         protected override Task ProcessReceivedPacket(string packetJSON)
         {
             try
             {
-                this.server.PacketReceived(new OverlayV3Packet(packetJSON));
+                OverlayV3Packet packet = new OverlayV3Packet(packetJSON);
+                this.server.PacketReceived(packet);
+                this.OnPacketReceived(this, packet);
             }
             catch (Exception)
             {
