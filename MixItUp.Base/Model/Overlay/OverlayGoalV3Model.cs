@@ -92,6 +92,11 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
+        [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+        [JsonIgnore]
+        public override bool IsResettable { get { return true; } }
+
         public OverlayGoalV3Model() : base(OverlayItemV3Type.Goal) { }
 
         public void Reset()

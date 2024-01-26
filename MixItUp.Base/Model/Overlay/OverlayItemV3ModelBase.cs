@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -20,6 +21,12 @@ namespace MixItUp.Base.Model.Overlay
         TwitchClip,
         StreamBoss,
         Goal,
+    }
+
+    public enum OverlayItemV3DisplayOptionsType
+    {
+        OverlayEndpoint,
+        SingleWidgetURL,
     }
 
     [DataContract]
@@ -57,12 +64,34 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayItemV3Type Type { get; set; }
 
         [DataMember]
+        public OverlayItemV3DisplayOptionsType DisplayOption { get; set; } = OverlayItemV3DisplayOptionsType.OverlayEndpoint;
+
+        [DataMember]
         public OverlayPositionV3Model Position { get; set; }
 
         [DataMember]
         public int Width { get; set; }
         [DataMember]
         public int Height { get; set; }
+
+        [JsonIgnore]
+        public string SingleWidgetURL
+        {
+            get
+            {
+                OverlayWidgetEndpointV3Service widgetEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayWidgetEndpointService(this.ID);
+                if (widgetEndpoint != null)
+                {
+                    return widgetEndpoint.HttpListenerServerAddress;
+                }
+                return null;
+            }
+        }
+
+        [JsonIgnore]
+        public virtual bool IsTestable { get { return false; } }
+        [JsonIgnore]
+        public virtual bool IsResettable { get { return false; } }
 
         protected OverlayItemV3ModelBase() { }
 
@@ -84,7 +113,32 @@ namespace MixItUp.Base.Model.Overlay
         {
             await this.WidgetEnableInternal();
 
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
+            await this.WidgetSendInitial();
+        }
+
+        public async Task WidgetDisable()
+        {
+            await this.WidgetDisableInternal();
+
+            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
+            if (overlay != null)
+            {
+                await overlay.Remove(this.ID.ToString());
+            }
+        }
+
+        public async Task WidgetReset()
+        {
+            await this.WidgetResetInternal();
+
+            await this.WidgetDisable();
+
+            await this.WidgetEnable();
+        }
+
+        public async Task WidgetSendInitial()
+        {
+            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
             if (overlay != null)
             {
                 Dictionary<string, object> properties = this.GetGenerationProperties();
@@ -108,29 +162,33 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public async Task WidgetDisable()
-        {
-            await this.WidgetDisableInternal();
-
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
-            if (overlay != null)
-            {
-                await overlay.Remove(this.ID.ToString());
-            }
-        }
-
         protected virtual Task WidgetEnableInternal() { return Task.CompletedTask; }
 
         protected virtual Task WidgetDisableInternal() { return Task.CompletedTask; }
 
+        protected virtual Task WidgetResetInternal() { return Task.CompletedTask; }
+
         protected async Task CallFunction(string functionName, Dictionary<string, object> data)
         {
             // TODO: Change to support different overlay endpoints or direct URLs
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
+            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
             if (overlay != null)
             {
                 await overlay.Function(this.ID.ToString(), functionName, data);
             }
+        }
+
+        protected OverlayEndpointV3Service GetOverlayEndpointService()
+        {
+            if (this.DisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint)
+            {
+                return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
+            }
+            else if (this.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
+            {
+                return ServiceManager.Get<OverlayV3Service>().GetOverlayWidgetEndpointService(this.ID);
+            }
+            return null;
         }
     }
 }

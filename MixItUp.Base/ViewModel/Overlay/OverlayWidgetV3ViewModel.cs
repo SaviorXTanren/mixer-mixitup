@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,6 +46,22 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private bool isEnabled;
+
+        public IEnumerable<OverlayItemV3DisplayOptionsType> DisplayOptions { get; set; } = EnumHelper.GetEnumList<OverlayItemV3DisplayOptionsType>();
+
+        public OverlayItemV3DisplayOptionsType SelectedDisplayOption
+        {
+            get { return this.selectedDisplayOption; }
+            set
+            {
+                this.selectedDisplayOption = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(this.IsDisplayOptionOverlayEndpoint));
+            }
+        }
+        private OverlayItemV3DisplayOptionsType selectedDisplayOption;
+
+        public bool IsDisplayOptionOverlayEndpoint { get { return this.SelectedDisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint; } }
 
         public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get; set; } = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints();
 
@@ -139,6 +156,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.ID = Guid.NewGuid();
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+            this.SelectedDisplayOption = OverlayItemV3DisplayOptionsType.OverlayEndpoint;
 
             switch (type)
             {
@@ -172,7 +190,18 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.ID = widget.ID;
             this.Name = widget.Name;
             this.RefreshTime = widget.RefreshTime;
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(widget.Item.OverlayEndpointID);
+
+            this.SelectedDisplayOption = widget.Item.DisplayOption;
+
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+            if (this.SelectedDisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint)
+            {
+                OverlayEndpointV3Model overlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(widget.Item.OverlayEndpointID);
+                if (overlayEndpoint == null)
+                {
+                    this.SelectedOverlayEndpoint = overlayEndpoint;
+                }
+            }
 
             switch (widget.Item.Type)
             {
@@ -278,6 +307,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             item.HTML = this.HTML;
             item.CSS = this.CSS;
             item.Javascript = this.Javascript;
+            item.DisplayOption = this.SelectedDisplayOption;
             item.Position = this.Position.GetPosition();
 
             OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);

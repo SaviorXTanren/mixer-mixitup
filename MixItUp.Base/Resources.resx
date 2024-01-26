@@ -9939,4 +9939,16 @@ namespace CustomNamespace
   <data name="ResetCadence" xml:space="preserve">
     <value>Reset Cadence</value>
   </data>
+  <data name="DisplayOption" xml:space="preserve">
+    <value>Display Option</value>
+  </data>
+  <data name="OverlayWidgetResetConfirmation" xml:space="preserve">
+    <value>This option will reset all progress and data for this widget. Are you sure you want to do this?</value>
+  </data>
+  <data name="OverlayEndpoint" xml:space="preserve">
+    <value>Overlay Endpoint</value>
+  </data>
+  <data name="SingleWidgetURL" xml:space="preserve">
+    <value>Single Widget URL</value>
+  </data>
 </root>

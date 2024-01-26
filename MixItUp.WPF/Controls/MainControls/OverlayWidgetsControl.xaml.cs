@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
@@ -41,12 +42,34 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
+        private void LinkButton_Click(object sender, RoutedEventArgs e)
+        {
+            OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
+            string url = widget.SingleWidgetURL;
+            if (url != null)
+            {
+                ServiceManager.Get<IProcessService>().LaunchLink(url);
+            }
+        }
+
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
             {
                 OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
                 await this.viewModel.PlayWidget(widget);
+            });
+        }
+
+        private async void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.OverlayWidgetResetConfirmation))
+                {
+                    OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
+                    await widget.Reset();
+                }
             });
         }
 

@@ -5289,6 +5289,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display Option.
+        /// </summary>
+        public static string DisplayOption {
+            get {
+                return ResourceManager.GetString("DisplayOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Rotation (Secs).
         /// </summary>
         public static string DisplayRotationSeconds {
@@ -14308,6 +14317,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overlay Endpoint.
+        /// </summary>
+        public static string OverlayEndpoint {
+            get {
+                return ResourceManager.GetString("OverlayEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overlay Endpoints.
         /// </summary>
         public static string OverlayEndpoints {
@@ -14673,6 +14691,15 @@ namespace MixItUp.Base {
         public static string OverlayWidgetProgressBarDescription {
             get {
                 return ResourceManager.GetString("OverlayWidgetProgressBarDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This option will reset all progress and data for this widget. Are you sure you want to do this?.
+        /// </summary>
+        public static string OverlayWidgetResetConfirmation {
+            get {
+                return ResourceManager.GetString("OverlayWidgetResetConfirmation", resourceCulture);
             }
         }
         
@@ -18858,6 +18885,15 @@ namespace MixItUp.Base {
         public static string Simple {
             get {
                 return ResourceManager.GetString("Simple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Widget URL.
+        /// </summary>
+        public static string SingleWidgetURL {
+            get {
+                return ResourceManager.GetString("SingleWidgetURL", resourceCulture);
             }
         }
         

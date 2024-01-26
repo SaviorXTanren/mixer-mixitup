@@ -747,7 +747,7 @@ function update(data)
 
                 // When the connection is open, send some data to the server
                 connection.onopen = function () {
-                    sendPacket('Ping', '');
+                    sendPacket('ConnectionStart', '');
                 };
 
                 // Log messages from the server
@@ -859,6 +859,9 @@ function update(data)
                 else if (packet.Type === 'Remove') {
                     processRemove(packet.Data);
                 }
+                else if (packet.Type === 'Clear') {
+                    processClear(packet.Data);
+                }
                 else if (packet.Type === 'Function') {
                     processFunction(packet.Data);
                 }
@@ -891,6 +894,14 @@ function update(data)
 
                 iframes.delete(data.ID);
             }
+        }
+
+        function processClear(data) {
+            iframes.forEach((value, key) =&gt; {
+                mainOverlayDiv.removeChild(value);
+            });
+            
+            iframes.clear();
         }
 
         function processFunction(data) {

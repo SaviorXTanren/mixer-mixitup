@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,17 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public OverlayItemV3ModelBase Item { get { return this.Widget.Item; } }
 
+        public Guid ID { get { return this.Widget.ID; } }
+
         public string Name { get { return this.Widget.Name; } }
+
+        public bool IsSingleWidgetURL { get { return this.Widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL; } }
+
+        public string SingleWidgetURL { get { return this.Widget.SingleWidgetURL; } }
+
+        public bool IsTestable { get { return this.Widget.IsTestable; } }
+
+        public bool IsResettable { get { return this.Widget.IsResettable; } }
 
         public bool IsEnabled
         {
@@ -32,6 +43,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.Widget = widget;
         }
+
+        public async Task Reset() { await this.Widget.Reset(); }
     }
 
     public class OverlayWidgetsMainControlViewModel : WindowControlViewModelBase

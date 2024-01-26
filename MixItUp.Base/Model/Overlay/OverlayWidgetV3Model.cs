@@ -1,6 +1,8 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,17 +22,25 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         [DataMember]
         public bool IsEnabled { get; set; }
 
+        [JsonIgnore]
         public Guid ID { get { return this.Item.ID; } }
+        [JsonIgnore]
         public OverlayItemV3Type Type { get { return this.Item.Type; } }
+        [JsonIgnore]
+        public Guid OverlayEndpointID { get { return this.Item.OverlayEndpointID; } }
 
-        public virtual bool IsTestable { get { return true; } }
+        [JsonIgnore]
+        public string SingleWidgetURL { get { return this.Item.SingleWidgetURL; } }
+        [JsonIgnore]
+        public bool IsResettable { get { return this.Item.IsResettable; } }
+        [JsonIgnore]
+        public bool IsTestable { get { return this.Item.IsTestable; } }
 
         private CancellationTokenSource refreshCancellationTokenSource;
 
         public OverlayWidgetV3Model(OverlayItemV3ModelBase item)
         {
             this.Item = item;
-            this.IsEnabled = true;
         }
 
         [Obsolete]
@@ -77,6 +87,16 @@ namespace MixItUp.Base.Model.Overlay.Widgets
             this.refreshCancellationTokenSource = null;
 
             this.IsEnabled = false;
+        }
+
+        public async Task Reset()
+        {
+            await this.Item.WidgetReset();
+        }
+
+        public async Task SendInitial()
+        {
+            await this.Item.WidgetSendInitial();
         }
     }
 }

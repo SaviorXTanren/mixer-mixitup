@@ -64,6 +64,11 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public int HealthRemainingPercentage { get { return Math.Max(Math.Min((int)Math.Round(((double)this.CurrentHealth / this.CurrentMaxHealth) * 100.0), 100), 0); } }
 
+        [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+        [JsonIgnore]
+        public override bool IsResettable { get { return true; } }
+
         public OverlayStreamBossV3Model() : base(OverlayItemV3Type.StreamBoss) { }
 
         public async Task DealDamage(UserV2ViewModel user, double amount, bool forceDamage = false)

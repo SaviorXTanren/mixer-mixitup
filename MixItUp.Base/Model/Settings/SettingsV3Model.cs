@@ -467,6 +467,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool EnableOverlay { get; set; }
         [DataMember]
+        public int OverlayPortNumber { get; set; } = 8111;
+        [DataMember]
         public string OverlaySourceName { get; set; }
         [DataMember]
         public List<OverlayEndpointV3Model> OverlayEndpointsV3 { get; set; } = new List<OverlayEndpointV3Model>();
