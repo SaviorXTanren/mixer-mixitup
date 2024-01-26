@@ -244,8 +244,9 @@ namespace MixItUp.Base.Services
 
         public void ConnectOverlayEndpointService(OverlayEndpointV3Model overlayEndpoint)
         {
-            OverlayEndpointV3Service overlay = new OverlayEndpointV3Service(overlayEndpoint);
-            this.overlayEndpoints[overlayEndpoint.ID] = overlay;
+            OverlayEndpointV3Service endpointService = new OverlayEndpointV3Service(overlayEndpoint);
+            endpointService.Initialize();
+            this.overlayEndpoints[overlayEndpoint.ID] = endpointService;
         }
 
         public void DisconnectOverlayEndpointService(Guid id)
@@ -309,6 +310,7 @@ namespace MixItUp.Base.Services
             if (endpointService == null)
             {
                 OverlayWidgetEndpointV3Service widgetEndpoint = new OverlayWidgetEndpointV3Service(widget);
+                widgetEndpoint.Initialize();
                 this.overlayEndpoints[widgetEndpoint.ID] = widgetEndpoint;
             }
         }
@@ -375,20 +377,7 @@ namespace MixItUp.Base.Services
 
         protected virtual void WebSocketListenerServer_OnPacketReceived(object sender, OverlayV3Packet packet)
         {
-//            this.PacketReceived(packet);
 
-//            if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
-//            {
-//                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
-//                {
-//                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint && this.ID == widget.OverlayEndpointID)
-//                    {
-//#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-//                        widget.SendInitial();
-//#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-//                    }
-//                }
-//            }
         }
 
         //private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
@@ -439,7 +428,7 @@ namespace MixItUp.Base.Services
                 {
                     return ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress;
                 }
-                return ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress + this.ID.ToString();
+                return $"{ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress}{OverlayV3HttpListenerServer.OverlayPathPrefix}/{this.ID}";
             }
         }
         public virtual string WebSocketConnectionURL { get { return $"/ws/{this.ID}/"; } }
@@ -455,7 +444,10 @@ namespace MixItUp.Base.Services
         public OverlayEndpointV3Service(OverlayEndpointV3Model model)
         {
             this.Model = model;
+        }
 
+        public void Initialize()
+        {
             this.mainHTML = OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayMainHTML);
             this.mainHTML = OverlayV3Service.ReplaceProperty(this.mainHTML, nameof(WebSocketConnectionURL), WebSocketConnectionURL);
 
@@ -569,6 +561,22 @@ namespace MixItUp.Base.Services
 
         public void SetLocalFile(string id, string filePath) { ServiceManager.Get<OverlayV3Service>().SetLocalFile(id, filePath); }
 
+        protected virtual void PacketReceived(OverlayV3Packet packet)
+        {
+            if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
+            {
+                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
+                {
+                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint && this.ID == widget.OverlayEndpointID)
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        widget.SendInitial();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
+                }
+            }
+        }
+
         private async Task Send(OverlayV3Packet packet)
         {
             if (this.isBatching)
@@ -596,6 +604,8 @@ namespace MixItUp.Base.Services
         private void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
         {
             this.OnPacketReceived(this, packet);
+
+            this.PacketReceived(packet);
         }
 
         private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
@@ -625,23 +635,21 @@ namespace MixItUp.Base.Services
             this.Widget = widget;
         }
 
-//        protected override void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
-//        {
-//            this.PacketReceived(packet);
-
-//            if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
-//            {
-//                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
-//                {
-//                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL && this.ID == widget.ID)
-//                    {
-//#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-//                        widget.SendInitial();
-//#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-//                    }
-//                }
-//            }
-//        }
+        protected override void PacketReceived(OverlayV3Packet packet)
+        {
+            if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
+            {
+                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
+                {
+                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL && this.ID == widget.ID)
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        widget.SendInitial();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
+                }
+            }
+        }
     }
 
     public class OverlayV3HttpListenerServer : LocalHttpListenerServer
