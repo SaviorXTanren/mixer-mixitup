@@ -389,11 +389,11 @@ namespace MixItUp.Base.Services.Twitch
 
                     if (this.AdSchedule != null)
                     {
-                        DateTimeOffset nextAd = adSchedule.NextAdTimestamp();
+                        DateTimeOffset nextAd = this.AdSchedule.NextAdTimestamp();
                         if (nextAd > this.NextAdTimestamp)
                         {
                             int nextAdMinutes = this.AdSchedule.NextAdMinutesFromNow();
-                            if (nextAdMinutes <= ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount)
+                            if (nextAdMinutes <= ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount && nextAdMinutes > 0)
                             {
                                 this.NextAdTimestamp = nextAd;
 
