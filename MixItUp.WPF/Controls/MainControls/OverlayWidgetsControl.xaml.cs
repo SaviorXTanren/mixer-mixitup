@@ -1,9 +1,11 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
+using StreamingClient.Base.Util;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -107,11 +109,18 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.viewModel.DisableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender));
         }
 
-        private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
+        private async void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
         {
-            OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow();
-            window.Closed += Window_Closed;
-            window.Show();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames<OverlayItemV3Type>(), "");
+                if (!string.IsNullOrEmpty(result))
+                {
+                    OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(EnumHelper.GetEnumValueFromString<OverlayItemV3Type>(result));
+                    window.Closed += Window_Closed;
+                    window.Show();
+                }
+            });
         }
     }
 }

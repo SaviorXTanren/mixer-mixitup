@@ -14,6 +14,8 @@ namespace MixItUp.Base.Util
 
         Task<string> ShowTextEntry(string message, string defaultValue = null, string description = null);
 
+        Task<string> ShowDropDown(IEnumerable<string> options, string description = null);
+
         Task<object> ShowCustom(object dialog);
 
         Task<object> ShowCustomTimed(object dialog, int timeout);
@@ -37,6 +39,8 @@ namespace MixItUp.Base.Util
         public static async Task<bool> ShowConfirmation(string message) { return await DialogHelper.dialogShower.ShowConfirmation(message); }
 
         public static async Task<string> ShowTextEntry(string message, string defaultValue = null, string description = null) { return await DialogHelper.dialogShower.ShowTextEntry(message, defaultValue, description); }
+
+        public static async Task<string> ShowDropDown(IEnumerable<string> options, string description = null) { return await DialogHelper.dialogShower.ShowDropDown(options, description); }
 
         public static async Task<object> ShowCustom(object dialog) { return await DialogHelper.dialogShower.ShowCustom(dialog); }
 

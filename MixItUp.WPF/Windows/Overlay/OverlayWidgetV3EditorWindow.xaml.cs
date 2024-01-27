@@ -14,9 +14,9 @@ namespace MixItUp.WPF.Windows.Overlay
     {
         private OverlayWidgetV3ViewModel viewModel;
 
-        public OverlayWidgetV3EditorWindow()
+        public OverlayWidgetV3EditorWindow(OverlayItemV3Type type)
         {
-            this.ViewModel = this.viewModel = new OverlayWidgetV3ViewModel(OverlayItemV3Type.StreamBoss);
+            this.ViewModel = this.viewModel = new OverlayWidgetV3ViewModel(type);
 
             InitializeComponent();
 

@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -167,8 +166,6 @@ namespace MixItUp.Base.Services
                 if (this.webSocketListenerServer.Start(this.WebSocketServerAddress))
                 {
                     this.webSocketListenerServer.OnConnectedOccurred += WebSocketListenerServer_OnConnectedOccurred;
-                    this.webSocketListenerServer.OnDisconnectOccurred += WebSocketListenerServer_OnDisconnectOccurred;
-                    this.webSocketListenerServer.OnPacketReceived += WebSocketListenerServer_OnPacketReceived;
 
                     if (ServiceManager.Get<IOBSStudioService>().IsConnected)
                     {
@@ -188,8 +185,6 @@ namespace MixItUp.Base.Services
                         await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                     }
 
-                    ServiceManager.Get<ITelemetryService>().TrackService("Overlay");
-
                     foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
                     {
                         this.ConnectOverlayEndpointService(overlayEndpoint);
@@ -203,6 +198,7 @@ namespace MixItUp.Base.Services
                         }
                     }
 
+                    ServiceManager.Get<ITelemetryService>().TrackService("Overlay");
                     return new Result();
                 }
             }
@@ -218,8 +214,6 @@ namespace MixItUp.Base.Services
             }
 
             this.webSocketListenerServer.OnConnectedOccurred -= WebSocketListenerServer_OnConnectedOccurred;
-            this.webSocketListenerServer.OnDisconnectOccurred -= WebSocketListenerServer_OnDisconnectOccurred;
-            this.webSocketListenerServer.OnPacketReceived -= WebSocketListenerServer_OnPacketReceived;
 
             this.httpListenerServer.Stop();
             await this.webSocketListenerServer.Stop();
@@ -369,44 +363,6 @@ namespace MixItUp.Base.Services
                 }
             }
         }
-
-        private void WebSocketListenerServer_OnDisconnectOccurred(WebSocketServerBase webSocketServer, WebSocketCloseStatus closeStatus)
-        {
-
-        }
-
-        protected virtual void WebSocketListenerServer_OnPacketReceived(object sender, OverlayV3Packet packet)
-        {
-
-        }
-
-        //private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
-        //{
-        //    OverlayEndpointV3Service overlay = (OverlayEndpointV3Service)sender;
-
-        //    Logger.Log("Client connected to Overlay Endpoint - " + overlay.Name);
-
-        //    try
-        //    {
-        //        overlay.StartBatching();
-        //        //foreach (OverlayWidgetV3ModelBase widget in this.GetWidgets())
-        //        //{
-        //        //    if (widget.IsEnabled && widget.OverlayEndpointID == overlay.ID)
-        //        //    {
-        //        //        //await overlay.Add(widget.Item, new CommandParametersModel());
-        //        //    }
-        //        //}
-        //        await overlay.EndBatching();
-        //    }
-        //    catch (Exception ex) { Logger.Log(ex); }
-        //}
-
-        //private void Overlay_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus closeStatus)
-        //{
-        //    OverlayEndpointV3Service overlay = (OverlayEndpointV3Service)sender;
-
-        //    Logger.Log("Client disconnect from Overlay Endpoint - " + overlay.Name);
-        //}
     }
 
     public class OverlayEndpointV3Service
