@@ -8,6 +8,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
@@ -152,9 +153,14 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         private OverlayWidgetV3Model existingWidget;
 
+        private OverlayWidgetV3Model testWidget;
+
+        private OverlayWidgetV3Model newWidget;
+
         public OverlayWidgetV3ViewModel(OverlayItemV3Type type)
         {
             this.ID = Guid.NewGuid();
+            this.Name = EnumLocalizationHelper.GetLocalizedName(type);
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
             this.SelectedDisplayOption = OverlayItemV3DisplayOptionsType.OverlayEndpoint;
 
@@ -224,6 +230,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.CSS = widget.Item.CSS;
             this.Javascript = widget.Item.Javascript;
 
+            this.testWidget = widget;
+
             this.Initialize();
         }
 
@@ -249,6 +257,54 @@ namespace MixItUp.Base.ViewModel.Overlay
             return new Result();
         }
 
+        public OverlayWidgetV3Model GetWidget()
+        {
+            OverlayItemV3ModelBase item = this.Item.GetItem();
+            item.ID = this.ID;
+            item.OverlayEndpointID = this.SelectedOverlayEndpoint.ID;
+            item.HTML = this.HTML;
+            item.CSS = this.CSS;
+            item.Javascript = this.Javascript;
+            item.DisplayOption = this.SelectedDisplayOption;
+            item.Position = this.Position.GetPosition();
+
+            OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
+            widget.Name = this.Name;
+            return widget;
+        }
+
+        public async Task DisableTestWidget()
+        {
+            if (this.testWidget != null)
+            {
+                await this.testWidget.Disable();
+            }
+        }
+
+        protected override async Task OnOpenInternal()
+        {
+            if (this.existingWidget != null)
+            {
+                await this.existingWidget.Disable();
+            }
+
+            this.Item.PropertyChanged += Item_PropertyChanged;
+
+            await this.EnableTestWidget();
+        }
+
+        protected override async Task OnClosedInternal()
+        {
+            await this.DisableTestWidget();
+
+            if (this.newWidget == null && this.existingWidget != null)
+            {
+                await this.existingWidget.Enable();
+            }
+
+            await base.OnClosedInternal();
+        }
+
         private void Initialize()
         {
             foreach (OverlayAnimationV3ViewModel animation in this.Item.Animations)
@@ -265,13 +321,19 @@ namespace MixItUp.Base.ViewModel.Overlay
                     return;
                 }
 
+                if (this.testWidget != null)
+                {
+                    await this.testWidget.Disable();
+                    this.testWidget = null;
+                }
+
                 if (this.existingWidget != null)
                 {
                     await ServiceManager.Get<OverlayV3Service>().RemoveWidget(this.existingWidget);
                 }
 
-                OverlayWidgetV3Model widget = this.GetWidget();
-                await ServiceManager.Get<OverlayV3Service>().AddWidget(widget);
+                this.newWidget = this.GetWidget();
+                await ServiceManager.Get<OverlayV3Service>().AddWidget(this.newWidget);
 
                 this.OnCloseRequested(this, new EventArgs());
             });
@@ -308,20 +370,29 @@ namespace MixItUp.Base.ViewModel.Overlay
             });
         }
 
-        public OverlayWidgetV3Model GetWidget()
+        private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            OverlayItemV3ModelBase item = this.Item.GetItem();
-            item.ID = this.ID;
-            item.OverlayEndpointID = this.SelectedOverlayEndpoint.ID;
-            item.HTML = this.HTML;
-            item.CSS = this.CSS;
-            item.Javascript = this.Javascript;
-            item.DisplayOption = this.SelectedDisplayOption;
-            item.Position = this.Position.GetPosition();
+            if (this.Validate().Success)
+            {
+                Task.Run(async () =>
+                {
+                    await this.RefreshTestWidget();
+                });
+            }
+        }
 
-            OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
-            widget.Name = this.Name;
-            return widget;
+        private async Task EnableTestWidget()
+        {
+            OverlayWidgetV3Model widget = this.GetWidget();
+            this.testWidget = widget;
+            await widget.Enable();
+        }
+
+        private async Task RefreshTestWidget()
+        {
+            await this.DisableTestWidget();
+
+            await this.EnableTestWidget();
         }
     }
 }

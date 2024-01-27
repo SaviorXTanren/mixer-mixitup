@@ -42,6 +42,13 @@ namespace MixItUp.WPF.Windows.Overlay
             await base.OnLoaded();
         }
 
+        protected override async Task OnClosing()
+        {
+            await this.ViewModel.OnClosed();
+
+            await base.OnClosing();
+        }
+
         private void AssignOverlayTypeControl(OverlayItemV3Type type)
         {
             UserControl overlayControl = null;

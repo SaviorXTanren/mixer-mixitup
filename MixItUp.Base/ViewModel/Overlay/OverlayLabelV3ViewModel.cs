@@ -243,6 +243,17 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.Displays.Add(new OverlayLabelDisplayV3ViewModel(labelType));
                 }
             }
+
+            foreach (OverlayLabelDisplayV3ViewModel display in this.Displays)
+            {
+                display.PropertyChanged += (sender, e) =>
+                {
+                    this.NotifyPropertyChanged("X");
+                };
+            }
+
+            this.Displays.First(d => d.Type == OverlayLabelDisplayV3TypeEnum.LatestSubscriber).IsEnabled = true;
+            this.Displays.First(d => d.Type == OverlayLabelDisplayV3TypeEnum.LatestRaid).IsEnabled = true;
         }
     }
 }

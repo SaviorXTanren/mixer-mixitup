@@ -276,6 +276,11 @@ namespace MixItUp.Base.Services
             return ChannelSession.Settings.OverlayWidgetsV3;
         }
 
+        public OverlayWidgetV3Model GetWidget(Guid id)
+        {
+            return this.GetWidgets().FirstOrDefault(w => w.ID == id);
+        }
+
         public async Task AddWidget(OverlayWidgetV3Model widget)
         {
             if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)

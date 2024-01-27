@@ -48,7 +48,7 @@
                     </Hyperlink>
                 </TextBlock>
 
-                <Controls:IconButton Grid.Column="2" x:Name="CopyEndpointURLButton" Click="CopyEndpointURLButton_Click" Icon="Link" ToolTip="{x:Static resx:Resources.Copy}" />
+                <Controls:IconButton Grid.Column="2" x:Name="CopyEndpointURLButton" Click="CopyEndpointURLButton_Click" Icon="ContentCopy" ToolTip="{x:Static resx:Resources.Copy}" />
             </Grid>
 
             <TextBlock Grid.Row="4" TextWrapping="Wrap" Text="{x:Static resx:Resources.OverlayInfo2}"/>
