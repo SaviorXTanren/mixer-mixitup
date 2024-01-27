@@ -176,6 +176,13 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(this.Item.DefaultCSS);
             this.Javascript = this.Item.DefaultJavascript;
 
+            // Add Widget-unique Animations
+            if (type == OverlayItemV3Type.Text || type == OverlayItemV3Type.Image || type == OverlayItemV3Type.Video ||
+                type == OverlayItemV3Type.YouTube || type == OverlayItemV3Type.HTML || type == OverlayItemV3Type.TwitchClip)
+            {
+                
+            }
+
             foreach (OverlayAnimationV3ViewModel animation in this.Item.Animations)
             {
                 this.Animations.Add(animation);

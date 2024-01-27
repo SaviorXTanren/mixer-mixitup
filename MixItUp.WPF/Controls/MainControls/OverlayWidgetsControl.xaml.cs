@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
 using StreamingClient.Base.Util;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -113,7 +114,9 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames<OverlayItemV3Type>(), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
+                List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>() { OverlayItemV3Type.Label, OverlayItemV3Type.StreamBoss, OverlayItemV3Type.Goal };
+
+                string result = await DialogHelper.ShowDropDown(widgetTypes, MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
                 if (!string.IsNullOrEmpty(result))
                 {
                     OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(EnumHelper.GetEnumValueFromString<OverlayItemV3Type>(result));
