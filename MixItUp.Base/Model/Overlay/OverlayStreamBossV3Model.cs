@@ -175,6 +175,15 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
+        protected override Task WidgetResetInternal()
+        {
+            this.CurrentBoss = Guid.Empty;
+            this.CurrentMaxHealth = this.BaseHealth;
+            this.CurrentHealth = this.CurrentMaxHealth;
+
+            return Task.CompletedTask;
+        }
+
         private Dictionary<string, object> GetDataProperties()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();

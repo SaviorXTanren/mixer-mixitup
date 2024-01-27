@@ -35,16 +35,13 @@
             <DataGrid ItemsSource="{Binding OverlayWidgets}" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="{x:Static resx:Resources.Overlay}" Binding="{Binding OverlayName}" IsReadOnly="True" Width="*" />
-                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="340">
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="290">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,15,0">
 
                                     <Controls:IconButton x:Name="LinkButton" Margin="10,0,0,0" Click="LinkButton_Click" HorizontalAlignment="Center" Visibility="{Binding IsSingleWidgetURL, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" Icon="Link" ToolTip="{x:Static resx:Resources.Link}" />
                                     
-                                    <Controls:IconButton x:Name="PlayButton" Margin="10,0,0,0" Click="PlayButton_Click" HorizontalAlignment="Center" Visibility="{Binding IsTestable, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" Icon="Play" ToolTip="{x:Static resx:Resources.TestCommand}" />
-
                                     <Controls:IconButton x:Name="ResetButton" Margin="10,0,0,0" Click="ResetButton_Click" HorizontalAlignment="Center" Visibility="{Binding IsResettable, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" Icon="Sync" ToolTip="{x:Static resx:Resources.Reset}" />
 
                                     <Controls:IconButton x:Name="EditButton" Margin="10,0,0,0" Click="EditButton_Click" HorizontalAlignment="Center" Icon="TooltipEdit" ToolTip="{x:Static resx:Resources.EditCommand}" />

@@ -1,12 +1,14 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -29,6 +31,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public ObservableCollection<OverlayAnimationV3ViewModel> Animations { get; set; } = new ObservableCollection<OverlayAnimationV3ViewModel>();
 
+        public virtual bool IsTestable { get { return false; } }
+
         public OverlayItemV3ViewModelBase(OverlayItemV3Type type)
         {
             this.Type = type;
@@ -45,6 +49,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
 
         public OverlayItemV3ModelBase GetItem() { return this.GetItemInternal(); }
+
+        public virtual Task TestWidget(OverlayWidgetV3Model widget) { return Task.CompletedTask; }
 
         protected abstract OverlayItemV3ModelBase GetItemInternal();
 

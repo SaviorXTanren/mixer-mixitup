@@ -1,10 +1,20 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
+    public enum OverlayStreamBossV3TestType
+    {
+        Damage,
+        Heal,
+        NewBoss,
+    }
+
     public class OverlayStreamBossV3ViewModel : OverlayEventTrackingV3ViewModelBase
     {
         public override string DefaultHTML { get { return OverlayStreamBossV3Model.DefaultHTML; } }
@@ -138,6 +148,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel HealingOcurredAnimation;
         public OverlayAnimationV3ViewModel NewBossAnimation;
 
+        public override bool IsTestable { get { return true; } }
+
         public OverlayStreamBossV3ViewModel()
             : base(OverlayItemV3Type.StreamBoss)
         {
@@ -214,6 +226,31 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override Result Validate()
         {
             return new Result();
+        }
+
+        public override async Task TestWidget(OverlayWidgetV3Model widget)
+        {
+            OverlayStreamBossV3Model streamBoss = (OverlayStreamBossV3Model)widget.Item;
+
+            string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames<OverlayStreamBossV3TestType>());
+            if (!string.IsNullOrEmpty(result))
+            {
+                OverlayStreamBossV3TestType type = EnumHelper.GetEnumValueFromString<OverlayStreamBossV3TestType>(result);
+                if (type == OverlayStreamBossV3TestType.Damage)
+                {
+                    await streamBoss.ProcessEvent(ChannelSession.User, this.BaseHealth / 2, forceDamage: true);
+                }
+                else if (type == OverlayStreamBossV3TestType.Heal)
+                {
+                    await streamBoss.ProcessEvent(ChannelSession.User, this.BaseHealth / 2);
+                }
+                else if (type == OverlayStreamBossV3TestType.NewBoss)
+                {
+                    await streamBoss.ProcessEvent(ChannelSession.User, streamBoss.CurrentHealth, forceDamage: true);
+                }
+            }
+
+            await base.TestWidget(widget);
         }
 
         protected override OverlayItemV3ModelBase GetItemInternal()

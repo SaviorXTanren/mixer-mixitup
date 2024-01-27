@@ -196,6 +196,15 @@ namespace MixItUp.Base.Model.Overlay
             await base.WidgetEnableInternal();
         }
 
+        protected override Task WidgetResetInternal()
+        {
+            this.TotalAmount = 0;
+            this.CurrentAmount = 0;
+            this.CurrentSegment = this.Segments.First();
+
+            return Task.CompletedTask;
+        }
+
         private Dictionary<string, object> GetDataProperties()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();

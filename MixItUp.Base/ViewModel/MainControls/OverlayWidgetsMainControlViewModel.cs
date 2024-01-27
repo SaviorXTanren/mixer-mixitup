@@ -64,18 +64,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.NotifyPropertyChanges();
         }
 
-        public async Task PlayWidget(OverlayWidgetViewModel widget)
-        {
-            CommandParametersModel parameters = CommandParametersModel.GetTestParameters(new Dictionary<string, string>());
-            parameters = await DialogHelper.ShowEditTestCommandParametersDialog(parameters);
-            if (parameters == null)
-            {
-                return;
-            }
-
-            //await widget.Widget.Test(parameters);
-        }
-
         public async Task DeleteWidget(OverlayWidgetViewModel widget)
         {
             if (widget != null)

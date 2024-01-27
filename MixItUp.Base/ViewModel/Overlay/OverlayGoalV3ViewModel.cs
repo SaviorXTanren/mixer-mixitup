@@ -1,9 +1,12 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
@@ -134,6 +137,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel ProgressOccurredAnimation;
         public OverlayAnimationV3ViewModel SegmentCompletedAnimation;
 
+        public override bool IsTestable { get { return true; } }
+
         public OverlayGoalV3ViewModel()
             : base(OverlayItemV3Type.Goal)
         {
@@ -203,6 +208,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
 
             return new Result();
+        }
+
+        public override async Task TestWidget(OverlayWidgetV3Model widget)
+        {
+            OverlayGoalV3Model goal = (OverlayGoalV3Model)widget.Item;
+
+            await goal.ProcessEvent(ChannelSession.User, goal.CurrentSegment.Amount / 2);
+
+            await base.TestWidget(widget);
         }
 
         protected void InitializeInternal()

@@ -145,6 +145,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string javascript;
 
+        public bool IsTestable { get { return this.Item.IsTestable; } }
+
         public ICommand SaveCommand { get; set; }
         public ICommand TestCommand { get; set; }
         public ICommand ExportCommand { get; set; }
@@ -310,6 +312,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             foreach (OverlayAnimationV3ViewModel animation in this.Item.Animations)
             {
                 this.Animations.Add(animation);
+                animation.PropertyChanged += Animation_PropertyChanged;
             }
 
             this.SaveCommand = this.CreateCommand(async () =>
@@ -340,21 +343,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.TestCommand = this.CreateCommand(async () =>
             {
-                Result result = this.Validate();
-                if (!result.Success)
+                if (this.testWidget != null)
                 {
-                    await DialogHelper.ShowFailedResults(new List<Result>() { result });
-                    return;
+                    await this.Item.TestWidget(this.testWidget);
                 }
-
-                CommandParametersModel parameters = CommandParametersModel.GetTestParameters(new Dictionary<string, string>());
-                parameters = await DialogHelper.ShowEditTestCommandParametersDialog(parameters);
-                if (parameters == null)
-                {
-                    return;
-                }
-
-                //await this.viewModel.Test(parameters);
             });
 
             this.ExportCommand = this.CreateCommand(async () =>
@@ -368,6 +360,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
                 OverlayWidgetV3Model widget = this.GetWidget();
             });
+        }
+
+        private void Animation_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Item_PropertyChanged(sender, e);
         }
 
         private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

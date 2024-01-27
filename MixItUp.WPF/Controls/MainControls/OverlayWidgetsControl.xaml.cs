@@ -55,15 +55,6 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
-                await this.viewModel.PlayWidget(widget);
-            });
-        }
-
         private async void ResetButton_Click(object sender, RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
