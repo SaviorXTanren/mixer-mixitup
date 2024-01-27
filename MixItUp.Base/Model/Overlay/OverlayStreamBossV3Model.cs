@@ -71,7 +71,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayStreamBossV3Model() : base(OverlayItemV3Type.StreamBoss) { }
 
-        public async Task DealDamage(UserV2ViewModel user, double amount, bool forceDamage = false)
+        public async Task ProcessEvent(UserV2ViewModel user, double amount, bool forceDamage = false)
         {
             if (amount > 0)
             {
@@ -80,8 +80,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (!forceDamage && this.CurrentBoss == user.ID && this.SelfHealingMultiplier > 0)
                 {
                     this.CurrentHealth = Math.Min(damage + this.CurrentHealth, this.CurrentMaxHealth);
-                    await this.CallFunction("heal", this.GetDataProperties());
-
+                    await this.Heal();
                     await ServiceManager.Get<CommandService>().Queue(this.HealingOccurredCommandID, new CommandParametersModel(user));
                 }
                 else
@@ -89,31 +88,45 @@ namespace MixItUp.Base.Model.Overlay
                     this.CurrentHealth -= damage;
                     if (this.CurrentHealth > 0)
                     {
-                        await this.CallFunction("damage", this.GetDataProperties());
-
+                        await this.Damage();
                         await ServiceManager.Get<CommandService>().Queue(this.DamageOccurredCommandID, new CommandParametersModel(user));
                     }
                     else
                     {
+                        this.CurrentBoss = user.ID;
                         this.CurrentMaxHealth += this.KillBonusHealth;
                         this.CurrentMaxHealth += (int)Math.Round(Math.Abs(this.CurrentHealth) * this.OverkillBonusHealthMultiplier);
                         this.CurrentHealth = this.CurrentMaxHealth;
 
-                        Dictionary<string, object> properties = this.GetDataProperties();
-                        properties[BossImageProperty] = user.AvatarLink;
-                        properties[BossNameProperty] = user.DisplayName;
-                        properties[BossMaxHealthProperty] = this.CurrentMaxHealth.ToString();
-                        await this.CallFunction("newboss", properties);
-
+                        await this.NewBoss(user);
                         await ServiceManager.Get<CommandService>().Queue(this.NewBossCommandID, new CommandParametersModel(user));
                     }
                 }
             }
         }
 
+        public async Task Damage()
+        {
+            await this.CallFunction("damage", this.GetDataProperties());
+        }
+
+        public async Task Heal()
+        {
+            await this.CallFunction("heal", this.GetDataProperties());
+        }
+
+        public async Task NewBoss(UserV2ViewModel user)
+        {
+            Dictionary<string, object> properties = this.GetDataProperties();
+            properties[BossImageProperty] = user.AvatarLink;
+            properties[BossNameProperty] = user.DisplayName;
+            properties[BossMaxHealthProperty] = this.CurrentMaxHealth.ToString();
+            await this.CallFunction("killboss", properties);
+        }
+
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
-            await this.DealDamage(user, amount, forceDamage: false);
+            await this.ProcessEvent(user, amount, forceDamage: false);
         }
 
         public override Dictionary<string, object> GetGenerationProperties()

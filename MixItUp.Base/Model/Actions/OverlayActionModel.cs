@@ -139,7 +139,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.StreamBossDamageAmount, parameters), out double damage))
                     {
-                        await ((OverlayStreamBossV3Model)widget.Item).DealDamage(parameters.User, damage, this.StreamBossForceDamage);
+                        await ((OverlayStreamBossV3Model)widget.Item).ProcessEvent(parameters.User, damage, this.StreamBossForceDamage);
                     }
                 }
             }

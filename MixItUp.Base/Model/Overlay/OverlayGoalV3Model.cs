@@ -116,8 +116,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.CurrentAmount < this.CurrentSegment.Amount || this.CurrentSegment == this.Segments.Last())
                 {
-                    Dictionary<string, object> properties = this.GetDataProperties();
-                    await this.CallFunction("update", properties);
+                    await this.Update();
 
                     await ServiceManager.Get<CommandService>().Queue(this.ProgressOccurredCommandID, new CommandParametersModel(user));
                 }
@@ -125,12 +124,23 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.ProgressSegments();
 
-                    Dictionary<string, object> properties = this.GetDataProperties();
-                    await this.CallFunction("reset", properties);
+                    await this.Complete();
 
                     await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, new CommandParametersModel(user));
                 }
             }
+        }
+
+        public async Task Update()
+        {
+            Dictionary<string, object> properties = this.GetDataProperties();
+            await this.CallFunction("update", properties);
+        }
+
+        public async Task Complete()
+        {
+            Dictionary<string, object> properties = this.GetDataProperties();
+            await this.CallFunction("complete", properties);
         }
 
         public override Dictionary<string, object> GetGenerationProperties()

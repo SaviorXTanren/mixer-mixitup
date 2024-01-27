@@ -531,6 +531,17 @@ function update(data)
 {
   goalAmount.innerHTML = data.GoalAmount;
   adjustProgress(data);
+  {ProgressOccurredAnimation}
+}
+
+function complete(data)
+{
+  update({
+    "GoalAmount": goalMaxAmount.innerHTML,
+    "GoalBarCompletionPercentage": 100,
+  })
+    
+  setTimeout(() =&gt; reset(data), 3000);
 }
 
 function reset(data)
@@ -540,6 +551,7 @@ function reset(data)
   goalAmount.innerHTML = data.GoalAmount;
   goalMaxAmount.innerHTML = data.GoalMaxAmount;
   adjustProgress(data);
+  {SegmentCompletedAnimation}
 }
 
 function adjustProgress(data)
@@ -1125,6 +1137,16 @@ function newboss(data)
     bossMaxHealth.innerHTML = data.BossMaxHealth;
     adjustProgress(data);
     {NewBossAnimation}
+}
+
+function killboss(data)
+{
+    damage({
+        "BossHealth": 0,
+        "BossHealthBarRemaining": 0,
+    })
+    
+    setTimeout(() =&gt; newboss(data), 3000);
 }
 
 function adjustProgress(data)

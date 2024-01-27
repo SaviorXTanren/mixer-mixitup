@@ -385,13 +385,14 @@ namespace MixItUp.Base {
         ///{
         ///  goalAmount.innerHTML = data.GoalAmount;
         ///  adjustProgress(data);
+        ///  {ProgressOccurredAnimation}
         ///}
         ///
-        ///function reset(data)
+        ///function complete(data)
         ///{
-        ///  goalName.innerHTML = data.GoalName;
-        ///  goalEnd.innerHTML = data.GoalEnd;
-        ///  goalAmount.inne [rest of string was truncated]&quot;;.
+        ///  update({
+        ///    &quot;GoalAmount&quot;: goalMaxAmount.innerHTML,
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultJavascript {
             get {

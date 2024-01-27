@@ -116,7 +116,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>() { OverlayItemV3Type.Label, OverlayItemV3Type.StreamBoss, OverlayItemV3Type.Goal };
 
-                string result = await DialogHelper.ShowDropDown(widgetTypes, MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
+                string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames(widgetTypes), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
                 if (!string.IsNullOrEmpty(result))
                 {
                     OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(EnumHelper.GetEnumValueFromString<OverlayItemV3Type>(result));

@@ -183,12 +183,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 
             }
 
-            foreach (OverlayAnimationV3ViewModel animation in this.Item.Animations)
-            {
-                this.Animations.Add(animation);
-            }
-
-            this.SetupCommands();
+            this.Initialize();
         }
 
         public OverlayWidgetV3ViewModel(OverlayWidgetV3Model widget)
@@ -229,7 +224,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.CSS = widget.Item.CSS;
             this.Javascript = widget.Item.Javascript;
 
-            this.SetupCommands();
+            this.Initialize();
         }
 
         public Result Validate()
@@ -254,8 +249,13 @@ namespace MixItUp.Base.ViewModel.Overlay
             return new Result();
         }
 
-        private void SetupCommands()
+        private void Initialize()
         {
+            foreach (OverlayAnimationV3ViewModel animation in this.Item.Animations)
+            {
+                this.Animations.Add(animation);
+            }
+
             this.SaveCommand = this.CreateCommand(async () =>
             {
                 Result result = this.Validate();
