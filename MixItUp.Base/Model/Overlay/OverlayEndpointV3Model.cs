@@ -8,12 +8,9 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayEndpointV3Model
     {
         public static readonly string DefaultOverlayName = MixItUp.Base.Resources.Default;
-        public const int DefaultOverlayPort = 8111;
 
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
-        [DataMember]
-        public int PortNumber { get; set; }
         [DataMember]
         public string Name { get; set; }
 
@@ -27,12 +24,22 @@ namespace MixItUp.Base.Model.Overlay
         [Obsolete]
         public OverlayEndpointV3Model() { }
 
-        public OverlayEndpointV3Model(int portNumber, string name)
+        public OverlayEndpointV3Model(string name)
         {
-            this.PortNumber = portNumber;
             this.Name = name;
         }
 
-        public string Address { get { return string.Format(OverlayV3Service.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
+        public string Address
+        {
+            get
+            {
+                OverlayEndpointV3Service endpointService = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.ID);
+                if (endpointService != null)
+                {
+                    return endpointService.HttpAddress;
+                }
+                return string.Empty;
+            }
+        }
     }
 }

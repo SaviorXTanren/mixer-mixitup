@@ -66,11 +66,9 @@ namespace MixItUp.Base.Services
         public event EventHandler OnWebSocketConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred = delegate { };
 
-        public OverlayEndpointV3Model Model { get; private set; }
-
-        public Guid ID { get { return this.Model.ID; } }
-        public int PortNumber { get { return this.Model.PortNumber; } }
-        public string Name { get { return this.Model.Name; } }
+        public Guid ID { get { return Guid.Empty; } }
+        public int PortNumber { get { return 0; } }
+        public string Name { get { return string.Empty; } }
 
         private OverlayHttpListenerServer httpListenerServer;
         private OverlayWebSocketHttpListenerServer webSocketServer;
@@ -83,10 +81,8 @@ namespace MixItUp.Base.Services
 
         public int TotalConnectedClients { get { return this.webSocketServer.TotalConnectedClients; } }
 
-        public OverlayEndpointService(OverlayEndpointV3Model model)
+        public OverlayEndpointService()
         {
-            this.Model = model;
-
             this.httpListenerServer = new OverlayHttpListenerServer();
             this.webSocketServer = new OverlayWebSocketHttpListenerServer();
         }

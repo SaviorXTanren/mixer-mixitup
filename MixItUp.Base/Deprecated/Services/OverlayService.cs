@@ -72,7 +72,7 @@ namespace MixItUp.Base.Services
 
         public async Task<bool> AddOverlayEndpoint(OverlayEndpointV3Model overlayEndpoint)
         {
-            OverlayEndpointService overlay = new OverlayEndpointService(overlayEndpoint);
+            OverlayEndpointService overlay = new OverlayEndpointService();
             if (await overlay.Initialize())
             {
                 overlay.OnWebSocketConnectedOccurred += Overlay_OnWebSocketConnectedOccurred;

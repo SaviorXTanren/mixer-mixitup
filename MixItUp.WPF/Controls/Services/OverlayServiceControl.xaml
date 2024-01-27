@@ -38,15 +38,11 @@
             <Grid Grid.Row="2" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center">
-                    <Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">
-                        http://localhost:8111/overlay/
-                    </Hyperlink>
-                </TextBlock>
+                <Controls:IconButton Grid.Column="0" x:Name="OpenEndpointURLButton" Click="OpenEndpointURLButton_Click" Icon="Link" ToolTip="{x:Static resx:Resources.Link}" />
 
                 <Controls:IconButton Grid.Column="2" x:Name="CopyEndpointURLButton" Click="CopyEndpointURLButton_Click" Icon="ContentCopy" ToolTip="{x:Static resx:Resources.Copy}" />
             </Grid>

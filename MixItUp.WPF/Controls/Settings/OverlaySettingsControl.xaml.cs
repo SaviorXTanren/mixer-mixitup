@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Settings;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.ViewModel.Settings;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -28,6 +29,13 @@ namespace MixItUp.WPF.Controls.Settings
         protected override async Task OnVisibilityChanged()
         {
             await this.InitializeInternal();
+        }
+
+        private void LaunchEndpointURLButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            OverlayEndpointListingViewModel overlay = (OverlayEndpointListingViewModel)button.DataContext;
+            ServiceManager.Get<IProcessService>().LaunchLink(overlay.Address);
         }
 
         private async void CopyEndpointURLButton_Click(object sender, System.Windows.RoutedEventArgs e)

@@ -101,6 +101,8 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3Service : IExternalService
     {
+        public const int DefaultOverlayPort = 8111;
+
         public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/";
         public const string RegularOverlayWebSocketServerAddressFormat = "http://localhost:{0}/ws/";
 
@@ -387,7 +389,7 @@ namespace MixItUp.Base.Services
             {
                 if (this.ID == Guid.Empty)
                 {
-                    return ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress;
+                    return $"{ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress}{OverlayV3HttpListenerServer.OverlayPathPrefix}";
                 }
                 return $"{ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress}{OverlayV3HttpListenerServer.OverlayPathPrefix}/{this.ID}";
             }

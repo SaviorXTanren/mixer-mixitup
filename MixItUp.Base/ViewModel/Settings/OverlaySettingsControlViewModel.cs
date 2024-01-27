@@ -28,35 +28,6 @@ namespace MixItUp.Base.ViewModel.Settings
                 }
             }
         }
-        public int PortNumber
-        {
-            get { return this.model.PortNumber; }
-            set
-            {
-                if (value > 0 && value < Math.Pow(2, 16))
-                {
-                    if (!this.viewModel.Endpoints.Any(e => e.PortNumber == this.PortNumber && e.ID != this.ID))
-                    {
-                        //Task.Run(async () =>
-                        //{
-                        //    ServiceManager.Get<OverlayV3Service>().DisconnectOverlayEndpointService(this.ID);
-
-                        //    int oldPortNumber = this.model.PortNumber;
-                        //    this.model.PortNumber = value;
-
-                        //    if (ServiceManager.Get<OverlayV3Service>().ConnectOverlayEndpointService(this.model))
-                        //    {
-                        //        this.NotifyPropertyChanged();
-                        //    }
-                        //    else
-                        //    {
-                        //        this.model.PortNumber = oldPortNumber;
-                        //    }
-                        //});
-                    }
-                }
-            }
-        }
 
         public string Address { get { return this.model.Address; } }
 
@@ -85,6 +56,17 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         public ObservableCollection<OverlayEndpointListingViewModel> Endpoints { get; set; } = new ObservableCollection<OverlayEndpointListingViewModel>();
 
+        public int PortNumber
+        {
+            get { return this.portNumber; }
+            set
+            {
+                this.portNumber = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int portNumber;
+
         public string NewEndpointName
         {
             get { return this.newEndpointName; }
@@ -96,46 +78,44 @@ namespace MixItUp.Base.ViewModel.Settings
         }
         private string newEndpointName;
 
-        public int NewEndpointPortNumber
-        {
-            get { return this.newEndpointPortNumber; }
-            set
-            {
-                this.newEndpointPortNumber = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int newEndpointPortNumber;
+        public ICommand UpdatePortNumberCommand { get; set; }
 
         public ICommand AddCommand { get; set; }
 
         public OverlaySettingsControlViewModel()
         {
-            this.AddCommand = this.CreateCommand(async () =>
+            this.UpdatePortNumberCommand = this.CreateCommand(async () =>
             {
-                if (!string.IsNullOrEmpty(this.NewEndpointName) && this.NewEndpointPortNumber > 0 && this.NewEndpointPortNumber < Math.Pow(2, 16))
-                {
-                    if (!this.Endpoints.Any(e => e.Name.Equals(this.NewEndpointName)) && !this.Endpoints.Any(e => e.PortNumber == this.NewEndpointPortNumber))
-                    {
-                        OverlayEndpointV3Model overlayEndpoint = new OverlayEndpointV3Model(this.NewEndpointPortNumber, this.NewEndpointName);
+                await ServiceManager.Get<OverlayV3Service>().Disconnect();
 
-                        //if (await ServiceManager.Get<OverlayV3Service>().ConnectOverlayEndpointService(overlayEndpoint))
-                        //{
-                        //    ChannelSession.Settings.OverlayEndpointsV3.Add(overlayEndpoint);
-                        //    this.Endpoints.Add(new OverlayEndpointListingViewModel(this, overlayEndpoint));
-                        //}
+                ChannelSession.Settings.OverlayPortNumber = this.PortNumber;
+
+                await ServiceManager.Get<OverlayV3Service>().Connect();
+            });
+
+            this.AddCommand = this.CreateCommand(() =>
+            {
+                if (!string.IsNullOrEmpty(this.NewEndpointName))
+                {
+                    if (!this.Endpoints.Any(e => e.Name.Equals(this.NewEndpointName)))
+                    {
+                        OverlayEndpointV3Model overlayEndpoint = new OverlayEndpointV3Model(this.NewEndpointName);
+                        ChannelSession.Settings.OverlayEndpointsV3.Add(overlayEndpoint);
+
+                        ServiceManager.Get<OverlayV3Service>().ConnectOverlayEndpointService(overlayEndpoint);
+
+                        this.Endpoints.Add(new OverlayEndpointListingViewModel(this, overlayEndpoint));
                     }
                 }
                 this.NewEndpointName = string.Empty;
-                this.NewEndpointPortNumber = this.Endpoints.Max(o => o.PortNumber) + 1;
             });
         }
 
         protected override Task OnOpenInternal()
         {
-            this.Endpoints.ClearAndAddRange(ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints().Select(oe => new OverlayEndpointListingViewModel(this, oe)));
+            this.PortNumber = ChannelSession.Settings.OverlayPortNumber;
 
-            this.NewEndpointPortNumber = this.Endpoints.Max(o => o.PortNumber) + 1;
+            this.Endpoints.ClearAndAddRange(ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints().Select(oe => new OverlayEndpointListingViewModel(this, oe)));
 
             return Task.CompletedTask;
         }

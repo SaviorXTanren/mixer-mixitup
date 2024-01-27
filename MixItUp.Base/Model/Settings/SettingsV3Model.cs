@@ -467,7 +467,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool EnableOverlay { get; set; }
         [DataMember]
-        public int OverlayPortNumber { get; set; } = 8111;
+        public int OverlayPortNumber { get; set; } = OverlayV3Service.DefaultOverlayPort;
         [DataMember]
         public string OverlaySourceName { get; set; }
         [DataMember]
@@ -1144,10 +1144,12 @@ namespace MixItUp.Base.Model.Settings
 
             if (this.OverlayEndpointsV3.Count == 0)
             {
-                this.OverlayEndpointsV3.Add(new OverlayEndpointV3Model(OverlayEndpointV3Model.DefaultOverlayPort, OverlayEndpointV3Model.DefaultOverlayName)
+                this.OverlayEndpointsV3.Add(new OverlayEndpointV3Model(OverlayEndpointV3Model.DefaultOverlayName)
                 {
                     ID = Guid.Empty
                 });
+
+                await ServiceManager.Get<OverlayV3Service>().Enable();
             }
 
             if (this.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
