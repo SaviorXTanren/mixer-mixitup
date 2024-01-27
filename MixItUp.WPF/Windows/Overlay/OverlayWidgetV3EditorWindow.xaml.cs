@@ -45,17 +45,18 @@ namespace MixItUp.WPF.Windows.Overlay
         private void AssignOverlayTypeControl(OverlayItemV3Type type)
         {
             UserControl overlayControl = null;
-            if (type == OverlayItemV3Type.Label)
+            switch (type)
             {
-                overlayControl = new OverlayLabelV3Control();
-            }
-            else if (type == OverlayItemV3Type.StreamBoss)
-            {
-                overlayControl = new OverlayStreamBossV3Control();
-            }
-            else if (type == OverlayItemV3Type.Goal)
-            {
-                overlayControl = new OverlayGoalV3Control();
+                case OverlayItemV3Type.Text: overlayControl = new OverlayTextV3Control(); break;
+                case OverlayItemV3Type.Image: overlayControl = new OverlayImageV3Control(); break;
+                case OverlayItemV3Type.Video: overlayControl = new OverlayVideoV3Control(); break;
+                case OverlayItemV3Type.YouTube: overlayControl = new OverlayYouTubeV3Control(); break;
+                case OverlayItemV3Type.HTML: overlayControl = new OverlayHTMLV3Control(); break;
+                case OverlayItemV3Type.Timer: overlayControl = new OverlayTimerV3Control(); break;
+                case OverlayItemV3Type.TwitchClip: overlayControl = new OverlayTwitchClipV3Control(); break;
+                case OverlayItemV3Type.Label: overlayControl = new OverlayLabelV3Control(); break;
+                case OverlayItemV3Type.StreamBoss: overlayControl = new OverlayStreamBossV3Control(); break;
+                case OverlayItemV3Type.Goal: overlayControl = new OverlayGoalV3Control(); break;
             }
 
             if (overlayControl != null)

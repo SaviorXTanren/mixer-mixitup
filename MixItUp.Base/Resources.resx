@@ -9951,4 +9951,7 @@ namespace CustomNamespace
   <data name="SingleWidgetURL" xml:space="preserve">
     <value>Single Widget URL</value>
   </data>
+  <data name="OverlayWidgetSelectorDescription" xml:space="preserve">
+    <value>Select the type of Overlay Widget you wish to create</value>
+  </data>
 </root>

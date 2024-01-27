@@ -14713,6 +14713,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the type of Overlay Widget you wish to create.
+        /// </summary>
+        public static string OverlayWidgetSelectorDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetSelectorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Overlay must be enabled in the Services menu to use Overlay Widgets..
         /// </summary>
         public static string OverlayWidgetsRequireOverlay {

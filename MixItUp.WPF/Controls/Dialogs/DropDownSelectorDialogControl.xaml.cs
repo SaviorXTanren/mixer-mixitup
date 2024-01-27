@@ -11,6 +11,8 @@ namespace MixItUp.WPF.Controls.Dialogs
     {
         private class DropDownSelectorDialogControlViewModel : UIViewModelBase
         {
+            public string Description { get; set; }
+
             public List<string> Options { get; set; } = new List<string>();
 
             public string SelectedOption
@@ -37,8 +39,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
             if (!string.IsNullOrEmpty(description))
             {
-                this.DescriptionTextBlock.Text = description;
-                this.DescriptionTextBlock.Visibility = System.Windows.Visibility.Visible;
+                this.viewModel.Description = description;
             }
 
             InitializeComponent();

@@ -113,7 +113,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames<OverlayItemV3Type>(), "");
+                string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames<OverlayItemV3Type>(), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
                 if (!string.IsNullOrEmpty(result))
                 {
                     OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(EnumHelper.GetEnumValueFromString<OverlayItemV3Type>(result));

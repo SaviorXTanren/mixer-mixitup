@@ -12,6 +12,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        <MaterialDesign:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
     </UserControl.Resources>
     
@@ -23,7 +24,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" x:Name="DescriptionTextBlock" Width="200" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,10" />
+        <TextBlock Grid.Row="0" Text="{Binding Description}" Visibility="{Binding Description, Converter={StaticResource NullableToVisibilityConverter}}" Width="200" TextWrapping="Wrap" Margin="0,0,0,10" />
 
         <ComboBox Grid.Row="1" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Options}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" HorizontalAlignment="Center"  Width="250">
             <ComboBox.ItemTemplate>

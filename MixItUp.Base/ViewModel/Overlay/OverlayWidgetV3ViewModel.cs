@@ -160,15 +160,16 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             switch (type)
             {
-                case OverlayItemV3Type.Label:
-                    this.Item = new OverlayLabelV3ViewModel();
-                    break;
-                case OverlayItemV3Type.StreamBoss:
-                    this.Item = new OverlayStreamBossV3ViewModel();
-                    break;
-                case OverlayItemV3Type.Goal:
-                    this.Item = new OverlayGoalV3ViewModel();
-                    break;
+                case OverlayItemV3Type.Text: this.Item = new OverlayTextV3ViewModel(); break;
+                case OverlayItemV3Type.Image: this.Item = new OverlayImageV3ViewModel(); break;
+                case OverlayItemV3Type.Video: this.Item = new OverlayVideoV3ViewModel(); break;
+                case OverlayItemV3Type.YouTube: this.Item = new OverlayYouTubeV3ViewModel(); break;
+                case OverlayItemV3Type.HTML: this.Item = new OverlayHTMLV3ViewModel(); break;
+                case OverlayItemV3Type.Timer:  this.Item = new OverlayTimerV3ViewModel(); break;
+                case OverlayItemV3Type.TwitchClip:  this.Item = new OverlayTwitchClipV3ViewModel(); break;
+                case OverlayItemV3Type.Label: this.Item = new OverlayLabelV3ViewModel(); break;
+                case OverlayItemV3Type.StreamBoss: this.Item = new OverlayStreamBossV3ViewModel(); break;
+                case OverlayItemV3Type.Goal: this.Item = new OverlayGoalV3ViewModel(); break;
             }
 
             this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
@@ -205,15 +206,16 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             switch (widget.Item.Type)
             {
-                case OverlayItemV3Type.Label:
-                    this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)widget.Item);
-                    break;
-                case OverlayItemV3Type.StreamBoss:
-                    this.Item = new OverlayStreamBossV3ViewModel((OverlayStreamBossV3Model)widget.Item);
-                    break;
-                case OverlayItemV3Type.Goal:
-                    this.Item = new OverlayGoalV3ViewModel((OverlayGoalV3Model)widget.Item);
-                    break;
+                case OverlayItemV3Type.Text: this.Item = new OverlayTextV3ViewModel((OverlayTextV3Model)widget.Item); break;
+                case OverlayItemV3Type.Image: this.Item = new OverlayImageV3ViewModel((OverlayImageV3Model)widget.Item); break;
+                case OverlayItemV3Type.Video: this.Item = new OverlayVideoV3ViewModel((OverlayVideoV3Model)widget.Item); break;
+                case OverlayItemV3Type.YouTube: this.Item = new OverlayYouTubeV3ViewModel((OverlayYouTubeV3Model)widget.Item); break;
+                case OverlayItemV3Type.HTML: this.Item = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)widget.Item); break;
+                case OverlayItemV3Type.Timer: this.Item = new OverlayTimerV3ViewModel((OverlayTimerV3Model)widget.Item); break;
+                case OverlayItemV3Type.TwitchClip: this.Item = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)widget.Item); break;
+                case OverlayItemV3Type.Label: this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)widget.Item); break;
+                case OverlayItemV3Type.StreamBoss: this.Item = new OverlayStreamBossV3ViewModel((OverlayStreamBossV3Model)widget.Item); break;
+                case OverlayItemV3Type.Goal: this.Item = new OverlayGoalV3ViewModel((OverlayGoalV3Model)widget.Item); break;
             }
 
             this.HTML = widget.Item.HTML;
