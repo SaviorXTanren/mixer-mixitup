@@ -54,7 +54,7 @@ namespace MixItUp.WPF
                 this.EndLoadingOperation();
             };
 
-            if (ChannelSession.AppSettings.Width > 0)
+            if (ChannelSession.AppSettings.Width > 0 && !ChannelSession.AppSettings.DontSaveLastWindowPosition)
             {
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
                 this.Height = ChannelSession.AppSettings.Height;

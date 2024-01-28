@@ -5352,6 +5352,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t Save Window Positioning.
+        /// </summary>
+        public static string DontSaveLastWindowPosition {
+            get {
+                return ResourceManager.GetString("DontSaveLastWindowPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Down Arrow.
         /// </summary>
         public static string DownArrow {
