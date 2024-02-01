@@ -287,6 +287,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
                     }
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration);
 
                     // Replace any lingering {PostEvent} properties
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, OverlayActionModel.PostEventReplacementText, string.Empty);
