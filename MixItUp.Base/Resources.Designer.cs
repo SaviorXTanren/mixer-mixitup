@@ -16155,6 +16155,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pulsoid.
+        /// </summary>
+        public static string Pulsoid {
+            get {
+                return ResourceManager.GetString("Pulsoid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information..
+        /// </summary>
+        public static string PulsoidInfo1 {
+            get {
+                return ResourceManager.GetString("PulsoidInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to get Heart Rate data.
+        /// </summary>
+        public static string PulsoidUnableToGetHeartRateData {
+            get {
+                return ResourceManager.GetString("PulsoidUnableToGetHeartRateData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Purchase Time.
         /// </summary>
         public static string PurchaseTime {

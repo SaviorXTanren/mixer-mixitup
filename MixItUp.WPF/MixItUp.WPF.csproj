@@ -971,6 +971,9 @@
     <Compile Include="Controls\Services\PixelChatServiceControl.xaml.cs">
       <DependentUpon>PixelChatServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\PulsoidServiceControl.xaml.cs">
+      <DependentUpon>PulsoidServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\SAMMIServiceControl.xaml.cs">
       <DependentUpon>SAMMIServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1870,6 +1873,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Services\PixelChatServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\PulsoidServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

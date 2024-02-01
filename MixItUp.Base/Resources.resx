@@ -10347,4 +10347,13 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="DontSaveLastWindowPosition" xml:space="preserve">
     <value>Don't Save Window Positioning</value>
   </data>
+  <data name="Pulsoid" xml:space="preserve">
+    <value>Pulsoid</value>
+  </data>
+  <data name="PulsoidUnableToGetHeartRateData" xml:space="preserve">
+    <value>Unable to get Heart Rate data</value>
+  </data>
+  <data name="PulsoidInfo1" xml:space="preserve">
+    <value>Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information.</value>
+  </data>
 </root>
