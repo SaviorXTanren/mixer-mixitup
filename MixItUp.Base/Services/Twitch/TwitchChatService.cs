@@ -67,6 +67,8 @@ namespace MixItUp.Base.Services.Twitch
     {
         private const int MaxMessageLength = 500;
 
+        private const string SlashMeMessagePrefix = "/me";
+
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
@@ -391,6 +393,12 @@ namespace MixItUp.Base.Services.Twitch
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
+
+                        if (ChannelSession.Settings.TwitchSlashMeForAllChatMessages)
+                        {
+                            message = $"{SlashMeMessagePrefix} {message}";
+                        }
+
                         if (!string.IsNullOrEmpty(replyMessageID))
                         {
                             await client.SendReplyMessage(ServiceManager.Get<TwitchSessionService>().User, message, replyMessageID);

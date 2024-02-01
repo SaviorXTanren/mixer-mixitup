@@ -22880,6 +22880,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch /me For All Chat Messages.
+        /// </summary>
+        public static string TwitchSlashMeForAllChatMessages {
+            get {
+                return ResourceManager.GetString("TwitchSlashMeForAllChatMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Staff.
         /// </summary>
         public static string TwitchStaff {

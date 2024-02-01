@@ -9954,4 +9954,7 @@ namespace CustomNamespace
   <data name="OverlayWidgetSelectorDescription" xml:space="preserve">
     <value>Select the type of Overlay Widget you wish to create</value>
   </data>
+  <data name="TwitchSlashMeForAllChatMessages" xml:space="preserve">
+    <value>Twitch /me For All Chat Messages</value>
+  </data>
 </root>

@@ -28,6 +28,7 @@
             <Separator Margin="10" />
 
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding TwitchReplyToCommandChatMessages}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding TwitchSlashMeForAllChatMessages}" />
             <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding TwitchUpcomingAdCommandTriggerAmount}" />
 
             <Separator Margin="10" />

@@ -234,6 +234,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool TwitchReplyToCommandChatMessages { get; set; }
         [DataMember]
+        public bool TwitchSlashMeForAllChatMessages { get; set; }
+        [DataMember]
         public int TwitchUpcomingAdCommandTriggerAmount { get; set; } = 5;
 
         [DataMember]
