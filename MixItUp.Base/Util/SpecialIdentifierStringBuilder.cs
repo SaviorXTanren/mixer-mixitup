@@ -408,6 +408,14 @@ namespace MixItUp.Base.Util
                 }
             }
 
+            if (ServiceManager.Get<GiveawayService>().IsRunning)
+            {
+                foreach (var kvp in ServiceManager.Get<GiveawayService>().GetSpecialIdentifiers())
+                {
+                    this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
+                }
+            }
+
             if (ServiceManager.Get<DonorDriveService>().IsConnected)
             {
                 if (this.ContainsSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "user") ||

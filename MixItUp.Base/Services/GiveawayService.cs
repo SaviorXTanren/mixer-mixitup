@@ -123,6 +123,17 @@ namespace MixItUp.Base.Services
             return Task.CompletedTask;
         }
 
+        public Dictionary<string, string> GetSpecialIdentifiers()
+        {
+            return new Dictionary<string, string>()
+            {
+                { "giveawayitem", this.Item },
+                { "giveawaycommand", "!" + ChannelSession.Settings.GiveawayCommand },
+                { "giveawaytimelimit", (this.TimeLeft / 60).ToString() },
+                { "giveawaymaximumentries", ChannelSession.Settings.GiveawayMaximumEntries.ToString() }
+            };
+        }
+
         private async Task GiveawayTimerBackground()
         {
             GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
@@ -321,17 +332,6 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(ex);
             }
-        }
-
-        private Dictionary<string, string> GetSpecialIdentifiers()
-        {
-            return new Dictionary<string, string>()
-            {
-                { "giveawayitem", this.Item },
-                { "giveawaycommand", "!" + ChannelSession.Settings.GiveawayCommand },
-                { "giveawaytimelimit", (this.TimeLeft / 60).ToString() },
-                { "giveawaymaximumentries", ChannelSession.Settings.GiveawayMaximumEntries.ToString() }
-            };
         }
     }
 }
