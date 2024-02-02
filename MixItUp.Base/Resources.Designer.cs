@@ -3021,6 +3021,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Command Trigger Delay.
+        /// </summary>
+        public static string CommandTriggerDelay {
+            get {
+                return ResourceManager.GetString("CommandTriggerDelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command Type.
         /// </summary>
         public static string CommandType {
@@ -16164,11 +16173,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pulsoid Heart Rate Changed.
+        /// </summary>
+        public static string PulsoidHeartRateChanged {
+            get {
+                return ResourceManager.GetString("PulsoidHeartRateChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information..
         /// </summary>
         public static string PulsoidInfo1 {
             get {
                 return ResourceManager.GetString("PulsoidInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Command Trigger Delay option allows you set how often the Pulsoid Heart Rate Changed event command can be triggered due to changes in your heart rate. For example, setting the value to 3 seconds means that regardless of heart rate changes, the Pulsoid Heart Rate Changed event command can not be triggered again for 3 seconds after it has been triggered due to a heart rate change. Note that only heart rate changes will trigger the command, it will not repeatedly trigger if your heart rate stays the same..
+        /// </summary>
+        public static string PulsoidInfo2 {
+            get {
+                return ResourceManager.GetString("PulsoidInfo2", resourceCulture);
             }
         }
         

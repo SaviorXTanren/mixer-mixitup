@@ -131,21 +131,33 @@ namespace MixItUp.Base.Services
         GenericDonation = 1999,
 
         StreamlabsDonation = 1000,
+
         TiltifyDonation = 1020,
+
         DonorDriveDonation = 1030,
         DonorDriveDonationIncentive = 1031,
         DonorDriveDonationMilestone = 1032,
+
         TipeeeStreamDonation = 1040,
+
         TreatStreamDonation = 1050,
+
         PatreonSubscribed = 1060,
+
         RainmakerDonation = 1070,
+
         JustGivingDonation = 1080,
+
         StreamlootsCardRedeemed = 1090,
         StreamlootsPackPurchased = 1091,
         StreamlootsPackGifted = 1092,
+
         StreamElementsDonation = 1100,
         StreamElementsMerchPurchase = 1101,
+
         CrowdControlEffectRedeemed = 1110,
+
+        PulsoidHeartRateChanged = 1120,
     }
 
     public class EventService

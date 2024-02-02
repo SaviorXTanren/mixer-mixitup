@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using System;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
@@ -9,6 +10,16 @@ namespace MixItUp.Base.ViewModel.Services
     {
         public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
+
+        public int CommandTriggerDelay
+        {
+            get { return ChannelSession.Settings.PulsoidCommandTriggerDelay; }
+            set
+            {
+                ChannelSession.Settings.PulsoidCommandTriggerDelay = Math.Max(value, 0);
+                this.NotifyPropertyChanged();
+            }
+        }
 
         public override string WikiPageName { get { return "pulsoid"; } }
 

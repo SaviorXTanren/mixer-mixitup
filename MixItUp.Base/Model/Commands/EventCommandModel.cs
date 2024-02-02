@@ -275,6 +275,9 @@ namespace MixItUp.Base.Model.Commands
                         specialIdentifiers[kvp.Key] = kvp.Value;
                     }
                     break;
+                case EventTypeEnum.PulsoidHeartRateChanged:
+                    specialIdentifiers["pulsoidheartrate"] = "80";
+                    break;
             }
 
             int eventNumber = (int)eventType;

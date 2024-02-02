@@ -538,6 +538,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string SAMMIAPIPassword { get; set; }
 
+        [DataMember]
+        public int PulsoidCommandTriggerDelay { get; set; } = 3;
+
         #endregion Services
 
         #region Dashboard

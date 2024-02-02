@@ -80,6 +80,7 @@ namespace MixItUp.Base.Util
 
         public const string DonorDriveSpecialIdentifierHeader = "donordrive";
         public const string TiltifySpecialIdentifierHeader = "tiltify";
+        public const string PulsoidSpecialIdentifierHeader = "pulsoid";
 
         public const string UnicodeRegexSpecialIdentifier = "unicode";
 
@@ -455,6 +456,18 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationurl", campaign.DonateURL);
                         this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationgoal", campaign.FundraiserGoalAmount.ToString());
                         this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationamount", campaign.AmountRaised.ToString());
+                    }
+                }
+            }
+
+            if (ServiceManager.Get<PulsoidService>().IsConnected)
+            {
+                if (this.ContainsSpecialIdentifier(PulsoidSpecialIdentifierHeader))
+                {
+                    PulsoidHeartRate heartRate = ServiceManager.Get<PulsoidService>().LastHeartRate;
+                    if (heartRate != null)
+                    {
+                        this.ReplaceSpecialIdentifier(PulsoidSpecialIdentifierHeader + "heartrate", heartRate.HeartRate.ToString());
                     }
                 }
             }

@@ -1,11 +1,17 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Net.WebSockets;
 
 namespace MixItUp.Base.Services.External
 {
@@ -14,7 +20,7 @@ namespace MixItUp.Base.Services.External
         public long measured_at { get; set; }
         public JObject data { get; set; }
 
-        public int heart_rate
+        public int HeartRate
         {
             get
             {
@@ -23,6 +29,39 @@ namespace MixItUp.Base.Services.External
                     return result;
                 }
                 return 0;
+            }
+        }
+    }
+
+    public class PulsoidWebSocket : ClientWebSocketBase
+    {
+        public PulsoidHeartRate LastHeartRate { get; private set; }
+
+        private DateTimeOffset lastTrigger = DateTimeOffset.MinValue;
+
+        protected override async Task ProcessReceivedPacket(string packetJSON)
+        {
+            try
+            {
+                PulsoidHeartRate packet = JSONSerializerHelper.DeserializeFromString<PulsoidHeartRate>(packetJSON);
+                if (packet != null)
+                {
+                    this.LastHeartRate = packet;
+                    if (this.lastTrigger.TotalSecondsFromNow() >= ChannelSession.Settings.PulsoidCommandTriggerDelay)
+                    {
+                        CommandParametersModel parameters = new CommandParametersModel();
+                        parameters.SpecialIdentifiers["pulsoidheartrate"] = packet.HeartRate.ToString();
+                        if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.PulsoidHeartRateChanged, parameters))
+                        {
+                            this.lastTrigger = DateTimeOffset.Now;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                Logger.Log("Pulsoid Service - Failed Packet Processing: " + packetJSON);
             }
         }
     }
@@ -38,11 +77,17 @@ namespace MixItUp.Base.Services.External
 
         public const string TokenUrl = "https://pulsoid.net/oauth2/token";
 
+        public const string WebsocketUrl = "wss://dev.pulsoid.net/api/v1/data/real_time";
+
         public override string Name { get { return Resources.Pulsoid; } }
 
         public string AuthorizationURL { get { return $"https://pulsoid.net/oauth2/authorize?client_id={PulsoidService.ClientID}&redirect_uri={OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL}&response_type=code&scope=data:heart_rate:read&state={Guid.NewGuid()}"; } }
 
+        private PulsoidWebSocket socket = new PulsoidWebSocket();
+
         public PulsoidService() : base(PulsoidService.BaseAddress) { }
+
+        public PulsoidHeartRate LastHeartRate { get { return this.socket?.LastHeartRate; } }
 
         public override async Task<Result> Connect()
         {
@@ -65,6 +110,19 @@ namespace MixItUp.Base.Services.External
                     {
                         token.authorizationCode = authorizationCode;
 
+                        if (ChannelSession.IsDebug())
+                        {
+                            this.socket.OnSentOccurred += Socket_OnSentOccurred;
+                            this.socket.OnTextReceivedOccurred += Socket_OnTextReceivedOccurred;
+                        }
+                        this.socket.OnDisconnectOccurred += Socket_OnDisconnectOccurred;
+
+                        if (!await this.socket.Connect($"{PulsoidService.WebsocketUrl}?access_token={this.token.accessToken}"))
+                        {
+                            await this.Disconnect();
+                            return new Result(false);
+                        }
+
                         return await this.InitializeInternal();
                     }
                 }
@@ -79,8 +137,13 @@ namespace MixItUp.Base.Services.External
 
         public override async Task Disconnect()
         {
-            //this.socket.OnDisconnected -= Socket_OnDisconnected;
-            //await this.socket.Disconnect();
+            if (ChannelSession.IsDebug())
+            {
+                this.socket.OnSentOccurred -= Socket_OnSentOccurred;
+                this.socket.OnTextReceivedOccurred -= Socket_OnTextReceivedOccurred;
+            }
+            this.socket.OnDisconnectOccurred -= Socket_OnDisconnectOccurred;
+            await this.socket.Disconnect();
 
             this.token = null;
         }
@@ -123,6 +186,21 @@ namespace MixItUp.Base.Services.External
 
                 this.token = await this.GetWWWFormUrlEncodedOAuthToken(PulsoidService.TokenUrl, body);
             }
+        }
+
+        private async void Socket_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        {
+            await this.Disconnect();
+        }
+
+        private void Socket_OnSentOccurred(object sender, string e)
+        {
+            Logger.Log("Pulsoid Service - Packet Sent: " + e);
+        }
+
+        private void Socket_OnTextReceivedOccurred(object sender, string e)
+        {
+            Logger.Log("Pulsoid Service - Packet Received: " + e);
         }
     }
 }
