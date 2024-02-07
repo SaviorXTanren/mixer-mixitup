@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
-    public class RandomActionEditorControlViewModel : SubActionContainerControlViewModel
+    public class RandomActionEditorControlViewModel : GroupActionEditorControlViewModel
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Random; } }
 
@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.Actions
         private bool noDuplicates;
 
         public RandomActionEditorControlViewModel(RandomActionModel action)
-            : base(action, action.Actions)
+            : base(action)
         {
             this.Amount = action.Amount;
             this.NoDuplicates = action.NoDuplicates;

@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Actions
     }
 
     [DataContract]
-    public class TwitchActionModel : ActionWithSubActionsModelBase
+    public class TwitchActionModel : GroupActionModel
     {
         public const string ClipURLSpecialIdentifier = "clipurl";
         public const string PollChoiceSpecialIdentifier = "pollchoice";
@@ -603,7 +603,7 @@ namespace MixItUp.Base.Model.Actions
                                         IEnumerable<PollChoiceModel> winningChoices = results.choices.Where(c => c.votes == maxVotes);
                                         parameters.SpecialIdentifiers[PollChoiceSpecialIdentifier] = string.Join(" & ", winningChoices.Select(c => c.title));
 
-                                        await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                        await this.RunSubActions(parameters);
                                         return;
                                     }
                                     else if (!string.Equals(results.status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
@@ -665,7 +665,7 @@ namespace MixItUp.Base.Model.Actions
 
                                         parameters.SpecialIdentifiers[PredictionOutcomeSpecialIdentifier] = outcome?.title;
 
-                                        await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                        await this.RunSubActions(parameters);
                                         return;
                                     }
                                     else if (string.Equals(results.status, "CANCELED", StringComparison.OrdinalIgnoreCase))

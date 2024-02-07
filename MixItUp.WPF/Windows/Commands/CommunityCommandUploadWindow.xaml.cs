@@ -128,9 +128,9 @@ namespace MixItUp.WPF.Windows.Commands
         {
             foreach (ActionModelBase action in actions)
             {
-                if (action is ActionWithSubActionsModelBase)
+                if (action is GroupActionModel)
                 {
-                    this.SetActionTags(tags, ((ActionWithSubActionsModelBase)action).Actions);
+                    this.SetActionTags(tags, ((GroupActionModel)action).Actions);
                 }
                 this.uploadCommand.Tags.Add((CommunityCommandTagEnum)action.Type);
             }

@@ -57,7 +57,8 @@ namespace MixItUp.Base.Model.Actions
         MusicPlayer,
         LumiaStream,
         Random,
-        Script
+        Script,
+        Group
     }
 
     [DataContract]
@@ -135,17 +136,5 @@ namespace MixItUp.Base.Model.Actions
         public bool Equals(ActionModelBase other) { return this.ID.Equals(other.ID); }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
-    }
-
-    [DataContract]
-    public abstract class ActionWithSubActionsModelBase : ActionModelBase
-    {
-        [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
-
-        public ActionWithSubActionsModelBase(ActionTypeEnum type) : base(type) { }
-
-        [Obsolete]
-        public ActionWithSubActionsModelBase() { }
     }
 }

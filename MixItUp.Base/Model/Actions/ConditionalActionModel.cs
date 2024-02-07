@@ -62,7 +62,7 @@ namespace MixItUp.Base.Model.Actions
     }
 
     [DataContract]
-    public class ConditionalActionModel : ActionWithSubActionsModelBase
+    public class ConditionalActionModel : GroupActionModel
     {
         [DataMember]
         public bool CaseSensitive { get; set; }
@@ -78,17 +78,16 @@ namespace MixItUp.Base.Model.Actions
         public Guid CommandID { get; set; }
 
         public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, bool repeatWhileTrue, IEnumerable<ConditionalClauseModel> clauses, IEnumerable<ActionModelBase> actions)
-            : base(ActionTypeEnum.Conditional)
+            : base(ActionTypeEnum.Conditional, actions)
         {
             this.CaseSensitive = caseSensitive;
             this.Operator = op;
             this.RepeatWhileTrue = repeatWhileTrue;
             this.Clauses = new List<ConditionalClauseModel>(clauses);
-            this.Actions = new List<ActionModelBase>(actions);
         }
 
         [Obsolete]
-        public ConditionalActionModel() { }
+        public ConditionalActionModel() : base() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
@@ -118,7 +117,7 @@ namespace MixItUp.Base.Model.Actions
 
                 if (finalResult)
                 {
-                    await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                    await this.RunSubActions(parameters);
                 }
 
                 totalLoops++;

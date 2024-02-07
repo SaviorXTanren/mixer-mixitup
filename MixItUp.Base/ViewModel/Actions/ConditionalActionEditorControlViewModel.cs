@@ -121,7 +121,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public ConditionalClauseModel GetModel() { return new ConditionalClauseModel(this.ComparisionType, this.Value1, this.Value2, this.Value3); }
     }
 
-    public class ConditionalActionEditorControlViewModel : SubActionContainerControlViewModel
+    public class ConditionalActionEditorControlViewModel : GroupActionEditorControlViewModel
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Conditional; } }
 
@@ -165,7 +165,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public ObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ObservableCollection<ConditionalClauseViewModel>();
 
         public ConditionalActionEditorControlViewModel(ConditionalActionModel action)
-            : base(action, action.Actions)
+            : base(action)
         {
             this.CaseSensitive = action.CaseSensitive;
             this.SelectedOperatorType = action.Operator;

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
 {
-    public class RandomActionModel : ActionWithSubActionsModelBase
+    public class RandomActionModel : GroupActionModel
     {
         [DataMember]
         public string Amount { get; set; }
@@ -18,11 +18,10 @@ namespace MixItUp.Base.Model.Actions
         public bool NoDuplicates { get; set; }
 
         public RandomActionModel(string amount, bool noDuplicates, IEnumerable<ActionModelBase> actions)
-            : base(ActionTypeEnum.Random)
+            : base(ActionTypeEnum.Random, actions)
         {
             this.Amount = amount;
             this.NoDuplicates = noDuplicates;
-            this.Actions = new List<ActionModelBase>(actions);
         }
 
         [Obsolete]

@@ -13,7 +13,7 @@ using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
-    public class TwitchActionEditorControlViewModel : SubActionContainerControlViewModel
+    public class TwitchActionEditorControlViewModel : GroupActionEditorControlViewModel
     {
         private const int PredictionTitleMaxLength = 45;
 
@@ -603,7 +603,7 @@ namespace MixItUp.Base.ViewModel.Actions
         private IEnumerable<string> existingContentClassificationLabelIDs = null;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
-            : base(action, action.Actions)
+            : base(action)
         {
             action.UpdateSetChatSettingsProperties();
 

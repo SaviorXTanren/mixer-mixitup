@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -122,6 +120,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.ExternalProgram: actionPageName = "external-program-action"; break;
                     case ActionTypeEnum.File: actionPageName = "file-action"; break;
                     case ActionTypeEnum.GameQueue: actionPageName = "game-queue-action"; break;
+                    case ActionTypeEnum.Group: actionPageName = "group-action"; break;
                     case ActionTypeEnum.IFTTT: actionPageName = "ifttt-action"; break;
                     case ActionTypeEnum.InfiniteAlbum: actionPageName = "infinite-album"; break;
                     case ActionTypeEnum.Input: actionPageName = "input-action"; break;

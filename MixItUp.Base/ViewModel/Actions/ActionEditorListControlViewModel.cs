@@ -56,6 +56,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.ExternalProgram: editorViewModel = new ExternalProgramActionEditorControlViewModel(); break;
                         case ActionTypeEnum.File: editorViewModel = new FileActionEditorControlViewModel(); break;
                         case ActionTypeEnum.GameQueue: editorViewModel = new GameQueueActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.Group: editorViewModel = new GroupActionEditorControlViewModel(); break;
                         case ActionTypeEnum.IFTTT: editorViewModel = new IFTTTActionEditorControlViewModel(); break;
                         case ActionTypeEnum.InfiniteAlbum: editorViewModel = new InfiniteAlbumActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Input: editorViewModel = new InputActionEditorControlViewModel(); break;
@@ -143,6 +144,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.ExternalProgram: editorViewModel = new ExternalProgramActionEditorControlViewModel((ExternalProgramActionModel)action); break;
                 case ActionTypeEnum.File: editorViewModel = new FileActionEditorControlViewModel((FileActionModel)action); break;
                 case ActionTypeEnum.GameQueue: editorViewModel = new GameQueueActionEditorControlViewModel((GameQueueActionModel)action); break;
+                case ActionTypeEnum.Group: editorViewModel = new GroupActionEditorControlViewModel((GroupActionModel)action); break;
                 case ActionTypeEnum.IFTTT: editorViewModel = new IFTTTActionEditorControlViewModel((IFTTTActionModel)action); break;
                 case ActionTypeEnum.InfiniteAlbum: editorViewModel = new InfiniteAlbumActionEditorControlViewModel((InfiniteAlbumActionModel)action); break;
                 case ActionTypeEnum.Input: editorViewModel = new InputActionEditorControlViewModel((InputActionModel)action); break;
