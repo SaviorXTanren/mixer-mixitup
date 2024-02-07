@@ -9957,4 +9957,7 @@ namespace CustomNamespace
   <data name="TwitchSlashMeForAllChatMessages" xml:space="preserve">
     <value>Twitch /me For All Chat Messages</value>
   </data>
+  <data name="MicrosoftAzureSpeech" xml:space="preserve">
+    <value>Microsoft Azure Speech</value>
+  </data>
 </root>

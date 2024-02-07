@@ -12407,6 +12407,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Microsoft Azure Speech.
+        /// </summary>
+        public static string MicrosoftAzureSpeech {
+            get {
+                return ResourceManager.GetString("MicrosoftAzureSpeech", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Middle Button.
         /// </summary>
         public static string MiddleButton {
