@@ -25,13 +25,17 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool ShouldProcessMath { get; set; }
 
-        public SpecialIdentifierActionModel(string specialIdentifierName, string replacementText, bool makeGloballyUsable, bool shouldProcessMath)
+        [DataMember]
+        public bool ReplaceSpecialIdentifiersInFunctions { get; set; }
+
+        public SpecialIdentifierActionModel(string specialIdentifierName, string replacementText, bool makeGloballyUsable, bool shouldProcessMath, bool replaceSpecialIdentifiersInFunctions)
             : base(ActionTypeEnum.SpecialIdentifier)
         {
             this.SpecialIdentifierName = specialIdentifierName;
             this.ReplacementText = replacementText;
             this.MakeGloballyUsable = makeGloballyUsable;
             this.ShouldProcessMath = shouldProcessMath;
+            this.ReplaceSpecialIdentifiersInFunctions = replaceSpecialIdentifiersInFunctions;
         }
 
         [Obsolete]
@@ -39,40 +43,47 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string replacementText = await ReplaceStringWithSpecialModifiers(this.ReplacementText, parameters);
+            string replacementText = this.ReplacementText;
+            if (!this.ReplaceSpecialIdentifiersInFunctions)
+            {
+                replacementText = await ReplaceStringWithSpecialModifiers(replacementText, parameters);
+            }
 
             if (replacementText.Contains("(") || replacementText.Contains(")"))
             {
-                replacementText = await this.ProcessStringFunction(replacementText, "removespaces", (text) => { return Task.FromResult(text.Replace(" ", string.Empty)); });
-                replacementText = await this.ProcessStringFunction(replacementText, "removecommas", (text) => { return Task.FromResult(text.Replace(",", string.Empty)); });
-                replacementText = await this.ProcessStringFunction(replacementText, "tolower", (text) => { return Task.FromResult(text.ToLower()); });
-                replacementText = await this.ProcessStringFunction(replacementText, "toupper", (text) => { return Task.FromResult(text.ToUpper()); });
-                replacementText = await this.ProcessStringFunction(replacementText, "length", (text) => { return Task.FromResult(text.Length.ToString()); });
-                replacementText = await this.ProcessStringFunction(replacementText, "urlencode", (text) => { return Task.FromResult(HttpUtility.UrlEncode(text)); });
-                replacementText = await this.ProcessStringFunction(replacementText, "uriescape", (text) => { return Task.FromResult(Uri.EscapeDataString(text)); });
-                replacementText = await this.ProcessStringFunction(replacementText, "replace", (text) =>
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "removespaces", 1, (arguments) => { return Task.FromResult(arguments.First().Replace(" ", string.Empty)); });
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "removecommas", 1, (arguments) => { return Task.FromResult(arguments.First().Replace(",", string.Empty)); });
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "tolower", 1, (arguments) => { return Task.FromResult(arguments.First().ToLower()); });
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "toupper", 1, (arguments) => { return Task.FromResult(arguments.First().ToUpper()); });
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "length", 1, (arguments) => { return Task.FromResult(arguments.First().Length.ToString()); });
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "urlencode", 1, (arguments) => { return Task.FromResult(HttpUtility.UrlEncode(arguments.First())); });
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "uriescape", 1, (arguments) => { return Task.FromResult(Uri.EscapeDataString(arguments.First())); });
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "replace", 3, (arguments) =>
                 {
-                    string[] splits = text.Split(new char[] { ',' });
-                    if (splits != null && splits.Length == 3)
+                    if (arguments.Count() == 3)
                     {
-                        return Task.FromResult(splits[0].Replace(splits[1], splits[2]));
+                        return Task.FromResult(arguments.ElementAt(0).Replace(arguments.ElementAt(1), arguments.ElementAt(2)));
                     }
-                    return Task.FromResult(text);
+                    return Task.FromResult<string>(null);
                 });
-                replacementText = await this.ProcessStringFunction(replacementText, "count", (text) =>
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "count", 2, (arguments) =>
                 {
-                    string[] splits = text.Split(new char[] { ',' });
-                    if (splits != null && splits.Length == 2)
+                    if (arguments.Count() == 2)
                     {
-                        return Task.FromResult(Regex.Matches(splits[0], splits[1]).Count.ToString());
+                        return Task.FromResult(Regex.Matches(arguments.ElementAt(0), arguments.ElementAt(1)).Count.ToString());
                     }
-                    return Task.FromResult(text);
+                    return Task.FromResult<string>(null);
                 });
             }
 
             if (this.ShouldProcessMath)
             {
                 replacementText = MathHelper.ProcessMathEquation(replacementText).ToString();
+            }
+
+            if (this.ReplaceSpecialIdentifiersInFunctions)
+            {
+                replacementText = await ReplaceStringWithSpecialModifiers(replacementText, parameters);
             }
 
             if (this.MakeGloballyUsable)
@@ -85,7 +96,7 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
-        private async Task<string> ProcessStringFunction(string text, string functionName, Func<string, Task<string>> processor)
+        private async Task<string> ProcessStringFunction(CommandParametersModel parameters, string text, string functionName, int expectedArgumentNumber, Func<IEnumerable<string>, Task<string>> processor)
         {
             int index = 0;
             while (index >= 0)
@@ -109,7 +120,7 @@ namespace MixItUp.Base.Model.Actions
                             if (leftCount == (rightCount + 1))
                             {
                                 // Successful match, reset and check again
-                                text = await this.PerformStringFunction(text, functionName, processor, index, rightIndex);
+                                text = await this.PerformStringFunction(parameters, text, functionName, expectedArgumentNumber, processor, index, rightIndex);
 
                                 rightIndex = -1;
                             }
@@ -132,18 +143,52 @@ namespace MixItUp.Base.Model.Actions
                         // We've reached the end of the text, find the last ) that exists
                         rightIndex = text.LastIndexOf(")", rightIndex);
 
-                        text = await this.PerformStringFunction(text, functionName, processor, index, rightIndex);
+                        text = await this.PerformStringFunction(parameters, text, functionName, expectedArgumentNumber, processor, index, rightIndex);
                     }
                 }
             }
             return text;
         }
 
-        private async Task<string> PerformStringFunction(string text, string functionName, Func<string, Task<string>> processor, int startIndex, int endIndex)
+        private async Task<string> PerformStringFunction(CommandParametersModel parameters, string text, string functionName, int expectedArgumentNumber, Func<IEnumerable<string>, Task<string>> processor, int startIndex, int endIndex)
         {
             string functionText = text.Substring(startIndex, endIndex - startIndex + 1);
             string textToProcess = functionText.Substring(functionName.Length + 1, functionText.Length - functionName.Length - 2);
-            return text.Replace(functionText, await processor(textToProcess));
+
+            List<string> arguments = new List<string>();
+            if (expectedArgumentNumber > 1)
+            {
+                string[] splits = textToProcess.Split(new char[] { ',' });
+                if (splits != null && splits.Length == expectedArgumentNumber)
+                {
+                    arguments.AddRange(splits);
+                }
+            }
+            else
+            {
+                arguments.Add(textToProcess);
+            }
+
+            // Arguments failed to process, abort
+            if (arguments.Count == 0)
+            {
+                return textToProcess;
+            }
+
+            if (this.ReplaceSpecialIdentifiersInFunctions)
+            {
+                for (int i = 0; i < arguments.Count; i++)
+                {
+                    arguments[i] = await ReplaceStringWithSpecialModifiers(arguments[i], parameters);
+                }
+            }
+
+            text = text.Replace(functionText, await processor(arguments));
+            if (text == null)
+            {
+                text = textToProcess;
+            }
+            return text;
         }
     }
 }

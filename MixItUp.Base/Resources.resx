@@ -9960,4 +9960,7 @@ namespace CustomNamespace
   <data name="MicrosoftAzureSpeech" xml:space="preserve">
     <value>Microsoft Azure Speech</value>
   </data>
+  <data name="ReplaceSpecialIdentifiersInFunctions" xml:space="preserve">
+    <value>Replace Special Identifiers In Functions</value>
+  </data>
 </root>

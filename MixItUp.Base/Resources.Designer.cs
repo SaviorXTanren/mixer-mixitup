@@ -16849,6 +16849,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replace Special Identifiers In Functions.
+        /// </summary>
+        public static string ReplaceSpecialIdentifiersInFunctions {
+            get {
+                return ResourceManager.GetString("ReplaceSpecialIdentifiersInFunctions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replace Text In File.
         /// </summary>
         public static string ReplaceTextInFile {

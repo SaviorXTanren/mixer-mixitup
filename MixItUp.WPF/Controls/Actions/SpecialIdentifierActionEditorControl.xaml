@@ -38,11 +38,15 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -51,6 +55,9 @@
 
             <TextBlock Grid.Column="5" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IsMathExpression}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="7" IsChecked="{Binding ShouldProcessMath}" />
+
+            <TextBlock Grid.Column="9" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ReplaceSpecialIdentifiersInFunctions}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="11" IsChecked="{Binding ReplaceSpecialIdentifiersInFunctions}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>
