@@ -565,6 +565,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add To Persistent Timer.
+        /// </summary>
+        public static string AddToPersistentTimer {
+            get {
+                return ResourceManager.GetString("AddToPersistentTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add to specific user.
         /// </summary>
         public static string AddToSpecificUser {
@@ -10623,6 +10632,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Initial Amount.
+        /// </summary>
+        public static string InitialAmount {
+            get {
+                return ResourceManager.GetString("InitialAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to initialize user information.
         /// </summary>
         public static string InitializeSessionUserInitializationFailed {
@@ -15159,6 +15177,15 @@ namespace MixItUp.Base {
         public static string PerRequirement {
             get {
                 return ResourceManager.GetString("PerRequirement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persistent Timer.
+        /// </summary>
+        public static string PersistentTimer {
+            get {
+                return ResourceManager.GetString("PersistentTimer", resourceCulture);
             }
         }
         
@@ -21016,6 +21043,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Time Amount.
+        /// </summary>
+        public static string TimeAmount {
+            get {
+                return ResourceManager.GetString("TimeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Day(s).
         /// </summary>
         public static string TimeDays {
@@ -21057,6 +21093,15 @@ namespace MixItUp.Base {
         public static string TimeMonths {
             get {
                 return ResourceManager.GetString("TimeMonths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Multiplier.
+        /// </summary>
+        public static string TimeMultiplier {
+            get {
+                return ResourceManager.GetString("TimeMultiplier", resourceCulture);
             }
         }
         
@@ -21106,11 +21151,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Timer Adjusted.
+        /// </summary>
+        public static string TimerAdjusted {
+            get {
+                return ResourceManager.GetString("TimerAdjusted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Timer Command.
         /// </summary>
         public static string TimerCommand {
             get {
                 return ResourceManager.GetString("TimerCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timer Completed.
+        /// </summary>
+        public static string TimerCompleted {
+            get {
+                return ResourceManager.GetString("TimerCompleted", resourceCulture);
             }
         }
         

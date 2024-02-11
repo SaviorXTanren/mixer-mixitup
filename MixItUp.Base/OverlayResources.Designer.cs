@@ -576,6 +576,32 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to var additionalTime = 0;
+        ///
+        ///function timerLoop(totalSeconds, displayFormat)
+        ///{
+        ///    totalSeconds += additionalTime;
+        ///    additionalTime = 0;
+        ///
+        ///    var text = displayFormat;
+        ///
+        ///    var seconds = totalSeconds % 60;
+        ///    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
+        ///    text = text.replace(&quot;SS&quot;, totalSeconds);
+        ///    text = text.replace(&quot;ss&quot;, seconds);
+        ///
+        ///    var totalMinutes = Math.floor(totalSeconds / 60);
+        ///    var minutes = totalMinutes % 60;
+        ///    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
+        ///    text = tex [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayPersistentTimerDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayPersistentTimerDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .maindiv {
         ///    position: absolute;
         ///    width: 100%;
@@ -765,13 +791,8 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to var additionalTime = 0;
-        ///
-        ///function timerLoop(totalSeconds, endingSeconds, displayFormat)
+        ///   Looks up a localized string similar to function timerLoop(totalSeconds, endingSeconds, displayFormat)
         ///{
-        ///    totalSeconds += additionalTime;
-        ///    additionalTime = 0;
-        ///
         ///    var text = displayFormat;
         ///
         ///    var seconds = totalSeconds % 60;
@@ -781,7 +802,11 @@ namespace MixItUp.Base {
         ///
         ///    var totalMinutes = Math.floor(totalSeconds / 60);
         ///    var minutes = totalMinutes % 60;
-        ///    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }        /// [rest of string was truncated]&quot;;.
+        ///    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
+        ///    text = text.replace(&quot;MM&quot;, totalMinutes);
+        ///    text = text.replace(&quot;mm&quot;, minutes);
+        ///
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayTimerDefaultJavascript {
             get {

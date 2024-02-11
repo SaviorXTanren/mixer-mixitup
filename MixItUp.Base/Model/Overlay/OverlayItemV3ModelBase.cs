@@ -21,6 +21,7 @@ namespace MixItUp.Base.Model.Overlay
         TwitchClip,
         StreamBoss,
         Goal,
+        PersistentTimer,
     }
 
     public enum OverlayItemV3DisplayOptionsType

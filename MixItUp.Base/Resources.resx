@@ -9963,4 +9963,25 @@ namespace CustomNamespace
   <data name="ReplaceSpecialIdentifiersInFunctions" xml:space="preserve">
     <value>Replace Special Identifiers In Functions</value>
   </data>
+  <data name="PersistentTimer" xml:space="preserve">
+    <value>Persistent Timer</value>
+  </data>
+  <data name="AddToPersistentTimer" xml:space="preserve">
+    <value>Add To Persistent Timer</value>
+  </data>
+  <data name="TimerAdjusted" xml:space="preserve">
+    <value>Timer Adjusted</value>
+  </data>
+  <data name="TimerCompleted" xml:space="preserve">
+    <value>Timer Completed</value>
+  </data>
+  <data name="InitialAmount" xml:space="preserve">
+    <value>Initial Amount</value>
+  </data>
+  <data name="TimeAmount" xml:space="preserve">
+    <value>Time Amount</value>
+  </data>
+  <data name="TimeMultiplier" xml:space="preserve">
+    <value>Time Multiplier</value>
+  </data>
 </root>

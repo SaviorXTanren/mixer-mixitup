@@ -974,6 +974,57 @@ function update(data)
 &lt;/body&gt;
 &lt;/html&gt;</value>
   </data>
+  <data name="OverlayPersistentTimerDefaultJavascript" xml:space="preserve">
+    <value>var additionalTime = 0;
+
+function timerLoop(totalSeconds, displayFormat)
+{
+    totalSeconds += additionalTime;
+    additionalTime = 0;
+
+    var text = displayFormat;
+
+    var seconds = totalSeconds % 60;
+    if (seconds &lt; 10) { seconds = "0" + seconds }
+    text = text.replace("SS", totalSeconds);
+    text = text.replace("ss", seconds);
+
+    var totalMinutes = Math.floor(totalSeconds / 60);
+    var minutes = totalMinutes % 60;
+    if (minutes &lt; 10) { minutes = "0" + minutes }
+    text = text.replace("MM", totalMinutes);
+    text = text.replace("mm", minutes);
+
+    var totalHours = Math.floor(totalMinutes / 60);
+    var hours = totalHours % 24;
+    if (hours &lt; 10) { hours = "0" + hours }
+    text = text.replace("HH", totalHours);
+    text = text.replace("hh", hours);
+
+    var days = Math.floor(totalHours / 24);
+    text = text.replace("DD", hours);
+
+    document.getElementById("text").innerHTML = text;
+
+    setTimeout(function () {
+        totalSeconds--;
+        if (totalSeconds &gt;= 0) {
+            timerLoop(totalSeconds, displayFormat);
+        }
+        else {
+            {TimerCompletedAnimation}
+        }
+    }, 1000);
+}
+
+function adjustTime(data)
+{
+    additionalTime += data.Seconds;
+    {TimerAdjustedAnimation}
+}
+
+timerLoop({CurrentAmount}, "{DisplayFormat}");</value>
+  </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
     <value>.maindiv {
     position: absolute;
@@ -1200,13 +1251,8 @@ newboss({
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
-    <value>var additionalTime = 0;
-
-function timerLoop(totalSeconds, endingSeconds, displayFormat)
+    <value>function timerLoop(totalSeconds, endingSeconds, displayFormat)
 {
-    totalSeconds += additionalTime;
-    additionalTime = 0;
-
     var text = displayFormat;
 
     var seconds = totalSeconds % 60;
@@ -1245,11 +1291,6 @@ function timerLoop(totalSeconds, endingSeconds, displayFormat)
             }
         }
     }, 1000);
-}
-
-function adjustTime(time)
-{
-    additionalTime += time;
 }
 
 if ({CountUp}) {
