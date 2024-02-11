@@ -24,6 +24,7 @@ namespace MixItUp.Base.ViewModel.Actions
         TwitchClip,
         DamageStreamBoss,
         AddToGoal,
+        AddToPersistentTimer,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -46,6 +47,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.ShowItem));
                     this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
                     this.NotifyPropertyChanged(nameof(this.ShowAddGoal));
+                    this.NotifyPropertyChanged(nameof(this.ShowAddPersistTimer));
 
                     if (this.ShowItem)
                     {
@@ -274,6 +276,32 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string goalAmount;
 
+        public bool ShowAddPersistTimer { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToPersistentTimer; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> PersistentTimers { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedPersistentTimer
+        {
+            get { return this.selectedPersistentTimer; }
+            set
+            {
+                this.selectedPersistentTimer = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayWidgetV3Model selectedPersistentTimer;
+
+        public string TimeAmount
+        {
+            get { return this.timeAmount; }
+            set
+            {
+                this.timeAmount = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string timeAmount;
+
         private Guid widgetID;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
@@ -348,6 +376,12 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.widgetID = action.StreamBossID;
                 this.GoalAmount = action.GoalAmount;
             }
+            else if (action.PersistentTimerID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.AddToPersistentTimer;
+                this.widgetID = action.PersistentTimerID;
+                this.TimeAmount = action.TimeAmount;
+            }
         }
 
         public OverlayActionEditorControlViewModel()
@@ -414,6 +448,18 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
+            else if (this.ShowAddPersistTimer)
+            {
+                if (this.SelectedPersistentTimer == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.TimeAmount))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
 
             return Task.FromResult(new Result());
         }
@@ -432,6 +478,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.Goals.Add(widget);
                 }
+                else if (widget.Type == OverlayItemV3Type.PersistentTimer)
+                {
+                    this.PersistentTimers.Add(widget);
+                }
             }
 
             if (this.ShowDamageStreamBoss)
@@ -441,6 +491,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowAddGoal)
             {
                 this.SelectedGoal = this.Goals.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowAddPersistTimer)
+            {
+                this.SelectedPersistentTimer = this.PersistentTimers.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
         }
 
@@ -466,6 +520,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowAddGoal)
             {
                 return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayGoalV3Model)this.SelectedGoal.Item, this.GoalAmount));
+            }
+            else if (this.ShowAddPersistTimer)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayPersistentTimerV3Model)this.SelectedPersistentTimer.Item, this.TimeAmount));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

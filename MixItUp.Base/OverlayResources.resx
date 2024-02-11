@@ -975,12 +975,21 @@ function update(data)
 &lt;/html&gt;</value>
   </data>
   <data name="OverlayPersistentTimerDefaultJavascript" xml:space="preserve">
-    <value>var additionalTime = 0;
+    <value>var totalSeconds = {CurrentAmount};
+var displayFormat = "{DisplayFormat}";
 
-function timerLoop(totalSeconds, displayFormat)
+var additionalTime = 0;
+
+function timerLoop()
 {
-    totalSeconds += additionalTime;
-    additionalTime = 0;
+    if (additionalTime != 0)
+    {
+        totalSeconds += additionalTime;
+        additionalTime = 0;
+
+        totalSeconds = Math.max(totalSeconds, 0);
+        {TimerAdjustedAnimation}
+    }
 
     var text = displayFormat;
 
@@ -1006,24 +1015,40 @@ function timerLoop(totalSeconds, displayFormat)
 
     document.getElementById("text").innerHTML = text;
 
-    setTimeout(function () {
-        totalSeconds--;
-        if (totalSeconds &gt;= 0) {
-            timerLoop(totalSeconds, displayFormat);
-        }
-        else {
-            {TimerCompletedAnimation}
-        }
-    }, 1000);
+    if (totalSeconds &gt; 0)
+    {
+        setTimeout(function () {
+            totalSeconds--;
+            timerLoop();
+        }, 1000);
+    }
+    else
+    {
+        {TimerCompletedAnimation}
+        checkForAdditionalTime();
+    }
 }
 
 function adjustTime(data)
 {
     additionalTime += data.Seconds;
-    {TimerAdjustedAnimation}
 }
 
-timerLoop({CurrentAmount}, "{DisplayFormat}");</value>
+function checkForAdditionalTime()
+{
+    setTimeout(function () {
+        if (additionalTime &gt; 0)
+        {
+            timerLoop();
+        }
+        else
+        {
+            checkForAdditionalTime();
+        }
+    }, 1000);
+}
+
+timerLoop();</value>
   </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
     <value>.maindiv {

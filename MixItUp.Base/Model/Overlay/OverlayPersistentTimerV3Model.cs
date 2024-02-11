@@ -50,20 +50,17 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
-            if (amount > 0)
+            amount = Math.Round(amount);
+            this.CurrentAmount += (int)amount;
+            this.CurrentAmount = Math.Max(this.CurrentAmount, 0);
+
+            if (amount != 0)
             {
-                amount = Math.Round(amount);
-                this.CurrentAmount += (int)amount;
-                this.CurrentAmount = Math.Max(this.CurrentAmount, 0);
+                Dictionary<string, object> properties = new Dictionary<string, object>();
+                properties[SecondsProperty] = amount;
+                await this.CallFunction("adjustTime", properties);
 
-                if (amount != 0)
-                {
-                    Dictionary<string, object> properties = new Dictionary<string, object>();
-                    properties[SecondsProperty] = amount;
-                    await this.CallFunction("adjustTime", properties);
-
-                    await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user));
-                }
+                await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user));
             }
         }
 

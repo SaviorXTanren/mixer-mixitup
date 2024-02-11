@@ -576,24 +576,28 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to var additionalTime = 0;
+        ///   Looks up a localized string similar to var totalSeconds = {CurrentAmount};
+        ///var displayFormat = &quot;{DisplayFormat}&quot;;
         ///
-        ///function timerLoop(totalSeconds, displayFormat)
+        ///var additionalTime = 0;
+        ///
+        ///function timerLoop()
         ///{
-        ///    totalSeconds += additionalTime;
-        ///    additionalTime = 0;
+        ///    if (additionalTime != 0)
+        ///    {
+        ///        totalSeconds += additionalTime;
+        ///        additionalTime = 0;
+        ///
+        ///        totalSeconds = Math.max(totalSeconds, 0);
+        ///        {TimerAdjustedAnimation}
+        ///    }
         ///
         ///    var text = displayFormat;
         ///
         ///    var seconds = totalSeconds % 60;
         ///    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
         ///    text = text.replace(&quot;SS&quot;, totalSeconds);
-        ///    text = text.replace(&quot;ss&quot;, seconds);
-        ///
-        ///    var totalMinutes = Math.floor(totalSeconds / 60);
-        ///    var minutes = totalMinutes % 60;
-        ///    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
-        ///    text = tex [rest of string was truncated]&quot;;.
+        ///    text = [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPersistentTimerDefaultJavascript {
             get {

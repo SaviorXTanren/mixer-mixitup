@@ -52,6 +52,11 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string GoalAmount { get; set; }
 
+        [DataMember]
+        public Guid PersistentTimerID { get; set; }
+        [DataMember]
+        public string TimeAmount { get; set; }
+
         [Obsolete]
         public OverlayActionModel(OverlayItemModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
@@ -110,6 +115,13 @@ namespace MixItUp.Base.Model.Actions
             this.GoalAmount = goalAmount;
         }
 
+        public OverlayActionModel(OverlayPersistentTimerV3Model timer, string timeAmount)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.PersistentTimerID = timer.ID;
+            this.TimeAmount = timeAmount;
+        }
+
         [Obsolete]
         public OverlayActionModel() { }
 
@@ -151,6 +163,17 @@ namespace MixItUp.Base.Model.Actions
                     if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.GoalAmount, parameters), out double amount))
                     {
                         await ((OverlayGoalV3Model)widget.Item).ProcessEvent(parameters.User, amount);
+                    }
+                }
+            }
+            else if (this.PersistentTimerID != Guid.Empty)
+            {
+                OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.PersistentTimerID));
+                if (widget != null && widget.Type == OverlayItemV3Type.PersistentTimer)
+                {
+                    if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TimeAmount, parameters), out double amount))
+                    {
+                        await ((OverlayPersistentTimerV3Model)widget.Item).ProcessEvent(parameters.User, amount);
                     }
                 }
             }
