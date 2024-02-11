@@ -1276,7 +1276,18 @@ newboss({
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
-    <value>function timerLoop(totalSeconds, endingSeconds, displayFormat)
+    <value>var totalSeconds = 0;
+var endingSeconds = 0;
+var displayFormat = "{DisplayFormat}";
+
+if ({CountUp}) {
+    endingSeconds = {Duration};
+}
+else {
+    totalSeconds = {Duration};
+}
+
+function timerLoop()
 {
     var text = displayFormat;
 
@@ -1306,24 +1317,19 @@ newboss({
         if (endingSeconds &gt; 0) {
             totalSeconds++;
             if (totalSeconds &lt; endingSeconds) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
+                timerLoop();
             }        
         }
         else {
             totalSeconds--;
-            if (totalSeconds &gt;= 0) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
+            if (totalSeconds &gt; 0) {
+                timerLoop();
             }
         }
     }, 1000);
 }
 
-if ({CountUp}) {
-    timerLoop(0, {Duration}, "{DisplayFormat}");  
-}
-else {
-    timerLoop({Duration}, 0, "{DisplayFormat}");
-}</value>
+timerLoop();</value>
   </data>
   <data name="OverlayTwitchClipEmbedDefaultCSS" xml:space="preserve">
     <value>.clip {
