@@ -43,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private CrowdControlGame selectedGame;
 
-        public ObservableCollection<CrowdControlGamePack> Packs { get; private set; } = new ObservableCollection<CrowdControlGamePack>();
+        public ThreadSafeObservableCollection<CrowdControlGamePack> Packs { get; private set; } = new ThreadSafeObservableCollection<CrowdControlGamePack>();
 
         public CrowdControlGamePack SelectedPack
         {
@@ -66,7 +66,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private CrowdControlGamePack selectedPack;
 
-        public ObservableCollection<CrowdControlGamePackEffect> Effects { get; private set; } = new ObservableCollection<CrowdControlGamePackEffect>();
+        public ThreadSafeObservableCollection<CrowdControlGamePackEffect> Effects { get; private set; } = new ThreadSafeObservableCollection<CrowdControlGamePackEffect>();
 
         public CrowdControlGamePackEffect SelectedEffect
         {

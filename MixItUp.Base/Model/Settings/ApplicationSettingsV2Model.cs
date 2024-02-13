@@ -69,6 +69,9 @@ namespace MixItUp.Base.Model.Settings
         public string FullThemeName { get; set; } = string.Empty;
 
         [DataMember]
+        public bool DontSaveLastWindowPosition { get; set; }
+
+        [DataMember]
         public double Top { get; set; }
 
         [DataMember]

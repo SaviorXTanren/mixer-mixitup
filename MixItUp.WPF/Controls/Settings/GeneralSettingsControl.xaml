@@ -14,6 +14,7 @@
     <Grid Margin="20">
         <StackPanel>
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding OptOutOfDataTracking}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DontSaveLastWindowPosition}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AutoLogIn}" />
 
             <Separator Grid.Row="26" Grid.ColumnSpan="2" Margin="10" />

@@ -234,6 +234,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             crowdControlCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.CrowdControlEffectRedeemed));
             commandGroups.Add(crowdControlCommands);
 
+            EventCommandGroupViewModel pulsoidCommands = new EventCommandGroupViewModel(Resources.Pulsoid, packIconName: "HeartPulse");
+            pulsoidCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.PulsoidHeartRateChanged));
+            commandGroups.Add(pulsoidCommands);
+
             EventCommandGroupViewModel patreonCommands = new EventCommandGroupViewModel(Resources.Patreon, packIconName: "Patreon");
             patreonCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.PatreonSubscribed));
             commandGroups.Add(patreonCommands);
