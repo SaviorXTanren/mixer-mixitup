@@ -57,6 +57,7 @@ namespace MixItUp.Base.Model.Actions
                 replacementText = await this.ProcessStringFunction(parameters, replacementText, "toupper", 1, (arguments) => { return Task.FromResult(arguments.First().ToUpper()); });
                 replacementText = await this.ProcessStringFunction(parameters, replacementText, "length", 1, (arguments) => { return Task.FromResult(arguments.First().Length.ToString()); });
                 replacementText = await this.ProcessStringFunction(parameters, replacementText, "urlencode", 1, (arguments) => { return Task.FromResult(HttpUtility.UrlEncode(arguments.First())); });
+                replacementText = await this.ProcessStringFunction(parameters, replacementText, "urldecode", 1, (arguments) => { return Task.FromResult(HttpUtility.UrlDecode(arguments.First())); });
                 replacementText = await this.ProcessStringFunction(parameters, replacementText, "uriescape", 1, (arguments) => { return Task.FromResult(Uri.EscapeDataString(arguments.First())); });
                 replacementText = await this.ProcessStringFunction(parameters, replacementText, "replace", 3, (arguments) =>
                 {
