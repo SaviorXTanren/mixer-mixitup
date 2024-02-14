@@ -43,11 +43,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayPersistentTimerV3Model() : base(OverlayItemV3Type.PersistentTimer) { }
 
-        public void Reset()
-        {
-            this.CurrentAmount = this.InitialAmount;
-        }
-
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
             amount = Math.Round(amount);

@@ -99,13 +99,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayGoalV3Model() : base(OverlayItemV3Type.Goal) { }
 
-        public void Reset()
-        {
-            this.TotalAmount = 0;
-            this.CurrentAmount = 0;
-            this.CurrentSegment = this.Segments.First();
-        }
-
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
             if (amount > 0)
@@ -198,9 +191,7 @@ namespace MixItUp.Base.Model.Overlay
 
         protected override Task WidgetResetInternal()
         {
-            this.TotalAmount = 0;
-            this.CurrentAmount = 0;
-            this.CurrentSegment = this.Segments.First();
+            this.Reset();
 
             return Task.CompletedTask;
         }
@@ -223,6 +214,13 @@ namespace MixItUp.Base.Model.Overlay
                 this.CurrentAmount -= this.CurrentSegment.Amount;
                 this.CurrentSegment = this.Segments[this.Segments.IndexOf(this.CurrentSegment) + 1];
             }
+        }
+
+        private void Reset()
+        {
+            this.TotalAmount = 0;
+            this.CurrentAmount = 0;
+            this.CurrentSegment = this.Segments.First();
         }
     }
 }
