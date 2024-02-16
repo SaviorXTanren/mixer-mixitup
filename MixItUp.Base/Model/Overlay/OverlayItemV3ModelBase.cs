@@ -22,6 +22,7 @@ namespace MixItUp.Base.Model.Overlay
         StreamBoss,
         Goal,
         PersistentTimer,
+        Chat,
     }
 
     public enum OverlayItemV3DisplayOptionsType

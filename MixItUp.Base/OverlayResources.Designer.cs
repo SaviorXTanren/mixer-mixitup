@@ -126,35 +126,29 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to .list {
-        ///    width: {ItemWidth};
-        ///    {FullHeight}
-        ///}
-        ///
-        ///.item {
-        ///    position: relative;
-        ///    border-style: solid;
-        ///    border-width: 5px;
-        ///    border-color: {BorderColor};
-        ///    background-color: {BackgroundColor};
-        ///    width: {ItemWidth};
-        ///    {IndividualHeight}
+        ///    width: {Width};
+        ///    height: {Height};
         ///}
         ///
         ///.message {
-        ///    padding: 10px;
         ///    margin: auto;
         ///}
         ///
-        ///.messagebadge {
+        ///.text {
+        ///    font-size: {FontSize}px;
+        ///    color: {FontColor};
+        ///    font-family: &apos;{FontFamily}&apos;;
+        ///    font-weight: {FontWeight};
+        ///    text-decoration: {TextDecoration};
+        ///    font-style: {FontStyle};
+        ///    text-align: {TextAlignment};
+        ///    text-shadow: {ShadowColor};
+        ///    word-wrap: break-word;
         ///    vertical-align: middle;
-        ///    padding-right: 2px;
-        ///    width: auto;
-        ///    height: {FontSize}px;
-        ///}
-        ///
-        ///.messageavatar {
-        ///    vertical-align: middle;
-        ///    padding-right [rest of string was truncated]&quot;;.
+        ///    margin-block-start: 0px;
+        ///    margin-block-end: 0px;
+        ///    margin-inline-start: 0px;
+        ///    m [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultCSS {
             get {
@@ -163,34 +157,34 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-        ///
-        ///&lt;/div&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
         ///
         ///&lt;template id=&quot;item&quot;&gt;
-        ///    &lt;div class=&quot;item&quot;&gt;
-        ///        &lt;p class=&quot;message&quot;&gt;&lt;/p&gt;
-        ///    &lt;/div&gt;
+        ///    &lt;div class=&quot;item&quot;&gt;&lt;/div&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messagebadge&quot;&gt;
-        ///    &lt;img class=&quot;messagebadge&quot; /&gt;
+        ///&lt;template id=&quot;message&quot;&gt;
+        ///    &lt;span class=&quot;message&quot;&gt;&lt;/span&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messageavatar&quot;&gt;
-        ///    &lt;img class=&quot;messageavatar&quot; /&gt;
+        ///&lt;template id=&quot;useravatar&quot;&gt;
+        ///    &lt;img class=&quot;image&quot; /&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messageusername&quot;&gt;
-        ///    &lt;span class=&quot;messageusername&quot;&gt;&lt;/span&gt;
+        ///&lt;template id=&quot;userbadge&quot;&gt;
+        ///    &lt;img class=&quot;image&quot; /&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;username&quot;&gt;
+        ///    &lt;span class=&quot;text&quot;&gt;&lt;/span&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;messagetext&quot;&gt;
-        ///    &lt;span class=&quot;messagetext&quot;&gt;&lt;/span&gt;
+        ///    &lt;span class=&quot;text&quot;&gt;&lt;/span&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;messageemote&quot;&gt;
-        /// [rest of string was truncated]&quot;;.
+        ///    &lt;img class [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultHTML {
             get {
@@ -199,22 +193,14 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function add(user, messageParts)
-        ///{
-        ///    var list = document.getElementById(&quot;list&quot;);
-        ///
-        ///    if ({ShowMaxMessagesOnly})
-        ///    {
-        ///        if (list.childElementCount &gt; {MaxToShow})
-        ///        {
-        ///            removeOldest();
-        ///        }
-        ///    }
-        ///
-        ///    var itemTemplate = document.querySelector(&quot;#item&quot;);
-        ///    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge&quot;);
-        ///    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar&quot;);
-        ///    var messageUsernameTemplate = document.querySelector(&quot;#messageuse [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to const itemTemplate = document.querySelector(&quot;#item&quot;);
+        ///const messageTemplate = document.querySelector(&quot;#message&quot;);
+        ///const userAvatarTemplate = document.querySelector(&quot;#useravatar&quot;);
+        ///const userBadgeTemplate = document.querySelector(&quot;#userbadge&quot;);
+        ///const usernameTemplate = document.querySelector(&quot;#username&quot;);
+        ///const messageHeaderTemplate = document.querySelector(&quot;#messageheader&quot;);
+        ///const messageTextTemplate = document.querySelector(&quot;#messagetext&quot;);
+        ///const messageEmoteTemplate = document.querySelector(&quot;#messa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultJavascript {
             get {

@@ -42,7 +42,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Controls:IconButton Grid.Column="0" x:Name="OpenEndpointURLButton" Click="OpenEndpointURLButton_Click" Icon="Link" ToolTip="{x:Static resx:Resources.Link}" />
+                <Controls:IconButton Grid.Column="0" x:Name="OpenEndpointURLButton" Click="OpenEndpointURLButton_Click" Icon="Launch" ToolTip="{x:Static resx:Resources.GoToLink}" />
 
                 <Controls:IconButton Grid.Column="2" x:Name="CopyEndpointURLButton" Click="CopyEndpointURLButton_Click" Icon="ContentCopy" ToolTip="{x:Static resx:Resources.Copy}" />
             </Grid>

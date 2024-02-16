@@ -105,7 +105,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>() { OverlayItemV3Type.Label, OverlayItemV3Type.StreamBoss, OverlayItemV3Type.Goal, OverlayItemV3Type.PersistentTimer };
+                List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>() { OverlayItemV3Type.Chat, OverlayItemV3Type.Label, OverlayItemV3Type.StreamBoss, OverlayItemV3Type.Goal, OverlayItemV3Type.PersistentTimer };
 
                 string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames(widgetTypes), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
                 if (!string.IsNullOrEmpty(result))

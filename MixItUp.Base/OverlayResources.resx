@@ -155,169 +155,158 @@
   </data>
   <data name="OverlayChatDefaultCSS" xml:space="preserve">
     <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
+    width: {Width};
+    height: {Height};
 }
 
 .message {
-    padding: 10px;
     margin: auto;
 }
 
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: '{FontFamily}';
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
+.text {
     font-size: {FontSize}px;
     color: {FontColor};
     font-family: '{FontFamily}';
     font-weight: {FontWeight};
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
-    text-shadow: {Shadow};
+    text-align: {TextAlignment};
+    text-shadow: {ShadowColor};
+    word-wrap: break-word;
+    vertical-align: middle;
     margin-block-start: 0px;
     margin-block-end: 0px;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
 }
 
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {TEXT_SIZE}px;
+.image {
+    vertical-align: middle;
+    width: max-content;
+    height: {FontSize}px;
 }</value>
   </data>
   <data name="OverlayChatDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list" class="list"&gt;
-
-&lt;/div&gt;
+    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
 
 &lt;template id="item"&gt;
-    &lt;div class="item"&gt;
-        &lt;p class="message"&gt;&lt;/p&gt;
-    &lt;/div&gt;
+    &lt;div class="item"&gt;&lt;/div&gt;
 &lt;/template&gt;
 
-&lt;template id="messagebadge"&gt;
-    &lt;img class="messagebadge" /&gt;
+&lt;template id="message"&gt;
+    &lt;span class="message"&gt;&lt;/span&gt;
 &lt;/template&gt;
 
-&lt;template id="messageavatar"&gt;
-    &lt;img class="messageavatar" /&gt;
+&lt;template id="useravatar"&gt;
+    &lt;img class="image" /&gt;
 &lt;/template&gt;
 
-&lt;template id="messageusername"&gt;
-    &lt;span class="messageusername"&gt;&lt;/span&gt;
+&lt;template id="userbadge"&gt;
+    &lt;img class="image" /&gt;
+&lt;/template&gt;
+
+&lt;template id="username"&gt;
+    &lt;span class="text"&gt;&lt;/span&gt;
 &lt;/template&gt;
 
 &lt;template id="messagetext"&gt;
-    &lt;span class="messagetext"&gt;&lt;/span&gt;
+    &lt;span class="text"&gt;&lt;/span&gt;
 &lt;/template&gt;
 
 &lt;template id="messageemote"&gt;
-    &lt;img class="messageemote" /&gt;
+    &lt;img class="image" /&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayChatDefaultJavascript" xml:space="preserve">
-    <value>function add(user, messageParts)
-{
-    var list = document.getElementById("list");
+    <value>const itemTemplate = document.querySelector("#item");
+const messageTemplate = document.querySelector("#message");
+const userAvatarTemplate = document.querySelector("#useravatar");
+const userBadgeTemplate = document.querySelector("#userbadge");
+const usernameTemplate = document.querySelector("#username");
+const messageHeaderTemplate = document.querySelector("#messageheader");
+const messageTextTemplate = document.querySelector("#messagetext");
+const messageEmoteTemplate = document.querySelector("#messageemote");
 
-    if ({ShowMaxMessagesOnly})
+const list = document.getElementById("list");
+const maxMessages = {MaxMessages};
+
+function add(data)
+{
+    if (maxMessages &gt; 0)
     {
-        if (list.childElementCount &gt; {MaxToShow})
+        while (list.childElementCount &gt; maxMessages)
         {
-            removeOldest();
+            list.removeChild(list.firstElementChild);
         }
     }
+    
+    let message = messageTemplate.content.cloneNode(true);
+    
+    let userAvatar = userAvatarTemplate.content.cloneNode(true);
+    userAvatar.firstElementChild.src = data.User.AvatarLink;
+    message.firstElementChild.appendChild(userAvatar);
 
-    var itemTemplate = document.querySelector("#item");
-    var messageBadgeTemplate = document.querySelector("#messagebadge");
-    var messageAvatarTemplate = document.querySelector("#messageavatar");
-    var messageUsernameTemplate = document.querySelector("#messageusername");
-    var messageTextTemplate = document.querySelector("#messagetext");
-    var messageEmoteTemplate = document.querySelector("#messageemote");
+    addBadge(message, data.User.PlatformBadgeFullLink, {ShowPlatformBadge});
+    addBadge(message, data.User.PlatformRoleBadgeLink, {ShowRoleBadge});
+    addBadge(message, data.User.PlatformSubscriberBadgeLink, {ShowSubscriberBadge});
+    addBadge(message, data.User.PlatformSpecialtyBadgeLink, {ShowSpecialtyBadge});
     
-    const item = itemTemplate.content.cloneNode(true);
-    var messageElement = item.querySelector(".message");
+    let messageUsername = usernameTemplate.content.cloneNode(true);
+    messageUsername.firstElementChild.style.color = data.User.Color;
+    messageUsername.firstElementChild.innerHTML = data.User.DisplayName + ":";
+    message.firstElementChild.appendChild(messageUsername);
     
-    const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageRoleBadge.src = user.PlatformRoleBadgeLink;
-    messageElement.appendChild(messageRoleBadge);
-    
-    const messageSubBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageSubBadge.src = user.PlatformSubscriberBadgeLink;
-    messageElement.appendChild(messageSubBadge);
-    
-    const messageAvatar = messageAvatarTemplate.content.cloneNode(true);
-    messageAvatar.src = user.AvatarLink;
-    messageElement.appendChild(messageAvatar);
-    
-    const messageUsername = messageUsernameTemplate.content.cloneNode(true);
-    messageUsername.style.color = user.Color;
-    messageUsername.innerHTML = user.DisplayName;
-    messageElement.appendChild(messageUsername);
-    
-    messageParts.forEach(messagePart =&gt;
+    data.Message.forEach(messagePart =&gt;
     {
-        if (messagePart.Type === 'text')
+        if (messagePart.Type === 'Text')
         {
-            const messageText = messageTextTemplate.content.cloneNode(true);
-            messageUsername.innerHTML = messagePart.Text;
-            messageElement.appendChild(messageText);
+            let messageText = messageTextTemplate.content.cloneNode(true);
+            messageText.firstElementChild.innerHTML = messagePart.Content;
+            message.firstElementChild.appendChild(messageText);
         }
-        else if (messagePart.Type === 'image')
+        else if (messagePart.Type === 'Emote')
         {
-            const messageEmote = messageEmoteTemplate.content.cloneNode(true);
-            messageEmote.src = messagePart.URL;
-            messageElement.appendChild(messageEmote);      
+            let messageEmote = messageEmoteTemplate.content.cloneNode(true);
+            messageEmote.firstElementChild.src = messagePart.Content;
+            message.firstElementChild.appendChild(messageEmote);
         }
     });
 
+    let item = itemTemplate.content.cloneNode(true);
+    item.firstElementChild.id = data.MessageID;
+    item.firstElementChild.appendChild(message);
+    
     list.appendChild(item);
 }
 
-function removeOldest()
+function remove(data)
 {
-    var list = document.getElementById("list");
-    list.removeChild(list.firstElementChild);
+    for (let i = 0; i &lt; list.children.length; i++)
+    {
+        if (list.children[i].id == data.MessageID)
+        {
+            list.removeChild(list.children[i]);
+            return;
+        }
+    }
+}
+
+function clear(data)
+{
+    while (list.childElementCount &gt; 0)
+    {
+        list.removeChild(list.firstElementChild);
+    }
+}
+
+function addBadge(message, url, shouldShow)
+{
+    if (shouldShow &amp;&amp; url != null &amp;&amp; url.length &gt; 0)
+    {
+        let badge = userBadgeTemplate.content.cloneNode(true);
+        badge.firstElementChild.src = url;
+        message.firstElementChild.appendChild(badge);
+    }
 }</value>
   </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">

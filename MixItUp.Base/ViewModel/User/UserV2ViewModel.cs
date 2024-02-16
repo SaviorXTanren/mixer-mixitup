@@ -109,6 +109,8 @@ namespace MixItUp.Base.ViewModel.User
         }
         private string color;
 
+        public string ColorInApp { get { return string.IsNullOrEmpty(this.Color) ? UserV2ViewModel.UserDefaultColor : this.Color; } }
+
         public string RolesString
         {
             get { return this.rolesString; }
@@ -194,6 +196,7 @@ namespace MixItUp.Base.ViewModel.User
                 return null;
             }
         }
+        public string PlatformBadgeFullLink { get { return $"https://github.com/SaviorXTanren/mixer-mixitup/raw/master/MixItUp.WPF{this.PlatformBadgeLink}"; } }
         public bool ShowPlatformBadge { get { return true; } }
 
         public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
@@ -740,11 +743,6 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.Color = ((TwitchUserPlatformV2Model)this.PlatformModel).Color;
                 }
-            }
-
-            if (string.IsNullOrEmpty(this.Color))
-            {
-                this.Color = UserV2ViewModel.UserDefaultColor;
             }
 
             var sortRole = this.PrimaryRole;
