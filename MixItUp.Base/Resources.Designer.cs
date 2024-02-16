@@ -9804,6 +9804,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Heart Rate Ranges.
+        /// </summary>
+        public static string HeartRateRanges {
+            get {
+                return ResourceManager.GetString("HeartRateRanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height (Pixels).
         /// </summary>
         public static string Height {
@@ -16191,7 +16200,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Command Trigger Delay option allows you set how often the Pulsoid Heart Rate Changed event command can be triggered due to changes in your heart rate. For example, setting the value to 3 seconds means that regardless of heart rate changes, the Pulsoid Heart Rate Changed event command can not be triggered again for 3 seconds after it has been triggered due to a heart rate change. Note that only heart rate changes will trigger the command, it will not repeatedly trigger if your heart rate stays the same..
+        ///   Looks up a localized string similar to The Command Trigger Delay and Heart Rate Range options allows you set how often the Pulsoid Heart Rate Changed event command can be triggered due to changes in your heart rate. For full details on how these work, please visit the Mix It Up Wiki page on the Pulsoid service..
         /// </summary>
         public static string PulsoidInfo2 {
             get {

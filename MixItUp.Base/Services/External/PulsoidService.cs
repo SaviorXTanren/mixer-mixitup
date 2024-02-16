@@ -1,17 +1,14 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Net.WebSockets;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
@@ -46,22 +43,42 @@ namespace MixItUp.Base.Services.External
                 PulsoidHeartRate packet = JSONSerializerHelper.DeserializeFromString<PulsoidHeartRate>(packetJSON);
                 if (packet != null)
                 {
-                    this.LastHeartRate = packet;
-                    if (this.lastTrigger.TotalSecondsFromNow() >= ChannelSession.Settings.PulsoidCommandTriggerDelay)
+                    if (ChannelSession.Settings.PulsoidCommandHeartRateRangeTriggers.Count > 0 && this.LastHeartRate != null)
                     {
-                        CommandParametersModel parameters = new CommandParametersModel();
-                        parameters.SpecialIdentifiers["pulsoidheartrate"] = packet.HeartRate.ToString();
-                        if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.PulsoidHeartRateChanged, parameters))
+                        foreach (var range in ChannelSession.Settings.PulsoidCommandHeartRateRangeTriggers)
                         {
-                            this.lastTrigger = DateTimeOffset.Now;
+                            if (MathHelper.InRangeInclusive(packet.HeartRate, range.Item1, range.Item2) &&
+                                !MathHelper.InRangeInclusive(this.LastHeartRate.HeartRate, range.Item1, range.Item2))
+                            {
+                                await this.TriggerCommand(packet);
+                                break;
+                            }
                         }
                     }
+                    else
+                    {
+                        await this.TriggerCommand(packet);
+                    }
+                    this.LastHeartRate = packet;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
                 Logger.Log("Pulsoid Service - Failed Packet Processing: " + packetJSON);
+            }
+        }
+
+        private async Task TriggerCommand(PulsoidHeartRate packet)
+        {
+            if (this.lastTrigger.TotalSecondsFromNow() >= ChannelSession.Settings.PulsoidCommandTriggerDelay)
+            {
+                CommandParametersModel parameters = new CommandParametersModel();
+                parameters.SpecialIdentifiers["pulsoidheartrate"] = packet.HeartRate.ToString();
+                if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.PulsoidHeartRateChanged, parameters))
+                {
+                    this.lastTrigger = DateTimeOffset.Now;
+                }
             }
         }
     }

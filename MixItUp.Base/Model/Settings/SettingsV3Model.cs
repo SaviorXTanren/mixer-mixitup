@@ -540,6 +540,8 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public int PulsoidCommandTriggerDelay { get; set; } = 3;
+        [DataMember]
+        public List<Tuple<int, int>> PulsoidCommandHeartRateRangeTriggers { get; set; } = new List<Tuple<int, int>>();
 
         #endregion Services
 

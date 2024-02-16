@@ -2,6 +2,7 @@
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System;
+using System.Linq;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
@@ -18,6 +19,50 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 ChannelSession.Settings.PulsoidCommandTriggerDelay = Math.Max(value, 0);
                 this.NotifyPropertyChanged();
+            }
+        }
+
+        public string HeartRateRanges
+        {
+            get
+            {
+                if (ChannelSession.Settings.PulsoidCommandHeartRateRangeTriggers.Count > 0)
+                {
+                    return string.Join(",", ChannelSession.Settings.PulsoidCommandHeartRateRangeTriggers.Select(range => (range.Item1 == range.Item2) ? range.Item1.ToString() : $"{range.Item1}-{range.Item2}"));
+                }
+                return string.Empty;
+            }
+            set
+            {
+                ChannelSession.Settings.PulsoidCommandHeartRateRangeTriggers.Clear();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    string[] splits = value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                    if (splits != null)
+                    {
+                        foreach (string split in splits)
+                        {
+                            if (split.Contains("-"))
+                            {
+                                string[] numbers = split.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
+                                if (numbers != null && numbers.Length == 2)
+                                {
+                                    if (int.TryParse(numbers[0], out int number1) && number1 > 0 && int.TryParse(numbers[1], out int number2) && number2 > 0)
+                                    {
+                                        ChannelSession.Settings.PulsoidCommandHeartRateRangeTriggers.Add(new Tuple<int, int>(number1, number2));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (int.TryParse(split, out int number) && number > 0)
+                                {
+                                    ChannelSession.Settings.PulsoidCommandHeartRateRangeTriggers.Add(new Tuple<int, int>(number, number));
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

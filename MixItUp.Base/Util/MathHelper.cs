@@ -17,6 +17,11 @@ namespace MixItUp.Base.Util
             return Math.Min(Math.Max(number, min), max);
         }
 
+        public static bool InRangeInclusive(double number, double min, double max)
+        {
+            return number >= min && number <= max;
+        }
+
         public static double ProcessMathEquation(string equation)
         {
             double result = 0;

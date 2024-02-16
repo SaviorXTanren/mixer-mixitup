@@ -10360,9 +10360,12 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     <value>Pulsoid Heart Rate Changed</value>
   </data>
   <data name="PulsoidInfo2" xml:space="preserve">
-    <value>The Command Trigger Delay option allows you set how often the Pulsoid Heart Rate Changed event command can be triggered due to changes in your heart rate. For example, setting the value to 3 seconds means that regardless of heart rate changes, the Pulsoid Heart Rate Changed event command can not be triggered again for 3 seconds after it has been triggered due to a heart rate change. Note that only heart rate changes will trigger the command, it will not repeatedly trigger if your heart rate stays the same.</value>
+    <value>The Command Trigger Delay and Heart Rate Range options allows you set how often the Pulsoid Heart Rate Changed event command can be triggered due to changes in your heart rate. For full details on how these work, please visit the Mix It Up Wiki page on the Pulsoid service.</value>
   </data>
   <data name="CommandTriggerDelay" xml:space="preserve">
     <value>Command Trigger Delay</value>
+  </data>
+  <data name="HeartRateRanges" xml:space="preserve">
+    <value>Heart Rate Ranges</value>
   </data>
 </root>

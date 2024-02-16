@@ -35,8 +35,10 @@
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="40" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -44,6 +46,8 @@
 
                 <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{Binding Source={x:Static resx:Resources.CommandTriggerDelay}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <TextBox Grid.Row="3" Text="{Binding CommandTriggerDelay}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Seconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Row="5" Text="{Binding HeartRateRanges}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HeartRateRanges}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
