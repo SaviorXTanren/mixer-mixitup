@@ -2294,6 +2294,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\MixItUpTheme.WildWestDan.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.KarebearXp.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\MixItUpTheme.Mixer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2991,6 +2999,7 @@
     <Resource Include="Assets\Images\Youtube-XS.png" />
     <Resource Include="Assets\Images\Twitch-XS.png" />
     <Resource Include="Assets\Images\Trovo-XS.png" />
+    <Resource Include="Assets\Images\Patreon.png" />
     <Content Include="Logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
