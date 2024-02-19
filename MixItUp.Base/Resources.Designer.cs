@@ -430,6 +430,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Messages To Top.
+        /// </summary>
+        public static string AddMessagesToTop {
+            get {
+                return ResourceManager.GetString("AddMessagesToTop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Moderation Strike.
         /// </summary>
         public static string AddModerationStrike {
@@ -2321,6 +2330,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat Box Settings.
+        /// </summary>
+        public static string ChatBoxSettings {
+            get {
+                return ResourceManager.GetString("ChatBoxSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat Cleared.
         /// </summary>
         public static string ChatCleared {
@@ -2407,6 +2425,15 @@ namespace MixItUp.Base {
         public static string ChatMessages {
             get {
                 return ResourceManager.GetString("ChatMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat Message Settings.
+        /// </summary>
+        public static string ChatMessageSettings {
+            get {
+                return ResourceManager.GetString("ChatMessageSettings", resourceCulture);
             }
         }
         
@@ -4591,6 +4618,15 @@ namespace MixItUp.Base {
         public static string DefaultStreamingSoftware {
             get {
                 return ResourceManager.GetString("DefaultStreamingSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delay Time (Secs).
+        /// </summary>
+        public static string DelayTimeSeconds {
+            get {
+                return ResourceManager.GetString("DelayTimeSeconds", resourceCulture);
             }
         }
         
@@ -12317,6 +12353,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max Height (Pixels).
+        /// </summary>
+        public static string MaxHeightPixels {
+            get {
+                return ResourceManager.GetString("MaxHeightPixels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max Level.
         /// </summary>
         public static string MaxLevel {
@@ -12331,6 +12376,15 @@ namespace MixItUp.Base {
         public static string MaxLevelGreaterThanZero {
             get {
                 return ResourceManager.GetString("MaxLevelGreaterThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Messages.
+        /// </summary>
+        public static string MaxMessages {
+            get {
+                return ResourceManager.GetString("MaxMessages", resourceCulture);
             }
         }
         
@@ -16836,6 +16890,15 @@ namespace MixItUp.Base {
         public static string RemoteTwoLayersMax {
             get {
                 return ResourceManager.GetString("RemoteTwoLayersMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removal Time (Secs).
+        /// </summary>
+        public static string RemovalTimeSeconds {
+            get {
+                return ResourceManager.GetString("RemovalTimeSeconds", resourceCulture);
             }
         }
         

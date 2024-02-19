@@ -10005,4 +10005,25 @@ namespace CustomNamespace
   <data name="TimeMultiplier" xml:space="preserve">
     <value>Time Multiplier</value>
   </data>
+  <data name="MaxHeightPixels" xml:space="preserve">
+    <value>Max Height (Pixels)</value>
+  </data>
+  <data name="AddMessagesToTop" xml:space="preserve">
+    <value>Add Messages To Top</value>
+  </data>
+  <data name="ChatBoxSettings" xml:space="preserve">
+    <value>Chat Box Settings</value>
+  </data>
+  <data name="ChatMessageSettings" xml:space="preserve">
+    <value>Chat Message Settings</value>
+  </data>
+  <data name="DelayTimeSeconds" xml:space="preserve">
+    <value>Delay Time (Secs)</value>
+  </data>
+  <data name="MaxMessages" xml:space="preserve">
+    <value>Max Messages</value>
+  </data>
+  <data name="RemovalTimeSeconds" xml:space="preserve">
+    <value>Removal Time (Secs)</value>
+  </data>
 </root>

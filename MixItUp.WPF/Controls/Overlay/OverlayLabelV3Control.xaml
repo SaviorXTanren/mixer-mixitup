@@ -37,7 +37,7 @@
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="125" />
+                <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
 
             <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -46,7 +46,7 @@
 
             <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding Width}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxWidthPixels}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding ShadowColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -85,7 +85,7 @@
                 </ListBoxItem>
             </ListBox>
 
-            <TextBox Grid.Column="4" Text="{Binding ShadowColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding Width}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxWidthPixels}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Rectangle VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="4" Fill="{DynamicResource PrimaryHueMidBrush}" Height="4" />

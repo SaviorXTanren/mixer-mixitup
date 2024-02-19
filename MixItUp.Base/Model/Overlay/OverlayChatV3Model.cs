@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
 using Newtonsoft.Json.Linq;
 using System;
@@ -82,6 +83,34 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
+        public async Task AddMessage(ChatMessageViewModel message)
+        {
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+
+            properties[MessageIDProperty] = message.ID;
+            properties[UserProperty] = JObject.FromObject(message.User);
+
+            List<JObject> messageParts = new List<JObject>();
+            foreach (var messagePart in message.MessageParts)
+            {
+                JObject part = new JObject();
+                if (messagePart is string)
+                {
+                    part[MessagePartTypeProperty] = MessagePartTypeTextValue;
+                    part[MessagePartContentProperty] = (string)messagePart;
+                }
+                else if (messagePart is ChatEmoteViewModelBase)
+                {
+                    part[MessagePartTypeProperty] = MessagePartTypeEmoteValue;
+                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).ImageURL;
+                }
+                messageParts.Add(part);
+            }
+            properties[MessageProperty] = messageParts;
+
+            await this.CallFunction("add", properties);
+        }
+
         protected override async Task WidgetEnableInternal()
         {
             await base.WidgetEnableInternal();
@@ -117,30 +146,7 @@ namespace MixItUp.Base.Model.Overlay
                 return;
             }
 
-            Dictionary<string, object> properties = new Dictionary<string, object>();
-
-            properties[MessageIDProperty] = message.ID;
-            properties[UserProperty] = JObject.FromObject(message.User);
-
-            List<JObject> messageParts = new List<JObject>();
-            foreach (var messagePart in message.MessageParts)
-            {
-                JObject part = new JObject();
-                if (messagePart is string)
-                {
-                    part[MessagePartTypeProperty] = MessagePartTypeTextValue;
-                    part[MessagePartContentProperty] = (string)messagePart;
-                }
-                else if (messagePart is ChatEmoteViewModelBase)
-                {
-                    part[MessagePartTypeProperty] = MessagePartTypeEmoteValue;
-                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).ImageURL;
-                }
-                messageParts.Add(part);
-            }
-            properties[MessageProperty] = messageParts;
-
-            await this.CallFunction("add", properties);
+            await this.AddMessage(message);
         }
 
         private async void ChatService_OnChatMessageDeleted(object sender, string messageID)

@@ -19,69 +19,135 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="125" />
-            </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.ChatBoxSettings}">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-            <ComboBox Text="{Binding FontName}" Grid.Column="2" ItemsSource="{Binding Fonts}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                    <TextBox Text="{Binding BackgroundColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding BorderColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BorderColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding Width}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxWidthPixels}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        </Grid>
+                    <TextBox Text="{Binding Width}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxWidthPixels}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="150" />
-            </Grid.ColumnDefinitions>
+                    <TextBox Text="{Binding Height}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxHeightPixels}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+            </Grid>
+        </GroupBox>
 
-            <ListBox Grid.Column="0" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
-                <ListBoxItem IsSelected="{Binding Bold}">
-                    <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem IsSelected="{Binding Italics}">
-                    <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem IsSelected="{Binding Underline}">
-                    <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-            </ListBox>
+        <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.ChatMessageSettings}">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <ListBox Grid.Column="2" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
-                <ListBoxItem IsSelected="{Binding LeftAlignment}">
-                    <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem IsSelected="{Binding CenterAlignment}">
-                    <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem IsSelected="{Binding RightAlignment}">
-                    <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem IsSelected="{Binding JustifyAlignment}">
-                    <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-            </ListBox>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="4" Text="{Binding ShadowColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        </Grid>
+                    <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <ComboBox Text="{Binding FontName}" Grid.Column="2" ItemsSource="{Binding Fonts}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                    <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Text="{Binding ShadowColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox Grid.Column="0" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding Bold}">
+                            <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Italics}">
+                            <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Underline}">
+                            <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+
+                    <ListBox Grid.Column="2" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding LeftAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding CenterAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding RightAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding JustifyAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+
+                    <TextBox Text="{Binding BackgroundColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Text="{Binding BorderColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BorderColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding MaxMessages}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxMessages}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Text="{Binding MessageDelayTime}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DelayTimeSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Text="{Binding MessageRemovalTime}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RemovalTimeSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AddMessagesToTop}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <ToggleButton Grid.Column="7" IsChecked="{Binding AddMessagesToTop}" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </Grid>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Controls:LoadingControlBase>

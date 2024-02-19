@@ -167,6 +167,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.FontSize = 24;
             this.FontName = "Arial";
             this.FontColor = "Black";
+            this.LeftAlignment = true;
         }
 
         public OverlayVisualTextV3ViewModelBase(OverlayVisualTextV3ModelBase item)

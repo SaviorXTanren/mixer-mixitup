@@ -34,11 +34,9 @@
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="125" />
+                <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="125" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="125" />
+                <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
 
             <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -48,8 +46,6 @@
             <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Text="{Binding ShadowColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            <TextBox Text="{Binding Width}" Grid.Column="8" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxWidthPixels}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -96,7 +92,6 @@
             <TextBox Text="{Binding InitialAmount}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Seconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
             <TextBox Grid.Column="8" Text="{Binding DisplayFormat}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DisplayFormat}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">

@@ -1,9 +1,15 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.Chat.Twitch;
+using MixItUp.Base.ViewModel.Chat.YouTube;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -112,7 +118,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private bool showPlatformBadge = true;
+        private bool showPlatformBadge;
 
         public bool ShowRoleBadge
         {
@@ -123,7 +129,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private bool showRoleBadge = true;
+        private bool showRoleBadge;
 
         public bool ShowSubscriberBadge
         {
@@ -134,7 +140,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private bool showSubscriberBadge = true;
+        private bool showSubscriberBadge;
 
         public bool ShowSpecialtyBadge
         {
@@ -145,11 +151,15 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private bool showSpecialtyBadge = true;
+        private bool showSpecialtyBadge;
 
         public OverlayChatV3ViewModel()
             : base(OverlayItemV3Type.Chat)
         {
+            this.ShowPlatformBadge = true;
+            this.ShowRoleBadge = true;
+            this.ShowSubscriberBadge = true;
+            this.ShowSpecialtyBadge = true;
         }
 
         public OverlayChatV3ViewModel(OverlayChatV3Model item)
@@ -180,6 +190,38 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override Result Validate()
         {
             return new Result();
+        }
+
+        public override async Task TestWidget(OverlayWidgetV3Model widget)
+        {
+            OverlayChatV3Model chat = (OverlayChatV3Model)widget.Item;
+
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.GetConnectedPlatforms())
+            {
+                if (platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    TwitchChatMessageViewModel message = new TwitchChatMessageViewModel(ChannelSession.User, "Hello World! This is a test message so you can see how chat looks Kappa");
+                    await chat.AddMessage(message);
+                }
+                else if (platform == StreamingPlatformTypeEnum.YouTube)
+                {
+                    YouTubeChatMessageViewModel message = new YouTubeChatMessageViewModel(ChannelSession.User, "Hello World! This is a test message so you can see how chat looks :grinning_face:");
+                    await chat.AddMessage(message);
+                }
+                else if (platform == StreamingPlatformTypeEnum.Trovo)
+                {
+                    TrovoChatMessageViewModel message = new TrovoChatMessageViewModel(ChannelSession.User, "Hello World! This is a test message so you can see how chat looks :smile");
+                    await chat.AddMessage(message);
+                }
+                else
+                {
+                    ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), platform, ChannelSession.User);
+                    message.AddStringMessagePart("Hello World! This is a test message so you can see how chat looks");
+                    await chat.AddMessage(message);
+                }
+            }
+
+            await base.TestWidget(widget);
         }
 
         protected override OverlayItemV3ModelBase GetItemInternal()
