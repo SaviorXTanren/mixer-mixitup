@@ -156,6 +156,12 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayChatV3ViewModel()
             : base(OverlayItemV3Type.Chat)
         {
+            this.width = 600;
+            this.height = 800;
+
+            this.BackgroundColor = "WhiteSmoke";
+            this.BorderColor = "Black";
+
             this.ShowPlatformBadge = true;
             this.ShowRoleBadge = true;
             this.ShowSubscriberBadge = true;
