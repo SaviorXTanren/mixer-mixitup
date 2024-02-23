@@ -34,7 +34,7 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public abstract class OverlayItemV3ModelBase : OverlayOutputV3Model
     {
-        public const string MainDivElementID = "maindiv";
+        public const string MainDivElement = "document.getElementById('maindiv')";
 
         public const string InnerHTMLProperty = "InnerHTML";
 

@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,17 +53,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string borderColor;
 
-        public string MaxMessages
-        {
-            get { return (this.maxMessages > 0) ? this.maxMessages.ToString() : string.Empty; }
-            set
-            {
-                this.maxMessages = this.GetPositiveIntFromString(value);
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int maxMessages;
-
         public int MessageDelayTime
         {
             get { return this.messageDelayTime; }
@@ -107,7 +97,16 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool ignoreSpecialtyExcludedUsers;
 
-        public ObservableCollection<string> UsernamesToIgnore { get; set; } = new ObservableCollection<string>();
+        public string UsernamesToIgnore
+        {
+            get { return this.usernamesToIgnore; }
+            set
+            {
+                this.usernamesToIgnore = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string usernamesToIgnore;
 
         public bool ShowPlatformBadge
         {
@@ -153,19 +152,28 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool showSpecialtyBadge;
 
+        public OverlayAnimationV3ViewModel MessageAddedAnimation;
+        public OverlayAnimationV3ViewModel MessageRemovedAnimation;
+
         public OverlayChatV3ViewModel()
             : base(OverlayItemV3Type.Chat)
         {
-            this.width = 600;
-            this.height = 800;
+            this.width = 400;
+            this.height = 600;
 
-            this.BackgroundColor = "WhiteSmoke";
+            this.BackgroundColor = "Wheat";
             this.BorderColor = "Black";
 
             this.ShowPlatformBadge = true;
             this.ShowRoleBadge = true;
             this.ShowSubscriberBadge = true;
             this.ShowSpecialtyBadge = true;
+
+            this.MessageAddedAnimation = new OverlayAnimationV3ViewModel(Resources.MessageAdded, new OverlayAnimationV3Model());
+            this.MessageRemovedAnimation = new OverlayAnimationV3ViewModel(Resources.MessageRemoved, new OverlayAnimationV3Model());
+
+            this.Animations.Add(this.MessageAddedAnimation);
+            this.Animations.Add(this.MessageRemovedAnimation);
         }
 
         public OverlayChatV3ViewModel(OverlayChatV3Model item)
@@ -176,21 +184,23 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.BackgroundColor = item.BackgroundColor;
             this.BorderColor = item.BorderColor;
 
-            this.maxMessages = item.MaxMessages;
             this.MessageDelayTime = item.MessageDelayTime;
             this.MessageRemovalTime = item.MessageRemovalTime;
             this.AddMessagesToTop = item.AddMessagesToTop;
 
             this.IgnoreSpecialtyExcludedUsers = item.IgnoreSpecialtyExcludedUsers;
-            foreach (string username in item.UsernamesToIgnore)
-            {
-                this.UsernamesToIgnore.Add(username);
-            }
+            this.UsernamesToIgnore = string.Join(" ", item.UsernamesToIgnore);
 
             this.ShowPlatformBadge = item.ShowPlatformBadge;
             this.ShowRoleBadge = item.ShowRoleBadge;
             this.ShowSubscriberBadge = item.ShowSubscriberBadge;
             this.ShowSpecialtyBadge = item.ShowSpecialtyBadge;
+
+            this.MessageAddedAnimation = new OverlayAnimationV3ViewModel(Resources.MessageAdded, item.MessageAddedAnimation);
+            this.MessageRemovedAnimation = new OverlayAnimationV3ViewModel(Resources.MessageRemoved, item.MessageRemovedAnimation);
+
+            this.Animations.Add(this.MessageAddedAnimation);
+            this.Animations.Add(this.MessageRemovedAnimation);
         }
 
         public override Result Validate()
@@ -239,20 +249,32 @@ namespace MixItUp.Base.ViewModel.Overlay
                 BackgroundColor = this.BackgroundColor,
                 BorderColor = this.BorderColor,
 
-                MaxMessages = this.maxMessages,
-                MessageDelayTime = this.MessageRemovalTime,
+                MessageDelayTime = this.MessageDelayTime,
                 MessageRemovalTime = this.MessageRemovalTime,
                 AddMessagesToTop = this.AddMessagesToTop,
 
                 IgnoreSpecialtyExcludedUsers = this.IgnoreSpecialtyExcludedUsers,
-                UsernamesToIgnore = this.UsernamesToIgnore.ToList(),
 
                 ShowPlatformBadge = this.ShowPlatformBadge,
                 ShowRoleBadge = this.ShowRoleBadge,
                 ShowSubscriberBadge = this.ShowSubscriberBadge,
                 ShowSpecialtyBadge = this.ShowSpecialtyBadge,
             };
+
+            if (!string.IsNullOrWhiteSpace(this.UsernamesToIgnore))
+            {
+                string[] splits = this.UsernamesToIgnore.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (splits != null && splits.Length > 0)
+                {
+                    result.UsernamesToIgnore = new List<string>(splits);
+                }
+            }
+
+            result.MessageAddedAnimation = this.MessageAddedAnimation.GetAnimation();
+            result.MessageRemovedAnimation = this.MessageRemovedAnimation.GetAnimation();
+
             this.AssignProperties(result);
+
             return result;
         }
     }

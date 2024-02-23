@@ -1,10 +1,11 @@
-﻿using MixItUp.Base.Model.Overlay.Widgets;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -12,6 +13,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayChatV3Model : OverlayVisualTextV3ModelBase
     {
         public const string MessageIDProperty = "MessageID";
+        public const string UsernameProperty = "Username";
         public const string UserProperty = "User";
         public const string MessageProperty = "Message";
 
@@ -20,6 +22,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public const string MessagePartTypeTextValue = "Text";
         public const string MessagePartTypeEmoteValue = "Emote";
+
+        public const string AnimationFunctionMessageVariableName = "message";
+        public const string RemoveMessagePostAnimationFunction = "list.removeChild(message);";
+        public const string FlexStart = "flex-start";
+        public const string FlexEnd = "flex-end";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayChatDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayChatDefaultCSS;
@@ -30,8 +37,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string BorderColor { get; set; }
 
-        [DataMember]
-        public int MaxMessages { get; set; }
         [DataMember]
         public int MessageDelayTime { get; set; }
         [DataMember]
@@ -58,6 +63,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public OverlayAnimationV3Model MessageRemovedAnimation { get; set; } = new OverlayAnimationV3Model();
 
+        [JsonIgnore]
+        public string FlexAlignment { get { return this.AddMessagesToTop ? FlexStart : FlexEnd; } }
+
         public OverlayChatV3Model() : base(OverlayItemV3Type.Chat) { }
 
         public override Dictionary<string, object> GetGenerationProperties()
@@ -67,18 +75,18 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.BorderColor)] = this.BorderColor;
 
-            properties[nameof(this.MaxMessages)] = this.MaxMessages.ToString();
             properties[nameof(this.MessageDelayTime)] = this.MessageDelayTime.ToString();
             properties[nameof(this.MessageRemovalTime)] = this.MessageRemovalTime.ToString();
-            properties[nameof(this.AddMessagesToTop)] = this.AddMessagesToTop.ToString();
+            properties[nameof(this.AddMessagesToTop)] = this.AddMessagesToTop.ToString().ToLower();
+            properties[nameof(this.FlexAlignment)] = this.FlexAlignment;
 
             properties[nameof(this.ShowPlatformBadge)] = this.ShowPlatformBadge.ToString().ToLower();
             properties[nameof(this.ShowRoleBadge)] = this.ShowRoleBadge.ToString().ToLower();
             properties[nameof(this.ShowSubscriberBadge)] = this.ShowSubscriberBadge.ToString().ToLower();
             properties[nameof(this.ShowSpecialtyBadge)] = this.ShowSpecialtyBadge.ToString().ToLower();
 
-            properties[nameof(this.MessageAddedAnimation)] = this.MessageAddedAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID);
-            properties[nameof(this.MessageRemovedAnimation)] = this.MessageRemovedAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID);
+            properties[nameof(this.MessageAddedAnimation)] = this.MessageAddedAnimation.GenerateAnimationJavascript(AnimationFunctionMessageVariableName);
+            properties[nameof(this.MessageRemovedAnimation)] = this.MessageRemovedAnimation.GenerateAnimationJavascript(AnimationFunctionMessageVariableName, postAnimation: RemoveMessagePostAnimationFunction);
 
             return properties;
         }
@@ -87,7 +95,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
 
-            properties[MessageIDProperty] = message.ID;
+            properties[MessageIDProperty] = message.ID.ToString();
             properties[UserProperty] = JObject.FromObject(message.User);
 
             List<JObject> messageParts = new List<JObject>();
@@ -117,6 +125,7 @@ namespace MixItUp.Base.Model.Overlay
 
             ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
             ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
+            ChatService.OnChatUserTimedOut += ChatService_OnChatUserTimedOut;
             ChatService.OnChatCleared += ChatService_OnChatCleared;
         }
 
@@ -126,6 +135,7 @@ namespace MixItUp.Base.Model.Overlay
 
             ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
             ChatService.OnChatMessageDeleted -= ChatService_OnChatMessageDeleted;
+            ChatService.OnChatUserTimedOut -= ChatService_OnChatUserTimedOut;
             ChatService.OnChatCleared -= ChatService_OnChatCleared;
         }
 
@@ -153,6 +163,13 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[MessageIDProperty] = messageID;
+            await this.CallFunction("remove", properties);
+        }
+
+        private async void ChatService_OnChatUserTimedOut(object sender, UserV2ViewModel user)
+        {
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+            properties[UsernameProperty] = user.Username;
             await this.CallFunction("remove", properties);
         }
 

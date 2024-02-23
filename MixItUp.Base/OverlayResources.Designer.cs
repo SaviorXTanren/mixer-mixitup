@@ -114,7 +114,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to animateCSS(document.getElementById(&apos;{AnimationElementID}&apos;), &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
+        ///   Looks up a localized string similar to animateCSS({AnimationElement}, &apos;{AnimateCSSAnimationName}&apos;).then((postAnimation) =&gt; {
         ///    {PostAnimation}
         ///});.
         /// </summary>
@@ -128,27 +128,29 @@ namespace MixItUp.Base {
         ///   Looks up a localized string similar to .list {
         ///    width: {Width};
         ///    height: {Height};
+        ///    background-color: {BackgroundColor};
+        ///    border-style: solid;
+        ///    border-width: 5px;
+        ///    border-color: {BorderColor};
+        ///
+        ///    overflow: hidden;
+        ///
+        ///    display: flex;
+        ///    flex-direction: column;
+        ///    align-items: flex-start;
+        ///    justify-content: {FlexAlignment};
+        ///}
+        ///
+        ///.item {
+        ///    margin: 5px;
         ///}
         ///
         ///.message {
-        ///    margin: auto;
-        ///}
-        ///
-        ///.text {
         ///    font-size: {FontSize}px;
         ///    color: {FontColor};
         ///    font-family: &apos;{FontFamily}&apos;;
         ///    font-weight: {FontWeight};
-        ///    text-decoration: {TextDecoration};
-        ///    font-style: {FontStyle};
-        ///    text-align: {TextAlignment};
-        ///    text-shadow: {ShadowColor};
-        ///    word-wrap: break-word;
-        ///    vertical-align: middle;
-        ///    margin-block-start: 0px;
-        ///    margin-block-end: 0px;
-        ///    margin-inline-start: 0px;
-        ///    m [rest of string was truncated]&quot;;.
+        ///    text-decoratio [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultCSS {
             get {
@@ -159,32 +161,31 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
         ///
-        ///&lt;template id=&quot;item&quot;&gt;
-        ///    &lt;div class=&quot;item&quot;&gt;&lt;/div&gt;
-        ///&lt;/template&gt;
-        ///
         ///&lt;template id=&quot;message&quot;&gt;
-        ///    &lt;span class=&quot;message&quot;&gt;&lt;/span&gt;
+        ///    &lt;div class=&quot;item&quot;&gt;
+        ///        &lt;span class=&quot;message&quot;&gt;&lt;/span&gt;
+        ///    &lt;/div&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;useravatar&quot;&gt;
+        ///&lt;template id=&quot;avatar&quot;&gt;
         ///    &lt;img class=&quot;image&quot; /&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;userbadge&quot;&gt;
+        ///&lt;template id=&quot;badge&quot;&gt;
         ///    &lt;img class=&quot;image&quot; /&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;username&quot;&gt;
-        ///    &lt;span class=&quot;text&quot;&gt;&lt;/span&gt;
+        ///    &lt;span&gt;&lt;/span&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messagetext&quot;&gt;
-        ///    &lt;span class=&quot;text&quot;&gt;&lt;/span&gt;
+        ///&lt;template id=&quot;text&quot;&gt;
+        ///    &lt;span&gt;&lt;/span&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messageemote&quot;&gt;
-        ///    &lt;img class [rest of string was truncated]&quot;;.
+        ///&lt;template id=&quot;emote&quot;&gt;
+        ///    &lt;img class=&quot;image&quot; /&gt;
+        ///&lt;/template&gt;.
         /// </summary>
         public static string OverlayChatDefaultHTML {
             get {
@@ -193,14 +194,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const itemTemplate = document.querySelector(&quot;#item&quot;);
-        ///const messageTemplate = document.querySelector(&quot;#message&quot;);
-        ///const userAvatarTemplate = document.querySelector(&quot;#useravatar&quot;);
-        ///const userBadgeTemplate = document.querySelector(&quot;#userbadge&quot;);
+        ///   Looks up a localized string similar to const messageTemplate = document.querySelector(&quot;#message&quot;);
+        ///const avatarTemplate = document.querySelector(&quot;#avatar&quot;);
+        ///const badgeTemplate = document.querySelector(&quot;#badge&quot;);
         ///const usernameTemplate = document.querySelector(&quot;#username&quot;);
-        ///const messageHeaderTemplate = document.querySelector(&quot;#messageheader&quot;);
-        ///const messageTextTemplate = document.querySelector(&quot;#messagetext&quot;);
-        ///const messageEmoteTemplate = document.querySelector(&quot;#messa [rest of string was truncated]&quot;;.
+        ///const textTemplate = document.querySelector(&quot;#text&quot;);
+        ///const emoteTemplate = document.querySelector(&quot;#emote&quot;);
+        ///
+        ///const list = document.getElementById(&quot;list&quot;);
+        ///
+        ///const maxMessages = 100;
+        ///var pendingMessage = [];
+        ///
+        ///const messageDelayTime = {MessageDelayTime};
+        ///const mes [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultJavascript {
             get {

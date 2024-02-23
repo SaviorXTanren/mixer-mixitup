@@ -56,7 +56,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.TextDecoration)] = this.TextDecoration;
             properties[nameof(this.FontStyle)] = this.FontStyle;
             properties[nameof(this.TextAlignment)] = this.TextAlignment.ToString().ToLower();
-            properties[nameof(this.ShadowColor)] = (!string.IsNullOrEmpty(this.ShadowColor)) ? $"2px 2px {this.ShadowColor}" : "none";
+            properties[nameof(this.ShadowColor)] = (!string.IsNullOrEmpty(this.ShadowColor)) ? $"1px 1px {this.ShadowColor}" : "none";
             return properties;
         }
     }

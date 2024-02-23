@@ -34,11 +34,11 @@
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
@@ -57,9 +57,11 @@
             <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -86,12 +88,13 @@
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="150" />
                     </Grid.ColumnDefinitions>
 
                     <ListBox Grid.Column="0" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
@@ -106,46 +109,54 @@
                         </ListBoxItem>
                     </ListBox>
 
-                    <ListBox Grid.Column="2" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
-                        <ListBoxItem IsSelected="{Binding LeftAlignment}">
-                            <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                        </ListBoxItem>
-                        <ListBoxItem IsSelected="{Binding CenterAlignment}">
-                            <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                        </ListBoxItem>
-                        <ListBoxItem IsSelected="{Binding RightAlignment}">
-                            <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                        </ListBoxItem>
-                        <ListBoxItem IsSelected="{Binding JustifyAlignment}">
-                            <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                        </ListBoxItem>
-                    </ListBox>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AddMessagesToTop}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="3" IsChecked="{Binding AddMessagesToTop}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-                    <TextBox Text="{Binding BackgroundColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding MessageDelayTime}" Grid.Column="5" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DelayTimeSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Text="{Binding BorderColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BorderColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding MessageRemovalTime}" Grid.Column="7" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RemovalTimeSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
                 <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Text="{Binding MaxMessages}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxMessages}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowPlatformBadge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="1" IsChecked="{Binding ShowPlatformBadge}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-                    <TextBox Text="{Binding MessageDelayTime}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DelayTimeSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowRoleBadge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="4" IsChecked="{Binding ShowRoleBadge}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-                    <TextBox Text="{Binding MessageRemovalTime}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RemovalTimeSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowSubscriberBadge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="7" IsChecked="{Binding ShowSubscriberBadge}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AddMessagesToTop}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-                    <ToggleButton Grid.Column="7" IsChecked="{Binding AddMessagesToTop}" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    <TextBlock Grid.Column="9" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowSpecialtyBadge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="10" IsChecked="{Binding ShowSpecialtyBadge}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                </Grid>
+
+                <Grid Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IgnoreSpecialtyExcludedUsers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="1" IsChecked="{Binding IgnoreSpecialtyExcludedUsers}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                    <TextBox Text="{Binding UsernamesToIgnore}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UsernamesToIgnore}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
             </Grid>
         </GroupBox>

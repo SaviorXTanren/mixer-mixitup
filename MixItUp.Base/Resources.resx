@@ -10026,4 +10026,28 @@ namespace CustomNamespace
   <data name="RemovalTimeSeconds" xml:space="preserve">
     <value>Removal Time (Secs)</value>
   </data>
+  <data name="MessageAdded" xml:space="preserve">
+    <value>Message Added</value>
+  </data>
+  <data name="MessageRemoved" xml:space="preserve">
+    <value>Message Removed</value>
+  </data>
+  <data name="ShowPlatformBadge" xml:space="preserve">
+    <value>Show Platform Badge</value>
+  </data>
+  <data name="ShowRoleBadge" xml:space="preserve">
+    <value>Show Role Badge</value>
+  </data>
+  <data name="ShowSpecialtyBadge" xml:space="preserve">
+    <value>Show Specialty Badge</value>
+  </data>
+  <data name="ShowSubscriberBadge" xml:space="preserve">
+    <value>Show Subscriber Badge</value>
+  </data>
+  <data name="IgnoreSpecialtyExcludedUsers" xml:space="preserve">
+    <value>Ignore Specialty Excluded Users</value>
+  </data>
+  <data name="UsernamesToIgnore" xml:space="preserve">
+    <value>Usernames To Ignore (Space Separated)</value>
+  </data>
 </root>

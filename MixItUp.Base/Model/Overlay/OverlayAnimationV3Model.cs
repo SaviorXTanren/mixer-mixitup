@@ -132,7 +132,7 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayAnimationV3Model
     {
-        private const string AnimationElementID = "AnimationElementID";
+        private const string AnimationElement = "AnimationElement";
         private const string PostAnimation = "PostAnimation";
 
         private const string PostTimeout = "PostTimeout";
@@ -192,7 +192,7 @@ namespace MixItUp.Base.Model.Overlay
         //    return output;
         //}
 
-        public string GenerateAnimationJavascript(string animationElementID, double preTimeoutSeconds = 0.0, string postAnimation = "")
+        public string GenerateAnimationJavascript(string animationElement, double preTimeoutSeconds = 0.0, string postAnimation = "")
         {
             string output = string.Empty;
             if (this.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
@@ -208,7 +208,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 output = postAnimation;
             }
-            output = OverlayV3Service.ReplaceProperty(output, AnimationElementID, animationElementID);
+            output = OverlayV3Service.ReplaceProperty(output, AnimationElement, animationElement);
 
             if (preTimeoutSeconds > 0.0)
             {

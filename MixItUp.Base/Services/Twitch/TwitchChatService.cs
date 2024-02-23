@@ -857,6 +857,8 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserTimeout, parameters);
 
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTimedOut, user.FullDisplayName, chatClear.BanDuration), ChannelSession.Settings.AlertModerationColor));
+
+                ChatService.ChatUserTimedOut(user);
             }
             else if (chatClear.IsBan)
             {

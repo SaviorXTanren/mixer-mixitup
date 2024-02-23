@@ -10452,6 +10452,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignore Specialty Excluded Users.
+        /// </summary>
+        public static string IgnoreSpecialtyExcludedUsers {
+            get {
+                return ResourceManager.GetString("IgnoreSpecialtyExcludedUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore Usage Requirements.
         /// </summary>
         public static string IgnoreUsageRequirements {
@@ -12493,6 +12502,24 @@ namespace MixItUp.Base {
         public static string Message {
             get {
                 return ResourceManager.GetString("Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message Added.
+        /// </summary>
+        public static string MessageAdded {
+            get {
+                return ResourceManager.GetString("MessageAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message Removed.
+        /// </summary>
+        public static string MessageRemoved {
+            get {
+                return ResourceManager.GetString("MessageRemoved", resourceCulture);
             }
         }
         
@@ -18934,11 +18961,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Platform Badge.
+        /// </summary>
+        public static string ShowPlatformBadge {
+            get {
+                return ResourceManager.GetString("ShowPlatformBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Raids.
         /// </summary>
         public static string ShowRaids {
             get {
                 return ResourceManager.GetString("ShowRaids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Role Badge.
+        /// </summary>
+        public static string ShowRoleBadge {
+            get {
+                return ResourceManager.GetString("ShowRoleBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Specialty Badge.
+        /// </summary>
+        public static string ShowSpecialtyBadge {
+            get {
+                return ResourceManager.GetString("ShowSpecialtyBadge", resourceCulture);
             }
         }
         
@@ -18957,6 +19011,15 @@ namespace MixItUp.Base {
         public static string ShowSubs {
             get {
                 return ResourceManager.GetString("ShowSubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Subscriber Badge.
+        /// </summary>
+        public static string ShowSubscriberBadge {
+            get {
+                return ResourceManager.GetString("ShowSubscriberBadge", resourceCulture);
             }
         }
         
@@ -23777,6 +23840,15 @@ namespace MixItUp.Base {
         public static string UserNameOptional {
             get {
                 return ResourceManager.GetString("UserNameOptional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usernames To Ignore (Space Separated).
+        /// </summary>
+        public static string UsernamesToIgnore {
+            get {
+                return ResourceManager.GetString("UsernamesToIgnore", resourceCulture);
             }
         }
         

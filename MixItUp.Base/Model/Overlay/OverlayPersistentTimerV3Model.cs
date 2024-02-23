@@ -66,8 +66,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.CurrentAmount)] = this.CurrentAmount;
             properties[nameof(this.DisplayFormat)] = this.DisplayFormat;
 
-            properties[nameof(this.TimerAdjustedAnimation)] = this.TimerAdjustedAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID);
-            properties[nameof(this.TimerCompletedAnimation)] = this.TimerCompletedAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElementID);
+            properties[nameof(this.TimerAdjustedAnimation)] = this.TimerAdjustedAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement);
+            properties[nameof(this.TimerCompletedAnimation)] = this.TimerCompletedAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement);
 
             return properties;
         }
