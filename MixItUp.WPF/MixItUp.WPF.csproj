@@ -2999,6 +2999,10 @@
     <Resource Include="Assets\Images\Twitter.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\MixItUpTheme.DrewsTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Resource Include="Assets\Images\YoutubeMonochrome.png" />
     <Resource Include="Assets\Images\TwitchMonochrome.png" />
     <Resource Include="Assets\Images\TrovoMonochrome.png" />
