@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayStreamBossV3Model : OverlayEventTrackingV3ModelBase
+    public class OverlayStreamBossV3Model : OverlayEventCountingV3ModelBase
     {
         public const string BossImageProperty = "BossImage";
         public const string BossNameProperty = "BossName";

@@ -11,7 +11,7 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.Model.Overlay
 {
-    public class OverlayPersistentTimerV3Model : OverlayEventTrackingV3ModelBase
+    public class OverlayPersistentTimerV3Model : OverlayEventCountingV3ModelBase
     {
         public const string SecondsProperty = "Seconds";
 

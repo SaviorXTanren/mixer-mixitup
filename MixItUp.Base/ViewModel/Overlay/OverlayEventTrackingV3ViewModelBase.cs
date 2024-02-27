@@ -255,7 +255,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
 
-        public OverlayEventTrackingV3ViewModelBase(OverlayEventTrackingV3ModelBase item)
+        public OverlayEventTrackingV3ViewModelBase(OverlayEventCountingV3ModelBase item)
             : base(item)
         {
             this.FollowAmount = item.FollowAmount;
@@ -297,7 +297,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             return new Result();
         }
 
-        protected void AssignProperties(OverlayEventTrackingV3ModelBase result)
+        protected void AssignProperties(OverlayEventCountingV3ModelBase result)
         {
             base.AssignProperties(result);
 

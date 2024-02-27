@@ -6,7 +6,6 @@ using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -16,73 +15,69 @@ namespace MixItUp.Base.Model.Overlay
     public abstract class OverlayEventTrackingV3ModelBase : OverlayVisualTextV3ModelBase
     {
         [DataMember]
-        public int FollowAmount { get; set; }
+        public bool Follows { get; set; }
 
         [DataMember]
-        public int RaidAmount { get; set; }
-        [DataMember]
-        public double RaidPerViewAmount { get; set; }
+        public bool Raids { get; set; }
 
         [DataMember]
-        public Dictionary<int, int> TwitchSubscriptionsAmount { get; set; } = new Dictionary<int, int>();
+        public bool TwitchSubscriptions { get; set; }
         [DataMember]
-        public double TwitchBitsAmount { get; set; }
+        public bool TwitchBits { get; set; }
 
         [DataMember]
-        public Dictionary<string, int> YouTubeMembershipsAmount { get; set; } = new Dictionary<string, int>();
+        public bool YouTubeMemberships { get; set; }
         [DataMember]
-        public double YouTubeSuperChatAmount { get; set; }
+        public bool YouTubeSuperChats { get; set; }
 
         [DataMember]
-        public Dictionary<int, int> TrovoSubscriptionsAmount { get; set; } = new Dictionary<int, int>();
+        public bool TrovoSubscriptions { get; set; }
         [DataMember]
-        public double TrovoElixirSpellAmount { get; set; }
+        public bool TrovoElixirSpells { get; set; }
 
         [DataMember]
-        public double DonationAmount { get; set; }
+        public bool Donations { get; set; }
 
         public OverlayEventTrackingV3ModelBase(OverlayItemV3Type type) : base(type) { }
-
-        public abstract Task ProcessEvent(UserV2ViewModel user, double amount);
 
         protected override async Task WidgetEnableInternal()
         {
             await base.WidgetEnableInternal();
 
-            if (this.FollowAmount > 0)
+            if (this.Follows)
             {
-                EventService.OnFollowOccurred += EventService_OnFollowOccurred;
+                EventService.OnFollowOccurred += OnFollow;
             }
 
-            if (this.RaidAmount > 0 || this.RaidPerViewAmount > 0)
+            if (this.Raids)
             {
-                EventService.OnRaidOccurred += EventService_OnRaidOccurred;
+                EventService.OnRaidOccurred += OnRaid;
             }
 
-            if (this.TwitchSubscriptionsAmount.Any(d => d.Value > 0) || this.YouTubeMembershipsAmount.Any(d => d.Value > 0) || this.TrovoSubscriptionsAmount.Any(d => d.Value > 0))
+            if (this.TwitchSubscriptions)
             {
-                EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
-                EventService.OnResubscribeOccurred += EventService_OnSubscribeOccurred;
-                EventService.OnSubscriptionGiftedOccurred += EventService_OnSubscribeOccurred;
-                EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
+                EventService.OnSubscribeOccurred += OnSubscribe;
+                EventService.OnResubscribeOccurred += OnSubscribe;
+                EventService.OnSubscriptionGiftedOccurred += OnSubscribe;
+                EventService.OnMassSubscriptionsGiftedOccurred += OnMassSubscription;
             }
 
-            if (this.DonationAmount > 0)
+            if (this.Donations)
             {
-                EventService.OnDonationOccurred += EventService_OnDonationOccurred;
+                EventService.OnDonationOccurred += OnDonation;
             }
 
-            if (this.TwitchBitsAmount > 0)
+            if (this.TwitchBits)
             {
-                EventService.OnTwitchBitsCheeredOccurred += EventService_OnTwitchBitsCheeredOccurred;
+                EventService.OnTwitchBitsCheeredOccurred += OnTwitchBits;
             }
 
-            if (this.YouTubeSuperChatAmount > 0)
+            if (this.YouTubeSuperChats)
             {
-                EventService.OnYouTubeSuperChatOccurred += EventService_OnYouTubeSuperChatOccurred;
+                EventService.OnYouTubeSuperChatOccurred += OnYouTubeSuperChat;
             }
 
-            if (this.TrovoElixirSpellAmount > 0)
+            if (this.TrovoElixirSpells)
             {
                 EventService.OnTrovoSpellCastOccurred += EventService_OnTrovoSpellCastOccurred;
             }
@@ -92,108 +87,41 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetDisableInternal();
 
-            EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
-            EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
-            EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
-            EventService.OnResubscribeOccurred -= EventService_OnSubscribeOccurred;
-            EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscribeOccurred;
-            EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
-            EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
-            EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
+            EventService.OnFollowOccurred -= OnFollow;
+            EventService.OnRaidOccurred -= OnRaid;
+            EventService.OnSubscribeOccurred -= OnSubscribe;
+            EventService.OnResubscribeOccurred -= OnSubscribe;
+            EventService.OnSubscriptionGiftedOccurred -= OnSubscribe;
+            EventService.OnMassSubscriptionsGiftedOccurred -= OnMassSubscription;
+            EventService.OnDonationOccurred -= OnDonation;
+            EventService.OnTwitchBitsCheeredOccurred -= OnTwitchBits;
             EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
-            EventService.OnYouTubeSuperChatOccurred -= EventService_OnYouTubeSuperChatOccurred;
+            EventService.OnYouTubeSuperChatOccurred -= OnYouTubeSuperChat;
         }
 
-        private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
-        {
-            await this.ProcessEvent(user, this.FollowAmount);
-        }
+        protected virtual void OnFollow(object sender, UserV2ViewModel user) { }
 
-        private async void EventService_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
-        {
-            await this.ProcessEvent(raid.Item1, this.RaidAmount + (this.RaidPerViewAmount * raid.Item2));
-        }
+        protected virtual void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid) { }
 
-        private async void EventService_OnSubscribeOccurred(object sender, SubscriptionDetailsModel subscription)
-        {
-            if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
-            {
-                if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out int damage))
-                {
-                    await this.ProcessEvent(subscription.User, damage);
-                }
-            }
-            else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
-            {
-                if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out int damage))
-                {
-                    await this.ProcessEvent(subscription.User, damage);
-                }
-            }
-            else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
-            {
-                if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out int damage))
-                {
-                    await this.ProcessEvent(subscription.User, damage);
-                }
-            }
-        }
+        protected virtual void OnSubscribe(object sender, SubscriptionDetailsModel subscription) { }
 
-        private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
-        {
-            if (subscriptions.Count() > 0)
-            {
-                double totalDamage = 0;
-                foreach (SubscriptionDetailsModel subscription in subscriptions)
-                {
-                    if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
-                    {
-                        if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out int damage))
-                        {
-                            totalDamage += damage;
-                        }
-                    }
-                    else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
-                    {
-                        if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out int damage))
-                        {
-                            totalDamage += damage;
-                        }
-                    }
-                    else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
-                    {
-                        if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out int damage))
-                        {
-                            totalDamage += damage;
-                        }
-                    }
-                }
+        protected virtual void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions) { }
 
-                await this.ProcessEvent(subscriptions.First().User, totalDamage);
-            }
-        }
+        protected virtual void OnDonation(object sender, UserDonationModel donation) { }
 
-        private async void EventService_OnDonationOccurred(object sender, UserDonationModel donation)
-        {
-            await this.ProcessEvent(donation.User, this.DonationAmount * donation.Amount);
-        }
+        protected virtual void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered) { }
 
-        private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchUserBitsCheeredModel bitsCheered)
-        {
-            await this.ProcessEvent(bitsCheered.User, this.TwitchBitsAmount * bitsCheered.Amount);
-        }
+        protected virtual void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat) { }
 
-        private async void EventService_OnYouTubeSuperChatOccurred(object sender, YouTubeSuperChatViewModel superChat)
-        {
-            await this.ProcessEvent(superChat.User, this.YouTubeSuperChatAmount * superChat.Amount);
-        }
+        protected virtual void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell) { }
 
-        private async void EventService_OnTrovoSpellCastOccurred(object sender, TrovoChatSpellViewModel spell)
+        private void EventService_OnTrovoSpellCastOccurred(object sender, TrovoChatSpellViewModel spell)
         {
             if (spell.IsElixir)
             {
-                await this.ProcessEvent(spell.User, this.TrovoElixirSpellAmount * spell.ValueTotal);
+                this.OnTrovoSpell(sender, spell);
             }
         }
+
     }
 }

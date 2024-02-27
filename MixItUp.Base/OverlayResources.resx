@@ -382,6 +382,15 @@ function addInternal(message)
     }
 }</value>
   </data>
+  <data name="OverlayEndCreditsDefaultCSS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayEndCreditsDefaultHTML" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
+    <value />
+  </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">
     <value>.list {
     width: {ItemWidth};

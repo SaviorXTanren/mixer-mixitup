@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    [DataContract]
     public class OverlayChatV3Model : OverlayVisualTextV3ModelBase
     {
         public const string MessageIDProperty = "MessageID";

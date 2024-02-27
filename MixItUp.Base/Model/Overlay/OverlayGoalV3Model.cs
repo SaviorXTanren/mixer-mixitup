@@ -29,7 +29,7 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayGoalV3Model : OverlayEventTrackingV3ModelBase
+    public class OverlayGoalV3Model : OverlayEventCountingV3ModelBase
     {
         public const string GoalNameProperty = "GoalName";
         public const string GoalEndProperty = "GoalEnd";

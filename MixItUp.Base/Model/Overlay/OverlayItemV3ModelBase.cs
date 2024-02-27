@@ -23,6 +23,7 @@ namespace MixItUp.Base.Model.Overlay
         Goal,
         PersistentTimer,
         Chat,
+        EndCredits,
     }
 
     public enum OverlayItemV3DisplayOptionsType
