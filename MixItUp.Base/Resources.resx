@@ -10354,7 +10354,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     <value>Unable to get Heart Rate data</value>
   </data>
   <data name="PulsoidInfo1" xml:space="preserve">
-    <value>Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information.</value>
+    <value>Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information. A Pulsoid BRO plan is required for all external integrations.</value>
   </data>
   <data name="PulsoidHeartRateChanged" xml:space="preserve">
     <value>Pulsoid Heart Rate Changed</value>
@@ -10367,5 +10367,11 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
   <data name="HeartRateRanges" xml:space="preserve">
     <value>Heart Rate Ranges</value>
+  </data>
+  <data name="PulsoidInfo3" xml:space="preserve">
+    <value>A special 20% discount is available for new Pulsoid BRO plan user that also helps support Mix It Up's continued development. Information can found by visiting the link below:</value>
+  </data>
+  <data name="PulsoidWebsite" xml:space="preserve">
+    <value>Pulsoid Website</value>
   </data>
 </root>

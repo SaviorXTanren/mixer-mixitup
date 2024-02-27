@@ -16191,7 +16191,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information..
+        ///   Looks up a localized string similar to Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information. A Pulsoid BRO plan is required for all external integrations..
         /// </summary>
         public static string PulsoidInfo1 {
             get {
@@ -16209,11 +16209,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A special 20% discount is available for new Pulsoid BRO plan user that also helps support Mix It Up&apos;s continued development. Information can found by visiting the link below:.
+        /// </summary>
+        public static string PulsoidInfo3 {
+            get {
+                return ResourceManager.GetString("PulsoidInfo3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to get Heart Rate data.
         /// </summary>
         public static string PulsoidUnableToGetHeartRateData {
             get {
                 return ResourceManager.GetString("PulsoidUnableToGetHeartRateData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pulsoid Website.
+        /// </summary>
+        public static string PulsoidWebsite {
+            get {
+                return ResourceManager.GetString("PulsoidWebsite", resourceCulture);
             }
         }
         

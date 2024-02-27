@@ -24,11 +24,23 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.PulsoidInfo1}"/>
 
             <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.PulsoidInfo2}"/>
+
+            <TextBlock Grid.Row="4" TextWrapping="Wrap" Text="{x:Static resx:Resources.PulsoidInfo3}"/>
+
+            <TextBlock Grid.Row="6" TextWrapping="Wrap">
+                <Hyperlink NavigateUri="https://pulsoid.net/s/WAoxz" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.PulsoidWebsite}"/>
+                </Hyperlink>
+            </TextBlock>
         </Grid>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
