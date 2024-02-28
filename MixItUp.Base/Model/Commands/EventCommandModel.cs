@@ -83,6 +83,9 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["usersubplan"] = "Tier 1";
                     specialIdentifiers["isanonymous"] = "false";
                     break;
+                case EventTypeEnum.TwitchChannelWatchStreak:
+                    specialIdentifiers["userwatchstreak"] = "5";
+                    break;
                 case EventTypeEnum.TwitchChannelBitsCheered:
                     specialIdentifiers["bitsamount"] = "10";
                     specialIdentifiers["bitslifetimeamount"] = "100";

@@ -10059,4 +10059,7 @@ namespace CustomNamespace
   <data name="UsernamesToIgnore" xml:space="preserve">
     <value>Usernames To Ignore (Space Separated)</value>
   </data>
+  <data name="TwitchChannelWatchStreak" xml:space="preserve">
+    <value>Twitch Channel Watch Streak</value>
+  </data>
 </root>

@@ -75,6 +75,9 @@ namespace MixItUp.Base.Services.Twitch
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
         private const string AnnouncementUserNoticeMessageTypeID = "announcement";
 
+        private const string ViewerMilestoneUserNoticeMessageTypeID = "viewermilestone";
+        private const string ViewerMilestoneWatchStreakUserNoticeMessageCategory = "watch-streak";
+
         private List<string> emoteSetIDs = new List<string>();
 
         public IDictionary<string, TwitchChatEmoteViewModel> Emotes { get { return this.emotes; } }
@@ -825,6 +828,34 @@ namespace MixItUp.Base.Services.Twitch
                     }
 
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(userNotice, user));
+                }
+                else if (ViewerMilestoneUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
+                {
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userNotice.UserID.ToString(), platformUsername: userNotice.Login);
+                    if (user == null)
+                    {
+                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
+                    }
+                    else
+                    {
+                        user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                    }
+
+                    string milestoneType = userNotice.RawPacket.GetTagString("msg-param-category");
+                    if (ViewerMilestoneWatchStreakUserNoticeMessageCategory.Equals(milestoneType))
+                    {
+                        int streak = userNotice.RawPacket.GetTagInt("msg-param-value");
+                        if (streak > 0)
+                        {
+                            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
+                            parameters.SpecialIdentifiers["userwatchstreak"] = streak.ToString();
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelWatchStreak, parameters);
+                        }
+                    }
+                    else
+                    {
+                        Logger.ForceLog(LogLevel.Information, "Unknown User Milestone type: " + JSONSerializerHelper.SerializeToString(userNotice));
+                    }
                 }
             }
             catch (Exception ex)

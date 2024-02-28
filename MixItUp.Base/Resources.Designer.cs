@@ -22916,6 +22916,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Watch Streak.
+        /// </summary>
+        public static string TwitchChannelWatchStreak {
+            get {
+                return ResourceManager.GetString("TwitchChannelWatchStreak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Chat.
         /// </summary>
         public static string TwitchChat {
