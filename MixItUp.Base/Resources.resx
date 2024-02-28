@@ -9790,16 +9790,25 @@ namespace CustomNamespace
     <value>Unable to get Heart Rate data</value>
   </data>
   <data name="PulsoidInfo1" xml:space="preserve">
-    <value>Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information.</value>
+    <value>Pulsoid service connectivity allows you to perform actions when your heart rate changes through the Pulsoid service. When you log in, an authentication webpage will open asking you to log in to Pulsoid and approve Mix It Up to access your information. A Pulsoid BRO plan is required for all external integrations.</value>
   </data>
   <data name="PulsoidHeartRateChanged" xml:space="preserve">
     <value>Pulsoid Heart Rate Changed</value>
   </data>
   <data name="PulsoidInfo2" xml:space="preserve">
-    <value>The Command Trigger Delay option allows you set how often the Pulsoid Heart Rate Changed event command can be triggered due to changes in your heart rate. For example, setting the value to 3 seconds means that regardless of heart rate changes, the Pulsoid Heart Rate Changed event command can not be triggered again for 3 seconds after it has been triggered due to a heart rate change. Note that only heart rate changes will trigger the command, it will not repeatedly trigger if your heart rate stays the same.</value>
+    <value>The Command Trigger Delay and Heart Rate Range options allows you set how often the Pulsoid Heart Rate Changed event command can be triggered due to changes in your heart rate. For full details on how these work, please visit the Mix It Up Wiki page on the Pulsoid service.</value>
   </data>
   <data name="CommandTriggerDelay" xml:space="preserve">
     <value>Command Trigger Delay</value>
+  </data>
+  <data name="HeartRateRanges" xml:space="preserve">
+    <value>Heart Rate Ranges</value>
+  </data>
+  <data name="PulsoidInfo3" xml:space="preserve">
+    <value>A special 20% discount is available for new Pulsoid BRO plan user that also helps support Mix It Up's continued development. Information can found by visiting the link below:</value>
+  </data>
+  <data name="PulsoidWebsite" xml:space="preserve">
+    <value>Pulsoid Website</value>
   </data>
   <data name="MaxWidthPixels" xml:space="preserve">
     <value>Max Width (Pixels)</value>

@@ -1118,9 +1118,6 @@
     <Compile Include="Controls\Services\TreatStreamServiceControl.xaml.cs">
       <DependentUpon>TreatStreamServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\TwitterServiceControl.xaml.cs">
-      <DependentUpon>TwitterServiceControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Services\VoicemodServiceControl.xaml.cs">
       <DependentUpon>VoicemodServiceControl.xaml</DependentUpon>
     </Compile>
@@ -2122,10 +2119,6 @@
     <Page Include="Controls\Services\TreatStreamServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Services\TwitterServiceControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\VoicemodServiceControl.xaml">
       <SubType>Designer</SubType>
