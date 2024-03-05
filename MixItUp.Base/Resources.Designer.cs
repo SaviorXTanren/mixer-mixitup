@@ -943,6 +943,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Subscriptions.
+        /// </summary>
+        public static string AllSubscriptions {
+            get {
+                return ResourceManager.GetString("AllSubscriptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All Voices.
         /// </summary>
         public static string AllVoices {
@@ -9467,6 +9476,15 @@ namespace MixItUp.Base {
         public static string GiftedSubs {
             get {
                 return ResourceManager.GetString("GiftedSubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gifted Subscriptions.
+        /// </summary>
+        public static string GiftedSubscriptions {
+            get {
+                return ResourceManager.GetString("GiftedSubscriptions", resourceCulture);
             }
         }
         

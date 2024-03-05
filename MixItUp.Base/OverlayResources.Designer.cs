@@ -216,7 +216,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to .list {
+        ///  position: absolute;
+        ///}.
         /// </summary>
         public static string OverlayEndCreditsDefaultCSS {
             get {
@@ -225,7 +227,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
+        ///
+        ///&lt;template id=&quot;header&quot;&gt;
+        ///    &lt;div&gt;
+        ///        &lt;span&gt;HEADER&lt;/span&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;line&quot;&gt;
+        ///    &lt;div&gt;
+        ///        &lt;span&gt;line&lt;/span&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/template&gt;.
         /// </summary>
         public static string OverlayEndCreditsDefaultHTML {
             get {
@@ -234,7 +248,23 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to const headerTemplate = document.querySelector(&quot;#header&quot;);
+        ///const lineTemplate = document.querySelector(&quot;#line&quot;);
+        ///
+        ///const scrollSpeed = 10;
+        ///
+        ///const list = document.getElementById(&quot;list&quot;);
+        ///list.style.top = document.documentElement.clientHeight + &quot;px&quot;;
+        ///
+        ///for (var i = 0; i &lt; 5; i++)
+        ///{
+        ///    let header = headerTemplate.content.cloneNode(true);
+        ///    //header.firstElementChild.innerHTML = &quot;&quot;;
+        ///    list.appendChild(header);
+        ///    
+        ///    for (var j = 0; j &lt; 10; j++)
+        ///    {
+        ///        let line = lineTemplate.content. [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {

@@ -5,6 +5,40 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    public enum OverlayEndCreditsSectionV3Type
+    {
+        Chatters = 0,
+        Followers,
+        Subscribers,
+        Moderators,
+
+        NewSubscribers = 20,
+        Resubscribers,
+        GiftedSubscriptions,
+        AllSubscriptions,
+
+        Custom = 100,
+    }
+
+    [DataContract]
+    public class OverlayEndCreditsSectionV3Model
+    {
+        [DataMember]
+        public Guid ID { get; set; }
+
+        [DataMember]
+        public OverlayEndCreditsSectionV3Type Type { get; set; }
+
+        [DataMember]
+        public string Name { get; set; }
+
+        [DataMember]
+        public string Header { get; set; }
+
+        [DataMember]
+        public string ItemTemplate { get; set; }
+    }
+
     [DataContract]
     public class OverlayEndCreditsV3Model : OverlayEventTrackingV3ModelBase
     {
@@ -13,7 +47,7 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultJavascript = OverlayResources.OverlayEndCreditsDefaultJavascript;
 
         [DataMember]
-        public Dictionary<string, string> CustomSections { get; set; } = new Dictionary<string, string>();
+        public List<OverlayEndCreditsSectionV3Model> Sections { get; set; } = new List<OverlayEndCreditsSectionV3Model>();
 
         [DataMember]
         public Guid StartedCommandID { get; set; }

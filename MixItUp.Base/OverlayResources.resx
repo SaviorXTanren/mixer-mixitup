@@ -383,13 +383,65 @@ function addInternal(message)
 }</value>
   </data>
   <data name="OverlayEndCreditsDefaultCSS" xml:space="preserve">
-    <value />
+    <value>.list {
+  position: absolute;
+}</value>
   </data>
   <data name="OverlayEndCreditsDefaultHTML" xml:space="preserve">
-    <value />
+    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
+
+&lt;template id="header"&gt;
+    &lt;div&gt;
+        &lt;span&gt;HEADER&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;template id="line"&gt;
+    &lt;div&gt;
+        &lt;span&gt;line&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</value>
   </data>
   <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
-    <value />
+    <value>const headerTemplate = document.querySelector("#header");
+const lineTemplate = document.querySelector("#line");
+
+const scrollSpeed = 10;
+
+const list = document.getElementById("list");
+list.style.top = document.documentElement.clientHeight + "px";
+
+for (var i = 0; i &lt; 5; i++)
+{
+    let header = headerTemplate.content.cloneNode(true);
+    //header.firstElementChild.innerHTML = "";
+    list.appendChild(header);
+    
+    for (var j = 0; j &lt; 10; j++)
+    {
+        let line = lineTemplate.content.cloneNode(true);
+        //line.firstElementChild.innerHTML = "";
+        list.appendChild(line);
+    }
+}
+
+function moveCredits()
+{
+    setTimeout(() =&gt; {
+        const rect = list.getBoundingClientRect();
+        if (rect.bottom &gt; 0)
+        {
+            list.style.top = rect.top - 1 + 'px';
+            moveCredits();
+        }
+        else
+        {
+            console.log("Scrolling done!");
+        }
+    }, scrollSpeed);
+}
+
+moveCredits();</value>
   </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">
     <value>.list {

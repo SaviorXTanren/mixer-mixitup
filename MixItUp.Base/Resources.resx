@@ -10062,4 +10062,10 @@ namespace CustomNamespace
   <data name="TwitchChannelWatchStreak" xml:space="preserve">
     <value>Twitch Channel Watch Streak</value>
   </data>
+  <data name="AllSubscriptions" xml:space="preserve">
+    <value>All Subscriptions</value>
+  </data>
+  <data name="GiftedSubscriptions" xml:space="preserve">
+    <value>Gifted Subscriptions</value>
+  </data>
 </root>
