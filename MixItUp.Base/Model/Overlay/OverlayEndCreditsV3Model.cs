@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -21,8 +22,17 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
+    public class OverlayEndCreditsHeaderDetailsV3Model : OverlayVisualTextV3ModelBase
+    {
+        public OverlayEndCreditsHeaderDetailsV3Model() : base(OverlayItemV3Type.Text) { }
+    }
+
+    [DataContract]
     public class OverlayEndCreditsSectionV3Model
     {
+        public static readonly string DefaultHTML = OverlayResources.OverlayEndCreditsSectionDefaultHTML;
+        public static readonly string DefaultCSS = OverlayResources.OverlayEndCreditsSectionDefaultCSS;
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -33,6 +43,9 @@ namespace MixItUp.Base.Model.Overlay
         public string Name { get; set; }
 
         [DataMember]
+        public int Columns { get; set; }
+
+        [DataMember]
         public string Header { get; set; }
         [DataMember]
         public string Item { get; set; }
@@ -41,6 +54,15 @@ namespace MixItUp.Base.Model.Overlay
         public string HTML { get; set; } = string.Empty;
         [DataMember]
         public string CSS { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        public double ColumnWidthPercentage
+        {
+            get
+            {
+                return Math.Round(100.0 / ((double)this.Columns), 4);
+            }
+        }
     }
 
     [DataContract]

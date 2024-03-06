@@ -384,23 +384,38 @@ function addInternal(message)
   </data>
   <data name="OverlayEndCreditsDefaultCSS" xml:space="preserve">
     <value>.list {
-  position: absolute;
+    position: absolute;
+}
+
+.section {
+    margin: 0;
+    padding-bottom: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    padding-bottom: 20px;
+    font-size: {HeaderFontSize}px;
+    color: {HeaderFontColor};
+    font-family: '{HeaderFontFamily}';
+    font-weight: {HeaderFontWeight};
+    text-decoration: {HeaderTextDecoration};
+    font-style: {HeaderFontStyle};
+    text-align: {HeaderTextAlignment};
+    text-shadow: {HeaderShadowColor};
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.columns {
 }</value>
   </data>
   <data name="OverlayEndCreditsDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
-
-&lt;template id="header"&gt;
-    &lt;div&gt;
-        &lt;span&gt;HEADER&lt;/span&gt;
-    &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;template id="line"&gt;
-    &lt;div&gt;
-        &lt;span&gt;line&lt;/span&gt;
-    &lt;/div&gt;
-&lt;/template&gt;</value>
+    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;</value>
   </data>
   <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
     <value>const headerTemplate = document.querySelector("#header");
@@ -442,6 +457,37 @@ function moveCredits()
 }
 
 moveCredits();</value>
+  </data>
+  <data name="OverlayEndCreditsSectionDefaultCSS" xml:space="preserve">
+    <value>.header-{SectionID} {
+}
+
+.column-{SectionID} {
+    width: {ColumnWidthPercentage}%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.item-{SectionID} {
+    display: inline-block;
+    width: 100%;
+}</value>
+  </data>
+  <data name="OverlayEndCreditsSectionDefaultHTML" xml:space="preserve">
+    <value>&lt;template id="section-{SectionID}"&gt;
+    &lt;div class="section"&gt;
+        &lt;div class="header-{SectionID} header"&gt;&lt;/div&gt;
+        &lt;div class="columns"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;template id="column-{SectionID}"&gt;
+    &lt;div class="column-{SectionID}"&gt;&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;template id="item-{SectionID}"&gt;
+    &lt;div class="item-{SectionID} text"&gt;&lt;/div&gt;
+&lt;/template&gt;</value>
   </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">
     <value>.list {

@@ -217,8 +217,27 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to .list {
-        ///  position: absolute;
-        ///}.
+        ///    position: absolute;
+        ///}
+        ///
+        ///.section {
+        ///    margin: 0;
+        ///    padding-bottom: 100px;
+        ///    display: flex;
+        ///    justify-content: center;
+        ///    align-items: center;
+        ///}
+        ///
+        ///.header {
+        ///    padding-bottom: 20px;
+        ///    font-size: {HeaderFontSize}px;
+        ///    color: {HeaderFontColor};
+        ///    font-family: &apos;{HeaderFontFamily}&apos;;
+        ///    font-weight: {HeaderFontWeight};
+        ///    text-decoration: {HeaderTextDecoration};
+        ///    font-style: {HeaderFontStyle};
+        ///    text-align: {HeaderTextAlignment};
+        ///    text-shadow: {HeaderShadowC [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultCSS {
             get {
@@ -227,19 +246,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
-        ///
-        ///&lt;template id=&quot;header&quot;&gt;
-        ///    &lt;div&gt;
-        ///        &lt;span&gt;HEADER&lt;/span&gt;
-        ///    &lt;/div&gt;
-        ///&lt;/template&gt;
-        ///
-        ///&lt;template id=&quot;line&quot;&gt;
-        ///    &lt;div&gt;
-        ///        &lt;span&gt;line&lt;/span&gt;
-        ///    &lt;/div&gt;
-        ///&lt;/template&gt;.
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;.
         /// </summary>
         public static string OverlayEndCreditsDefaultHTML {
             get {
@@ -269,6 +276,49 @@ namespace MixItUp.Base {
         public static string OverlayEndCreditsDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayEndCreditsDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .header-{SectionID} {
+        ///}
+        ///
+        ///.column-{SectionID} {
+        ///    width: {ColumnWidthPercentage}%;
+        ///    box-sizing: border-box;
+        ///    text-align: center;
+        ///}
+        ///
+        ///.item-{SectionID} {
+        ///    display: inline-block;
+        ///    width: 100%;
+        ///}.
+        /// </summary>
+        public static string OverlayEndCreditsSectionDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayEndCreditsSectionDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;template id=&quot;section-{SectionID}&quot;&gt;
+        ///    &lt;div class=&quot;section&quot;&gt;
+        ///        &lt;div class=&quot;header-{SectionID} header&quot;&gt;&lt;/div&gt;
+        ///        &lt;div class=&quot;columns&quot;&gt;&lt;/div&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;column-{SectionID}&quot;&gt;
+        ///    &lt;div class=&quot;column-{SectionID}&quot;&gt;&lt;/div&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;item-{SectionID}&quot;&gt;
+        ///    &lt;div class=&quot;item-{SectionID} text&quot;&gt;&lt;/div&gt;
+        ///&lt;/template&gt;.
+        /// </summary>
+        public static string OverlayEndCreditsSectionDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayEndCreditsSectionDefaultHTML", resourceCulture);
             }
         }
         

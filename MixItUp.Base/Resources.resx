@@ -10068,4 +10068,7 @@ namespace CustomNamespace
   <data name="GiftedSubscriptions" xml:space="preserve">
     <value>Gifted Subscriptions</value>
   </data>
+  <data name="Header" xml:space="preserve">
+    <value>Header</value>
+  </data>
 </root>
