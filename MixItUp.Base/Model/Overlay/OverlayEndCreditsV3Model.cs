@@ -34,9 +34,13 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public string Header { get; set; }
+        [DataMember]
+        public string Item { get; set; }
 
         [DataMember]
-        public string ItemTemplate { get; set; }
+        public string HTML { get; set; } = string.Empty;
+        [DataMember]
+        public string CSS { get; set; } = string.Empty;
     }
 
     [DataContract]
