@@ -17,48 +17,53 @@ namespace MixItUp.Base.Services.External
     [DataContract]
     public class TiltifyUser
     {
+        [DataMember]
         public string id { get; set; }
-
+        [DataMember]
         public string username { get; set; }
-
+        [DataMember]
         public string url { get; set; }
     }
 
     [DataContract]
     public class TiltifyTeam
     {
+        [DataMember]
         public string id { get; set; }
-
+        [DataMember]
         public string name { get; set; }
     }
 
     [DataContract]
     public class TiltifyCampaign
     {
+        public const string RetiredStatus = "retired";
+
+        [DataMember]
         public string id { get; set; }
-
+        [DataMember]
         public int legacy_id { get; set; }
-
+        [DataMember]
         public string name { get; set; }
-
+        [DataMember]
         public string cause_id { get; set; }
-
+        [DataMember]
         public string description { get; set; }
-
+        [DataMember]
         public string url { get; set; }
-
+        [DataMember]
         public string donate_url { get; set; }
-
+        [DataMember]
         public string fundraising_event_id { get; set; }
-
+        [DataMember]
         public string status { get; set; }
-
+        [DataMember]
         public JObject goal { get; set; }
-
+        [DataMember]
         public JObject original_goal { get; set; }
-
+        [DataMember]
         public JObject amount_raised { get; set; }
-
+        [DataMember]
         public JObject total_amount_raised { get; set; }
 
         [JsonIgnore]
@@ -69,23 +74,27 @@ namespace MixItUp.Base.Services.External
         public double Goal { get { return TiltifyService.GetValueFromTiltifyJObject(this.goal); } }
         [JsonIgnore]
         public double OriginalGoal { get { return TiltifyService.GetValueFromTiltifyJObject(this.original_goal); } }
+
+        [JsonIgnore]
+        public bool IsRetired { get { return string.Equals(this.status, RetiredStatus); } }
     }
 
     [DataContract]
     public class TiltifyDonation
     {
+        [DataMember]
         public string id { get; set; }
-
+        [DataMember]
         public string campaign_id { get; set; }
-
+        [DataMember]
         public string cause_id { get; set; }
-
+        [DataMember]
         public string completed_at { get; set; }
-
+        [DataMember]
         public string donor_name { get; set; }
-
+        [DataMember]
         public string donor_comment { get; set; }
-
+        [DataMember]
         public JObject amount { get; set; }
 
         [JsonIgnore]
@@ -124,14 +133,12 @@ namespace MixItUp.Base.Services.External
     [DataContract]
     public class TiltifyResult
     {
-        [JsonProperty("data")]
         public JObject data { get; set; }
     }
 
     [DataContract]
     public class TiltifyResultArray
     {
-        [JsonProperty("data")]
         public JArray data { get; set; }
     }
 
@@ -175,7 +182,7 @@ namespace MixItUp.Base.Services.External
                     payload["client_id"] = TiltifyService.ClientID;
                     payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TiltifySecret");
                     payload["code"] = authorizationCode;
-                    payload["scope"] = "public";
+                    payload["redirect_uri"] = OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL;
 
                     this.token = await this.PostAsync<OAuthTokenModel>("https://v5api.tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
@@ -205,84 +212,32 @@ namespace MixItUp.Base.Services.External
 
         public async Task<TiltifyUser> GetUser()
         {
-            try
-            {
-                TiltifyResult result = await this.GetAsync<TiltifyResult>("api/public/current-user");
-                return result.data.ToObject<TiltifyUser>();
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return null;
+            return await this.GetObjectResult<TiltifyUser>("api/public/current-user");
         }
 
         public async Task<TiltifyCampaign> GetCampaign(string campaignID)
         {
-            try
-            {
-                TiltifyResult result = await this.GetAsync<TiltifyResult>("api/public/campaigns/" + campaignID.ToString());
-                return result.data.ToObject<TiltifyCampaign>();
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return null;
+            return await this.GetObjectResult<TiltifyCampaign>("api/public/campaigns/" + campaignID.ToString());
         }
 
         public async Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user)
         {
-            List<TiltifyCampaign> results = new List<TiltifyCampaign>();
-            try
-            {
-                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>($"api/public/users/{user.id}/campaigns");
-                foreach (JToken token in result.data)
-                {
-                    results.Add(token.ToObject<TiltifyCampaign>());
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return results;
+            return await this.GetArrayResult<TiltifyCampaign>($"api/public/users/{user.id}/campaigns");
         }
 
         public async Task<IEnumerable<TiltifyTeam>> GetUserTeams(TiltifyUser user)
         {
-            List<TiltifyTeam> results = new List<TiltifyTeam>();
-            try
-            {
-                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>($"api/public/users/{user.id}/teams");
-                foreach (JToken token in result.data)
-                {
-                    results.Add(token.ToObject<TiltifyTeam>());
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return results;
+            return await this.GetArrayResult<TiltifyTeam>($"api/public/users/{user.id}/teams");
         }
 
         public async Task<IEnumerable<TiltifyCampaign>> GetTeamCampaigns(TiltifyTeam team)
         {
-            List<TiltifyCampaign> results = new List<TiltifyCampaign>();
-            try
-            {
-                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>($"api/public/teams/{team.id}/team_campaigns");
-                foreach (JToken token in result.data)
-                {
-                    results.Add(token.ToObject<TiltifyCampaign>());
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return results;
+            return await this.GetArrayResult<TiltifyCampaign>($"api/public/teams/{team.id}/team_campaigns");
         }
 
         public async Task<IEnumerable<TiltifyDonation>> GetCampaignDonations(TiltifyCampaign campaign)
         {
-            List<TiltifyDonation> results = new List<TiltifyDonation>();
-            try
-            {
-                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>($"api/public/campaigns/{campaign.id}/donations?limit=20");
-                foreach (JToken token in result.data)
-                {
-                    results.Add(token.ToObject<TiltifyDonation>());
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return results;
+            return await this.GetArrayResult<TiltifyDonation>($"api/public/campaigns/{campaign.id}/donations?limit=20");
         }
 
         protected override async Task RefreshOAuthToken()
@@ -365,6 +320,38 @@ namespace MixItUp.Base.Services.External
                     }
                 }
             }
+        }
+
+        private async Task<T> GetObjectResult<T>(string url)
+        {
+            try
+            {
+                JObject result = await this.GetJObjectAsync(url);
+                if (result != null && result.ContainsKey("data"))
+                {
+                    return result["data"].ToObject<T>();
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return default(T);
+        }
+
+        private async Task<IEnumerable<T>> GetArrayResult<T>(string url)
+        {
+            List<T> results = new List<T>();
+            try
+            {
+                JObject result = await this.GetJObjectAsync(url);
+                if (result != null && result.ContainsKey("data"))
+                {
+                    foreach (JToken token in (JArray)result["data"])
+                    {
+                        results.Add(token.ToObject<T>());
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return results;
         }
     }
 }
