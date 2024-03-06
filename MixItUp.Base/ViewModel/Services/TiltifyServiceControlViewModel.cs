@@ -24,11 +24,11 @@ namespace MixItUp.Base.ViewModel.Services
 
                 if (this.SelectedCampaign != null)
                 {
-                    ChannelSession.Settings.TiltifyCampaign = this.SelectedCampaign.ID;
+                    ChannelSession.Settings.TiltifyCampaignV5 = this.SelectedCampaign.id;
                 }
                 else
                 {
-                    ChannelSession.Settings.TiltifyCampaign = 0;
+                    ChannelSession.Settings.TiltifyCampaignV5 = null;
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Services
                 await ServiceManager.Get<TiltifyService>().Disconnect();
 
                 ChannelSession.Settings.TiltifyOAuthToken = null;
-                ChannelSession.Settings.TiltifyCampaign = 0;
+                ChannelSession.Settings.TiltifyCampaignV5 = null;
 
                 this.IsConnected = false;
             });
@@ -74,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Services
             if (this.IsConnected)
             {
                 await this.RefreshCampaigns();
-                this.SelectedCampaign = this.Campaigns.FirstOrDefault(c => c.ID == ChannelSession.Settings.TiltifyCampaign);
+                this.SelectedCampaign = this.Campaigns.FirstOrDefault(c => string.Equals(c.id, ChannelSession.Settings.TiltifyCampaignV5));
             }
         }
 
@@ -82,22 +82,26 @@ namespace MixItUp.Base.ViewModel.Services
         {
             TiltifyUser user = await ServiceManager.Get<TiltifyService>().GetUser();
 
-            Dictionary<int, TiltifyCampaign> campaignDictionary = new Dictionary<int, TiltifyCampaign>();
+            Dictionary<string, TiltifyCampaign> campaignDictionary = new Dictionary<string, TiltifyCampaign>();
 
             foreach (TiltifyCampaign campaign in await ServiceManager.Get<TiltifyService>().GetUserCampaigns(user))
             {
-                campaignDictionary[campaign.ID] = campaign;
+                campaignDictionary[campaign.id] = campaign;
             }
 
             foreach (TiltifyTeam team in await ServiceManager.Get<TiltifyService>().GetUserTeams(user))
             {
                 foreach (TiltifyCampaign campaign in await ServiceManager.Get<TiltifyService>().GetTeamCampaigns(team))
                 {
-                    campaignDictionary[campaign.ID] = campaign;
+                    campaignDictionary[campaign.id] = campaign;
                 }
             }
 
-            this.Campaigns.ClearAndAddRange(campaignDictionary.Values.Where(c => c.Ends > DateTimeOffset.Now));
+            TiltifyCampaign activeCampaign = await ServiceManager.Get<TiltifyService>().GetCampaign("a37eb5be-b18e-4e76-b436-2e153bc4fbfb");
+
+            TiltifyCampaign completedCampaign = await ServiceManager.Get<TiltifyService>().GetCampaign("ac0a6017-52b4-485e-9aba-e5da8348f01e");
+
+            //this.Campaigns.ClearAndAddRange(campaignDictionary.Values.Where(c => c.Ends > DateTimeOffset.Now));
         }
     }
 }

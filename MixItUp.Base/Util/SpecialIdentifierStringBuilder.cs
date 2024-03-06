@@ -445,16 +445,16 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ServiceManager.Get<TiltifyService>().IsConnected && ChannelSession.Settings.TiltifyCampaign > 0)
+            if (ServiceManager.Get<TiltifyService>().IsConnected && !string.IsNullOrWhiteSpace(ChannelSession.Settings.TiltifyCampaignV5))
             {
                 if (this.ContainsSpecialIdentifier(TiltifySpecialIdentifierHeader))
                 {
-                    TiltifyCampaign campaign = await ServiceManager.Get<TiltifyService>().GetCampaign(ChannelSession.Settings.TiltifyCampaign);
+                    TiltifyCampaign campaign = await ServiceManager.Get<TiltifyService>().GetCampaign(ChannelSession.Settings.TiltifyCampaignV5);
                     if (campaign != null)
                     {
-                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "campaignurl", campaign.CampaignURL);
-                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationurl", campaign.DonateURL);
-                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationgoal", campaign.FundraiserGoalAmount.ToString());
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "campaignurl", campaign.url);
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationurl", campaign.donate_url);
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationgoal", campaign.Goal.ToString());
                         this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationamount", campaign.AmountRaised.ToString());
                     }
                 }

@@ -7,7 +7,6 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,125 +17,92 @@ namespace MixItUp.Base.Services.External
     [DataContract]
     public class TiltifyUser
     {
-        [JsonProperty("id")]
-        public int ID { get; set; }
+        public string id { get; set; }
 
-        [JsonProperty("username")]
-        public string Username { get; set; }
+        public string username { get; set; }
 
-        [JsonProperty("slug")]
-        public string Slug { get; set; }
-
-        [JsonProperty("url")]
-        public string URL { get; set; }
+        public string url { get; set; }
     }
 
     [DataContract]
     public class TiltifyTeam
     {
-        [JsonProperty("id")]
-        public int ID { get; set; }
+        public string id { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("slug")]
-        public string Slug { get; set; }
-
-        [JsonProperty("url")]
-        public string URL { get; set; }
-
-        [JsonProperty("totalAmountRaised")]
-        public double TotalAmountRaised { get; set; }
-
-        [JsonProperty("role")]
-        public string Role { get; set; }
+        public string name { get; set; }
     }
 
     [DataContract]
     public class TiltifyCampaign
     {
-        [JsonProperty("id")]
-        public int ID { get; set; }
+        public string id { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        public int legacy_id { get; set; }
 
-        [JsonProperty("slug")]
-        public string Slug { get; set; }
+        public string name { get; set; }
 
-        [JsonProperty("startsAt")]
-        public long? StartsAtMilliseconds { get; set; }
+        public string cause_id { get; set; }
 
-        [JsonProperty("endsAt")]
-        public long? EndsAtMilliseconds { get; set; }
+        public string description { get; set; }
 
-        [JsonProperty("description")]
-        public string Description { get; set; }
+        public string url { get; set; }
 
-        [JsonProperty("fundraiserGoalAmount")]
-        public double FundraiserGoalAmount { get; set; }
+        public string donate_url { get; set; }
 
-        [JsonProperty("originalFundraiserGoal")]
-        public double OriginalGoalAmount { get; set; }
+        public string fundraising_event_id { get; set; }
 
-        [JsonProperty("supportingAmountRaised")]
-        public double SupportingAmountRaised { get; set; }
+        public string status { get; set; }
 
-        [JsonProperty("amountRaised")]
-        public double AmountRaised { get; set; }
+        public JObject goal { get; set; }
 
-        [JsonProperty("totalAmountRaised")]
-        public double TotalAmountRaised { get; set; }
+        public JObject original_goal { get; set; }
 
-        [JsonProperty("supportable")]
-        public bool Supportable { get; set; }
+        public JObject amount_raised { get; set; }
 
-        [JsonProperty("status")]
-        public string Status { get; set; }
-
-        [JsonProperty("type")]
-        public string Type { get; set; }
-
-        [JsonProperty("user")]
-        public TiltifyUser User { get; set; }
-
-        [JsonProperty("teamId")]
-        public int TeamID { get; set; }
-
-        [JsonProperty("team")]
-        public TiltifyTeam Team { get; set; }
+        public JObject total_amount_raised { get; set; }
 
         [JsonIgnore]
-        public string CampaignURL { get { return string.Format("https://tiltify.com/@{0}/{1}", this.User.Slug, this.Slug); } }
-
+        public double AmountRaised { get { return TiltifyService.GetValueFromTiltifyJObject(this.amount_raised); } }
         [JsonIgnore]
-        public string DonateURL { get { return string.Format("{0}/donate", this.CampaignURL); } }
-
+        public double TotalAmountRaised { get { return TiltifyService.GetValueFromTiltifyJObject(this.total_amount_raised); } }
         [JsonIgnore]
-        public DateTimeOffset Starts { get { return (this.StartsAtMilliseconds.HasValue) ? StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.StartsAtMilliseconds.GetValueOrDefault()) : DateTimeOffset.MinValue; } }
-
+        public double Goal { get { return TiltifyService.GetValueFromTiltifyJObject(this.goal); } }
         [JsonIgnore]
-        public DateTimeOffset Ends { get { return (this.EndsAtMilliseconds.HasValue) ? StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.EndsAtMilliseconds.GetValueOrDefault()) : DateTimeOffset.MaxValue; } }
+        public double OriginalGoal { get { return TiltifyService.GetValueFromTiltifyJObject(this.original_goal); } }
     }
 
     [DataContract]
     public class TiltifyDonation
     {
-        [JsonProperty("id")]
-        public int ID { get; set; }
+        public string id { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        public string campaign_id { get; set; }
 
-        [JsonProperty("comment")]
-        public string Comment { get; set; }
+        public string cause_id { get; set; }
 
-        [JsonProperty("amount")]
-        public double Amount { get; set; }
+        public string completed_at { get; set; }
 
-        [JsonProperty("completedAt")]
-        public long CompletedAtTimestamp { get; set; }
+        public string donor_name { get; set; }
+
+        public string donor_comment { get; set; }
+
+        public JObject amount { get; set; }
+
+        [JsonIgnore]
+        public double Amount { get { return TiltifyService.GetValueFromTiltifyJObject(this.amount); } }
+
+        [JsonIgnore]
+        public DateTimeOffset Timestamp
+        {
+            get
+            {
+                if (DateTimeOffset.TryParse(this.completed_at, out DateTimeOffset value))
+                {
+                    return value;
+                }
+                return DateTimeOffset.MinValue;
+            }
+        }
 
         public UserDonationModel ToGenericDonation()
         {
@@ -144,71 +110,64 @@ namespace MixItUp.Base.Services.External
             {
                 Source = UserDonationSourceEnum.Tiltify,
 
-                ID = this.ID.ToString(),
-                Username = this.Name,
-                Message = this.Comment,
+                ID = this.id.ToString(),
+                Username = this.donor_name,
+                Message = this.donor_comment,
 
                 Amount = Math.Round(this.Amount, 2),
 
-                DateTime = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.CompletedAtTimestamp),
+                DateTime = this.Timestamp,
             };
         }
     }
 
     [DataContract]
-    public class TiltifyResult : TiltifyResultBase
+    public class TiltifyResult
     {
         [JsonProperty("data")]
-        public JObject Data { get; set; }
+        public JObject data { get; set; }
     }
 
     [DataContract]
-    public class TiltifyResultArray : TiltifyResultBase
+    public class TiltifyResultArray
     {
         [JsonProperty("data")]
-        public JArray Data { get; set; }
-    }
-
-    [DataContract]
-    public abstract class TiltifyResultBase
-    {
-        [JsonProperty("meta")]
-        public JObject Meta { get; set; }
-
-        [JsonProperty("links")]
-        public JObject Links { get; set; }
-
-        [JsonProperty("error")]
-        public JObject Error { get; set; }
-
-        [JsonProperty("errors")]
-        public JObject Errors { get; set; }
+        public JArray data { get; set; }
     }
 
     public class TiltifyService : OAuthExternalServiceBase
     {
-        private const string BaseAddress = "https://tiltify.com/api/v3/";
+        private const string BaseAddress = "https://v5api.tiltify.com/";
 
-        public const string ClientID = "aa6b19e3f472808a632fe5a1b26b8ab37e852c123f60fb431c8a15c40df07f25";
+        public const string ClientID = "74ea7c434fe177e560fb7c6262728e5c3cae9ddb494c179d4c9c35e924e27342";
 
-        public const string AuthorizationURL = "https://tiltify.com/oauth/authorize?client_id={0}&redirect_uri={1}&response_type=code";
+        public const string AuthorizationURL = "https://v5api.tiltify.com/oauth/authorize?client_id={0}&redirect_uri={1}&response_type=code&scope=public";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private TiltifyUser user;
 
         private TiltifyCampaign campaign = null;
-        private Dictionary<int, TiltifyDonation> donationsReceived = new Dictionary<int, TiltifyDonation>();
+        private Dictionary<string, TiltifyDonation> donationsReceived = new Dictionary<string, TiltifyDonation>();
 
         public TiltifyService() : base(TiltifyService.BaseAddress) { }
 
         public override string Name { get { return MixItUp.Base.Resources.Tiltify; } }
 
+        public static double GetValueFromTiltifyJObject(JObject jobj)
+        {
+            if (jobj != null && jobj.ContainsKey("value") && double.TryParse(jobj["value"].ToString(), out double value))
+            {
+                return value;
+            }
+            return 0;
+        }
+
         public override async Task<Result> Connect()
         {
             try
             {
-                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(TiltifyService.AuthorizationURL, TiltifyService.ClientID, OAuthExternalServiceBase.HTTPS_OAUTH_REDIRECT_URL));
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(TiltifyService.AuthorizationURL, TiltifyService.ClientID, OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL));
                 if (!string.IsNullOrEmpty(authorizationCode))
                 {
                     JObject payload = new JObject();
@@ -216,9 +175,9 @@ namespace MixItUp.Base.Services.External
                     payload["client_id"] = TiltifyService.ClientID;
                     payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TiltifySecret");
                     payload["code"] = authorizationCode;
-                    payload["redirect_uri"] = OAuthExternalServiceBase.HTTPS_OAUTH_REDIRECT_URL;
+                    payload["scope"] = "public";
 
-                    this.token = await this.PostAsync<OAuthTokenModel>("https://tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
+                    this.token = await this.PostAsync<OAuthTokenModel>("https://v5api.tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
                         token.authorizationCode = authorizationCode;
@@ -248,19 +207,19 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                TiltifyResult result = await this.GetAsync<TiltifyResult>("user");
-                return result.Data.ToObject<TiltifyUser>();
+                TiltifyResult result = await this.GetAsync<TiltifyResult>("api/public/current-user");
+                return result.data.ToObject<TiltifyUser>();
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
-        public async Task<TiltifyCampaign> GetCampaign(int campaignID)
+        public async Task<TiltifyCampaign> GetCampaign(string campaignID)
         {
             try
             {
-                TiltifyResult result = await this.GetAsync<TiltifyResult>("campaigns/" + campaignID.ToString());
-                return result.Data.ToObject<TiltifyCampaign>();
+                TiltifyResult result = await this.GetAsync<TiltifyResult>("api/public/campaigns/" + campaignID.ToString());
+                return result.data.ToObject<TiltifyCampaign>();
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -271,8 +230,8 @@ namespace MixItUp.Base.Services.External
             List<TiltifyCampaign> results = new List<TiltifyCampaign>();
             try
             {
-                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>("users/" + user.ID.ToString() + "/campaigns");
-                foreach (JToken token in result.Data)
+                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>($"api/public/users/{user.id}/campaigns");
+                foreach (JToken token in result.data)
                 {
                     results.Add(token.ToObject<TiltifyCampaign>());
                 }
@@ -286,8 +245,8 @@ namespace MixItUp.Base.Services.External
             List<TiltifyTeam> results = new List<TiltifyTeam>();
             try
             {
-                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>("users/" + user.ID.ToString() + "/teams");
-                foreach (JToken token in result.Data)
+                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>($"api/public/users/{user.id}/teams");
+                foreach (JToken token in result.data)
                 {
                     results.Add(token.ToObject<TiltifyTeam>());
                 }
@@ -301,8 +260,8 @@ namespace MixItUp.Base.Services.External
             List<TiltifyCampaign> results = new List<TiltifyCampaign>();
             try
             {
-                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>("teams/" + team.ID.ToString() + "/campaigns");
-                foreach (JToken token in result.Data)
+                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>($"api/public/teams/{team.id}/team_campaigns");
+                foreach (JToken token in result.data)
                 {
                     results.Add(token.ToObject<TiltifyCampaign>());
                 }
@@ -316,8 +275,8 @@ namespace MixItUp.Base.Services.External
             List<TiltifyDonation> results = new List<TiltifyDonation>();
             try
             {
-                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>("campaigns/" + campaign.ID.ToString() + "/donations");
-                foreach (JToken token in result.Data)
+                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>($"api/public/campaigns/{campaign.id}/donations?limit=20");
+                foreach (JToken token in result.data)
                 {
                     results.Add(token.ToObject<TiltifyDonation>());
                 }
@@ -326,9 +285,19 @@ namespace MixItUp.Base.Services.External
             return results;
         }
 
-        protected override Task RefreshOAuthToken()
+        protected override async Task RefreshOAuthToken()
         {
-            return Task.CompletedTask;
+            if (this.token != null)
+            {
+                JObject payload = new JObject();
+                payload["grant_type"] = "refresh_token";
+                payload["client_id"] = TiltifyService.ClientID;
+                payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TiltifySecret");
+                payload["refresh_token"] = this.token.refreshToken;
+                payload["scope"] = "public";
+
+                this.token = await this.PostAsync<OAuthTokenModel>("https://v5api.tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
+            }
         }
 
         protected override void DisposeInternal()
@@ -355,19 +324,32 @@ namespace MixItUp.Base.Services.External
 
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            if (ChannelSession.Settings.TiltifyCampaign == 0)
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (ChannelSession.Settings.TiltifyCampaign > 0)
+            {
+                // Legacy upgrade to new V5 API
+                campaign = await this.GetCampaign(ChannelSession.Settings.TiltifyCampaign.ToString());
+                if (campaign != null)
+                {
+                    ChannelSession.Settings.TiltifyCampaignV5 = campaign.id;
+                    ChannelSession.Settings.TiltifyCampaign = 0;
+                }
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            if (string.IsNullOrWhiteSpace(ChannelSession.Settings.TiltifyCampaignV5))
             {
                 campaign = null;
             }
-            else if (campaign == null || ChannelSession.Settings.TiltifyCampaign != this.campaign.ID)
+            else if (campaign == null || ChannelSession.Settings.TiltifyCampaignV5 != this.campaign.id)
             {
                 donationsReceived.Clear();
-                campaign = await this.GetCampaign(ChannelSession.Settings.TiltifyCampaign);
+                campaign = await this.GetCampaign(ChannelSession.Settings.TiltifyCampaignV5);
                 if (campaign != null)
                 {
                     foreach (TiltifyDonation donation in await this.GetCampaignDonations(campaign))
                     {
-                        donationsReceived[donation.ID] = donation;
+                        donationsReceived[donation.id] = donation;
                     }
                 }
             }
@@ -376,9 +358,9 @@ namespace MixItUp.Base.Services.External
             {
                 foreach (TiltifyDonation tDonation in await this.GetCampaignDonations(campaign))
                 {
-                    if (!donationsReceived.ContainsKey(tDonation.ID))
+                    if (!donationsReceived.ContainsKey(tDonation.id))
                     {
-                        donationsReceived[tDonation.ID] = tDonation;
+                        donationsReceived[tDonation.id] = tDonation;
                         await EventService.ProcessDonationEvent(EventTypeEnum.TiltifyDonation, tDonation.ToGenericDonation());
                     }
                 }
