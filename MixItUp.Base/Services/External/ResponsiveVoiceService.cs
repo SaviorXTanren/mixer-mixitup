@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -144,9 +145,9 @@ namespace MixItUp.Base.Services.External
 
         private void Overlay_OnPacketReceived(object sender, OverlayV3Packet packet)
         {
-            if (packet.Type.Equals("ResponseVoiceTextToSpeechComplete"))
+            if (packet.Type.Equals("ResponseVoiceTextToSpeechComplete") && packet.Data.TryGetValue("ID", out JToken value))
             {
-                this.completedRequests.Add(packet.Data.First.ToString());
+                this.completedRequests.Add(value.ToString());
             }
         }
     }

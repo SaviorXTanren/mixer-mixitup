@@ -127,6 +127,7 @@ namespace MixItUp.Base.Model.Overlay
             ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
             ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
             ChatService.OnChatUserTimedOut += ChatService_OnChatUserTimedOut;
+            ChatService.OnChatUserBanned += ChatService_OnChatUserBanned;
             ChatService.OnChatCleared += ChatService_OnChatCleared;
         }
 
@@ -137,6 +138,7 @@ namespace MixItUp.Base.Model.Overlay
             ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
             ChatService.OnChatMessageDeleted -= ChatService_OnChatMessageDeleted;
             ChatService.OnChatUserTimedOut -= ChatService_OnChatUserTimedOut;
+            ChatService.OnChatUserBanned -= ChatService_OnChatUserBanned;
             ChatService.OnChatCleared -= ChatService_OnChatCleared;
         }
 
@@ -168,6 +170,13 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         private async void ChatService_OnChatUserTimedOut(object sender, UserV2ViewModel user)
+        {
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+            properties[UsernameProperty] = user.Username;
+            await this.CallFunction("remove", properties);
+        }
+
+        private async void ChatService_OnChatUserBanned(object sender, UserV2ViewModel user)
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[UsernameProperty] = user.Username;

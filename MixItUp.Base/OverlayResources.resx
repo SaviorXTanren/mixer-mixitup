@@ -412,32 +412,56 @@ function addInternal(message)
 }
 
 .columns {
+}
+
+.column {
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.item {
+    display: inline-block;
+    width: 100%;
 }</value>
   </data>
   <data name="OverlayEndCreditsDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;</value>
+    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
+
+{Sections}</value>
   </data>
   <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
-    <value>const headerTemplate = document.querySelector("#header");
-const lineTemplate = document.querySelector("#line");
-
-const scrollSpeed = 10;
+    <value>const scrollSpeed = {ScrollSpeed};
 
 const list = document.getElementById("list");
 list.style.top = document.documentElement.clientHeight + "px";
 
-for (var i = 0; i &lt; 5; i++)
+function startCredits(data)
 {
-    let header = headerTemplate.content.cloneNode(true);
-    //header.firstElementChild.innerHTML = "";
-    list.appendChild(header);
-    
-    for (var j = 0; j &lt; 10; j++)
+    data.Order.forEach((id) =&gt;
     {
-        let line = lineTemplate.content.cloneNode(true);
-        //line.firstElementChild.innerHTML = "";
-        list.appendChild(line);
+        let sectionTemplate = document.querySelector("#section-" + id);
+        let section = sectionTemplate.content.cloneNode(true);
+        
+        let columns = section.firstElementChild.getElementById("columns-" + id);
+        let columnTemplate = document.querySelector("#column-" + id);
+        for (let i = 0; i &lt; data.Columns[id]; i++)
+        {
+            let column = columnTemplate.content.cloneNode(true);
+            columns.appendChild(column.firstElementChild);
+        }
+        
+        data.Items[id].forEach((item) =&gt;
+        {
+            let lineTemplate = document.querySelector("#line-" + id);
+            let line = lineTemplate.content.cloneNode(true);
+            line.firstElementChild.innerHTML = item;
+            columns.firstElementChild.appendChild(line);
+        }
+        
+        list.appendChild(section);
     }
+
+    moveCredits();
 }
 
 function moveCredits()
@@ -456,37 +480,25 @@ function moveCredits()
     }, scrollSpeed);
 }
 
-moveCredits();</value>
-  </data>
-  <data name="OverlayEndCreditsSectionDefaultCSS" xml:space="preserve">
-    <value>.header-{SectionID} {
-}
-
-.column-{SectionID} {
-    width: {ColumnWidthPercentage}%;
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.item-{SectionID} {
-    display: inline-block;
-    width: 100%;
+if ({RunCreditsWhenVisible})
+{
+    sendPacket("EndCreditsLoaded", { "ID": {ID} });
 }</value>
   </data>
   <data name="OverlayEndCreditsSectionDefaultHTML" xml:space="preserve">
     <value>&lt;template id="section-{SectionID}"&gt;
     &lt;div class="section"&gt;
-        &lt;div class="header-{SectionID} header"&gt;&lt;/div&gt;
-        &lt;div class="columns"&gt;&lt;/div&gt;
+        &lt;div class="header"&gt;{Name}&lt;/div&gt;
+        &lt;div class="columns-{SectionID}"&gt;&lt;/div&gt;
     &lt;/div&gt;
 &lt;/template&gt;
 
 &lt;template id="column-{SectionID}"&gt;
-    &lt;div class="column-{SectionID}"&gt;&lt;/div&gt;
+    &lt;div class="column" style="width: {ColumnWidthPercentage}%;"&gt;&lt;/div&gt;
 &lt;/template&gt;
 
 &lt;template id="item-{SectionID}"&gt;
-    &lt;div class="item-{SectionID} text"&gt;&lt;/div&gt;
+    &lt;div class="item text"&gt;&lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">
@@ -1095,7 +1107,7 @@ function update(data)
             responsiveVoice.forcedFallbackMode = true;
             if (responsiveVoice.voiceSupport()) {
                 responsiveVoice.speak(data.Text, data.Voice, { volume: data.Volume, pitch: data.Pitch, rate: data.Rate, onend: function () {
-                    sendPacket("ResponseVoiceTextToSpeechComplete", [data.ID]);
+                    sendPacket("ResponseVoiceTextToSpeechComplete", { "ID": data.ID });
                 }});
             }
         }

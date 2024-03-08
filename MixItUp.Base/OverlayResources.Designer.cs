@@ -246,7 +246,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;.
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
+        ///
+        ///{Sections}.
         /// </summary>
         public static string OverlayEndCreditsDefaultHTML {
             get {
@@ -255,23 +257,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const headerTemplate = document.querySelector(&quot;#header&quot;);
-        ///const lineTemplate = document.querySelector(&quot;#line&quot;);
-        ///
-        ///const scrollSpeed = 10;
+        ///   Looks up a localized string similar to const scrollSpeed = {ScrollSpeed};
         ///
         ///const list = document.getElementById(&quot;list&quot;);
         ///list.style.top = document.documentElement.clientHeight + &quot;px&quot;;
         ///
-        ///for (var i = 0; i &lt; 5; i++)
+        ///function startCredits(data)
         ///{
-        ///    let header = headerTemplate.content.cloneNode(true);
-        ///    //header.firstElementChild.innerHTML = &quot;&quot;;
-        ///    list.appendChild(header);
-        ///    
-        ///    for (var j = 0; j &lt; 10; j++)
+        ///    data.Order.forEach((id) =&gt;
         ///    {
-        ///        let line = lineTemplate.content. [rest of string was truncated]&quot;;.
+        ///        let sectionTemplate = document.querySelector(&quot;#section-&quot; + id);
+        ///        let section = sectionTemplate.content.cloneNode(true);
+        ///        
+        ///        let columns = section.firstElementChild.getElementById(&quot;columns-&quot; + id);
+        ///        let columnTemplate = document.querySelector(&quot;#column- [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {
@@ -280,40 +279,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .header-{SectionID} {
-        ///}
-        ///
-        ///.column-{SectionID} {
-        ///    width: {ColumnWidthPercentage}%;
-        ///    box-sizing: border-box;
-        ///    text-align: center;
-        ///}
-        ///
-        ///.item-{SectionID} {
-        ///    display: inline-block;
-        ///    width: 100%;
-        ///}.
-        /// </summary>
-        public static string OverlayEndCreditsSectionDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayEndCreditsSectionDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;template id=&quot;section-{SectionID}&quot;&gt;
         ///    &lt;div class=&quot;section&quot;&gt;
-        ///        &lt;div class=&quot;header-{SectionID} header&quot;&gt;&lt;/div&gt;
-        ///        &lt;div class=&quot;columns&quot;&gt;&lt;/div&gt;
+        ///        &lt;div class=&quot;header&quot;&gt;{Name}&lt;/div&gt;
+        ///        &lt;div class=&quot;columns-{SectionID}&quot;&gt;&lt;/div&gt;
         ///    &lt;/div&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;column-{SectionID}&quot;&gt;
-        ///    &lt;div class=&quot;column-{SectionID}&quot;&gt;&lt;/div&gt;
+        ///    &lt;div class=&quot;column&quot; style=&quot;width: {ColumnWidthPercentage}%;&quot;&gt;&lt;/div&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;item-{SectionID}&quot;&gt;
-        ///    &lt;div class=&quot;item-{SectionID} text&quot;&gt;&lt;/div&gt;
+        ///    &lt;div class=&quot;item text&quot;&gt;&lt;/div&gt;
         ///&lt;/template&gt;.
         /// </summary>
         public static string OverlayEndCreditsSectionDefaultHTML {

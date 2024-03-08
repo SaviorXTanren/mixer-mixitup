@@ -10071,4 +10071,7 @@ namespace CustomNamespace
   <data name="Header" xml:space="preserve">
     <value>Header</value>
   </data>
+  <data name="YouTubeSuperChats" xml:space="preserve">
+    <value>YouTube Super Chats</value>
+  </data>
 </root>

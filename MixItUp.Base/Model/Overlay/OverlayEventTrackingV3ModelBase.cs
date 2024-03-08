@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
@@ -15,34 +16,53 @@ namespace MixItUp.Base.Model.Overlay
     public abstract class OverlayEventTrackingV3ModelBase : OverlayVisualTextV3ModelBase
     {
         [DataMember]
-        public bool Follows { get; set; }
+        public virtual bool Chatters { get; set; }
 
         [DataMember]
-        public bool Raids { get; set; }
+        public virtual bool ChatMessages { get; set; }
 
         [DataMember]
-        public bool TwitchSubscriptions { get; set; }
-        [DataMember]
-        public bool TwitchBits { get; set; }
+        public virtual bool Follows { get; set; }
 
         [DataMember]
-        public bool YouTubeMemberships { get; set; }
-        [DataMember]
-        public bool YouTubeSuperChats { get; set; }
+        public virtual bool Raids { get; set; }
 
         [DataMember]
-        public bool TrovoSubscriptions { get; set; }
+        public virtual bool TwitchSubscriptions { get; set; }
         [DataMember]
-        public bool TrovoElixirSpells { get; set; }
+        public virtual bool TwitchBits { get; set; }
 
         [DataMember]
-        public bool Donations { get; set; }
+        public virtual bool YouTubeMemberships { get; set; }
+        [DataMember]
+        public virtual bool YouTubeSuperChats { get; set; }
+
+        [DataMember]
+        public virtual bool TrovoSubscriptions { get; set; }
+        [DataMember]
+        public virtual bool TrovoElixirSpells { get; set; }
+
+        [DataMember]
+        public virtual bool Donations { get; set; }
 
         public OverlayEventTrackingV3ModelBase(OverlayItemV3Type type) : base(type) { }
 
         protected override async Task WidgetEnableInternal()
         {
             await base.WidgetEnableInternal();
+
+            ChatService.OnChatUserBanned += OnChatUserBanned;
+
+            if (this.Chatters || this.ChatMessages)
+            {
+                ChatService.OnChatMessageReceived += OnChatMessageReceived;
+            }
+
+            if (this.ChatMessages)
+            {
+                ChatService.OnChatMessageDeleted += OnChatMessageDeleted;
+                ChatService.OnChatCleared += OnChatCleared;
+            }
 
             if (this.Follows)
             {
@@ -87,6 +107,10 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetDisableInternal();
 
+            ChatService.OnChatUserBanned -= OnChatUserBanned;
+            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
+            ChatService.OnChatMessageDeleted -= OnChatMessageDeleted;
+            ChatService.OnChatCleared -= OnChatCleared;
             EventService.OnFollowOccurred -= OnFollow;
             EventService.OnRaidOccurred -= OnRaid;
             EventService.OnSubscribeOccurred -= OnSubscribe;
@@ -98,6 +122,14 @@ namespace MixItUp.Base.Model.Overlay
             EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
             EventService.OnYouTubeSuperChatOccurred -= OnYouTubeSuperChat;
         }
+
+        protected virtual void OnChatUserBanned(object sender, UserV2ViewModel user) { }
+
+        protected virtual void OnChatMessageReceived(object sender, ChatMessageViewModel message) { }
+
+        protected virtual void OnChatMessageDeleted(object sender, string messageID) { }
+
+        protected virtual void OnChatCleared(object sender, EventArgs e) { }
 
         protected virtual void OnFollow(object sender, UserV2ViewModel user) { }
 
@@ -122,6 +154,5 @@ namespace MixItUp.Base.Model.Overlay
                 this.OnTrovoSpell(sender, spell);
             }
         }
-
     }
 }

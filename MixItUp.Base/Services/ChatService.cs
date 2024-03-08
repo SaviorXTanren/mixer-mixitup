@@ -39,6 +39,9 @@ namespace MixItUp.Base.Services
         public static event EventHandler<UserV2ViewModel> OnChatUserTimedOut = delegate { };
         public static void ChatUserTimedOut(UserV2ViewModel user) { OnChatUserTimedOut(null, user); }
 
+        public static event EventHandler<UserV2ViewModel> OnChatUserBanned = delegate { };
+        public static void ChatUserBanned(UserV2ViewModel user) { OnChatUserBanned(null, user); }
+
         public static event EventHandler OnChatCleared = delegate { };
         public static void ChatCleared() { OnChatCleared(null, new EventArgs()); }
 
@@ -369,7 +372,7 @@ namespace MixItUp.Base.Services
                 await ServiceManager.Get<TrovoChatEventService>().BanUser(user.Username);
             }
 
-            ChatService.ChatUserTimedOut(user);
+            ChatService.ChatUserBanned(user);
         }
 
         public async Task UnbanUser(UserV2ViewModel user)

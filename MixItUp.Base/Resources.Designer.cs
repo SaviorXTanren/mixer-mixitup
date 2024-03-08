@@ -25729,6 +25729,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to YouTube Super Chats.
+        /// </summary>
+        public static string YouTubeSuperChats {
+            get {
+                return ResourceManager.GetString("YouTubeSuperChats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to YouTube Username.
         /// </summary>
         public static string YouTubeUsername {
