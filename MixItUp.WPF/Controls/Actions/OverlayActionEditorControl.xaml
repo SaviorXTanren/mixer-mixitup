@@ -178,5 +178,29 @@
 
             <TextBox Grid.Column="2" Text="{Binding TimeAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowAddToEndCredits, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ComboBox Grid.Row="0" ItemsSource="{Binding EndCredits}" SelectedItem="{Binding SelectedEndCredits}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <ComboBox Grid.Row="2" ItemsSource="{Binding EndCreditsSections}" SelectedItem="{Binding SelectedEndCreditsSection}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Sections}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox Grid.Row="4" Text="{Binding EndCreditsItemText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Text}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowPlayEndCredits, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ComboBox Grid.Row="0" ItemsSource="{Binding EndCredits}" SelectedItem="{Binding SelectedEndCredits}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

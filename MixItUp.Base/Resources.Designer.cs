@@ -556,6 +556,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add To End Credits.
+        /// </summary>
+        public static string AddToEndCredits {
+            get {
+                return ResourceManager.GetString("AddToEndCredits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add To Existing Command.
         /// </summary>
         public static string AddToExistingCommand {
@@ -15541,6 +15550,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Play End Credits.
+        /// </summary>
+        public static string PlayEndCredits {
+            get {
+                return ResourceManager.GetString("PlayEndCredits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play/Pause.
         /// </summary>
         public static string PlayPause {
@@ -18208,6 +18226,15 @@ namespace MixItUp.Base {
         public static string SectionHTMLStyle {
             get {
                 return ResourceManager.GetString("SectionHTMLStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sections.
+        /// </summary>
+        public static string Sections {
+            get {
+                return ResourceManager.GetString("Sections", resourceCulture);
             }
         }
         

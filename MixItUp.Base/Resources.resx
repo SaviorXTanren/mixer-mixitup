@@ -10074,4 +10074,13 @@ namespace CustomNamespace
   <data name="YouTubeSuperChats" xml:space="preserve">
     <value>YouTube Super Chats</value>
   </data>
+  <data name="AddToEndCredits" xml:space="preserve">
+    <value>Add To End Credits</value>
+  </data>
+  <data name="Sections" xml:space="preserve">
+    <value>Sections</value>
+  </data>
+  <data name="PlayEndCredits" xml:space="preserve">
+    <value>Play End Credits</value>
+  </data>
 </root>

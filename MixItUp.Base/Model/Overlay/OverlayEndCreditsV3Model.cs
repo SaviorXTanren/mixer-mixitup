@@ -257,7 +257,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
             {
-                if (section.ID.Equals(sectionID))
+                if (section.ID.Equals(sectionID) && section.Type == OverlayEndCreditsSectionV3Type.Custom)
                 {
                     section.Track(user, text);
                     return;
@@ -265,7 +265,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public async Task ShowCredits()
+        public async Task PlayCredits()
         {
             Dictionary<string, IEnumerable<string>> sectionItems = new Dictionary<string, IEnumerable<string>>();
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)

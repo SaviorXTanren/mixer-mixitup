@@ -25,6 +25,8 @@ namespace MixItUp.Base.ViewModel.Actions
         DamageStreamBoss,
         AddToGoal,
         AddToPersistentTimer,
+        AddToEndCredits,
+        PlayEndCredits,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -48,6 +50,8 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
                     this.NotifyPropertyChanged(nameof(this.ShowAddGoal));
                     this.NotifyPropertyChanged(nameof(this.ShowAddPersistTimer));
+                    this.NotifyPropertyChanged(nameof(this.ShowAddToEndCredits));
+                    this.NotifyPropertyChanged(nameof(this.ShowPlayEndCredits));
 
                     if (this.ShowItem)
                     {
@@ -302,6 +306,48 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string timeAmount;
 
+        public bool ShowAddToEndCredits { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToEndCredits; } }
+
+        public bool ShowPlayEndCredits { get { return this.SelectedActionType == OverlayActionTypeEnum.PlayEndCredits; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> EndCredits { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedEndCredits
+        {
+            get { return this.selectedEndCredits; }
+            set
+            {
+                this.selectedEndCredits = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayWidgetV3Model selectedEndCredits;
+
+        public ObservableCollection<OverlayEndCreditsSectionV3Model> EndCreditsSections { get; set; } = new ObservableCollection<OverlayEndCreditsSectionV3Model>();
+
+        public OverlayEndCreditsSectionV3Model SelectedEndCreditsSection
+        {
+            get { return this.selectedEndCreditsSection; }
+            set
+            {
+                this.selectedEndCreditsSection = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayEndCreditsSectionV3Model selectedEndCreditsSection;
+        private Guid endCreditsSectionID;
+
+        public string EndCreditsItemText
+        {
+            get { return this.endCreditsItemText; }
+            set
+            {
+                this.endCreditsItemText = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string endCreditsItemText;
+
         private Guid widgetID;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
@@ -382,6 +428,21 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.widgetID = action.PersistentTimerID;
                 this.TimeAmount = action.TimeAmount;
             }
+            else if (action.EndCreditsID != Guid.Empty)
+            {
+                if (action.EndCreditsSectionID != Guid.Empty)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.AddToEndCredits;
+                    this.widgetID = action.EndCreditsID;
+                    this.endCreditsSectionID = action.EndCreditsSectionID;
+                    this.EndCreditsItemText = action.EndCreditsItemText;
+                }
+                else
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.PlayEndCredits;
+                    this.widgetID = action.EndCreditsID;
+                }
+            }
         }
 
         public OverlayActionEditorControlViewModel()
@@ -460,6 +521,30 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
+            else if (this.ShowAddToEndCredits)
+            {
+                if (this.SelectedEndCredits == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (this.SelectedEndCreditsSection == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.EndCreditsItemText))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
+            else if (this.ShowPlayEndCredits)
+            {
+                if (this.SelectedEndCredits == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
 
             return Task.FromResult(new Result());
         }
@@ -482,6 +567,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.PersistentTimers.Add(widget);
                 }
+                else if (widget.Type == OverlayItemV3Type.EndCredits)
+                {
+                    this.EndCredits.Add(widget);
+                }
             }
 
             if (this.ShowDamageStreamBoss)
@@ -495,6 +584,20 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowAddPersistTimer)
             {
                 this.SelectedPersistentTimer = this.PersistentTimers.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowAddToEndCredits)
+            {
+                this.SelectedEndCredits = this.EndCredits.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+                if (this.SelectedEndCredits != null)
+                {
+                    OverlayEndCreditsV3Model endCredits = (OverlayEndCreditsV3Model)this.SelectedEndCredits.Item;
+                    this.EndCreditsSections.AddRange(endCredits.Sections.Where(s => s.Type == OverlayEndCreditsSectionV3Type.Custom));
+                    this.SelectedEndCreditsSection = this.EndCreditsSections.FirstOrDefault(s => s.ID == this.endCreditsSectionID);
+                }
+            }
+            else if (this.ShowPlayEndCredits)
+            {
+                this.SelectedEndCredits = this.EndCredits.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
         }
 
@@ -524,6 +627,14 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowAddPersistTimer)
             {
                 return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayPersistentTimerV3Model)this.SelectedPersistentTimer.Item, this.TimeAmount));
+            }
+            else if (this.ShowAddToEndCredits)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayEndCreditsV3Model)this.SelectedEndCredits.Item, this.SelectedEndCreditsSection, this.EndCreditsItemText));
+            }
+            else if (this.ShowPlayEndCredits)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayEndCreditsV3Model)this.SelectedEndCredits.Item));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

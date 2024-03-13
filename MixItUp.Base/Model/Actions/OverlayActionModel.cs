@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Clips;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MixItUp.Base.Model.Actions
 {
@@ -56,6 +57,13 @@ namespace MixItUp.Base.Model.Actions
         public Guid PersistentTimerID { get; set; }
         [DataMember]
         public string TimeAmount { get; set; }
+
+        [DataMember]
+        public Guid EndCreditsID { get; set; }
+        [DataMember]
+        public Guid EndCreditsSectionID { get; set; }
+        [DataMember]
+        public string EndCreditsItemText { get; set; }
 
         [Obsolete]
         public OverlayActionModel(OverlayItemModelBase overlayItem)
@@ -122,6 +130,20 @@ namespace MixItUp.Base.Model.Actions
             this.TimeAmount = timeAmount;
         }
 
+        public OverlayActionModel(OverlayEndCreditsV3Model endCredits)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.EndCreditsID = endCredits.ID;
+        }
+
+        public OverlayActionModel(OverlayEndCreditsV3Model endCredits, OverlayEndCreditsSectionV3Model endCreditsSection, string itemText)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.EndCreditsID = endCredits.ID;
+            this.EndCreditsSectionID = endCreditsSection.ID;
+            this.EndCreditsItemText = itemText;
+        }
+
         [Obsolete]
         public OverlayActionModel() { }
 
@@ -174,6 +196,25 @@ namespace MixItUp.Base.Model.Actions
                     if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TimeAmount, parameters), out double amount))
                     {
                         await ((OverlayPersistentTimerV3Model)widget.Item).ProcessEvent(parameters.User, amount);
+                    }
+                }
+            }
+            else if (this.EndCreditsID != Guid.Empty)
+            {
+                OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.EndCreditsID));
+                if (widget != null && widget.Type == OverlayItemV3Type.EndCredits)
+                {
+                    if (this.EndCreditsSectionID != Guid.Empty)
+                    {
+                        string text = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.EndCreditsItemText, parameters);
+                        if (!string.IsNullOrEmpty(text))
+                        {
+                            ((OverlayEndCreditsV3Model)widget.Item).CustomTrack(this.EndCreditsSectionID, parameters.User, text);
+                        }
+                    }
+                    else
+                    {
+                        await ((OverlayEndCreditsV3Model)widget.Item).PlayCredits();
                     }
                 }
             }
