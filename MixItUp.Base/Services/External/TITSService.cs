@@ -105,12 +105,19 @@ namespace MixItUp.Base.Services.External
     public class TITSService : OAuthExternalServiceBase
     {
         public const int DefaultPortNumber = 42069;
+        public const int MaxCacheDuration = 30;
 
         private const string websocketAddress = "ws://localhost:";
 
         public bool WebSocketConnected { get; private set; }
 
         private TITSWebSocket websocket = new TITSWebSocket();
+
+        private IEnumerable<TITSItem> allItemsCache;
+        private DateTimeOffset allItemsCacheExpiration = DateTimeOffset.MinValue;
+
+        private IEnumerable<TITSTrigger> allTriggersCache;
+        private DateTimeOffset allTriggersCacheExpiration = DateTimeOffset.MinValue;
 
         public TITSService() : base(string.Empty) { }
 
@@ -151,32 +158,40 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<TITSItem>> GetAllItems()
         {
-            List<TITSItem> results = new List<TITSItem>();
-
             try
             {
-                TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSItemListRequest"));
-                if (response != null && response.data != null && response.data.TryGetValue("items", out JToken items) && items is JArray)
+                if (this.allItemsCacheExpiration <= DateTimeOffset.Now || this.allItemsCache == null)
                 {
-                    foreach (TITSItem item in ((JArray)items).ToTypedArray<TITSItem>())
+                    TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSItemListRequest"));
+                    if (response != null && response.data != null && response.data.TryGetValue("items", out JToken items) && items is JArray)
                     {
-                        if (item != null)
+                        List<TITSItem> results = new List<TITSItem>();
+                        foreach (TITSItem item in ((JArray)items).ToTypedArray<TITSItem>())
                         {
-                            results.Add(item);
+                            if (item != null)
+                            {
+                                results.Add(item);
+                            }
                         }
+                        this.allItemsCache = results;
+                        this.allItemsCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
+                    }
+                    else
+                    {
+                        Logger.Log(LogLevel.Error, "TITS - No Response Packet Received - GetAllItems");
                     }
                 }
-                else
+
+                if (this.allItemsCache != null)
                 {
-                    Logger.Log(LogLevel.Error, "TITS - No Response Packet Received - GetAllItems");
+                    return this.allItemsCache;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
-
-            return results;
+            return new List<TITSItem>();
         }
 
         public async Task<bool> ThrowItem(string itemID, double delayTime, int amount)
@@ -208,32 +223,40 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<TITSTrigger>> GetAllTriggers()
         {
-            List<TITSTrigger> results = new List<TITSTrigger>();
-            TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSTriggerListRequest"));
-
             try
             {
-                if (response != null && response.data != null && response.data.TryGetValue("triggers", out JToken triggers) && triggers is JArray)
+                if (this.allTriggersCacheExpiration <= DateTimeOffset.Now || this.allTriggersCache == null)
                 {
-                    foreach (TITSTrigger trigger in ((JArray)triggers).ToTypedArray<TITSTrigger>())
+                    TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSTriggerListRequest"));
+                    if (response != null && response.data != null && response.data.TryGetValue("triggers", out JToken triggers) && triggers is JArray)
                     {
-                        if (trigger != null)
+                        List<TITSTrigger> results = new List<TITSTrigger>();
+                        foreach (TITSTrigger trigger in ((JArray)triggers).ToTypedArray<TITSTrigger>())
                         {
-                            results.Add(trigger);
+                            if (trigger != null)
+                            {
+                                results.Add(trigger);
+                            }
                         }
+                        this.allTriggersCache = results;
+                        this.allTriggersCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
+                    }
+                    else
+                    {
+                        Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - GetAllTriggers");
                     }
                 }
-                else
+
+                if (this.allTriggersCache != null)
                 {
-                    Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - GetAllTriggers");
+                    return this.allTriggersCache;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
-
-            return results;
+            return new List<TITSTrigger>();
         }
 
         public async Task<bool> ActivateTrigger(string triggerID)
@@ -259,6 +282,15 @@ namespace MixItUp.Base.Services.External
             }
 
             return false;
+        }
+
+        public void ClearCaches()
+        {
+            this.allItemsCache = null;
+            this.allItemsCacheExpiration = DateTimeOffset.MinValue;
+
+            this.allTriggersCache = null;
+            this.allTriggersCacheExpiration = DateTimeOffset.MinValue;
         }
 
         protected override Task<Result> InitializeInternal()
