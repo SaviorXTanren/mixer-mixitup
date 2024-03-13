@@ -9810,6 +9810,9 @@ namespace CustomNamespace
   <data name="PulsoidWebsite" xml:space="preserve">
     <value>Pulsoid Website</value>
   </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
   <data name="MaxWidthPixels" xml:space="preserve">
     <value>Max Width (Pixels)</value>
   </data>

@@ -133,6 +133,7 @@ namespace MixItUp.Base.Services.External
     public class VTubeStudioService : OAuthExternalServiceBase
     {
         public const int DefaultPortNumber = 8001;
+        public const int MaxCacheDuration = 30;
 
         private const string websocketAddress = "ws://localhost:";
 
@@ -143,6 +144,12 @@ namespace MixItUp.Base.Services.External
         public bool WebSocketConnected { get; private set; }
 
         private VTubeStudioWebSocket websocket = new VTubeStudioWebSocket();
+
+        private IEnumerable<VTubeStudioModel> allModelsCache;
+        private DateTimeOffset allModelsCacheExpiration = DateTimeOffset.MinValue;
+
+        private Dictionary<string, IEnumerable<VTubeStudioHotKey>> modelHotKeyCache = new Dictionary<string, IEnumerable<VTubeStudioHotKey>>();
+        private DateTimeOffset modelHotKeyCacheExpiration = DateTimeOffset.MinValue;
 
         public VTubeStudioService() : base(string.Empty) { }
 
@@ -236,26 +243,36 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<VTubeStudioModel>> GetAllModels()
         {
-            List<VTubeStudioModel> results = new List<VTubeStudioModel>();
             try
             {
-                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("AvailableModelsRequest"));
-                if (response != null && response.data != null && response.data.TryGetValue("availableModels", out JToken models) && models is JArray)
+                if (this.allModelsCacheExpiration <= DateTimeOffset.Now || this.allModelsCache == null)
                 {
-                    foreach (VTubeStudioModel model in ((JArray)models).ToTypedArray<VTubeStudioModel>())
+                    VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("AvailableModelsRequest"));
+                    if (response != null && response.data != null && response.data.TryGetValue("availableModels", out JToken models) && models is JArray)
                     {
-                        if (model != null)
+                        List<VTubeStudioModel> results = new List<VTubeStudioModel>();
+                        foreach (VTubeStudioModel model in ((JArray)models).ToTypedArray<VTubeStudioModel>())
                         {
-                            results.Add(model);
+                            if (model != null)
+                            {
+                                results.Add(model);
+                            }
                         }
+                        this.allModelsCache = results;
+                        this.allModelsCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
                     }
+                }
+
+                if (this.allModelsCache != null)
+                {
+                    return this.allModelsCache;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
-            return results;
+            return new List<VTubeStudioModel>();
         }
 
         public async Task<bool> LoadModel(string modelID)
@@ -307,27 +324,36 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<VTubeStudioHotKey>> GetHotKeys(string modelID = null)
         {
-            List<VTubeStudioHotKey> results = new List<VTubeStudioHotKey>();
-
-            VTubeStudioWebSocketRequestPacket packet = new VTubeStudioWebSocketRequestPacket("HotkeysInCurrentModelRequest");
-            if (!string.IsNullOrEmpty(modelID))
-            {
-                packet.data = new JObject();
-                packet.data["modelID"] = modelID;
-            }
-
             try
             {
-                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(packet);
-                if (response != null && response.data != null && response.data.TryGetValue("availableHotkeys", out JToken hotKeys) && hotKeys is JArray)
+                if (this.modelHotKeyCacheExpiration <= DateTimeOffset.Now || !this.modelHotKeyCache.ContainsKey(modelID))
                 {
-                    foreach (VTubeStudioHotKey hotKey in ((JArray)hotKeys).ToTypedArray<VTubeStudioHotKey>())
+                    VTubeStudioWebSocketRequestPacket packet = new VTubeStudioWebSocketRequestPacket("HotkeysInCurrentModelRequest");
+                    if (!string.IsNullOrEmpty(modelID))
                     {
-                        if (hotKey != null)
-                        {
-                            results.Add(hotKey);
-                        }
+                        packet.data = new JObject();
+                        packet.data["modelID"] = modelID;
                     }
+
+                    VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(packet);
+                    if (response != null && response.data != null && response.data.TryGetValue("availableHotkeys", out JToken hotKeys) && hotKeys is JArray)
+                    {
+                        List<VTubeStudioHotKey> results = new List<VTubeStudioHotKey>();
+                        foreach (VTubeStudioHotKey hotKey in ((JArray)hotKeys).ToTypedArray<VTubeStudioHotKey>())
+                        {
+                            if (hotKey != null)
+                            {
+                                results.Add(hotKey);
+                            }
+                        }
+                        this.modelHotKeyCache[modelID] = results;
+                        this.modelHotKeyCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
+                    }
+                }
+
+                if (this.modelHotKeyCache.ContainsKey(modelID))
+                {
+                    return this.modelHotKeyCache[modelID];
                 }
             }
             catch (Exception ex)
@@ -335,7 +361,7 @@ namespace MixItUp.Base.Services.External
                 Logger.Log(ex);
             }
 
-            return results;
+            return new List<VTubeStudioHotKey>();
         }
 
         public async Task<bool> RunHotKey(string hotKeyID)
@@ -357,6 +383,15 @@ namespace MixItUp.Base.Services.External
             }
 
             return false;
+        }
+
+        public void ClearCaches()
+        {
+            this.allModelsCache = null;
+            this.allModelsCacheExpiration = DateTimeOffset.MinValue;
+
+            this.modelHotKeyCache.Clear();
+            this.modelHotKeyCacheExpiration = DateTimeOffset.MinValue;
         }
 
         protected override async Task<Result> InitializeInternal()

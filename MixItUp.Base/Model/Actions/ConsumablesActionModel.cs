@@ -179,7 +179,7 @@ namespace MixItUp.Base.Model.Actions
                     return;
                 }
 
-                int amountValue = (int)Math.Ceiling(doubleAmount);
+                int amountValue = (int)Math.Floor(doubleAmount);
                 if (amountValue < 0)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, amountTextValue, systemName), parameters);

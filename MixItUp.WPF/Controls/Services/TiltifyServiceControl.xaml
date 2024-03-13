@@ -35,7 +35,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0" ItemsSource="{Binding Campaigns}" SelectedItem="{Binding SelectedCampaign}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SelectedCampaign}" DisplayMemberPath="Name" Width="200" />
+                <ComboBox Grid.Row="0" ItemsSource="{Binding Campaigns}" SelectedItem="{Binding SelectedCampaign}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SelectedCampaign}" DisplayMemberPath="name" Width="200" />
 
                 <Button Grid.Row="2" Command="{Binding LogOutCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Logout}"/>
             </Grid>
