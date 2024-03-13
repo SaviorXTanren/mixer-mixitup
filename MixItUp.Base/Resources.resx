@@ -10374,4 +10374,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="PulsoidWebsite" xml:space="preserve">
     <value>Pulsoid Website</value>
   </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
 </root>
