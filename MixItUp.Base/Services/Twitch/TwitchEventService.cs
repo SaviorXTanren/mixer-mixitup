@@ -666,6 +666,9 @@ namespace MixItUp.Base.Services.Twitch
         private void EventSub_OnReconnectMessageReceived(object sender, ReconnectMessage e)
         {
             // NOTE: This SHOULD auto-disconnect
+
+            // The URL of the reconnection message bight have encoded characters in it (EX: "cell-c.eventsub.wss.twitch.tv/ws?challenge=XXX\u0026id=XXX" where "\u0026" is "&").
+            // There have also been issues noted with being able to re-connect properly to the URL specified.
         }
 
         private void EventSub_OnTextReceivedOccurred(object sender, string text)
