@@ -95,7 +95,7 @@ namespace MixItUp.Base.Services
             Task.Run(async () => { await this.GiveawayTimerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(platform: ChannelSession.Settings.GiveawayRequirementsSet.Role.StreamingPlatform, specialIdentifiers: this.GetSpecialIdentifiers()));
+            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(this.GetTriggeringPlatform(), this.GetSpecialIdentifiers()));
 
             return null;
         }
@@ -150,7 +150,7 @@ namespace MixItUp.Base.Services
 
                     if (reminderTime > 0 && this.TimeLeft > 0 && (totalTime - this.TimeLeft) % reminderTime == 0)
                     {
-                        await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(ChannelSession.Settings.GiveawayRequirementsSet.Role.StreamingPlatform, this.GetSpecialIdentifiers()));
+                        await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(this.GetTriggeringPlatform(), this.GetSpecialIdentifiers()));
                     }
 
                     if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
@@ -189,7 +189,7 @@ namespace MixItUp.Base.Services
 
                         if (!ChannelSession.Settings.GiveawayRequireClaim)
                         {
-                            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, ChannelSession.Settings.GiveawayRequirementsSet.Role.StreamingPlatform, this.GetSpecialIdentifiers()));
+                            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, this.GetTriggeringPlatform(), this.GetSpecialIdentifiers()));
                             await this.End();
                             return;
                         }
@@ -316,7 +316,7 @@ namespace MixItUp.Base.Services
                             specialIdentifiers["usergiveawayentries"] = entries.ToString();
                             specialIdentifiers["usergiveawaytotalentries"] = giveawayUser.Entries.ToString();
 
-                            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayUserJoinedCommandID, new CommandParametersModel(message.User, arguments, specialIdentifiers));
+                            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayUserJoinedCommandID, new CommandParametersModel(message.User, this.GetTriggeringPlatform(), arguments, specialIdentifiers));
 
                             GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
                         }
@@ -324,7 +324,7 @@ namespace MixItUp.Base.Services
                 }
                 else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, ChannelSession.Settings.GiveawayRequirementsSet.Role.StreamingPlatform, this.GetSpecialIdentifiers()));
+                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, this.GetTriggeringPlatform(), this.GetSpecialIdentifiers()));
                     await this.End();
                 }
             }
@@ -332,6 +332,11 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(ex);
             }
+        }
+
+        private StreamingPlatformTypeEnum GetTriggeringPlatform()
+        {
+            return ChannelSession.Settings.GiveawayRequirementsSet?.Role?.StreamingPlatform ?? StreamingPlatformTypeEnum.All;
         }
     }
 }
