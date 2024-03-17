@@ -30,6 +30,9 @@ namespace MixItUp.WPF.Services
 
         public async Task CopyFile(string sourcePath, string destinationPath)
         {
+            sourcePath = this.ExpandEnvironmentVariablesInFilePath(sourcePath);
+            destinationPath = this.ExpandEnvironmentVariablesInFilePath(destinationPath);
+
             if (!string.IsNullOrEmpty(sourcePath) && !string.IsNullOrEmpty(destinationPath) && File.Exists(sourcePath))
             {
                 string destinationDirectory = Path.GetDirectoryName(destinationPath);
@@ -40,6 +43,7 @@ namespace MixItUp.WPF.Services
 
         public Task DeleteFile(string filePath)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 File.Delete(filePath);
@@ -49,6 +53,7 @@ namespace MixItUp.WPF.Services
 
         public Task CreateDirectory(string path)
         {
+            path = this.ExpandEnvironmentVariablesInFilePath(path);
             if (!string.IsNullOrEmpty(path) && !Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -58,6 +63,9 @@ namespace MixItUp.WPF.Services
 
         public async Task CopyDirectory(string sourceDirectoryPath, string destinationDirectoryPath)
         {
+            sourceDirectoryPath = this.ExpandEnvironmentVariablesInFilePath(sourceDirectoryPath);
+            destinationDirectoryPath = this.ExpandEnvironmentVariablesInFilePath(destinationDirectoryPath);
+
             if (!string.IsNullOrEmpty(sourceDirectoryPath) && !string.IsNullOrEmpty(destinationDirectoryPath) && Directory.Exists(sourceDirectoryPath))
             {
                 await this.CreateDirectory(destinationDirectoryPath);
@@ -70,6 +78,7 @@ namespace MixItUp.WPF.Services
 
         public Task<IEnumerable<string>> GetFilesInDirectory(string directoryPath)
         {
+            directoryPath = this.ExpandEnvironmentVariablesInFilePath(directoryPath);
             if (!string.IsNullOrEmpty(directoryPath) && Directory.Exists(directoryPath))
             {
                 return Task.FromResult<IEnumerable<string>>(Directory.GetFiles(directoryPath));
@@ -79,6 +88,7 @@ namespace MixItUp.WPF.Services
 
         public Task<IEnumerable<string>> GetFoldersInDirectory(string directoryPath)
         {
+            directoryPath = this.ExpandEnvironmentVariablesInFilePath(directoryPath);
             if (!string.IsNullOrEmpty(directoryPath) && Directory.Exists(directoryPath))
             {
                 return Task.FromResult<IEnumerable<string>>(Directory.GetDirectories(directoryPath));
@@ -88,6 +98,7 @@ namespace MixItUp.WPF.Services
 
         public bool FileExists(string filePath)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             return !string.IsNullOrEmpty(filePath) && File.Exists(filePath);
         }
 
@@ -114,6 +125,7 @@ namespace MixItUp.WPF.Services
 
         public async Task<string> ReadFile(string filePath)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -148,6 +160,7 @@ namespace MixItUp.WPF.Services
 
         public async Task<byte[]> ReadFileAsBytes(string filePath)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -186,6 +199,7 @@ namespace MixItUp.WPF.Services
 
         public async Task SaveFile(string filePath, string data)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -214,6 +228,7 @@ namespace MixItUp.WPF.Services
 
         public async Task SaveFileAsBytes(string filePath, byte[] data)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -229,6 +244,7 @@ namespace MixItUp.WPF.Services
 
         public async Task AppendFile(string filePath, string data)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -391,6 +407,15 @@ namespace MixItUp.WPF.Services
                 }
                 return fonts;
             }
+        }
+
+        public string ExpandEnvironmentVariablesInFilePath(string path)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                return Environment.ExpandEnvironmentVariables(path);
+            }
+            return path;
         }
     }
 }

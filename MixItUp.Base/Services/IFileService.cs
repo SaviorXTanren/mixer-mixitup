@@ -45,5 +45,7 @@ namespace MixItUp.Base.Services
         string GetApplicationVersion();
 
         IEnumerable<string> GetInstalledFonts();
+
+        string ExpandEnvironmentVariablesInFilePath(string path);
     }
 }

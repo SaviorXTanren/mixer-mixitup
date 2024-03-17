@@ -714,7 +714,8 @@ namespace MixItUp.Base.Services
                             listenerContext.Response.Headers["Accept-Ranges"] = "bytes";
 
                             string filePath = this.localFiles[fileID];
-                            FileInfo fileInfo = new FileInfo(this.localFiles[fileID]);
+                            filePath = ServiceManager.Get<IFileService>().ExpandEnvironmentVariablesInFilePath(filePath);
+                            FileInfo fileInfo = new FileInfo(filePath);
 
                             // If they overlay requests a range, let's chunk this file
                             string range = listenerContext.Request.Headers["Range"];
