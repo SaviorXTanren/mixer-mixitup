@@ -11,6 +11,7 @@ using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -69,6 +70,8 @@ namespace MixItUp.Base.Services
 
         public async Task<UserV2ViewModel> GetUserByPlatform(StreamingPlatformTypeEnum platform, string platformID = null, string platformUsername = null, bool performPlatformSearch = false)
         {
+            UserV2ViewModel user = null;
+
             if (string.IsNullOrEmpty(platformID) && string.IsNullOrEmpty(platformUsername))
             {
                 throw new ArgumentException("Neither PlatformID or PlatformUsername were specified");
@@ -76,10 +79,24 @@ namespace MixItUp.Base.Services
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
+                user = await this.GetUserByPlatform(ChannelSession.Settings.DefaultStreamingPlatform, platformID, platformUsername);
+                if (user != null)
+                {
+                    return user;
+                }
+
+                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.GetConnectedPlatforms().Where(p => p != ChannelSession.Settings.DefaultStreamingPlatform))
+                {
+                    user = await this.GetUserByPlatform(p, platformID, platformUsername);
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
                 return null;
             }
 
-            UserV2ViewModel user = this.GetCachedUserByPlatform(platform, platformID: platformID, platformUsername: platformUsername);
+            user = this.GetCachedUserByPlatform(platform, platformID: platformID, platformUsername: platformUsername);
             if (user == null)
             {
                 user = await this.GetDatabaseUserByPlatform(platform, platformID: platformID, platformUsername: platformUsername);
@@ -333,6 +350,19 @@ namespace MixItUp.Base.Services
         private UserV2ViewModel GetCachedUserByPlatform(StreamingPlatformTypeEnum platform, string platformID = null, string platformUsername = null)
         {
             UserV2ViewModel user = null;
+
+            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            {
+                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.GetConnectedPlatforms())
+                {
+                    user = GetCachedUserByPlatform(p, platformID, platformUsername);
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+                return null;
+            }
 
             Guid userId;
             if (!string.IsNullOrEmpty(platformID))
