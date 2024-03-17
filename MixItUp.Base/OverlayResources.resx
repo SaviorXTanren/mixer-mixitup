@@ -1121,6 +1121,20 @@ function update(data)
             iframe.sandbox = "allow-scripts allow-same-origin";
             iframe.src = url;
 
+            iframe.addEventListener("load", ev =&gt; {
+                var passedDownStyles = document.createElement("style");
+                passedDownStyles.textContent = "";
+                for (var i = 0; i &lt; document.styleSheets.length; i++)
+                {
+                    var ruleList = document.styleSheets[i].cssRules;
+                    for (var j = 0; j &lt; ruleList.length; j++)
+                    {
+                        passedDownStyles.textContent += ruleList[j].cssText;
+                    }
+                }
+                ev.target.contentDocument.head.appendChild(passedDownStyles);
+            });
+
             div.appendChild(iframe);
 
             return div;
