@@ -870,6 +870,9 @@
     <Compile Include="Controls\Overlay\OverlayChatV3Control.xaml.cs">
       <DependentUpon>OverlayChatV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayEndCreditsV3Control.xaml.cs">
+      <DependentUpon>OverlayEndCreditsV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayHTMLV3Control.xaml.cs">
       <DependentUpon>OverlayHTMLV3Control.xaml</DependentUpon>
     </Compile>
@@ -1785,6 +1788,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayChatV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayEndCreditsV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6009,6 +6009,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ended.
+        /// </summary>
+        public static string Ended {
+            get {
+                return ResourceManager.GetString("Ended", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ending Amount.
         /// </summary>
         public static string EndingAmount {
@@ -17825,6 +17834,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run Credits When Visible.
+        /// </summary>
+        public static string RunCreditsWhenVisible {
+            get {
+                return ResourceManager.GetString("RunCreditsWhenVisible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run For Each User.
         /// </summary>
         public static string RunForEachUser {
@@ -18230,11 +18248,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Section Header Settings.
+        /// </summary>
+        public static string SectionHeaderSettings {
+            get {
+                return ResourceManager.GetString("SectionHeaderSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Section HTML Style.
         /// </summary>
         public static string SectionHTMLStyle {
             get {
                 return ResourceManager.GetString("SectionHTMLStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Section Item Settings.
+        /// </summary>
+        public static string SectionItemSettings {
+            get {
+                return ResourceManager.GetString("SectionItemSettings", resourceCulture);
             }
         }
         
@@ -19671,6 +19707,15 @@ namespace MixItUp.Base {
         public static string Start {
             get {
                 return ResourceManager.GetString("Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Started.
+        /// </summary>
+        public static string Started {
+            get {
+                return ResourceManager.GetString("Started", resourceCulture);
             }
         }
         

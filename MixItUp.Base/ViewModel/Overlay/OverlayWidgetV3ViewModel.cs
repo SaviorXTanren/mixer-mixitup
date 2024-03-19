@@ -180,6 +180,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Goal: this.Item = new OverlayGoalV3ViewModel(); break;
                 case OverlayItemV3Type.PersistentTimer: this.Item = new OverlayPersistentTimerV3ViewModel(); break;
                 case OverlayItemV3Type.Chat: this.Item = new OverlayChatV3ViewModel(); break;
+                case OverlayItemV3Type.EndCredits: this.Item = new OverlayEndCreditsV3ViewModel(); break;
             }
 
             this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
@@ -230,6 +231,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Goal: this.Item = new OverlayGoalV3ViewModel((OverlayGoalV3Model)widget.Item); break;
                 case OverlayItemV3Type.PersistentTimer: this.Item = new OverlayPersistentTimerV3ViewModel((OverlayPersistentTimerV3Model)widget.Item); break;
                 case OverlayItemV3Type.Chat: this.Item = new OverlayChatV3ViewModel((OverlayChatV3Model)widget.Item); break;
+                case OverlayItemV3Type.EndCredits: this.Item = new OverlayEndCreditsV3ViewModel((OverlayEndCreditsV3Model)widget.Item); break;
             }
 
             this.HTML = widget.Item.HTML;

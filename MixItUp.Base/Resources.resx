@@ -10086,4 +10086,19 @@ namespace CustomNamespace
   <data name="PlayEndCredits" xml:space="preserve">
     <value>Play End Credits</value>
   </data>
+  <data name="Ended" xml:space="preserve">
+    <value>Ended</value>
+  </data>
+  <data name="RunCreditsWhenVisible" xml:space="preserve">
+    <value>Run Credits When Visible</value>
+  </data>
+  <data name="SectionHeaderSettings" xml:space="preserve">
+    <value>Section Header Settings</value>
+  </data>
+  <data name="SectionItemSettings" xml:space="preserve">
+    <value>Section Item Settings</value>
+  </data>
+  <data name="Started" xml:space="preserve">
+    <value>Started</value>
+  </data>
 </root>

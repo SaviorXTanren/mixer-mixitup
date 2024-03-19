@@ -58,6 +58,10 @@ namespace MixItUp.Base.Model.Overlay
 
         public static readonly string DefaultHTML = OverlayResources.OverlayEndCreditsSectionDefaultHTML;
 
+        public static readonly string UsernameItemTemplate = $"{{{UsernamePropertyName}}}";
+        public static readonly string UsernameAmountItemTemplate = $"{{{UsernamePropertyName}}} - {{{AmountPropertyName}}}";
+        public static readonly string TextItemTemplate = $"{{{TextPropertyName}}}";
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -137,14 +141,19 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public IEnumerable<string> GetItems()
+        public async Task<IEnumerable<string>> GetItems()
         {
             List<string> items = new List<string>();
             if (this.Type == OverlayEndCreditsSectionV3Type.Custom)
             {
                 foreach (var item in this.customTracking)
                 {
-                    items.Add(OverlayV3Service.ReplaceProperty(this.ItemTemplate, TextPropertyName, item.Item2));
+                    string text = OverlayV3Service.ReplaceProperty(this.ItemTemplate, TextPropertyName, item.Item2);
+                    if (SpecialIdentifierStringBuilder.ContainsSpecialIdentifiers(text))
+                    {
+                        await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(text, new CommandParametersModel(item.Item1));
+                    }
+                    items.Add(text);
                 }
                 return items;
             }
@@ -164,6 +173,12 @@ namespace MixItUp.Base.Model.Overlay
                         text = OverlayV3Service.ReplaceProperty(text, AmountPropertyName, item.Value.ToNumberDisplayString());
                         break;
                 }
+
+                if (SpecialIdentifierStringBuilder.ContainsSpecialIdentifiers(text))
+                {
+                    await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(text, new CommandParametersModel(item.Key));
+                }
+
                 items.Add(text);
             }
             return items.OrderBy(i => i);
@@ -270,7 +285,7 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, IEnumerable<string>> sectionItems = new Dictionary<string, IEnumerable<string>>();
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
             {
-                sectionItems[section.ID.ToString()] = section.GetItems();
+                sectionItems[section.ID.ToString()] = await section.GetItems();
             }
 
             Dictionary<string, object> data = new Dictionary<string, object>();

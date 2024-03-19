@@ -186,6 +186,8 @@ namespace MixItUp.Base.Util
             return exemptUsers;
         }
 
+        public static bool ContainsSpecialIdentifiers(string text) { return !string.IsNullOrEmpty(text) && text.Contains(SpecialIdentifierHeader); }
+
         private string text;
         private bool encode;
 
@@ -203,7 +205,7 @@ namespace MixItUp.Base.Util
                 platform = ChannelSession.Settings.DefaultStreamingPlatform;
             }
 
-            if (!this.text.Contains(SpecialIdentifierHeader))
+            if (!SpecialIdentifierStringBuilder.ContainsSpecialIdentifiers(this.text))
             {
                 return;
             }
