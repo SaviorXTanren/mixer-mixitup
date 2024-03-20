@@ -27,9 +27,9 @@ namespace MixItUp.Base.ViewModel.Settings
         public Dictionary<string, string> FullThemes { get; set; } = new Dictionary<string, string>() { { string.Empty, MixItUp.Base.Resources.None },
             { "1YearAnniversary", "1 Year Anniversary" }, { "Mixer", "Mixer" }, { "Twitch", "Twitch" },
             { "Atl3msPlexify", "Atl3m's Plexify" }, { "AwkwardTysonAmericana", "AwkwardTyson - Americana" }, { "AzhtralsCosmicFire", "Azhtral's Cosmic Fire" },
-            { "BlueLeprechaunTV", "BlueLeprechaunTV" }, { "DrewsTheme", "Drew's Theme" }, { "DustysPurplePotion", "Dusty's Purple Potion" }, { "InsertCoinTheater", "Insert Coin Theater" },
-            { "KaciesGalaxy", "Kacie's Galaxy" }, { "KarebearXp", "KarebearXp" }, { "NibblesCarrotPatch", "Nibbles' Carrot Patch" }, { "StarkContrast", "Stark Contrast" },
-            { "TacosAfterDark", "Tacos After Dark" }, { "TeamBoom", "Team Boom" }, { "WildWestDan", "WildWestDan's Carnival Theme" } };
+            { "BlueLeprechaunTV", "BlueLeprechaunTV" }, { "DrewsTheme", "Drew's Theme" }, { "DustysPurplePotion", "Dusty's Purple Potion" }, { "Elmza", "Elmza" },
+            { "InsertCoinTheater", "Insert Coin Theater" }, { "KaciesGalaxy", "Kacie's Galaxy" }, { "KarebearXp", "KarebearXp" }, { "NibblesCarrotPatch", "Nibbles' Carrot Patch" },
+            { "StarkContrast", "Stark Contrast" }, { "TacosAfterDark", "Tacos After Dark" }, { "TeamBoom", "Team Boom" }, { "WildWestDan", "WildWestDan's Carnival Theme" } };
 
         public GenericColorComboBoxSettingsOptionControlViewModel ColorScheme { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<string> BackgroundColor { get; set; }
