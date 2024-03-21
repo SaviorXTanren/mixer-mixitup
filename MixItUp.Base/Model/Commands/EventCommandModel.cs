@@ -63,6 +63,8 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["message"] = "Test Message";
                     specialIdentifiers["usersubplanname"] = "Plan Name";
                     specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["isprimeupgrade"] = "False";
+                    specialIdentifiers["isgiftupgrade"] = "False";
                     break;
                 case EventTypeEnum.TwitchChannelResubscribed:
                     specialIdentifiers["message"] = "Test Message";

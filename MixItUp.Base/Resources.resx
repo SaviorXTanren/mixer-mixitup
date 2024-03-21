@@ -10101,4 +10101,7 @@ namespace CustomNamespace
   <data name="Started" xml:space="preserve">
     <value>Started</value>
   </data>
+  <data name="AlertContinuedPrimeSubscriptionTier" xml:space="preserve">
+    <value>{0} Continued Their Prime Sub at {1}</value>
+  </data>
 </root>

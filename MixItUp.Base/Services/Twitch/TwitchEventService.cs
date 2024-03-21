@@ -38,6 +38,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public string Message { get; set; } = string.Empty;
 
+        public bool IsPrimeUpgrade { get; set; }
         public bool IsGiftedUpgrade { get; set; }
 
         public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
@@ -66,8 +67,6 @@ namespace MixItUp.Base.Services.Twitch
                 this.PlanTier = this.PlanName = MixItUp.Base.Resources.Tier1;
             }
             this.PlanTierNumber = 1;
-
-            this.IsGiftedUpgrade = true;
         }
     }
 
@@ -974,7 +973,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             CommandParametersModel parameters = new CommandParametersModel(subEvent.User, StreamingPlatformTypeEnum.Twitch);
 
-            if (subEvent.IsGiftedUpgrade)
+            if (subEvent.IsPrimeUpgrade || subEvent.IsGiftedUpgrade)
             {
                 var subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBroadcasterSubscription(ServiceManager.Get<TwitchSessionService>().User, ((TwitchUserPlatformV2Model)subEvent.User.PlatformModel).GetTwitchNewAPIUserModel());
                 if (subscription != null)
@@ -991,6 +990,8 @@ namespace MixItUp.Base.Services.Twitch
             parameters.SpecialIdentifiers["message"] = subEvent.Message;
             parameters.SpecialIdentifiers["usersubplanname"] = subEvent.PlanName;
             parameters.SpecialIdentifiers["usersubplan"] = subEvent.PlanTier;
+            parameters.SpecialIdentifiers["isprimeupgrade"] = subEvent.IsPrimeUpgrade.ToString();
+            parameters.SpecialIdentifiers["isgiftupgrade"] = subEvent.IsGiftedUpgrade.ToString();
 
             if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelSubscribed, parameters))
             {
@@ -1017,7 +1018,11 @@ namespace MixItUp.Base.Services.Twitch
 
             EventService.SubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, subEvent.User, tier: subEvent.PlanTierNumber));
 
-            if (subEvent.IsGiftedUpgrade)
+            if (subEvent.IsPrimeUpgrade)
+            {
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subEvent.User, string.Format(MixItUp.Base.Resources.AlertContinuedPrimeSubscriptionTier, subEvent.User.FullDisplayName, subEvent.PlanTier), ChannelSession.Settings.AlertSubColor));
+            }
+            else if (subEvent.IsGiftedUpgrade)
             {
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subEvent.User, string.Format(MixItUp.Base.Resources.AlertContinuedGiftedSubscriptionTier, subEvent.User.FullDisplayName, subEvent.PlanTier), ChannelSession.Settings.AlertSubColor));
             }

@@ -72,6 +72,7 @@ namespace MixItUp.Base.Services.Twitch
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
+        private const string PrimePaidUpgradeUserNoticeMessageTypeID = "primepaidupgrade";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
         private const string AnnouncementUserNoticeMessageTypeID = "announcement";
 
@@ -801,7 +802,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                     await ServiceManager.Get<TwitchPubSubService>().AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice, gifter));
                 }
-                else if (SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
+                else if (PrimePaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) || SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
                     UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userNotice.UserID.ToString(), platformUsername: userNotice.Login);
                     if (user == null)
@@ -813,7 +814,11 @@ namespace MixItUp.Base.Services.Twitch
                         user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
                     }
 
-                    await ServiceManager.Get<TwitchPubSubService>().AddSub(new TwitchSubEventModel(user, userNotice));
+                    TwitchSubEventModel subEvent = new TwitchSubEventModel(user, userNotice);
+                    subEvent.IsPrimeUpgrade = PrimePaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID);
+                    subEvent.IsGiftedUpgrade = SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID);
+
+                    await ServiceManager.Get<TwitchPubSubService>().AddSub(subEvent);
                 }
                 else if (AnnouncementUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {

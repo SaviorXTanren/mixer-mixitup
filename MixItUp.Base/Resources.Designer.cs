@@ -709,6 +709,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Continued Their Prime Sub at {1}.
+        /// </summary>
+        public static string AlertContinuedPrimeSubscriptionTier {
+            get {
+                return ResourceManager.GetString("AlertContinuedPrimeSubscriptionTier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Donated {1}.
         /// </summary>
         public static string AlertDonated {
