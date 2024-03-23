@@ -10104,4 +10104,13 @@ namespace CustomNamespace
   <data name="AlertContinuedPrimeSubscriptionTier" xml:space="preserve">
     <value>{0} Continued Their Prime Sub at {1}</value>
   </data>
+  <data name="ItemTemplate" xml:space="preserve">
+    <value>Item Template</value>
+  </data>
+  <data name="Columns" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="AddSection" xml:space="preserve">
+    <value>Add Section</value>
+  </data>
 </root>

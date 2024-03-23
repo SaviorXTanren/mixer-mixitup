@@ -20,8 +20,6 @@ namespace MixItUp.Base.Services
     public class OverlayV3Packet
     {
         [DataMember]
-        public string ID { get; set;}
-        [DataMember]
         public string Type { get; set; }
         [DataMember]
         public JObject Data { get; set; } = new JObject();
@@ -564,11 +562,20 @@ namespace MixItUp.Base.Services
             return content;
         }
 
-        private void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
+        private async void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
         {
             this.OnPacketReceived(this, packet);
 
             this.PacketReceived(packet);
+
+            if (packet.Data.TryGetValue("ID", out JToken idString) && idString != null && Guid.TryParse(idString.ToString(), out Guid id))
+            {
+                OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(id);
+                if (widget != null)
+                {
+                    await widget.Item.ProcessPacket(packet);
+                }
+            }
         }
 
         private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
@@ -602,14 +609,12 @@ namespace MixItUp.Base.Services
         {
             if (string.Equals(packet.Type, WebSocketConnectionStartInitialPacket))
             {
-                foreach (OverlayWidgetV3Model widget in ServiceManager.Get<OverlayV3Service>().GetWidgets())
+                OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID);
+                if (widget != null && widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
                 {
-                    if (widget.IsEnabled && widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL && this.ID == widget.ID)
-                    {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        widget.SendInitial();
+                    widget.SendInitial();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    }
                 }
             }
         }

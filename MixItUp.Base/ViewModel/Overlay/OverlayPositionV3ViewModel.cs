@@ -141,24 +141,36 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.SetCommands();
         }
 
-        public OverlayPositionV3ViewModel(OverlayPositionV3Model position)
+        public OverlayPositionV3ViewModel(OverlayItemV3ModelBase item)
             : this()
         {
-            this.SelectedPositionType = position.Type;
+            this.SelectedPositionType = item.PositionType;
             if (this.SelectedPositionType == OverlayPositionV3Type.Random)
             {
-                OverlayRandomPositionV3Model randomPosition = (OverlayRandomPositionV3Model)position;
-                this.XPosition = randomPosition.XMinimum;
-                this.YPosition = randomPosition.YMinimum;
-                this.XMaximumPosition = randomPosition.XMaximum;
-                this.YMaximumPosition = randomPosition.YMaximum;
+                this.XPosition = item.XPosition;
+                this.YPosition = item.YPosition;
+                this.XMaximumPosition = item.XMaximum;
+                this.YMaximumPosition = item.YMaximum;
             }
             else
             {
-                this.XPosition = position.XPosition;
-                this.YPosition = position.YPosition;
+                this.XPosition = item.XPosition;
+                this.YPosition = item.YPosition;
             }
-            this.Layer = position.Layer;
+            this.Layer = item.Layer;
+        }
+
+        public void SetPosition(OverlayItemV3ModelBase item)
+        {
+            item.PositionType = this.SelectedPositionType;
+            item.XPosition = this.XPosition;
+            item.YPosition = this.YPosition;
+            item.Layer = this.Layer;
+            if (this.SelectedPositionType == OverlayPositionV3Type.Random)
+            {
+                item.XMaximum = this.XMaximumPosition;
+                item.YMaximum = this.YMaximumPosition;
+            }
         }
 
         public Result Validate()
@@ -178,30 +190,6 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
             }
             return new Result();
-        }
-
-        public OverlayPositionV3Model GetPosition()
-        {
-            if (this.SelectedPositionType == OverlayPositionV3Type.Random)
-            {
-                OverlayRandomPositionV3Model position = new OverlayRandomPositionV3Model();
-                position.Type = this.SelectedPositionType;
-                position.XMinimum = this.XPosition;
-                position.YMinimum = this.YPosition;
-                position.XMaximum = this.XMaximumPosition;
-                position.YMaximum = this.YMaximumPosition;
-                position.Layer = this.Layer;
-                return position;
-            }
-            else
-            {
-                OverlayPositionV3Model position = new OverlayPositionV3Model();
-                position.Type = this.SelectedPositionType;
-                position.XPosition = this.XPosition;
-                position.YPosition = this.YPosition;
-                position.Layer = this.Layer;
-                return position;
-            }
         }
 
         private void SetCommands()

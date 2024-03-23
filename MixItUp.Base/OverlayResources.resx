@@ -433,16 +433,18 @@ function addInternal(message)
     <value>const scrollSpeed = {ScrollSpeed};
 
 const list = document.getElementById("list");
-list.style.top = document.documentElement.clientHeight + "px";
 
 function startCredits(data)
 {
+    var listTop = document.documentElement.clientHeight;
+    list.style.top = listTop + "px";
+
     data.Order.forEach((id) =&gt;
     {
         let sectionTemplate = document.querySelector("#section-" + id);
         let section = sectionTemplate.content.cloneNode(true);
         
-        let columns = section.firstElementChild.getElementById("columns-" + id);
+        let columns = section.firstElementChild.querySelector(".columns-" + id);
         let columnTemplate = document.querySelector("#column-" + id);
         for (let i = 0; i &lt; data.Columns[id]; i++)
         {
@@ -452,38 +454,36 @@ function startCredits(data)
         
         data.Items[id].forEach((item) =&gt;
         {
-            let lineTemplate = document.querySelector("#line-" + id);
+            let lineTemplate = document.querySelector("#item-" + id);
             let line = lineTemplate.content.cloneNode(true);
             line.firstElementChild.innerHTML = item;
             columns.firstElementChild.appendChild(line);
-        }
+        });
         
         list.appendChild(section);
-    }
+    });
 
-    moveCredits();
+    moveCredits(listTop);
 }
 
-function moveCredits()
+function moveCredits(listTop)
 {
     setTimeout(() =&gt; {
         const rect = list.getBoundingClientRect();
         if (rect.bottom &gt; 0)
         {
-            list.style.top = rect.top - 1 + 'px';
-            moveCredits();
+            listTop = listTop - 1;
+            list.style.top = listTop + 'px';
+            moveCredits(listTop);
         }
         else
         {
-            console.log("Scrolling done!");
+            sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
         }
     }, scrollSpeed);
 }
 
-if ({RunCreditsWhenVisible})
-{
-    sendPacket("EndCreditsLoaded", { "ID": {ID} });
-}</value>
+sendParentMessage({ Type: "EndCreditsLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayEndCreditsSectionDefaultHTML" xml:space="preserve">
     <value>&lt;template id="section-{SectionID}"&gt;
@@ -1159,8 +1159,13 @@ function update(data)
             if (message != null &amp;&amp; message.data != null &amp;&amp; message.data.length &gt; 0) {
                 var obj = JSON.parse(message.data);
                 if (typeof obj.Type !== 'undefined' &amp;&amp; typeof obj.ID !== 'undefined') {
-                    if (obj.Type == 'Remove' &amp;&amp; iframes.has(obj.ID)) {
-                        mainOverlayDiv.removeChild(iframes.get(obj.ID));
+                    if (obj.Type == 'Remove') {
+                        if (iframes.has(obj.ID)) {
+                            mainOverlayDiv.removeChild(iframes.get(obj.ID));
+                        }
+                    }
+                    else {
+                        sendPacket(obj.Type, obj);
                     }
                 }
             }
@@ -1261,8 +1266,8 @@ timerLoop();</value>
 .contentdiv {
     position: absolute;
     margin: 0px;
-    left: {XPosition}{PositionType};
-    top: {YPosition}{PositionType};
+    left: {XPosition}{PositionTypeUnit};
+    top: {YPosition}{PositionTypeUnit};
     transform: translate({XTranslation}%, {YTranslation}%);
     width: {Width};
     height: {Height};
@@ -1540,9 +1545,7 @@ timerLoop();</value>
   </data>
   <data name="OverlayTwitchClipEmbedDefaultJavascript" xml:space="preserve">
     <value>var clip = document.getElementById("clip");
-clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.location.hostname + "&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}");
-
-</value>
+clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.location.hostname + "&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}");</value>
   </data>
   <data name="OverlayTwitchClipVideoDefaultCSS" xml:space="preserve">
     <value>.video {

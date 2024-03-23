@@ -32,12 +32,22 @@ namespace MixItUp.Base.Model.Overlay
         SingleWidgetURL,
     }
 
+    public enum OverlayPositionV3Type
+    {
+        Simple,
+        Percentage,
+        Pixel,
+        Random
+    }
+
     [DataContract]
     public abstract class OverlayItemV3ModelBase : OverlayOutputV3Model
     {
         public const string MainDivElement = "document.getElementById('maindiv')";
 
         public const string InnerHTMLProperty = "InnerHTML";
+
+        public static int zIndexCounter = 0;
 
         public static readonly string PositionedHTML = OverlayResources.OverlayPositionedItemDefaultHTML;
         public static readonly string PositionedCSS = OverlayResources.OverlayPositionedItemDefaultCSS;
@@ -70,12 +80,35 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayItemV3DisplayOptionsType DisplayOption { get; set; } = OverlayItemV3DisplayOptionsType.OverlayEndpoint;
 
         [DataMember]
-        public OverlayPositionV3Model Position { get; set; }
-
-        [DataMember]
         public int Width { get; set; }
         [DataMember]
         public int Height { get; set; }
+
+        [DataMember]
+        public OverlayPositionV3Type PositionType { get; set; }
+
+        [DataMember]
+        public int XPosition { get; set; }
+        [DataMember]
+        public int YPosition { get; set; }
+
+        [DataMember]
+        public int XMaximum { get; set; }
+        [DataMember]
+        public int YMaximum { get; set; }
+
+        [DataMember]
+        public int Layer { get; set; }
+
+        [JsonIgnore]
+        public bool PositionTypeIsPercentage { get { return this.PositionType == OverlayPositionV3Type.Simple || this.PositionType == OverlayPositionV3Type.Percentage; } }
+        [JsonIgnore]
+        public string PositionTypeUnit { get { return this.PositionTypeIsPercentage ? "%" : "px"; } }
+
+        [JsonIgnore]
+        public int XTranslation { get { return this.PositionTypeIsPercentage ? -50 : 0; } }
+        [JsonIgnore]
+        public int YTranslation { get { return this.PositionTypeIsPercentage ? -50 : 0; } }
 
         [JsonIgnore]
         public string SingleWidgetURL
@@ -106,7 +139,31 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.ID)] = (this.ID == Guid.Empty) ? Guid.NewGuid().ToString() : this.ID.ToString();
             properties[nameof(this.Width)] = (this.Width > 0) ? $"{this.Width}px" : "max-content";
             properties[nameof(this.Height)] = (this.Height > 0) ? $"{this.Height}px" : "max-content";
-            this.Position.SetPositionProperties(properties);
+
+            if (this.Layer == 0)
+            {
+                zIndexCounter++;
+            }
+
+            if (this.PositionType == OverlayPositionV3Type.Random)
+            {
+                int x = RandomHelper.GenerateRandomNumber(this.XPosition, this.XMaximum);
+                int y = RandomHelper.GenerateRandomNumber(this.YPosition, this.YMaximum);
+                properties[nameof(this.XPosition)] = x;
+                properties[nameof(this.YPosition)] = y;
+            }
+            else
+            {
+                properties[nameof(this.XPosition)] = this.XPosition;
+                properties[nameof(this.YPosition)] = this.YPosition;
+            }
+
+            properties[nameof(this.PositionType)] = this.PositionType;
+            properties[nameof(this.PositionTypeUnit)] = this.PositionTypeUnit;
+            properties[nameof(this.XTranslation)] = this.XTranslation;
+            properties[nameof(this.YTranslation)] = this.YTranslation;
+            properties[nameof(this.Layer)] = (this.Layer == 0) ? zIndexCounter : this.Layer;
+
             return properties;
         }
 
@@ -164,6 +221,8 @@ namespace MixItUp.Base.Model.Overlay
                 await overlay.Add(this.ID.ToString(), iframeHTML);
             }
         }
+
+        public virtual Task ProcessPacket(OverlayV3Packet packet) { return Task.CompletedTask; }
 
         protected virtual Task WidgetEnableInternal() { return Task.CompletedTask; }
 

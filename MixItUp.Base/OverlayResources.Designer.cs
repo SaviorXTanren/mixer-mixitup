@@ -260,17 +260,19 @@ namespace MixItUp.Base {
         ///   Looks up a localized string similar to const scrollSpeed = {ScrollSpeed};
         ///
         ///const list = document.getElementById(&quot;list&quot;);
-        ///list.style.top = document.documentElement.clientHeight + &quot;px&quot;;
         ///
         ///function startCredits(data)
         ///{
+        ///    var listTop = document.documentElement.clientHeight;
+        ///    list.style.top = listTop + &quot;px&quot;;
+        ///
         ///    data.Order.forEach((id) =&gt;
         ///    {
         ///        let sectionTemplate = document.querySelector(&quot;#section-&quot; + id);
         ///        let section = sectionTemplate.content.cloneNode(true);
         ///        
-        ///        let columns = section.firstElementChild.getElementById(&quot;columns-&quot; + id);
-        ///        let columnTemplate = document.querySelector(&quot;#column- [rest of string was truncated]&quot;;.
+        ///        let columns = section.firstElementChild.querySelector(&quot;.columns-&quot; + id);
+        ///        let columnTemplate  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {
@@ -699,8 +701,8 @@ namespace MixItUp.Base {
         ///.contentdiv {
         ///    position: absolute;
         ///    margin: 0px;
-        ///    left: {XPosition}{PositionType};
-        ///    top: {YPosition}{PositionType};
+        ///    left: {XPosition}{PositionTypeUnit};
+        ///    top: {YPosition}{PositionTypeUnit};
         ///    transform: translate({XTranslation}%, {YTranslation}%);
         ///    width: {Width};
         ///    height: {Height};
@@ -928,9 +930,7 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to var clip = document.getElementById(&quot;clip&quot;);
-        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}&quot;);
-        ///
-        ///.
+        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}&quot;);.
         /// </summary>
         public static string OverlayTwitchClipEmbedDefaultJavascript {
             get {

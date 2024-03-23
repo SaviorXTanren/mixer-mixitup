@@ -520,6 +520,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Section.
+        /// </summary>
+        public static string AddSection {
+            get {
+                return ResourceManager.GetString("AddSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Separators Between Messages.
         /// </summary>
         public static string AddSeparatorsBetweenMessages {
@@ -2956,6 +2965,15 @@ namespace MixItUp.Base {
         public static string ColumnNumber {
             get {
                 return ResourceManager.GetString("ColumnNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Columns.
+        /// </summary>
+        public static string Columns {
+            get {
+                return ResourceManager.GetString("Columns", resourceCulture);
             }
         }
         
@@ -11303,6 +11321,15 @@ namespace MixItUp.Base {
         public static string ItemsTraded {
             get {
                 return ResourceManager.GetString("ItemsTraded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Template.
+        /// </summary>
+        public static string ItemTemplate {
+            get {
+                return ResourceManager.GetString("ItemTemplate", resourceCulture);
             }
         }
         

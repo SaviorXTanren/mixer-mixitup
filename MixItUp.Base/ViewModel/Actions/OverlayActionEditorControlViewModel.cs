@@ -399,7 +399,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.Item = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)action.OverlayItemV3);
                 }
 
-                this.Position = new OverlayPositionV3ViewModel(action.OverlayItemV3.Position);
+                this.Position = new OverlayPositionV3ViewModel(action.OverlayItemV3);
                 this.Duration = action.Duration;
                 this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, action.EntranceAnimation);
                 this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, action.ExitAnimation);
@@ -612,7 +612,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     item.HTML = this.HTML;
                     item.CSS = this.CSS;
                     item.Javascript = this.Javascript;
-                    item.Position = this.Position.GetPosition();
+                    this.Position.SetPosition(item);
                     return Task.FromResult<ActionModelBase>(new OverlayActionModel(item, this.Duration, this.EntranceAnimation.GetAnimation(), this.ExitAnimation.GetAnimation()));
                 }
             }

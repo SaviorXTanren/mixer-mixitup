@@ -194,6 +194,13 @@ namespace MixItUp.Base.ViewModel.Overlay
                 
             }
 
+            if (type == OverlayItemV3Type.EndCredits)
+            {
+                this.Position.XPosition = 0;
+                this.Position.YPosition = 0;
+                this.Position.SelectedPositionType = OverlayPositionV3Type.Pixel;
+            }
+
             this.Initialize();
         }
 
@@ -274,7 +281,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             item.CSS = this.CSS;
             item.Javascript = this.Javascript;
             item.DisplayOption = this.SelectedDisplayOption;
-            item.Position = this.Position.GetPosition();
+            this.Position.SetPosition(item);
 
             OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
             widget.Name = this.Name;

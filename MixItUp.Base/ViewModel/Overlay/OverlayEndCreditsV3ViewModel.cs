@@ -1,11 +1,16 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -20,7 +25,37 @@ namespace MixItUp.Base.ViewModel.Overlay
     {
         public Guid ID { get; set; }
 
-        public OverlayEndCreditsSectionV3Type Type { get; set; }
+        public IEnumerable<OverlayEndCreditsSectionV3Type> Types { get; set; } = EnumHelper.GetEnumList<OverlayEndCreditsSectionV3Type>();
+
+        public OverlayEndCreditsSectionV3Type SelectedType
+        {
+            get { return this.selectedType; }
+            set
+            {
+                this.selectedType = value;
+                this.NotifyPropertyChanged();
+
+                switch (this.SelectedType)
+                {
+                    case OverlayEndCreditsSectionV3Type.Custom:
+                        this.ItemTemplate = OverlayEndCreditsSectionV3Model.TextItemTemplate;
+                        break;
+                    case OverlayEndCreditsSectionV3Type.Raids:
+                    case OverlayEndCreditsSectionV3Type.Resubscribers:
+                    case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
+                    case OverlayEndCreditsSectionV3Type.TwitchBits:
+                    case OverlayEndCreditsSectionV3Type.TrovoSpells:
+                    case OverlayEndCreditsSectionV3Type.YouTubeSuperChats:
+                    case OverlayEndCreditsSectionV3Type.Donations:
+                        this.ItemTemplate = OverlayEndCreditsSectionV3Model.UsernameAmountItemTemplate;
+                        break;
+                    default:
+                        this.ItemTemplate = OverlayEndCreditsSectionV3Model.UsernameItemTemplate;
+                        break;
+                }
+            }
+        }
+        private OverlayEndCreditsSectionV3Type selectedType;
 
         public string Name
         {
@@ -49,7 +84,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.columns; }
             set
             {
-                this.columns = value;
+                this.columns = (value > 0) ? value : 0;
                 this.NotifyPropertyChanged();
             }
         }
@@ -66,42 +101,35 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string html;
 
-        public OverlayEndCreditsSectionV3ViewModel(OverlayEndCreditsSectionV3Type type)
+        public OverlayEndCreditsSectionV3ViewModel()
         {
             this.ID = Guid.NewGuid();
-            this.Type = type;
-            this.Name = EnumLocalizationHelper.GetLocalizedName(type);
+            this.SelectedType = OverlayEndCreditsSectionV3Type.Chatters;
             this.Columns = 1;
             this.HTML = OverlayEndCreditsSectionV3Model.DefaultHTML;
-
-            switch (type)
-            {
-                case OverlayEndCreditsSectionV3Type.Custom:
-                    this.ItemTemplate = OverlayEndCreditsSectionV3Model.TextItemTemplate;
-                    break;
-                case OverlayEndCreditsSectionV3Type.Raids:
-                case OverlayEndCreditsSectionV3Type.Resubscribers:
-                case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
-                case OverlayEndCreditsSectionV3Type.TwitchBits:
-                case OverlayEndCreditsSectionV3Type.TrovoSpells:
-                case OverlayEndCreditsSectionV3Type.YouTubeSuperChats:
-                case OverlayEndCreditsSectionV3Type.Donations:
-                    this.ItemTemplate = OverlayEndCreditsSectionV3Model.UsernameAmountItemTemplate;
-                    break;
-                default:
-                    this.ItemTemplate = OverlayEndCreditsSectionV3Model.UsernameItemTemplate;
-                    break;
-            }
         }
 
         public OverlayEndCreditsSectionV3ViewModel(OverlayEndCreditsSectionV3Model section)
         {
             this.ID = section.ID;
-            this.Type = section.Type;
+            this.SelectedType = section.Type;
             this.Name = section.Name;
             this.ItemTemplate = section.ItemTemplate;
             this.Columns = section.Columns;
             this.HTML = section.HTML;
+        }
+
+        public OverlayEndCreditsSectionV3Model GetModel()
+        {
+            return new OverlayEndCreditsSectionV3Model()
+            {
+                ID = this.ID,
+                Type = this.SelectedType,
+                Name = this.Name,
+                ItemTemplate = this.ItemTemplate,
+                Columns = this.Columns,
+                HTML = this.HTML
+            };
         }
     }
 
@@ -134,6 +162,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultHTML { get { return OverlayEndCreditsV3Model.DefaultHTML; } }
         public override string DefaultCSS { get { return OverlayEndCreditsV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayEndCreditsV3Model.DefaultJavascript; } }
+
+        public override bool IsTestable { get { return true; } }
 
         public OverlayEndCreditsHeaderV3ViewModel Header
         {
@@ -194,6 +224,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private CustomCommandModel endedCommand;
 
+        public ICommand AddSectionCommand { get; set; }
+
         public OverlayEndCreditsV3ViewModel()
             : base(OverlayItemV3Type.EndCredits)
         {
@@ -221,6 +253,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.StartedCommand = this.GetEmbeddedCommand(item.StartedCommandID, Resources.Started);
             this.EndedCommand = this.GetEmbeddedCommand(item.EndedCommandID, Resources.Ended);
 
+            foreach (OverlayEndCreditsSectionV3Model section in item.Sections)
+            {
+                this.Sections.Add(new OverlayEndCreditsSectionV3ViewModel(section));
+                this.Sections.Last().PropertyChanged += (sender, e) =>
+                {
+                    this.NotifyPropertyChanged("X");
+                };
+            }
+
             this.Initialize();
         }
 
@@ -235,6 +276,41 @@ namespace MixItUp.Base.ViewModel.Overlay
             return new Result();
         }
 
+        public override async Task TestWidget(OverlayWidgetV3Model widget)
+        {
+            OverlayEndCreditsV3Model endCredits = (OverlayEndCreditsV3Model)widget.Item;
+
+            foreach (OverlayEndCreditsSectionV3Model section in endCredits.Sections)
+            {
+                section.ClearTracking();
+                for (int i = 0; i < 10; i++)
+                {
+                    switch (section.Type)
+                    {
+                        case OverlayEndCreditsSectionV3Type.Custom:
+                            section.Track(ChannelSession.User, Resources.Text);
+                            break;
+                        case OverlayEndCreditsSectionV3Type.Raids:
+                        case OverlayEndCreditsSectionV3Type.Resubscribers:
+                        case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
+                        case OverlayEndCreditsSectionV3Type.TwitchBits:
+                        case OverlayEndCreditsSectionV3Type.TrovoSpells:
+                        case OverlayEndCreditsSectionV3Type.YouTubeSuperChats:
+                        case OverlayEndCreditsSectionV3Type.Donations:
+                            section.Track(ChannelSession.User, RandomHelper.GenerateRandomNumber(1, 100));
+                            break;
+                        default:
+                            section.Track(ChannelSession.User);
+                            break;
+                    }
+                }
+            }
+
+            await endCredits.PlayCredits();
+
+            await base.TestWidget(widget);
+        }
+
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
             OverlayEndCreditsV3Model result = new OverlayEndCreditsV3Model();
@@ -242,7 +318,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.AssignProperties(result);
 
             result.Header = (OverlayEndCreditsHeaderV3Model)this.Header.GetItem();
-            result.Header.Position = new OverlayPositionV3Model();
 
             switch (this.SelectedScrollSpeed)
             {
@@ -252,6 +327,11 @@ namespace MixItUp.Base.ViewModel.Overlay
                 default: result.ScrollSpeed = MediumScrollSpeed; break;
             }
             result.RunCreditsWhenVisible = this.RunCreditsWhenVisible;
+
+            foreach (OverlayEndCreditsSectionV3ViewModel section in this.Sections)
+            {
+                result.Sections.Add(section.GetModel());
+            }
 
             result.StartedCommandID = this.StartedCommand.ID;
             ChannelSession.Settings.SetCommand(this.StartedCommand);
@@ -268,6 +348,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.NotifyPropertyChanged("X");
             };
+
+            this.AddSectionCommand = this.CreateCommand(() =>
+            {
+                this.Sections.Add(new OverlayEndCreditsSectionV3ViewModel());
+                this.Sections.Last().PropertyChanged += (sender, e) =>
+                {
+                    this.NotifyPropertyChanged("X");
+                };
+            });
         }
     }
 }

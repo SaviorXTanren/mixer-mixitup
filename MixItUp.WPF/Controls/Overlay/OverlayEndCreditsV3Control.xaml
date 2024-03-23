@@ -23,6 +23,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.SectionHeaderSettings}">
@@ -161,6 +163,8 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding ScrollSpeeds}" SelectedItem="{Binding SelectedScrollSpeed}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ScrollSpeed}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
@@ -173,6 +177,78 @@
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunCreditsWhenVisible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="3" IsChecked="{Binding RunCreditsWhenVisible}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+            <Button Grid.Column="5" Command="{Binding AddSectionCommand}" Content="{x:Static resx:Resources.AddSection}" />
         </Grid>
+
+        <ItemsControl Grid.Row="6" ItemsSource="{Binding Sections}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Controls:AccordianGroupBoxControl>
+                        <Controls:AccordianGroupBoxControl.Header>
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="25" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="25" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" FontWeight="Bold" Width="Auto" VerticalAlignment="Center" />
+
+                                <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" Margin="0,-9" />
+
+                                <Controls:IconButton Grid.Column="2" Margin="-10" Command="{Binding MoveUpCommand}" Icon="ArrowUpBold" ToolTip="{x:Static resx:Resources.MoveUp}" />
+                                <Controls:IconButton Grid.Column="4" Margin="-10" Command="{Binding MoveDownCommand}" Icon="ArrowDownBold" ToolTip="{x:Static resx:Resources.MoveDown}" />
+
+                                <Controls:IconButton Grid.Column="6" Margin="-10" Command="{Binding DeleteCommand}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
+                            </Grid>
+                        </Controls:AccordianGroupBoxControl.Header>
+
+                        <Controls:AccordianGroupBoxControl.Content>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ComboBox Grid.Column="0" ItemsSource="{Binding Types}" SelectedItem="{Binding SelectedType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                    <TextBox Text="{Binding Name}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                    <TextBox Text="{Binding Columns}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Columns}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                                </Grid>
+
+                                <TextBox Text="{Binding ItemTemplate}" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemTemplate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <TextBox Text="{Binding HTML}" Grid.Row="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HTML}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="150" />
+                            </Grid>
+                        </Controls:AccordianGroupBoxControl.Content>
+                    </Controls:AccordianGroupBoxControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Controls:LoadingControlBase>

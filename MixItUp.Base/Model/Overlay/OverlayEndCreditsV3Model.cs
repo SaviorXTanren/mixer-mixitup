@@ -188,6 +188,9 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayEndCreditsV3Model : OverlayEventTrackingV3ModelBase
     {
+        public const string EndCreditsLoadedPacketType = "EndCreditsLoaded";
+        public const string EndCreditsCompletedPacketType = "EndCreditsCompleted";
+
         public static readonly string DefaultHTML = OverlayResources.OverlayEndCreditsDefaultHTML;
         public static readonly string DefaultCSS =  OverlayResources.OverlayEndCreditsDefaultCSS + "\n\n" + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayEndCreditsDefaultJavascript;
@@ -239,6 +242,22 @@ namespace MixItUp.Base.Model.Overlay
             //properties[nameof(this.SegmentCompletedAnimation)] = this.SegmentCompletedAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement);
 
             return properties;
+        }
+
+        public override async Task ProcessPacket(OverlayV3Packet packet)
+        {
+            if (string.Equals(packet.Type, OverlayEndCreditsV3Model.EndCreditsLoadedPacketType))
+            {
+                if (this.RunCreditsWhenVisible)
+                {
+                    await this.PlayCredits();
+                    await ServiceManager.Get<CommandService>().Queue(this.StartedCommandID);
+                }
+            }
+            else if (string.Equals(packet.Type, EndCreditsCompletedPacketType))
+            {
+                await ServiceManager.Get<CommandService>().Queue(this.EndedCommandID);
+            }
         }
 
         protected override async Task WidgetEnableInternal()
