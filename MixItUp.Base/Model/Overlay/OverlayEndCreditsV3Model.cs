@@ -189,6 +189,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayEndCreditsV3Model : OverlayEventTrackingV3ModelBase
     {
         public const string EndCreditsLoadedPacketType = "EndCreditsLoaded";
+        public const string EndCreditsStartedPacketType = "EndCreditsStarted";
         public const string EndCreditsCompletedPacketType = "EndCreditsCompleted";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayEndCreditsDefaultHTML;
@@ -200,6 +201,8 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int ScrollSpeed { get; set; }
+        [DataMember]
+        public string BackgroundColor { get; set; }
         [DataMember]
         public bool RunCreditsWhenVisible { get; set; }
 
@@ -223,6 +226,7 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             properties[nameof(this.ScrollSpeed)] = this.ScrollSpeed.ToString();
+            properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.RunCreditsWhenVisible)] = this.RunCreditsWhenVisible.ToString().ToLower();
 
             List<string> sectionsHTML = new List<string>();
@@ -251,8 +255,11 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.RunCreditsWhenVisible)
                 {
                     await this.PlayCredits();
-                    await ServiceManager.Get<CommandService>().Queue(this.StartedCommandID);
                 }
+            }
+            if (string.Equals(packet.Type, OverlayEndCreditsV3Model.EndCreditsStartedPacketType))
+            {
+                await ServiceManager.Get<CommandService>().Queue(this.StartedCommandID);
             }
             else if (string.Equals(packet.Type, EndCreditsCompletedPacketType))
             {

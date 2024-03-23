@@ -431,6 +431,7 @@ function addInternal(message)
   </data>
   <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
     <value>const scrollSpeed = {ScrollSpeed};
+const fadeTime = 3000;
 
 const list = document.getElementById("list");
 
@@ -462,8 +463,15 @@ function startCredits(data)
         
         list.appendChild(section);
     });
-
-    moveCredits(listTop);
+    
+    maindiv.style.display = "none";
+    maindiv.style.backgroundColor = "{BackgroundColor}";
+    
+    sendParentMessage({ Type: "EndCreditsStarted", ID: "{ID}" });
+    $(maindiv).fadeIn(fadeTime);
+    setTimeout(() =&gt; {
+        moveCredits(listTop);
+    }, fadeTime);
 }
 
 function moveCredits(listTop)
@@ -478,6 +486,7 @@ function moveCredits(listTop)
         }
         else
         {
+            $(maindiv).fadeOut(fadeTime);
             sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
         }
     }, scrollSpeed);

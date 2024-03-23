@@ -258,6 +258,7 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to const scrollSpeed = {ScrollSpeed};
+        ///const fadeTime = 3000;
         ///
         ///const list = document.getElementById(&quot;list&quot;);
         ///
@@ -272,7 +273,7 @@ namespace MixItUp.Base {
         ///        let section = sectionTemplate.content.cloneNode(true);
         ///        
         ///        let columns = section.firstElementChild.querySelector(&quot;.columns-&quot; + id);
-        ///        let columnTemplate  [rest of string was truncated]&quot;;.
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {

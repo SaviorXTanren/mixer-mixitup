@@ -200,6 +200,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool runCreditsWhenVisible;
 
+        public string BackgroundColor
+        {
+            get { return this.backgroundColor; }
+            set
+            {
+                this.backgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string backgroundColor;
+
         public ObservableCollection<OverlayEndCreditsSectionV3ViewModel> Sections { get; set; } = new ObservableCollection<OverlayEndCreditsSectionV3ViewModel>();
 
         public CustomCommandModel StartedCommand
@@ -248,6 +259,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case MediumScrollSpeed: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Medium; break;
                 case SlowScrollSpeed: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Slow; break;
             }
+            this.BackgroundColor = item.BackgroundColor;
             this.RunCreditsWhenVisible = item.RunCreditsWhenVisible;
 
             this.StartedCommand = this.GetEmbeddedCommand(item.StartedCommandID, Resources.Started);
@@ -326,6 +338,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayEndCreditsSpeedV3TypeEnum.Fast: result.ScrollSpeed = FastScrollSpeed; break;
                 default: result.ScrollSpeed = MediumScrollSpeed; break;
             }
+            result.BackgroundColor = this.BackgroundColor;
             result.RunCreditsWhenVisible = this.RunCreditsWhenVisible;
 
             foreach (OverlayEndCreditsSectionV3ViewModel section in this.Sections)
