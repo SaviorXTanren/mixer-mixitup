@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
@@ -292,15 +294,21 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             OverlayEndCreditsV3Model endCredits = (OverlayEndCreditsV3Model)widget.Item;
 
+            List<UserV2ViewModel> users = new List<UserV2ViewModel>();
+            foreach (UserV2Model user in await ServiceManager.Get<UserService>().LoadQuantityOfUserData(20))
+            {
+                users.Add(new UserV2ViewModel(user));
+            }
+
             foreach (OverlayEndCreditsSectionV3Model section in endCredits.Sections)
             {
                 section.ClearTracking();
-                for (int i = 0; i < 10; i++)
+                foreach (UserV2ViewModel user in users)
                 {
                     switch (section.Type)
                     {
                         case OverlayEndCreditsSectionV3Type.Custom:
-                            section.Track(ChannelSession.User, Resources.Text);
+                            section.Track(user, Resources.Text);
                             break;
                         case OverlayEndCreditsSectionV3Type.Raids:
                         case OverlayEndCreditsSectionV3Type.Resubscribers:
@@ -309,10 +317,10 @@ namespace MixItUp.Base.ViewModel.Overlay
                         case OverlayEndCreditsSectionV3Type.TrovoSpells:
                         case OverlayEndCreditsSectionV3Type.YouTubeSuperChats:
                         case OverlayEndCreditsSectionV3Type.Donations:
-                            section.Track(ChannelSession.User, RandomHelper.GenerateRandomNumber(1, 100));
+                            section.Track(user, RandomHelper.GenerateRandomNumber(1, 100));
                             break;
                         default:
-                            section.Track(ChannelSession.User);
+                            section.Track(user);
                             break;
                     }
                 }

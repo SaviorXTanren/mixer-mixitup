@@ -183,6 +183,17 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        public async Task<IEnumerable<UserV2Model>> LoadQuantityOfUserData(int amount)
+        {
+            List<UserV2Model> results = new List<UserV2Model>();
+            foreach (UserV2Model userData in await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users LIMIT {amount}", new Dictionary<string, object>()))
+            {
+                this.SetUserData(userData);
+                results.Add(userData);
+            }
+            return results;
+        }
+
         public async Task LoadAllUserData()
         {
             if (!this.fullUserDataLoadOccurred)
