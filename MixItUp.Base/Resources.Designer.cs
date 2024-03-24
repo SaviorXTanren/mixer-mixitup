@@ -17879,6 +17879,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run Endlessly.
+        /// </summary>
+        public static string RunEndlessly {
+            get {
+                return ResourceManager.GetString("RunEndlessly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run For Each User.
         /// </summary>
         public static string RunForEachUser {

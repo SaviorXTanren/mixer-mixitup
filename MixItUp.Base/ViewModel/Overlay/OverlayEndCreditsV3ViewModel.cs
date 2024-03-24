@@ -202,6 +202,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool runCreditsWhenVisible;
 
+        public bool RunEndlessly
+        {
+            get { return this.runEndlessly; }
+            set
+            {
+                this.runEndlessly = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool runEndlessly;
+
         public string BackgroundColor
         {
             get { return this.backgroundColor; }
@@ -276,6 +287,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
             this.BackgroundColor = item.BackgroundColor;
             this.RunCreditsWhenVisible = item.RunCreditsWhenVisible;
+            this.RunEndlessly = item.RunEndlessly;
 
             this.StartedCommand = this.GetEmbeddedCommand(item.StartedCommandID, Resources.Started);
             this.EndedCommand = this.GetEmbeddedCommand(item.EndedCommandID, Resources.Ended);
@@ -361,6 +373,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
             result.BackgroundColor = this.BackgroundColor;
             result.RunCreditsWhenVisible = this.RunCreditsWhenVisible;
+            result.RunEndlessly = this.RunEndlessly;
 
             foreach (OverlayEndCreditsSectionV3ViewModel section in this.Sections)
             {

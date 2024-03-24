@@ -432,6 +432,7 @@ function addInternal(message)
   </data>
   <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
     <value>const scrollSpeed = {ScrollSpeed};
+const runEndlessly = {RunEndlessly};
 const fadeTime = 3000;
 
 const list = document.getElementById("list");
@@ -502,8 +503,17 @@ function moveCredits(listTop)
         }
         else
         {
-            $(maindiv).fadeOut(fadeTime);
-            sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
+            if (runEndlessly)
+            {
+                listTop = document.documentElement.clientHeight;
+                list.style.top = listTop + 'px';
+                moveCredits(listTop);
+            }
+            else
+            {
+                $(maindiv).fadeOut(fadeTime);
+                sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
+            }
         }
     }, scrollSpeed);
 }

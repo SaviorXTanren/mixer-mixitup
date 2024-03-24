@@ -205,6 +205,8 @@ namespace MixItUp.Base.Model.Overlay
         public string BackgroundColor { get; set; }
         [DataMember]
         public bool RunCreditsWhenVisible { get; set; }
+        [DataMember]
+        public bool RunEndlessly { get; set; }
 
         [DataMember]
         public List<OverlayEndCreditsSectionV3Model> Sections { get; set; } = new List<OverlayEndCreditsSectionV3Model>();
@@ -228,6 +230,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.ScrollSpeed)] = this.ScrollSpeed.ToString();
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.RunCreditsWhenVisible)] = this.RunCreditsWhenVisible.ToString().ToLower();
+            properties[nameof(this.RunEndlessly)] = this.RunEndlessly.ToString().ToLower();
 
             List<string> sectionsHTML = new List<string>();
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)

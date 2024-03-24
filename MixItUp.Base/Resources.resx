@@ -10113,4 +10113,7 @@ namespace CustomNamespace
   <data name="AddSection" xml:space="preserve">
     <value>Add Section</value>
   </data>
+  <data name="RunEndlessly" xml:space="preserve">
+    <value>Run Endlessly</value>
+  </data>
 </root>

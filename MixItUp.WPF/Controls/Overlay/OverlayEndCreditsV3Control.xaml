@@ -25,6 +25,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.SectionHeaderSettings}">
@@ -165,7 +167,8 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -182,10 +185,19 @@
             <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunCreditsWhenVisible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="5" IsChecked="{Binding RunCreditsWhenVisible}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-            <Button Grid.Column="7" Command="{Binding AddSectionCommand}" Content="{x:Static resx:Resources.AddSection}" />
+            <TextBlock Grid.Column="7" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunEndlessly}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="8" IsChecked="{Binding RunEndlessly}" VerticalAlignment="Center" Margin="5,0,0,0" />
         </Grid>
 
-        <ItemsControl Grid.Row="6" ItemsSource="{Binding Sections}">
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <Button Command="{Binding AddSectionCommand}" Content="{x:Static resx:Resources.AddSection}" />
+        </Grid>
+
+        <ItemsControl Grid.Row="8" ItemsSource="{Binding Sections}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Controls:AccordianGroupBoxControl>

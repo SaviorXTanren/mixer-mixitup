@@ -264,6 +264,7 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to const scrollSpeed = {ScrollSpeed};
+        ///const runEndlessly = {RunEndlessly};
         ///const fadeTime = 3000;
         ///
         ///const list = document.getElementById(&quot;list&quot;);
@@ -281,8 +282,7 @@ namespace MixItUp.Base {
         ///
         ///    data.Order.forEach((id) =&gt;
         ///    {
-        ///        let sectionTemplate = document.querySelector(&quot;#section-&quot; + id);
-        ///        let s [rest of string was truncated]&quot;;.
+        ///        let sectionTemplate = document.querySele [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {
