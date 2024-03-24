@@ -218,14 +218,16 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to .list {
         ///    position: absolute;
+        ///    margin: 0;
+        ///    padding: 0;
+        ///    display: flex;
+        ///    align-items: center;
+        ///    width: 100vw;
+        ///    flex-direction: column;
         ///}
         ///
         ///.section {
-        ///    margin: 0;
-        ///    padding-bottom: 100px;
-        ///    display: flex;
-        ///    justify-content: center;
-        ///    align-items: center;
+        ///    display: contents;
         ///}
         ///
         ///.header {
@@ -237,7 +239,7 @@ namespace MixItUp.Base {
         ///    text-decoration: {HeaderTextDecoration};
         ///    font-style: {HeaderFontStyle};
         ///    text-align: {HeaderTextAlignment};
-        ///    text-shadow: {HeaderShadowC [rest of string was truncated]&quot;;.
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultCSS {
             get {
@@ -247,6 +249,10 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
+        ///
+        ///&lt;template id=&quot;spacer&quot;&gt;
+        ///    &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
+        ///&lt;/template&gt;
         ///
         ///{Sections}.
         /// </summary>
@@ -262,18 +268,21 @@ namespace MixItUp.Base {
         ///
         ///const list = document.getElementById(&quot;list&quot;);
         ///
+        ///let spacerTemplate = document.querySelector(&quot;#spacer&quot;);
+        ///
         ///function startCredits(data)
         ///{
+        ///    while (list.firstChild) {
+        ///        list.removeChild(list.lastChild);
+        ///    }
+        ///    
         ///    var listTop = document.documentElement.clientHeight;
         ///    list.style.top = listTop + &quot;px&quot;;
         ///
         ///    data.Order.forEach((id) =&gt;
         ///    {
         ///        let sectionTemplate = document.querySelector(&quot;#section-&quot; + id);
-        ///        let section = sectionTemplate.content.cloneNode(true);
-        ///        
-        ///        let columns = section.firstElementChild.querySelector(&quot;.columns-&quot; + id);
-        ///    [rest of string was truncated]&quot;;.
+        ///        let s [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {
@@ -283,18 +292,18 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template id=&quot;section-{SectionID}&quot;&gt;
-        ///    &lt;div class=&quot;section&quot;&gt;
+        ///    &lt;div&gt;
         ///        &lt;div class=&quot;header&quot;&gt;{Name}&lt;/div&gt;
-        ///        &lt;div class=&quot;columns-{SectionID}&quot;&gt;&lt;/div&gt;
+        ///        &lt;div class=&quot;columns columns-{SectionID}&quot;&gt;&lt;/div&gt;
         ///    &lt;/div&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;column-{SectionID}&quot;&gt;
-        ///    &lt;div class=&quot;column&quot; style=&quot;width: {ColumnWidthPercentage}%;&quot;&gt;&lt;/div&gt;
+        ///    &lt;div style=&quot;width: {ColumnWidthPercentage}vw;&quot;&gt;&lt;/div&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;item-{SectionID}&quot;&gt;
-        ///    &lt;div class=&quot;item text&quot;&gt;&lt;/div&gt;
+        ///    &lt;div class=&quot;text&quot;&gt;&lt;/div&gt;
         ///&lt;/template&gt;.
         /// </summary>
         public static string OverlayEndCreditsSectionDefaultHTML {

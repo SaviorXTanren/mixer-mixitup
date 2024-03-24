@@ -385,14 +385,16 @@ function addInternal(message)
   <data name="OverlayEndCreditsDefaultCSS" xml:space="preserve">
     <value>.list {
     position: absolute;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    flex-direction: column;
 }
 
 .section {
-    margin: 0;
-    padding-bottom: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: contents;
 }
 
 .header {
@@ -412,20 +414,19 @@ function addInternal(message)
 }
 
 .columns {
+    display: flex;
 }
 
-.column {
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.item {
-    display: inline-block;
-    width: 100%;
+.spacer {
+    height: 50px;
 }</value>
   </data>
   <data name="OverlayEndCreditsDefaultHTML" xml:space="preserve">
     <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
+
+&lt;template id="spacer"&gt;
+    &lt;div class="spacer"&gt;&lt;/div&gt;
+&lt;/template&gt;
 
 {Sections}</value>
   </data>
@@ -435,8 +436,14 @@ const fadeTime = 3000;
 
 const list = document.getElementById("list");
 
+let spacerTemplate = document.querySelector("#spacer");
+
 function startCredits(data)
 {
+    while (list.firstChild) {
+        list.removeChild(list.lastChild);
+    }
+    
     var listTop = document.documentElement.clientHeight;
     list.style.top = listTop + "px";
 
@@ -445,23 +452,32 @@ function startCredits(data)
         let sectionTemplate = document.querySelector("#section-" + id);
         let section = sectionTemplate.content.cloneNode(true);
         
+        let columnCount = data.Columns[id];
         let columns = section.firstElementChild.querySelector(".columns-" + id);
         let columnTemplate = document.querySelector("#column-" + id);
-        for (let i = 0; i &lt; data.Columns[id]; i++)
+        for (let i = 0; i &lt; columnCount; i++)
         {
             let column = columnTemplate.content.cloneNode(true);
             columns.appendChild(column.firstElementChild);
         }
         
+        let columnIndex = 0;
         data.Items[id].forEach((item) =&gt;
         {
             let lineTemplate = document.querySelector("#item-" + id);
             let line = lineTemplate.content.cloneNode(true);
             line.firstElementChild.innerHTML = item;
-            columns.firstElementChild.appendChild(line);
+            columns.children[columnIndex].appendChild(line);
+            
+            columnIndex++;
+            if (columnIndex &gt;= columnCount)
+            {
+                columnIndex = 0;
+            }
         });
         
         list.appendChild(section);
+        list.appendChild(spacerTemplate.content.cloneNode(true));
     });
     
     maindiv.style.display = "none";
@@ -496,18 +512,18 @@ sendParentMessage({ Type: "EndCreditsLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayEndCreditsSectionDefaultHTML" xml:space="preserve">
     <value>&lt;template id="section-{SectionID}"&gt;
-    &lt;div class="section"&gt;
+    &lt;div&gt;
         &lt;div class="header"&gt;{Name}&lt;/div&gt;
-        &lt;div class="columns-{SectionID}"&gt;&lt;/div&gt;
+        &lt;div class="columns columns-{SectionID}"&gt;&lt;/div&gt;
     &lt;/div&gt;
 &lt;/template&gt;
 
 &lt;template id="column-{SectionID}"&gt;
-    &lt;div class="column" style="width: {ColumnWidthPercentage}%;"&gt;&lt;/div&gt;
+    &lt;div style="width: {ColumnWidthPercentage}vw;"&gt;&lt;/div&gt;
 &lt;/template&gt;
 
 &lt;template id="item-{SectionID}"&gt;
-    &lt;div class="item text"&gt;&lt;/div&gt;
+    &lt;div class="text"&gt;&lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">

@@ -244,6 +244,19 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Header = new OverlayEndCreditsHeaderV3ViewModel();
 
+            this.Header.FontSize = 42;
+            this.Header.FontColor = "White";
+            this.Header.Bold = true;
+            this.Header.Underline = true;
+            this.Header.LeftAlignment = false;
+            this.Header.CenterAlignment = true;
+
+            this.FontColor = "White";
+            this.LeftAlignment = false;
+            this.CenterAlignment = true;
+
+            this.BackgroundColor = "Black";
+
             this.StartedCommand = this.CreateEmbeddedCommand(Resources.Started);
             this.EndedCommand = this.CreateEmbeddedCommand(Resources.Ended);
 
