@@ -329,7 +329,7 @@ function clear(data)
 {
     while (list.childElementCount &gt; 0)
     {
-        list.removeChild(list.firstElementChild);
+        list.removeChild(list.lastElementChild);
     }
 }
 
@@ -652,6 +652,131 @@ function removeOldest()
 {
     var list = document.getElementById("list");
     list.removeChild(list.firstElementChild);
+}</value>
+  </data>
+  <data name="OverlayGameQueueDefaultCSS" xml:space="preserve">
+    <value>.list {
+}
+
+.item {
+    width: {Width};
+    height: {Height};
+    background-color: {BackgroundColor};
+    border-style: solid;
+    border-width: 5px;
+    border-color: {BorderColor};
+    overflow: hidden;
+}
+
+.itemContents {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.avatar {
+    width: max-content;
+    height: {FontSize}px;
+    margin-right: 10px;
+}
+
+.centeredText {
+    line-height: {Height};
+}</value>
+  </data>
+  <data name="OverlayGameQueueDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
+
+&lt;template id="item"&gt;
+    &lt;div class="item"&gt;
+        &lt;div class="itemContents"&gt;
+            &lt;img class="avatar" /&gt;
+            &lt;span class="centeredText text"&gt;&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</value>
+  </data>
+  <data name="OverlayGameQueueDefaultJavascript" xml:space="preserve">
+    <value>const list = document.getElementById("list");
+
+const itemTemplate = document.querySelector("#item");
+
+var items = [];
+
+function clear(data)
+{
+    items = [];
+    while (list.childElementCount &gt; 0)
+    {
+        list.removeChild(list.lastElementChild);
+    }
+}
+
+function update(data)
+{
+    for (let i = 0; i &lt; items.length &amp;&amp; i &lt; data.Items.length; i++)
+    {
+        if (items[i] !== data.Items[i].User.ID)
+        {
+            let oldItem = list.children[i];
+            let newItem = createItem(data.Items[i]);
+            {ItemSwapAnimation}
+        }
+    }
+    
+    if (data.Items.length &gt; items.length)
+    {
+        for (let i = items.length; i &lt; data.Items.length; i++)
+        {
+            let item = createItem(data.Items[i]);
+            list.appendChild(item);
+            addItem(item);
+        }
+    }
+    else if (items.length &gt; data.Items.length)
+    {
+        for (let i = items.length - data.Items.length; i &gt; 0; i--)
+        {
+            removeItem(list.lastElementChild);
+        }
+    }
+    
+    items = [];
+    for (let i = 0; i &lt; data.Items.length; i++)
+    {
+        items.push(data.Items[i].User.ID);
+    }
+}
+
+function createItem(itemData)
+{
+    let item = itemTemplate.content.cloneNode(true);
+    
+    let avatar = item.firstElementChild.querySelector(".avatar");
+    avatar.src = itemData.User.AvatarLink;
+    
+    let text = item.firstElementChild.querySelector(".text");
+    text.textContent = itemData.User.DisplayName;
+    
+    return item.firstElementChild;
+}
+
+function addItem(item)
+{
+    {ItemAddAnimation}
+}
+
+function removeItem(item)
+{
+    {ItemRemovedAnimation}
+}
+
+function swapItems(oldItem, newItem)
+{
+    oldItem.replaceWith(newItem);
+    addItem(newItem);
 }</value>
   </data>
   <data name="OverlayGoalDefaultCSS" xml:space="preserve">

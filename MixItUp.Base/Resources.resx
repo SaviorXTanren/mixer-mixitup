@@ -10116,4 +10116,10 @@ namespace CustomNamespace
   <data name="RunEndlessly" xml:space="preserve">
     <value>Run Endlessly</value>
   </data>
+  <data name="ItemAdded" xml:space="preserve">
+    <value>Item Added</value>
+  </data>
+  <data name="ItemRemoved" xml:space="preserve">
+    <value>Item Removed</value>
+  </data>
 </root>

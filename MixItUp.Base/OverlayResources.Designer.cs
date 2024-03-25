@@ -395,6 +395,92 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .list {
+        ///}
+        ///
+        ///.item {
+        ///    width: {Width};
+        ///    height: {Height};
+        ///    background-color: {BackgroundColor};
+        ///    border-style: solid;
+        ///    border-width: 5px;
+        ///    border-color: {BorderColor};
+        ///    overflow: hidden;
+        ///}
+        ///
+        ///.itemContents {
+        ///    display: inline-flex;
+        ///    justify-content: flex-start;
+        ///    align-items: center;
+        ///    margin-left: 10px;
+        ///    margin-right: 10px;
+        ///}
+        ///
+        ///.avatar {
+        ///    width: max-content;
+        ///    height: {FontSize}px;
+        ///    margin-right: 10px;
+        ///}
+        ///
+        ///.centeredText {
+        ///    line-height: {Heigh [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayGameQueueDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayGameQueueDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
+        ///
+        ///&lt;template id=&quot;item&quot;&gt;
+        ///    &lt;div class=&quot;item&quot;&gt;
+        ///        &lt;div class=&quot;itemContents&quot;&gt;
+        ///            &lt;img class=&quot;avatar&quot; /&gt;
+        ///            &lt;span class=&quot;centeredText text&quot;&gt;&lt;/span&gt;
+        ///        &lt;/div&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/template&gt;.
+        /// </summary>
+        public static string OverlayGameQueueDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayGameQueueDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const list = document.getElementById(&quot;list&quot;);
+        ///
+        ///const itemTemplate = document.querySelector(&quot;#item&quot;);
+        ///
+        ///var items = [];
+        ///
+        ///function clear(data)
+        ///{
+        ///    items = [];
+        ///    while (list.childElementCount &gt; 0)
+        ///    {
+        ///        list.removeChild(list.lastElementChild);
+        ///    }
+        ///}
+        ///
+        ///function update(data)
+        ///{
+        ///    for (let i = 0; i &lt; items.length &amp;&amp; i &lt; data.Items.length; i++)
+        ///    {
+        ///        if (items[i] !== data.Items[i].User.ID)
+        ///        {
+        ///            let oldItem = list.children[i];
+        ///            let newItem = cre [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayGameQueueDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayGameQueueDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .mainContainer {
         ///  width: {Width};
         ///}

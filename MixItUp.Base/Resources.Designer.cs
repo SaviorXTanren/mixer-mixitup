@@ -11235,6 +11235,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Item Added.
+        /// </summary>
+        public static string ItemAdded {
+            get {
+                return ResourceManager.GetString("ItemAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The item buy amount must be either blank or a number greater than 0..
         /// </summary>
         public static string ItemBuyAmountZeroOrMore {
@@ -11285,6 +11294,15 @@ namespace MixItUp.Base {
         public static string ItemNameRequired {
             get {
                 return ResourceManager.GetString("ItemNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Removed.
+        /// </summary>
+        public static string ItemRemoved {
+            get {
+                return ResourceManager.GetString("ItemRemoved", resourceCulture);
             }
         }
         

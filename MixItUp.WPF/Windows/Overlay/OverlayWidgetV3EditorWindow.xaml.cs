@@ -67,6 +67,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.PersistentTimer: overlayControl = new OverlayPersistentTimerV3Control(); break;
                 case OverlayItemV3Type.Chat: overlayControl = new OverlayChatV3Control(); break;
                 case OverlayItemV3Type.EndCredits: overlayControl = new OverlayEndCreditsV3Control(); break;
+                case OverlayItemV3Type.GameQueue: overlayControl = new OverlayGameQueueV3Control(); break;
             }
 
             if (overlayControl != null)
