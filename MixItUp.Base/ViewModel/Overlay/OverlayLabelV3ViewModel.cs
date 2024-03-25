@@ -65,12 +65,12 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayLabelDisplayV3TypeEnum.Counter:
                 case OverlayLabelDisplayV3TypeEnum.TotalFollowers:
                 case OverlayLabelDisplayV3TypeEnum.TotalSubscribers:
-                    this.Format = OverlayResources.OverlayLabelAmountDefaultFormat;
+                    this.Format = OverlayLabelV3ViewModel.AmountItemTemplate;
                     break;
 
                 case OverlayLabelDisplayV3TypeEnum.LatestFollower:
                 case OverlayLabelDisplayV3TypeEnum.LatestSubscriber:
-                    this.Format = OverlayResources.OverlayLabelUsernameDefaultFormat;
+                    this.Format = OverlayLabelV3ViewModel.UsernameItemTemplate;
                     break;
 
                 case OverlayLabelDisplayV3TypeEnum.LatestRaid:
@@ -78,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayLabelDisplayV3TypeEnum.LatestTwitchBits:
                 case OverlayLabelDisplayV3TypeEnum.LatestTrovoElixir:
                 case OverlayLabelDisplayV3TypeEnum.LatestYouTubeSuperChat:
-                    this.Format = OverlayResources.OverlayLabelUsernameAmountDefaultFormat;
+                    this.Format = OverlayLabelV3ViewModel.UsernameAmountItemTemplate;
                     break;
             }
 
@@ -134,6 +134,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 
     public class OverlayLabelV3ViewModel : OverlayVisualTextV3ViewModelBase
     {
+        public static readonly string UsernameItemTemplate = $"{{{OverlayLabelV3Model.UsernamePropertyName}}}";
+        public static readonly string AmountItemTemplate = $"{{{OverlayLabelV3Model.AmountPropertyName}}}";
+        public static readonly string UsernameAmountItemTemplate = $"{{{OverlayLabelV3Model.UsernamePropertyName}}} - {{{OverlayLabelV3Model.AmountPropertyName}}}";
+
         public override string DefaultHTML { get { return OverlayLabelV3Model.DefaultHTML; } }
         public override string DefaultCSS { get { return OverlayLabelV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayLabelV3Model.DefaultJavascript; } }

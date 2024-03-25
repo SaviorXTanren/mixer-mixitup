@@ -71,6 +71,9 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string LabelAdds = "LabelAdds";
 
+        public const string UsernamePropertyName = "Username";
+        public const string AmountPropertyName = "Amount";
+
         public static readonly string DefaultHTML = OverlayResources.OverlayLabelDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS + "\n\n" + OverlayResources.OverlayLabelDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayLabelDefaultJavascript;
@@ -440,16 +443,28 @@ namespace MixItUp.Base.Model.Overlay
                 user = await ServiceManager.Get<UserService>().GetUserByID(display.UserID);
             }
 
+            if (user == null)
+            {
+                user = ChannelSession.User;
+            }
+
             string amount = display.Amount.ToString();
             if (!string.IsNullOrEmpty(display.AmountText))
             {
                 amount = display.AmountText;
             }
 
-            CommandParametersModel parameters = new CommandParametersModel(user: user);
-            parameters.SpecialIdentifiers["labelamount"] = amount;
+            string result = display.Format;
+            if (user != null)
+            {
+                result = OverlayV3Service.ReplaceProperty(result, OverlayLabelV3Model.UsernamePropertyName, user.DisplayName);
+            }
+            if (!string.IsNullOrEmpty(amount))
+            {
+                result = OverlayV3Service.ReplaceProperty(result, OverlayLabelV3Model.AmountPropertyName, amount);
+            }
 
-            string result = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(display.Format, parameters);
+            result = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result, new CommandParametersModel(user));
 
             Dictionary<string, object> data = new Dictionary<string, object>();
             data[nameof(display.Type)] = display.Type.ToString();
