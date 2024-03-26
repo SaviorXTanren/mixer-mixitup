@@ -1,5 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
@@ -32,7 +31,7 @@ namespace MixItUp.Base.Model.Overlay
         public int TotalToShow { get; set; }
 
         [DataMember]
-        public OverlayAnimationV3Model ItemAddAnimation { get; set; } = new OverlayAnimationV3Model();
+        public OverlayAnimationV3Model ItemAddedAnimation { get; set; } = new OverlayAnimationV3Model();
         [DataMember]
         public OverlayAnimationV3Model ItemRemovedAnimation { get; set; } = new OverlayAnimationV3Model();
 
@@ -71,7 +70,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.BorderColor)] = this.BorderColor;
 
-            properties[nameof(this.ItemAddAnimation)] = this.ItemAddAnimation.GenerateAnimationJavascript(OverlayGameQueueV3Model.AnimationItemElementName);
+            properties[nameof(this.ItemAddedAnimation)] = this.ItemAddedAnimation.GenerateAnimationJavascript(OverlayGameQueueV3Model.AnimationItemElementName);
             properties[nameof(this.ItemRemovedAnimation)] = this.ItemRemovedAnimation.GenerateAnimationJavascript(OverlayGameQueueV3Model.AnimationItemElementName, postAnimation: OverlayGameQueueV3Model.RemoveItemPostAnimationFunction);
             properties[OverlayGameQueueV3Model.ItemSwapAnimationPropertyName] = this.ItemRemovedAnimation.GenerateAnimationJavascript(OverlayGameQueueV3Model.AnimationOldItemElementName, postAnimation: OverlayGameQueueV3Model.SwapItemPostAnimationFunction);
 

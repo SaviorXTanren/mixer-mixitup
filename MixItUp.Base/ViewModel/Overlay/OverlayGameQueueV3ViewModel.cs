@@ -58,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string backgroundColor;
 
-        public OverlayAnimationV3ViewModel ItemAddAnimation;
+        public OverlayAnimationV3ViewModel ItemAddedAnimation;
         public OverlayAnimationV3ViewModel ItemRemovedAnimation;
 
         public override bool IsTestable { get { return true; } }
@@ -66,15 +66,18 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayGameQueueV3ViewModel()
             : base(OverlayItemV3Type.GameQueue)
         {
+            this.width = 250;
+            this.height = 50;
+
             this.BorderColor = "Black";
             this.BackgroundColor = "White";
 
             this.TotalToShow = 5;
 
-            this.ItemAddAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, new OverlayAnimationV3Model());
+            this.ItemAddedAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, new OverlayAnimationV3Model());
             this.ItemRemovedAnimation = new OverlayAnimationV3ViewModel(Resources.ItemRemoved, new OverlayAnimationV3Model());
 
-            this.Animations.Add(this.ItemAddAnimation);
+            this.Animations.Add(this.ItemAddedAnimation);
             this.Animations.Add(this.ItemRemovedAnimation);
         }
 
@@ -88,10 +91,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.TotalToShow = item.TotalToShow;
             
-            this.ItemAddAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, item.ItemAddAnimation);
+            this.ItemAddedAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, item.ItemAddedAnimation);
             this.ItemRemovedAnimation = new OverlayAnimationV3ViewModel(Resources.ItemRemoved, item.ItemRemovedAnimation);
 
-            this.Animations.Add(this.ItemAddAnimation);
+            this.Animations.Add(this.ItemAddedAnimation);
             this.Animations.Add(this.ItemRemovedAnimation);
         }
 
@@ -132,7 +135,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.AssignProperties(result);
 
-            result.ItemAddAnimation = this.ItemAddAnimation.GetAnimation();
+            result.ItemAddedAnimation = this.ItemAddedAnimation.GetAnimation();
             result.ItemRemovedAnimation = this.ItemRemovedAnimation.GetAnimation();
 
             return result;

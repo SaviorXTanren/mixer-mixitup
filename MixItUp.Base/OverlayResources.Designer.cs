@@ -314,35 +314,37 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to .list {
-        ///    width: {ItemWidth};
-        ///    {FullHeight}
         ///}
         ///
         ///.item {
-        ///    position: relative;
+        ///    width: {Width};
+        ///    height: {Height};
+        ///    background-color: {BackgroundColor};
         ///    border-style: solid;
         ///    border-width: 5px;
         ///    border-color: {BorderColor};
-        ///    background-color: {BackgroundColor};
-        ///    width: {ItemWidth};
-        ///    {IndividualHeight}
+        ///    overflow: hidden;
         ///}
         ///
-        ///.message {
-        ///    padding: 10px;
-        ///    margin: auto;
+        ///.itemContents {
+        ///    display: flex;
+        ///    flex-direction: column;
+        ///    height: 100%;
+        ///    justify-content: space-between;
         ///}
         ///
-        ///.messagebadge {
-        ///    vertical-align: middle;
-        ///    padding-right: 2px;
-        ///    width: auto;
-        ///    height: {FontSize}px;
+        ///.topLeft {
+        ///    margin-top: 10px;
+        ///    margin-left: 10px;
         ///}
         ///
-        ///.messageavatar {
-        ///    vertical-align: middle;
-        ///    padding-right [rest of string was truncated]&quot;;.
+        ///.bottomRight {
+        ///    align-self: end;
+        ///    margin-bottom: 10px;
+        ///    margin-right: 10px;
+        ///}
+        ///
+        ///.heade [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultCSS {
             get {
@@ -351,15 +353,14 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-        ///
-        ///&lt;/div&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
         ///
         ///&lt;template id=&quot;item&quot;&gt;
         ///    &lt;div class=&quot;item&quot;&gt;
-        ///        &lt;p class=&quot;eventtype&quot;&gt;{EventType}&lt;/p&gt;
-        ///        &lt;p class=&quot;details&quot;&gt;{Details}&lt;/p&gt;
-        ///        &lt;p class=&quot;subdetails&quot;&gt;{SubDetails}&lt;/p&gt;
+        ///        &lt;div class=&quot;itemContents&quot;&gt;
+        ///            &lt;span class=&quot;header topLeft&quot;&gt;&lt;/span&gt;
+        ///            &lt;span class=&quot;text bottomRight&quot;&gt;&lt;/span&gt;
+        ///        &lt;/div&gt;
         ///    &lt;/div&gt;
         ///&lt;/template&gt;.
         /// </summary>
@@ -370,23 +371,30 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function add(eventType, details, subdetails)
+        ///   Looks up a localized string similar to const list = document.getElementById(&quot;list&quot;);
+        ///
+        ///const itemTemplate = document.querySelector(&quot;#item&quot;);
+        ///
+        ///const maxItems = {TotalToShow};
+        ///const addToTop = {AddToTop};
+        ///
+        ///function clear(data)
         ///{
-        ///    var list = document.getElementById(&quot;list&quot;);
-        ///
-        ///    if (list.childElementCount &gt; {MaxToShow}) {
-        ///        removeOldest();
+        ///    while (list.childElementCount &gt; 0)
+        ///    {
+        ///        list.removeChild(list.lastElementChild);
         ///    }
+        ///}
         ///
-        ///    var itemTemplate = document.querySelector(&quot;#item&quot;);
-        ///    const item = itemTemplate.content.cloneNode(true);
-        ///    
-        ///    var eventTypeElement = item.querySelector(&quot;.eventtype&quot;);
-        ///    eventTypeElement.innerHTML = eventType;
-        ///
-        ///    var detailsElement = item.querySelector(&quot;.details&quot;);
-        ///    detailsElement.innerHTML = details;
-        ///   [rest of string was truncated]&quot;;.
+        ///function add(data)
+        ///{
+        ///    let item = createItem(data);
+        ///    if (list.children.length &gt;= maxItems)
+        ///    {
+        ///        if (addToTop)
+        ///        {
+        ///            removeAndAddItem(list.lastElementChild, item);
+        ///       [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultJavascript {
             get {
@@ -925,10 +933,6 @@ namespace MixItUp.Base {
         ///    font-style: {FontStyle};
         ///    text-align: {TextAlignment};
         ///    text-shadow: {ShadowColor};
-        ///    margin-block-start: 0px;
-        ///    margin-block-end: 0px;
-        ///    margin-inline-start: 0px;
-        ///    margin-inline-end: 0px;
         ///}.
         /// </summary>
         public static string OverlayTextDefaultCSS {

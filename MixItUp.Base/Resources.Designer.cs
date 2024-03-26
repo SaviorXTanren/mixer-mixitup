@@ -574,6 +574,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add To Event List.
+        /// </summary>
+        public static string AddToEventList {
+            get {
+                return ResourceManager.GetString("AddToEventList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add To Existing Command.
         /// </summary>
         public static string AddToExistingCommand {
@@ -606,6 +615,15 @@ namespace MixItUp.Base {
         public static string AddToSpecificUser {
             get {
                 return ResourceManager.GetString("AddToSpecificUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add To Top.
+        /// </summary>
+        public static string AddToTop {
+            get {
+                return ResourceManager.GetString("AddToTop", resourceCulture);
             }
         }
         
@@ -9507,6 +9525,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gifted Membership.
+        /// </summary>
+        public static string GiftedMembership {
+            get {
+                return ResourceManager.GetString("GiftedMembership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gifted Sub.
         /// </summary>
         public static string GiftedSub {
@@ -9521,6 +9548,15 @@ namespace MixItUp.Base {
         public static string GiftedSubs {
             get {
                 return ResourceManager.GetString("GiftedSubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gifted Subscription.
+        /// </summary>
+        public static string GiftedSubscription {
+            get {
+                return ResourceManager.GetString("GiftedSubscription", resourceCulture);
             }
         }
         
@@ -12601,6 +12637,15 @@ namespace MixItUp.Base {
         public static string MeetTheTeam {
             get {
                 return ResourceManager.GetString("MeetTheTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Membership.
+        /// </summary>
+        public static string Membership {
+            get {
+                return ResourceManager.GetString("Membership", resourceCulture);
             }
         }
         
@@ -17146,6 +17191,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Renewed Membership.
+        /// </summary>
+        public static string RenewedMembership {
+            get {
+                return ResourceManager.GetString("RenewedMembership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repeat While True.
         /// </summary>
         public static string RepeatWhileTrue {
@@ -17452,6 +17506,15 @@ namespace MixItUp.Base {
         public static string Resubs {
             get {
                 return ResourceManager.GetString("Resubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resubscribed.
+        /// </summary>
+        public static string Resubscribed {
+            get {
+                return ResourceManager.GetString("Resubscribed", resourceCulture);
             }
         }
         
@@ -20949,6 +21012,15 @@ namespace MixItUp.Base {
         public static string SuccessProbability {
             get {
                 return ResourceManager.GetString("SuccessProbability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Super Chat.
+        /// </summary>
+        public static string SuperChat {
+            get {
+                return ResourceManager.GetString("SuperChat", resourceCulture);
             }
         }
         

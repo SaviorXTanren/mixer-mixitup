@@ -27,6 +27,7 @@ namespace MixItUp.Base.ViewModel.Actions
         AddToPersistentTimer,
         AddToEndCredits,
         PlayEndCredits,
+        AddToEventList,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -52,6 +53,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.ShowAddPersistTimer));
                     this.NotifyPropertyChanged(nameof(this.ShowAddToEndCredits));
                     this.NotifyPropertyChanged(nameof(this.ShowPlayEndCredits));
+                    this.NotifyPropertyChanged(nameof(this.ShowAddToEventList));
 
                     if (this.ShowItem)
                     {
@@ -348,6 +350,32 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string endCreditsItemText;
 
+        public bool ShowAddToEventList { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToEventList; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> EventLists { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedEventList
+        {
+            get { return this.selectedEventList; }
+            set
+            {
+                this.selectedEventList = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayWidgetV3Model selectedEventList;
+
+        public string EventListDetails
+        {
+            get { return this.eventListDetails; }
+            set
+            {
+                this.eventListDetails = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string eventListDetails;
+
         private Guid widgetID;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
@@ -442,6 +470,12 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedActionType = OverlayActionTypeEnum.PlayEndCredits;
                     this.widgetID = action.EndCreditsID;
                 }
+            }
+            else if (action.EventListID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.AddToEventList;
+                this.widgetID = action.EventListID;
+                this.EventListDetails = action.EventListDetails;
             }
         }
 
@@ -545,6 +579,18 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
+            else if (this.ShowAddToEventList)
+            {
+                if (this.SelectedEventList == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.EventListDetails))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
 
             return Task.FromResult(new Result());
         }
@@ -570,6 +616,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 else if (widget.Type == OverlayItemV3Type.EndCredits)
                 {
                     this.EndCredits.Add(widget);
+                }
+                else if (widget.Type == OverlayItemV3Type.EventList)
+                {
+                    this.EventLists.Add(widget);
                 }
             }
 
@@ -598,6 +648,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowPlayEndCredits)
             {
                 this.SelectedEndCredits = this.EndCredits.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowAddToEventList)
+            {
+                this.SelectedEventList = this.EventLists.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
         }
 
@@ -635,6 +689,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowPlayEndCredits)
             {
                 return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayEndCreditsV3Model)this.SelectedEndCredits.Item));
+            }
+            else if (this.ShowAddToEventList)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayEventListV3Model)this.SelectedEventList.Item, this.EventListDetails));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

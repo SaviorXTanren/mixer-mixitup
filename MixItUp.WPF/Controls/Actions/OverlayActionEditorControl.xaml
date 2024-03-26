@@ -202,5 +202,25 @@
 
             <ComboBox Grid.Row="0" ItemsSource="{Binding EndCredits}" SelectedItem="{Binding SelectedEndCredits}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowPlayEndCredits, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ComboBox Grid.Row="0" ItemsSource="{Binding EndCredits}" SelectedItem="{Binding SelectedEndCredits}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowAddToEventList, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding EventLists}" SelectedItem="{Binding SelectedEventList}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox Grid.Column="2" Text="{Binding EventListDetails}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Details}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

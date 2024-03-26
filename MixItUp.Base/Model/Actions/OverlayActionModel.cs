@@ -65,6 +65,11 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string EndCreditsItemText { get; set; }
 
+        [DataMember]
+        public Guid EventListID { get; set; }
+        [DataMember]
+        public string EventListDetails { get; set; }
+
         [Obsolete]
         public OverlayActionModel(OverlayItemModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
@@ -144,6 +149,13 @@ namespace MixItUp.Base.Model.Actions
             this.EndCreditsItemText = itemText;
         }
 
+        public OverlayActionModel(OverlayEventListV3Model eventList, string details)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.EventListID = eventList.ID;
+            this.EventListDetails = details;
+        }
+
         [Obsolete]
         public OverlayActionModel() { }
 
@@ -216,6 +228,15 @@ namespace MixItUp.Base.Model.Actions
                     {
                         await ((OverlayEndCreditsV3Model)widget.Item).PlayCredits();
                     }
+                }
+            }
+            else if (this.EventListID != Guid.Empty)
+            {
+                OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.EventListID));
+                if (widget != null && widget.Type == OverlayItemV3Type.EventList)
+                {
+                    string details = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.EventListDetails, parameters);
+                    await ((OverlayEventListV3Model)widget.Item).AddEvent(parameters.User, "Custom", details, new Dictionary<string, string>());
                 }
             }
             else

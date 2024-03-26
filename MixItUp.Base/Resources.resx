@@ -10122,4 +10122,28 @@ namespace CustomNamespace
   <data name="ItemRemoved" xml:space="preserve">
     <value>Item Removed</value>
   </data>
+  <data name="Membership" xml:space="preserve">
+    <value>Membership</value>
+  </data>
+  <data name="SuperChat" xml:space="preserve">
+    <value>Super Chat</value>
+  </data>
+  <data name="GiftedMembership" xml:space="preserve">
+    <value>Gifted Membership</value>
+  </data>
+  <data name="GiftedSubscription" xml:space="preserve">
+    <value>Gifted Subscription</value>
+  </data>
+  <data name="RenewedMembership" xml:space="preserve">
+    <value>Renewed Membership</value>
+  </data>
+  <data name="Resubscribed" xml:space="preserve">
+    <value>Resubscribed</value>
+  </data>
+  <data name="AddToEventList" xml:space="preserve">
+    <value>Add To Event List</value>
+  </data>
+  <data name="AddToTop" xml:space="preserve">
+    <value>Add To Top</value>
+  </data>
 </root>
