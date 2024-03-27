@@ -24,8 +24,6 @@ namespace MixItUp.Base.Model.Overlay
         public const string MessagePartTypeTextValue = "Text";
         public const string MessagePartTypeEmoteValue = "Emote";
 
-        public const string AnimationFunctionMessageVariableName = "message";
-        public const string RemoveMessagePostAnimationFunction = "list.removeChild(message);";
         public const string FlexStart = "flex-start";
         public const string FlexEnd = "flex-end";
 
@@ -86,8 +84,10 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.ShowSubscriberBadge)] = this.ShowSubscriberBadge.ToString().ToLower();
             properties[nameof(this.ShowSpecialtyBadge)] = this.ShowSpecialtyBadge.ToString().ToLower();
 
-            properties[nameof(this.MessageAddedAnimation)] = this.MessageAddedAnimation.GenerateAnimationJavascript(AnimationFunctionMessageVariableName);
-            properties[nameof(this.MessageRemovedAnimation)] = this.MessageRemovedAnimation.GenerateAnimationJavascript(AnimationFunctionMessageVariableName, postAnimation: RemoveMessagePostAnimationFunction);
+            properties["MessageAddedAnimationFramework"] = this.MessageAddedAnimation.AnimationFramework;
+            properties["MessageAddedAnimationName"] = this.MessageAddedAnimation.AnimationName;
+            properties["MessageRemovedAnimationFramework"] = this.MessageRemovedAnimation.AnimationFramework;
+            properties["MessageRemovedAnimationName"] = this.MessageRemovedAnimation.AnimationName;
 
             return properties;
         }

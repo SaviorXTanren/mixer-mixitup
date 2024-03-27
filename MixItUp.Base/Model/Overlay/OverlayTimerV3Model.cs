@@ -21,7 +21,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public static readonly string DefaultHTML = OverlayResources.OverlayTimerDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
-        public static readonly string DefaultJavascript = OverlayResources.OverlayTimerDefaultJavascript;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + "\n\n" + OverlayResources.OverlayTimerDefaultJavascript;
 
         [DataMember]
         public string DisplayFormat { get; set; }

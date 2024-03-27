@@ -31,11 +31,6 @@ namespace MixItUp.Base.Model.Overlay
         public const string DetailsTierPropertyName = "Tier";
         public const string DetailsMembershipNamePropertyName = "MembershipName";
 
-        public const string AnimationItemElementName = "item";
-
-        public const string RemoveItemAnimationItemElementName = "oldItem";
-        public const string RemoveItemPostAnimationFunction = "list.removeChild(oldItem);\naddItem(newItem);";
-
         public static readonly string DefaultHTML = OverlayResources.OverlayEventListDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayEventListDefaultCSS + "\n\n" + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayEventListDefaultJavascript;
@@ -257,8 +252,10 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.TotalToShow)] = this.TotalToShow;
             properties[nameof(this.AddToTop)] = this.AddToTop.ToString().ToLower();
 
-            properties[nameof(this.ItemAddedAnimation)] = this.ItemAddedAnimation.GenerateAnimationJavascript(OverlayEventListV3Model.AnimationItemElementName);
-            properties[nameof(this.ItemRemovedAnimation)] = this.ItemRemovedAnimation.GenerateAnimationJavascript(OverlayEventListV3Model.RemoveItemAnimationItemElementName, postAnimation: OverlayEventListV3Model.RemoveItemPostAnimationFunction);
+            properties["ItemAddedAnimationFramework"] = this.ItemAddedAnimation.AnimationFramework;
+            properties["ItemAddedAnimationName"] = this.ItemAddedAnimation.AnimationName;
+            properties["ItemRemovedAnimationFramework"] = this.ItemRemovedAnimation.AnimationFramework;
+            properties["ItemRemovedAnimationName"] = this.ItemRemovedAnimation.AnimationName;
 
             return properties;
         }

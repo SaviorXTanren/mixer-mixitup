@@ -11,13 +11,6 @@ namespace MixItUp.Base.Model.Overlay
 {
     public class OverlayGameQueueV3Model : OverlayVisualTextV3ModelBase
     {
-        public const string AnimationItemElementName = "item";
-        public const string RemoveItemPostAnimationFunction = "list.removeChild(item);";
-
-        public const string ItemSwapAnimationPropertyName = "ItemSwapAnimation";
-        public const string AnimationOldItemElementName = "oldItem";
-        public const string SwapItemPostAnimationFunction = "swapItems(oldItem, newItem);";
-
         public static readonly string DefaultHTML = OverlayResources.OverlayGameQueueDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayGameQueueDefaultCSS + "\n\n" + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayGameQueueDefaultJavascript;
@@ -70,9 +63,10 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.BorderColor)] = this.BorderColor;
 
-            properties[nameof(this.ItemAddedAnimation)] = this.ItemAddedAnimation.GenerateAnimationJavascript(OverlayGameQueueV3Model.AnimationItemElementName);
-            properties[nameof(this.ItemRemovedAnimation)] = this.ItemRemovedAnimation.GenerateAnimationJavascript(OverlayGameQueueV3Model.AnimationItemElementName, postAnimation: OverlayGameQueueV3Model.RemoveItemPostAnimationFunction);
-            properties[OverlayGameQueueV3Model.ItemSwapAnimationPropertyName] = this.ItemRemovedAnimation.GenerateAnimationJavascript(OverlayGameQueueV3Model.AnimationOldItemElementName, postAnimation: OverlayGameQueueV3Model.SwapItemPostAnimationFunction);
+            properties["ItemAddedAnimationFramework"] = this.ItemAddedAnimation.AnimationFramework;
+            properties["ItemAddedAnimationName"] = this.ItemAddedAnimation.AnimationName;
+            properties["ItemRemovedAnimationFramework"] = this.ItemRemovedAnimation.AnimationFramework;
+            properties["ItemRemovedAnimationName"] = this.ItemRemovedAnimation.AnimationName;
 
             return properties;
         }

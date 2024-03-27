@@ -10,13 +10,17 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Clips;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MixItUp.Base.Model.Actions
 {
     [DataContract]
     public class OverlayActionModel : ActionModelBase
     {
+        public const string EntranceAnimationFrameworkPropertyName = "EntranceAnimationFramework";
+        public const string EntranceAnimationNamePropertyName = "EntranceAnimationName";
+        public const string ExitAnimationFrameworkPropertyName = "ExitAnimationFramework";
+        public const string ExitAnimationNamePropertyName = "ExitAnimationName";
+
         private const string PostEventReplacementText = "PostEvent";
 
         [DataMember]
@@ -325,57 +329,22 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
 
-                    string javascript = this.OverlayItemV3.Javascript;
-                    string removeJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayItemHideAndSendParentMessageRemoveJavascript, nameof(this.OverlayItemV3.ID), properties[nameof(this.OverlayItemV3.ID)]);
-
-                    string exitJavascript = string.Empty;
-                    if (duration > 0.0)
-                    {
-                        exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement, preTimeoutSeconds: duration, postAnimation: removeJavascript);
-                    }
-                    else
-                    {
-                        if (this.OverlayItemV3.Type == OverlayItemV3Type.Video)
-                        {
-                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement, postAnimation: removeJavascript);
-                            exitJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayVideoNoDurationJavascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
-                        }
-                        else if (this.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
-                        {
-                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement, postAnimation: OverlayResources.OverlayYouTubeIFrameDestroyJavascript + "\n" + removeJavascript);
-                            javascript = OverlayV3Service.ReplaceProperty(javascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
-                            exitJavascript = string.Empty;
-                        }
-                        else if (this.OverlayItemV3.Type == OverlayItemV3Type.TwitchClip)
-                        {
-                            exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement, postAnimation: removeJavascript);
-                            exitJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayVideoNoDurationJavascript, OverlayActionModel.PostEventReplacementText, exitJavascript);
-
-                            // For use with Embed-based clip displaying
-                            //OverlayTwitchClipV3Model overlayTwitchClipItemV3 = (OverlayTwitchClipV3Model)this.OverlayItemV3;
-                            //exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, preTimeoutSeconds: overlayTwitchClipItemV3.ClipDuration, postAnimation: removeJavascript);
-                            //javascript = javascript + "\n\n" + exitJavascript + "\n\n";
-                            //exitJavascript = string.Empty;
-                        }
-                    }
-
-                    string entranceAndExitJavascript = this.EntranceAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement, postAnimation: exitJavascript);
-                    javascript = javascript + "\n\n" + entranceAndExitJavascript;
-
                     string iframeHTML = overlay.GetItemIFrameHTML();
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.HTML), this.OverlayItemV3.HTML);
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.CSS), this.OverlayItemV3.CSS);
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.Javascript), javascript);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.Javascript), this.OverlayItemV3.Javascript);
 
                     await this.OverlayItemV3.ProcessGenerationProperties(properties, parameters);
                     foreach (var property in properties)
                     {
                         iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
                     }
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration);
 
-                    // Replace any lingering {PostEvent} properties
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, OverlayActionModel.PostEventReplacementText, string.Empty);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, EntranceAnimationFrameworkPropertyName, this.EntranceAnimation.AnimationFramework);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, EntranceAnimationNamePropertyName, this.EntranceAnimation.AnimationName);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, ExitAnimationFrameworkPropertyName, this.ExitAnimation.AnimationFramework);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, ExitAnimationNamePropertyName, this.ExitAnimation.AnimationName);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration);
 
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
 

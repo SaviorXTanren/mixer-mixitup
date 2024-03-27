@@ -7,7 +7,7 @@ namespace MixItUp.Base.Model.Overlay
     {
         public static readonly string DefaultHTML = OverlayResources.OverlayTextDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
-        public static readonly string DefaultJavascript = string.Empty;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript;
 
         public OverlayTextV3Model() : base(OverlayItemV3Type.Text) { }
     }

@@ -143,9 +143,12 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.HealthColor)] = this.HealthColor;
             properties[nameof(this.DamageColor)] = this.DamageColor;
 
-            properties[nameof(this.DamageAnimation)] = this.DamageAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement);
-            properties[nameof(this.HealingAnimation)] = this.HealingAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement);
-            properties[nameof(this.NewBossAnimation)] = this.NewBossAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement);
+            properties["DamageAnimationFramework"] = this.DamageAnimation.AnimationFramework;
+            properties["DamageAnimationName"] = this.DamageAnimation.AnimationName;
+            properties["HealingAnimationFramework"] = this.HealingAnimation.AnimationFramework;
+            properties["HealingAnimationName"] = this.HealingAnimation.AnimationName;
+            properties["NewBossAnimationFramework"] = this.NewBossAnimation.AnimationFramework;
+            properties["NewBossAnimationName"] = this.NewBossAnimation.AnimationName;
 
             return properties;
         }

@@ -114,13 +114,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to animateCSS({AnimationElement}, &apos;{AnimateCSSAnimationName}&apos;).then((postAnimation) =&gt; {
-        ///    {PostAnimation}
-        ///});.
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///
+        ///const duration = {Duration} * 1000;
+        ///
+        ///function removeSelf()
+        ///{
+        ///    main.style.visibility=&apos;hidden&apos;;
+        ///    sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });
+        ///}
+        ///
+        ///performAnimation(&quot;{EntranceAnimationFramework}&quot;, &quot;{EntranceAnimationName}&quot;, main).then((result) =&gt;
+        ///{
+        ///    if (duration &gt; 0.0)
+        ///    {
+        ///        setTimeout(() =&gt;
+        ///        {
+        ///            performAnimation(&quot;{ExitAnimationFramework}&quot;, &quot;{ExitAnimationName}&quot;, main).then((result) =&gt;
+        ///            {
+        ///       [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string OverlayAnimateCSSJavascript {
+        public static string OverlayActionDefaultJavascript {
             get {
-                return ResourceManager.GetString("OverlayAnimateCSSJavascript", resourceCulture);
+                return ResourceManager.GetString("OverlayActionDefaultJavascript", resourceCulture);
             }
         }
         
@@ -267,9 +283,10 @@ namespace MixItUp.Base {
         ///const runEndlessly = {RunEndlessly};
         ///const fadeTime = 3000;
         ///
+        ///const main = document.getElementById(&quot;maindiv&quot;);
         ///const list = document.getElementById(&quot;list&quot;);
         ///
-        ///let spacerTemplate = document.querySelector(&quot;#spacer&quot;);
+        ///const spacerTemplate = document.querySelector(&quot;#spacer&quot;);
         ///
         ///function startCredits(data)
         ///{
@@ -277,12 +294,11 @@ namespace MixItUp.Base {
         ///        list.removeChild(list.lastChild);
         ///    }
         ///    
-        ///    var listTop = document.documentElement.clientHeight;
+        ///    let listTop = document.documentElement.clientHeight;
         ///    list.style.top = listTop + &quot;px&quot;;
         ///
         ///    data.Order.forEach((id) =&gt;
-        ///    {
-        ///        let sectionTemplate = document.querySele [rest of string was truncated]&quot;;.
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {
@@ -559,24 +575,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to let goalName = document.getElementById(&quot;goalName&quot;);
-        ///let goalEnd = document.getElementById(&quot;goalEnd&quot;);
-        ///let goalBarCompleted = document.getElementById(&quot;goalBarCompleted&quot;);
-        ///let goalAmount = document.getElementById(&quot;goalAmount&quot;);
-        ///let goalMaxAmount = document.getElementById(&quot;goalMaxAmount&quot;);
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///
+        ///const goalName = document.getElementById(&quot;goalName&quot;);
+        ///const goalEnd = document.getElementById(&quot;goalEnd&quot;);
+        ///const goalBarCompleted = document.getElementById(&quot;goalBarCompleted&quot;);
+        ///const goalAmount = document.getElementById(&quot;goalAmount&quot;);
+        ///const goalMaxAmount = document.getElementById(&quot;goalMaxAmount&quot;);
         ///
         ///function update(data)
         ///{
-        ///  goalAmount.innerHTML = data.GoalAmount;
-        ///  adjustProgress(data);
-        ///  {ProgressOccurredAnimation}
-        ///}
-        ///
-        ///function complete(data)
-        ///{
-        ///  update({
-        ///    &quot;GoalAmount&quot;: goalMaxAmount.innerHTML,
-        ///    [rest of string was truncated]&quot;;.
+        ///    goalAmount.innerHTML = data.GoalAmount;
+        ///    adjustProgress(data);
+        ///    performAnimation(&quot;{ProgressOccurredAnimationFramework [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultJavascript {
             get {
@@ -689,25 +700,18 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to var labels = document.getElementById(&quot;labels&quot;);
         ///
-        ///{LabelAdds}
-        ///
         ///var displaySettings = &quot;{DisplaySetting}&quot;;
         ///var displayRotationSeconds = {DisplayRotationSeconds};
         ///var displayRotationIndex = 0;
         ///
-        ///if (displaySettings == &quot;RotatingDisplays&quot;)
-        ///{
-        ///    rotateLabelDisplay();
-        ///}
-        ///else
-        ///{
-        ///    labels.children[0].style.visibility = &quot;visible&quot;;
-        ///}
-        ///
         ///function addLabelDisplay(type, format)
         ///{
-        ///    var labelDisplayTemplate = document.getElementById(&quot;labeldisplay&quot;);
-        ///    const labelDisplay = labelDisplayTemplate.content [rest of string was truncated]&quot;;.
+        ///    let labelDisplayTemplate = document.getElementById(&quot;labeldisplay&quot;);
+        ///    const labelDisplay = labelDisplayTemplate.content.cloneNode(true);
+        ///    const labelText = labelDisplay.querySelector(&quot;.text&quot;);
+        ///    labelText.id = type;
+        ///    labelText.innerHTML = format;
+        ///    labelText.style. [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayLabelDefaultJavascript {
             get {
@@ -760,10 +764,12 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to var totalSeconds = {CurrentAmount};
-        ///var displayFormat = &quot;{DisplayFormat}&quot;;
+        ///   Looks up a localized string similar to const displayFormat = &quot;{DisplayFormat}&quot;;
         ///
+        ///var totalSeconds = {CurrentAmount};
         ///var additionalTime = 0;
+        ///
+        ///const main = document.getElementById(&quot;maindiv&quot;);
         ///
         ///function timerLoop()
         ///{
@@ -773,15 +779,13 @@ namespace MixItUp.Base {
         ///        additionalTime = 0;
         ///
         ///        totalSeconds = Math.max(totalSeconds, 0);
-        ///        {TimerAdjustedAnimation}
+        ///        performAnimation(&quot;{TimerAdjustedAnimationFramework}&quot;, &quot;{TimerAdjustedAnimationName}&quot;, main).then((result) =&gt;
+        ///        {
+        ///            
+        ///        });
         ///    }
         ///
-        ///    var text = displayFormat;
-        ///
-        ///    var seconds = totalSeconds % 60;
-        ///    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
-        ///    text = text.replace(&quot;SS&quot;, totalSeconds);
-        ///    text = [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPersistentTimerDefaultJavascript {
             get {
@@ -899,23 +903,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to let bossImage = document.getElementById(&quot;bossImage&quot;);
-        ///let bossName = document.getElementById(&quot;bossName&quot;);
-        ///let bossHealth = document.getElementById(&quot;bossHealth&quot;);
-        ///let bossMaxHealth = document.getElementById(&quot;bossMaxHealth&quot;);
-        ///let bossHealthBarRemaining = document.getElementById(&quot;bossHealthBarRemaining&quot;);
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///
+        ///const bossImage = document.getElementById(&quot;bossImage&quot;);
+        ///const bossName = document.getElementById(&quot;bossName&quot;);
+        ///const bossHealth = document.getElementById(&quot;bossHealth&quot;);
+        ///const bossMaxHealth = document.getElementById(&quot;bossMaxHealth&quot;);
+        ///const bossHealthBarRemaining = document.getElementById(&quot;bossHealthBarRemaining&quot;);
         ///
         ///function damage(data)
         ///{
         ///    bossHealth.innerHTML = data.BossHealth;
         ///    adjustProgress(data);
-        ///    {DamageAnimation}
-        ///}
-        ///
-        ///function heal(data)
-        ///{
-        ///    bossHealth.innerHTML = data.BossHealth;
-        ///    ad [rest of string was truncated]&quot;;.
+        ///    performAnimation(&quot;{DamageAnimationFra [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayStreamBossDefaultJavascript {
             get {
@@ -975,28 +975,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to var totalSeconds = 0;
-        ///var endingSeconds = 0;
-        ///var displayFormat = &quot;{DisplayFormat}&quot;;
+        ///   Looks up a localized string similar to const displayFormat = &quot;{DisplayFormat}&quot;;
         ///
-        ///if ({CountUp}) {
-        ///    endingSeconds = {Duration};
-        ///}
-        ///else {
-        ///    totalSeconds = {Duration};
-        ///}
+        ///var totalSeconds = 0;
+        ///var endingSeconds = 0;
         ///
         ///function timerLoop()
         ///{
-        ///    var text = displayFormat;
+        ///    let text = displayFormat;
         ///
-        ///    var seconds = totalSeconds % 60;
+        ///    let seconds = totalSeconds % 60;
         ///    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
         ///    text = text.replace(&quot;SS&quot;, totalSeconds);
         ///    text = text.replace(&quot;ss&quot;, seconds);
         ///
-        ///    var totalMinutes = Math.floor(totalSeconds / 60);
-        ///    var minutes = totalMinutes %  [rest of string was truncated]&quot;;.
+        ///    let totalMinutes = Math.floor(totalSeconds / 60);
+        ///    let minutes = totalMinutes % 60;
+        ///    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
+        ///    text = text.replace(&quot;MM&quot;, totalMinu [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayTimerDefaultJavascript {
             get {
@@ -1062,6 +1058,25 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to if (duration == 0.0)
+        ///{
+        ///    var video = document.getElementById(&quot;video&quot;);
+        ///    video.addEventListener(&quot;ended&quot;, (event) =&gt;
+        ///    {
+        ///        performAnimation(&quot;{ExitAnimationFramework}&quot;, &quot;{ExitAnimationName}&quot;, main).then((result) =&gt;
+        ///        {
+        ///            removeSelf();
+        ///        });
+        ///    });
+        ///}.
+        /// </summary>
+        public static string OverlayVideoActionDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayVideoActionDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .video {
         ///    width: {Width};
         ///    height: {Height};
@@ -1081,18 +1096,6 @@ namespace MixItUp.Base {
         public static string OverlayVideoDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayVideoDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to var video = document.getElementById(&quot;video&quot;);
-        ///video.addEventListener(&quot;ended&quot;, (event) =&gt; {
-        ///    {PostEvent}
-        ///});.
-        /// </summary>
-        public static string OverlayVideoNoDurationJavascript {
-            get {
-                return ResourceManager.GetString("OverlayVideoNoDurationJavascript", resourceCulture);
             }
         }
         
@@ -1142,15 +1145,6 @@ namespace MixItUp.Base {
         public static string OverlayYouTubeDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to event.target.destroy();.
-        /// </summary>
-        public static string OverlayYouTubeIFrameDestroyJavascript {
-            get {
-                return ResourceManager.GetString("OverlayYouTubeIFrameDestroyJavascript", resourceCulture);
             }
         }
         

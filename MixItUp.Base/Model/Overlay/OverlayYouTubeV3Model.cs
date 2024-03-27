@@ -12,7 +12,7 @@ namespace MixItUp.Base.Model.Overlay
     {
         public static readonly string DefaultHTML = OverlayResources.OverlayYouTubeDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayYouTubeDefaultCSS;
-        public static readonly string DefaultJavascript = OverlayResources.OverlayYouTubeDefaultJavascript;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + "\n\n" + OverlayResources.OverlayYouTubeDefaultJavascript;
 
         [DataMember]
         public string VideoID { get; set; }
