@@ -1,14 +1,18 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    [DataContract]
     public class OverlayGameQueueV3Model : OverlayVisualTextV3ModelBase
     {
         public static readonly string DefaultHTML = OverlayResources.OverlayGameQueueDefaultHTML;
@@ -69,6 +73,14 @@ namespace MixItUp.Base.Model.Overlay
             properties["ItemRemovedAnimationName"] = this.ItemRemovedAnimation.AnimationName;
 
             return properties;
+        }
+
+        public override async Task ProcessPacket(OverlayV3Packet packet)
+        {
+            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
+            {
+                await this.UpdateGameQueue(ServiceManager.Get<GameQueueService>().Queue.ToList().Select(p => p.User));
+            }
         }
 
         protected override async Task WidgetEnableInternal()

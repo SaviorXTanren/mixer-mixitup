@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Util;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay

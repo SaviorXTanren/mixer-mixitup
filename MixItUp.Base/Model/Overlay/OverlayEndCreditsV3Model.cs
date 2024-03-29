@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
@@ -188,7 +189,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayEndCreditsV3Model : OverlayEventTrackingV3ModelBase
     {
-        public const string EndCreditsLoadedPacketType = "EndCreditsLoaded";
         public const string EndCreditsStartedPacketType = "EndCreditsStarted";
         public const string EndCreditsCompletedPacketType = "EndCreditsCompleted";
 
@@ -253,7 +253,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessPacket(OverlayV3Packet packet)
         {
-            if (string.Equals(packet.Type, OverlayEndCreditsV3Model.EndCreditsLoadedPacketType))
+            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
             {
                 if (this.RunCreditsWhenVisible)
                 {

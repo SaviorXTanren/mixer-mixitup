@@ -25,6 +25,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayEventListHeaderV3Model() : base(OverlayItemV3Type.Text) { }
     }
 
+    [DataContract]
     public class OverlayEventListV3Model : OverlayEventTrackingV3ModelBase
     {
         public const string DetailsAmountPropertyName = "Amount";
