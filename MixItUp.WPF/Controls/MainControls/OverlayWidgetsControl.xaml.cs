@@ -115,6 +115,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     OverlayItemV3Type.EndCredits,
                     OverlayItemV3Type.GameQueue,
                     OverlayItemV3Type.EventList,
+                    OverlayItemV3Type.Leaderboard,
                 };
 
                 string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames(widgetTypes), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);

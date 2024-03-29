@@ -26,6 +26,7 @@ namespace MixItUp.Base.Model.Overlay
         EndCredits,
         GameQueue,
         EventList,
+        Leaderboard,
     }
 
     public enum OverlayItemV3DisplayOptionsType

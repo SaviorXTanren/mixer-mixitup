@@ -279,26 +279,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const scrollSpeed = {ScrollSpeed};
-        ///const runEndlessly = {RunEndlessly};
-        ///const fadeTime = 3000;
+        ///   Looks up a localized string similar to const list = document.getElementById(&quot;list&quot;);
         ///
-        ///const main = document.getElementById(&quot;maindiv&quot;);
-        ///const list = document.getElementById(&quot;list&quot;);
+        ///const itemTemplate = document.querySelector(&quot;#item&quot;);
         ///
-        ///const spacerTemplate = document.querySelector(&quot;#spacer&quot;);
+        ///var items = [];
         ///
-        ///function startCredits(data)
+        ///function clear(data)
         ///{
-        ///    while (list.firstChild) {
-        ///        list.removeChild(list.lastChild);
+        ///    items = [];
+        ///    while (list.childElementCount &gt; 0)
+        ///    {
+        ///        list.removeChild(list.lastElementChild);
         ///    }
-        ///    
-        ///    let listTop = document.documentElement.clientHeight;
-        ///    list.style.top = listTop + &quot;px&quot;;
+        ///}
         ///
-        ///    data.Order.forEach((id) =&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///function update(data)
+        ///{
+        ///    for (let i = 0; i &lt; items.length &amp;&amp; i &lt; data.Items.length; i++)
+        ///    {
+        ///        if (items[i] !== data.Items[i].User.ID)
+        ///        {
+        ///            let oldItem = list.children[i];
+        ///            let newItem = cre [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {
@@ -734,6 +737,95 @@ namespace MixItUp.Base {
         public static string OverlayLabelUsernameDefaultFormat {
             get {
                 return ResourceManager.GetString("OverlayLabelUsernameDefaultFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .list {
+        ///}
+        ///
+        ///.item {
+        ///    width: {Width};
+        ///    height: {Height};
+        ///    background-color: {BackgroundColor};
+        ///    border-style: solid;
+        ///    border-width: 5px;
+        ///    border-color: {BorderColor};
+        ///    overflow: hidden;
+        ///}
+        ///
+        ///.itemContents {
+        ///    display: flex;
+        ///    flex-direction: column;
+        ///    height: 100%;
+        ///    justify-content: space-between;
+        ///}
+        ///
+        ///.topLeft {
+        ///    margin-top: 10px;
+        ///    margin-left: 10px;
+        ///}
+        ///
+        ///.bottomRight {
+        ///    align-self: end;
+        ///    margin-bottom: 10px;
+        ///    margin-right: 10px;
+        ///}
+        ///
+        ///.heade [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayLeaderboardDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayLeaderboardDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
+        ///
+        ///&lt;template id=&quot;item&quot;&gt;
+        ///    &lt;div class=&quot;item&quot;&gt;
+        ///        &lt;div class=&quot;itemContents&quot;&gt;
+        ///            &lt;span class=&quot;header topLeft&quot;&gt;&lt;/span&gt;
+        ///            &lt;span class=&quot;text bottomRight&quot;&gt;&lt;/span&gt;
+        ///        &lt;/div&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/template&gt;.
+        /// </summary>
+        public static string OverlayLeaderboardDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayLeaderboardDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const list = document.getElementById(&quot;list&quot;);
+        ///
+        ///const itemTemplate = document.querySelector(&quot;#item&quot;);
+        ///
+        ///var items = [];
+        ///
+        ///function clear(data)
+        ///{
+        ///    items = [];
+        ///    while (list.childElementCount &gt; 0)
+        ///    {
+        ///        list.removeChild(list.lastElementChild);
+        ///    }
+        ///}
+        ///
+        ///function update(data)
+        ///{
+        ///    for (let i = 0; i &lt; items.length &amp;&amp; i &lt; data.Items.length; i++)
+        ///    {
+        ///        if (items[i] !== data.Items[i].User.ID)
+        ///        {
+        ///            let oldItem = list.children[i];
+        ///            let newItem = cre [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayLeaderboardDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayLeaderboardDefaultJavascript", resourceCulture);
             }
         }
         

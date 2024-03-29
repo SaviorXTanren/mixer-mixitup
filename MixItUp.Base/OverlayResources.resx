@@ -462,7 +462,87 @@ function removeInternal(message)
 {Sections}</value>
   </data>
   <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
-    <value>const scrollSpeed = {ScrollSpeed};
+    <value>const list = document.getElementById("list");
+
+const itemTemplate = document.querySelector("#item");
+
+var items = [];
+
+function clear(data)
+{
+    items = [];
+    while (list.childElementCount &gt; 0)
+    {
+        list.removeChild(list.lastElementChild);
+    }
+}
+
+function update(data)
+{
+    for (let i = 0; i &lt; items.length &amp;&amp; i &lt; data.Items.length; i++)
+    {
+        if (items[i] !== data.Items[i].User.ID)
+        {
+            let oldItem = list.children[i];
+            let newItem = createItem(data.Items[i]);
+            performAnimation("{ItemRemovedAnimationFramework}", "{ItemRemovedAnimationName}", oldItem).then((result) =&gt;
+            {
+                oldItem.replaceWith(newItem);
+                addItem(newItem);
+            });
+        }
+    }
+    
+    if (data.Items.length &gt; items.length)
+    {
+        for (let i = items.length; i &lt; data.Items.length; i++)
+        {
+            let item = createItem(data.Items[i]);
+            list.appendChild(item);
+            addItem(item);
+        }
+    }
+    else if (items.length &gt; data.Items.length)
+    {
+        for (let i = items.length - data.Items.length; i &gt; 0; i--)
+        {
+            let oldItem = list.lastElementChild;
+            performAnimation("{ItemRemovedAnimationFramework}", "{ItemRemovedAnimationName}", oldItem).then((result) =&gt;
+            {
+                list.removeChild(oldItem);
+            });
+        }
+    }
+    
+    items = [];
+    for (let i = 0; i &lt; data.Items.length; i++)
+    {
+        items.push(data.Items[i].User.ID);
+    }
+}
+
+function createItem(itemData)
+{
+    let item = itemTemplate.content.cloneNode(true);
+    
+    let header = item.firstElementChild.querySelector(".header");
+    header.textContent = itemData.User.DisplayName;
+    
+    let text = item.firstElementChild.querySelector(".text");
+    text.textContent = itemData.Details;
+    
+    return item.firstElementChild;
+}
+
+function addItem(item)
+{
+    performAnimation("{ItemAddedAnimationFramework}", "{ItemAddedAnimationName}", item).then((result) =&gt;
+    {
+        
+    });
+}
+
+const scrollSpeed = {ScrollSpeed};
 const runEndlessly = {RunEndlessly};
 const fadeTime = 3000;
 
@@ -550,7 +630,7 @@ function moveCredits(listTop)
     }, scrollSpeed);
 }
 
-sendParentMessage({ Type: "EndCreditsLoaded", ID: "{ID}" });</value>
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayEndCreditsSectionDefaultHTML" xml:space="preserve">
     <value>&lt;template id="section-{SectionID}"&gt;
@@ -821,7 +901,9 @@ function addItem(item)
     {
         
     });
-}</value>
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayGoalDefaultCSS" xml:space="preserve">
     <value>.mainContainer {
@@ -1137,6 +1219,144 @@ else
   </data>
   <data name="OverlayLabelUsernameDefaultFormat" xml:space="preserve">
     <value>$userdisplayname</value>
+  </data>
+  <data name="OverlayLeaderboardDefaultCSS" xml:space="preserve">
+    <value>.list {
+}
+
+.item {
+    width: {Width};
+    height: {Height};
+    background-color: {BackgroundColor};
+    border-style: solid;
+    border-width: 5px;
+    border-color: {BorderColor};
+    overflow: hidden;
+}
+
+.itemContents {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.topLeft {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.bottomRight {
+    align-self: end;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.header {
+    font-size: {HeaderFontSize}px;
+    color: {HeaderFontColor};
+    font-family: '{HeaderFontFamily}';
+    font-weight: {HeaderFontWeight};
+    text-decoration: {HeaderTextDecoration};
+    font-style: {HeaderFontStyle};
+    text-align: {HeaderTextAlignment};
+    text-shadow: {HeaderShadowColor};
+}</value>
+  </data>
+  <data name="OverlayLeaderboardDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
+
+&lt;template id="item"&gt;
+    &lt;div class="item"&gt;
+        &lt;div class="itemContents"&gt;
+            &lt;span class="header topLeft"&gt;&lt;/span&gt;
+            &lt;span class="text bottomRight"&gt;&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</value>
+  </data>
+  <data name="OverlayLeaderboardDefaultJavascript" xml:space="preserve">
+    <value>const list = document.getElementById("list");
+
+const itemTemplate = document.querySelector("#item");
+
+var items = [];
+
+function clear(data)
+{
+    items = [];
+    while (list.childElementCount &gt; 0)
+    {
+        list.removeChild(list.lastElementChild);
+    }
+}
+
+function update(data)
+{
+    for (let i = 0; i &lt; items.length &amp;&amp; i &lt; data.Items.length; i++)
+    {
+        if (items[i] !== data.Items[i].User.ID)
+        {
+            let oldItem = list.children[i];
+            let newItem = createItem(data.Items[i]);
+            performAnimation("{ItemRemovedAnimationFramework}", "{ItemRemovedAnimationName}", oldItem).then((result) =&gt;
+            {
+                oldItem.replaceWith(newItem);
+                addItem(newItem);
+            });
+        }
+    }
+    
+    if (data.Items.length &gt; items.length)
+    {
+        for (let i = items.length; i &lt; data.Items.length; i++)
+        {
+            let item = createItem(data.Items[i]);
+            list.appendChild(item);
+            addItem(item);
+        }
+    }
+    else if (items.length &gt; data.Items.length)
+    {
+        for (let i = items.length - data.Items.length; i &gt; 0; i--)
+        {
+            let oldItem = list.lastElementChild;
+            performAnimation("{ItemRemovedAnimationFramework}", "{ItemRemovedAnimationName}", oldItem).then((result) =&gt;
+            {
+                list.removeChild(oldItem);
+            });
+        }
+    }
+    
+    items = [];
+    for (let i = 0; i &lt; data.Items.length; i++)
+    {
+        items.push(data.Items[i].User.ID);
+    }
+}
+
+function createItem(itemData)
+{
+    let item = itemTemplate.content.cloneNode(true);
+    
+    let header = item.firstElementChild.querySelector(".header");
+    header.textContent = itemData.User.DisplayName;
+    
+    let text = item.firstElementChild.querySelector(".text");
+    text.textContent = itemData.Details;
+    
+    return item.firstElementChild;
+}
+
+function addItem(item)
+{
+    performAnimation("{ItemAddedAnimationFramework}", "{ItemAddedAnimationName}", item).then((result) =&gt;
+    {
+        
+    });
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayMainHTML" xml:space="preserve">
     <value>&lt;!DOCTYPE html&gt;

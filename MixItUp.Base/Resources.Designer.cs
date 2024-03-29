@@ -997,6 +997,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Time.
+        /// </summary>
+        public static string AllTime {
+            get {
+                return ResourceManager.GetString("AllTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All Voices.
         /// </summary>
         public static string AllVoices {
@@ -3550,6 +3559,15 @@ namespace MixItUp.Base {
         public static string ConnectedServicesFailed {
             get {
                 return ResourceManager.GetString("ConnectedServicesFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consumable.
+        /// </summary>
+        public static string Consumable {
+            get {
+                return ResourceManager.GetString("Consumable", resourceCulture);
             }
         }
         
@@ -14740,6 +14758,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A valid consumable must be selected.
+        /// </summary>
+        public static string OverlayLeaderboardValidConsumableMustBeSelected {
+            get {
+                return ResourceManager.GetString("OverlayLeaderboardValidConsumableMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max To Show must be a valid value.
         /// </summary>
         public static string OverlayMaxToShowMustBeValidValue {
@@ -24632,6 +24659,15 @@ namespace MixItUp.Base {
         public static string ViewingThirtyMinutes {
             get {
                 return ResourceManager.GetString("ViewingThirtyMinutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Viewing Time.
+        /// </summary>
+        public static string ViewingTime {
+            get {
+                return ResourceManager.GetString("ViewingTime", resourceCulture);
             }
         }
         

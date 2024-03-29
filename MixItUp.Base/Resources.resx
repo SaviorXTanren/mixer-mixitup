@@ -10146,4 +10146,16 @@ namespace CustomNamespace
   <data name="AddToTop" xml:space="preserve">
     <value>Add To Top</value>
   </data>
+  <data name="Consumable" xml:space="preserve">
+    <value>Consumable</value>
+  </data>
+  <data name="ViewingTime" xml:space="preserve">
+    <value>Viewing Time</value>
+  </data>
+  <data name="AllTime" xml:space="preserve">
+    <value>All Time</value>
+  </data>
+  <data name="OverlayLeaderboardValidConsumableMustBeSelected" xml:space="preserve">
+    <value>A valid consumable must be selected</value>
+  </data>
 </root>

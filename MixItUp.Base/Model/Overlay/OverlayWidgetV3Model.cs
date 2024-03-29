@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Services;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
@@ -11,6 +10,8 @@ namespace MixItUp.Base.Model.Overlay.Widgets
     [DataContract]
     public class OverlayWidgetV3Model
     {
+        public const string WidgetLoadedPacketType = "WidgetLoaded";
+
         [DataMember]
         public string Name { get; set; }
 
