@@ -132,10 +132,11 @@ namespace MixItUp.Base.Services.External
 
                 if (waitForFinish)
                 {
+                    DateTimeOffset start = DateTimeOffset.Now;
                     do
                     {
                         await Task.Delay(100);
-                    } while (!this.completedRequests.Contains(ttsRequset.ID.ToString()));
+                    } while (!this.completedRequests.Contains(ttsRequset.ID.ToString()) && (DateTimeOffset.Now - start).TotalMinutes < 1);
 
                     this.completedRequests.Remove(ttsRequset.ID.ToString());
                     overlay.OnPacketReceived -= Overlay_OnPacketReceived;

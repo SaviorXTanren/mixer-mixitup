@@ -178,12 +178,14 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
             }
 
-            this.SelectedVoice = this.Voices.FirstOrDefault(v => string.Equals(v.ID, action.Voice, StringComparison.OrdinalIgnoreCase));
             this.Text = action.Text;
             this.Volume = action.Volume;
             this.Pitch = action.Pitch;
             this.Rate = action.Rate;
             this.WaitForFinish = action.WaitForFinish;
+
+            this.UpdateTextToSpeechProvider();
+            this.SelectedVoice = this.Voices.FirstOrDefault(v => string.Equals(v.ID, action.Voice, StringComparison.OrdinalIgnoreCase));
         }
 
         public TextToSpeechActionEditorControlViewModel()
@@ -193,6 +195,8 @@ namespace MixItUp.Base.ViewModel.Actions
             this.SelectedAudioDevice = ServiceManager.Get<IAudioService>().DefaultAudioDevice;
 
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+
+            this.SelectedProviderType = TextToSpeechProviderType.WindowsTextToSpeech;
 
             this.UpdateTextToSpeechProvider();
         }

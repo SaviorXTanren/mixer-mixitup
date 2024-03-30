@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -52,26 +51,8 @@ namespace MixItUp.WPF.Services
                 }
                 else
                 {
-                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                    audioTasks[cancellationTokenSource.Token] = cancellationTokenSource;
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () =>
-                    {
-                        Tuple<WaveOutEvent, WaveStream> output = this.PlayWithOutput(filePath, volume, deviceName);
-                        WaveOutEvent waveOut = output.Item1;
-                        using (waveOut)
-                        {
-                            if (waveOut != null)
-                            {
-                                while (waveOut.PlaybackState == PlaybackState.Playing && !cancellationTokenSource.Token.IsCancellationRequested)
-                                {
-                                    await Task.Delay(500);
-                                }
-                                waveOut.Dispose();
-                                cancellationTokenSource.Cancel();
-                            }
-                        }
-                    }, cancellationTokenSource.Token);
+                    this.PlayAndCleanUp(this.PlayWithOutput(filePath, volume, deviceName));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
@@ -79,12 +60,28 @@ namespace MixItUp.WPF.Services
 
         public Task PlayMP3(Stream stream, int volume, string deviceName, bool track = true, bool waitForFinish = false)
         {
-            throw new NotImplementedException();
+            float floatVolume = this.ConvertVolumeAmount(volume);
+            WaveOutEvent outputEvent = this.CreateWaveOutEvent(deviceName);
+            outputEvent.Volume = floatVolume;
+            Mp3FileReader mp3Stream = new Mp3FileReader(stream);
+
+            outputEvent.Init(mp3Stream);
+            outputEvent.Play();
+
+            return this.PlayAndCleanUp(new Tuple<WaveOutEvent, WaveStream>(outputEvent, mp3Stream));
         }
 
         public Task PlayPCM(Stream stream, int volume, string deviceName, bool track = true, bool waitForFinish = false)
         {
-            throw new NotImplementedException();
+            float floatVolume = this.ConvertVolumeAmount(volume);
+            WaveOutEvent outputEvent = this.CreateWaveOutEvent(deviceName);
+            outputEvent.Volume = floatVolume;
+            RawSourceWaveStream rawSourceStream = new RawSourceWaveStream(stream, new WaveFormat(88200, 16, 1));
+
+            outputEvent.Init(rawSourceStream);
+            outputEvent.Play();
+
+            return this.PlayAndCleanUp(new Tuple<WaveOutEvent, WaveStream>(outputEvent, rawSourceStream));
         }
 
         public async Task PlayNotification(string filePath, int volume, bool track = true)
@@ -156,15 +153,8 @@ namespace MixItUp.WPF.Services
 
         public Tuple<WaveOutEvent, WaveStream> PlayWithOutput(string filePath, int volume, string deviceName)
         {
-            int deviceNumber = -1;
-            if (!string.IsNullOrEmpty(deviceName))
-            {
-                deviceNumber = this.GetOutputDeviceID(deviceName);
-            }
-
             float floatVolume = this.ConvertVolumeAmount(volume);
-
-            WaveOutEvent outputEvent = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber };
+            WaveOutEvent outputEvent = this.CreateWaveOutEvent(deviceName);
             WaveStream waveStream = null;
             if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -188,6 +178,45 @@ namespace MixItUp.WPF.Services
         }
 
         public float ConvertVolumeAmount(int amount) { return MathHelper.Clamp(amount, 0, 100) / 100.0f; }
+
+        private WaveOutEvent CreateWaveOutEvent(string deviceName)
+        {
+            int deviceNumber = -1;
+            if (!string.IsNullOrEmpty(deviceName))
+            {
+                deviceNumber = this.GetOutputDeviceID(deviceName);
+            }
+            return (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber };
+        }
+
+        private Task PlayAndCleanUp(Tuple<WaveOutEvent, WaveStream> output)
+        {
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            audioTasks[cancellationTokenSource.Token] = cancellationTokenSource;
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    WaveOutEvent waveOut = output.Item1;
+                    using (waveOut)
+                    {
+                        if (waveOut != null)
+                        {
+                            while (waveOut.PlaybackState == PlaybackState.Playing && !cancellationTokenSource.Token.IsCancellationRequested)
+                            {
+                                await Task.Delay(500);
+                            }
+                            waveOut.Dispose();
+                            cancellationTokenSource.Cancel();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            }, cancellationTokenSource.Token);
+        }
 
         private int GetOutputDeviceID(string deviceName)
         {

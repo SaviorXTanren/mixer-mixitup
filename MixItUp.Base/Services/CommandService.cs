@@ -547,7 +547,7 @@ namespace MixItUp.Base.Services
                     ActionModelBase action = actions[i];
                     if (ServiceManager.Get<OverlayV3Service>().IsConnected)
                     {
-                        if (action is OverlayActionModel || action is TextToSpeechActionModel)
+                        if (action is OverlayActionModel)
                         {
                             ServiceManager.Get<OverlayV3Service>().StartBatching();
                         }
