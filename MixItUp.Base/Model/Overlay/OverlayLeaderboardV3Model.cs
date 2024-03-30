@@ -123,8 +123,10 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public override Task ProcessPacket(OverlayV3Packet packet)
+        public override async Task ProcessPacket(OverlayV3Packet packet)
         {
+            await base.ProcessPacket(packet);
+
             if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
             {
                 if (this.cancellationTokenSource != null)
@@ -153,7 +155,6 @@ namespace MixItUp.Base.Model.Overlay
                 }
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
-            return Task.CompletedTask;
         }
 
         protected override async Task WidgetDisableInternal()

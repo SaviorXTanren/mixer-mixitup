@@ -60,7 +60,22 @@
                 <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">
                     <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
                         <TabItem Header="{x:Static resx:Resources.Details}" HorizontalAlignment="Stretch">
-                            <ContentControl x:Name="InnerContent" Margin="10" DataContext="{Binding Item}" />
+                            <Grid Margin="10" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <ContentControl x:Name="InnerContent" Grid.Row="0" DataContext="{Binding Item}" />
+
+                                <Grid Grid.Row="1" Visibility="{Binding IsBasicWidget}" Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBox Text="{Binding RefreshTime}" Grid.Column="0" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RefreshTimeSecs}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                </Grid>
+                            </Grid>
                         </TabItem>
 
                         <TabItem Header="{x:Static resx:Resources.Position}" HorizontalContentAlignment="Stretch">

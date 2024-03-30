@@ -599,6 +599,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to function update(data)
+        ///{
+        ///
+        ///}
+        ///
+        ///sendParentMessage({ Type: &quot;WidgetLoaded&quot;, ID: &quot;{ID}&quot; });.
+        /// </summary>
+        public static string OverlayHTMLWidgetDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayHTMLWidgetDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .image {
         ///    width: {Width};
         ///    height: {Height};
@@ -611,11 +625,34 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{URLPath}&quot; /&gt;.
         /// </summary>
         public static string OverlayImageDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayImageDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const image = document.getElementById(&quot;image&quot;);
+        ///
+        ///var lastFilePathID = &quot;{FilePathID}&quot;;
+        ///
+        ///function update(data)
+        ///{
+        ///    if (lastFilePathID !== data.FilePathID)
+        ///    {
+        ///        lastFilePathID = data.FilePathID;
+        ///        
+        ///        image.src = data.URLPath;
+        ///    }
+        ///}
+        ///
+        ///sendParentMessage({ Type: &quot;WidgetLoaded&quot;, ID: &quot;{ID}&quot; });.
+        /// </summary>
+        public static string OverlayImageWidgetDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayImageWidgetDefaultJavascript", resourceCulture);
             }
         }
         
@@ -1045,6 +1082,22 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to const text = document.getElementById(&quot;text&quot;);
+        ///
+        ///function update(data)
+        ///{
+        ///    text.textContent = data.Text;
+        ///}
+        ///
+        ///sendParentMessage({ Type: &quot;WidgetLoaded&quot;, ID: &quot;{ID}&quot; });.
+        /// </summary>
+        public static string OverlayTextWidgetDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayTextWidgetDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to setTimeout(function () {
         ///    {PostTimeout}
         ///}, {MillisecondTiming});.
@@ -1182,12 +1235,39 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
-        ///    &lt;source src=&quot;{FilePath}&quot; /&gt;
+        ///    &lt;source id=&quot;videosource&quot; src=&quot;{URLPath}&quot; /&gt;
         ///&lt;/video&gt;.
         /// </summary>
         public static string OverlayVideoDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayVideoDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const video = document.getElementById(&quot;video&quot;);
+        ///const videosource = document.getElementById(&quot;videosource&quot;);
+        ///
+        ///var lastFilePathID = &quot;{FilePathID}&quot;;
+        ///
+        ///function update(data)
+        ///{
+        ///    if (lastFilePathID !== data.FilePathID)
+        ///    {
+        ///        lastFilePathID = data.FilePathID;
+        ///        
+        ///        video.pause();
+        ///        videosource.setAttribute(&quot;src&quot;, data.URLPath);
+        ///        video.load();
+        ///        video.play();
+        ///    }
+        ///}
+        ///
+        ///sendParentMessage({ Type: &quot;WidgetLoaded&quot;, ID: &quot;{ID}&quot; });.
+        /// </summary>
+        public static string OverlayVideoWidgetDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayVideoWidgetDefaultJavascript", resourceCulture);
             }
         }
         
@@ -1237,6 +1317,28 @@ namespace MixItUp.Base {
         public static string OverlayYouTubeDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to var youtubeVideoPlayer;
+        ///var lastVideoID = &apos;{VideoID}&apos;;
+        ///
+        ///function onYouTubeIframeAPIReady() {
+        ///    youtubeVideoPlayer = new YT.Player(&quot;youtube-player&quot;, {
+        ///        height: {HeightNumber},
+        ///        width: {WidthNumber},
+        ///        videoId: &apos;{VideoID}&apos;,
+        ///        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
+        ///        events: {
+        ///            &apos;onReady&apos;: function () {
+        ///                youtubeVideoPlayer.setVolume({Volume});
+        ///                youtubeVideoPlayer.setLoop(false);
+        ///            [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayYouTubeWidgetDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayYouTubeWidgetDefaultJavascript", resourceCulture);
             }
         }
         

@@ -55,31 +55,15 @@ namespace MixItUp.Base.Model.Overlay.Widgets
 
             if (this.RefreshTime > 0)
             {
-                if (this.refreshCancellationTokenSource != null)
-                {
-                    this.refreshCancellationTokenSource.Cancel();
-                }
-                this.refreshCancellationTokenSource = new CancellationTokenSource();
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                {
-                    do
-                    {
-                        await Task.Delay(1000 * RefreshTime);
-
-                        //await this.CallFunction("Update", null, null);
-
-                    } while (!cancellationToken.IsCancellationRequested);
-
-                }, this.refreshCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                this.Item.LoadedInWidget += Item_LoadedInWidget;
             }
         }
 
         public async Task Disable()
         {
             await this.Item.WidgetDisable();
+
+            this.Item.LoadedInWidget -= Item_LoadedInWidget;
 
             if (this.refreshCancellationTokenSource != null)
             {
@@ -98,6 +82,32 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         public async Task SendInitial()
         {
             await this.Item.WidgetSendInitial();
+        }
+
+        private void Item_LoadedInWidget(object sender, EventArgs e)
+        {
+            if (this.refreshCancellationTokenSource != null)
+            {
+                this.refreshCancellationTokenSource.Cancel();
+            }
+            this.refreshCancellationTokenSource = new CancellationTokenSource();
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+            {
+                do
+                {
+                    await Task.Delay(1000 * this.RefreshTime);
+
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        await this.Item.WidgetUpdate();
+                    }
+
+                } while (!cancellationToken.IsCancellationRequested);
+
+            }, this.refreshCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
     }
 }

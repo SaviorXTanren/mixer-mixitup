@@ -10,6 +10,9 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayVideoV3Model : OverlayItemV3ModelBase
     {
+        public const string FilePathIDPropertyName = "FilePathID";
+        public const string URLPathPropertyName = "URLPath";
+
         public static readonly string DefaultHTML = OverlayResources.OverlayVideoDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayVideoDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + "\n\n" + OverlayResources.OverlayVideoActionDefaultJavascript;
@@ -36,8 +39,12 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
         {
-            properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)].ToString(), parameters);
-            properties[nameof(this.FilePath)] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)].ToString(), "video");
+            if (!string.IsNullOrEmpty(this.FilePath))
+            {
+                properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)].ToString(), parameters);
+                properties[FilePathIDPropertyName] = properties[nameof(this.FilePath)].ToString().GetHashCode().ToString();
+                properties[URLPathPropertyName] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)].ToString(), "video");
+            }
         }
     }
 }

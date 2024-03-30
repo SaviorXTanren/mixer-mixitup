@@ -1048,6 +1048,14 @@ reset({
     "GoalMaxAmount": {GoalMaxAmount},
 });</value>
   </data>
+  <data name="OverlayHTMLWidgetDefaultJavascript" xml:space="preserve">
+    <value>function update(data)
+{
+
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
+  </data>
   <data name="OverlayImageDefaultCSS" xml:space="preserve">
     <value>.image {
     width: {Width};
@@ -1055,7 +1063,24 @@ reset({
 }</value>
   </data>
   <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id="image" class="image" src="{FilePath}" /&gt;</value>
+    <value>&lt;img id="image" class="image" src="{URLPath}" /&gt;</value>
+  </data>
+  <data name="OverlayImageWidgetDefaultJavascript" xml:space="preserve">
+    <value>const image = document.getElementById("image");
+
+var lastFilePathID = "{FilePathID}";
+
+function update(data)
+{
+    if (lastFilePathID !== data.FilePathID)
+    {
+        lastFilePathID = data.FilePathID;
+        
+        image.src = data.URLPath;
+    }
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayItemHideAndSendParentMessageRemoveJavascript" xml:space="preserve">
     <value>maindiv.style.visibility='hidden';
@@ -1924,6 +1949,16 @@ newboss({
     {Text}
 &lt;/p&gt;</value>
   </data>
+  <data name="OverlayTextWidgetDefaultJavascript" xml:space="preserve">
+    <value>const text = document.getElementById("text");
+
+function update(data)
+{
+    text.textContent = data.Text;
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
+  </data>
   <data name="OverlayTimeoutWrapperJavascript" xml:space="preserve">
     <value>setTimeout(function () {
     {PostTimeout}
@@ -2039,8 +2074,29 @@ clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.locati
   </data>
   <data name="OverlayVideoDefaultHTML" xml:space="preserve">
     <value>&lt;video id="video" class="video" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
-    &lt;source src="{FilePath}" /&gt;
+    &lt;source id="videosource" src="{URLPath}" /&gt;
 &lt;/video&gt;</value>
+  </data>
+  <data name="OverlayVideoWidgetDefaultJavascript" xml:space="preserve">
+    <value>const video = document.getElementById("video");
+const videosource = document.getElementById("videosource");
+
+var lastFilePathID = "{FilePathID}";
+
+function update(data)
+{
+    if (lastFilePathID !== data.FilePathID)
+    {
+        lastFilePathID = data.FilePathID;
+        
+        video.pause();
+        videosource.setAttribute("src", data.URLPath);
+        video.load();
+        video.play();
+    }
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
     <value>&lt;iframe frameborder="0" width="{Width}" height="{Height}" src="{URL}" /&gt;</value>
@@ -2087,6 +2143,48 @@ var youtubePlayerScript = document.createElement('script');
 youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);</value>
+  </data>
+  <data name="OverlayYouTubeWidgetDefaultJavascript" xml:space="preserve">
+    <value>var youtubeVideoPlayer;
+var lastVideoID = '{VideoID}';
+
+function onYouTubeIframeAPIReady() {
+    youtubeVideoPlayer = new YT.Player("youtube-player", {
+        height: {HeightNumber},
+        width: {WidthNumber},
+        videoId: '{VideoID}',
+        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': {StartTime} },
+        events: {
+            'onReady': function () {
+                youtubeVideoPlayer.setVolume({Volume});
+                youtubeVideoPlayer.setLoop(false);
+                youtubeVideoPlayer.frameBorder = 0;
+                youtubeVideoPlayer.playVideo();
+            },
+            'onStateChange': function (event) {
+                if (event.data == YT.PlayerState.ENDED) {
+                    
+                }
+            }
+        }
+    });
+}
+
+function update(data)
+{
+    if (youtubeVideoPlayer != null &amp;&amp; lastVideoID !== data.VideoID)
+    {
+        lastVideoID = data.VideoID;
+        youtubeVideoPlayer.loadVideoById(data.VideoID);
+    }
+}
+
+var youtubePlayerScript = document.createElement('script');
+youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="videoCSS" xml:space="preserve">
     <value>@charset "UTF-8";

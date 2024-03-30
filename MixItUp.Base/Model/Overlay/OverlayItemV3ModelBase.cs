@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -17,11 +19,12 @@ namespace MixItUp.Base.Model.Overlay
         YouTube,
         HTML,
         Timer,
-        Label,
         TwitchClip,
+
+        PersistentTimer,
+        Label,
         StreamBoss,
         Goal,
-        PersistentTimer,
         Chat,
         EndCredits,
         GameQueue,
@@ -54,6 +57,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public static readonly string PositionedHTML = OverlayResources.OverlayPositionedItemDefaultHTML;
         public static readonly string PositionedCSS = OverlayResources.OverlayPositionedItemDefaultCSS;
+
+        public event EventHandler LoadedInWidget = delegate { };
 
         public static string GetPositionWrappedHTML(string innerHTML)
         {
@@ -199,6 +204,21 @@ namespace MixItUp.Base.Model.Overlay
             await this.WidgetEnable();
         }
 
+        public async Task WidgetUpdate()
+        {
+            CommandParametersModel parameters = new CommandParametersModel();
+            Dictionary<string, object> data = this.GetGenerationProperties();
+            foreach (string key in data.Keys.ToList())
+            {
+                if (data[key] != null)
+                {
+                    data[key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(data[key].ToString(), parameters);
+                }
+            }
+            await this.ProcessGenerationProperties(data, new CommandParametersModel());
+            await this.CallFunction("update", data);
+        }
+
         public async Task WidgetSendInitial()
         {
             OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
@@ -225,7 +245,23 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public virtual Task ProcessPacket(OverlayV3Packet packet) { return Task.CompletedTask; }
+        public async Task CallFunction(string functionName, Dictionary<string, object> data)
+        {
+            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
+            if (overlay != null)
+            {
+                await overlay.Function(this.ID.ToString(), functionName, data);
+            }
+        }
+
+        public virtual Task ProcessPacket(OverlayV3Packet packet)
+        {
+            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
+            {
+                this.LoadedInWidget(this, new EventArgs());
+            }
+            return Task.CompletedTask;
+        }
 
         protected virtual Task WidgetEnableInternal() { return Task.CompletedTask; }
 
@@ -233,14 +269,9 @@ namespace MixItUp.Base.Model.Overlay
 
         protected virtual Task WidgetResetInternal() { return Task.CompletedTask; }
 
-        protected async Task CallFunction(string functionName, Dictionary<string, object> data)
+        protected virtual Task<Dictionary<string, object>> WidgetUpdateInternal()
         {
-            // TODO: Change to support different overlay endpoints or direct URLs
-            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
-            if (overlay != null)
-            {
-                await overlay.Function(this.ID.ToString(), functionName, data);
-            }
+            return Task.FromResult(new Dictionary<string, object>());
         }
 
         protected OverlayEndpointV3Service GetOverlayEndpointService()

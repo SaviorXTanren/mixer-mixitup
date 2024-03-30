@@ -77,6 +77,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessPacket(OverlayV3Packet packet)
         {
+            await base.ProcessPacket(packet);
+
             if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
             {
                 await this.UpdateGameQueue(ServiceManager.Get<GameQueueService>().Queue.ToList().Select(p => p.User));

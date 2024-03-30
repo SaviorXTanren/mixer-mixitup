@@ -14911,6 +14911,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A valid refresh time must be specified.
+        /// </summary>
+        public static string OverlayWidgetAValidRefreshTimeMustBeSpecified {
+            get {
+                return ResourceManager.GetString("OverlayWidgetAValidRefreshTimeMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows the last X many chat messages from your channel. Chat messages are added as they occur..
         /// </summary>
         public static string OverlayWidgetChatMessagesDescription {

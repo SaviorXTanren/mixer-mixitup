@@ -59,8 +59,6 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.Video: overlayControl = new OverlayVideoV3Control(); break;
                 case OverlayItemV3Type.YouTube: overlayControl = new OverlayYouTubeV3Control(); break;
                 case OverlayItemV3Type.HTML: overlayControl = new OverlayHTMLV3Control(); break;
-                case OverlayItemV3Type.Timer: overlayControl = new OverlayTimerV3Control(); break;
-                case OverlayItemV3Type.TwitchClip: overlayControl = new OverlayTwitchClipV3Control(); break;
                 case OverlayItemV3Type.Label: overlayControl = new OverlayLabelV3Control(); break;
                 case OverlayItemV3Type.StreamBoss: overlayControl = new OverlayStreamBossV3Control(); break;
                 case OverlayItemV3Type.Goal: overlayControl = new OverlayGoalV3Control(); break;

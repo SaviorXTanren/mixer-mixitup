@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using Google.Apis.YouTube.v3.Data;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
@@ -7,6 +8,7 @@ using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -107,18 +109,24 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>()
                 {
-                    OverlayItemV3Type.Chat,
+                    OverlayItemV3Type.Text,
+                    OverlayItemV3Type.Image,
+                    OverlayItemV3Type.Video,
+                    OverlayItemV3Type.YouTube,
+                    OverlayItemV3Type.HTML,
+
+                    OverlayItemV3Type.PersistentTimer,
                     OverlayItemV3Type.Label,
                     OverlayItemV3Type.StreamBoss,
                     OverlayItemV3Type.Goal,
-                    OverlayItemV3Type.PersistentTimer,
+                    OverlayItemV3Type.Chat,
                     OverlayItemV3Type.EndCredits,
                     OverlayItemV3Type.GameQueue,
                     OverlayItemV3Type.EventList,
                     OverlayItemV3Type.Leaderboard,
                 };
 
-                string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames(widgetTypes), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
+                string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames(widgetTypes).OrderBy(s => s), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
                 if (!string.IsNullOrEmpty(result))
                 {
                     OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(EnumHelper.GetEnumValueFromString<OverlayItemV3Type>(result));

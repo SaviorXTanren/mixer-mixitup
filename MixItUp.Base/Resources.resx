@@ -10158,4 +10158,7 @@ namespace CustomNamespace
   <data name="OverlayLeaderboardValidConsumableMustBeSelected" xml:space="preserve">
     <value>A valid consumable must be selected</value>
   </data>
+  <data name="OverlayWidgetAValidRefreshTimeMustBeSpecified" xml:space="preserve">
+    <value>A valid refresh time must be specified</value>
+  </data>
 </root>

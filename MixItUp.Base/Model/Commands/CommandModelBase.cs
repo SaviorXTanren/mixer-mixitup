@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -162,9 +163,9 @@ namespace MixItUp.Base.Model.Commands
                 else if (action.Type == ActionTypeEnum.Overlay)
                 {
                     OverlayActionModel overlayAction = (OverlayActionModel)action;
-                    if (overlayAction.OverlayItem != null)
+                    if (overlayAction.OverlayItemV3 != null)
                     {
-                        if (overlayAction.OverlayItem.ItemType == Overlay.OverlayItemModelTypeEnum.Video || overlayAction.OverlayItem.ItemType == Overlay.OverlayItemModelTypeEnum.YouTube)
+                        if (overlayAction.OverlayItemV3.Type == OverlayItemV3Type.Video || overlayAction.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
                         {
                             actionTypes.Add(ActionTypeEnum.Sound);
                         }

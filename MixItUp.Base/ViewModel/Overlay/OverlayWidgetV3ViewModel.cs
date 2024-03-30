@@ -26,6 +26,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private Guid id;
 
+        public OverlayItemV3Type Type
+        {
+            get { return this.type; }
+            set
+            {
+                this.type = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayItemV3Type type;
+
         public string Name
         {
             get { return this.name; }
@@ -76,6 +87,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private OverlayEndpointV3Model selectedOverlayEndpoint;
+
+        public bool IsBasicWidget
+        {
+            get
+            {
+                return this.Type == OverlayItemV3Type.Text || this.Type == OverlayItemV3Type.Image || this.Type == OverlayItemV3Type.Video ||
+                    this.Type == OverlayItemV3Type.YouTube || this.Type == OverlayItemV3Type.HTML;
+            }
+        }
 
         public int RefreshTime
         {
@@ -162,23 +182,24 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayWidgetV3ViewModel(OverlayItemV3Type type)
         {
             this.ID = Guid.NewGuid();
+            this.Type = type;
             this.Name = EnumLocalizationHelper.GetLocalizedName(type);
+
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
             this.SelectedDisplayOption = OverlayItemV3DisplayOptionsType.OverlayEndpoint;
 
-            switch (type)
+            switch (this.Type)
             {
                 case OverlayItemV3Type.Text: this.Item = new OverlayTextV3ViewModel(); break;
                 case OverlayItemV3Type.Image: this.Item = new OverlayImageV3ViewModel(); break;
                 case OverlayItemV3Type.Video: this.Item = new OverlayVideoV3ViewModel(); break;
                 case OverlayItemV3Type.YouTube: this.Item = new OverlayYouTubeV3ViewModel(); break;
                 case OverlayItemV3Type.HTML: this.Item = new OverlayHTMLV3ViewModel(); break;
-                case OverlayItemV3Type.Timer:  this.Item = new OverlayTimerV3ViewModel(); break;
-                case OverlayItemV3Type.TwitchClip:  this.Item = new OverlayTwitchClipV3ViewModel(); break;
+
+                case OverlayItemV3Type.PersistentTimer: this.Item = new OverlayPersistentTimerV3ViewModel(); break;
                 case OverlayItemV3Type.Label: this.Item = new OverlayLabelV3ViewModel(); break;
                 case OverlayItemV3Type.StreamBoss: this.Item = new OverlayStreamBossV3ViewModel(); break;
                 case OverlayItemV3Type.Goal: this.Item = new OverlayGoalV3ViewModel(); break;
-                case OverlayItemV3Type.PersistentTimer: this.Item = new OverlayPersistentTimerV3ViewModel(); break;
                 case OverlayItemV3Type.Chat: this.Item = new OverlayChatV3ViewModel(); break;
                 case OverlayItemV3Type.EndCredits: this.Item = new OverlayEndCreditsV3ViewModel(); break;
                 case OverlayItemV3Type.GameQueue: this.Item = new OverlayGameQueueV3ViewModel(); break;
@@ -190,14 +211,34 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(this.Item.DefaultCSS);
             this.Javascript = this.Item.DefaultJavascript;
 
-            // Add Widget-unique Animations
-            if (type == OverlayItemV3Type.Text || type == OverlayItemV3Type.Image || type == OverlayItemV3Type.Video ||
-                type == OverlayItemV3Type.YouTube || type == OverlayItemV3Type.HTML || type == OverlayItemV3Type.TwitchClip)
+            if (this.IsBasicWidget)
             {
-                
+                this.RefreshTime = 5;
             }
 
-            if (type == OverlayItemV3Type.EndCredits)
+            // Add Widget-unique Javascript
+            if (this.Type == OverlayItemV3Type.Text)
+            {
+                this.Javascript = OverlayResources.OverlayTextWidgetDefaultJavascript;
+            }
+            else if (this.Type == OverlayItemV3Type.Image)
+            {
+                this.Javascript = OverlayResources.OverlayImageWidgetDefaultJavascript;
+            }
+            else if (this.Type == OverlayItemV3Type.Video)
+            {
+                this.Javascript = OverlayResources.OverlayVideoWidgetDefaultJavascript;
+            }
+            else if (this.Type == OverlayItemV3Type.YouTube)
+            {
+                this.Javascript = OverlayResources.OverlayYouTubeWidgetDefaultJavascript;
+            }
+            else if (this.Type == OverlayItemV3Type.HTML)
+            {
+                this.Javascript = OverlayResources.OverlayHTMLWidgetDefaultJavascript;
+            }
+
+            if (this.Type == OverlayItemV3Type.EndCredits)
             {
                 this.Position.XPosition = 0;
                 this.Position.YPosition = 0;
@@ -212,11 +253,11 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.existingWidget = widget;
 
             this.ID = widget.ID;
+            this.Type = widget.Item.Type;
             this.Name = widget.Name;
             this.RefreshTime = widget.RefreshTime;
 
             this.SelectedDisplayOption = widget.Item.DisplayOption;
-
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
             if (this.SelectedDisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint)
             {
@@ -227,7 +268,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
             }
 
-            switch (widget.Item.Type)
+            switch (this.Type)
             {
                 case OverlayItemV3Type.Text: this.Item = new OverlayTextV3ViewModel((OverlayTextV3Model)widget.Item); break;
                 case OverlayItemV3Type.Image: this.Item = new OverlayImageV3ViewModel((OverlayImageV3Model)widget.Item); break;
@@ -263,6 +304,11 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return new Result(Resources.ANameMustBeSpecified);
             }
 
+            if (this.IsBasicWidget && this.RefreshTime < 0)
+            {
+                return new Result(Resources.OverlayWidgetAValidRefreshTimeMustBeSpecified);
+            }
+
             Result result = this.Item.Validate();
             if (!result.Success)
             {
@@ -291,6 +337,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
             widget.Name = this.Name;
+            widget.RefreshTime = this.RefreshTime;
             return widget;
         }
 

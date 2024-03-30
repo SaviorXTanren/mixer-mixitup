@@ -639,7 +639,15 @@ namespace MixItUp.Base.Services
             }
 
             string id = Guid.NewGuid().ToString();
-            this.localFiles[id] = filePath;
+            var existing = this.localFiles.FirstOrDefault(kvp => string.Equals(kvp.Value, filePath));
+            if (!string.IsNullOrEmpty(existing.Key))
+            {
+                id = existing.Key;
+            }
+            else
+            {
+                this.localFiles[id] = filePath;
+            }
 
             return $"/{OverlayFilesPrefix}/{fileType}/{id}?nonce={Guid.NewGuid()}";
         }

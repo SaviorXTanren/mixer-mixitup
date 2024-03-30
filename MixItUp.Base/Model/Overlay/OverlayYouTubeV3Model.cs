@@ -43,14 +43,17 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
         {
-            properties[nameof(this.VideoID)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.VideoID)].ToString(), parameters);
-            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://www.youtube.com/watch?v=", "");
-            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("www.youtube.com/watch?v=", "");
-            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("youtube.com/watch?v=", "");
-            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtu.be/", "");
-            if (properties[nameof(this.VideoID)].ToString().Contains("&"))
+            if (!string.IsNullOrEmpty(this.VideoID))
             {
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Substring(0, properties[nameof(this.VideoID)].ToString().IndexOf("&"));
+                properties[nameof(this.VideoID)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.VideoID)].ToString(), parameters);
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://www.youtube.com/watch?v=", "");
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("www.youtube.com/watch?v=", "");
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("youtube.com/watch?v=", "");
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtu.be/", "");
+                if (properties[nameof(this.VideoID)].ToString().Contains("&"))
+                {
+                    properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Substring(0, properties[nameof(this.VideoID)].ToString().IndexOf("&"));
+                }
             }
         }
     }
