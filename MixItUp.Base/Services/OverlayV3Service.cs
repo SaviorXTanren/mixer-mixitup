@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
@@ -134,6 +135,23 @@ namespace MixItUp.Base.Services
             return html;
         }
 
+        public static async Task<string> PerformBasicOverlayItemProcessing(OverlayEndpointV3Service endpoint, OverlayItemV3ModelBase item)
+        {
+            string iframeHTML = endpoint.GetItemIFrameHTML();
+            iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(item.HTML), item.HTML);
+            iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(item.CSS), item.CSS);
+            iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(item.Javascript), item.Javascript);
+
+            Dictionary<string, object> properties = item.GetGenerationProperties();
+            await item.ProcessGenerationProperties(properties, new CommandParametersModel());
+            foreach (var property in properties)
+            {
+                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
+            }
+
+            return iframeHTML;
+        }
+
         public string Name { get { return Resources.Overlay; } }
         public int PortNumber { get { return ChannelSession.Settings.OverlayPortNumber; } }
 
@@ -210,7 +228,7 @@ namespace MixItUp.Base.Services
         {
             foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
             {
-                this.DisconnectOverlayEndpointService(overlayEndpoint.ID);
+                await this.DisconnectOverlayEndpointService(overlayEndpoint.ID);
             }
 
             this.webSocketListenerServer.OnConnectedOccurred -= WebSocketListenerServer_OnConnectedOccurred;
@@ -239,12 +257,16 @@ namespace MixItUp.Base.Services
         public void ConnectOverlayEndpointService(OverlayEndpointV3Model overlayEndpoint)
         {
             OverlayEndpointV3Service endpointService = new OverlayEndpointV3Service(overlayEndpoint);
-            endpointService.Initialize();
+            endpointService.Connect();
             this.overlayEndpoints[overlayEndpoint.ID] = endpointService;
         }
 
-        public void DisconnectOverlayEndpointService(Guid id)
+        public async Task DisconnectOverlayEndpointService(Guid id)
         {
+            if (this.overlayEndpoints.TryGetValue(id, out OverlayEndpointV3Service service))
+            {
+                await service.Disconnect();
+            }
             this.overlayEndpoints.Remove(id);
         }
 
@@ -299,7 +321,7 @@ namespace MixItUp.Base.Services
 
             if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
             {
-                this.DisconnectOverlayEndpointService(widget.ID);
+                await this.DisconnectOverlayEndpointService(widget.ID);
             }
         }
 
@@ -309,7 +331,7 @@ namespace MixItUp.Base.Services
             if (endpointService == null)
             {
                 OverlayWidgetEndpointV3Service widgetEndpoint = new OverlayWidgetEndpointV3Service(widget);
-                widgetEndpoint.Initialize();
+                widgetEndpoint.Connect();
                 this.overlayEndpoints[widgetEndpoint.ID] = widgetEndpoint;
             }
         }
@@ -407,12 +429,21 @@ namespace MixItUp.Base.Services
             this.Model = model;
         }
 
-        public void Initialize()
+        public void Connect()
         {
             this.mainHTML = OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayMainHTML);
             this.mainHTML = OverlayV3Service.ReplaceProperty(this.mainHTML, nameof(WebSocketConnectionURL), WebSocketConnectionURL);
 
             this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML; //OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayItemIFrameHTML);
+        }
+
+        public async Task Disconnect()
+        {
+            foreach (OverlayV3WebSocketServer server in this.webSocketServers)
+            {
+                await server.Disconnect();
+            }
+            this.webSocketServers.Clear();
         }
 
         public void AddWebsocketServer(OverlayV3WebSocketServer webSocketServer)
@@ -570,10 +601,17 @@ namespace MixItUp.Base.Services
 
             if (packet.Data.TryGetValue("ID", out JToken idString) && idString != null && Guid.TryParse(idString.ToString(), out Guid id))
             {
-                OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(id);
-                if (widget != null)
+                if (string.Equals(packet.Type, OverlaySoundV3Model.SoundFinishedPacketType))
                 {
-                    await widget.Item.ProcessPacket(packet);
+                    ServiceManager.Get<IAudioService>().OverlaySoundFinished(id);
+                }
+                else
+                {
+                    OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(id);
+                    if (widget != null)
+                    {
+                        await widget.Item.ProcessPacket(packet);
+                    }
                 }
             }
         }

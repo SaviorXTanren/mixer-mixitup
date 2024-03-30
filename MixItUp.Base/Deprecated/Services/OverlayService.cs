@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    [Obsolete]
     public class OverlayService : IExternalService, IDisposable
     {
         public event EventHandler OnOverlayConnectedOccurred = delegate { };
@@ -24,8 +25,6 @@ namespace MixItUp.Base.Services
         public string Name { get { return "Overlay"; } }
 
         public bool IsConnected { get; private set; }
-
-        private long updateSeconds = 0;
 
         public async Task<Result> Connect()
         {
@@ -141,16 +140,18 @@ namespace MixItUp.Base.Services
             return this.GetOverlayWidgets().FirstOrDefault(w => w.ID.Equals(id));
         }
 
-        public async Task AddOverlayWidget(OverlayItemV3ModelBase widget)
+        public Task AddOverlayWidget(OverlayItemV3ModelBase widget)
         {
             //ChannelSession.Settings.OverlayWidgetsV3.Add(widget);
             //await widget.EnableAsWidget();
+            return Task.CompletedTask;
         }
 
-        public async Task RemoveOverlayWidget(OverlayItemV3ModelBase widget)
+        public Task RemoveOverlayWidget(OverlayItemV3ModelBase widget)
         {
             //await widget.DisableAsWidget();
             //ChannelSession.Settings.OverlayWidgetsV3.Remove(widget);
+            return Task.CompletedTask;
         }
 
         public async Task<int> TestConnections()
@@ -179,11 +180,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task WidgetsBackgroundUpdate(CancellationToken token)
+        private Task WidgetsBackgroundUpdate(CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();
+            return Task.CompletedTask;
 
-            UserV2ViewModel user = ChannelSession.User;
+            //token.ThrowIfCancellationRequested();
+
+            //UserV2ViewModel user = ChannelSession.User;
 
             //foreach (var widgetGroup in ChannelSession.Settings.OverlayWidgets.GroupBy(ow => ow.OverlayName))
             //{
@@ -225,7 +228,7 @@ namespace MixItUp.Base.Services
             //    }
             //}
 
-            this.updateSeconds++;
+            //this.updateSeconds++;
         }
 
         private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)

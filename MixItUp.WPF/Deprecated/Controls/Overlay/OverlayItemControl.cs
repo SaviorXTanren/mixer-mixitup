@@ -1,11 +1,13 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Overlay;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.Overlay
 {
+    [Obsolete]
     public abstract class OverlayItemControl : LoadingControlBase
     {
         protected OverlayItemViewModelBase ViewModel { get; set; }

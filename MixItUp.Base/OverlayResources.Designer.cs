@@ -967,6 +967,43 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;audio id=&quot;audio&quot; allow=&quot;autoplay; encrypted-media&quot; onloadstart=&quot;this.volume={Volume}&quot; autoplay&gt;
+        ///    &lt;source src=&quot;{URLPath}&quot; type=&quot;{SourceType}&quot;&gt;
+        ///&lt;/audio&gt;.
+        /// </summary>
+        public static string OverlaySoundDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlaySoundDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///const sound = document.getElementById(&apos;audio&apos;);
+        ///
+        ///function removeSelf()
+        ///{
+        ///    sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });
+        ///}
+        ///
+        ///function remove(data)
+        ///{
+        ///    removeSelf();
+        ///}
+        ///
+        ///sound.addEventListener(&apos;ended&apos;, () =&gt;
+        ///{
+        ///    sendParentMessage({ Type: &quot;SoundFinished&quot;, ID: &quot;{ID}&quot; });
+        ///    removeSelf();
+        ///});.
+        /// </summary>
+        public static string OverlaySoundDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlaySoundDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .mainContainer {
         ///  display: flex;
         ///  border-style: solid;

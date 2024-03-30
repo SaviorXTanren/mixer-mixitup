@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Overlay;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -7,6 +8,7 @@ namespace MixItUp.WPF.Controls.Overlay
     /// <summary>
     /// Interaction logic for OverlayEndCreditsItemControl.xaml
     /// </summary>
+    [Obsolete]
     public partial class OverlayEndCreditsItemControl : OverlayItemControl
     {
         public OverlayEndCreditsItemControl()

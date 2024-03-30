@@ -45,7 +45,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.DeleteCommand = this.CreateCommand(async () =>
             {
-                await ServiceManager.Get<OverlayService>().RemoveOverlayEndpoint(this.model.ID);
+                await ServiceManager.Get<OverlayV3Service>().DisconnectOverlayEndpointService(this.model.ID);
                 ChannelSession.Settings.OverlayEndpointsV3.Remove(this.model);
                 this.viewModel.Endpoints.Remove(this);
             });

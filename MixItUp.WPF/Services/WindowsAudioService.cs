@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using NAudio.Wave;
@@ -21,6 +23,8 @@ namespace MixItUp.WPF.Services
 
         private Dictionary<CancellationToken, CancellationTokenSource> audioTasks = new Dictionary<CancellationToken, CancellationTokenSource>();
 
+        private HashSet<Guid> activeOverlaySounds = new HashSet<Guid>();
+
         public async Task Play(string filePath, int volume, bool track = true, bool waitForFinish = false)
         {
             await this.Play(filePath, volume, null, track);
@@ -40,8 +44,10 @@ namespace MixItUp.WPF.Services
                     OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
                     if (overlay != null)
                     {
-                        //var overlayItem = new OverlaySoundItemModel(filePath, volume);
-                        //await overlay.ShowItem(overlayItem, new CommandParametersModel());
+                        Guid audioID = Guid.NewGuid();
+                        OverlaySoundV3Model overlayItem = new OverlaySoundV3Model(filePath, volume);
+                        await overlay.Add(audioID.ToString(), await OverlayV3Service.PerformBasicOverlayItemProcessing(overlay, overlayItem));
+                        this.activeOverlaySounds.Add(audioID);
                     }
                 }
                 else
@@ -97,7 +103,7 @@ namespace MixItUp.WPF.Services
             }
         }
 
-        public Task StopAllSounds()
+        public async Task StopAllSounds()
         {
             foreach (var key in this.audioTasks.Keys.ToList())
             {
@@ -107,7 +113,21 @@ namespace MixItUp.WPF.Services
                 }
                 this.audioTasks.Remove(key);
             }
-            return Task.CompletedTask;
+
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+            if (overlay != null)
+            {
+                foreach (var id in this.activeOverlaySounds.ToList())
+                {
+                    await overlay.Function(id.ToString(), "remove", new Dictionary<string, object>());
+                }
+                this.activeOverlaySounds.Clear();
+            }
+        }
+
+        public void OverlaySoundFinished(Guid id)
+        {
+            this.activeOverlaySounds.Remove(id);
         }
 
         public IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false)

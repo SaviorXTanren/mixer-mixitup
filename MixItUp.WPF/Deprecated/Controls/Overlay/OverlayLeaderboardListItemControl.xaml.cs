@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Windows.Commands;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -11,6 +12,7 @@ namespace MixItUp.WPF.Controls.Overlay
     /// <summary>
     /// Interaction logic for OverlayLeaderboardListItemControl.xaml
     /// </summary>
+    [Obsolete]
     public partial class OverlayLeaderboardListItemControl : OverlayItemControl
     {
         public OverlayLeaderboardListItemControl()

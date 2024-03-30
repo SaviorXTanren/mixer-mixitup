@@ -21,6 +21,8 @@ namespace MixItUp.Base.Model.Overlay
         Timer,
         TwitchClip,
 
+        Sound,
+
         PersistentTimer,
         Label,
         StreamBoss,

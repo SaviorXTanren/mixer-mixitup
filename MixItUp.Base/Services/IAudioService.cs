@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -22,6 +23,8 @@ namespace MixItUp.Base.Services
         Task PlayNotification(string filePath, int volume, bool track = true);
 
         Task StopAllSounds();
+
+        void OverlaySoundFinished(Guid id);
 
         IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false);
 

@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
@@ -660,13 +661,14 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamBossSpecialIdentifierHeader))
             {
-                OverlayWidgetModel streamBossWidget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item is OverlayStreamBossItemModel);
+                OverlayWidgetV3Model streamBossWidget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.Type == OverlayItemV3Type.StreamBoss);
                 if (streamBossWidget != null)
                 {
-                    OverlayStreamBossItemModel streamBossOverlay = (OverlayStreamBossItemModel)streamBossWidget.Item;
-                    if (streamBossOverlay != null && streamBossOverlay.CurrentBoss != null)
+                    OverlayStreamBossV3Model streamBossOverlay = (OverlayStreamBossV3Model)streamBossWidget.Item;
+                    if (streamBossOverlay != null)
                     {
-                        await this.HandleUserSpecialIdentifiers(streamBossOverlay.CurrentBoss, StreamBossSpecialIdentifierHeader);
+                        UserV2ViewModel streamBossUser = await streamBossOverlay.GetCurrentBoss();
+                        await this.HandleUserSpecialIdentifiers(streamBossUser, StreamBossSpecialIdentifierHeader);
                         this.ReplaceSpecialIdentifier("streambosshealth", streamBossOverlay.CurrentHealth.ToString());
                     }
                 }

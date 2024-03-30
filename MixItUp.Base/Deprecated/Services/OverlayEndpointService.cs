@@ -8,7 +8,6 @@ using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
@@ -17,6 +16,7 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Services
 {
     [DataContract]
+    [Obsolete]
     public class OverlayTextToSpeech
     {
         [DataMember]
@@ -31,6 +31,7 @@ namespace MixItUp.Base.Services
         public double Rate { get; set; }
     }
 
+    [Obsolete]
     public class OverlayPacket
     {
         public string type { get; set; }
@@ -55,6 +56,7 @@ namespace MixItUp.Base.Services
         }
     }
 
+    [Obsolete]
     public class OverlayEndpointService
     {
         public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
@@ -74,7 +76,6 @@ namespace MixItUp.Base.Services
         private OverlayWebSocketHttpListenerServer webSocketServer;
 
         private List<OverlayPacket> batchPackets = new List<OverlayPacket>();
-        private bool isBatching = false;
 
         public string HttpListenerServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
         public string WebSocketServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.PortNumber); } }
@@ -141,17 +142,18 @@ namespace MixItUp.Base.Services
 
         public void StartBatching()
         {
-            this.isBatching = true;
+
         }
 
-        public async Task EndBatching()
+        public Task EndBatching()
         {
-            this.isBatching = false;
+
             if (batchPackets.Count > 0)
             {
                 //await this.webSocketServer.Send(new OverlayPacket("Batch", JArray.FromObject(this.batchPackets.ToList())));
             }
             this.batchPackets.Clear();
+            return Task.CompletedTask;
         }
 
         public async Task SendJObject(string type, string id, JObject jobj, CommandParametersModel parameters)
@@ -210,58 +212,60 @@ namespace MixItUp.Base.Services
 
 
 
-        public async Task ShowItem(OverlayItemModelBase item, CommandParametersModel parameters)
+        public Task ShowItem(OverlayItemModelBase item, CommandParametersModel parameters)
         {
-            if (item != null)
-            {
-                try
-                {
-                    JObject jobj = await item.GetProcessedItem(parameters);
-                    if (jobj != null)
-                    {
-                        if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
-                        {
-                            string filepath = jobj["FilePath"].ToString();
-                            if (!ServiceManager.Get<IFileService>().IsURLPath(filepath) && !ServiceManager.Get<IFileService>().FileExists(filepath))
-                            {
-                                Logger.Log(LogLevel.Error, $"Overlay Action - File does not exist: {filepath}");
-                            }
+            //if (item != null)
+            //{
+            //    try
+            //    {
+            //        JObject jobj = await item.GetProcessedItem(parameters);
+            //        if (jobj != null)
+            //        {
+            //            if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
+            //            {
+            //                string filepath = jobj["FilePath"].ToString();
+            //                if (!ServiceManager.Get<IFileService>().IsURLPath(filepath) && !ServiceManager.Get<IFileService>().FileExists(filepath))
+            //                {
+            //                    Logger.Log(LogLevel.Error, $"Overlay Action - File does not exist: {filepath}");
+            //                }
 
-                            this.SetLocalFile(jobj["FileID"].ToString(), filepath);
-                            jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), filepath);
-                        }
-                        await this.SendPacket("Show", jobj);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            }
+            //                this.SetLocalFile(jobj["FileID"].ToString(), filepath);
+            //                jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), filepath);
+            //            }
+            //            await this.SendPacket("Show", jobj);
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Logger.Log(ex);
+            //    }
+            //}
+            return Task.CompletedTask;
         }
 
-        public async Task UpdateItem(OverlayItemModelBase item, CommandParametersModel parameters)
+        public Task UpdateItem(OverlayItemModelBase item, CommandParametersModel parameters)
         {
-            if (item != null)
-            {
-                try
-                {
-                    JObject jobj = await item.GetProcessedItem(parameters);
-                    if (jobj != null)
-                    {
-                        if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
-                        {
-                            this.SetLocalFile(jobj["FileID"].ToString(), jobj["FilePath"].ToString());
-                            jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), jobj["FilePath"].ToString());
-                        }
-                        await this.SendPacket("Update", jobj);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            }
+            //if (item != null)
+            //{
+            //    try
+            //    {
+            //        JObject jobj = await item.GetProcessedItem(parameters);
+            //        if (jobj != null)
+            //        {
+            //            if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
+            //            {
+            //                this.SetLocalFile(jobj["FileID"].ToString(), jobj["FilePath"].ToString());
+            //                jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), jobj["FilePath"].ToString());
+            //            }
+            //            await this.SendPacket("Update", jobj);
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Logger.Log(ex);
+            //    }
+            //}
+            return Task.CompletedTask;
         }
 
         public async Task HideItem(OverlayItemModelBase item)
@@ -281,17 +285,18 @@ namespace MixItUp.Base.Services
             this.httpListenerServer.SetLocalFile(fileID, filePath);
         }
 
-        private async Task SendPacket(string type, object contents)
+        private Task SendPacket(string type, object contents)
         {
-            OverlayPacket packet = new OverlayPacket(type, JObject.FromObject(contents));
-            if (this.isBatching)
-            {
-                this.batchPackets.Add(packet);
-            }
-            else
-            {
-                //await this.webSocketServer.Send(packet);
-            }
+            //OverlayPacket packet = new OverlayPacket(type, JObject.FromObject(contents));
+            //if (this.isBatching)
+            //{
+            //    this.batchPackets.Add(packet);
+            //}
+            //else
+            //{
+            //    //await this.webSocketServer.Send(packet);
+            //}
+            return Task.CompletedTask;
         }
 
         private void WebSocketServer_OnConnectedOccurred(object sender, WebSocketServerBase e)

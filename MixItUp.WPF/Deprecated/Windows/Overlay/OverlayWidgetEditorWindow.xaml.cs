@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Overlay;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +13,7 @@ namespace MixItUp.WPF.Windows.Overlay
     /// <summary>
     /// Interaction logic for OverlayWidgetEditorWindow.xaml
     /// </summary>
+    [Obsolete]
     public partial class OverlayWidgetEditorWindow : LoadingWindowBase
     {
         private OverlayWidgetEditorWindowViewModel viewModel;

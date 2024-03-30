@@ -1759,6 +1759,31 @@ timerLoop();</value>
 &lt;/div&gt;
 &lt;/div&gt;</value>
   </data>
+  <data name="OverlaySoundDefaultHTML" xml:space="preserve">
+    <value>&lt;audio id="audio" allow="autoplay; encrypted-media" onloadstart="this.volume={Volume}" autoplay&gt;
+    &lt;source src="{URLPath}" type="{SourceType}"&gt;
+&lt;/audio&gt;</value>
+  </data>
+  <data name="OverlaySoundDefaultJavascript" xml:space="preserve">
+    <value>const main = document.getElementById("maindiv");
+const sound = document.getElementById('audio');
+
+function removeSelf()
+{
+    sendParentMessage({ Type: "Remove", ID: "{ID}" });
+}
+
+function remove(data)
+{
+    removeSelf();
+}
+
+sound.addEventListener('ended', () =&gt;
+{
+    sendParentMessage({ Type: "SoundFinished", ID: "{ID}" });
+    removeSelf();
+});</value>
+  </data>
   <data name="OverlayStreamBossDefaultCSS" xml:space="preserve">
     <value>.mainContainer {
   display: flex;

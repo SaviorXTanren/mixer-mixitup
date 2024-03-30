@@ -71,6 +71,16 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayStreamBossV3Model() : base(OverlayItemV3Type.StreamBoss) { }
 
+        public async Task<UserV2ViewModel> GetCurrentBoss()
+        {
+            UserV2ViewModel boss = await ServiceManager.Get<UserService>().GetUserByID(this.CurrentBoss);
+            if (boss == null)
+            {
+                boss = ChannelSession.User;
+            }
+            return boss;
+        }
+
         public async Task ProcessEvent(UserV2ViewModel user, double amount, bool forceDamage = false)
         {
             if (amount > 0)
@@ -157,11 +167,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.ProcessGenerationProperties(properties, parameters);
 
-            UserV2ViewModel boss = await ServiceManager.Get<UserService>().GetUserByID(this.CurrentBoss);
-            if (boss == null)
-            {
-                boss = ChannelSession.User;
-            }
+            UserV2ViewModel boss = await this.GetCurrentBoss();
 
             properties[BossImageProperty] = boss.AvatarLink;
             properties[BossNameProperty] = boss.DisplayName;
