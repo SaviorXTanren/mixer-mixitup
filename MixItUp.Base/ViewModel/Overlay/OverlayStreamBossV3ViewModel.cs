@@ -23,6 +23,17 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override string EquationUnits { get { return Resources.Damage; } }
 
+        public string Height
+        {
+            get { return this.height > 0 ? this.height.ToString() : string.Empty; }
+            set
+            {
+                this.height = this.GetPositiveIntFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        protected int height;
+
         public string BorderColor
         {
             get { return this.borderColor; }
@@ -153,6 +164,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayStreamBossV3ViewModel()
             : base(OverlayItemV3Type.StreamBoss)
         {
+            this.width = 450;
+            this.height = 125;
+
             this.FontSize = 16;
 
             this.BorderColor = "Black";
@@ -200,6 +214,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayStreamBossV3ViewModel(OverlayStreamBossV3Model item)
             : base(item)
         {
+            this.width = item.Width;
+            this.height = item.Height;
+
             this.BorderColor = item.BorderColor;
             this.BackgroundColor = item.BackgroundColor;
             this.HealthColor = item.HealthColor;

@@ -75,6 +75,10 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <TextBox Text="{Binding BorderColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BorderColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -84,6 +88,10 @@
             <TextBox Text="{Binding HealthColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HealthColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Text="{Binding DamageColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Text="{Binding Height}" Grid.Column="8" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Text="{Binding Width}" Grid.Column="10" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Rectangle VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="4" Fill="{DynamicResource PrimaryHueMidBrush}" Height="4" />

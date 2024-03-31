@@ -23,7 +23,7 @@ namespace MixItUp.Base.Model.Overlay
         TwitchBits,
     }
 
-    public enum OverlayLeaderboardTwitchBitsDateRangeV3Enum
+    public enum OverlayLeaderboardDateRangeV3Enum
     {
         Daily,
         Weekly,
@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Overlay
         public Guid ConsumableID { get; set; }
 
         [DataMember]
-        public OverlayLeaderboardTwitchBitsDateRangeV3Enum TwitchBitsDataRange { get; set; }
+        public OverlayLeaderboardDateRangeV3Enum TwitchBitsDataRange { get; set; }
 
         [DataMember]
         public OverlayLeaderboardHeaderV3Model Header { get; set; }
@@ -240,19 +240,19 @@ namespace MixItUp.Base.Model.Overlay
             BitsLeaderboardModel bitsLeaderboard = null;
             switch (this.TwitchBitsDataRange)
             {
-                case OverlayLeaderboardTwitchBitsDateRangeV3Enum.Daily:
+                case OverlayLeaderboardDateRangeV3Enum.Daily:
                     bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Day, this.TotalToShow);
                     break;
-                case OverlayLeaderboardTwitchBitsDateRangeV3Enum.Weekly:
+                case OverlayLeaderboardDateRangeV3Enum.Weekly:
                     bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Week, this.TotalToShow);
                     break;
-                case OverlayLeaderboardTwitchBitsDateRangeV3Enum.Monthly:
+                case OverlayLeaderboardDateRangeV3Enum.Monthly:
                     bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Month, this.TotalToShow);
                     break;
-                case OverlayLeaderboardTwitchBitsDateRangeV3Enum.Yearly:
+                case OverlayLeaderboardDateRangeV3Enum.Yearly:
                     bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Year, this.TotalToShow);
                     break;
-                case OverlayLeaderboardTwitchBitsDateRangeV3Enum.AllTime:
+                case OverlayLeaderboardDateRangeV3Enum.AllTime:
                     bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.All, this.TotalToShow);
                     break;
             }

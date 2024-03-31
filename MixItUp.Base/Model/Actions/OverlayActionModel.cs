@@ -21,8 +21,6 @@ namespace MixItUp.Base.Model.Actions
         public const string ExitAnimationFrameworkPropertyName = "ExitAnimationFramework";
         public const string ExitAnimationNamePropertyName = "ExitAnimationName";
 
-        private const string PostEventReplacementText = "PostEvent";
-
         [DataMember]
         [Obsolete]
         public string OverlayName { get; set; }

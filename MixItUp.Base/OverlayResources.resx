@@ -1792,8 +1792,8 @@ sound.addEventListener('ended', () =&gt;
   border-width: 5px;
   border-color: {BorderColor};
   background-color: {BackgroundColor};
-  width: 450px;
-  height: 125px;
+  width: {Width};
+  height: {Height};
 }
 
 .image {

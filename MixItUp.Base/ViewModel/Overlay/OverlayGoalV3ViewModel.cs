@@ -23,7 +23,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string name;
 
-        public int Amount
+        public double Amount
         {
             get { return this.amount; }
             set
@@ -32,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private int amount = 1;
+        private double amount = 1;
 
         public ICommand DeleteCommand { get; private set; }
 

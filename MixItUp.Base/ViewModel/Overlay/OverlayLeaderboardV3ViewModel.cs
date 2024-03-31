@@ -127,9 +127,9 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public bool IsSelectedLeaderboardTypeTwitchBits { get { return this.SelectedLeaderboardType == OverlayLeaderboardTypeV3Enum.TwitchBits; } }
 
-        public IEnumerable<OverlayLeaderboardTwitchBitsDateRangeV3Enum> TwitchBitsDataRanges { get; set; } = EnumHelper.GetEnumList<OverlayLeaderboardTwitchBitsDateRangeV3Enum>();
+        public IEnumerable<OverlayLeaderboardDateRangeV3Enum> TwitchBitsDataRanges { get; set; } = EnumHelper.GetEnumList<OverlayLeaderboardDateRangeV3Enum>();
 
-        public OverlayLeaderboardTwitchBitsDateRangeV3Enum SelectedTwitchBitsDataRange
+        public OverlayLeaderboardDateRangeV3Enum SelectedTwitchBitsDataRange
         {
             get { return this.selectedTwitchBitsDataRange; }
             set
@@ -138,7 +138,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayLeaderboardTwitchBitsDateRangeV3Enum selectedTwitchBitsDataRange;
+        private OverlayLeaderboardDateRangeV3Enum selectedTwitchBitsDataRange;
 
         public OverlayAnimationV3ViewModel ItemAddedAnimation;
         public OverlayAnimationV3ViewModel ItemRemovedAnimation;

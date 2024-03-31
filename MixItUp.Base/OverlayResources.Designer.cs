@@ -1010,8 +1010,8 @@ namespace MixItUp.Base {
         ///  border-width: 5px;
         ///  border-color: {BorderColor};
         ///  background-color: {BackgroundColor};
-        ///  width: 450px;
-        ///  height: 125px;
+        ///  width: {Width};
+        ///  height: {Height};
         ///}
         ///
         ///.image {
@@ -1035,7 +1035,7 @@ namespace MixItUp.Base {
         ///  flex: 1;
         ///  display: flex;
         ///  align-items: center;
-        ///  jus [rest of string was truncated]&quot;;.
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayStreamBossDefaultCSS {
             get {

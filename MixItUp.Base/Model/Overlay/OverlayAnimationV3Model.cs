@@ -131,12 +131,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayAnimationV3Model
     {
-        private const string AnimationElement = "AnimationElement";
-        private const string PostAnimation = "PostAnimation";
-
-        private const string PostTimeout = "PostTimeout";
-        private const string MillisecondTiming = "MillisecondTiming";
-
         [DataMember]
         public OverlayAnimateCSSAnimationType AnimateCSSAnimation { get; set; }
         [JsonIgnore]

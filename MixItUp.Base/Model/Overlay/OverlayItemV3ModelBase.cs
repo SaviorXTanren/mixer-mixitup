@@ -81,6 +81,9 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         [DataMember]
+        public int Version { get; set; }
+
+        [DataMember]
         public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
@@ -109,6 +112,10 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int Layer { get; set; }
+
+        [Obsolete]
+        [DataMember]
+        public string OldCustomHTML { get; set; }
 
         [JsonIgnore]
         public bool PositionTypeIsPercentage { get { return this.PositionType == OverlayPositionV3Type.Simple || this.PositionType == OverlayPositionV3Type.Percentage; } }
@@ -139,7 +146,13 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public virtual bool IsResettable { get { return false; } }
 
-        protected OverlayItemV3ModelBase() { }
+        [JsonIgnore]
+        public virtual int LatestVersion { get { return 0; } }
+
+        protected OverlayItemV3ModelBase()
+        {
+            this.Version = this.LatestVersion;
+        }
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 

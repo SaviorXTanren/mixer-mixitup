@@ -25,7 +25,7 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string Name { get; set; }
         [DataMember]
-        public int Amount { get; set; }
+        public double Amount { get; set; }
     }
 
     [DataContract]
@@ -72,12 +72,12 @@ namespace MixItUp.Base.Model.Overlay
         public Guid SegmentCompletedCommandID { get; set; }
 
         [JsonIgnore]
-        public int CurrentAmount { get; private set; }
+        public double CurrentAmount { get; internal set; }
         [JsonIgnore]
         public OverlayGoalSegmentV3Model CurrentSegment { get; private set; }
 
         [JsonIgnore]
-        public int GoalBarCompletionPercentage { get { return Math.Max(Math.Min((int)Math.Round(((double)this.CurrentAmount / this.CurrentSegment.Amount) * 100.0), 100), 0); } }
+        public int GoalBarCompletionPercentage { get { return Math.Max(Math.Min((int)Math.Round(this.CurrentAmount / this.CurrentSegment.Amount), 100), 0); } }
 
         [JsonIgnore]
         public string GoalEndText

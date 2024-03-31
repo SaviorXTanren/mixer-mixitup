@@ -22,18 +22,18 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string name;
 
-        public int Amount
+        public double Amount
         {
             get { return this.damageAmount; }
             set
             {
-                this.damageAmount = Math.Max(value, 0);
+                this.damageAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int damageAmount;
+        private double damageAmount;
 
-        public OverlayEventTrackingYouTubeMembershipViewModel(string name, int amount)
+        public OverlayEventTrackingYouTubeMembershipViewModel(string name, double amount)
         {
             this.Name = name;
             this.Amount = amount;
@@ -47,35 +47,35 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public abstract string EquationUnits { get; }
 
-        public int FollowAmount
+        public double FollowAmount
         {
             get { return this.followAmount; }
             set
             {
-                this.followAmount = Math.Max(value, 0);
+                this.followAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int followAmount;
+        private double followAmount;
 
-        public int RaidAmount
+        public double RaidAmount
         {
             get { return this.raidAmount; }
             set
             {
-                this.raidAmount = Math.Max(value, 0);
+                this.raidAmount = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.RaidEquation));
             }
         }
-        private int raidAmount;
+        private double raidAmount;
 
         public double RaidPerViewAmount
         {
             get { return this.raidPerViewAmount; }
             set
             {
-                this.raidPerViewAmount = Math.Max(value, 0);
+                this.raidPerViewAmount = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.RaidEquation));
             }
@@ -91,80 +91,80 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
 
-        public int TwitchSubscriptionTier1Amount
+        public double TwitchSubscriptionTier1Amount
         {
             get { return this.twitchSubscriptionTier1Amount; }
             set
             {
-                this.twitchSubscriptionTier1Amount = Math.Max(value, 0);
+                this.twitchSubscriptionTier1Amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int twitchSubscriptionTier1Amount;
+        private double twitchSubscriptionTier1Amount;
 
-        public int TwitchSubscriptionTier2Amount
+        public double TwitchSubscriptionTier2Amount
         {
             get { return this.twitchSubscriptionTier2Amount; }
             set
             {
-                this.twitchSubscriptionTier2Amount = Math.Max(value, 0);
+                this.twitchSubscriptionTier2Amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int twitchSubscriptionTier2Amount;
+        private double twitchSubscriptionTier2Amount;
 
-        public int TwitchSubscriptionTier3Amount
+        public double TwitchSubscriptionTier3Amount
         {
             get { return this.twitchSubscriptionTier3Amount; }
             set
             {
-                this.twitchSubscriptionTier3Amount = Math.Max(value, 0);
+                this.twitchSubscriptionTier3Amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int twitchSubscriptionTier3Amount;
+        private double twitchSubscriptionTier3Amount;
 
         public ObservableCollection<OverlayEventTrackingYouTubeMembershipViewModel> YouTubeMemberships { get; set; } = new ObservableCollection<OverlayEventTrackingYouTubeMembershipViewModel>();
 
-        public int TrovoSubscriptionTier1Amount
+        public double TrovoSubscriptionTier1Amount
         {
             get { return this.trovoSubscriptionTier1Amount; }
             set
             {
-                this.trovoSubscriptionTier1Amount = Math.Max(value, 0);
+                this.trovoSubscriptionTier1Amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int trovoSubscriptionTier1Amount;
+        private double trovoSubscriptionTier1Amount;
 
-        public int TrovoSubscriptionTier2Amount
+        public double TrovoSubscriptionTier2Amount
         {
             get { return this.trovoSubscriptionTier2Amount; }
             set
             {
-                this.trovoSubscriptionTier2Amount = Math.Max(value, 0);
+                this.trovoSubscriptionTier2Amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int trovoSubscriptionTier2Amount;
+        private double trovoSubscriptionTier2Amount;
 
-        public int TrovoSubscriptionTier3Amount
+        public double TrovoSubscriptionTier3Amount
         {
             get { return this.trovoSubscriptionTier3Amount; }
             set
             {
-                this.trovoSubscriptionTier3Amount = Math.Max(value, 0);
+                this.trovoSubscriptionTier3Amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int trovoSubscriptionTier3Amount;
+        private double trovoSubscriptionTier3Amount;
 
         public double TwitchBitsAmount
         {
             get { return this.twitchBitsAmount; }
             set
             {
-                this.twitchBitsAmount = Math.Max(value, 0);
+                this.twitchBitsAmount = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.TwitchBitsEquation));
             }
@@ -185,7 +185,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.youTubeSuperChatAmount; }
             set
             {
-                this.youTubeSuperChatAmount = Math.Max(value, 0);
+                this.youTubeSuperChatAmount = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.YouTubeSuperChatEquation));
             }
@@ -206,7 +206,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.trovoElixirSpellAmount; }
             set
             {
-                this.trovoElixirSpellAmount = Math.Max(value, 0);
+                this.trovoElixirSpellAmount = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.TrovoElixirSpellEquation));
             }
@@ -227,7 +227,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.donationAmount; }
             set
             {
-                this.donationAmount = Math.Max(value, 0);
+                this.donationAmount = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(DonationEquation));
             }
@@ -272,7 +272,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSessionService>().MembershipLevels)
                 {
-                    if (item.YouTubeMembershipsAmount.TryGetValue(membershipsLevel.Snippet.LevelDetails.DisplayName, out int damageAmount))
+                    if (item.YouTubeMembershipsAmount.TryGetValue(membershipsLevel.Snippet.LevelDetails.DisplayName, out double damageAmount))
                     {
                         this.YouTubeMemberships.Add(new OverlayEventTrackingYouTubeMembershipViewModel(membershipsLevel.Snippet.LevelDetails.DisplayName, damageAmount));
                     }

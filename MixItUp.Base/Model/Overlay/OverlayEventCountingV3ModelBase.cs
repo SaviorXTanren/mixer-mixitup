@@ -16,25 +16,25 @@ namespace MixItUp.Base.Model.Overlay
     public abstract class OverlayEventCountingV3ModelBase : OverlayVisualTextV3ModelBase
     {
         [DataMember]
-        public int FollowAmount { get; set; }
+        public double FollowAmount { get; set; }
 
         [DataMember]
-        public int RaidAmount { get; set; }
+        public double RaidAmount { get; set; }
         [DataMember]
         public double RaidPerViewAmount { get; set; }
 
         [DataMember]
-        public Dictionary<int, int> TwitchSubscriptionsAmount { get; set; } = new Dictionary<int, int>();
+        public Dictionary<int, double> TwitchSubscriptionsAmount { get; set; } = new Dictionary<int, double>();
         [DataMember]
         public double TwitchBitsAmount { get; set; }
 
         [DataMember]
-        public Dictionary<string, int> YouTubeMembershipsAmount { get; set; } = new Dictionary<string, int>();
+        public Dictionary<string, double> YouTubeMembershipsAmount { get; set; } = new Dictionary<string, double>();
         [DataMember]
         public double YouTubeSuperChatAmount { get; set; }
 
         [DataMember]
-        public Dictionary<int, int> TrovoSubscriptionsAmount { get; set; } = new Dictionary<int, int>();
+        public Dictionary<int, double> TrovoSubscriptionsAmount { get; set; } = new Dictionary<int, double>();
         [DataMember]
         public double TrovoElixirSpellAmount { get; set; }
 
@@ -118,21 +118,21 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out int damage))
+                if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out double damage))
                 {
                     await this.ProcessEvent(subscription.User, damage);
                 }
             }
             else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
             {
-                if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out int damage))
+                if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out double damage))
                 {
                     await this.ProcessEvent(subscription.User, damage);
                 }
             }
             else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
             {
-                if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out int damage))
+                if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out double damage))
                 {
                     await this.ProcessEvent(subscription.User, damage);
                 }
@@ -148,21 +148,21 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out int damage))
+                        if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out double damage))
                         {
                             totalDamage += damage;
                         }
                     }
                     else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
-                        if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out int damage))
+                        if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out double damage))
                         {
                             totalDamage += damage;
                         }
                     }
                     else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
-                        if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out int damage))
+                        if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out double damage))
                         {
                             totalDamage += damage;
                         }
