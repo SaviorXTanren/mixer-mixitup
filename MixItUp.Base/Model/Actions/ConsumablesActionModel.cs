@@ -179,7 +179,7 @@ namespace MixItUp.Base.Model.Actions
                     return;
                 }
 
-                int amountValue = (int)Math.Ceiling(doubleAmount);
+                int amountValue = (int)Math.Floor(doubleAmount);
                 if (amountValue < 0)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, amountTextValue, systemName), parameters);
@@ -197,13 +197,13 @@ namespace MixItUp.Base.Model.Actions
                     if (!string.IsNullOrEmpty(this.Username))
                     {
                         string usernameString = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                        if (this.UsersMustBePresent)
+                        receivingUser = await ServiceManager.Get<UserService>().GetUserByPlatform(parameters.Platform, platformUsername: usernameString);
+                        if (this.UsersMustBePresent && receivingUser != null)
                         {
-                            receivingUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, usernameString);
-                        }
-                        else
-                        {
-                            receivingUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, usernameString, performPlatformSearch: true);
+                            if (!ServiceManager.Get<UserService>().IsUserActive(receivingUser.ID))
+                            {
+                                receivingUser = null;
+                            }
                         }
                     }
 

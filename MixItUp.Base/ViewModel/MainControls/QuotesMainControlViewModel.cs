@@ -78,8 +78,8 @@ namespace MixItUp.Base.ViewModel.MainControls
                         List<string> data = new List<string>();
                         data.Add(quote.ID.ToString());
                         data.Add(quote.Quote);
-                        data.Add(quote.GameName);
                         data.Add(quote.DateTime.ToFriendlyDateTimeString());
+                        data.Add(quote.GameName);
                         contents.Add(data);
                     }
 

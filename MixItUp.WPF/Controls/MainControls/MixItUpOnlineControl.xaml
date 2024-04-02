@@ -1,0 +1,34 @@
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.MixItUpOnlineControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:TwitchControls="clr-namespace:MixItUp.WPF.Controls.Twitch"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <local:MainControlBase.Resources>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:MainControlBase.Resources>
+
+    <Grid VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Image x:Name="LightMode" Grid.Row="0" Width="549" Height="149" HorizontalAlignment="Center" Source="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUpOnline-Long-Light.png" />
+        <Image x:Name="DarkMode" Grid.Row="0" Width="549" Height="149" HorizontalAlignment="Center" Source="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUpOnline-Long-Dark.png" />
+
+        <TextBlock Grid.Row="2" HorizontalAlignment="Center" TextWrapping="Wrap" Width="500" Text="{x:Static resx:Resources.MixItUpOnlineAlphaRegistrationInfo}" />
+
+        <Button Grid.Row="4" HorizontalAlignment="Center" Click="Button_Click" Content="{x:Static resx:Resources.Register}" />
+    </Grid>
+</local:MainControlBase>

@@ -5,33 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Deprecated\**" />
-    <Compile Remove="Model\Import\**" />
-    <Compile Remove="ViewModel\Command %2528OLD%2529\**" />
-    <EmbeddedResource Remove="Deprecated\**" />
-    <EmbeddedResource Remove="Model\Import\**" />
-    <EmbeddedResource Remove="ViewModel\Command %2528OLD%2529\**" />
-    <None Remove="Deprecated\**" />
-    <None Remove="Model\Import\**" />
-    <None Remove="ViewModel\Command %2528OLD%2529\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Overlay\OverlayPage.html" />
-    <None Remove="Overlay\webSocketWrapper.js" />
     <None Remove="XSplit\Mix It Up.html" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
+    <Compile Include="..\..\Mix It Up Web\Services\External\TTSMonsterService.cs" Link="Services\External\TTSMonsterService.cs" />
     <Compile Include="..\..\Mix It Up Web\Services\External\VoicemodService.cs" Link="Services\External\VoicemodService.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Overlay\OverlayPage.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Overlay\webSocketWrapper.js">
+    <Content Include="Deprecated\OverlayPageOld.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="XSplit\Mix It Up.html">
@@ -45,12 +29,15 @@
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.24" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.73" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.77" />
     <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.21" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="PresentationFramework">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2\PresentationFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
@@ -61,6 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="OverlayResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OverlayResources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -78,6 +70,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="OverlayResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>OverlayResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

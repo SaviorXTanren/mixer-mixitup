@@ -158,7 +158,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AccountsDetails" xml:space="preserve">
-    <value>Le compte Streamer est votre compte réel à partir duquel vous diffusez. Les comptes de robots sont des comptes distincts et facultatifs que vous pouvez utiliser pour envoyer des messages depuis votre chaîne. Les comptes de robots doivent être créés manuellement par vous et vous devez vous assurez d&apos;être connecté à eux avant d&apos;essayer de les connecter dans Mix It Up.</value>
+    <value>Le compte Streamer est votre compte réel à partir duquel vous diffusez. Les comptes de robots sont des comptes distincts et facultatifs que vous pouvez utiliser pour envoyer des messages depuis votre chaîne. Les comptes de robots doivent être créés manuellement par vous et vous devez vous assurez d'être connecté à eux avant d'essayer de les connecter dans Mix It Up.</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
@@ -206,7 +206,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AddInventory" xml:space="preserve">
-    <value>Ajouter à l&apos;inventaire</value>
+    <value>Ajouter à l'inventaire</value>
     <comment>Manual</comment>
   </data>
   <data name="AddItem" xml:space="preserve">
@@ -224,7 +224,7 @@
     <value>Ajouter une nouvelle variable</value>
   </data>
   <data name="AddOverlayWidget" xml:space="preserve">
-    <value>Ajouter un Widget à l&apos;Overlay</value>
+    <value>Ajouter un Widget à l'Overlay</value>
     <comment>Manual</comment>
   </data>
   <data name="AddQuote" xml:space="preserve">
@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>&quot;!&quot; auto</value>
+    <value>"!" auto</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -331,7 +331,7 @@
     <comment>Manual</comment>
   </data>
   <data name="BackgroundColor" xml:space="preserve">
-    <value>Couleur de l&apos;arrière plan</value>
+    <value>Couleur de l'arrière plan</value>
     <comment>Manual</comment>
   </data>
   <data name="BackupRate" xml:space="preserve">
@@ -389,7 +389,7 @@
     <value>Nom du bouton</value>
   </data>
   <data name="BuyPrice" xml:space="preserve">
-    <value>Prix d&apos;achat</value>
+    <value>Prix d'achat</value>
     <comment>Manual</comment>
   </data>
   <data name="Cancel" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Commande dans le chat ( &quot;!&quot; non nécessaire, espace séparé, point-virgule pour plusieurs mots)</value>
+    <value>Commande dans le chat ( "!" non nécessaire, espace séparé, point-virgule pour plusieurs mots)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -473,11 +473,11 @@
     <comment>Manual</comment>
   </data>
   <data name="ClearQueue" xml:space="preserve">
-    <value>Effacer la file d&apos;attente</value>
+    <value>Effacer la file d'attente</value>
     <comment>Manual</comment>
   </data>
   <data name="ClearUserData" xml:space="preserve">
-    <value>Effacer les données sur l&apos;utilisateur</value>
+    <value>Effacer les données sur l'utilisateur</value>
     <comment>Manual</comment>
   </data>
   <data name="Click" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Commande (Pas besoin de &apos;!&apos;)</value>
+    <value>Commande (Pas besoin de '!')</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -548,7 +548,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Cooldown" xml:space="preserve">
-    <value>Délai d&apos;attente</value>
+    <value>Délai d'attente</value>
   </data>
   <data name="Cost" xml:space="preserve">
     <value>Coût</value>
@@ -566,7 +566,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
-    <value>Mois d&apos;abonnements cumulées </value>
+    <value>Mois d'abonnements cumulées </value>
     <comment>Manual</comment>
   </data>
   <data name="Currency" xml:space="preserve">
@@ -657,7 +657,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
-    <value>Déduire de la commande en cours d&apos;exécution de l&apos;utilisateur</value>
+    <value>Déduire de la commande en cours d'exécution de l'utilisateur</value>
     <comment>Manual</comment>
   </data>
   <data name="DeepOrange" xml:space="preserve">
@@ -865,7 +865,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ExemptFromRuleAndStrikes" xml:space="preserve">
-    <value>Exempté de la règle et d&apos;avertissement</value>
+    <value>Exempté de la règle et d'avertissement</value>
     <comment>Manual</comment>
   </data>
   <data name="ExitAnimation" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>Nom de la valeur JSON (Utiliser &apos; &apos; pour les paramètres imbriqués)</value>
+    <value>Nom de la valeur JSON (Utiliser ' ' pour les paramètres imbriqués)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1560,7 +1560,7 @@
     <value>Pour plus d’informations :</value>
   </data>
   <data name="OverlayWarning3" xml:space="preserve">
-    <value>Paramètres Windows: Problème d’animation d&apos;overlay</value>
+    <value>Paramètres Windows: Problème d’animation d'overlay</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetEditor" xml:space="preserve">
@@ -1568,7 +1568,7 @@
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetEditorInstructions" xml:space="preserve">
-    <value>Sélectionnez le type d&apos;overlay que vous souhaitez créer :</value>
+    <value>Sélectionnez le type d'overlay que vous souhaitez créer :</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgets" xml:space="preserve">
@@ -1576,7 +1576,7 @@
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetsRequireOverlay" xml:space="preserve">
-    <value>L&apos;overlay doit être activé dans le menu Services pour utiliser Overlay Widgets.</value>
+    <value>L'overlay doit être activé dans le menu Services pour utiliser Overlay Widgets.</value>
     <comment>Manual</comment>
   </data>
   <data name="OvrStream" xml:space="preserve">
@@ -1615,10 +1615,6 @@
   </data>
   <data name="PortName" xml:space="preserve">
     <value>Nom du port</value>
-  </data>
-  <data name="Position" xml:space="preserve">
-    <value>Pos</value>
-    <comment>Manual</comment>
   </data>
   <data name="PreMade" xml:space="preserve">
     <value>Préfabriqué</value>
@@ -1710,7 +1706,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
-    <value>Lire à partir d&apos;un fichier</value>
+    <value>Lire à partir d'un fichier</value>
     <comment>Manual</comment>
   </data>
   <data name="ReadRandomLineFromFile" xml:space="preserve">
@@ -1864,7 +1860,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SaveFailed" xml:space="preserve">
-    <value>L&apos;enregistrement a échoué, essayer une fois de plus ...</value>
+    <value>L'enregistrement a échoué, essayer une fois de plus ...</value>
     <comment>Manual</comment>
   </data>
   <data name="SaveToFile" xml:space="preserve">
@@ -2007,7 +2003,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ShowMessageTimestamp" xml:space="preserve">
-    <value>Afficher l&apos;horodatage du message</value>
+    <value>Afficher l'horodatage du message</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowOnChatListContextMenu" xml:space="preserve">
@@ -2139,11 +2135,11 @@
     <comment>Manual</comment>
   </data>
   <data name="SubAge" xml:space="preserve">
-    <value>Durée d&apos;abonnement</value>
+    <value>Durée d'abonnement</value>
     <comment>Manual</comment>
   </data>
   <data name="SubBonus" xml:space="preserve">
-    <value>Bonus d&apos;abonnement</value>
+    <value>Bonus d'abonnement</value>
     <comment>Manual</comment>
   </data>
   <data name="SubmitABug" xml:space="preserve">
@@ -2155,7 +2151,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SubscribeAge" xml:space="preserve">
-    <value>souscrire à l&apos;âge</value>
+    <value>souscrire à l'âge</value>
     <comment>Manual</comment>
   </data>
   <data name="Subscriber" xml:space="preserve">
@@ -2556,7 +2552,7 @@
     <comment>Manual</comment>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
-    <value>Chuchotement à l&apos;utilisateur (facultatif)</value>
+    <value>Chuchotement à l'utilisateur (facultatif)</value>
     <comment>Manual</comment>
   </data>
   <data name="White" xml:space="preserve">
@@ -2709,7 +2705,7 @@
     <value>Purger</value>
   </data>
   <data name="Timeout" xml:space="preserve">
-    <value>Délai d&apos;expiration</value>
+    <value>Délai d'expiration</value>
     <comment>Manual</comment>
   </data>
   <data name="Imported" xml:space="preserve">
@@ -2967,7 +2963,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ValidCooldownAmountMustBeSpecified" xml:space="preserve">
-    <value>Une valeur valide pour le délai d&apos;attente doit être spécifiée</value>
+    <value>Une valeur valide pour le délai d'attente doit être spécifiée</value>
     <comment>Manual</comment>
   </data>
   <data name="ValidCooldownGroupMustBeSpecified" xml:space="preserve">
@@ -3416,7 +3412,7 @@ Par exemple, si cette option est activée et que le montant est défini sur 5, c
     <comment>Manual</comment>
   </data>
   <data name="RemoveModerationStrike" xml:space="preserve">
-    <value>Supprimer l&apos;avertissement de modération</value>
+    <value>Supprimer l'avertissement de modération</value>
     <comment>Manual</comment>
   </data>
   <data name="TimeoutUser" xml:space="preserve">
@@ -3634,7 +3630,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="ModerationStrikeCommandName" xml:space="preserve">
-    <value>Modération d&apos;un avertissement</value>
+    <value>Modération d'un avertissement</value>
     <comment>Manual</comment>
   </data>
   <data name="RedemptionStoreDefaultRedemptionCommandName" xml:space="preserve">
@@ -4923,7 +4919,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <comment>Manual</comment>
   </data>
   <data name="CooldownRequirementOnCooldown" xml:space="preserve">
-    <value>Cette commande est actuellement inopérante, merci d&apos;attendre encore {0} seconde(s).</value>
+    <value>Cette commande est actuellement inopérante, merci d'attendre encore {0} seconde(s).</value>
     <comment>Manual</comment>
   </data>
   <data name="RankRequirementNotGreaterThanOrEqual" xml:space="preserve">
@@ -5054,7 +5050,7 @@ Ce paramètre modifiera toutes les exigences de rôle pour qu’elles soient exp
     <comment>Manual</comment>
   </data>
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
-    <value>Erreurs sur le montant de la valeur du délai d&apos;attente</value>
+    <value>Erreurs sur le montant de la valeur du délai d'attente</value>
     <comment>Manual</comment>
   </data>
   <data name="WaitUntilComplete" xml:space="preserve">
@@ -5460,7 +5456,7 @@ Activé. Vous pouvez penser que cela ressemble à basculer l’option « Déver
     <value>La connectivité du service Discord vous permet d’obtenir des informations sur votre compte Discord, d’envoyer des messages aux canaux et de contrôler l’audio à partir des canaux vocaux. Lorsque vous vous connectez, une page Web d’authentification s’ouvre vous demandant de vous connecter à Discord et d’approuver Mix It Up pour accéder à vos informations.</value>
   </data>
   <data name="DiscordInfo2" xml:space="preserve">
-    <value>L’application Mix It Up Discord a par défaut un délai d&apos;attente de 30 secondes entre chaque action Discord pour éviter les problèmes de limitation de débit pour tous les utilisateurs. Pour contourner le délai d&apos;attente de 30 secondes, vous pouvez créer votre propre application Discord personnalisée.</value>
+    <value>L’application Mix It Up Discord a par défaut un délai d'attente de 30 secondes entre chaque action Discord pour éviter les problèmes de limitation de débit pour tous les utilisateurs. Pour contourner le délai d'attente de 30 secondes, vous pouvez créer votre propre application Discord personnalisée.</value>
   </data>
   <data name="DiscordInvalidBotToken" xml:space="preserve">
     <value>Veuillez saisir un jeton de bot personnalisé valide.</value>
@@ -6522,7 +6518,7 @@ Activé. Vous pouvez penser que cela ressemble à basculer l’option « Déver
     <value>Action Twitch: Récompense de point de canal manquant</value>
   </data>
   <data name="ChannelPointsRewardGlobalCooldown" xml:space="preserve">
-    <value>Délai d&apos;attente global (mins)</value>
+    <value>Délai d'attente global (mins)</value>
   </data>
   <data name="ChannelPointsRewardMaxPerStream" xml:space="preserve">
     <value>Maximum par flux</value>
@@ -6583,7 +6579,7 @@ Cela peut être fait en cliquant sur Créer une récompense de points de chaîne
   <data name="RequirementErrorsCooldownTypeTooltip" xml:space="preserve">
     <value>- Par défaut : chaque exigence pour chaque commande suit son propre message d’erreur cooldown
 - Par commande : Chaque commande suit son propre message d’erreur pour toutes ses exigences
-- Par exigence : Chaque type d’exigence suit son propre message d’erreur de délai d&apos;attente dans toutes les commandes
+- Par exigence : Chaque type d’exigence suit son propre message d’erreur de délai d'attente dans toutes les commandes
 - Singulier : Un message d’erreur universel qui s’applique à toutes les commandes et exigences
 - Aucun : Aucun message d’erreur ne sera affiché</value>
   </data>
@@ -7096,7 +7092,7 @@ Si vous ne parvenez pas à effectuer l’une des opérations suivantes, les util
     <value>VTube Studio n’est pas connecté, veuillez vous assurer que le logiciel est en cours d’exécution et qu’il est connecté sur la page Services.</value>
   </data>
   <data name="NotFollowing" xml:space="preserve">
-    <value>N&apos;est pas follower</value>
+    <value>N'est pas follower</value>
   </data>
   <data name="GameCommandHangmanMissingGuess" xml:space="preserve">
     <value>Une supposition doit être spécifiée</value>
@@ -7943,7 +7939,7 @@ Les guillemets importés avec des ID qui correspondent aux guillemets existants 
     <value>Commande désactivée : !</value>
   </data>
   <data name="DiscordActionBlockedDueToRateLimiting" xml:space="preserve">
-    <value>L’action Discord que vous essayiez d’effectuer a été bloquée en raison d’un trop grand nombre de demandes. Assurez-vous que vous n’effectuez qu&apos;1 action Discord toutes les 30 secondes. Vous pouvez ajouter un bot Discord personnalisé sous la page Services pour contourner ce blocage.</value>
+    <value>L’action Discord que vous essayiez d’effectuer a été bloquée en raison d’un trop grand nombre de demandes. Assurez-vous que vous n’effectuez qu'1 action Discord toutes les 30 secondes. Vous pouvez ajouter un bot Discord personnalisé sous la page Services pour contourner ce blocage.</value>
   </data>
   <data name="ErrorCouldNotFindGame" xml:space="preserve">
     <value>Impossible de trouver le jeu spécifié</value>
@@ -8032,7 +8028,7 @@ Les guillemets importés avec des ID qui correspondent aux guillemets existants 
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
     <value>Vous devez spécifier « acheter » ou « vendre »</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>UTILISATION: liste {0} = Répertorie tous les articles disponibles à l’achat / vente ** {0} &lt;NOM DE L’ARTICLE&gt; = Répertorie le prix d’achat / vente de l’article ** {0} acheter &lt; NOM DE L’article&gt; [MONTANT] = Achète 1 ou le montant spécifié de l’article ** {0} vendre &lt;NOM DE L’article&gt; [MONTANT] = Vend 1 ou le montant spécifié de l’article</value>
@@ -8211,7 +8207,7 @@ Les guillemets importés avec des ID qui correspondent aux guillemets existants 
     <value>Commande mise à jour: !</value>
   </data>
   <data name="UserFollowAgeHeader" xml:space="preserve">
-    <value>{0}&apos;âge de suivi: </value>
+    <value>{0}'âge de suivi: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UserSubscribeAgeHeader" xml:space="preserve">
@@ -8716,7 +8712,7 @@ Nous tenterons de nous reconnecter au service lorsque cela sera possible. Si cel
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8734,7 +8730,7 @@ Nous tenterons de nous reconnecter au service lorsque cela sera possible. Si cel
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
+via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>
@@ -9100,170 +9096,8 @@ via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
   <data name="EnableSubscriberMode" xml:space="preserve">
     <value>Enable Subscriber Mode</value>
   </data>
-  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
-    <value>var additionalTime = 0;
-
-function timerLoop(totalSeconds, endingSeconds, displayFormat)
-{
-    totalSeconds += additionalTime;
-    additionalTime = 0;
-
-    var text = displayFormat;
-
-    var seconds = totalSeconds % 60;
-    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
-    text = text.replace(&quot;SS&quot;, totalSeconds);
-    text = text.replace(&quot;ss&quot;, seconds);
-
-    var totalMinutes = Math.floor(totalSeconds / 60);
-    var minutes = totalMinutes % 60;
-    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
-    text = text.replace(&quot;MM&quot;, totalMinutes);
-    text = text.replace(&quot;mm&quot;, minutes);
-
-    var totalHours = Math.floor(totalMinutes / 60);
-    var hours = totalHours % 24;
-    if (hours &lt; 10) { hours = &quot;0&quot; + hours }
-    text = text.replace(&quot;HH&quot;, totalHours);
-    text = text.replace(&quot;hh&quot;, hours);
-
-    var days = Math.floor(totalHours / 24);
-    text = text.replace(&quot;DD&quot;, hours);
-
-    document.getElementById(&quot;text&quot;).innerHTML = text;
-
-    setTimeout(function () {
-        if (endingSeconds &gt; 0) {
-            totalSeconds++;
-            if (totalSeconds &lt; endingSeconds) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
-            }        
-        }
-        else {
-            totalSeconds--;
-            if (totalSeconds &gt;= 0) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
-            }
-        }
-    }, 1000);
-}
-
-function adjustTime(time)
-{
-    additionalTime += time;
-}
-
-if ({CountUp}) {
-    timerLoop(0, {Duration}, &quot;{DisplayFormat}&quot;);  
-}
-else {
-    timerLoop({Duration}, 0, &quot;{DisplayFormat}&quot;);
-}</value>
-  </data>
-  <data name="OverlayImageDefaultCSS" xml:space="preserve">
-    <value>.image {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;</value>
-  </data>
-  <data name="OverlayTextDefaultCSS" xml:space="preserve">
-    <value>.text {
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-}</value>
-  </data>
-  <data name="OverlayTextDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
-    <value>.video-{ID} {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
-    <value>&lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
-    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
-&lt;/video&gt;</value>
-  </data>
-  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;</value>
-  </data>
-  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;youtube-{ID}&quot; /&gt;
-
-&lt;script&gt;
-    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
-        height: {HeightNumber},
-        width: {WidthNumber},
-        videoId: &apos;{VideoID}&apos;,
-        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
-        events: {
-            &apos;onReady&apos;: function () {
-                youtubeVideoPlayer.setVolume({Volume});
-                youtubeVideoPlayer.setLoop(false);
-                youtubeVideoPlayer.frameBorder = 0;
-                youtubeVideoPlayer.playVideo();
-            },
-            &apos;onStateChange&apos;: function (event) {
-                if (event.data == YT.PlayerState.ENDED) {
-                    event.target.destroy();
-                }
-            }
-        }
-    });
-&lt;/script&gt;</value>
-  </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
-  </data>
-  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>.maindiv {
-    position: absolute;
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    min-height: 100%;
-    margin: 0px;
-    z-index: {Layer};
-}
-
-.contentdiv {
-    position: absolute;
-    margin: 0px;
-    left: {XPosition}{PositionType};
-    top: {YPosition}{PositionType};
-    transform: translate({XTranslation}%, {YTranslation}%);
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
-&lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
-
-{InnerHTML}
-
-&lt;/div&gt;
-&lt;/div&gt;</value>
   </data>
   <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
     <value>Overlay Action: </value>
@@ -9324,9 +9158,9 @@ namespace CustomNamespace
         public object Run()
         {
             // Your code goes here
-            System.Console.WriteLine(&quot;Hello World!&quot;);
+            System.Console.WriteLine("Hello World!");
 
-            // Return any data here that you&apos;d like to use
+            // Return any data here that you'd like to use
             return 0;
         }
     }
@@ -9336,57 +9170,22 @@ namespace CustomNamespace
     <value>function run()
 {
     // Your code goes here
-    var text = &apos;Hello World!&apos;;
+    var text = 'Hello World!';
 
-    // Return any data here that you&apos;d like to use
+    // Return any data here that you'd like to use
     return 0;
 }</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
     # Your code goes here
-    print &apos;Hello World!&apos;
+    print 'Hello World!'
 
-    # Return any data here that you&apos;d like to use
+    # Return any data here that you'd like to use
     return 0</value>
   </data>
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
-  </data>
-  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        {Amount}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text-{ID}&quot;&gt;
-    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-    {Username}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function update(name, amount)
-{
-    var nameElement = document.getElementById(&quot;label-name&quot;);
-    if (nameElement != null) {
-        nameElement.innerHTML = name;
-    }
-    
-    var amountElement = document.getElementById(&quot;label-amount&quot;);
-    if (amountElement != null) {
-        amountElement.innerHTML = amount; 
-    }
-}</value>
   </data>
   <data name="OnUpdate" xml:space="preserve">
     <value>On Update</value>
@@ -9403,177 +9202,11 @@ namespace CustomNamespace
   <data name="Donation" xml:space="preserve">
     <value>Donation</value>
   </data>
-  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {FontSize}px;
-}</value>
-  </data>
-  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;eventtype&quot;&gt;{EventType}&lt;/p&gt;
-        &lt;p class=&quot;details&quot;&gt;{Details}&lt;/p&gt;
-        &lt;p class=&quot;subdetails&quot;&gt;{SubDetails}&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
-    <value>function add(eventType, details, subdetails)
-{
-    var list = document.getElementById(&quot;list&quot;);
-
-    if (list.childElementCount &gt; {MaxToShow}) {
-        removeOldest();
-    }
-
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    const item = itemTemplate.content.cloneNode(true);
-    
-    var eventTypeElement = item.querySelector(&quot;.eventtype&quot;);
-    eventTypeElement.innerHTML = eventType;
-
-    var detailsElement = item.querySelector(&quot;.details&quot;);
-    detailsElement.innerHTML = details;
-    
-    var subdetailsElement = item.querySelector(&quot;.subdetails&quot;);
-    subdetailsElement.innerHTML = subdetails;
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById(&quot;list&quot;);
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
   <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
     <value>Twitch Channel Hype Train Level Up</value>
   </data>
   <data name="AlertTwitchCharityDonation" xml:space="preserve">
     <value>{0} Donated {1} To The Twitch Charity</value>
-  </data>
-  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
-    <value>.background
-{
-    position: absolute;
-    background-color: {BackgroundColor};
-    width: {Width}px;
-    height: {Height}px;
-}
-
-.progress
-{
-    position: absolute;
-    background-color: {ProgressColor};
-    height: {Height}px;
-}
-
-.text {
-    position: absolute;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-    left: 50%;
-    top: 50%;
-    margin: auto;
-    transform: translate(-50%, -50%);
-}</value>
-  </data>
-  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
-    <value>&lt;div class=&quot;background&quot;&gt;
-  &lt;div id=&quot;progress&quot; class=&quot;progress&quot; /&gt;
-&lt;/div&gt;
-&lt;p id=&quot;text&quot; class=&quot;text&quot; /&gt;</value>
-  </data>
-  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
-    <value>function update(amount, goal, width)
-{
-    var percentage = (amount / goal)
-
-    var textElement = document.getElementById(&quot;text&quot;);
-    if (textElement != null) {
-        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
-    }
-    
-    var progressElement = document.getElementById(&quot;progress&quot;);
-    if (progressElement != null) {
-        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
-    }
-}
-
-update({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
@@ -9600,7 +9233,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     <value>This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream.</value>
   </data>
   <data name="LoupeDeckInfo2" xml:space="preserve">
-    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for &quot;Mix It Up&quot;.</value>
+    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for "Mix It Up".</value>
   </data>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell Execute</value>
@@ -9629,22 +9262,6 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="CooldownRequirementOnCooldownSeconds" xml:space="preserve">
     <value>This command is currently on cooldown, please wait another {0} second(s).</value>
     <comment>Manual</comment>
-  </data>
-  <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text&quot;&gt;
-    &lt;span id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-    {Username}
-&lt;/p&gt;</value>
   </data>
   <data name="Added" xml:space="preserve">
     <value>Added</value>
@@ -9703,252 +9320,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="OverlayWidthMustBeValidValue" xml:space="preserve">
     <value>Width must be a valid value</value>
   </data>
-  <data name="OverlayChatDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;message&quot;&gt;&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messagebadge&quot;&gt;
-    &lt;img class=&quot;messagebadge&quot; /&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageavatar&quot;&gt;
-    &lt;img class=&quot;messageavatar&quot; /&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageusername&quot;&gt;
-    &lt;span class=&quot;messageusername&quot;&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messagetext&quot;&gt;
-    &lt;span class=&quot;messagetext&quot;&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageemote&quot;&gt;
-    &lt;img class=&quot;messageemote&quot; /&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayChatDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {TEXT_SIZE}px;
-}</value>
-  </data>
-  <data name="OverlayChatDefaultJavascript" xml:space="preserve">
-    <value>function add(user, messageParts)
-{
-    var list = document.getElementById(&quot;list&quot;);
-
-    if ({ShowMaxMessagesOnly})
-    {
-        if (list.childElementCount &gt; {MaxToShow})
-        {
-            removeOldest();
-        }
-    }
-
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge&quot;);
-    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar&quot;);
-    var messageUsernameTemplate = document.querySelector(&quot;#messageusername&quot;);
-    var messageTextTemplate = document.querySelector(&quot;#messagetext&quot;);
-    var messageEmoteTemplate = document.querySelector(&quot;#messageemote&quot;);
-    
-    const item = itemTemplate.content.cloneNode(true);
-    var messageElement = item.querySelector(&quot;.message&quot;);
-    
-    const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageRoleBadge.src = user.PlatformRoleBadgeLink;
-    messageElement.appendChild(messageRoleBadge);
-    
-    const messageSubBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageSubBadge.src = user.PlatformSubscriberBadgeLink;
-    messageElement.appendChild(messageSubBadge);
-    
-    const messageAvatar = messageAvatarTemplate.content.cloneNode(true);
-    messageAvatar.src = user.AvatarLink;
-    messageElement.appendChild(messageAvatar);
-    
-    const messageUsername = messageUsernameTemplate.content.cloneNode(true);
-    messageUsername.style.color = user.Color;
-    messageUsername.innerHTML = user.DisplayName;
-    messageElement.appendChild(messageUsername);
-    
-    messageParts.forEach(messagePart =&gt;
-    {
-        if (messagePart.Type === &apos;text&apos;)
-        {
-            const messageText = messageTextTemplate.content.cloneNode(true);
-            messageUsername.innerHTML = messagePart.Text;
-            messageElement.appendChild(messageText);
-        }
-        else if (messagePart.Type === &apos;image&apos;)
-        {
-            const messageEmote = messageEmoteTemplate.content.cloneNode(true);
-            messageEmote.src = messagePart.URL;
-            messageElement.appendChild(messageEmote);      
-        }
-    });
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById(&quot;list&quot;);
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
-  <data name="OverlayBasicIFrameTemplate" xml:space="preserve">
-    <value>&lt;!DOCTYPE html&gt;
-
-&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;utf-8&quot; /&gt;
-    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-
-    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-
-    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
-
-    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
-
-    &lt;style type=&quot;text/css&quot;&gt;
-        {CSS}
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;&quot;&gt;
-
-    {HTML}
-
-    &lt;script&gt;
-        var maindiv = document.getElementById(&quot;maindiv&quot;);
-        
-        function sendParentMessage(obj) {
-            window.top.postMessage(JSON.stringify(obj), &apos;*&apos;);
-        }
-
-        window.onmessage = function (message) {
-            if (message != null) {
-                var obj = JSON.parse(message);
-            }
-        };
-        
-        const animateCSS = (element, animation, prefix = &apos;animate__&apos;) =&gt;
-            // We create a Promise and return it
-            new Promise((resolve, reject) =&gt; {
-                if (animation != null &amp;&amp; animation) {
-                    const animationName = `${prefix}${animation}`;
-
-                    element.classList.add(`${prefix}animated`, animationName);
-
-                    // When the animation ends, we clean the classes and resolve the Promise
-                    function handleAnimationEnd(event) {
-                        event.stopPropagation();
-                        element.classList.remove(`${prefix}animated`, animationName);
-                        resolve(&apos;Animation ended&apos;);
-                    }
-
-                    element.addEventListener(&apos;animationend&apos;, handleAnimationEnd, { once: true });
-                }
-                else {
-                    resolve(&apos;Animation ended&apos;);
-                }
-            });
-        
-        {Animations}
-        
-        {Javascript}
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</value>
-    <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Animations} is the Javascript animation calls, {Javascript} is the Javascript replacement</comment>
-  </data>
-  <data name="OverlayAnimateCSSJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);</value>
-  </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
-  </data>
-  <data name="OverlayAnimationTimedWrapperJavascript" xml:space="preserve">
-    <value>setTimeout(function () {
-    {Animation}
-}, {MillisecondTiming});</value>
-  </data>
-  <data name="OverlayAnimateCSSThenJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
-    {PostAnimation}
-});</value>
-  </data>
-  <data name="OverlayIFrameSendParentMessageRemove" xml:space="preserve">
-    <value>maindiv.style.visibility=&apos;hidden&apos;
-sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });</value>
   </data>
 </root>

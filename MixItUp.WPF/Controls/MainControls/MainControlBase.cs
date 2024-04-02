@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+            ServiceManager.Get<IProcessService>().LaunchLink(e.Uri.AbsoluteUri);
             e.Handled = true;
         }
 

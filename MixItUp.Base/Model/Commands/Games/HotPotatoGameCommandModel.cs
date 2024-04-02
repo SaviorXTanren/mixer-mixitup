@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -71,6 +72,8 @@ namespace MixItUp.Base.Model.Commands.Games
             var lastTargetUser = this.lastTossParameters?.TargetUser;
             if (this.gameActive && lastTargetUser != parameters.User)
             {
+                Logger.ForceLog(LogLevel.Information, $"User trying to trigger Hot Potato game isn't the currently targeted user: {parameters.User} - {lastTargetUser}");
+
                 // The game is underway and it's not the user's turn
                 await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway, parameters);
                 await this.Requirements.Refund(parameters);

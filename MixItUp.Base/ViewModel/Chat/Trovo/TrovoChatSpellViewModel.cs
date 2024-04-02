@@ -1,4 +1,5 @@
-﻿using StreamingClient.Base.Util;
+﻿using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using Trovo.Base.Models.Chat;
@@ -15,6 +16,10 @@ namespace MixItUp.Base.ViewModel.Chat.Trovo
         public const string SpellValueSpecialIdentifier = "spellvalue";
         public const string SpellTotalValueSpecialIdentifier = "spellvaluetotal";
         public const string SpellValueTypeSpecialIdentifier = "spellvaluetype";
+
+        public TrovoChatSpellContentModel Contents { get; set; }
+
+        public UserV2ViewModel User { get; set; }
 
         public string Name { get { return this.Contents.gift; } }
 
@@ -42,10 +47,9 @@ namespace MixItUp.Base.ViewModel.Chat.Trovo
             }
         }
 
-        public TrovoChatSpellContentModel Contents { get; set; }
-
-        public TrovoChatSpellViewModel(ChatMessageModel message)
+        public TrovoChatSpellViewModel(UserV2ViewModel user, ChatMessageModel message)
         {
+            this.User = user;
             this.Contents = JSONSerializerHelper.DeserializeFromString<TrovoChatSpellContentModel>(message.content);
         }
 

@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -44,9 +43,6 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public int Amount { get; set; }
 
-        [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
-
         private YouTubeActionModel(YouTubeActionType type)
             : base(ActionTypeEnum.YouTube)
         {
@@ -64,7 +60,9 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (ServiceManager.Get<YouTubeSessionService>().IsLive && ServiceManager.Get<YouTubeSessionService>().Video != null)
                     {
-                        await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>().Video, title: this.Title, description: this.Description);
+                        string title = await ReplaceStringWithSpecialModifiers(this.Title, parameters);
+                        string description = await ReplaceStringWithSpecialModifiers(this.Description, parameters);
+                        await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>().Video, title: title, description: description);
                     }
                 }
                 else if (this.ActionType == YouTubeActionType.RunAdBreak)

@@ -2,7 +2,9 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirements;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -161,7 +163,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public GiveawayMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            GlobalEvents.OnGiveawaysChangedOccurred += GlobalEvents_OnGiveawaysChangedOccurred;
+            GiveawayService.OnGiveawaysChangedOccurred += GiveawayService_OnGiveawaysChangedOccurred;
 
             this.Requirements = new RequirementsSetViewModel(ChannelSession.Settings.GiveawayRequirementsSet);
             this.Requirements.Currency.RestrictToRequiredAmountOnly = true;
@@ -195,7 +197,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        private void GlobalEvents_OnGiveawaysChangedOccurred(object sender, bool usersUpdated)
+        private void GiveawayService_OnGiveawaysChangedOccurred(object sender, bool usersUpdated)
         {
             if (usersUpdated)
             {

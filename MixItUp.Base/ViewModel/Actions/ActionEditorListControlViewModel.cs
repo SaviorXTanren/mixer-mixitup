@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Actions
 {
     public class ActionEditorListControlViewModel : UIViewModelBase
     {
-        public ThreadSafeObservableCollection<ActionTypeEnum> ActionTypes { get; set; } = new ThreadSafeObservableCollection<ActionTypeEnum>();
+        public ObservableCollection<ActionTypeEnum> ActionTypes { get; set; } = new ObservableCollection<ActionTypeEnum>();
         public ActionTypeEnum SelectedActionType
         {
             get { return this.selectedActionType; }
@@ -26,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddCommand { get; private set; }
 
-        public ThreadSafeObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ThreadSafeObservableCollection<ActionEditorControlViewModelBase>();
+        public ObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ObservableCollection<ActionEditorControlViewModelBase>();
 
         public ActionEditorListControlViewModel()
         {
@@ -55,6 +56,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.ExternalProgram: editorViewModel = new ExternalProgramActionEditorControlViewModel(); break;
                         case ActionTypeEnum.File: editorViewModel = new FileActionEditorControlViewModel(); break;
                         case ActionTypeEnum.GameQueue: editorViewModel = new GameQueueActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.Group: editorViewModel = new GroupActionEditorControlViewModel(); break;
                         case ActionTypeEnum.IFTTT: editorViewModel = new IFTTTActionEditorControlViewModel(); break;
                         case ActionTypeEnum.InfiniteAlbum: editorViewModel = new InfiniteAlbumActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Input: editorViewModel = new InputActionEditorControlViewModel(); break;
@@ -65,7 +67,9 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel(); break;
                         case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel(); break;
                         case ActionTypeEnum.PolyPop: editorViewModel = new PolyPopActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.Random: editorViewModel = new RandomActionEditorControlViewModel(); break;
                         case ActionTypeEnum.SAMMI: editorViewModel = new SAMMIActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.Script: editorViewModel = new ScriptActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Serial: editorViewModel = new SerialActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Sound: editorViewModel = new SoundActionEditorControlViewModel(); break;
                         case ActionTypeEnum.SpecialIdentifier: editorViewModel = new SpecialIdentifierActionEditorControlViewModel(); break;
@@ -140,6 +144,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.ExternalProgram: editorViewModel = new ExternalProgramActionEditorControlViewModel((ExternalProgramActionModel)action); break;
                 case ActionTypeEnum.File: editorViewModel = new FileActionEditorControlViewModel((FileActionModel)action); break;
                 case ActionTypeEnum.GameQueue: editorViewModel = new GameQueueActionEditorControlViewModel((GameQueueActionModel)action); break;
+                case ActionTypeEnum.Group: editorViewModel = new GroupActionEditorControlViewModel((GroupActionModel)action); break;
                 case ActionTypeEnum.IFTTT: editorViewModel = new IFTTTActionEditorControlViewModel((IFTTTActionModel)action); break;
                 case ActionTypeEnum.InfiniteAlbum: editorViewModel = new InfiniteAlbumActionEditorControlViewModel((InfiniteAlbumActionModel)action); break;
                 case ActionTypeEnum.Input: editorViewModel = new InputActionEditorControlViewModel((InputActionModel)action); break;
@@ -150,7 +155,9 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel((OvrStreamActionModel)action); break;
                 case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel((PixelChatActionModel)action); break;
                 case ActionTypeEnum.PolyPop: editorViewModel = new PolyPopActionEditorControlViewModel((PolyPopActionModel)action); break;
+                case ActionTypeEnum.Random: editorViewModel = new RandomActionEditorControlViewModel((RandomActionModel)action); break;
                 case ActionTypeEnum.SAMMI: editorViewModel = new SAMMIActionEditorControlViewModel((SAMMIActionModel)action); break;
+                case ActionTypeEnum.Script: editorViewModel = new ScriptActionEditorControlViewModel((ScriptActionModel)action); break;
                 case ActionTypeEnum.Serial: editorViewModel = new SerialActionEditorControlViewModel((SerialActionModel)action); break;
                 case ActionTypeEnum.Sound: editorViewModel = new SoundActionEditorControlViewModel((SoundActionModel)action); break;
                 case ActionTypeEnum.SpecialIdentifier: editorViewModel = new SpecialIdentifierActionEditorControlViewModel((SpecialIdentifierActionModel)action); break;

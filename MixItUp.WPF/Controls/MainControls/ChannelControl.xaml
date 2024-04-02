@@ -130,6 +130,46 @@
                 </Expander>
             </Border>
 
+            <!-- YouTube -->
+            <Border Visibility="{Binding IsYouTubeConnected, Converter={StaticResource BooleanToVisibilityConverter}}" BorderBrush="{StaticResource PrimaryHueDarkBrush}" BorderThickness="1">
+                <Expander DataContext="{Binding YouTube}" VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Background="{StaticResource PrimaryHueMidBrush}" IsExpanded="True">
+                    <Expander.Header>
+                        <Grid Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="/Assets/Images/YouTube.png" Height="24" Width="24" VerticalAlignment="Center" />
+
+                            <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{x:Static resx:Resources.YouTube}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
+                        </Grid>
+                    </Expander.Header>
+
+                    <Grid Background="{StaticResource MaterialDesignBackground}">
+                        <Grid Margin="10">
+                            <GroupBox Header="{x:Static resx:Resources.ChannelInfo}">
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <ComboBox Grid.Row="0" Text="{Binding Title}" ItemsSource="{Binding PastTitles}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Title}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                                    <TextBox Grid.Row="2" Text="{Binding Description}" AcceptsReturn="True" Height="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                    <Button Grid.Row="4" Content="{x:Static resx:Resources.Update}" Command="{Binding UpdateChannelInformationCommand}" Width="150" />
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </Expander>
+            </Border>
+
             <!-- Trovo -->
             
             <Border Visibility="{Binding IsTrovoConnected, Converter={StaticResource BooleanToVisibilityConverter}}" BorderBrush="{StaticResource PrimaryHueDarkBrush}" BorderThickness="1">

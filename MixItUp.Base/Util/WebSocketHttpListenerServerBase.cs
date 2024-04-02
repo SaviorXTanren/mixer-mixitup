@@ -9,8 +9,10 @@ namespace MixItUp.Base.Util
 {
     public abstract class WebSocketHttpListenerServerBase : LocalHttpListenerServer
     {
-        public event EventHandler OnConnectedOccurred = delegate { };
-        public event EventHandler<WebSocketCloseStatus> OnDisconnectOccurred = delegate { };
+        public delegate void DisconnectHandler(WebSocketServerBase webSocketServer, WebSocketCloseStatus status);
+
+        public event EventHandler<WebSocketServerBase> OnConnectedOccurred = delegate { };
+        public event DisconnectHandler OnDisconnectOccurred = delegate { };
 
         private LockedList<WebSocketServerBase> webSocketServers = new LockedList<WebSocketServerBase>();
 
@@ -28,13 +30,13 @@ namespace MixItUp.Base.Util
             base.Stop();
         }
 
-        public async Task Send(WebSocketPacket packet)
+        public async Task Send(string packet)
         {
             try
             {
                 foreach (WebSocketServerBase webSocketServer in this.webSocketServers)
                 {
-                    Logger.Log(LogLevel.Debug, "Sending Web Socket Packet - " + JSONSerializerHelper.SerializeToString(packet));
+                    Logger.Log(LogLevel.Debug, "Sending Web Socket Packet - " + packet);
 
                     await webSocketServer.Send(packet);
                 }
@@ -65,13 +67,20 @@ namespace MixItUp.Base.Util
                 if (listenerContext.Request.IsWebSocketRequest)
                 {
                     WebSocketServerBase webSocketServer = this.CreateWebSocketServer(listenerContext);
-                    this.webSocketServers.Add(webSocketServer);
-                    webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
-                    webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
+                    if (webSocketServer != null)
+                    {
+                        this.webSocketServers.Add(webSocketServer);
+                        webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
+                        webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
 
-                    await webSocketServer.Initialize();
+                        await webSocketServer.Initialize();
 
-                    listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                    }
+                    else
+                    {
+                        listenerContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    }
                 }
                 else
                 {
@@ -86,13 +95,13 @@ namespace MixItUp.Base.Util
 
         private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)
         {
-            this.OnConnectedOccurred(sender, e);
+            this.OnConnectedOccurred(sender, (WebSocketServerBase)sender);
         }
 
         private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             this.webSocketServers.Remove((WebSocketServerBase)sender);
-            this.OnDisconnectOccurred(sender, e);
+            this.OnDisconnectOccurred((WebSocketServerBase)sender, e);
         }
     }
 }

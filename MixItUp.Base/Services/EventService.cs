@@ -1,8 +1,12 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -41,6 +45,7 @@ namespace MixItUp.Base.Services
         ChatUserTimeout = 57,
         ChatWhisperReceived = 58,
         ChatUserEntranceCommand = 59,
+        ChatUserFirstMessage = 60,
 
         // Application = 100
 
@@ -55,6 +60,7 @@ namespace MixItUp.Base.Services
         TwitchChannelHosted = 202,
         TwitchChannelRaided = 203,
         TwitchChannelOutgoingRaidCompleted = 204,
+        TwitchChannelUpdated = 205,
 
         TwitchChannelFollowed = 210,
         [Obsolete]
@@ -64,6 +70,12 @@ namespace MixItUp.Base.Services
         TwitchChannelResubscribed = 221,
         TwitchChannelSubscriptionGifted = 222,
         TwitchChannelMassSubscriptionsGifted = 223,
+
+        TwitchChannelWatchStreak = 230,
+
+        TwitchChannelAdUpcoming = 250,
+        TwitchChannelAdStarted = 251,
+        TwitchChannelAdEnded = 252,
 
         TwitchChannelBitsCheered = 270,
         TwitchChannelPointsRedeemed = 271,
@@ -125,25 +137,101 @@ namespace MixItUp.Base.Services
         GenericDonation = 1999,
 
         StreamlabsDonation = 1000,
+
         TiltifyDonation = 1020,
+
         DonorDriveDonation = 1030,
         DonorDriveDonationIncentive = 1031,
         DonorDriveDonationMilestone = 1032,
+
         TipeeeStreamDonation = 1040,
+
         TreatStreamDonation = 1050,
+
         PatreonSubscribed = 1060,
+
         RainmakerDonation = 1070,
+
         JustGivingDonation = 1080,
+
         StreamlootsCardRedeemed = 1090,
         StreamlootsPackPurchased = 1091,
         StreamlootsPackGifted = 1092,
+
         StreamElementsDonation = 1100,
         StreamElementsMerchPurchase = 1101,
+
         CrowdControlEffectRedeemed = 1110,
+
+        PulsoidHeartRateChanged = 1120,
+    }
+
+    public class SubscriptionDetailsModel
+    {
+        public UserV2ViewModel User { get; set; }
+        public StreamingPlatformTypeEnum Platform { get; set; }
+        public int Months { get; set; }
+
+        public int Tier { get; set; } = 1;
+        public string YouTubeMembershipTier { get; set; }
+
+        public UserV2ViewModel Gifter { get; set; }
+
+        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, int months = 1, int? tier = 1, string youTubeMembershipTier = null)
+        {
+            this.Platform = platform;
+            this.User = user;
+            this.Months = months;
+
+            if (tier != null)
+            {
+                this.Tier = tier.GetValueOrDefault();
+            }
+            if (!string.IsNullOrEmpty(youTubeMembershipTier))
+            {
+                this.YouTubeMembershipTier = youTubeMembershipTier;
+            }
+        }
+
+        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, UserV2ViewModel gifter, int months = 1, int? twitchSubscriptionTier = null, string youTubeMembershipTier = null)
+            : this(platform, user, months, twitchSubscriptionTier, youTubeMembershipTier)
+        {
+            this.Gifter = gifter;
+        }
     }
 
     public class EventService
     {
+        public static event EventHandler<UserV2ViewModel> OnFollowOccurred = delegate { };
+        public static void FollowOccurred(UserV2ViewModel user) { OnFollowOccurred(null, user); }
+
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnRaidOccurred = delegate { };
+        public static void RaidOccurred(UserV2ViewModel user, int viewers) { OnRaidOccurred(null, new Tuple<UserV2ViewModel, int>(user, viewers)); }
+
+        public static event EventHandler<SubscriptionDetailsModel> OnSubscribeOccurred = delegate { };
+        public static void SubscribeOccurred(SubscriptionDetailsModel subscription) { OnSubscribeOccurred(null, subscription); }
+
+        public static event EventHandler<SubscriptionDetailsModel> OnResubscribeOccurred = delegate { };
+        public static void ResubscribeOccurred(SubscriptionDetailsModel subscription) { OnResubscribeOccurred(null, subscription); }
+
+        public static event EventHandler<SubscriptionDetailsModel> OnSubscriptionGiftedOccurred = delegate { };
+        public static void SubscriptionGiftedOccurred(SubscriptionDetailsModel subscription) { OnSubscriptionGiftedOccurred(null, subscription); }
+
+        public static event EventHandler<IEnumerable<SubscriptionDetailsModel>> OnMassSubscriptionsGiftedOccurred = delegate { };
+        public static void MassSubscriptionsGiftedOccurred(IEnumerable<SubscriptionDetailsModel> subscriptions) { OnMassSubscriptionsGiftedOccurred(null, subscriptions); }
+
+        public static event EventHandler<UserDonationModel> OnDonationOccurred = delegate { };
+        public static void DonationOccurred(UserDonationModel donation) { OnDonationOccurred(null, donation); }
+
+        public static event EventHandler<TwitchUserBitsCheeredModel> OnTwitchBitsCheeredOccurred = delegate { };
+        public static void TwitchBitsCheeredOccurred(TwitchUserBitsCheeredModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
+
+        public static event EventHandler<TrovoChatSpellViewModel> OnTrovoSpellCastOccurred = delegate { };
+        public static void TrovoSpellCastOccurred(TrovoChatSpellViewModel spell) { OnTrovoSpellCastOccurred(null, spell); }
+
+        public static event EventHandler<YouTubeSuperChatViewModel> OnYouTubeSuperChatOccurred = delegate { };
+        public static void YouTubeSuperChatOccurred(YouTubeSuperChatViewModel superchat) { OnYouTubeSuperChatOccurred(null, superchat); }
+
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {
             EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
@@ -169,7 +257,7 @@ namespace MixItUp.Base.Services
 
         public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, List<string> arguments = null, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
-            await donation.AssignUser();
+            donation.AssignUser();
 
             CommandParametersModel parameters = new CommandParametersModel(donation.User, donation.Platform, arguments, donation.GetSpecialIdentifiers());
 
@@ -200,7 +288,7 @@ namespace MixItUp.Base.Services
 
             try
             {
-                GlobalEvents.DonationOccurred(donation);
+                EventService.DonationOccurred(donation);
             }
             catch (Exception ex)
             {
@@ -227,87 +315,94 @@ namespace MixItUp.Base.Services
 
         public async Task<bool> PerformEvent(EventTypeEnum type, CommandParametersModel parameters)
         {
-            if (this.CanPerformEvent(type, parameters))
+            try
             {
-                UserV2ViewModel user = parameters.User;
-                if (user == null)
+                if (this.CanPerformEvent(type, parameters))
                 {
-                    user = ChannelSession.User;
-                }
-
-                if (this.userEventTracking.ContainsKey(type))
-                {
-                    lock (this.userEventTracking)
+                    UserV2ViewModel user = parameters.User;
+                    if (user == null)
                     {
-                        this.userEventTracking[type].Add(user.ID);
+                        user = ChannelSession.User;
                     }
+
+                    if (this.userEventTracking.ContainsKey(type))
+                    {
+                        lock (this.userEventTracking)
+                        {
+                            this.userEventTracking[type].Add(user.ID);
+                        }
+                    }
+
+                    user.UpdateLastActivity();
+                    if (type != EventTypeEnum.ChatUserLeft)
+                    {
+                        await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
+                    }
+
+                    EventCommandModel command = this.GetEventCommand(type);
+                    if (command != null)
+                    {
+                        Logger.Log(LogLevel.Debug, $"Performing platform event trigger: {type}");
+                        await ServiceManager.Get<CommandService>().Queue(command, parameters);
+                    }
+
+                    EventCommandModel genericCommand = null;
+                    switch (type)
+                    {
+                        case EventTypeEnum.TwitchChannelStreamStart:
+                        case EventTypeEnum.YouTubeChannelStreamStart:
+                        case EventTypeEnum.TrovoChannelStreamStart:
+                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStart);
+                            break;
+                        case EventTypeEnum.TwitchChannelStreamStop:
+                        case EventTypeEnum.YouTubeChannelStreamStop:
+                        case EventTypeEnum.TrovoChannelStreamStop:
+                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStop);
+                            break;
+                        case EventTypeEnum.TwitchChannelRaided:
+                        case EventTypeEnum.TrovoChannelRaided:
+                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelRaided);
+                            break;
+                        case EventTypeEnum.TwitchChannelFollowed:
+                        case EventTypeEnum.TrovoChannelFollowed:
+                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelFollowed);
+                            break;
+                        case EventTypeEnum.TwitchChannelSubscribed:
+                        case EventTypeEnum.YouTubeChannelNewMember:
+                        case EventTypeEnum.TrovoChannelSubscribed:
+                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscribed);
+                            break;
+                        case EventTypeEnum.TwitchChannelResubscribed:
+                        case EventTypeEnum.YouTubeChannelMemberMilestone:
+                        case EventTypeEnum.TrovoChannelResubscribed:
+                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelResubscribed);
+                            break;
+                        case EventTypeEnum.TwitchChannelSubscriptionGifted:
+                        case EventTypeEnum.YouTubeChannelMembershipGifted:
+                        case EventTypeEnum.TrovoChannelSubscriptionGifted:
+                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscriptionGifted);
+                            break;
+                        case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
+                        case EventTypeEnum.YouTubeChannelMassMembershipGifted:
+                        case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
+                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelMassSubscriptionsGifted);
+                            break;
+                    }
+
+                    if (genericCommand != null)
+                    {
+                        Logger.Log(LogLevel.Debug, $"Performing generic event trigger: {genericCommand.EventType}");
+                        await ServiceManager.Get<CommandService>().Queue(genericCommand, parameters);
+                    }
+
+                    ServiceManager.Get<StatisticsService>().LogEventStatistic(type, parameters);
+
+                    return true;
                 }
-
-                user.UpdateLastActivity();
-                if (type != EventTypeEnum.ChatUserLeft)
-                {
-                    await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
-                }
-
-                EventCommandModel command = this.GetEventCommand(type);
-                if (command != null)
-                {
-                    Logger.Log(LogLevel.Debug, $"Performing platform event trigger: {type}");
-                    await ServiceManager.Get<CommandService>().Queue(command, parameters);
-                }
-
-                EventCommandModel genericCommand = null;
-                switch (type)
-                {
-                    case EventTypeEnum.TwitchChannelStreamStart:
-                    case EventTypeEnum.YouTubeChannelStreamStart:
-                    case EventTypeEnum.TrovoChannelStreamStart:
-                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStart);
-                        break;
-                    case EventTypeEnum.TwitchChannelStreamStop:
-                    case EventTypeEnum.YouTubeChannelStreamStop:
-                    case EventTypeEnum.TrovoChannelStreamStop:
-                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStop);
-                        break;
-                    case EventTypeEnum.TwitchChannelRaided:
-                    case EventTypeEnum.TrovoChannelRaided:
-                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelRaided);
-                        break;
-                    case EventTypeEnum.TwitchChannelFollowed:
-                    case EventTypeEnum.TrovoChannelFollowed:
-                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelFollowed);
-                        break;
-                    case EventTypeEnum.TwitchChannelSubscribed:
-                    case EventTypeEnum.YouTubeChannelNewMember:
-                    case EventTypeEnum.TrovoChannelSubscribed:
-                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscribed);
-                        break;
-                    case EventTypeEnum.TwitchChannelResubscribed:
-                    case EventTypeEnum.YouTubeChannelMemberMilestone:
-                    case EventTypeEnum.TrovoChannelResubscribed:
-                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelResubscribed);
-                        break;
-                    case EventTypeEnum.TwitchChannelSubscriptionGifted:
-                    case EventTypeEnum.YouTubeChannelMembershipGifted:
-                    case EventTypeEnum.TrovoChannelSubscriptionGifted:
-                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscriptionGifted);
-                        break;
-                    case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
-                    case EventTypeEnum.YouTubeChannelMassMembershipGifted:
-                    case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
-                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelMassSubscriptionsGifted);
-                        break;
-                }
-
-                if (genericCommand != null)
-                {
-                    Logger.Log(LogLevel.Debug, $"Performing generic event trigger: {genericCommand.EventType}");
-                    await ServiceManager.Get<CommandService>().Queue(genericCommand, parameters);
-                }
-
-                ServiceManager.Get<StatisticsService>().LogEventStatistic(type, parameters);
-
-                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"{type} - {parameters} - {ex}");
             }
             return false;
         }

@@ -493,14 +493,21 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<DonorDriveCharity>> GetCharities()
         {
-            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            try
             {
-                List<DonorDriveCharity> charities = await client.GetAsync<List<DonorDriveCharity>>("https://api.donordrive.com/programs?orderBy=displayName%20ASC");
-                if (charities != null)
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
                 {
-                    charities.Add(DonorDriveService.CustomCharity);
-                    return charities.Where(c => !c.isDemo);
+                    List<DonorDriveCharity> charities = await client.GetAsync<List<DonorDriveCharity>>("https://api.donordrive.com/programs?orderBy=displayName%20ASC");
+                    if (charities != null)
+                    {
+                        charities.Add(DonorDriveService.CustomCharity);
+                        return charities.Where(c => !c.isDemo);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
             return null;
         }
@@ -602,10 +609,12 @@ namespace MixItUp.Base.Services.External
 
                 if (donations != null)
                 {
+                    bool newDonations = false;
                     foreach (DonorDriveDonation donation in donations)
                     {
                         if (!donationsProcessed.ContainsKey(donation.donationID))
                         {
+                            newDonations = true;
                             donationsProcessed[donation.donationID] = donation;
                             if (donation.createdDateUTC > startTime)
                             {
@@ -623,35 +632,32 @@ namespace MixItUp.Base.Services.External
                                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.DonorDriveDonationIncentive, parameters);
                                     }
                                 }
+                            }
+                        }
+                    }
 
-                                if (this.Participant.participantID == donation.participantID)
+                    if (newDonations && this.Participant.numMilestones > 0)
+                    {
+                        IEnumerable<DonorDriveMilestone> milestones = await this.GetParticipantMilestones(this.Participant.participantID.ToString());
+                        if (milestones != null)
+                        {
+                            foreach (DonorDriveMilestone milestone in milestones.Where(m => m.isActive && m.endDateUTC > DateTime.UtcNow))
+                            {
+                                if (!milestone.isComplete)
                                 {
-                                    if (this.Participant.numMilestones > 0)
-                                    {
-                                        IEnumerable<DonorDriveMilestone> milestones = await this.GetParticipantMilestones(this.Participant.participantID.ToString());
-                                        if (milestones != null)
-                                        {
-                                            foreach (DonorDriveMilestone milestone in milestones.Where(m => m.isActive && m.endDateUTC > DateTime.UtcNow))
-                                            {
-                                                if (!milestone.isComplete)
-                                                {
-                                                    milestonesNotCompleted[milestone.milestoneID] = milestone;
-                                                }
-                                                else if (milestonesNotCompleted.ContainsKey(milestone.milestoneID))
-                                                {
-                                                    milestonesNotCompleted.Remove(milestone.milestoneID);
+                                    milestonesNotCompleted[milestone.milestoneID] = milestone;
+                                }
+                                else if (milestonesNotCompleted.ContainsKey(milestone.milestoneID))
+                                {
+                                    milestonesNotCompleted.Remove(milestone.milestoneID);
 
-                                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                                    specialIdentifiers["donordrivemilestonedescription"] = milestone.description;
-                                                    specialIdentifiers["donordrivemilestoneamountnumber"] = milestone.fundraisingGoal.ToString();
-                                                    specialIdentifiers["donordrivemilestoneamount"] = CurrencyHelper.ToCurrencyString(milestone.fundraisingGoal);
-                                                    CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.None, specialIdentifiers);
+                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                    specialIdentifiers["donordrivemilestonedescription"] = milestone.description;
+                                    specialIdentifiers["donordrivemilestoneamountnumber"] = milestone.fundraisingGoal.ToString();
+                                    specialIdentifiers["donordrivemilestoneamount"] = CurrencyHelper.ToCurrencyString(milestone.fundraisingGoal);
+                                    CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.None, specialIdentifiers);
 
-                                                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.DonorDriveDonationMilestone, parameters);
-                                                }
-                                            }
-                                        }
-                                    }
+                                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.DonorDriveDonationMilestone, parameters);
                                 }
                             }
                         }

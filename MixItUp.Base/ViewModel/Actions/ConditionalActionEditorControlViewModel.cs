@@ -3,6 +3,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -120,7 +121,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public ConditionalClauseModel GetModel() { return new ConditionalClauseModel(this.ComparisionType, this.Value1, this.Value2, this.Value3); }
     }
 
-    public class ConditionalActionEditorControlViewModel : SubActionContainerControlViewModel
+    public class ConditionalActionEditorControlViewModel : GroupActionEditorControlViewModel
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Conditional; } }
 
@@ -161,10 +162,10 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool repeatWhileTrue;
 
-        public ThreadSafeObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ThreadSafeObservableCollection<ConditionalClauseViewModel>();
+        public ObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ObservableCollection<ConditionalClauseViewModel>();
 
         public ConditionalActionEditorControlViewModel(ConditionalActionModel action)
-            : base(action, action.Actions)
+            : base(action)
         {
             this.CaseSensitive = action.CaseSensitive;
             this.SelectedOperatorType = action.Operator;
@@ -191,6 +192,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override async Task<Result> Validate()
         {
+            if (this.Clauses.Count == 0)
+            {
+                return new Result(MixItUp.Base.Resources.ConditionalActionAtLeastOneClause);
+            }
+
             foreach (ConditionalClauseViewModel clause in this.Clauses)
             {
                 if (!clause.Validate())

@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -34,13 +36,21 @@ namespace MixItUp.Base.Model.Actions
         UpdateChannelPointReward,
         CreatePoll,
         CreatePrediction,
+        [Obsolete]
         EnableEmoteOnly,
+        [Obsolete]
         DisableEmoteOnly,
+        [Obsolete]
         EnableFollowersOnly,
+        [Obsolete]
         DisableFollowersOnly,
+        [Obsolete]
         EnableSlowChat,
+        [Obsolete]
         DisableSlowChat,
+        [Obsolete]
         EnableSubscribersChat,
+        [Obsolete]
         DisableSubscriberChat,
         SetTitle,
         SetGame,
@@ -48,6 +58,8 @@ namespace MixItUp.Base.Model.Actions
         SendChatAnnouncement,
         SendShoutout,
         SetContentClassificationLabels,
+        SnoozeNextAd,
+        SetChatSettings,
     }
 
     public enum TwitchAnnouncementColor
@@ -60,7 +72,7 @@ namespace MixItUp.Base.Model.Actions
     }
 
     [DataContract]
-    public class TwitchActionModel : ActionModelBase
+    public class TwitchActionModel : GroupActionModel
     {
         public const string ClipURLSpecialIdentifier = "clipurl";
         public const string PollChoiceSpecialIdentifier = "pollchoice";
@@ -124,13 +136,15 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
-        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, string name, string description, bool state, string cost, bool updateCooldownsAndLimits, string maxPerStream, string maxPerUser, string globalCooldown)
+        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, string name, string description, bool state, bool paused, string backgroundColor, string cost, bool updateCooldownsAndLimits, string maxPerStream, string maxPerUser, string globalCooldown)
         {
             TwitchActionModel action = new TwitchActionModel(TwitchActionType.UpdateChannelPointReward);
             action.ChannelPointRewardID = id;
             action.ChannelPointRewardName = name;
             action.ChannelPointRewardDescription = description;
             action.ChannelPointRewardState = state;
+            action.ChannelPointRewardPaused = paused;
+            action.ChannelPointRewardBackgroundColor = backgroundColor;
             action.ChannelPointRewardCostString = cost;
             action.ChannelPointRewardUpdateCooldownsAndLimits = updateCooldownsAndLimits;
             action.ChannelPointRewardMaxPerStreamString = maxPerStream;
@@ -184,6 +198,18 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
+        public static TwitchActionModel CreateSetChatSettingsAction(int? slowModeDuration, int? followerModeDuration, bool? subscriberMode, bool? emoteMode, bool? uniqueChatMode, int? nonModeratorChatDuration)
+        {
+            TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.SetChatSettings);
+            actionModel.ChatSettingsSlowModeDuration = slowModeDuration;
+            actionModel.ChatSettingsFollowerModeDuration = followerModeDuration;
+            actionModel.ChatSettingsSubscriberMode = subscriberMode;
+            actionModel.ChatSettingsEmoteMode = emoteMode;
+            actionModel.ChatSettingsUniqueChatMode = uniqueChatMode;
+            actionModel.ChatSettingsNonModeratorChatDuration = nonModeratorChatDuration;
+            return actionModel;
+        }
+
         public static TwitchActionModel CreateAction(TwitchActionType type)
         {
             return new TwitchActionModel(type);
@@ -220,6 +246,10 @@ namespace MixItUp.Base.Model.Actions
         public string ChannelPointRewardDescription { get; set; }
         [DataMember]
         public bool ChannelPointRewardState { get; set; }
+        [DataMember]
+        public bool ChannelPointRewardPaused { get; set; }
+        [DataMember]
+        public string ChannelPointRewardBackgroundColor { get; set; }
         [DataMember]
         public string ChannelPointRewardCostString { get; set; }
         [DataMember]
@@ -265,9 +295,6 @@ namespace MixItUp.Base.Model.Actions
         public string TimeLength { get; set; }
 
         [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
-
-        [DataMember]
         public string Message { get; set; }
 
         [DataMember]
@@ -279,6 +306,19 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public List<string> ContentClassificationLabelIDs = new List<string>();
 
+        [DataMember]
+        public int? ChatSettingsSlowModeDuration = null;
+        [DataMember]
+        public int? ChatSettingsFollowerModeDuration = null;
+        [DataMember]
+        public bool? ChatSettingsSubscriberMode = null;
+        [DataMember]
+        public bool? ChatSettingsEmoteMode = null;
+        [DataMember]
+        public bool? ChatSettingsUniqueChatMode = null;
+        [DataMember]
+        public int? ChatSettingsNonModeratorChatDuration = null; 
+
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
         {
@@ -288,10 +328,59 @@ namespace MixItUp.Base.Model.Actions
         [Obsolete]
         public TwitchActionModel() { }
 
+        public void UpdateSetChatSettingsProperties()
+        {
+            #pragma warning disable CS0612 // Type or member is obsolete
+            int.TryParse(this.TimeLength, out int timeLength);
+
+            if (this.ActionType == TwitchActionType.EnableSlowChat)
+            {
+                this.ChatSettingsSlowModeDuration = timeLength;
+            }
+            else if (this.ActionType == TwitchActionType.DisableSlowChat)
+            {
+                this.ChatSettingsSlowModeDuration = 0;
+            }
+            else if (this.ActionType == TwitchActionType.EnableFollowersOnly)
+            {
+                this.ChatSettingsFollowerModeDuration = timeLength;
+            }
+            else if (this.ActionType == TwitchActionType.DisableFollowersOnly)
+            {
+                this.ChatSettingsFollowerModeDuration = 0;
+            }
+            else if (this.ActionType == TwitchActionType.EnableEmoteOnly)
+            {
+                this.ChatSettingsEmoteMode = true;
+            }
+            else if (this.ActionType == TwitchActionType.DisableEmoteOnly)
+            {
+                this.ChatSettingsEmoteMode = false;
+            }
+            else if (this.ActionType == TwitchActionType.EnableSubscribersChat)
+            {
+                this.ChatSettingsSubscriberMode = true;
+            }
+            else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
+            {
+                this.ChatSettingsSubscriberMode = false;
+            }
+            else
+            {
+                return;
+            }
+
+            this.ActionType = TwitchActionType.SetChatSettings;
+
+            #pragma warning restore CS0612 // Type or member is obsolete
+        }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
+                this.UpdateSetChatSettingsProperties();
+
                 if (this.ActionType == TwitchActionType.Raid)
                 {
                     string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
@@ -315,29 +404,29 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
                 {
-                    string targetUsername = null;
+                    UserV2ViewModel targetUser = null;
                     if (!string.IsNullOrEmpty(this.Username))
                     {
-                        targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        string targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        targetUser = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformUsername: targetUsername, performPlatformSearch: true);
                     }
                     else
                     {
-                        targetUsername = parameters.User.Username;
+                        targetUser = parameters.User;
                     }
 
-                    if (!string.IsNullOrEmpty(targetUsername))
+                    if (targetUser != null)
                     {
-                        UserModel targetUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(targetUsername);
-                        if (targetUser != null)
+                        UserModel twitchUser = targetUser.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel();
+                        if (this.ActionType == TwitchActionType.VIPUser)
                         {
-                            if (this.ActionType == TwitchActionType.VIPUser)
-                            {
-                                await ServiceManager.Get<TwitchSessionService>().UserConnection.VIPUser(ServiceManager.Get<TwitchSessionService>().User, targetUser);
-                            }
-                            else if (this.ActionType == TwitchActionType.UnVIPUser)
-                            {
-                                await ServiceManager.Get<TwitchSessionService>().UserConnection.UnVIPUser(ServiceManager.Get<TwitchSessionService>().User, targetUser);
-                            }
+                            targetUser.Roles.Add(User.UserRoleEnum.TwitchVIP);
+                            await ServiceManager.Get<TwitchSessionService>().UserConnection.VIPUser(ServiceManager.Get<TwitchSessionService>().User, twitchUser);
+                        }
+                        else if (this.ActionType == TwitchActionType.UnVIPUser)
+                        {
+                            targetUser.Roles.Remove(User.UserRoleEnum.TwitchVIP);
+                            await ServiceManager.Get<TwitchSessionService>().UserConnection.UnVIPUser(ServiceManager.Get<TwitchSessionService>().User, twitchUser);
                         }
                     }
                 }
@@ -359,7 +448,7 @@ namespace MixItUp.Base.Model.Actions
                                 }
                                 parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
 
-                                GlobalEvents.TwitchClipCreated(clip);
+                                TwitchPlatformService.TwitchClipCreated(clip);
                                 return;
                             }
                         }
@@ -386,6 +475,7 @@ namespace MixItUp.Base.Model.Actions
                     JObject jobj = new JObject()
                     {
                         { "is_enabled", this.ChannelPointRewardState },
+                        { "is_paused", this.ChannelPointRewardPaused }
                     };
 
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -413,6 +503,11 @@ namespace MixItUp.Base.Model.Actions
                         jobj["prompt"] = await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardDescription, parameters);
                     }
 
+                    if (!string.IsNullOrEmpty(this.ChannelPointRewardBackgroundColor))
+                    {
+                        jobj["background_color"] = await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardBackgroundColor, parameters);
+                    }
+
                     int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
                     if (cost > 0) { jobj["cost"] = cost; }
 
@@ -421,52 +516,37 @@ namespace MixItUp.Base.Model.Actions
                         int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
                         if (maxPerStream > 0)
                         {
-                            jobj["max_per_stream_setting"] = new JObject()
-                            {
-                                { "is_enabled", true },
-                                { "max_per_stream", maxPerStream}
-                            };
+                            jobj["is_max_per_stream_enabled"] = true;
+                            jobj["max_per_stream"] = maxPerStream;
                         }
                         else
                         {
-                            jobj["max_per_stream_setting"] = new JObject()
-                            {
-                                { "is_enabled", false },
-                            };
+                            jobj["is_max_per_stream_enabled"] = false;
+                            jobj["max_per_stream"] = 0;
                         }
 
                         int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
                         if (maxPerUser > 0)
                         {
-                            jobj["max_per_user_per_stream_setting"] = new JObject()
-                            {
-                                { "is_enabled", true },
-                                { "max_per_user_per_stream", maxPerUser }
-                            };
+                            jobj["is_max_per_user_per_stream_enabled"] = true;
+                            jobj["max_per_user_per_stream"] = maxPerUser;
                         }
                         else
                         {
-                            jobj["max_per_user_per_stream_setting"] = new JObject()
-                            {
-                                { "is_enabled", false },
-                            };
+                            jobj["is_max_per_user_per_stream_enabled"] = false;
+                            jobj["max_per_user_per_stream"] = 0;
                         }
 
                         int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
                         if (globalCooldown > 0)
                         {
-                            jobj["global_cooldown_setting"] = new JObject()
-                            {
-                                { "is_enabled", true },
-                                { "global_cooldown_seconds", globalCooldown * 60 }
-                            };
+                            jobj["is_global_cooldown_enabled"] = true;
+                            jobj["global_cooldown_seconds"] = globalCooldown * 60;
                         }
                         else
                         {
-                            jobj["global_cooldown_setting"] = new JObject()
-                            {
-                                { "is_enabled", false },
-                            };
+                            jobj["is_global_cooldown_enabled"] = false;
+                            jobj["global_cooldown_seconds"] = 0;
                         }
                     }
 
@@ -523,7 +603,7 @@ namespace MixItUp.Base.Model.Actions
                                         IEnumerable<PollChoiceModel> winningChoices = results.choices.Where(c => c.votes == maxVotes);
                                         parameters.SpecialIdentifiers[PollChoiceSpecialIdentifier] = string.Join(" & ", winningChoices.Select(c => c.title));
 
-                                        await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                        await this.RunSubActions(parameters);
                                         return;
                                     }
                                     else if (!string.Equals(results.status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
@@ -585,7 +665,7 @@ namespace MixItUp.Base.Model.Actions
 
                                         parameters.SpecialIdentifiers[PredictionOutcomeSpecialIdentifier] = outcome?.title;
 
-                                        await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                        await this.RunSubActions(parameters);
                                         return;
                                     }
                                     else if (string.Equals(results.status, "CANCELED", StringComparison.OrdinalIgnoreCase))
@@ -598,53 +678,63 @@ namespace MixItUp.Base.Model.Actions
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
-                else if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.DisableSlowChat ||
-                    this.ActionType == TwitchActionType.EnableEmoteOnly || this.ActionType == TwitchActionType.DisableEmoteOnly ||
-                    this.ActionType == TwitchActionType.EnableFollowersOnly || this.ActionType == TwitchActionType.DisableFollowersOnly ||
-                    this.ActionType == TwitchActionType.EnableSubscribersChat || this.ActionType == TwitchActionType.DisableSubscriberChat)
+                else if (this.ActionType == TwitchActionType.SetChatSettings)
                 {
                     ChatSettingsModel settings = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChatSettings(ServiceManager.Get<TwitchSessionService>().User);
                     if (settings != null)
                     {
-                        if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.EnableFollowersOnly)
+                        if (this.ChatSettingsSlowModeDuration != null)
                         {
-                            if (int.TryParse(await ReplaceStringWithSpecialModifiers(this.TimeLength, parameters), out int timeLength) && timeLength > 0)
+                            if (this.ChatSettingsSlowModeDuration > 0)
                             {
-                                if (this.ActionType == TwitchActionType.EnableSlowChat)
-                                {
-                                    settings.slow_mode = true;
-                                    settings.slow_mode_wait_time = timeLength;
-                                }
-                                else if (this.ActionType == TwitchActionType.EnableFollowersOnly)
-                                {
-                                    settings.follower_mode = true;
-                                    settings.follower_mode_duration = timeLength;
-                                }
+                                settings.slow_mode = true;
+                                settings.slow_mode_wait_time = this.ChatSettingsSlowModeDuration.GetValueOrDefault();
+                            }
+                            else
+                            {
+                                settings.slow_mode = false;
                             }
                         }
-                        else if (this.ActionType == TwitchActionType.DisableSlowChat)
+
+                        if (this.ChatSettingsFollowerModeDuration != null)
                         {
-                            settings.slow_mode = false;
+                            if (this.ChatSettingsFollowerModeDuration > 0)
+                            {
+                                settings.follower_mode = true;
+                                settings.follower_mode_duration = this.ChatSettingsFollowerModeDuration.GetValueOrDefault();
+                            }
+                            else
+                            {
+                                settings.follower_mode = false;
+                            }
                         }
-                        else if (this.ActionType == TwitchActionType.DisableFollowersOnly)
+
+                        if (this.ChatSettingsEmoteMode != null)
                         {
-                            settings.follower_mode = false;
+                            settings.emote_mode = this.ChatSettingsEmoteMode.GetValueOrDefault();
                         }
-                        else if (this.ActionType == TwitchActionType.EnableEmoteOnly)
+
+                        if (this.ChatSettingsSubscriberMode != null)
                         {
-                            settings.emote_mode = true;
+                            settings.subscriber_mode = this.ChatSettingsSubscriberMode.GetValueOrDefault();
                         }
-                        else if (this.ActionType == TwitchActionType.DisableEmoteOnly)
+
+                        if (this.ChatSettingsUniqueChatMode != null)
                         {
-                            settings.emote_mode = false;
+                            settings.unique_chat_mode = this.ChatSettingsUniqueChatMode.GetValueOrDefault();
                         }
-                        else if (this.ActionType == TwitchActionType.EnableSubscribersChat)
+
+                        if (this.ChatSettingsNonModeratorChatDuration != null)
                         {
-                            settings.subscriber_mode = true;
-                        }
-                        else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
-                        {
-                            settings.subscriber_mode = false;
+                            if (this.ChatSettingsNonModeratorChatDuration > 0)
+                            {
+                                settings.non_moderator_chat_delay = true;
+                                settings.non_moderator_chat_delay_duration = this.ChatSettingsNonModeratorChatDuration.GetValueOrDefault();
+                            }
+                            else
+                            {
+                                settings.non_moderator_chat_delay = false;
+                            }
                         }
 
                         await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChatSettings(ServiceManager.Get<TwitchSessionService>().User, settings);
@@ -713,6 +803,10 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, cclIdsToAdd: cclIdsToAdd, cclIdsToRemove: cclIdsToRemove);
+                }
+                else if (this.ActionType == TwitchActionType.SnoozeNextAd)
+                {
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.SnoozeNextAd(ServiceManager.Get<TwitchSessionService>().User);
                 }
             }
         }

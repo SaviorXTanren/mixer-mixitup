@@ -28,7 +28,6 @@ namespace MixItUp.WPF.Windows.Dashboard
 
         private ChatDashboardControl chatControl = new ChatDashboardControl();
         private AlertsDashboardControl alertsControl = new AlertsDashboardControl();
-        private StatisticsDashboardControl statisticsControl = new StatisticsDashboardControl();
         private GameQueueDashboardControl gameQueueControl = new GameQueueDashboardControl();
         private QuickCommandsDashboardControl quickCommandsControl = new QuickCommandsDashboardControl();
         private RedemptionStoreDashboardControl redemptionStoreControl = new RedemptionStoreDashboardControl();
@@ -92,14 +91,12 @@ namespace MixItUp.WPF.Windows.Dashboard
         {
             await this.chatControl.Initialize(this);
             await this.alertsControl.Initialize(this);
-            await this.statisticsControl.Initialize(this);
             await this.gameQueueControl.Initialize(this);
             await this.quickCommandsControl.Initialize(this);
             await this.redemptionStoreControl.Initialize(this);
 
             this.viewModel.ChatControl = this.chatControl;
             this.viewModel.AlertsControl = this.alertsControl;
-            this.viewModel.StatisticsControl = this.statisticsControl;
             this.viewModel.GameQueueControl = this.gameQueueControl;
             this.viewModel.QuickCommandsControl = this.quickCommandsControl;
             this.viewModel.RedemptionStoreControl = this.redemptionStoreControl;

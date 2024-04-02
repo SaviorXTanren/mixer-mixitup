@@ -17,7 +17,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Services
 {
@@ -226,8 +225,6 @@ namespace MixItUp.WPF.Services
         {
             Logger.Log(LogLevel.Debug, "Setting image source file path - " + sourceName);
 
-            await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
-
             await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
             {
                 if (this.OBSWebsocket.IsConnected)
@@ -247,15 +244,13 @@ namespace MixItUp.WPF.Services
                     }
                 }
 
-                return Task.FromResult(true);
+                return true;
             });
         }
 
         public async Task SetMediaSourceFilePath(string sceneName, string sourceName, string filePath)
         {
             Logger.Log(LogLevel.Debug, "Setting media source file path - " + sourceName);
-
-            await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
             await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
             {
@@ -276,7 +271,7 @@ namespace MixItUp.WPF.Services
                     }
                 }
 
-                return Task.FromResult(true);
+                return true;
             });
         }
 
@@ -909,7 +904,20 @@ namespace MixItUp.WPF.Services
 
         private async Task Send(OBSMessage message)
         {
-            await this.sendSemaphore.WaitAndRelease(base.Send(JsonConvert.SerializeObject(message)));
+            try
+            {
+                await this.sendSemaphore.WaitAsync();
+
+                await base.Send(JsonConvert.SerializeObject(message));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sendSemaphore.Release();
+            }
         }
 
         private async Task<string> SendAndWait<T>(OBSMessageRequest<T> request)

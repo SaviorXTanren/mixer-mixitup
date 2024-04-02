@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -56,7 +57,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public GenericToggleSettingsOptionControlViewModel ExplicitUserRoleRequirements { get; set; }
 
-        public ThreadSafeObservableCollection<UserTitleViewModel> Titles { get; set; } = new ThreadSafeObservableCollection<UserTitleViewModel>();
+        public ObservableCollection<UserTitleViewModel> Titles { get; set; } = new ObservableCollection<UserTitleViewModel>();
 
         public string TitleName
         {
@@ -123,12 +124,12 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.ClearUserDataRange = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearUserDataRangeHeader, MixItUp.Base.Resources.ClearUserDataRange, this.CreateCommand(async () =>
             {
-                string output = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ClearUserDataRangeWarning, "0", MixItUp.Base.Resources.TimeDays);
+                string output = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.TimeDays, "0", MixItUp.Base.Resources.ClearUserDataRangeWarning);
                 if (!string.IsNullOrEmpty(output) && int.TryParse(output, out int days) && days > 0)
                 {
                     await ServiceManager.Get<UserService>().ClearUserDataRange(days);
                     await ChannelSession.SaveSettings();
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
             }));
 
@@ -138,7 +139,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 {
                     await ServiceManager.Get<UserService>().ClearAllUserData();
                     await ChannelSession.SaveSettings();
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
             }));
 

@@ -4,6 +4,7 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
@@ -48,7 +49,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private LumiaStreamActionCommandTypeEnum selectedCommandType;
 
-        public ThreadSafeObservableCollection<string> CommandNames { get; set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> CommandNames { get; set; } = new ObservableCollection<string>();
 
         public string CommandName
         {

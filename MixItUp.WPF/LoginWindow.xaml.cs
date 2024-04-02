@@ -6,7 +6,6 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -23,7 +22,7 @@ namespace MixItUp.WPF
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
-        private ObservableCollection<SettingsV3Model> streamerSettings = new ThreadSafeObservableCollection<SettingsV3Model>();
+        private ThreadSafeObservableCollection<SettingsV3Model> streamerSettings = new ThreadSafeObservableCollection<SettingsV3Model>();
 
         public LoginWindow()
         {
@@ -34,12 +33,11 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            GlobalEvents.OnShowMessageBox += GlobalEvents_OnShowMessageBox;
-            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
+            ChannelSession.OnRestartRequested += ChannelSession_OnRestartRequested;
 
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
-            if (ProcessHelper.GetProcessesByName("MixItUp").Count() > 1)
+            if (ServiceManager.Get<IProcessService>().GetProcessesByName("MixItUp").Count() > 1)
             {
                 if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.MixItUpIsAlreadyRunning))
                 {
@@ -119,6 +117,9 @@ namespace MixItUp.WPF
                             {
                                 newWindow = new MainWindow();
                             }
+
+                            ChannelSession.OnRestartRequested -= ChannelSession_OnRestartRequested;
+
                             ShowMainWindow(newWindow);
                             this.Hide();
                             this.Close();
@@ -164,6 +165,8 @@ namespace MixItUp.WPF
         {
             if (await this.ShowLicenseAgreement())
             {
+                ChannelSession.OnRestartRequested -= ChannelSession_OnRestartRequested;
+
                 ShowMainWindow(new NewUserWizardWindow());
                 this.Hide();
                 this.Close();
@@ -175,21 +178,13 @@ namespace MixItUp.WPF
             await SettingsV3Model.RestoreSettingsBackup();
         }
 
-        private async void GlobalEvents_OnShowMessageBox(object sender, string message)
-        {
-            await this.RunAsyncOperation(async () =>
-            {
-                await DialogHelper.ShowMessage(message);
-            });
-        }
-
-        private async void GlobalEvents_OnRestartRequested(object sender, EventArgs e)
+        private async void ChannelSession_OnRestartRequested(object sender, EventArgs e)
         {
             await ChannelSession.AppSettings.Save();
 
             this.Close();
 
-            ProcessHelper.LaunchProgram(Application.ResourceAssembly.Location);
+            ServiceManager.Get<IProcessService>().LaunchProgram(Application.ResourceAssembly.Location);
         }
 
         private Task<bool> ShowLicenseAgreement()
@@ -205,7 +200,7 @@ namespace MixItUp.WPF
 
         public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+            ServiceManager.Get<IProcessService>().LaunchLink(e.Uri.AbsoluteUri);
             e.Handled = true;
         }
     }

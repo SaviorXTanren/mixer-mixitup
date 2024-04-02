@@ -20,20 +20,27 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
         public YouTubeChatMessageViewModel(LiveChatMessage message, UserV2ViewModel user = null)
             : base(message.Id, StreamingPlatformTypeEnum.YouTube, user)
         {
-            string[] parts = message.Snippet.DisplayMessage.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            this.ProcessMessageContents(message.Snippet.DisplayMessage);
+        }
+
+        public YouTubeChatMessageViewModel(UserV2ViewModel user, string message)
+            : base(string.Empty, StreamingPlatformTypeEnum.YouTube, user)
+        {
+            this.ProcessMessageContents(message);
+        }
+
+        private void ProcessMessageContents(string message)
+        {
+            string[] parts = message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string part in parts)
             {
                 this.AddStringMessagePart(part);
 
                 if (part.StartsWith(":"))
                 {
-                    string emote = part.Substring(1);
-                    if (ServiceManager.Has<YouTubeChatService>())
+                    if (ServiceManager.Get<YouTubeChatService>().EmoteDictionary.ContainsKey(part))
                     {
-                        if (ServiceManager.Get<YouTubeChatService>().EmoteDictionary.ContainsKey(emote))
-                        {
-                            this.MessageParts[this.MessageParts.Count - 1] = new YouTubeChatEmoteViewModel(ServiceManager.Get<YouTubeChatService>().EmoteDictionary[emote]);
-                        }
+                        this.MessageParts[this.MessageParts.Count - 1] = new YouTubeChatEmoteViewModel(ServiceManager.Get<YouTubeChatService>().EmoteDictionary[part]);
                     }
                 }
                 else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.ContainsKey(part))

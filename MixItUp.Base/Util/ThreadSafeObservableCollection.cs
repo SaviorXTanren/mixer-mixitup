@@ -9,24 +9,29 @@ namespace MixItUp.Base.Util
     {
         public ThreadSafeObservableCollection() { }
 
-        public ThreadSafeObservableCollection(IEnumerable<T> collection) : base(collection) { }
-
-        public ThreadSafeObservableCollection(List<T> list) : base(list) { }
+        public new T this[int index]
+        {
+            get { return base[index]; }
+            set
+            {
+                DispatcherHelper.Dispatcher.Invoke(() =>
+                {
+                    base[index] = value;
+                });
+            }
+        }
 
         public new void Add(T item)
         {
             DispatcherHelper.Dispatcher.Invoke(() =>
             {
-                base.Add(item);
+                this.AddInternal(item);
             });
         }
 
         public new void Clear()
         {
-            DispatcherHelper.Dispatcher.Invoke(() =>
-            {
-                base.Clear();
-            });
+            DispatcherHelper.Dispatcher.Invoke(base.Clear);
         }
 
         public new IEnumerator<T> GetEnumerator()
@@ -53,7 +58,7 @@ namespace MixItUp.Base.Util
         {
             DispatcherHelper.Dispatcher.Invoke(() =>
             {
-                base.Insert(index, item);
+                this.InsertInternal(index, item);
             });
         }
 

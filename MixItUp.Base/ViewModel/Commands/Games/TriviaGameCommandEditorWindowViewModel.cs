@@ -68,6 +68,17 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private string wrongAnswer3;
 
+        public bool Enabled
+        {
+            get { return this.enabled; }
+            set
+            {
+                this.enabled = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool enabled = true;
+
         public TriviaGameQuestionViewModel() { }
 
         public TriviaGameQuestionViewModel(TriviaGameQuestionModel model)
@@ -77,6 +88,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.WrongAnswer1 = model.Answers[1];
             this.WrongAnswer2 = (model.Answers.Count > 2) ? model.Answers[2] : string.Empty;
             this.WrongAnswer3 = (model.Answers.Count > 3) ? model.Answers[3] : string.Empty;
+            this.Enabled = model.Enabled;
         }
 
         public Result Validate()
@@ -104,6 +116,7 @@ namespace MixItUp.Base.ViewModel.Games
             result.Answers.Add(this.WrongAnswer1);
             if (!string.IsNullOrEmpty(this.WrongAnswer2)) { result.Answers.Add(this.WrongAnswer2); }
             if (!string.IsNullOrEmpty(this.WrongAnswer3)) { result.Answers.Add(this.WrongAnswer3); }
+            result.Enabled = this.Enabled;
             return result;
         }
     }
@@ -198,7 +211,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private CustomCommandModel userFailureCommand;
 
-        public ThreadSafeObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ThreadSafeObservableCollection<TriviaGameQuestionViewModel>();
+        public ObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ObservableCollection<TriviaGameQuestionViewModel>();
 
         public ICommand AddQuestionCommand { get; set; }
         public ICommand DeleteQuestionCommand { get; set; }

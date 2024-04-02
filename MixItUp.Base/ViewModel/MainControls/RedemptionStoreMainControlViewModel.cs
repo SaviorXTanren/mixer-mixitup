@@ -88,7 +88,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class RedemptionStoreMainControlViewModel : WindowControlViewModelBase
     {
-        public ThreadSafeObservableCollection<RedemptionStorePurchaseViewModel> Purchases { get; private set; } = new ThreadSafeObservableCollection<RedemptionStorePurchaseViewModel>();
+        public ObservableCollection<RedemptionStorePurchaseViewModel> Purchases { get; private set; } = new ObservableCollection<RedemptionStorePurchaseViewModel>();
 
         public bool EnableRedemptionStore
         {
@@ -100,7 +100,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public RedemptionStoreMainControlViewModel(UIViewModelBase windowViewModel) : base(windowViewModel) { GlobalEvents.OnRedemptionStorePurchasesUpdated += GlobalEvents_OnRedemptionStorePurchasesUpdated; }
+        public RedemptionStoreMainControlViewModel(UIViewModelBase windowViewModel) : base(windowViewModel)
+        {
+            RedemptionStorePurchaseModel.OnRedemptionStorePurchasesUpdated += RedemptionStorePurchaseModel_OnRedemptionStorePurchasesUpdated;
+        }
 
         public void Refresh()
         {
@@ -120,6 +123,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             await base.OnVisibleInternal();
         }
 
-        private void GlobalEvents_OnRedemptionStorePurchasesUpdated(object sender, System.EventArgs e) { this.Refresh(); }
+        private void RedemptionStorePurchaseModel_OnRedemptionStorePurchasesUpdated(object sender, System.EventArgs e) { this.Refresh(); }
     }
 }

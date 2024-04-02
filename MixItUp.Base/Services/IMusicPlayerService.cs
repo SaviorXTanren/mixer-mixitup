@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using MixItUp.Base.Util;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -52,7 +52,7 @@ namespace MixItUp.Base.Services
 
         MusicPlayerSong CurrentSong { get; }
 
-        ObservableCollection<MusicPlayerSong> Songs { get; }
+        ThreadSafeObservableCollection<MusicPlayerSong> Songs { get; }
 
         Task Play();
 

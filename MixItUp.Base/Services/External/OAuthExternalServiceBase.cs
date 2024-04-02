@@ -117,7 +117,7 @@ namespace MixItUp.Base.Services.External
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
             oauthServer.Start(listeningAddress);
 
-            ProcessHelper.LaunchLink(oauthPageURL);
+            ServiceManager.Get<IProcessService>().LaunchLink(oauthPageURL);
 
             string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait);
             oauthServer.Stop();
@@ -136,13 +136,22 @@ namespace MixItUp.Base.Services.External
             return this.token;
         }
 
+        protected async Task<OAuthTokenModel> GetWWWFormUrlEncodedOAuthToken(string endpoint, List<KeyValuePair<string, string>> bodyContent)
+        {
+            return await this.GetWWWFormUrlEncodedOAuthToken(endpoint, null, null, bodyContent);
+        }
+
         protected async Task<OAuthTokenModel> GetWWWFormUrlEncodedOAuthToken(string endpoint, string clientID, string clientSecret, List<KeyValuePair<string, string>> bodyContent)
         {
             try
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient())
                 {
-                    client.SetBasicClientIDClientSecretAuthorizationHeader(clientID, clientSecret);
+                    if (!string.IsNullOrEmpty(clientID) && !string.IsNullOrEmpty(clientSecret))
+                    {
+                        client.SetBasicClientIDClientSecretAuthorizationHeader(clientID, clientSecret);
+                    }
+
                     using (var content = new FormUrlEncodedContent(bodyContent))
                     {
                         content.Headers.Clear();

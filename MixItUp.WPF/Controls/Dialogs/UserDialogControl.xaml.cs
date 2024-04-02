@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         public UserDialogControl(UserV2ViewModel user)
         {
-            this.user = user;
+            this.DataContext = this.user = user;
 
             InitializeComponent();
 

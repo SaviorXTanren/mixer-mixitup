@@ -53,7 +53,7 @@ namespace MixItUp.WPF.Controls.Chat
                             }
                             break;
                         case UserDialogResult.ChannelPage:
-                            ProcessHelper.LaunchLink(user.ChannelLink);
+                            ServiceManager.Get<IProcessService>().LaunchLink(user.ChannelLink);
                             break;
                         case UserDialogResult.EditUser:
                             UserDataEditorWindow window = new UserDataEditorWindow(user.Model);

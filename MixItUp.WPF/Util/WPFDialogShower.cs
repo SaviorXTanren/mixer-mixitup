@@ -36,6 +36,16 @@ namespace MixItUp.WPF.Util
             return bool.Equals(await this.ShowDialogWrapper(new ConfirmationDialogControl(message)), true);
         }
 
+        public async Task<string> ShowDropDown(IEnumerable<string> options, string description = null)
+        {
+            DropDownSelectorDialogControl dialog = new DropDownSelectorDialogControl(options, description);
+            if (bool.Equals(await this.ShowDialogWrapper(dialog), true) && !string.IsNullOrEmpty(dialog.SelectedOption))
+            {
+                return dialog.SelectedOption;
+            }
+            return null;
+        }
+
         public async Task<string> ShowTextEntry(string message, string defaultValue = null, string description = null)
         {
             BasicTextEntryDialogControl dialog = new BasicTextEntryDialogControl(message, defaultValue, description);
@@ -51,7 +61,7 @@ namespace MixItUp.WPF.Util
             EditTestCommandParametersDialogControl dialogControl = new EditTestCommandParametersDialogControl(parameters);
             if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true))
             {
-                return dialogControl.GetCommandParameters();
+                return await dialogControl.GetCommandParameters();
             }
             return null;
         }

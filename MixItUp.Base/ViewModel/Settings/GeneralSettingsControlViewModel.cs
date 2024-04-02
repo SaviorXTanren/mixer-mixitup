@@ -15,6 +15,7 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         public GenericToggleSettingsOptionControlViewModel OptOutOfDataTracking { get; set; }
         public GenericToggleSettingsOptionControlViewModel AutoLogIn { get; set; }
+        public GenericToggleSettingsOptionControlViewModel DontSaveLastWindowPosition { get; set; }
 
         public GenericComboBoxSettingsOptionControlViewModel<LanguageOptions> Language { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<StreamingPlatformTypeEnum> DefaultStreamingPlatform { get; set; }
@@ -25,6 +26,9 @@ namespace MixItUp.Base.ViewModel.Settings
         {
             this.OptOutOfDataTracking = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.OptOutofDataTracking,
                 ChannelSession.Settings.OptOutTracking, (value) => { ChannelSession.Settings.OptOutTracking = value; }, MixItUp.Base.Resources.OptOutofDataTrackingTooltip);
+
+            this.DontSaveLastWindowPosition = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DontSaveLastWindowPosition,
+                ChannelSession.AppSettings.DontSaveLastWindowPosition, (value) => { ChannelSession.AppSettings.DontSaveLastWindowPosition = value; });
 
             this.AutoLogIn = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.AutoLogInCurrentAccount,
                 (ChannelSession.AppSettings.AutoLogInID == ChannelSession.Settings.ID),

@@ -26,7 +26,6 @@ namespace MixItUp.Base.Model.Commands
             {
                 // Generic
                 case EventTypeEnum.ChannelRaided:
-                    specialIdentifiers["hostviewercount"] = "123";
                     specialIdentifiers["raidviewercount"] = "123";
                     break;
                 case EventTypeEnum.ChannelSubscribed:
@@ -64,6 +63,8 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["message"] = "Test Message";
                     specialIdentifiers["usersubplanname"] = "Plan Name";
                     specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["isprimeupgrade"] = "False";
+                    specialIdentifiers["isgiftupgrade"] = "False";
                     break;
                 case EventTypeEnum.TwitchChannelResubscribed:
                     specialIdentifiers["message"] = "Test Message";
@@ -84,6 +85,9 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["usersubplan"] = "Tier 1";
                     specialIdentifiers["isanonymous"] = "false";
                     break;
+                case EventTypeEnum.TwitchChannelWatchStreak:
+                    specialIdentifiers["userwatchstreak"] = "5";
+                    break;
                 case EventTypeEnum.TwitchChannelBitsCheered:
                     specialIdentifiers["bitsamount"] = "10";
                     specialIdentifiers["bitslifetimeamount"] = "100";
@@ -95,6 +99,17 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["rewardname"] = "Test Reward";
                     specialIdentifiers["rewardcost"] = "100";
                     specialIdentifiers["message"] = "Test Message";
+                    break;
+                case EventTypeEnum.TwitchChannelAdUpcoming:
+                    specialIdentifiers["adsnoozecount"] = "3";
+                    specialIdentifiers["adnextduration"] = "60";
+                    specialIdentifiers["adnextminutes"] = "30";
+                    specialIdentifiers["adnexttime"] = DateTimeOffset.Now.ToFriendlyTimeString();
+                    break;
+                case EventTypeEnum.TwitchChannelAdStarted:
+                case EventTypeEnum.TwitchChannelAdEnded:
+                    specialIdentifiers["adduration"] = "60";
+                    specialIdentifiers["adisautomatic"] = "true";
                     break;
                 case EventTypeEnum.TwitchChannelHypeChat:
                     specialIdentifiers["hypechatamountnumberdigits"] = "123";
@@ -154,6 +169,8 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["usersubplan"] = "Plan Name";
                     break;
                 case EventTypeEnum.YouTubeChannelMassMembershipGifted:
+                    specialIdentifiers["subsgiftedamount"] = "5";
+                    specialIdentifiers["usersubplan"] = "Plan Name";
                     break;
                 case EventTypeEnum.YouTubeChannelSuperChat:
                     specialIdentifiers["amountnumber"] = "1.23";
@@ -262,6 +279,9 @@ namespace MixItUp.Base.Model.Commands
                         specialIdentifiers[kvp.Key] = kvp.Value;
                     }
                     break;
+                case EventTypeEnum.PulsoidHeartRateChanged:
+                    specialIdentifiers["pulsoidheartrate"] = "80";
+                    break;
             }
 
             int eventNumber = (int)eventType;
@@ -300,15 +320,15 @@ namespace MixItUp.Base.Model.Commands
             if (this.UpdateFollowEventModerationCount())
             {
                 bool allowFollowEvent = false;
-                await EventCommandModel.followEventsInQueueSemaphore.WaitAndRelease(() =>
+                await EventCommandModel.followEventsInQueueSemaphore.WaitAsync();
+
+                if (EventCommandModel.FollowEventsInQueue < ChannelSession.Settings.ModerationFollowEventMaxInQueue)
                 {
-                    if (EventCommandModel.FollowEventsInQueue < ChannelSession.Settings.ModerationFollowEventMaxInQueue)
-                    {
-                        EventCommandModel.FollowEventsInQueue++;
-                        allowFollowEvent = true;
-                    }
-                    return Task.CompletedTask;
-                });
+                    EventCommandModel.FollowEventsInQueue++;
+                    allowFollowEvent = true;
+                }
+
+                EventCommandModel.followEventsInQueueSemaphore.Release();
 
                 if (!allowFollowEvent)
                 {

@@ -101,7 +101,10 @@
                     <ListBox x:Name="EmoticonIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="EmoticonIntellisenseListBox_PreviewMouseUp">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <ChatControls:ChatImageControl ShowText="True" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Controls:AdvancedImage DataContext="{Binding}" UseChatFontSize="True" ChatFontSizeScale="2" />
+                                    <TextBlock Text="{Binding Name}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

@@ -31,6 +31,12 @@ namespace MixItUp.WPF.Controls.MainControls
             await base.InitializeInternal();
         }
 
+        protected override async Task OnVisibilityChanged()
+        {
+            await base.OnVisibilityChanged();
+            this.NameFilterTextBox.Text = string.Empty;
+        }
+
         private void NameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             this.viewModel.NameFilter = this.NameFilterTextBox.Text;

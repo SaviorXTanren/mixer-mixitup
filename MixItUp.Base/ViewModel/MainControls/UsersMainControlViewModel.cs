@@ -9,6 +9,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -163,7 +164,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsConsumablesSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.Consumables; } }
 
-        public ThreadSafeObservableCollection<ConsumableSearchFilterViewModel> ConsumablesSearchFilters { get; set; } = new ThreadSafeObservableCollection<ConsumableSearchFilterViewModel>();
+        public ObservableCollection<ConsumableSearchFilterViewModel> ConsumablesSearchFilters { get; set; } = new ObservableCollection<ConsumableSearchFilterViewModel>();
 
         public ConsumableSearchFilterViewModel SelectedConsumablesSearchFilter
         {
@@ -189,7 +190,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsConsumablesSearchFilterInventory { get { return this.SelectedConsumablesSearchFilter != null && this.SelectedConsumablesSearchFilter.IsInventory; } }
 
-        public ThreadSafeObservableCollection<InventoryItemModel> ConsumablesItemsSearchFilters { get; set; } = new ThreadSafeObservableCollection<InventoryItemModel>();
+        public ObservableCollection<InventoryItemModel> ConsumablesItemsSearchFilters { get; set; } = new ObservableCollection<InventoryItemModel>();
 
         public InventoryItemModel SelectedConsumablesItemsSearchFilter
         {
@@ -392,7 +393,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                             {
                                 data = data.Where(u => u.GetAllPlatformData().Any(p => p.Roles.Contains(this.SelectedUserRoleSearchFilter)));
                             }
-                            else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter > 0)
+                            else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter >= 0)
                             {
                                 if (this.SelectedWatchTimeComparisonSearchFilter.Equals(GreaterThanAmountFilter))
                                 {
@@ -407,7 +408,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                                     data = data.Where(u => u.OnlineViewingMinutes == this.WatchTimeAmountSearchFilter);
                                 }
                             }
-                            else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter > 0)
+                            else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter >= 0)
                             {
                                 if (this.SelectedConsumablesSearchFilter.Currency != null)
                                 {
@@ -459,7 +460,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                             {
                                 data = data.Where(u => u.IsSpecialtyExcluded || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
                             }
-                            else if (this.IsLastSeenSearchFilterType && this.LastSeenAmountSearchFilter > 0)
+                            else if (this.IsLastSeenSearchFilterType && this.LastSeenAmountSearchFilter >= 0)
                             {
                                 DateTime lastSeenDate = DateTimeOffset.Now.Date.Subtract(TimeSpan.FromDays(this.LastSeenAmountSearchFilter));
                                 if (this.SelectedLastSeenComparisonSearchFilter.Equals(GreaterThanAmountFilter))
@@ -514,7 +515,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public async Task FindAndAddUser(StreamingPlatformTypeEnum platform, string username)
         {
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(platform, username);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformUsername: username, performPlatformSearch: true);
             if (user != null)
             {
                 await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.UsersSuccessfullyFoundUser, user.DisplayName));

@@ -3,6 +3,8 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
@@ -11,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TwitchChannelPointsCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public ThreadSafeObservableCollection<CustomChannelPointRewardModel> ChannelPointRewards { get; set; } = new ThreadSafeObservableCollection<CustomChannelPointRewardModel>();
+        public ObservableCollection<CustomChannelPointRewardModel> ChannelPointRewards { get; set; } = new ObservableCollection<CustomChannelPointRewardModel>();
 
         public CustomChannelPointRewardModel ChannelPointReward
         {
@@ -46,6 +48,8 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return TwitchChannelPointsCommandModel.GetChannelPointTestSpecialIdentifiers(); }
+
         public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.ChannelPointReward.title, this.ChannelPointReward.id)); }
 
         public override async Task UpdateExistingCommand(CommandModelBase command)
@@ -63,20 +67,22 @@ namespace MixItUp.Base.ViewModel.Commands
 
         protected override async Task OnOpenInternal()
         {
-            foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User)).OrderBy(c => c.title))
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                this.ChannelPointRewards.Add(channelPoint);
-            }
+                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User)).OrderBy(c => c.title))
+                {
+                    this.ChannelPointRewards.Add(channelPoint);
+                }
 
-            if (this.existingChannelPointRewardID != Guid.Empty)
-            {
-                this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+                if (this.existingChannelPointRewardID != Guid.Empty)
+                {
+                    this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+                }
+                else if (!string.IsNullOrEmpty(this.Name))
+                {
+                    this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.title.Equals(this.Name));
+                }
             }
-            else if (!string.IsNullOrEmpty(this.Name))
-            {
-                this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.title.Equals(this.Name));
-            }
-
             await base.OnOpenInternal();
         }
     }

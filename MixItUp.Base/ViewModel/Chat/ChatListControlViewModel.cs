@@ -118,7 +118,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         if (splits.Length == 3)
                         {
                             string username = UserService.SanitizeUsername(splits[1]);
-                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
+                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.All, platformUsername: username);
                             if (user != null)
                             {
                                 if (uint.TryParse(splits[2], out uint amount) && amount > 0)
@@ -142,7 +142,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         if (splits.Length == 2)
                         {
                             string username = UserService.SanitizeUsername(splits[1]);
-                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
+                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.All, platformUsername: username);
                             if (user != null)
                             {
                                 await ServiceManager.Get<ChatService>().BanUser(user);
@@ -173,7 +173,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 this.ScrollingLockChanged(this, new EventArgs());
             });
 
-            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
+            ChatService.OnChatVisualSettingsChanged += ChatService_OnChatVisualSettingsChanged;
             ServiceManager.Get<ChatService>().ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
         }
 
@@ -216,9 +216,10 @@ namespace MixItUp.Base.ViewModel.Chat
             this.NotifyPropertyChanged("SendAsOptions");
         }
 
-        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
+        private void ChatService_OnChatVisualSettingsChanged(object sender, EventArgs e)
         {
             this.NotifyPropertyChanged("AlternationCount");
+            this.Messages.Clear();
         }
 
         private void Chat_ChatCommandsReprocessed(object sender, EventArgs e)

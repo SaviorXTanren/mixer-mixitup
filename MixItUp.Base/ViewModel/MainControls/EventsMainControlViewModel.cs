@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -15,7 +16,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string PackIconName { get; set; }
 
-        public ThreadSafeObservableCollection<EventCommandItemViewModel> Commands { get; set; } = new ThreadSafeObservableCollection<EventCommandItemViewModel>();
+        public ObservableCollection<EventCommandItemViewModel> Commands { get; set; } = new ObservableCollection<EventCommandItemViewModel>();
 
         public bool ShowImage { get { return !string.IsNullOrEmpty(this.Image); } }
 
@@ -124,7 +125,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class EventsMainControlViewModel : WindowControlViewModelBase
     {
-        public ThreadSafeObservableCollection<EventCommandGroupViewModel> EventCommandGroups { get; set; } = new ThreadSafeObservableCollection<EventCommandGroupViewModel>();
+        public ObservableCollection<EventCommandGroupViewModel> EventCommandGroups { get; set; } = new ObservableCollection<EventCommandGroupViewModel>();
 
         public Dictionary<EventTypeEnum, EventCommandItemViewModel> EventTypeItems { get; set; } = new Dictionary<EventTypeEnum, EventCommandItemViewModel>();
 
@@ -153,6 +154,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             EventCommandGroupViewModel twitchCommands = new EventCommandGroupViewModel(Resources.Twitch, image: StreamingPlatforms.TwitchLogoImageAssetFilePath);
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelStreamStart));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelStreamStop));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelUpdated));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelFollowed));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelRaided));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelOutgoingRaidCompleted));
@@ -160,9 +162,13 @@ namespace MixItUp.Base.ViewModel.MainControls
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelResubscribed));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelSubscriptionGifted));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelWatchStreak));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelBitsCheered));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelPointsRedeemed));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelCharityDonation));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelAdUpcoming));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelAdStarted));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelAdEnded));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHypeChat));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHypeTrainBegin));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHypeTrainLevelUp));
@@ -194,14 +200,15 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             EventCommandGroupViewModel chatCommands = new EventCommandGroupViewModel(Resources.Chat, packIconName: "Chat");
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserEntranceCommand));
-            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserFirstJoin));
-            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserJoined));
-            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserLeft));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserFirstMessage));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatMessageReceived));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatWhisperReceived));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatMessageDeleted));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserTimeout));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserBan));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserFirstJoin));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserJoined));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserLeft));
             commandGroups.Add(chatCommands);
 
             EventCommandGroupViewModel donationCommands = new EventCommandGroupViewModel(Resources.Donations, packIconName: "Cash");
@@ -227,6 +234,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             EventCommandGroupViewModel crowdControlCommands = new EventCommandGroupViewModel(Resources.CrowdControl, packIconName: "ControllerClassic");
             crowdControlCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.CrowdControlEffectRedeemed));
             commandGroups.Add(crowdControlCommands);
+
+            EventCommandGroupViewModel pulsoidCommands = new EventCommandGroupViewModel(Resources.Pulsoid, packIconName: "HeartPulse");
+            pulsoidCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.PulsoidHeartRateChanged));
+            commandGroups.Add(pulsoidCommands);
 
             EventCommandGroupViewModel patreonCommands = new EventCommandGroupViewModel(Resources.Patreon, packIconName: "Patreon");
             patreonCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.PatreonSubscribed));

@@ -39,7 +39,7 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
-            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
+            ChannelSession.OnRestartRequested += ChannelSession_OnRestartRequested;
 
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
@@ -54,7 +54,7 @@ namespace MixItUp.WPF
                 this.EndLoadingOperation();
             };
 
-            if (ChannelSession.AppSettings.Width > 0)
+            if (ChannelSession.AppSettings.Width > 0 && !ChannelSession.AppSettings.DontSaveLastWindowPosition)
             {
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
                 this.Height = ChannelSession.AppSettings.Height;
@@ -121,6 +121,7 @@ namespace MixItUp.WPF
 
             await this.MainMenu.Initialize(this);
 
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.MixItUpOnline, new MixItUpOnlineControl(), "https://online.mixitupapp.com/alpha");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Channel, new ChannelControl(), "https://wiki.mixitupapp.com/channel");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Chat, new ChatControl(), "https://wiki.mixitupapp.com/chat");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Commands, new ChatCommandsControl(), "https://wiki.mixitupapp.com/commands/chat-commands");
@@ -205,7 +206,7 @@ namespace MixItUp.WPF
             this.Close();
             if (this.restartApplication)
             {
-                ProcessHelper.LaunchProgram(Application.ResourceAssembly.Location);
+                ServiceManager.Get<IProcessService>().LaunchProgram(Application.ResourceAssembly.Location);
             }
         }
 
@@ -229,7 +230,7 @@ namespace MixItUp.WPF
             }
         }
 
-        private void GlobalEvents_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
+        private void ChannelSession_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
 
         private async void ActivationProtocolHandler_OnCommunityCommandActivation(object sender, Guid commandID)
         {

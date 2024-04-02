@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class StreamPassMainControlViewModel : WindowControlViewModelBase
     {
-        public ThreadSafeObservableCollection<StreamPassModel> StreamPasses { get; private set; } = new ThreadSafeObservableCollection<StreamPassModel>();
+        public ObservableCollection<StreamPassModel> StreamPasses { get; private set; } = new ObservableCollection<StreamPassModel>();
 
         public StreamPassMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 

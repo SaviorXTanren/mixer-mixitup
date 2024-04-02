@@ -83,7 +83,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
     public class RedemptionStoreWindowViewModel : UIViewModelBase
     {
-        public ThreadSafeObservableCollection<RedemptionStoreProductViewModel> Products { get; set; } = new ThreadSafeObservableCollection<RedemptionStoreProductViewModel>();
+        public ObservableCollection<RedemptionStoreProductViewModel> Products { get; set; } = new ObservableCollection<RedemptionStoreProductViewModel>();
 
         public string ProductName
         {

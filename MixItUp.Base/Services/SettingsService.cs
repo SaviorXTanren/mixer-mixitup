@@ -2,10 +2,15 @@
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
+using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Overlay;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -16,6 +21,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services
 {
@@ -163,16 +169,26 @@ namespace MixItUp.Base.Services
         {
             if (settings != null)
             {
-                Logger.Log(LogLevel.Debug, "Settings save operation started");
+                Logger.ForceLog(LogLevel.Information, "Settings save operation started");
 
-                await semaphore.WaitAndRelease(async () =>
+                try
                 {
+                    await semaphore.WaitAsync();
+
                     settings.CopyLatestValues();
                     await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
                     await settings.SaveDatabaseData();
-                });
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
 
-                Logger.Log(LogLevel.Debug, "Settings save operation finished");
+                Logger.ForceLog(LogLevel.Information, "Settings save operation finished");
             }
         }
 
@@ -188,10 +204,20 @@ namespace MixItUp.Base.Services
                     return;
                 }
 
-                await semaphore.WaitAndRelease(async () =>
+                try
                 {
+                    await semaphore.WaitAsync();
+
                     await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
-                });
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
 
                 Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
             }
@@ -366,45 +392,152 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
-                await SettingsV3Upgrader.Version6Upgrade(currentVersion, filePath);
-                //await SettingsV3Upgrader.Version7Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version7Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
         }
 
-        public static async Task Version6Upgrade(int version, string filePath)
+        public static async Task Version7Upgrade(int version, string filePath)
         {
-            if (version < 6)
+            if (version < 7)
             {
-                string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
-                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch) && settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken != null)
+                ChannelSession.SetChannelSessionSettings(settings);
+
+                settings.OverlayEndpointsV3.Add(new OverlayEndpointV3Model(OverlayEndpointV3Model.DefaultOverlayName)
                 {
-                    // Force OAuth token reset for new scopes
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.Reset();
+                    ID = Guid.Empty
+                });
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                foreach (var kvp in settings.OverlayCustomNameAndPorts)
+                {
+                    settings.OverlayEndpointsV3.Add(new OverlayEndpointV3Model(kvp.Key));
                 }
+                settings.OverlayCustomNameAndPorts.Clear();
+
+                foreach (var kvp in settings.Commands)
+                {
+                    if (kvp.Value is ActionGroupCommandModel)
+                    {
+                        ActionGroupCommandModel command = (ActionGroupCommandModel)kvp.Value;
+                        if (command.RunOneRandomly)
+                        {
+                            RandomActionModel randomAction = new RandomActionModel(amount: "1", noDuplicates: false, command.Actions.ToList());
+                            command.Actions.Clear();
+                            command.Actions.Add(randomAction);
+                            settings.Commands.ManualValueChanged(command.ID);
+                        }
+                    }
+
+                    foreach (ActionModelBase actionModel in kvp.Value.Actions)
+                    {
+                        if (actionModel is OverlayActionModel)
+                        {
+                            OverlayActionModel action = (OverlayActionModel)actionModel;
+
+                            OverlayEndpointV3Model endpoint = settings.OverlayEndpointsV3.FirstOrDefault(e => string.Equals(e.Name, action.OverlayName));
+
+                            if (action.WidgetID == Guid.Empty)
+                            {
+                                action.Duration = action.OverlayItem.Effects.Duration.ToString();
+                                if (action.OverlayItem.Effects.EntranceAnimation != OverlayItemEffectEntranceAnimationTypeEnum.None)
+                                {
+                                    action.EntranceAnimation = new OverlayAnimationV3Model()
+                                    {
+                                        AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.EntranceAnimation.ToString())
+                                    };
+                                }
+                                if (action.OverlayItem.Effects.ExitAnimation != OverlayItemEffectExitAnimationTypeEnum.None)
+                                {
+                                    action.ExitAnimation = new OverlayAnimationV3Model()
+                                    {
+                                        AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.ExitAnimation.ToString())
+                                    };
+                                }
+
+                                OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem);
+                                if (item != null)
+                                {
+                                    action.OverlayItemV3 = item;
+                                    if (endpoint != null && endpoint.ID != Guid.Empty)
+                                    {
+                                        action.OverlayItemV3.OverlayEndpointID = endpoint.ID;
+                                    }
+                                }
+                                settings.Commands.ManualValueChanged(kvp.Key);
+                            }
+                        }
+                        else if (actionModel is TextToSpeechActionModel)
+                        {
+                            TextToSpeechActionModel action = (TextToSpeechActionModel)actionModel;
+                            action.ProviderType = TextToSpeechProviderType.ResponsiveVoice;
+                            settings.Commands.ManualValueChanged(kvp.Key);
+                        }
+                    }
+                }
+
+                foreach (OverlayWidgetModel widget in settings.OverlayWidgets)
+                {
+                    OverlayWidgetV3Model newWidget = new OverlayWidgetV3Model();
+
+                    OverlayEndpointV3Model endpoint = settings.OverlayEndpointsV3.FirstOrDefault(e => string.Equals(e.Name, widget.OverlayName));
+
+                    newWidget.Name = widget.Name;
+                    newWidget.IsEnabled = widget.IsEnabled;
+                    if (widget.Item.ItemType == OverlayItemModelTypeEnum.HTML || widget.Item.ItemType == OverlayItemModelTypeEnum.Image ||
+                        widget.Item.ItemType == OverlayItemModelTypeEnum.Text || widget.Item.ItemType == OverlayItemModelTypeEnum.Video ||
+                        widget.Item.ItemType == OverlayItemModelTypeEnum.YouTube)
+                    {
+                        newWidget.RefreshTime = widget.RefreshTime;
+                    }
+
+                    OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(widget.Item);
+                    if (item != null)
+                    {
+                        item.ID = widget.Item.ID;
+                        newWidget.Item = item;
+                        if (endpoint != null && endpoint.ID != Guid.Empty)
+                        {
+                            newWidget.Item.OverlayEndpointID = endpoint.ID;
+                        }
+
+                        if (newWidget.Type == OverlayItemV3Type.Text)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayTextWidgetDefaultJavascript;
+                        }
+                        else if (newWidget.Type == OverlayItemV3Type.Image)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayImageWidgetDefaultJavascript;
+                        }
+                        else if (newWidget.Type == OverlayItemV3Type.Video)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayVideoWidgetDefaultJavascript;
+                        }
+                        else if (newWidget.Type == OverlayItemV3Type.YouTube)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayYouTubeWidgetDefaultJavascript;
+                        }
+                        else if (newWidget.Type == OverlayItemV3Type.HTML)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayHTMLWidgetDefaultJavascript;
+                        }
+
+                        settings.OverlayWidgetsV3.Add(newWidget);
+                    }
+                }
+                settings.OverlayWidgets.Clear();
+#pragma warning restore CS0612 // Type or member is obsolete
+
+                ChannelSession.SetChannelSessionSettings(null);
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
         }
-
-        //public static async Task Version7Upgrade(int version, string filePath)
-        //{
-        //    if (version < 7)
-        //    {
-        //        string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
-        //        SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
-        //        await settings.Initialize();
-
-
-
-        //        await ServiceManager.Get<SettingsService>().Save(settings);
-        //    }
-        //}
 
         public static async Task<int> GetSettingsVersion(string filePath)
         {
@@ -416,5 +549,376 @@ namespace MixItUp.Base.Services
             JObject settingsJObj = JObject.Parse(fileData);
             return (int)settingsJObj["Version"];
         }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        private static OverlayItemV3ModelBase ConvertOldOverlayItem(OverlayItemModelBase item)
+        {
+            OverlayItemV3ViewModelBase vmResult = null;
+            OverlayItemV3ModelBase result = null;
+            if (item.ItemType == OverlayItemModelTypeEnum.ChatMessages)
+            {
+                OverlayChatMessagesListItemModel oldItem = (OverlayChatMessagesListItemModel)item;
+                OverlayChatV3ViewModel newItem = new OverlayChatV3ViewModel();
+                vmResult = newItem;
+                newItem.BackgroundColor = oldItem.BackgroundColor;
+                newItem.BorderColor = oldItem.BorderColor;
+                newItem.FontColor = oldItem.TextColor;
+                newItem.FontName = oldItem.TextFont;
+                newItem.FontSize = oldItem.Height;
+                newItem.MessageRemovalTime = oldItem.FadeOut;
+                newItem.MessageAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
+                newItem.MessageRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
+                result = newItem.GetItem();
+                result.OldCustomHTML = oldItem.HTML;
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.EndCredits)
+            {
+                OverlayEndCreditsItemModel oldItem = (OverlayEndCreditsItemModel)item;
+                OverlayEndCreditsV3ViewModel newItem = new OverlayEndCreditsV3ViewModel();
+                vmResult = newItem;
+                newItem.BackgroundColor = oldItem.BackgroundColor;
+                newItem.Header.FontColor = oldItem.SectionTextColor;
+                newItem.Header.FontName = oldItem.SectionTextFont;
+                newItem.Header.FontSize = oldItem.SectionTextSize;
+                newItem.FontColor = oldItem.ItemTextColor;
+                newItem.FontName = oldItem.ItemTextFont;
+                newItem.FontSize = oldItem.ItemTextSize;
+                newItem.SelectedScrollSpeed = EnumHelper.GetEnumValueFromString<OverlayEndCreditsSpeedV3TypeEnum>(oldItem.Speed.ToString());
+                foreach (var oldSection in oldItem.SectionTemplates)
+                {
+                    OverlayEndCreditsSectionV3ViewModel newSection = new OverlayEndCreditsSectionV3ViewModel();
+                    switch (oldSection.Key)
+                    {
+                        case OverlayEndCreditsSectionTypeEnum.Followers:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.Followers;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.NewSubscribers:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.NewSubscribers;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.Resubscribers:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.Resubscribers;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.GiftedSubs:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.GiftedSubscriptions;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.Donations:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.Donations;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.Subscribers:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.Subscribers;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.Moderators:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.Moderators;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.FreeFormHTML:
+                        case OverlayEndCreditsSectionTypeEnum.FreeFormHTML2:
+                        case OverlayEndCreditsSectionTypeEnum.FreeFormHTML3:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.Custom;
+                            newSection.HTML = oldSection.Value.UserHTML;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.Bits:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.TwitchBits;
+                            break;
+                        case OverlayEndCreditsSectionTypeEnum.Hosts:
+                        case OverlayEndCreditsSectionTypeEnum.Raids:
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.Raids;
+                            break;
+                    }
+
+                    if (newSection != null)
+                    {
+                        newSection.Name = oldSection.Value.SectionHTML;
+                        newItem.Sections.Add(newSection);
+                    }
+                }
+                result = newItem.GetItem();
+                result.OldCustomHTML = string.Join("\n\n", oldItem.HTML, oldItem.TitleTemplate);
+                foreach (var oldSection in oldItem.SectionTemplates)
+                {
+                    result.OldCustomHTML += "\n\n";
+                    result.OldCustomHTML += string.Join("\n\n", oldSection.Value.SectionHTML, oldSection.Value.UserHTML);
+                }
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.EventList)
+            {
+                OverlayEventListItemModel oldItem = (OverlayEventListItemModel)item;
+                OverlayEventListV3ViewModel newItem = new OverlayEventListV3ViewModel();
+                vmResult = newItem;
+                newItem.BackgroundColor = oldItem.BackgroundColor;
+                newItem.BorderColor = oldItem.BorderColor;
+                newItem.FontColor = oldItem.TextColor;
+                newItem.FontName = oldItem.TextFont;
+                newItem.TotalToShow = oldItem.TotalToShow;
+                newItem.AddToTop = true;
+                newItem.ItemAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
+                newItem.ItemRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
+                if (oldItem.ItemTypes.Contains(OverlayEventListItemTypeEnum.Followers))
+                {
+                    newItem.Follows = true;
+                }
+                if (oldItem.ItemTypes.Contains(OverlayEventListItemTypeEnum.Hosts) || oldItem.ItemTypes.Contains(OverlayEventListItemTypeEnum.Raids))
+                {
+                    newItem.Raids = true;
+                }
+                if (oldItem.ItemTypes.Contains(OverlayEventListItemTypeEnum.Subscribers))
+                {
+                    newItem.TwitchSubscriptions = true;
+                    newItem.YouTubeMemberships = true;
+                    newItem.TrovoSubscriptions = true;
+                }
+                if (oldItem.ItemTypes.Contains(OverlayEventListItemTypeEnum.Donations))
+                {
+                    newItem.Donations = true;
+                }
+                if (oldItem.ItemTypes.Contains(OverlayEventListItemTypeEnum.Bits))
+                {
+                    newItem.TwitchBits = true;
+                }
+                result = newItem.GetItem();
+                result.OldCustomHTML = oldItem.HTML;
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.GameQueue)
+            {
+                OverlayGameQueueListItemModel oldItem = (OverlayGameQueueListItemModel)item;
+                OverlayGameQueueV3ViewModel newItem = new OverlayGameQueueV3ViewModel();
+                vmResult = newItem;
+                newItem.BackgroundColor = oldItem.BackgroundColor;
+                newItem.BorderColor = oldItem.BorderColor;
+                newItem.FontColor = oldItem.TextColor;
+                newItem.FontName = oldItem.TextFont;
+                newItem.TotalToShow = oldItem.TotalToShow;
+                newItem.ItemAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
+                newItem.ItemRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
+                result = newItem.GetItem();
+                result.OldCustomHTML = oldItem.HTML;
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.HTML)
+            {
+                OverlayHTMLItemModel oldItem = (OverlayHTMLItemModel)item;
+                OverlayHTMLV3ViewModel newItem = new OverlayHTMLV3ViewModel();
+                vmResult = newItem;
+                result = newItem.GetItem();
+                result.OldCustomHTML = oldItem.HTML;
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.Image)
+            {
+                OverlayImageItemModel oldItem = (OverlayImageItemModel)item;
+                OverlayImageV3ViewModel newItem = new OverlayImageV3ViewModel();
+                vmResult = newItem;
+                newItem.FilePath = oldItem.FilePath;
+                newItem.Width = oldItem.Width.ToString();
+                newItem.Height = oldItem.Height.ToString();
+                result = newItem.GetItem();
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.Leaderboard)
+            {
+                OverlayLeaderboardListItemModel oldItem = (OverlayLeaderboardListItemModel)item;
+                OverlayLeaderboardV3ViewModel newItem = new OverlayLeaderboardV3ViewModel();
+                vmResult = newItem;
+                if (oldItem.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
+                {
+                    newItem.SelectedLeaderboardType = OverlayLeaderboardTypeV3Enum.Consumable;
+                    if (ChannelSession.Settings.Currency.TryGetValue(oldItem.CurrencyID, out CurrencyModel currency))
+                    {
+                        newItem.SelectedConsumable = currency;
+                    }
+                }
+                else if (oldItem.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Bits)
+                {
+                    newItem.SelectedLeaderboardType = OverlayLeaderboardTypeV3Enum.TwitchBits;
+                    switch (oldItem.BitsLeaderboardDateRange)
+                    {
+                        case BitsLeaderboardPeriodEnum.Day: newItem.SelectedTwitchBitsDataRange = OverlayLeaderboardDateRangeV3Enum.Daily; break;
+                        case BitsLeaderboardPeriodEnum.Week: newItem.SelectedTwitchBitsDataRange = OverlayLeaderboardDateRangeV3Enum.Weekly; break;
+                        case BitsLeaderboardPeriodEnum.Month: newItem.SelectedTwitchBitsDataRange = OverlayLeaderboardDateRangeV3Enum.Monthly; break;
+                        case BitsLeaderboardPeriodEnum.Year: newItem.SelectedTwitchBitsDataRange = OverlayLeaderboardDateRangeV3Enum.Yearly; break;
+                        case BitsLeaderboardPeriodEnum.All: newItem.SelectedTwitchBitsDataRange = OverlayLeaderboardDateRangeV3Enum.AllTime; break;
+                    }
+                }
+                else
+                {
+                    newItem.SelectedLeaderboardType = OverlayLeaderboardTypeV3Enum.ViewingTime;
+                }
+                newItem.ItemAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
+                newItem.ItemRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
+                result = newItem.GetItem();
+                result.OldCustomHTML = oldItem.HTML;
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.ProgressBar)
+            {
+                OverlayProgressBarItemModel oldItem = (OverlayProgressBarItemModel)item;
+                OverlayGoalV3ViewModel newItem = new OverlayGoalV3ViewModel();
+                vmResult = newItem;
+                newItem.ProgressColor = oldItem.ProgressColor;
+                newItem.GoalColor = oldItem.BackgroundColor;
+                newItem.FontColor = oldItem.TextColor;
+                newItem.FontName = oldItem.TextFont;
+                newItem.Width = oldItem.Width.ToString();
+                newItem.Height = oldItem.Height.ToString();
+                if (oldItem.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
+                {
+                    newItem.FollowAmount = 1;
+                }
+                else if (oldItem.ProgressBarType == OverlayProgressBarItemTypeEnum.Subscribers)
+                {
+                    newItem.TwitchSubscriptionTier1Amount = 1;
+                    newItem.TwitchSubscriptionTier2Amount = 1;
+                    newItem.TwitchSubscriptionTier3Amount = 1;
+                    newItem.TrovoSubscriptionTier1Amount = 1;
+                    newItem.TrovoSubscriptionTier2Amount = 1;
+                    newItem.TrovoSubscriptionTier3Amount = 1;
+                    foreach (var membership in newItem.YouTubeMemberships)
+                    {
+                        membership.Amount = 1;
+                    }
+                }
+                else if (oldItem.ProgressBarType == OverlayProgressBarItemTypeEnum.Donations)
+                {
+                    newItem.DonationAmount = 1;
+                }
+                else if (oldItem.ProgressBarType == OverlayProgressBarItemTypeEnum.Bits)
+                {
+                    newItem.TwitchBitsAmount = 1;
+                }
+                newItem.Segments.Add(new OverlayGoalSegmentV3ViewModel(newItem)
+                {
+                    Amount = oldItem.GoalAmount
+                });
+                result = newItem.GetItem();
+                result.OldCustomHTML = oldItem.HTML;
+                ((OverlayGoalV3Model)result).CurrentAmount = oldItem.CurrentAmount;
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.StreamBoss)
+            {
+                OverlayStreamBossItemModel oldItem = (OverlayStreamBossItemModel)item;
+                OverlayStreamBossV3ViewModel newItem = new OverlayStreamBossV3ViewModel();
+                vmResult = newItem;
+                newItem.FontColor = oldItem.TextColor;
+                newItem.FontName = oldItem.TextFont;
+                newItem.BorderColor = oldItem.BorderColor;
+                newItem.HealthColor = oldItem.BackgroundColor;
+                newItem.DamageColor = oldItem.ProgressColor;
+                newItem.BaseHealth = oldItem.StartingHealth;
+                newItem.DamageOcurredAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.DamageAnimation.ToString());
+                newItem.NewBossAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.NewBossAnimation.ToString());
+                newItem.FollowAmount = oldItem.FollowBonus;
+                newItem.RaidAmount = oldItem.RaidBonus;
+                newItem.TwitchSubscriptionTier1Amount = oldItem.SubscriberBonus;
+                newItem.TwitchSubscriptionTier2Amount = oldItem.SubscriberBonus;
+                newItem.TwitchSubscriptionTier3Amount = oldItem.SubscriberBonus;
+                newItem.TrovoSubscriptionTier1Amount = oldItem.SubscriberBonus;
+                newItem.TrovoSubscriptionTier2Amount = oldItem.SubscriberBonus;
+                newItem.TrovoSubscriptionTier3Amount = oldItem.SubscriberBonus;
+                foreach (var membership in newItem.YouTubeMemberships)
+                {
+                    membership.Amount = oldItem.SubscriberBonus;
+                }
+                newItem.DonationAmount = oldItem.DonationBonus;
+                newItem.TwitchBitsAmount = oldItem.BitsBonus;
+                newItem.SelfHealingMultiplier = oldItem.HealingBonus;
+                newItem.OverkillBonusHealthMultiplier = oldItem.OverkillBonus;
+                result = newItem.GetItem();
+                result.OldCustomHTML = oldItem.HTML;
+                ((OverlayStreamBossV3Model)result).CurrentHealth = oldItem.CurrentHealth;
+                ((OverlayStreamBossV3Model)result).CurrentBoss = oldItem.CurrentBossID;
+                ((OverlayStreamBossV3Model)result).NewBossCommandID = oldItem.StreamBossChangedCommandID;
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.Text)
+            {
+                OverlayTextItemModel oldItem = (OverlayTextItemModel)item;
+                OverlayTextV3ViewModel newItem = new OverlayTextV3ViewModel();
+                vmResult = newItem;
+                newItem.Text = oldItem.Text;
+                newItem.FontColor = oldItem.Color;
+                newItem.FontName = oldItem.Font;
+                newItem.FontSize = oldItem.Size;
+                newItem.Bold = oldItem.Bold;
+                newItem.Underline = oldItem.Underline;
+                newItem.Italics = oldItem.Italic;
+                newItem.ShadowColor = oldItem.ShadowColor;
+                result = newItem.GetItem();
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.Timer)
+            {
+                OverlayTimerItemModel oldItem = (OverlayTimerItemModel)item;
+                OverlayPersistentTimerV3ViewModel newItem = new OverlayPersistentTimerV3ViewModel();
+                vmResult = newItem;
+                newItem.InitialAmount = oldItem.TotalLength;
+                newItem.FontColor = oldItem.TextColor;
+                newItem.FontName = oldItem.TextFont;
+                newItem.FontSize = oldItem.TextSize;
+                result = newItem.GetItem();
+                ((OverlayPersistentTimerV3Model)result).TimerCompletedCommandID = oldItem.TimerFinishedCommandID;
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.TimerTrain)
+            {
+                OverlayTimerTrainItemModel oldItem = (OverlayTimerTrainItemModel)item;
+                OverlayPersistentTimerV3ViewModel newItem = new OverlayPersistentTimerV3ViewModel();
+                vmResult = newItem;
+                newItem.FontColor = oldItem.TextColor;
+                newItem.FontName = oldItem.TextFont;
+                newItem.FontSize = oldItem.TextSize;
+                newItem.FollowAmount = oldItem.FollowBonus;
+                newItem.RaidAmount = oldItem.RaidBonus;
+                newItem.TwitchSubscriptionTier1Amount = oldItem.SubscriberBonus;
+                newItem.TwitchSubscriptionTier2Amount = oldItem.SubscriberBonus;
+                newItem.TwitchSubscriptionTier3Amount = oldItem.SubscriberBonus;
+                newItem.TrovoSubscriptionTier1Amount = oldItem.SubscriberBonus;
+                newItem.TrovoSubscriptionTier2Amount = oldItem.SubscriberBonus;
+                newItem.TrovoSubscriptionTier3Amount = oldItem.SubscriberBonus;
+                foreach (var membership in newItem.YouTubeMemberships)
+                {
+                    membership.Amount = oldItem.SubscriberBonus;
+                }
+                newItem.DonationAmount = oldItem.DonationBonus;
+                newItem.TwitchBitsAmount = oldItem.BitsBonus;
+                result = newItem.GetItem();
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.Video)
+            {
+                OverlayVideoItemModel oldItem = (OverlayVideoItemModel)item;
+                OverlayVideoV3ViewModel newItem = new OverlayVideoV3ViewModel();
+                vmResult = newItem;
+                newItem.FilePath = oldItem.FilePath;
+                newItem.Volume = oldItem.Volume;
+                newItem.Loop = oldItem.Loop;
+                newItem.Width = oldItem.Width.ToString();
+                newItem.Height = oldItem.Height.ToString();
+                result = newItem.GetItem();
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.YouTube)
+            {
+                OverlayYouTubeItemModel oldItem = (OverlayYouTubeItemModel)item;
+                OverlayYouTubeV3ViewModel newItem = new OverlayYouTubeV3ViewModel();
+                vmResult = newItem;
+                newItem.VideoID = oldItem.FilePath;
+                newItem.Volume = oldItem.Volume;
+                newItem.Width = oldItem.Width.ToString();
+                newItem.Height = oldItem.Height.ToString();
+                result = newItem.GetItem();
+            }
+
+            if (result != null)
+            {
+                result.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(vmResult.DefaultHTML);
+                result.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(vmResult.DefaultCSS);
+                result.Javascript = vmResult.DefaultJavascript;
+
+                result.Layer = item.Position.Layer;
+                result.XPosition = item.Position.Horizontal;
+                result.YPosition = item.Position.Vertical;
+                if (item.Position.PositionType == OverlayItemPositionType.Pixel)
+                {
+                    result.PositionType = OverlayPositionV3Type.Pixel;
+                }
+                else if (item.Position.PositionType == OverlayItemPositionType.Percentage)
+                {
+                    result.PositionType = OverlayPositionV3Type.Percentage;
+                }
+            }
+
+            return result;
+        }
+#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

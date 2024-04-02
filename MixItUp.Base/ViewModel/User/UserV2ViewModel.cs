@@ -109,6 +109,8 @@ namespace MixItUp.Base.ViewModel.User
         }
         private string color;
 
+        public string ColorInApp { get { return string.IsNullOrEmpty(this.Color) ? UserV2ViewModel.UserDefaultColor : this.Color; } }
+
         public string RolesString
         {
             get { return this.rolesString; }
@@ -194,18 +196,22 @@ namespace MixItUp.Base.ViewModel.User
                 return null;
             }
         }
+        public string PlatformBadgeFullLink { get { return $"https://github.com/SaviorXTanren/mixer-mixitup/raw/master/MixItUp.WPF{this.PlatformBadgeLink}"; } }
         public bool ShowPlatformBadge { get { return true; } }
 
         public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
+        public string AccountDateString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.Unknown; } }
         public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.Unknown; } }
         public int AccountDays { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
 
         public DateTimeOffset? FollowDate { get { return this.PlatformModel.FollowDate; } set { this.PlatformModel.FollowDate = value; } }
+        public string FollowDateString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.NotFollowing; } }
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotFollowing; } }
         public int FollowDays { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
         public int FollowMonths { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
         public DateTimeOffset? SubscribeDate { get { return this.PlatformModel.SubscribeDate; } set { this.PlatformModel.SubscribeDate = value; } }
+        public string SubscribeDateString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.NotSubscribed; } }
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
         public int SubscribeDays { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
         public int SubscribeMonths { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
@@ -554,19 +560,14 @@ namespace MixItUp.Base.ViewModel.User
                     this.LastUpdated = DateTimeOffset.Now;
 
                     DateTimeOffset refreshStart = DateTimeOffset.Now;
+                    Logger.Log($"User refresh started: {this.ID}");
 
-                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(2));
-
-                    try
+                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    Task refreshTask = Task.Run(async () =>
                     {
-                        await Task.Run(async () =>
+                        try
                         {
                             await this.platformModel.Refresh();
-
-                            if (ChannelSession.Settings.ShowAlejoPronouns && this.Platform == StreamingPlatformTypeEnum.Twitch)
-                            {
-                                this.Model.AlejoPronounID = await ServiceManager.Get<AlejoPronounsService>().GetPronounID(this.Username);
-                            }
 
                             double platformRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
                             if (platformRefreshTime > 1000)
@@ -574,19 +575,41 @@ namespace MixItUp.Base.ViewModel.User
                                 Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user (Platform refresh): {0} - {1} - {2} ms", this.ID, this.Username, platformRefreshTime));
                             }
 
+                            if (ChannelSession.Settings.ShowAlejoPronouns && this.Platform == StreamingPlatformTypeEnum.Twitch)
+                            {
+                                this.Model.AlejoPronounID = await ServiceManager.Get<AlejoPronounsService>().GetPronounID(this.Username);
+                            }
+
                             this.RefreshPatreonProperties();
 
+                            double externalRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                            if (externalRefreshTime > 1000)
+                            {
+                                Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user (External refresh): {0} - {1} - {2} ms", this.ID, this.Username, externalRefreshTime));
+                            }
+
                             this.ClearCachedProperties();
-                        }, cancellationTokenSource.Token);
-                    }
-                    catch (TaskCanceledException)
+                            double cacheRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                            if (cacheRefreshTime > 1000)
+                            {
+                                Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user (Cache refresh): {0} - {1} - {2} ms", this.ID, this.Username, cacheRefreshTime));
+                            }
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            Logger.Log(LogLevel.Error, "Refresh task cancelled due to taking too long to process, resetting last updated state and trying again later");
+                            this.LastUpdated = DateTimeOffset.MinValue;
+                        }
+                    }, cancellationTokenSource.Token);
+
+                    await Task.WhenAny(new Task[] { refreshTask, Task.Delay(2000) });
+                    if (!refreshTask.IsCompleted)
                     {
-                        Logger.Log(LogLevel.Error, "Refresh task cancelled due to taking too long to process, resetting last updated state and trying again later");
-                        this.LastUpdated = DateTimeOffset.MinValue;
+                        cancellationTokenSource.Cancel();
                     }
 
                     double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
-                    Logger.Log($"User refresh time: {refreshTime} ms");
+                    Logger.Log($"User refresh time: {this.ID} - {refreshTime} ms");
                     if (refreshTime > 1000)
                     {
                         Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user: {0} - {1} - {2} ms", this.ID, this.Username, refreshTime));
@@ -624,71 +647,7 @@ namespace MixItUp.Base.ViewModel.User
         public async Task MergeUserData(UserV2ViewModel other)
         {
             this.model.AddPlatformData(other.platformModel);
-            this.model.OnlineViewingMinutes += other.model.OnlineViewingMinutes;
-            
-            foreach (var kvp in other.model.CurrencyAmounts)
-            {
-                if (!this.model.CurrencyAmounts.ContainsKey(kvp.Key))
-                {
-                    this.model.CurrencyAmounts[kvp.Key] = 0;
-                }
-                this.model.CurrencyAmounts[kvp.Key] += kvp.Value;
-            }
-
-            foreach (var kvp in other.model.InventoryAmounts)
-            {
-                if (!this.model.InventoryAmounts.ContainsKey(kvp.Key))
-                {
-                    this.model.InventoryAmounts[kvp.Key] = new Dictionary<Guid, int>();
-                }
-
-                foreach (var itemKVP in kvp.Value)
-                {
-                    if (!this.model.InventoryAmounts[kvp.Key].ContainsKey(itemKVP.Key))
-                    {
-                        this.model.InventoryAmounts[kvp.Key][itemKVP.Key] = 0;
-                    }
-                    this.model.InventoryAmounts[kvp.Key][itemKVP.Key] += itemKVP.Value;
-                }
-            }
-
-            foreach (var kvp in other.model.StreamPassAmounts)
-            {
-                if (!this.model.StreamPassAmounts.ContainsKey(kvp.Key))
-                {
-                    this.model.StreamPassAmounts[kvp.Key] = 0;
-                }
-                this.model.StreamPassAmounts[kvp.Key] += kvp.Value;
-            }
-
-            if (string.IsNullOrEmpty(this.model.CustomTitle)) { this.model.CustomTitle = other.model.CustomTitle; }
-            if (!this.model.IsSpecialtyExcluded) { this.model.IsSpecialtyExcluded = other.model.IsSpecialtyExcluded; }
-            if (this.model.EntranceCommandID == Guid.Empty) { this.model.EntranceCommandID = other.model.EntranceCommandID; }
-            
-            foreach (Guid id in other.model.CustomCommandIDs)
-            {
-                this.model.CustomCommandIDs.Add(id);
-            }
-
-            if (string.IsNullOrEmpty(this.model.PatreonUserID)) { this.model.PatreonUserID = other.model.PatreonUserID; }
-
-            if (string.IsNullOrEmpty(this.model.Notes))
-            {
-                this.model.Notes = other.model.Notes;
-            }
-            else if (!string.IsNullOrEmpty(other.model.Notes))
-            {
-                this.model.Notes += Environment.NewLine + Environment.NewLine + other.model.Notes;
-            }
-
-            this.model.TotalStreamsWatched += other.Model.TotalStreamsWatched;
-            this.model.TotalAmountDonated += other.Model.TotalAmountDonated;
-            this.model.TotalSubsGifted += other.Model.TotalSubsGifted;
-            this.model.TotalSubsReceived += other.Model.TotalSubsReceived;
-            this.model.TotalChatMessageSent += other.Model.TotalChatMessageSent;
-            this.model.TotalTimesTagged += other.Model.TotalTimesTagged;
-            this.model.TotalCommandsRun += other.Model.TotalCommandsRun;
-            this.model.TotalMonthsSubbed += other.Model.TotalMonthsSubbed;
+            this.model.MergeUserData(other.Model);
 
             await ServiceManager.Get<UserService>().RemoveActiveUser(other.ID);
             await ServiceManager.Get<UserService>().RemoveActiveUser(this.ID);
@@ -784,11 +743,6 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.Color = ((TwitchUserPlatformV2Model)this.PlatformModel).Color;
                 }
-            }
-
-            if (string.IsNullOrEmpty(this.Color))
-            {
-                this.Color = UserV2ViewModel.UserDefaultColor;
             }
 
             var sortRole = this.PrimaryRole;

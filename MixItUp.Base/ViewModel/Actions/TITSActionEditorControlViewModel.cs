@@ -4,8 +4,10 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
@@ -33,7 +35,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowThrowItemGrid { get { return this.SelectedActionType == TITSActionTypeEnum.ThrowItem; } }
 
-        public ThreadSafeObservableCollection<TITSItem> Items { get; set; } = new ThreadSafeObservableCollection<TITSItem>();
+        public ObservableCollection<TITSItem> Items { get; set; } = new ObservableCollection<TITSItem>();
 
         public TITSItem SelectedItem
         {
@@ -70,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowActivateTriggerGrid { get { return this.SelectedActionType == TITSActionTypeEnum.ActivateTrigger; } }
 
-        public ThreadSafeObservableCollection<TITSTrigger> Triggers { get; set; } = new ThreadSafeObservableCollection<TITSTrigger>();
+        public ObservableCollection<TITSTrigger> Triggers { get; set; } = new ObservableCollection<TITSTrigger>();
 
         public TITSTrigger SelectedTrigger
         {
@@ -82,6 +84,8 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private TITSTrigger selectedTrigger;
+
+        public ICommand RefreshCacheCommand { get; set; }
 
         private string throwItemID;
         private string triggerID;
@@ -144,15 +148,37 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnOpenInternal()
         {
+            this.RefreshCacheCommand = this.CreateCommand(async () =>
+            {
+                await this.TryConnectToTITS();
+
+                if (this.TITSConnected)
+                {
+                    ServiceManager.Get<TITSService>().ClearCaches();
+                }
+
+                await this.LoadData();
+            });
+
+            await this.TryConnectToTITS();
+
+            await this.LoadData();
+
+            await base.OnOpenInternal();
+        }
+
+        private async Task<bool> TryConnectToTITS()
+        {
             if (ChannelSession.Settings.TITSOAuthToken != null && !this.TITSConnected)
             {
                 Result result = await ServiceManager.Get<TITSService>().Connect(ChannelSession.Settings.TITSOAuthToken);
-                if (!result.Success)
-                {
-                    return;
-                }
+                return result.Success;
             }
+            return false;
+        }
 
+        private async Task LoadData()
+        {
             if (this.TITSConnected)
             {
                 foreach (TITSItem item in await ServiceManager.Get<TITSService>().GetAllItems())
@@ -161,14 +187,22 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
                 this.SelectedItem = this.selectedItem = this.Items.FirstOrDefault(i => string.Equals(i.ID, this.throwItemID));
 
+                if (this.Items.Count == 0)
+                {
+                    Logger.Log(LogLevel.Error, "TITS Action - No items loaded");
+                }
+
                 foreach (TITSTrigger trigger in await ServiceManager.Get<TITSService>().GetAllTriggers())
                 {
                     this.Triggers.Add(trigger);
                 }
                 this.SelectedTrigger = this.selectedTrigger = this.Triggers.FirstOrDefault(i => string.Equals(i.ID, this.triggerID));
-            }
 
-            await base.OnOpenInternal();
+                if (this.Triggers.Count == 0)
+                {
+                    Logger.Log(LogLevel.Error, "TITS Action - No triggers loaded");
+                }
+            }
         }
     }
 }

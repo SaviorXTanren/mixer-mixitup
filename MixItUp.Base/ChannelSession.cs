@@ -24,6 +24,9 @@ namespace MixItUp.Base
 {
     public static class ChannelSession
     {
+        public static event EventHandler OnRestartRequested = delegate { };
+        public static void RestartRequested() { OnRestartRequested(null, new EventArgs()); }
+
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
         public static UserV2ViewModel User { get; private set; }
@@ -59,7 +62,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new GameQueueService());
             ServiceManager.Add(new GiveawayService());
             ServiceManager.Add(new SerialService());
-            ServiceManager.Add(new OverlayService());
+            ServiceManager.Add(new OverlayV3Service());
 
             ServiceManager.Add(new StreamlabsDesktopService());
             ServiceManager.Add(new XSplitService());
@@ -81,14 +84,17 @@ namespace MixItUp.Base
             ServiceManager.Add(new InfiniteAlbumService());
             ServiceManager.Add(new TITSService());
             ServiceManager.Add(new LumiaStreamService());
+            ServiceManager.Add(new PulsoidService());
+            ServiceManager.Add(new ResponsiveVoiceService());
+            ServiceManager.Add(new MicrosoftAzureSpeechService());
 
             try
             {
                 Type voicemodServiceType = Type.GetType("MixItUp.Base.Services.External.VoicemodService");
-                if (voicemodServiceType != null)
-                {
-                    ServiceManager.Add((IVoicemodService)Activator.CreateInstance(voicemodServiceType));
-                }
+                if (voicemodServiceType != null) { ServiceManager.Add((IVoicemodService)Activator.CreateInstance(voicemodServiceType)); }
+
+                Type ttsMonsterServiceType = Type.GetType("MixItUp.Base.Services.External.TTSMonsterService");
+                if (ttsMonsterServiceType != null) { ServiceManager.Add((ITTSMonsterService)Activator.CreateInstance(ttsMonsterServiceType)); }
             }
             catch (Exception ex) { Logger.Log(ex); }
 
@@ -237,6 +243,11 @@ namespace MixItUp.Base
                     }
                 }
 
+                if (!StreamingPlatforms.SupportedPlatforms.Contains(ChannelSession.Settings.DefaultStreamingPlatform))
+                {
+                    ChannelSession.Settings.DefaultStreamingPlatform = StreamingPlatforms.GetConnectedPlatforms().FirstOrDefault();
+                }
+
                 if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
                 {
                     ChannelSession.Settings.Name = StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).Username;
@@ -260,11 +271,11 @@ namespace MixItUp.Base
 
                 if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(ChannelSession.Settings.DefaultStreamingPlatform, StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).UserID);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(ChannelSession.Settings.DefaultStreamingPlatform, platformID: StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).UserID);
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserID);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: ServiceManager.Get<TwitchSessionService>().UserID);
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().User));
@@ -272,7 +283,7 @@ namespace MixItUp.Base
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().UserID);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: ServiceManager.Get<YouTubeSessionService>().UserID);
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
@@ -280,7 +291,7 @@ namespace MixItUp.Base
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().UserID);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: ServiceManager.Get<TrovoSessionService>().UserID);
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(ServiceManager.Get<TrovoSessionService>().User));
@@ -315,6 +326,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.InfiniteAlbumOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<InfiniteAlbumService>()] = ChannelSession.Settings.InfiniteAlbumOAuthToken; }
                 if (ChannelSession.Settings.TITSOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TITSService>()] = ChannelSession.Settings.TITSOAuthToken; }
                 if (ChannelSession.Settings.LumiaStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<LumiaStreamService>()] = ChannelSession.Settings.LumiaStreamOAuthToken; }
+                if (ChannelSession.Settings.PulsoidOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PulsoidService>()] = ChannelSession.Settings.PulsoidOAuthToken; }
                 if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }
                 if (ChannelSession.Settings.EnableCrowdControl) { externalServiceToConnect[ServiceManager.Get<CrowdControlService>()] = null; }
                 if (ChannelSession.Settings.EnableSAMMI) { externalServiceToConnect[ServiceManager.Get<SAMMIService>()] = null; }
@@ -323,7 +335,8 @@ namespace MixItUp.Base
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }
                 if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ServiceManager.Get<IOvrStreamService>()] = null; }
                 if (ChannelSession.Settings.PolyPopPortNumber > 0) { externalServiceToConnect[ServiceManager.Get<PolyPopService>()] = null; }
-                if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ServiceManager.Get<OverlayService>()] = null; }
+                if (ChannelSession.Settings.TTSMonsterOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<ITTSMonsterService>()] = ChannelSession.Settings.TTSMonsterOAuthToken; }
+                if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ServiceManager.Get<OverlayV3Service>()] = null; }
                 if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ServiceManager.Get<IDeveloperAPIService>()] = null; }
 
                 if (externalServiceToConnect.Count > 0)
@@ -478,13 +491,18 @@ namespace MixItUp.Base
         public static void DisconnectionOccurred(string serviceName)
         {
             Logger.Log(LogLevel.Error, serviceName + " Service disconnection occurred");
-            GlobalEvents.ServiceDisconnect(serviceName);
+            ServiceManager.ServiceDisconnect(serviceName);
         }
 
         public static void ReconnectionOccurred(string serviceName)
         {
-            Logger.Log(LogLevel.Error, serviceName + " Service reconnection successful");
-            GlobalEvents.ServiceReconnect(serviceName);
+            Logger.ForceLog(LogLevel.Information, serviceName + " Service reconnection successful");
+            ServiceManager.ServiceReconnect(serviceName);
+        }
+
+        internal static void SetChannelSessionSettings(SettingsV3Model settings)
+        {
+            ChannelSession.Settings = settings;
         }
 
         private static async Task SessionBackgroundTask(CancellationToken cancellationToken)
@@ -506,6 +524,11 @@ namespace MixItUp.Base
                 {
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
+
+                    int cpuUsage = await ServiceManager.Get<IProcessService>().GetCPUUsage();
+                    int memoryUsage = (int)Math.Round(ServiceManager.Get<IProcessService>().GetMemoryUsage() / 1024 / 1024);
+                    long gcMemory = GC.GetTotalMemory(true);
+                    Logger.ForceLog(LogLevel.Debug, $"Application Usage: {cpuUsage}% CPU Usage - {memoryUsage} MBs of Memory - {gcMemory} Garbage Collector Memory");
                 }
             }
         }

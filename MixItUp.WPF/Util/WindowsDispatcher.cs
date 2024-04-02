@@ -33,10 +33,7 @@ namespace MixItUp.WPF.Util
             }
             else
             {
-                await this.dispatcher.Invoke(async () =>
-                {
-                    await func();
-                });
+                await this.dispatcher.Invoke(func);
             }
         }
     }

@@ -65,7 +65,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.InstallationFolder = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.AccessTheFolderWhereMixItUpIsInstalled, MixItUp.Base.Resources.InstallationFolder, this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchFolder(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+                ServiceManager.Get<IProcessService>().LaunchFolder(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
             }));
 
             this.DiagnosticLogging = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DiagnosticLogging, ChannelSession.AppSettings.DiagnosticLogging,
@@ -76,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 if (await DialogHelper.ShowConfirmation(Resources.RunNewUserWizardWarning))
                 {
                     ChannelSession.Settings.ReRunWizard = true;
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
             }));
 
@@ -85,7 +85,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 if (await DialogHelper.ShowConfirmation(Resources.DeleteSettingsWarning))
                 {
                     ChannelSession.AppSettings.SettingsToDelete = ChannelSession.Settings.ID;
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
             }));
         }

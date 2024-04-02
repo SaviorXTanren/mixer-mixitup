@@ -14,6 +14,8 @@ namespace MixItUp.Base.Util
 
         Task<string> ShowTextEntry(string message, string defaultValue = null, string description = null);
 
+        Task<string> ShowDropDown(IEnumerable<string> options, string description = null);
+
         Task<object> ShowCustom(object dialog);
 
         Task<object> ShowCustomTimed(object dialog, int timeout);
@@ -38,11 +40,29 @@ namespace MixItUp.Base.Util
 
         public static async Task<string> ShowTextEntry(string message, string defaultValue = null, string description = null) { return await DialogHelper.dialogShower.ShowTextEntry(message, defaultValue, description); }
 
+        public static async Task<string> ShowDropDown(IEnumerable<string> options, string description = null) { return await DialogHelper.dialogShower.ShowDropDown(options, description); }
+
         public static async Task<object> ShowCustom(object dialog) { return await DialogHelper.dialogShower.ShowCustom(dialog); }
 
         public static async Task<object> ShowCustomTimed(object dialog, int timeout) { return await DialogHelper.dialogShower.ShowCustomTimed(dialog, timeout); }
 
-        public static async Task<CommandParametersModel> ShowEditTestCommandParametersDialog(CommandParametersModel parameters) { return await DialogHelper.dialogShower.ShowEditTestCommandParametersDialog(parameters); }
+        public static async Task<CommandParametersModel> ShowEditTestCommandParametersDialog(CommandParametersModel parameters)
+        {
+            CommandParametersModel result = await DialogHelper.dialogShower.ShowEditTestCommandParametersDialog(parameters);
+            if (result != null)
+            {
+                var emptyKeys = result.SpecialIdentifiers
+                    .Where(kvp => string.IsNullOrWhiteSpace(kvp.Value))
+                    .Select(kvp => kvp.Key)
+                    .ToArray();
+
+                foreach (var key in emptyKeys)
+                {
+                    result.SpecialIdentifiers.Remove(key);
+                }
+            }
+            return result;
+        }
 
         public static async Task ShowFailedResult(Result result) { await DialogHelper.ShowFailedResults(new List<Result>() { result }); }
 

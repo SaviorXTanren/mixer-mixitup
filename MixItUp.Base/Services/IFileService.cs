@@ -32,6 +32,7 @@ namespace MixItUp.Base.Services
 
         string ShowOpenFileDialog();
         string ShowOpenFileDialog(string filter);
+        IEnumerable<string> ShowMultiselectOpenFileDialog(string filter);
 
         string ShowSaveFileDialog(string fileName);
         string ShowSaveFileDialog(string fileName, string filter);
@@ -42,5 +43,9 @@ namespace MixItUp.Base.Services
         string GetTempFolder();
         string GetApplicationDirectory();
         string GetApplicationVersion();
+
+        IEnumerable<string> GetInstalledFonts();
+
+        string ExpandEnvironmentVariablesInFilePath(string path);
     }
 }

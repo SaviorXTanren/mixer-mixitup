@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             get
             {
                 CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsPrimary && !c.IsRank);
-                if (currency != null)
+                if (currency == null)
                 {
                     currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank);
                 }
@@ -24,7 +25,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public ThreadSafeObservableCollection<GameCommandModelBase> GameCommands { get; private set; } = new ThreadSafeObservableCollection<GameCommandModelBase>();
+        public ObservableCollection<GameCommandModelBase> GameCommands { get; private set; } = new ObservableCollection<GameCommandModelBase>();
 
         public GamesMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 

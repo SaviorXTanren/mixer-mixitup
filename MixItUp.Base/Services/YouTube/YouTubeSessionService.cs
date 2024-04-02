@@ -31,6 +31,8 @@ namespace MixItUp.Base.Services.YouTube
         public string ChannelID { get { return this.User?.Id; } }
         public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
 
+        public bool HasMembershipCapabilities { get { return this.MembershipLevels.Count > 0; } }
+
         private DateTime launchDateTime = DateTime.Now;
 
         public StreamingPlatformAccountModel UserAccount
@@ -62,17 +64,37 @@ namespace MixItUp.Base.Services.YouTube
 
         public int ViewerCount { get { return (int)this.Video?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault(); } }
 
+        public DateTimeOffset StreamStart
+        {
+            get
+            {
+                if (this.IsLive)
+                {
+                    if (this.Broadcast.Snippet.ActualStartTime.HasValue)
+                    {
+                        DateTime dt = this.Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
+                        if (dt.Kind == DateTimeKind.Unspecified)
+                        {
+                            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                        }
+                        return new DateTimeOffset(dt, (dt.Kind == DateTimeKind.Utc) ? TimeSpan.Zero : DateTimeOffset.Now.Offset);
+                    }
+                }
+                return DateTimeOffset.MinValue;
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<YouTubePlatformService> result = await YouTubePlatformService.ConnectUser();
             if (result.Success)
             {
-                this.UserConnection = result.Value;
-                this.User = await this.UserConnection.GetCurrentChannel();
+                this.User = await result.Value.GetCurrentChannel();
                 if (this.User == null)
                 {
                     return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                 }
+                this.UserConnection = result.Value;
 
                 await this.RefreshChannel();
             }
@@ -84,12 +106,12 @@ namespace MixItUp.Base.Services.YouTube
             Result<YouTubePlatformService> result = await YouTubePlatformService.ConnectBot();
             if (result.Success)
             {
-                this.BotConnection = result.Value;
-                this.Bot = await this.BotConnection.GetCurrentChannel();
+                this.Bot = await result.Value.GetCurrentChannel();
                 if (this.Bot == null)
                 {
                     return new Result(MixItUp.Base.Resources.YouTubeFailedToGetBotData);
                 }
+                this.BotConnection = result.Value;
             }
             return result;
         }

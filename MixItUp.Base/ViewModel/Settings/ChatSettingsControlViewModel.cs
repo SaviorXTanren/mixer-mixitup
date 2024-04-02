@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Settings
@@ -33,7 +35,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel HideUserSubscriberBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel HideUserSpecialtyBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel UseCustomUsernameColors { get; set; }
-        public ThreadSafeObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ThreadSafeObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
+        public ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
 
         public ChatSettingsControlViewModel()
         {
@@ -43,25 +45,25 @@ namespace MixItUp.Base.ViewModel.Settings
                 (value) =>
                 {
                     ChannelSession.Settings.ChatFontSize = value;
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
             this.AddSeparatorsBetweenMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.AddSeparatorsBetweenMessages, ChannelSession.Settings.AddSeparatorsBetweenMessages,
                 (value) =>
                 {
                     ChannelSession.Settings.AddSeparatorsBetweenMessages = value;
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
             this.UseAlternatingBackgroundColors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UseAlternatingBackgroundColors, ChannelSession.Settings.UseAlternatingBackgroundColors,
                 (value) =>
                 {
                     ChannelSession.Settings.UseAlternatingBackgroundColors = value;
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
             this.DisableAnimatedEmotes = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DisableAnimatedEmotes, ChannelSession.Settings.DisableAnimatedEmotes,
                 (value) =>
                 {
                     ChannelSession.Settings.DisableAnimatedEmotes = value;
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
 
             this.ShowLatestChatMessagesAtTop = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.ShowLatestChatMessagesAtTopInsteadOfBottom, ChannelSession.Settings.LatestChatAtTop,
@@ -91,25 +93,25 @@ namespace MixItUp.Base.ViewModel.Settings
                 (value) =>
                 {
                     ChannelSession.Settings.HideUserAvatar = value;
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
             this.HideUserRoleBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserRoleBadge, ChannelSession.Settings.HideUserRoleBadge,
                 (value) =>
                 {
                     ChannelSession.Settings.HideUserRoleBadge = value;
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
             this.HideUserSubscriberBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserSubscriberBadge, ChannelSession.Settings.HideUserSubscriberBadge,
                 (value) =>
                 {
                     ChannelSession.Settings.HideUserSubscriberBadge = value;
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
             this.HideUserSpecialtyBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserSpecialtyBadge, ChannelSession.Settings.HideUserSpecialtyBadge,
                 (value) =>
                 {
                     ChannelSession.Settings.HideUserSpecialtyBadge = value;
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
 
             this.UseCustomUsernameColors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UseCustomUsernameColors, ChannelSession.Settings.UseCustomUsernameColors,
@@ -117,7 +119,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 {
                     ChannelSession.Settings.UseCustomUsernameColors = value;
                     this.EnableDisableUsernameColors();
-                    GlobalEvents.ChatVisualSettingsChanged();
+                    ChatService.ChatVisualSettingsChanged();
                 });
 
             foreach (UserRoleEnum role in UserRoles.All.OrderBy(r => r))
@@ -136,7 +138,7 @@ namespace MixItUp.Base.ViewModel.Settings
                         {
                             ChannelSession.Settings.CustomUsernameRoleColors.Remove(role);
                         }
-                        GlobalEvents.ChatVisualSettingsChanged();
+                        ChatService.ChatVisualSettingsChanged();
                     }));
             }
 

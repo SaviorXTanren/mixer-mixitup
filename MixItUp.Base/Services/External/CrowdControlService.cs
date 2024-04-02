@@ -55,7 +55,7 @@ namespace MixItUp.Base.Services.External
     public class CrowdControlGamePackEffect
     {
         public string id { get; set; }
-        public string name { get; set; }
+        public JToken name { get; set; }
         public string note { get; set; }
         public string description { get; set; }
         public int price { get; set; }
@@ -64,15 +64,17 @@ namespace MixItUp.Base.Services.External
         public List<string> category { get; set; } = new List<string>();
         public int moral { get; set; }
 
-        public string Name
+        public string Name { get { return (this.name is JObject) ? this.name["public"].ToString() : this.name.ToString(); } }
+
+        public string FullName
         {
             get
             {
                 if (!string.IsNullOrWhiteSpace(this.note))
                 {
-                    return $"{this.name} - {this.note}";
+                    return $"{this.Name} - {this.note}";
                 }
-                return this.name;
+                return this.Name;
             }
         }
     }
@@ -180,11 +182,11 @@ namespace MixItUp.Base.Services.External
                             UserV2ViewModel requester = null;
                             if (string.Equals(effect.requester.profile, StreamingPlatformTypeEnum.Twitch.ToString(), StringComparison.OrdinalIgnoreCase))
                             {
-                                requester = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, effect.requester.originID);
+                                requester = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: effect.requester.originID, platformUsername: effect.requester.name);
                             }
                             else if (string.Equals(effect.requester.profile, StreamingPlatformTypeEnum.YouTube.ToString(), StringComparison.OrdinalIgnoreCase))
                             {
-                                requester = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, effect.requester.originID);
+                                requester = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: effect.requester.originID, platformUsername: effect.requester.name);
                             }
 
                             if (requester == null)

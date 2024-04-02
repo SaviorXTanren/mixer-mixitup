@@ -2,10 +2,12 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -46,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Currency
         }
         private int defaultItemMaxAmount;
 
-        public ThreadSafeObservableCollection<InventoryItemModel> Items { get; private set; } = new ThreadSafeObservableCollection<InventoryItemModel>();
+        public ObservableCollection<InventoryItemModel> Items { get; private set; } = new ObservableCollection<InventoryItemModel>();
 
         public InventoryItemModel SelectedItem
         {
@@ -308,7 +310,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.HelpCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/inventory");
+                ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/consumables/inventory");
             });
         }
 

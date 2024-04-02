@@ -43,11 +43,11 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return this.SelectedActionType == FileActionTypeEnum.ReadFromFile || this.SelectedActionType == FileActionTypeEnum.ReadSpecificLineFromFile ||
                     this.SelectedActionType == FileActionTypeEnum.ReadRandomLineFromFile || this.SelectedActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
-                    this.SelectedActionType == FileActionTypeEnum.RemoveRandomLineFromFile;
+                    this.SelectedActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.SelectedActionType == FileActionTypeEnum.CountLinesInFile;
             }
         }
 
-        public bool ShowTextToRemoveGrid { get { return this.SelectedActionType == FileActionTypeEnum.RemoveSpecificTextFromFile; } }
+        public bool ShowTextToRemoveGrid { get { return this.SelectedActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile; } }
 
         public bool ShowLineToWrite { get { return this.SelectedActionType == FileActionTypeEnum.InsertInFileAtSpecificLine; } }
 

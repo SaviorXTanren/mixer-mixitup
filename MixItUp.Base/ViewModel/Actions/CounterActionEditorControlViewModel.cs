@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Counter; } }
 
-        public ThreadSafeObservableCollection<string> Counters { get; set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> Counters { get; set; } = new ObservableCollection<string>();
 
         public bool SaveToFile
         {

@@ -67,11 +67,7 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ChannelSession.Settings.EnableVoicemodStudio && !ServiceManager.Get<IVoicemodService>().IsConnected)
             {
-                Result result = await ServiceManager.Get<IVoicemodService>().Connect();
-                if (!result.Success)
-                {
-                    return;
-                }
+                await ServiceManager.Get<IVoicemodService>().Connect();
             }
 
             if (ServiceManager.Get<IVoicemodService>().IsConnected)

@@ -67,11 +67,17 @@ namespace MixItUp.Base.Services.Twitch
     {
         private const int MaxMessageLength = 500;
 
+        private const string SlashMeMessagePrefix = "/me";
+
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
+        private const string PrimePaidUpgradeUserNoticeMessageTypeID = "primepaidupgrade";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
         private const string AnnouncementUserNoticeMessageTypeID = "announcement";
+
+        private const string ViewerMilestoneUserNoticeMessageTypeID = "viewermilestone";
+        private const string ViewerMilestoneWatchStreakUserNoticeMessageCategory = "watch-streak";
 
         private List<string> emoteSetIDs = new List<string>();
 
@@ -358,21 +364,32 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }
 
-            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+            try
             {
+                await this.userJoinLeaveEventsSemaphore.WaitAsync();
+
                 foreach (string user in this.initialUserLogins)
                 {
                     this.userJoinEvents.Add(user);
                 }
-                return Task.CompletedTask;
-            });
-            this.initialUserLogins.Clear();
+                this.initialUserLogins.Clear();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.userJoinLeaveEventsSemaphore.Release();
+            }
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
         {
-            await this.messageSemaphore.WaitAndRelease(async () =>
+            try
             {
+                await this.messageSemaphore.WaitAsync();
+
                 ChatClient client = this.GetChatClient(sendAsStreamer);
                 if (client != null)
                 {
@@ -380,6 +397,12 @@ namespace MixItUp.Base.Services.Twitch
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
+
+                        if (ChannelSession.Settings.TwitchSlashMeForAllChatMessages)
+                        {
+                            message = $"{SlashMeMessagePrefix} {message}";
+                        }
+
                         if (!string.IsNullOrEmpty(replyMessageID))
                         {
                             await client.SendReplyMessage(ServiceManager.Get<TwitchSessionService>().User, message, replyMessageID);
@@ -393,13 +416,23 @@ namespace MixItUp.Base.Services.Twitch
                     }
                     while (!string.IsNullOrEmpty(message));
                 }
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.messageSemaphore.Release();
+            }
         }
 
         public async Task SendWhisperMessage(UserV2ViewModel user, string message, bool sendAsStreamer = false)
         {
-            await this.messageSemaphore.WaitAndRelease(async () =>
+            try
             {
+                await this.messageSemaphore.WaitAsync();
+
                 ChatClient client = this.GetChatClient(sendAsStreamer);
                 UserModel sender = (!sendAsStreamer && ServiceManager.Get<TwitchSessionService>().IsBotConnected) ? ServiceManager.Get<TwitchSessionService>().Bot : ServiceManager.Get<TwitchSessionService>().User;
                 UserModel receiver = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel();
@@ -415,7 +448,15 @@ namespace MixItUp.Base.Services.Twitch
                     }
                     while (!string.IsNullOrEmpty(message));
                 }
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.messageSemaphore.Release();
+            }
         }
 
         public async Task DeleteMessage(ChatMessageViewModel message)
@@ -462,24 +503,24 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task TimeoutUser(UserV2ViewModel user, int lengthInSeconds)
+        public async Task TimeoutUser(UserV2ViewModel user, int lengthInSeconds, string reason = null)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.TimeoutUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), lengthInSeconds);
+                    await this.userClient.TimeoutUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), lengthInSeconds, string.IsNullOrEmpty(reason) ? "Manual Timeout from Mix It Up" : reason);
                 }
             });
         }
 
-        public async Task BanUser(UserV2ViewModel user)
+        public async Task BanUser(UserV2ViewModel user, string reason = null)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.BanUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), "Manual Ban from Mix It Up");
+                    await this.userClient.BanUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), string.IsNullOrEmpty(reason) ? "Manual Ban from Mix It Up" : reason);
                 }
             });
         }
@@ -511,35 +552,41 @@ namespace MixItUp.Base.Services.Twitch
         private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
         {
             List<string> joinsToProcess = new List<string>();
-            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+            List<string> leavesToProcess = new List<string>();
+
+            try
             {
+                await this.userJoinLeaveEventsSemaphore.WaitAsync();
+
                 for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userJoinEvents.Count(); i++)
                 {
                     string username = this.userJoinEvents.First();
                     joinsToProcess.Add(username);
                     this.userJoinEvents.Remove(username);
                 }
-                return Task.CompletedTask;
-            });
 
-            List<string> leavesToProcess = new List<string>();
-            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
-            {
                 for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
                 {
                     string username = this.userLeaveEvents.First();
                     leavesToProcess.Add(username);
                     this.userLeaveEvents.Remove(username);
                 }
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.userJoinLeaveEventsSemaphore.Release();
+            }
 
             if (joinsToProcess.Count > 0)
             {
                 List<UserV2ViewModel> processedUsers = new List<UserV2ViewModel>();
                 foreach (string username in joinsToProcess)
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username, performPlatformSearch: true);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformUsername: username, performPlatformSearch: true);
                     if (user != null)
                     {
                         processedUsers.Add(user);
@@ -556,7 +603,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (!string.IsNullOrEmpty(username))
                     {
-                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username);
+                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformUsername: username);
                         if (user != null)
                         {
                             processedUsers.Add(user);
@@ -601,7 +648,7 @@ namespace MixItUp.Base.Services.Twitch
                 List<UserV2ViewModel> processedUsers = new List<UserV2ViewModel>();
                 foreach (string username in joinsToProcess)
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username, performPlatformSearch: true);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformUsername: username, performPlatformSearch: true);
                     if (user != null)
                     {
                         processedUsers.Add(user);
@@ -673,31 +720,49 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnUserJoinReceived(object sender, ChatUserJoinPacketModel userJoin)
         {
-            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+            try
             {
+                await this.userJoinLeaveEventsSemaphore.WaitAsync();
+
                 if (!string.IsNullOrEmpty(userJoin.UserLogin))
                 {
                     this.userJoinEvents.Add(userJoin.UserLogin);
                 }
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.userJoinLeaveEventsSemaphore.Release();
+            }
         }
 
         private async void UserClient_OnUserLeaveReceived(object sender, ChatUserLeavePacketModel userLeave)
         {
-            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+            try
             {
+                await this.userJoinLeaveEventsSemaphore.WaitAsync();
+
                 if (!string.IsNullOrEmpty(userLeave.UserLogin))
                 {
                     this.userLeaveEvents.Add(userLeave.UserLogin);
                 }
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.userJoinLeaveEventsSemaphore.Release();
+            }
         }
 
         private void UserClient_OnUserStateReceived(object sender, ChatUserStatePacketModel userState)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, userState.UserDisplayName);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformUsername: userState.UserDisplayName);
             if (user != null)
             {
                 user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userState);
@@ -718,35 +783,84 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
                 {
-                    UserV2ViewModel gifter = UserV2ViewModel.CreateUnassociated("An Anonymous Gifter");
+                    UserV2ViewModel gifter = null;
                     if (!TwitchMassGiftedSubEventModel.IsAnonymousGifter(userNotice))
                     {
-                        gifter = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString(), performPlatformSearch: true);
-                        gifter.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userNotice.UserID.ToString(), platformUsername: userNotice.Login);
+                        if (user == null)
+                        {
+                            user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
+                        }
+                        else
+                        {
+                            user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                        }
+                    }
+                    else
+                    {
+                        gifter = UserV2ViewModel.CreateUnassociated("An Anonymous Gifter");
                     }
                     await ServiceManager.Get<TwitchPubSubService>().AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice, gifter));
                 }
-                else if (SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
+                else if (PrimePaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) || SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userNotice.UserID.ToString(), platformUsername: userNotice.Login);
                     if (user == null)
                     {
                         user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
                     }
-                    user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                    else
+                    {
+                        user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                    }
 
-                    await ServiceManager.Get<TwitchPubSubService>().AddSub(new TwitchSubEventModel(user, userNotice));
+                    TwitchSubEventModel subEvent = new TwitchSubEventModel(user, userNotice);
+                    subEvent.IsPrimeUpgrade = PrimePaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID);
+                    subEvent.IsGiftedUpgrade = SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID);
+
+                    await ServiceManager.Get<TwitchPubSubService>().AddSub(subEvent);
                 }
                 else if (AnnouncementUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userNotice.UserID.ToString(), platformUsername: userNotice.Login);
                     if (user == null)
                     {
                         user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
                     }
-                    user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                    else
+                    {
+                        user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                    }
 
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(userNotice, user));
+                }
+                else if (ViewerMilestoneUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
+                {
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userNotice.UserID.ToString(), platformUsername: userNotice.Login);
+                    if (user == null)
+                    {
+                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
+                    }
+                    else
+                    {
+                        user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                    }
+
+                    string milestoneType = userNotice.RawPacket.GetTagString("msg-param-category");
+                    if (ViewerMilestoneWatchStreakUserNoticeMessageCategory.Equals(milestoneType))
+                    {
+                        int streak = userNotice.RawPacket.GetTagInt("msg-param-value");
+                        if (streak > 0)
+                        {
+                            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
+                            parameters.SpecialIdentifiers["userwatchstreak"] = streak.ToString();
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelWatchStreak, parameters);
+                        }
+                    }
+                    else
+                    {
+                        Logger.ForceLog(LogLevel.Information, "Unknown User Milestone type: " + JSONSerializerHelper.SerializeToString(userNotice));
+                    }
                 }
             }
             catch (Exception ex)
@@ -759,7 +873,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnChatClearReceived(object sender, ChatClearChatPacketModel chatClear)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, chatClear.UserID);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: chatClear.UserID);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(chatClear));
@@ -768,6 +882,7 @@ namespace MixItUp.Base.Services.Twitch
             if (chatClear.IsClear)
             {
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.ChatCleared, ChannelSession.Settings.AlertModerationColor));
+                ChatService.ChatCleared();
             }
             else if (chatClear.IsTimeout)
             {
@@ -778,6 +893,8 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserTimeout, parameters);
 
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTimedOut, user.FullDisplayName, chatClear.BanDuration), ChannelSession.Settings.AlertModerationColor));
+
+                ChatService.ChatUserTimedOut(user);
             }
             else if (chatClear.IsBan)
             {
@@ -793,6 +910,8 @@ namespace MixItUp.Base.Services.Twitch
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertBanned, user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
 
                     await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
+
+                    ChatService.ChatUserBanned(user);
                 }
             }
         }
@@ -801,7 +920,16 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (message != null)
             {
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: message.UserID);
+                if (user == null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(message));
+                }
+                else
+                {
+                    user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(message);
+                }
+
                 TwitchChatMessageViewModel twitchMessage = null;
                 if (string.IsNullOrEmpty(message.UserLogin) || !message.UserLogin.Equals("jtv"))
                 {
@@ -814,7 +942,12 @@ namespace MixItUp.Base.Services.Twitch
 
                 if (int.TryParse(message.PinnedChatPaidAmount, out int amount) && int.TryParse(message.PinnedChatPaidExponent, out int exponent) && amount > 0)
                 {
-                    double decimalNumber = ((double)amount) / ((double)exponent);
+                    double decimalNumber = (double)amount;
+                    if (exponent > 0)
+                    {
+                        decimalNumber = decimalNumber / Math.Pow(10.0, exponent);
+                    }
+
                     CommandParametersModel parameters = (twitchMessage != null) ? new CommandParametersModel(twitchMessage) : new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
                     parameters.SpecialIdentifiers["hypechatamountnumberdigits"] = amount.ToString();
                     parameters.SpecialIdentifiers["hypechatamountnumber"] = decimalNumber.ToString();
@@ -829,7 +962,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (packet != null && !string.IsNullOrEmpty(packet.ID) && !string.IsNullOrEmpty(packet.UserLogin))
             {
-                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, packet.UserLogin);
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformUsername: packet.UserLogin);
                 if (user == null)
                 {
                     user = UserV2ViewModel.CreateUnassociated(packet.UserLogin);

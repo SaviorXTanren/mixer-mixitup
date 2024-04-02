@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
-    public class YouTubeActionEditorControlViewModel : SubActionContainerControlViewModel
+    public class YouTubeActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.YouTube; } }
 
@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.Actions
         private int amount;
 
         public YouTubeActionEditorControlViewModel(YouTubeActionModel action)
-            : base(action, action.Actions)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
 

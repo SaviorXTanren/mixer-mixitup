@@ -19,19 +19,21 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <TextBlock Grid.Row="0" Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,10" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Static resx:Resources.EnableOverlay}"/>
+
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox Grid.Column="0" x:Name="ActionTypeComboBox" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="ActionTypeComboBox_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -39,133 +41,201 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBlock Grid.Column="2" Grid.ColumnSpan="2" Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Static resx:Resources.EnableOverlay}"/>
-            
-            <ComboBox Grid.Column="2" Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-            <TextBlock Grid.Column="3" Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
-                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/special-identifiers" RequestNavigate="Hyperlink_RequestNavigate">
-                    <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
-                </Hyperlink>
-            </TextBlock>
+            <Grid Grid.Column="2" Visibility="{Binding ShowItem, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox Grid.Column="0" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                <TextBox Grid.Column="2" Text="{Binding Duration}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowShowHideWidgetGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Grid.Row="3" Visibility="{Binding ShowItem, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Style="{StaticResource DefaultBorder}">
+                <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                    <TabItem Header="{x:Static resx:Resources.Details}" HorizontalAlignment="Stretch">
+                        <ContentControl x:Name="InnerContent" Margin="10" />
+                    </TabItem>
+
+                    <TabItem Header="{x:Static resx:Resources.Position}" HorizontalContentAlignment="Stretch">
+                        <OverlayControls:OverlayPositionV3Control x:Name="Position" DataContext="{Binding Position}" Margin="10" />
+                    </TabItem>
+
+                    <TabItem Header="{x:Static resx:Resources.Animation}">
+                        <Grid HorizontalAlignment="Center" Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EntranceAnimation}" TextDecorations="Underline" />
+                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
+                            </Grid>
+
+                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.ExitAnimation}" TextDecorations="Underline" />
+                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="{x:Static resx:Resources.HTML}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource DefaultBorder}">
+                                <TextBox Text="{Binding HTML}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
+                            </Border>
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="{x:Static resx:Resources.CSS}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource DefaultBorder}">
+                                <TextBox Text="{Binding CSS}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
+                            </Border>
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="{x:Static resx:Resources.Javascript}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource DefaultBorder}">
+                                <TextBox Text="{Binding Javascript}" Style="{StaticResource OverlayEditorMultiLineTextBox}" Height="250" />
+                            </Border>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowWidget, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Widgets}" SelectedItem="{Binding SelectedWidget}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="4" IsChecked="{Binding ShowHideWidgetValue}" />
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowDamageStreamBoss, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding StreamBosses}" SelectedItem="{Binding SelectedStreamBoss}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox Grid.Column="2" Text="{Binding StreamBossDamageAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ForceDamage}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="6" IsChecked="{Binding StreamBossForceDamage}" />
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowAddGoal, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Widgets}" SelectedItem="{Binding SelectedWidget}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Widget}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoal}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,10,0,0" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <ToggleButton Grid.Column="4" IsChecked="{Binding WidgetVisible}" Margin="0,10,0,0" />
+            <TextBox Grid.Column="2" Text="{Binding GoalAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowItemGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Grid.Row="3" Visibility="{Binding ShowAddPersistTimer, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding PersistentTimers}" SelectedItem="{Binding SelectedPersistentTimer}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox Grid.Column="2" Text="{Binding TimeAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowAddToEndCredits, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayTextItemControl DataContext="{Binding TextItemViewModel}" />
-            </Grid>
+            <ComboBox Grid.Row="0" ItemsSource="{Binding EndCredits}" SelectedItem="{Binding SelectedEndCredits}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayImageItemControl DataContext="{Binding ImageItemViewModel}" />
-            </Grid>
+            <ComboBox Grid.Row="2" ItemsSource="{Binding EndCreditsSections}" SelectedItem="{Binding SelectedEndCreditsSection}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Sections}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayVideoItemControl DataContext="{Binding VideoItemViewModel}" />
-            </Grid>
+            <TextBox Grid.Row="4" Text="{Binding EndCreditsItemText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Text}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayYouTubeItemControl  DataContext="{Binding YouTubeItemViewModel}" />
-            </Grid>
+        <Grid Grid.Row="3" Visibility="{Binding ShowPlayEndCredits, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayWebPageItemControl DataContext="{Binding WebPageItemViewModel}" />
-            </Grid>
+            <ComboBox Grid.Row="0" ItemsSource="{Binding EndCredits}" SelectedItem="{Binding SelectedEndCredits}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        </Grid>
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayHTMLItemControl Margin="0,10,0,10" DataContext="{Binding HTMLItemViewModel}" />
-            </Grid>
+        <Grid Grid.Row="3" Visibility="{Binding ShowPlayEndCredits, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <ComboBox Grid.Row="0" ItemsSource="{Binding EndCredits}" SelectedItem="{Binding SelectedEndCredits}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        </Grid>
 
-                <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
-                    <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
-                </Border>
+        <Grid Grid.Row="3" Visibility="{Binding ShowAddToEventList, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
-                    <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="15" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="15" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+            <ComboBox Grid.Column="0" ItemsSource="{Binding EventLists}" SelectedItem="{Binding SelectedEventList}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <TextBox Grid.Row="0" Text="{Binding ItemDuration}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSec}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
-
-                        <Grid Grid.Row="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel x:Name="AnimationsMayNotWork" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,10" Orientation="Vertical">
-                                <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning1}"/>
-                                <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning2}"/>
-                                <TextBlock>
-                                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/overlay#windows-settings-overlay-animation-issue" RequestNavigate="Hyperlink_RequestNavigate">
-                                    <TextBlock Text="{x:Static resx:Resources.OverlayWarning3}"/>
-                                </Hyperlink>
-                            </TextBlock>
-                            </StackPanel>
-
-                            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding EntranceAnimations}" SelectedItem="{Binding SelectedEntranceAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EntranceAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-
-                            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding ExitAnimations}" SelectedItem="{Binding SelectedExitAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExitAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </Grid>
-
-                        <ComboBox Grid.Row="4" ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding SelectedVisibleAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VisibleAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </Grid>
-                </Border>
-            </Grid>
+            <TextBox Grid.Column="2" Text="{Binding EventListDetails}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Details}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

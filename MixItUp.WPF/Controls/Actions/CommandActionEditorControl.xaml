@@ -85,18 +85,31 @@
             </Grid>
 
             <Grid Grid.Row="1" Visibility="{Binding ShowCommandRunSection, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <TextBox Grid.Column="0" Text="{Binding CommandArguments}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OptionalCommandArguments}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Row="0" Text="{Binding CommandArguments}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OptionalCommandArguments}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.WaitUntilComplete}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{x:Static resx:Resources.CommandActionWaitUntilCompleteHintText}" VerticalAlignment="Center" />
-                <ToggleButton Grid.Column="4" IsChecked="{Binding WaitForCommandToFinish}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandActionWaitUntilCompleteHintText}" VerticalAlignment="Center" />
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.WaitUntilComplete}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{x:Static resx:Resources.CommandActionWaitUntilCompleteHintText}" VerticalAlignment="Center" />
+                    <ToggleButton Grid.Column="2" IsChecked="{Binding WaitForCommandToFinish}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandActionWaitUntilCompleteHintText}" VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.IgnoreUsageRequirements}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{x:Static resx:Resources.IgnoreUsageRequirements}" VerticalAlignment="Center" />
+                    <ToggleButton Grid.Column="6" IsChecked="{Binding IgnoreUsageRequirements}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.IgnoreUsageRequirements}" VerticalAlignment="Center" />
+                </Grid>
             </Grid>
 
             <Grid Grid.Row="1" Visibility="{Binding ShowCommandCooldownSection, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0">

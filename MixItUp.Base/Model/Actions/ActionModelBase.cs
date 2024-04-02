@@ -37,7 +37,6 @@ namespace MixItUp.Base.Model.Actions
         [Obsolete]
         Twitter,
         Conditional,
-        [Name("StreamingSoftware")]
         StreamingSoftware,
         Streamlabs,
         Command,
@@ -57,6 +56,9 @@ namespace MixItUp.Base.Model.Actions
         TITS,
         MusicPlayer,
         LumiaStream,
+        Random,
+        Script,
+        Group
     }
 
     [DataContract]

@@ -7,7 +7,6 @@ using NAudio.Wave;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -39,13 +38,14 @@ namespace MixItUp.WPF.Services
             }
         }
 
-        public ObservableCollection<MusicPlayerSong> Songs { get { return this.songs; } }
+        public ThreadSafeObservableCollection<MusicPlayerSong> Songs { get { return this.songs; } }
 
         private ThreadSafeObservableCollection<MusicPlayerSong> songs = new ThreadSafeObservableCollection<MusicPlayerSong>();
         private int currentSongIndex = 0;
 
         private CancellationTokenSource backgroundPlayThreadTokenSource = new CancellationTokenSource();
         private WaveOutEvent currentWaveOutEvent;
+        private WaveStream currentWaveStream;
 
         private SemaphoreSlim sempahore = new SemaphoreSlim(1); 
 
@@ -60,24 +60,43 @@ namespace MixItUp.WPF.Services
             {
                 if (this.State == MusicPlayerState.Paused)
                 {
-                    await this.sempahore.WaitAndRelease(() =>
+                    try
                     {
+                        await this.sempahore.WaitAsync();
+
                         this.State = MusicPlayerState.Playing;
                         if (this.currentWaveOutEvent != null)
                         {
                             this.currentWaveOutEvent.Play();
                         }
-                        return Task.CompletedTask;
-                    });
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                    finally
+                    {
+                        this.sempahore.Release();
+                    }
                 }
                 else if (this.State == MusicPlayerState.Stopped)
                 {
-                    await this.sempahore.WaitAndRelease(() =>
+                    try
                     {
+                        await this.sempahore.WaitAsync();
+
                         this.State = MusicPlayerState.Playing;
                         this.PlayInternal(this.CurrentSong.FilePath);
-                        return Task.CompletedTask;
-                    });
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                    finally
+                    {
+                        this.sempahore.Release();
+                    }
+
                     this.SongChanged.Invoke(this, new EventArgs());
 
                     await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.MusicPlayerOnSongChangedCommandID, new CommandParametersModel());
@@ -89,22 +108,33 @@ namespace MixItUp.WPF.Services
         {
             if (this.State == MusicPlayerState.Playing)
             {
-                await this.sempahore.WaitAndRelease(() =>
+                try
                 {
+                    await this.sempahore.WaitAsync();
+
                     this.State = MusicPlayerState.Paused;
                     if (this.currentWaveOutEvent != null)
                     {
                         this.currentWaveOutEvent.Pause();
                     }
-                    return Task.CompletedTask;
-                });
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    this.sempahore.Release();
+                }
             }
         }
 
         public async Task Stop()
         {
-            await this.sempahore.WaitAndRelease(() =>
+            try
             {
+                await this.sempahore.WaitAsync();
+
                 this.State = MusicPlayerState.Stopped;
 
                 if (this.currentWaveOutEvent != null)
@@ -118,57 +148,98 @@ namespace MixItUp.WPF.Services
                     this.backgroundPlayThreadTokenSource.Cancel();
                 }
                 this.backgroundPlayThreadTokenSource = null;
-
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sempahore.Release();
+            }
         }
 
         public async Task Next()
         {
             await this.Stop();
-            await this.sempahore.WaitAndRelease(() =>
+
+            try
             {
+                await this.sempahore.WaitAsync();
+
                 this.currentSongIndex++;
                 if (this.currentSongIndex >= this.songs.Count)
                 {
                     this.currentSongIndex = 0;
                 }
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sempahore.Release();
+            }
+
             await this.Play();
         }
 
         public async Task Previous()
         {
             await this.Stop();
-            await this.sempahore.WaitAndRelease(() =>
+
+            try
             {
+                await this.sempahore.WaitAsync();
+
                 this.currentSongIndex--;
                 if (this.currentSongIndex < 0)
                 {
                     this.currentSongIndex = Math.Max(this.songs.Count - 1, 0);
                 }
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sempahore.Release();
+            }
+
             await this.Play();
         }
 
         public async Task ChangeVolume(int amount)
         {
-            await this.sempahore.WaitAndRelease(() =>
+            try
             {
+                await this.sempahore.WaitAsync();
+
                 this.Volume = amount;
-                if (this.currentWaveOutEvent != null)
+                if (this.currentWaveStream != null && this.currentWaveStream is AudioFileReader)
+                {
+                    ((AudioFileReader)this.currentWaveStream).Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
+                }
+                else if (this.currentWaveOutEvent != null)
                 {
                     this.currentWaveOutEvent.Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
                 }
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sempahore.Release();
+            }
         }
 
         public async Task LoadSongs()
         {
-            await Task.Run(() => this.sempahore.WaitAndRelease(async () =>
+            await Task.Run(async () =>
             {
                 ISet<string> allowedFileExtensions = ServiceManager.Get<IAudioService>().ApplicableAudioFileExtensions;
                 WindowsFileService fileService = ServiceManager.Get<IFileService>() as WindowsFileService;
@@ -249,12 +320,25 @@ namespace MixItUp.WPF.Services
                     tempSongs.Add(song);
                 }
 
-                this.songs.Clear();
-                foreach (MusicPlayerSong song in tempSongs.Shuffle())
+                try
                 {
-                    this.songs.Add(song);
+                    await this.sempahore.WaitAsync();
+
+                    this.songs.Clear();
+                    foreach (MusicPlayerSong song in tempSongs.Shuffle())
+                    {
+                        this.songs.Add(song);
+                    }
                 }
-            }));
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    this.sempahore.Release();
+                }
+            });
         }
 
         public async Task<MusicPlayerSong> SearchAndPlaySong(string searchText)
@@ -286,7 +370,9 @@ namespace MixItUp.WPF.Services
             this.backgroundPlayThreadTokenSource = new CancellationTokenSource();
 
             WindowsAudioService audioService = ServiceManager.Get<IAudioService>() as WindowsAudioService;
-            this.currentWaveOutEvent = audioService.PlayWithOutput(filePath, this.Volume, ChannelSession.Settings.MusicPlayerAudioOutput);
+            Tuple<WaveOutEvent, WaveStream> output = audioService.PlayWithOutput(filePath, this.Volume, ChannelSession.Settings.MusicPlayerAudioOutput);
+            this.currentWaveOutEvent = output.Item1;
+            this.currentWaveStream = output.Item2;
             Task backgroundPlayThreadTask = Task.Run(async () => await this.PlayBackground(this.currentWaveOutEvent, this.currentSongIndex), this.backgroundPlayThreadTokenSource.Token);
         }
 
@@ -300,7 +386,7 @@ namespace MixItUp.WPF.Services
                 }
                 waveOutEvent.Dispose();
 
-                if (this.currentSongIndex == songIndex)
+                if (this.currentSongIndex == songIndex && this.State == MusicPlayerState.Playing)
                 {
                     await this.Next();
                 }

@@ -68,13 +68,18 @@ namespace MixItUp.Base.Model.Actions
                     httpClient.DefaultRequestHeaders.Add("Twitch-UserID", ServiceManager.Get<TwitchSessionService>()?.UserID ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", ServiceManager.Get<TwitchSessionService>().Username ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("YouTube-UserID", ServiceManager.Get<YouTubeSessionService>()?.UserID ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("YouTube-UserLogin", ServiceManager.Get<YouTubeSessionService>().Username ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("YouTube-UserLogin", Uri.EscapeDataString(ServiceManager.Get<YouTubeSessionService>().Username ?? string.Empty));
                     httpClient.DefaultRequestHeaders.Add("Trovo-UserID", ServiceManager.Get<TrovoSessionService>()?.UserID ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("Trovo-UserLogin", ServiceManager.Get<TrovoSessionService>().Username ?? string.Empty);
 
                     string targetUrl = await ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true);
                     using (HttpResponseMessage response = await httpClient.GetAsync(targetUrl))
                     {
+                        if (string.Equals(response?.Content?.Headers?.ContentType?.CharSet, "utf8"))
+                        {
+                            response.Content.Headers.ContentType.CharSet = "utf-8";
+                        }
+
                         if (response.IsSuccessStatusCode)
                         {
                             await this.ProcessContents(parameters, await response.Content.ReadAsStringAsync());

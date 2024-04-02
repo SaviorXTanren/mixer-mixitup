@@ -26,28 +26,42 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.OverlayEndpoints}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
+                <TextBox Grid.Column="0" Text="{Binding PortNumber}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PortNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Button Grid.Column="2" Command="{Binding UpdatePortNumberCommand}" Content="{x:Static resx:Resources.Update}" />
+            </Grid>
+
+            <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.OverlayEndpoints}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="4" BorderThickness="1">
                 <ItemsControl ItemsSource="{Binding Endpoints}" HorizontalAlignment="Center">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="125" />
-                                    <ColumnDefinition Width="15" />
-                                    <ColumnDefinition Width="200" />
+                                    <ColumnDefinition Width="300" />
                                     <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+                                <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-                                <TextBlock Grid.Column="2" VerticalAlignment="Center"><Hyperlink NavigateUri="{Binding Address}" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{Binding Address}"/></Hyperlink></TextBlock>
+                                <Controls:IconButton Grid.Column="2" x:Name="LaunchEndpointURLButton" Click="LaunchEndpointURLButton_Click" Icon="Launch" ToolTip="{x:Static resx:Resources.Link}" />
 
                                 <Controls:IconButton Grid.Column="4" x:Name="CopyEndpointURLButton" Click="CopyEndpointURLButton_Click" Icon="ContentCopy" ToolTip="{x:Static resx:Resources.Copy}" />
 
@@ -58,16 +72,16 @@
                 </ItemsControl>
             </Border>
 
-            <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid Grid.Row="6" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Text="{Binding NewEndpointName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
-
-                <Button Grid.Column="2" Command="{Binding AddCommand}" Content="{x:Static resx:Resources.Add}"/>
+                <TextBox Grid.Column="0" Text="{Binding NewEndpointName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="300" />
+                
+                <Button Grid.Column="4" Command="{Binding AddCommand}" Content="{x:Static resx:Resources.Add}"/>
             </Grid>
         </Grid>
 

@@ -8,8 +8,10 @@ using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -58,214 +60,109 @@ namespace MixItUp.Base.Services
 
         public async Task<UserV2ViewModel> GetUserByID(Guid id)
         {
-            if (this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
+            UserV2ViewModel user = this.GetCachedUserByID(id);
+            if (user == null)
             {
-                return user;
+                user = await this.GetDatabaseUserByID(id);
             }
-
-            if (ChannelSession.Settings.Users.ContainsKey(id))
-            {
-                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.Users[id]);
-            }
-
-            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users WHERE ID = $ID", new Dictionary<string, object>() { { "$ID", id.ToString() } });
-            if (results.Count() > 0)
-            {
-                this.SetUserData(results.First());
-                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, results.First());
-            }
-
-            return null;
+            return user;
         }
 
-        public async Task<UserV2ViewModel> GetUserByPlatformID(StreamingPlatformTypeEnum platform, string platformID, bool performPlatformSearch = false)
+        public async Task<UserV2ViewModel> GetUserByPlatform(StreamingPlatformTypeEnum platform, string platformID = null, string platformUsername = null, bool performPlatformSearch = false)
         {
             UserV2ViewModel user = null;
 
-            if (string.IsNullOrEmpty(platformID))
+            if (string.IsNullOrEmpty(platformID) && string.IsNullOrEmpty(platformUsername))
             {
-                return user;
+                throw new ArgumentException("Neither PlatformID or PlatformUsername were specified");
             }
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
-                return user;
-            }
-
-            if (this.platformUserIDLookups.ContainsKey(platform) && this.platformUserIDLookups[platform].TryGetValue(platformID, out Guid id))
-            {
-                user = await this.GetUserByID(id);
+                user = await this.GetUserByPlatform(ChannelSession.Settings.DefaultStreamingPlatform, platformID, platformUsername);
                 if (user != null)
                 {
                     return user;
                 }
+
+                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.GetConnectedPlatforms().Where(p => p != ChannelSession.Settings.DefaultStreamingPlatform))
+                {
+                    user = await this.GetUserByPlatform(p, platformID, platformUsername);
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+                return null;
             }
 
-            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform.ToString()}ID = $PlatformID", new Dictionary<string, object>() { { "$PlatformID", platformID } });
-            if (results.Count() > 0)
+            user = this.GetCachedUserByPlatform(platform, platformID: platformID, platformUsername: platformUsername);
+            if (user == null)
             {
-                this.SetUserData(results.First());
-                return new UserV2ViewModel(platform, results.First());
+                user = await this.GetDatabaseUserByPlatform(platform, platformID: platformID, platformUsername: platformUsername);
             }
 
-            if (performPlatformSearch)
+            if (user == null)
             {
                 UserPlatformV2ModelBase platformModel = null;
-                if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
+                if (performPlatformSearch)
                 {
-                    var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(platformID);
-                    if (twitchUser != null)
+                    if (!string.IsNullOrEmpty(platformID))
                     {
-                        platformModel = new TwitchUserPlatformV2Model(twitchUser);
+                        if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
+                        {
+                            var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(platformID);
+                            if (twitchUser != null)
+                            {
+                                platformModel = new TwitchUserPlatformV2Model(twitchUser);
+                            }
+                        }
+                        else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
+                        {
+                            var youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(platformID);
+                            if (youtubeUser != null)
+                            {
+                                platformModel = new YouTubeUserPlatformV2Model(youtubeUser);
+                            }
+                        }
+                        else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
+                        {
+                            // Trovo does not support user look-up by user ID
+                        }
                     }
-                }
-                else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
-                {
-                    var youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(platformID);
-                    if (youtubeUser != null)
+
+                    if (!string.IsNullOrEmpty(platformUsername))
                     {
-                        platformModel = new YouTubeUserPlatformV2Model(youtubeUser);
+                        if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
+                        {
+                            var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(platformUsername);
+                            if (twitchUser != null)
+                            {
+                                platformModel = new TwitchUserPlatformV2Model(twitchUser);
+                            }
+                        }
+                        else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
+                        {
+                            var youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(platformUsername);
+                            if (youtubeUser != null)
+                            {
+                                platformModel = new YouTubeUserPlatformV2Model(youtubeUser);
+                            }
+                        }
+                        else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
+                        {
+                            var trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(platformUsername);
+                            if (trovoUser != null)
+                            {
+                                platformModel = new TrovoUserPlatformV2Model(trovoUser);
+                            }
+                        }
                     }
-                }
-                else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
-                {
-                    throw new InvalidOperationException("Trovo does not support user look-up by user ID");
-                }
 
-                if (platformModel != null)
-                {
-                    return await this.CreateUserInternal(platformModel);
-                }
-            }
-
-            return null;
-        }
-
-        public async Task<UserV2ViewModel> GetUserByPlatformUsername(StreamingPlatformTypeEnum platform, string platformUsername, bool performPlatformSearch = false)
-        {
-            UserV2ViewModel user = null;
-
-            platformUsername = UserService.SanitizeUsername(platformUsername);
-            if (string.IsNullOrEmpty(platformUsername))
-            {
-                return user;
-            }
-            platformUsername = platformUsername.ToLower();
-
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
-            {
-                await StreamingPlatforms.ForEachPlatform(async (p) =>
-                {
-                    if (user == null)
+                    if (platformModel != null)
                     {
-                        user = await this.GetUserByPlatformUsername(p, platformUsername, performPlatformSearch);
+                        user = await this.CreateUserInternal(platformModel);
                     }
-                });
-                return user;
-            }
-
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
-            {
-                user = await this.GetUserByID(id);
-                if (user != null)
-                {
-                    return user;
-                }
-            }
-
-            if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out id))
-            {
-                user = await this.GetUserByID(id);
-                if (user != null)
-                {
-                    return user;
-                }
-            }
-
-            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform}Username = $PlatformUsername", new Dictionary<string, object>() { { "$PlatformUsername", platformUsername } });
-            if (results.Count() > 0)
-            {
-                this.SetUserData(results.First());
-                return new UserV2ViewModel(platform, results.First());
-            }
-
-            if (performPlatformSearch)
-            {
-                UserPlatformV2ModelBase platformModel = null;
-                if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
-                {
-                    var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(platformUsername);
-                    if (twitchUser != null)
-                    {
-                        platformModel = new TwitchUserPlatformV2Model(twitchUser);
-                    }
-                }
-                else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
-                {
-                    var youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(platformUsername);
-                    if (youtubeUser != null)
-                    {
-                        platformModel = new YouTubeUserPlatformV2Model(youtubeUser);
-                    }
-                }
-                else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
-                {
-                    var trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(platformUsername);
-                    if (trovoUser != null)
-                    {
-                        platformModel = new TrovoUserPlatformV2Model(trovoUser);
-                    }
-                }
-
-                if (platformModel != null)
-                {
-                    // Check to see if the user already exists by a different name
-                    UserV2ViewModel existingUser = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
-                    if (existingUser != null)
-                    {
-                        return existingUser;
-                    }
-                    else
-                    {
-                        return await this.CreateUserInternal(platformModel);
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public async Task<UserV2ViewModel> CreateUser(StreamingPlatformTypeEnum platform, string username)
-        {
-            UserV2ViewModel user = null;
-
-            if (!StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
-            {
-                return user;
-            }
-
-            if (platform == StreamingPlatformTypeEnum.Twitch)
-            {
-                var tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
-                if (tUser != null)
-                {
-                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(tUser));
-                }
-            }
-            else if (platform == StreamingPlatformTypeEnum.YouTube)
-            {
-                var yUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(username);
-                if (yUser != null)
-                {
-                    user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(yUser));
-                }
-            }
-            else if (platform == StreamingPlatformTypeEnum.Trovo)
-            {
-                var tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
-                if (tUser != null)
-                {
-                    user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(tUser));
                 }
             }
 
@@ -276,7 +173,7 @@ namespace MixItUp.Base.Services
         {
             if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
             {
-                UserV2ViewModel user = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
+                UserV2ViewModel user = await this.GetUserByPlatform(platformModel.Platform, platformModel.ID, platformModel.Username);
                 if (user == null)
                 {
                     return await this.CreateUserInternal(platformModel);
@@ -284,6 +181,17 @@ namespace MixItUp.Base.Services
                 return user;
             }
             return null;
+        }
+
+        public async Task<IEnumerable<UserV2Model>> LoadQuantityOfUserData(int amount)
+        {
+            List<UserV2Model> results = new List<UserV2Model>();
+            foreach (UserV2Model userData in await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users LIMIT {amount}", new Dictionary<string, object>()))
+            {
+                this.SetUserData(userData);
+                results.Add(userData);
+            }
+            return results;
         }
 
         public async Task LoadAllUserData()
@@ -316,13 +224,17 @@ namespace MixItUp.Base.Services
 
                 ChannelSession.Settings.Users.Remove(user.ID);
             }
+            ChannelSession.Settings.Users.ManualValueDeleted(id);
         }
 
         public async Task ClearUserDataRange(int days)
         {
-            this.platformUserIDLookups.Clear();
-            this.platformUsernameLookups.Clear();
-            this.platformDisplayNameLookups.Clear();
+            StreamingPlatforms.ForEachPlatform(p =>
+            {
+                this.platformUserIDLookups[p].Clear();
+                this.platformUsernameLookups[p].Clear();
+                this.platformDisplayNameLookups[p].Clear();
+            });
             this.activeUsers.Clear();
 
             await this.LoadAllUserData();
@@ -344,9 +256,12 @@ namespace MixItUp.Base.Services
 
         public async Task ClearAllUserData()
         {
-            this.platformUserIDLookups.Clear();
-            this.platformUsernameLookups.Clear();
-            this.platformDisplayNameLookups.Clear();
+            StreamingPlatforms.ForEachPlatform(p =>
+            {
+                this.platformUserIDLookups[p].Clear();
+                this.platformUsernameLookups[p].Clear();
+                this.platformDisplayNameLookups[p].Clear();
+            });
             this.activeUsers.Clear();
 
             ChannelSession.Settings.Users.Clear();
@@ -356,10 +271,11 @@ namespace MixItUp.Base.Services
             await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM ImportedUsers");
         }
 
-        public void SetUserData(UserV2Model userData)
+        public UserV2Model SetUserData(UserV2Model userData)
         {
             if (userData != null && userData.ID != Guid.Empty && userData.GetPlatforms().Count() > 0 && !userData.HasPlatformData(StreamingPlatformTypeEnum.None))
             {
+                UserV2Model userDataToDelete = null;
                 lock (ChannelSession.Settings.Users)
                 {
                     if (!ChannelSession.Settings.Users.ContainsKey(userData.ID))
@@ -376,15 +292,176 @@ namespace MixItUp.Base.Services
                     foreach (StreamingPlatformTypeEnum platform in userData.GetPlatforms())
                     {
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
-                        this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
-                        this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
-                        if (!string.IsNullOrEmpty(platformModel.DisplayName))
+                        if (platformModel != null)
                         {
-                            this.platformDisplayNameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                            // Check if there is more than 1 user record and if so, merge them together
+                            try
+                            {
+                                if (this.platformUserIDLookups[platform].TryGetValue(platformModel.ID, out Guid existingUserID) &&
+                                    existingUserID != userData.ID &&
+                                    ChannelSession.Settings.Users.TryGetValue(existingUserID, out UserV2Model existingUserData))
+                                {
+                                    existingUserData.MergeUserData(userData);
+                                    userDataToDelete = userData;
+                                    userData = existingUserData;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex);
+                            }
+
+                            this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
+                            if (!string.IsNullOrEmpty(platformModel.Username))
+                            {
+                                this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
+                            }
+                            if (!string.IsNullOrEmpty(platformModel.DisplayName))
+                            {
+                                this.platformDisplayNameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                            }
                         }
                     }
                 }
+
+                if (userDataToDelete != null)
+                {
+                    this.DeleteUserData(userDataToDelete.ID);
+                }
             }
+            return userData;
+        }
+
+        private UserV2ViewModel GetCachedUserByID(Guid id)
+        {
+            if (this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
+            {
+                return user;
+            }
+
+            if (ChannelSession.Settings.Users.ContainsKey(id))
+            {
+                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.Users[id]);
+            }
+
+            return null;
+        }
+
+        private async Task<UserV2ViewModel> GetDatabaseUserByID(Guid id)
+        {
+            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users WHERE ID = $ID", new Dictionary<string, object>() { { "$ID", id.ToString() } });
+            if (results.Count() > 0)
+            {
+                UserV2Model userData = this.SetUserData(results.First());
+                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, userData);
+            }
+            return null;
+        }
+
+        private UserV2ViewModel GetCachedUserByPlatform(StreamingPlatformTypeEnum platform, string platformID = null, string platformUsername = null)
+        {
+            UserV2ViewModel user = null;
+
+            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            {
+                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.GetConnectedPlatforms())
+                {
+                    user = GetCachedUserByPlatform(p, platformID, platformUsername);
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+                return null;
+            }
+
+            Guid userId;
+            if (!string.IsNullOrEmpty(platformID))
+            {
+                if (this.platformUserIDLookups.ContainsKey(platform) && this.platformUserIDLookups[platform].TryGetValue(platformID, out userId))
+                {
+                    user = this.GetCachedUserByID(userId);
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(platformUsername))
+            {
+                platformUsername = UserService.SanitizeUsername(platformUsername);
+                if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out userId))
+                {
+                    user = this.GetCachedUserByID(userId);
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+
+                if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out userId))
+                {
+                    user = this.GetCachedUserByID(userId);
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<UserV2ViewModel> GetDatabaseUserByPlatform(StreamingPlatformTypeEnum platform, string platformID = null, string platformUsername = null)
+        {
+            if (!string.IsNullOrEmpty(platformID))
+            {
+                IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform.ToString()}ID = $PlatformID", new Dictionary<string, object>() { { "$PlatformID", platformID } });
+                if (results.Count() > 0)
+                {
+                    // Check if there is more than 1 user record and if so, merge them together
+                    UserV2Model userData = results.First();
+                    if (results.Count() > 1)
+                    {
+                        userData = this.MergeData(results);
+                    }
+
+                    userData = this.SetUserData(userData);
+                    return new UserV2ViewModel(platform, userData);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(platformUsername))
+            {
+                IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform}Username = $PlatformUsername", new Dictionary<string, object>() { { "$PlatformUsername", platformUsername } });
+                if (results.Count() > 0)
+                {
+                    // Check if there is more than 1 user record and if so, merge them together
+                    UserV2Model userData = results.First();
+                    if (results.Count() > 1)
+                    {
+                        userData = this.MergeData(results);
+                    }
+
+                    userData = this.SetUserData(userData);
+                    return new UserV2ViewModel(platform, userData);
+                }
+            }
+
+            return null;
+        }
+
+        private UserV2Model MergeData(IEnumerable<UserV2Model> users)
+        {
+            UserV2Model primaryUserData = users.First();
+            foreach (UserV2Model duplicateUserData in users.Skip(1))
+            {
+                primaryUserData.MergeUserData(duplicateUserData);
+                this.DeleteUserData(duplicateUserData.ID);
+            }
+            ChannelSession.Settings.Users.ManualValueChanged(primaryUserData.ID);
+            return primaryUserData;
         }
 
         private async Task<UserV2ViewModel> CreateUserInternal(UserPlatformV2ModelBase platformModel)
@@ -392,11 +469,11 @@ namespace MixItUp.Base.Services
             if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
             {
                 UserV2Model userModel = new UserV2Model(platformModel);
-                UserV2ViewModel user = new UserV2ViewModel(platformModel.Platform, userModel);
-
+                UserV2ViewModel user = null;
                 if (platformModel.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    this.SetUserData(userModel);
+                    userModel = this.SetUserData(userModel);
+                    user = new UserV2ViewModel(platformModel.Platform, userModel);
 
                     UserImportModel import = await ChannelSession.Settings.LoadUserImportData(platformModel.Platform, platformModel.ID, platformModel.Username);
                     if (import != null)
@@ -405,6 +482,11 @@ namespace MixItUp.Base.Services
                         ChannelSession.Settings.ImportedUsers.Remove(import.ID);
                     }
                 }
+                else
+                {
+                    user = new UserV2ViewModel(platformModel.Platform, userModel);
+                }
+
                 return user;
             }
             return null;
@@ -423,73 +505,13 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public UserV2ViewModel GetActiveUserByPlatformID(StreamingPlatformTypeEnum platform, string platformID)
+        public UserV2ViewModel GetActiveUserByPlatform(StreamingPlatformTypeEnum platform, string platformID = null, string platformUsername = null)
         {
-            UserV2ViewModel user = null;
-
-            if (string.IsNullOrEmpty(platformID))
+            UserV2ViewModel user = this.GetCachedUserByPlatform(platform, platformID: platformID, platformUsername: platformUsername);
+            if (user != null)
             {
-                return user;
+                return this.GetActiveUserByID(user.ID);
             }
-
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
-            {
-                return user;
-            }
-
-            if (this.platformUserIDLookups.ContainsKey(platform) && this.platformUserIDLookups[platform].TryGetValue(platformID, out Guid id))
-            {
-                user = this.GetActiveUserByID(id);
-                if (user != null)
-                {
-                    return user;
-                }
-            }
-
-            return null;
-        }
-
-        public UserV2ViewModel GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum platform, string platformUsername)
-        {
-            UserV2ViewModel user = null;
-
-            platformUsername = UserService.SanitizeUsername(platformUsername);
-            if (string.IsNullOrEmpty(platformUsername))
-            {
-                return user;
-            }
-            platformUsername = platformUsername.ToLower();
-
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
-            {
-                StreamingPlatforms.ForEachPlatform(p =>
-                {
-                    if (user == null)
-                    {
-                        user = this.GetActiveUserByPlatformUsername(p, platformUsername);
-                    }
-                });
-                return user;
-            }
-
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
-            {
-                user = this.GetActiveUserByID(id);
-                if (user != null)
-                {
-                    return user;
-                }
-            }
-
-            if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out id))
-            {
-                user = this.GetActiveUserByID(id);
-                if (user != null)
-                {
-                    return user;
-                }
-            }
-
             return null;
         }
 

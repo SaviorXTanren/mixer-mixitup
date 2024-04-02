@@ -32,7 +32,7 @@ namespace MixItUp.Base.Services
             {
                 this.isInitialized = true;
 
-                GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+                ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
 
                 await this.RebuildTimerGroups();
 
@@ -44,8 +44,10 @@ namespace MixItUp.Base.Services
 
         public async Task RebuildTimerGroups()
         {
-            await this.timerCommandGroupSemaphore.WaitAndRelease(() =>
+            try
             {
+                await this.timerCommandGroupSemaphore.WaitAsync();
+
                 this.timerCommandGroups.Clear();
                 this.timerCommandGroups[string.Empty] = new List<TimerCommandModel>();
                 foreach (var kvp in ChannelSession.Settings.CommandGroups)
@@ -86,12 +88,18 @@ namespace MixItUp.Base.Services
                 {
                     this.timerCommandIndexes[kvp.Key] = 0;
                 }
-
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.timerCommandGroupSemaphore.Release();
+            }
         }
 
-        private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        private void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
             if (message is UserChatMessageViewModel)
             {
@@ -124,8 +132,11 @@ namespace MixItUp.Base.Services
             }
 
             List<string> timerGroupsToRun = new List<string>();
-            await this.timerCommandGroupSemaphore.WaitAndRelease(() =>
+
+            try
             {
+                await this.timerCommandGroupSemaphore.WaitAsync();
+
                 groupTotalTime++;
                 foreach (var kvp in ChannelSession.Settings.CommandGroups)
                 {
@@ -153,9 +164,15 @@ namespace MixItUp.Base.Services
                         nonGroupTotalTime = 0;
                     }
                 }
-
-                return Task.CompletedTask;
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.timerCommandGroupSemaphore.Release();
+            }
 
             foreach (string timerGroupToRun in timerGroupsToRun)
             {

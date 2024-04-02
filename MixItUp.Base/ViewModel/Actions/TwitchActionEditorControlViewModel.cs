@@ -13,7 +13,7 @@ using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
-    public class TwitchActionEditorControlViewModel : SubActionContainerControlViewModel
+    public class TwitchActionEditorControlViewModel : GroupActionEditorControlViewModel
     {
         private const int PredictionTitleMaxLength = 45;
 
@@ -38,10 +38,9 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowPollGrid");
                 this.NotifyPropertyChanged("ShowPredictionGrid");
                 this.NotifyPropertyChanged("ShowSubActions");
-                this.NotifyPropertyChanged("ShowFollowersGrid");
-                this.NotifyPropertyChanged("ShowSlowChatGrid");
                 this.NotifyPropertyChanged("ShowSendAnnouncementGrid");
                 this.NotifyPropertyChanged("ShowSetContentClassificationLabelsGrid");
+                this.NotifyPropertyChanged("ShowSetChatSettingsGrid");
             }
         }
         private TwitchActionType selectedActionType;
@@ -153,8 +152,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (this.existingChannelPointRewardID == Guid.Empty)
                 {
                     this.ChannelPointRewardState = this.ChannelPointReward.is_enabled;
+                    this.ChannelPointRewardPaused = this.ChannelPointReward.is_paused;
                     this.ChannelPointRewardName = this.ChannelPointReward.title;
                     this.ChannelPointRewardDescription = this.ChannelPointReward.prompt;
+                    this.ChannelPointRewardBackgroundColor = this.ChannelPointReward.background_color;
                     this.ChannelPointRewardCost = this.ChannelPointReward.cost.ToString();
                     this.ChannelPointRewardMaxPerStream = this.ChannelPointReward.max_per_stream_setting.max_per_stream.ToString();
                     this.ChannelPointRewardMaxPerUser = this.ChannelPointReward.max_per_user_per_stream_setting.max_per_user_per_stream.ToString();
@@ -177,6 +178,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool channelPointRewardState;
 
+        public bool ChannelPointRewardPaused
+        {
+            get { return this.channelPointRewardPaused; }
+            set
+            {
+                this.channelPointRewardPaused = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool channelPointRewardPaused;
+
         public string ChannelPointRewardName
         {
             get { return this.channelPointRewardName; }
@@ -198,6 +210,17 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string channelPointRewardDescription;
+
+        public string ChannelPointRewardBackgroundColor
+        {
+            get { return this.channelPointRewardBackgroundColor; }
+            set
+            {
+                this.channelPointRewardBackgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string channelPointRewardBackgroundColor;
 
         public string ChannelPointRewardCost
         {
@@ -413,9 +436,6 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string predictionOutcome2;
 
-        public bool ShowFollowersGrid { get { return this.SelectedActionType == TwitchActionType.EnableFollowersOnly; } }
-
-        public bool ShowSlowChatGrid { get { return this.SelectedActionType == TwitchActionType.EnableSlowChat; } }
         public bool ShowSendAnnouncementGrid { get { return this.SelectedActionType == TwitchActionType.SendChatAnnouncement; } }
 
         public string TimeLength
@@ -468,13 +488,127 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public TwitchContentClassificationLabelsEditorViewModel ContentClassificationLabelsEditor { get; set; } = new TwitchContentClassificationLabelsEditorViewModel();
 
+        public bool ShowSetChatSettingsGrid { get { return this.SelectedActionType == TwitchActionType.SetChatSettings; } }
+
+        public bool? ChatSettingsSlowMode
+        {
+            get { return this.chatSettingsSlowMode; }
+            set
+            {
+                this.chatSettingsSlowMode = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.ChatSettingsSlowModeEnabled));
+            }
+        }
+        private bool? chatSettingsSlowMode = null;
+
+        public bool ChatSettingsSlowModeEnabled { get { return this.ChatSettingsSlowMode.GetValueOrDefault(); } }
+
+        public int ChatSettingsSlowModeDuration
+        {
+            get { return this.chatSettingsSlowModeDuration; }
+            set
+            {
+                this.chatSettingsSlowModeDuration = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int chatSettingsSlowModeDuration = 0;
+
+        public bool? ChatSettingsFollowerMode
+        {
+            get { return this.chatSettingsFollowerMode; }
+            set
+            {
+                this.chatSettingsFollowerMode = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.ChatSettingsFollowerModeEnabled));
+            }
+        }
+        private bool? chatSettingsFollowerMode = null;
+
+        public bool ChatSettingsFollowerModeEnabled { get { return this.ChatSettingsFollowerMode.GetValueOrDefault(); } }
+
+        public int ChatSettingsFollowerModeDuration
+        {
+            get { return this.chatSettingsFollowerModeDuration; }
+            set
+            {
+                this.chatSettingsFollowerModeDuration = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int chatSettingsFollowerModeDuration = 0;
+
+        public bool? ChatSettingsSubscriberMode
+        {
+            get { return this.chatSettingsSubscriberMode; }
+            set
+            {
+                this.chatSettingsSubscriberMode = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool? chatSettingsSubscriberMode = null;
+
+        public bool? ChatSettingsEmoteMode
+        {
+            get { return this.chatSettingsEmoteMode; }
+            set
+            {
+                this.chatSettingsEmoteMode = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool? chatSettingsEmoteMode = null;
+
+        public bool? ChatSettingsUniqueChatMode
+        {
+            get { return this.chatSettingsUniqueChatMode; }
+            set
+            {
+                this.chatSettingsUniqueChatMode = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool? chatSettingsUniqueChatMode = null;
+
+        public bool? ChatSettingsNonModeratorChat
+        {
+            get { return this.chatSettingsNonModeratorChat; }
+            set
+            {
+                this.chatSettingsNonModeratorChat = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.ChatSettingsNonModeratorChatEnabled));
+            }
+        }
+        private bool? chatSettingsNonModeratorChat = null;
+
+        public bool ChatSettingsNonModeratorChatEnabled { get { return this.ChatSettingsNonModeratorChat.GetValueOrDefault(); } }
+
+        public List<int> ChatSettingsNonModeratorChatDurations { get; set; } = new List<int>() { 2, 4, 6 };
+        public int SelectedChatSettingsNonModeratorChatDuration
+        {
+            get { return this.selectedChatSettingsNonModeratorChatDuration; }
+            set
+            {
+                this.selectedChatSettingsNonModeratorChatDuration = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int selectedChatSettingsNonModeratorChatDuration;
+
         private IEnumerable<string> existingTags = null;
         private IEnumerable<string> existingContentClassificationLabelIDs = null;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
-            : base(action, action.Actions)
+            : base(action)
         {
+            action.UpdateSetChatSettingsProperties();
+
             this.SelectedActionType = action.ActionType;
+
             if (this.ShowUsernameGrid)
             {
                 this.Username = action.Username;
@@ -520,8 +654,10 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 this.existingChannelPointRewardID = action.ChannelPointRewardID;
                 this.ChannelPointRewardState = action.ChannelPointRewardState;
+                this.ChannelPointRewardPaused = action.ChannelPointRewardPaused;
                 this.ChannelPointRewardName = action.ChannelPointRewardName;
                 this.ChannelPointRewardDescription = action.ChannelPointRewardDescription;
+                this.ChannelPointRewardBackgroundColor = action.ChannelPointRewardBackgroundColor;
                 this.ChannelPointRewardCost = action.ChannelPointRewardCostString;
                 this.ChannelPointRewardUpdateCooldownsAndLimits = action.ChannelPointRewardUpdateCooldownsAndLimits;
                 this.ChannelPointRewardMaxPerStream = action.ChannelPointRewardMaxPerStreamString;
@@ -558,10 +694,6 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.PredictionOutcome1 = action.PredictionOutcomes[0];
                 this.PredictionOutcome2 = action.PredictionOutcomes[1];
             }
-            else if (this.ShowFollowersGrid || this.ShowSlowChatGrid)
-            {
-                this.TimeLength = action.TimeLength;
-            }
             else if (this.ShowSendAnnouncementGrid)
             {
                 this.Message = action.Message;
@@ -571,6 +703,27 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowSetContentClassificationLabelsGrid)
             {
                 this.existingContentClassificationLabelIDs = action.ContentClassificationLabelIDs;
+            }
+            else if (this.ShowSetChatSettingsGrid)
+            {
+                if (action.ChatSettingsSlowModeDuration != null)
+                {
+                    this.ChatSettingsSlowMode = action.ChatSettingsSlowModeDuration.GetValueOrDefault() > 0;
+                    this.ChatSettingsSlowModeDuration = action.ChatSettingsSlowModeDuration.GetValueOrDefault();
+                }
+                if (action.ChatSettingsFollowerModeDuration != null)
+                {
+                    this.ChatSettingsFollowerMode = action.ChatSettingsFollowerModeDuration.GetValueOrDefault() > 0;
+                    this.ChatSettingsFollowerModeDuration = action.ChatSettingsFollowerModeDuration.GetValueOrDefault();
+                }
+                if (action.ChatSettingsNonModeratorChatDuration != null)
+                {
+                    this.ChatSettingsNonModeratorChat = action.ChatSettingsNonModeratorChatDuration.GetValueOrDefault() > 0;
+                    this.SelectedChatSettingsNonModeratorChatDuration = action.ChatSettingsNonModeratorChatDuration.GetValueOrDefault();
+                }
+                this.ChatSettingsSubscriberMode = action.ChatSettingsSubscriberMode;
+                this.ChatSettingsEmoteMode = action.ChatSettingsEmoteMode;
+                this.ChatSettingsUniqueChatMode = action.ChatSettingsUniqueChatMode;
             }
         }
 
@@ -663,9 +816,19 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionPredictionOutcomesTooLong);
                 }
             }
-            else if (this.ShowFollowersGrid || this.ShowSlowChatGrid)
+            else if (this.ShowSetChatSettingsGrid)
             {
-                if (string.IsNullOrEmpty(this.TimeLength))
+                if (this.ChatSettingsSlowMode == true && (this.ChatSettingsSlowModeDuration < 3 || this.ChatSettingsSlowModeDuration > 120))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionTimeLengthMissing);
+                }
+
+                if (this.ChatSettingsFollowerMode == true && this.ChatSettingsFollowerModeDuration <= 0)
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionTimeLengthMissing);
+                }
+
+                if (this.ChatSettingsNonModeratorChat == true && this.SelectedChatSettingsNonModeratorChatDuration <= 0)
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionTimeLengthMissing);
                 }
@@ -751,8 +914,8 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
-                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardName, this.ChannelPointRewardDescription, this.ChannelPointRewardState,
-                    this.ChannelPointRewardCost, this.ChannelPointRewardUpdateCooldownsAndLimits, this.ChannelPointRewardMaxPerStream, this.ChannelPointRewardMaxPerUser, this.ChannelPointRewardGlobalCooldown);
+                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardName, this.ChannelPointRewardDescription, this.ChannelPointRewardState, this.ChannelPointRewardPaused,
+                    this.ChannelPointRewardBackgroundColor, this.ChannelPointRewardCost, this.ChannelPointRewardUpdateCooldownsAndLimits, this.ChannelPointRewardMaxPerStream, this.ChannelPointRewardMaxPerUser, this.ChannelPointRewardGlobalCooldown);
             }
             else if (this.ShowPollGrid)
             {
@@ -767,14 +930,6 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return TwitchActionModel.CreatePredictionAction(this.PredictionTitle, this.PredictionDurationSeconds, new List<string>() { this.PredictionOutcome1, this.PredictionOutcome2 }, await this.ActionEditorList.GetActions());
             }
-            else if (this.ShowFollowersGrid)
-            {
-                return TwitchActionModel.CreateTimeAction(TwitchActionType.EnableFollowersOnly, this.TimeLength);
-            }
-            else if (this.ShowSlowChatGrid)
-            {
-                return TwitchActionModel.CreateTimeAction(TwitchActionType.EnableSlowChat, this.TimeLength);
-            }
             else if (this.ShowSendAnnouncementGrid)
             {
                 return TwitchActionModel.CreateSendChatAnnouncementAction(this.Message, this.SelectedAnnouncementColor, this.SendAnnouncementAsStreamer);
@@ -782,6 +937,28 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowSetContentClassificationLabelsGrid)
             {
                 return TwitchActionModel.CreateSetContentClassificationLabelsAction(this.ContentClassificationLabelsEditor.Labels.Select(l => l.Label));
+            }
+            else if (this.ShowSetChatSettingsGrid)
+            {
+                int? slowModeDuration = null;
+                if (this.ChatSettingsSlowMode != null)
+                {
+                    slowModeDuration = this.ChatSettingsSlowMode.GetValueOrDefault() ? this.ChatSettingsSlowModeDuration : 0;
+                }
+
+                int? followerModeDuration = null;
+                if (this.chatSettingsFollowerMode != null)
+                {
+                    followerModeDuration = this.chatSettingsFollowerMode.GetValueOrDefault() ? this.ChatSettingsFollowerModeDuration : 0;
+                }
+
+                int? nonModeratorChatDelayDuration = null;
+                if (this.ChatSettingsNonModeratorChat != null)
+                {
+                    nonModeratorChatDelayDuration = this.ChatSettingsNonModeratorChat.GetValueOrDefault() ? this.SelectedChatSettingsNonModeratorChatDuration : 0;
+                }
+
+                return TwitchActionModel.CreateSetChatSettingsAction(slowModeDuration, followerModeDuration, this.ChatSettingsSubscriberMode, this.ChatSettingsEmoteMode, this.ChatSettingsUniqueChatMode, nonModeratorChatDelayDuration);
             }
             else
             {

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             this.HelpCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/usage-requirements");
+                ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/usage-requirements");
             });
         }
 

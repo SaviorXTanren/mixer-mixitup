@@ -10,19 +10,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
-    public class WebSocketPacket
-    {
-        /// <summary>
-        /// The type of packet.
-        /// </summary>
-        public string type { get; set; }
-
-        /// <summary>
-        /// The ID of the packet.
-        /// </summary>
-        public uint id { get; set; }
-    }
-
     public abstract class WebSocketServerBase : WebSocketBase
     {
         public event EventHandler OnConnectedOccurred = delegate { };
@@ -42,7 +29,7 @@ namespace MixItUp.Base.Util
 
                 if (ChannelSession.AppSettings.DiagnosticLogging)
                 {
-                    await this.Send(new WebSocketPacket() { type = "debug" });
+                    await this.Send(JsonConvert.SerializeObject(new JObject() { { "Type", "Debug" } }));
                 }
 
                 this.OnConnectedOccurred(this, new EventArgs());
@@ -55,13 +42,11 @@ namespace MixItUp.Base.Util
             return false;
         }
 
-        public async Task Send(WebSocketPacket packet) { await this.Send(JsonConvert.SerializeObject(packet)); }
-
         public async Task<bool> TestConnection()
         {
             this.connectionTestSuccessful = false;
 
-            await this.Send(new WebSocketPacket() { type = "test" });
+            await this.Send(JsonConvert.SerializeObject(new JObject() { { "Type", "Test" } }));
 
             await this.WaitForSuccess(() => this.connectionTestSuccessful);
 
@@ -88,11 +73,11 @@ namespace MixItUp.Base.Util
             if (!string.IsNullOrEmpty(packetJSON))
             {
                 JObject packetObj = JObject.Parse(packetJSON);
-                if (packetObj["type"].ToString().Equals("exception"))
+                if (packetObj["Type"].ToString().Equals("Exception"))
                 {
-                    Logger.Log("WebSocket Client Exception: " + packetObj["data"].ToString());
+                    Logger.Log("WebSocket Client Exception: " + packetObj["Data"].ToString());
                 }
-                else if (packetObj["type"].ToString().Equals("test"))
+                else if (packetObj["Type"].ToString().Equals("Test"))
                 {
                     this.connectionTestSuccessful = true;
                 }

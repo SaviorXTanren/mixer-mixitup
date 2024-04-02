@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
@@ -34,13 +35,15 @@
         </ComboBox>
 
         <Grid Grid.Row="3" Visibility="{Binding ShowLoadModelGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioModel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="modelName" />
 
-            <Grid Grid.Row="0">
-                <ComboBox Grid.Column="0" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioModel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="modelName" />
-            </Grid>
+            <Controls:IconButton Grid.Column="2" Command="{Binding RefreshCacheCommand}" Icon="Refresh" ToolTip="{x:Static resx:Resources.Refresh}" />
         </Grid>
 
         <Grid Grid.Row="3" Visibility="{Binding ShowMoveModelGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -93,19 +96,23 @@
         <Grid Grid.Row="3" Visibility="{Binding ShowRunHotKeyGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Row="0" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioModel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="modelName" />
+                <ComboBox Grid.Column="0" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioModel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="modelName" />
 
-                <ComboBox Grid.Row="2" ItemsSource="{Binding HotKeys}" SelectedItem="{Binding SelectedHotKey}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioHotKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="DisplayName" />
+                <Controls:IconButton Grid.Column="2" Command="{Binding RefreshCacheCommand}" Icon="Refresh" ToolTip="{x:Static resx:Resources.Refresh}" />
             </Grid>
+
+            <ComboBox Grid.Row="2" ItemsSource="{Binding HotKeys}" SelectedItem="{Binding SelectedHotKey}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioHotKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="DisplayName" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

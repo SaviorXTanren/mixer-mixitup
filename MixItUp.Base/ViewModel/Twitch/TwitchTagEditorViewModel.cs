@@ -3,6 +3,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -52,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Twitch
         }
         private string selectedTag;
 
-        public ThreadSafeObservableCollection<TwitchTagViewModel> CustomTags { get; private set; } = new ThreadSafeObservableCollection<TwitchTagViewModel>();
+        public ObservableCollection<TwitchTagViewModel> CustomTags { get; private set; } = new ObservableCollection<TwitchTagViewModel>();
 
         public bool CanAddMoreTags { get { return this.CustomTags.Count < 10; } }
 

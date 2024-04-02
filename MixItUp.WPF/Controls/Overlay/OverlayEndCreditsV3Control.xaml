@@ -1,0 +1,270 @@
+﻿<Controls:LoadingControlBase x:Class="MixItUp.WPF.Controls.Overlay.OverlayEndCreditsV3Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Controls:LoadingControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Controls:LoadingControlBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.SectionHeaderSettings}">
+            <Grid DataContext="{Binding Header}" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <ComboBox Text="{Binding FontName}" Grid.Column="2" ItemsSource="{Binding Fonts}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                    <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Text="{Binding ShadowColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox Grid.Column="0" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding Bold}">
+                            <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Italics}">
+                            <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Underline}">
+                            <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+
+                    <ListBox Grid.Column="2" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding LeftAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding CenterAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding RightAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding JustifyAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+                </Grid>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.SectionItemSettings}">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <ComboBox Text="{Binding FontName}" Grid.Column="2" ItemsSource="{Binding Fonts}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                    <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Text="{Binding ShadowColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox Grid.Column="0" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding Bold}">
+                            <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Italics}">
+                            <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Underline}">
+                            <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+
+                    <ListBox Grid.Column="2" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding LeftAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding CenterAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding RightAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding JustifyAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+                </Grid>
+            </Grid>
+        </GroupBox>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ScrollSpeeds}" SelectedItem="{Binding SelectedScrollSpeed}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ScrollSpeed}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <TextBox Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunCreditsWhenVisible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="5" IsChecked="{Binding RunCreditsWhenVisible}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+            <TextBlock Grid.Column="7" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunEndlessly}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="8" IsChecked="{Binding RunEndlessly}" VerticalAlignment="Center" Margin="5,0,0,0" />
+        </Grid>
+
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <Button Command="{Binding AddSectionCommand}" Content="{x:Static resx:Resources.AddSection}" />
+        </Grid>
+
+        <ItemsControl Grid.Row="8" ItemsSource="{Binding Sections}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Controls:AccordianGroupBoxControl>
+                        <Controls:AccordianGroupBoxControl.Header>
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="25" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="25" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" FontWeight="Bold" Width="Auto" VerticalAlignment="Center" />
+
+                                <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" Margin="0,-9" />
+
+                                <Controls:IconButton Grid.Column="2" Margin="-10" Command="{Binding MoveUpCommand}" Icon="ArrowUpBold" ToolTip="{x:Static resx:Resources.MoveUp}" />
+                                <Controls:IconButton Grid.Column="4" Margin="-10" Command="{Binding MoveDownCommand}" Icon="ArrowDownBold" ToolTip="{x:Static resx:Resources.MoveDown}" />
+
+                                <Controls:IconButton Grid.Column="6" Margin="-10" Command="{Binding DeleteCommand}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
+                            </Grid>
+                        </Controls:AccordianGroupBoxControl.Header>
+
+                        <Controls:AccordianGroupBoxControl.Content>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ComboBox Grid.Column="0" ItemsSource="{Binding Types}" SelectedItem="{Binding SelectedType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                    <TextBox Text="{Binding Name}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                    <TextBox Text="{Binding Columns}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Columns}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                                </Grid>
+
+                                <TextBox Text="{Binding ItemTemplate}" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemTemplate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <TextBox Text="{Binding HTML}" Grid.Row="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HTML}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="150" />
+                            </Grid>
+                        </Controls:AccordianGroupBoxControl.Content>
+                    </Controls:AccordianGroupBoxControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Controls:LoadingControlBase>

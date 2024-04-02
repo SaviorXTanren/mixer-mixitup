@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -10,13 +12,19 @@ namespace MixItUp.Base.Services
 
         ISet<string> ApplicableAudioFileExtensions { get; }
 
-        Task Play(string filePath, int volume, bool track = true);
+        Task Play(string filePath, int volume, bool track = true, bool waitForFinish = false);
 
-        Task Play(string filePath, int volume, string deviceName, bool track = true);
+        Task Play(string filePath, int volume, string deviceName, bool track = true, bool waitForFinish = false);
+
+        Task PlayMP3(Stream stream, int volume, string deviceName, bool track = true, bool waitForFinish = false);
+
+        Task PlayPCM(Stream stream, int volume, string deviceName, bool track = true, bool waitForFinish = false);
 
         Task PlayNotification(string filePath, int volume, bool track = true);
 
         Task StopAllSounds();
+
+        void OverlaySoundFinished(Guid id);
 
         IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false);
 

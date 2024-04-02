@@ -1,11 +1,13 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,9 +19,16 @@ namespace MixItUp.Base.ViewModel.Actions
         Image,
         Video,
         YouTube,
-        WebPage,
         HTML,
+        Timer,
+        TwitchClip,
         ShowHideWidget,
+        DamageStreamBoss,
+        AddToGoal,
+        AddToPersistentTimer,
+        AddToEndCredits,
+        PlayEndCredits,
+        AddToEventList,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -33,52 +42,190 @@ namespace MixItUp.Base.ViewModel.Actions
             get { return this.selectedActionType; }
             set
             {
-                this.selectedActionType = value;
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("ShowShowHideWidgetGrid");
-                this.NotifyPropertyChanged("ShowItemGrid");
-                this.NotifyPropertyChanged("ShowTextItem");
-                this.NotifyPropertyChanged("ShowImageItem");
-                this.NotifyPropertyChanged("ShowVideoItem");
-                this.NotifyPropertyChanged("ShowYouTubeItem");
-                this.NotifyPropertyChanged("ShowWebPageItem");
-                this.NotifyPropertyChanged("ShowHTMLItem");
-                this.NotifyPropertyChanged("OverlayNotEnabled");
-                this.NotifyPropertyChanged("OverlayEnabled");
+                if (this.selectedActionType != value)
+                {
+                    this.selectedActionType = value;
+                    this.NotifyPropertyChanged();
+                    this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));
+                    this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
+                    this.NotifyPropertyChanged(nameof(this.ShowItem));
+                    this.NotifyPropertyChanged(nameof(this.ShowWidget));
+                    this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
+                    this.NotifyPropertyChanged(nameof(this.ShowAddGoal));
+                    this.NotifyPropertyChanged(nameof(this.ShowAddPersistTimer));
+                    this.NotifyPropertyChanged(nameof(this.ShowAddToEndCredits));
+                    this.NotifyPropertyChanged(nameof(this.ShowPlayEndCredits));
+                    this.NotifyPropertyChanged(nameof(this.ShowAddToEventList));
+
+                    if (this.ShowItem)
+                    {
+                        if (this.SelectedActionType == OverlayActionTypeEnum.Text)
+                        {
+                            this.Item = new OverlayTextV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.Image)
+                        {
+                            this.Item = new OverlayImageV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.Video)
+                        {
+                            this.Item = new OverlayVideoV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.YouTube)
+                        {
+                            this.Item = new OverlayYouTubeV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.HTML)
+                        {
+                            this.Item = new OverlayHTMLV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.Timer)
+                        {
+                            this.Item = new OverlayTimerV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.TwitchClip)
+                        {
+                            this.Item = new OverlayTwitchClipV3ViewModel();
+                        }
+
+                        this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
+                        this.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(this.Item.DefaultCSS);
+                        this.Javascript = this.Item.DefaultJavascript;
+                    }
+                }
             }
         }
         private OverlayActionTypeEnum selectedActionType;
 
-        public bool OverlayNotEnabled { get { return !ServiceManager.Get<OverlayService>().IsConnected; } }
+        public bool OverlayNotEnabled { get { return !ServiceManager.Get<OverlayV3Service>().IsConnected; } }
 
-        public bool OverlayEnabled { get { return !this.OverlayNotEnabled &&  SelectedActionType != OverlayActionTypeEnum.ShowHideWidget; } }
+        public bool OverlayEnabled { get { return !this.OverlayNotEnabled; } }
 
-        public IEnumerable<string> OverlayEndpoints { get { return ServiceManager.Get<OverlayService>().GetOverlayNames(); } }
+        public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get { return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints(); } }
 
-        public string SelectedOverlayEndpoint
+        public OverlayEndpointV3Model SelectedOverlayEndpoint
         {
             get { return this.selectedOverlayEndpoint; }
             set
             {
-                var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
+                var overlays = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints();
                 if (overlays.Contains(value))
                 {
                     this.selectedOverlayEndpoint = value;
                 }
                 else
                 {
-                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
                 }
                 this.NotifyPropertyChanged();
             }
         }
-        private string selectedOverlayEndpoint;
+        private OverlayEndpointV3Model selectedOverlayEndpoint;
 
-        public bool ShowShowHideWidgetGrid { get { return this.SelectedActionType == OverlayActionTypeEnum.ShowHideWidget; } }
+        public bool ShowItem
+        {
+            get
+            {
+                return this.SelectedActionType == OverlayActionTypeEnum.Text || this.SelectedActionType == OverlayActionTypeEnum.Image ||
+                    this.SelectedActionType == OverlayActionTypeEnum.Video || this.SelectedActionType == OverlayActionTypeEnum.YouTube ||
+                    this.SelectedActionType == OverlayActionTypeEnum.HTML || this.SelectedActionType == OverlayActionTypeEnum.Timer ||
+                    this.SelectedActionType == OverlayActionTypeEnum.TwitchClip;
+            }
+        }
 
-        public IEnumerable<OverlayWidgetModel> Widgets { get { return ChannelSession.Settings.OverlayWidgets.ToList(); } }
+        public OverlayItemV3ViewModelBase Item
+        {
+            get { return this.item; }
+            set
+            {
+                this.item = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayItemV3ViewModelBase item;
 
-        public OverlayWidgetModel SelectedWidget
+        public OverlayPositionV3ViewModel Position
+        {
+            get { return this.position; }
+            set
+            {
+                this.position = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayPositionV3ViewModel position = new OverlayPositionV3ViewModel();
+
+        public string Duration
+        {
+            get { return this.duration; }
+            set
+            {
+                this.duration = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string duration;
+
+        public OverlayAnimationV3ViewModel EntranceAnimation
+        {
+            get { return this.entranceAnimation; }
+            set
+            {
+                this.entranceAnimation = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayAnimationV3ViewModel entranceAnimation;
+
+        public OverlayAnimationV3ViewModel ExitAnimation
+        {
+            get { return this.exitAnimation; }
+            set
+            {
+                this.exitAnimation = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayAnimationV3ViewModel exitAnimation;
+
+        public string HTML
+        {
+            get { return this.html; }
+            set
+            {
+                this.html = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string html;
+
+        public string CSS
+        {
+            get { return this.css; }
+            set
+            {
+                this.css = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string css;
+
+        public string Javascript
+        {
+            get { return this.javascript; }
+            set
+            {
+                this.javascript = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string javascript;
+
+        public bool ShowWidget { get { return this.SelectedActionType == OverlayActionTypeEnum.ShowHideWidget; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> Widgets { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedWidget
         {
             get { return this.selectedWidget; }
             set
@@ -87,319 +234,514 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayWidgetModel selectedWidget;
+        private OverlayWidgetV3Model selectedWidget;
 
-        public bool WidgetVisible
+        public bool ShowHideWidgetValue
         {
-            get { return this.widgetVisible; }
+            get { return this.showHideWidgetValue; }
             set
             {
-                this.widgetVisible = value;
+                this.showHideWidgetValue = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private bool widgetVisible;
+        private bool showHideWidgetValue;
 
-        public bool ShowItemGrid { get { return this.SelectedActionType != OverlayActionTypeEnum.ShowHideWidget; } }
+        public bool ShowDamageStreamBoss { get { return this.SelectedActionType == OverlayActionTypeEnum.DamageStreamBoss; } }
 
-        public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
+        public ObservableCollection<OverlayWidgetV3Model> StreamBosses { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
 
-        public bool ShowImageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Image; } }
-
-        public bool ShowVideoItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Video; } }
-
-        public bool ShowYouTubeItem { get { return this.SelectedActionType == OverlayActionTypeEnum.YouTube; } }
-
-        public bool ShowWebPageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.WebPage; } }
-
-        public bool ShowHTMLItem { get { return this.SelectedActionType == OverlayActionTypeEnum.HTML; } }
-
-        public OverlayItemViewModelBase SelectedItemViewModel
+        public OverlayWidgetV3Model SelectedStreamBoss
         {
-            get
-            {
-                if (this.ShowImageItem)
-                {
-                    return this.ImageItemViewModel;
-                }
-                else if (this.ShowTextItem)
-                {
-                    return this.TextItemViewModel;
-                }
-                else if (this.ShowYouTubeItem)
-                {
-                    return this.YouTubeItemViewModel;
-                }
-                else if (this.ShowVideoItem)
-                {
-                    return this.VideoItemViewModel;
-                }
-                else if (this.ShowWebPageItem)
-                {
-                    return this.WebPageItemViewModel;
-                }
-                else if (this.ShowHTMLItem)
-                {
-                    return this.HTMLItemViewModel;
-                }
-                return null;
-            }
-        }
-
-        public OverlayImageItemViewModel ImageItemViewModel
-        {
-            get { return this.imageItemViewModel; }
+            get { return this.selectedStreamBoss; }
             set
             {
-                this.imageItemViewModel = value;
+                this.selectedStreamBoss = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayImageItemViewModel imageItemViewModel = new OverlayImageItemViewModel();
+        private OverlayWidgetV3Model selectedStreamBoss;
 
-        public OverlayTextItemViewModel TextItemViewModel
+        public string StreamBossDamageAmount
         {
-            get { return this.textItemViewModel; }
+            get { return this.streamBossDamageAmount; }
             set
             {
-                this.textItemViewModel = value;
+                this.streamBossDamageAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayTextItemViewModel textItemViewModel = new OverlayTextItemViewModel();
+        private string streamBossDamageAmount;
 
-        public OverlayYouTubeItemViewModel YouTubeItemViewModel
+        public bool StreamBossForceDamage
         {
-            get { return this.youTubeItemViewModel; }
+            get { return this.streamBossForceDamage; }
             set
             {
-                this.youTubeItemViewModel = value;
+                this.streamBossForceDamage = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayYouTubeItemViewModel youTubeItemViewModel = new OverlayYouTubeItemViewModel();
+        private bool streamBossForceDamage = true;
 
-        public OverlayVideoItemViewModel VideoItemViewModel
+        public bool ShowAddGoal { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToGoal; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> Goals { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedGoal
         {
-            get { return this.videoItemViewModel; }
+            get { return this.selectedGoal; }
             set
             {
-                this.videoItemViewModel = value;
+                this.selectedGoal = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayVideoItemViewModel videoItemViewModel = new OverlayVideoItemViewModel();
+        private OverlayWidgetV3Model selectedGoal;
 
-        public OverlayWebPageItemViewModel WebPageItemViewModel
+        public string GoalAmount
         {
-            get { return this.webPageItemViewModel; }
+            get { return this.goalAmount; }
             set
             {
-                this.webPageItemViewModel = value;
+                this.goalAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayWebPageItemViewModel webPageItemViewModel = new OverlayWebPageItemViewModel();
+        private string goalAmount;
 
-        public OverlayHTMLItemViewModel HTMLItemViewModel
+        public bool ShowAddPersistTimer { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToPersistentTimer; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> PersistentTimers { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedPersistentTimer
         {
-            get { return this.htmlItemViewModel; }
+            get { return this.selectedPersistentTimer; }
             set
             {
-                this.htmlItemViewModel = value;
+                this.selectedPersistentTimer = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayHTMLItemViewModel htmlItemViewModel = new OverlayHTMLItemViewModel();
+        private OverlayWidgetV3Model selectedPersistentTimer;
 
-        public OverlayItemPositionViewModel ItemPosition
+        public string TimeAmount
         {
-            get { return this.itemPosition; }
+            get { return this.timeAmount; }
             set
             {
-                this.itemPosition = value;
+                this.timeAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayItemPositionViewModel itemPosition = new OverlayItemPositionViewModel();
+        private string timeAmount;
 
-        public double ItemDuration
+        public bool ShowAddToEndCredits { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToEndCredits; } }
+
+        public bool ShowPlayEndCredits { get { return this.SelectedActionType == OverlayActionTypeEnum.PlayEndCredits; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> EndCredits { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedEndCredits
         {
-            get { return this.itemDuration; }
+            get { return this.selectedEndCredits; }
             set
             {
-                if (value > 0)
-                {
-                    this.itemDuration = value;
-                }
-                else
-                {
-                    this.itemDuration = 0;
-                }
+                this.selectedEndCredits = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private double itemDuration;
+        private OverlayWidgetV3Model selectedEndCredits;
 
-        public IEnumerable<OverlayItemEffectEntranceAnimationTypeEnum> EntranceAnimations { get { return EnumHelper.GetEnumList<OverlayItemEffectEntranceAnimationTypeEnum>(); } }
+        public ObservableCollection<OverlayEndCreditsSectionV3Model> EndCreditsSections { get; set; } = new ObservableCollection<OverlayEndCreditsSectionV3Model>();
 
-        public OverlayItemEffectEntranceAnimationTypeEnum SelectedEntranceAnimation
+        public OverlayEndCreditsSectionV3Model SelectedEndCreditsSection
         {
-            get { return this.selectedEntranceAnimation; }
+            get { return this.selectedEndCreditsSection; }
             set
             {
-                this.selectedEntranceAnimation = value;
+                this.selectedEndCreditsSection = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayItemEffectEntranceAnimationTypeEnum selectedEntranceAnimation;
+        private OverlayEndCreditsSectionV3Model selectedEndCreditsSection;
+        private Guid endCreditsSectionID;
 
-        public IEnumerable<OverlayItemEffectExitAnimationTypeEnum> ExitAnimations { get { return EnumHelper.GetEnumList<OverlayItemEffectExitAnimationTypeEnum>(); } }
-
-        public OverlayItemEffectExitAnimationTypeEnum SelectedExitAnimation
+        public string EndCreditsItemText
         {
-            get { return this.selectedExitAnimation; }
+            get { return this.endCreditsItemText; }
             set
             {
-                this.selectedExitAnimation = value;
+                this.endCreditsItemText = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayItemEffectExitAnimationTypeEnum selectedExitAnimation;
+        private string endCreditsItemText;
 
-        public IEnumerable<OverlayItemEffectVisibleAnimationTypeEnum> VisibleAnimations { get { return EnumHelper.GetEnumList<OverlayItemEffectVisibleAnimationTypeEnum>(); } }
+        public bool ShowAddToEventList { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToEventList; } }
 
-        public OverlayItemEffectVisibleAnimationTypeEnum SelectedVisibleAnimation
+        public ObservableCollection<OverlayWidgetV3Model> EventLists { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedEventList
         {
-            get { return this.selectedVisibleAnimation; }
+            get { return this.selectedEventList; }
             set
             {
-                this.selectedVisibleAnimation = value;
+                this.selectedEventList = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayItemEffectVisibleAnimationTypeEnum selectedVisibleAnimation;
+        private OverlayWidgetV3Model selectedEventList;
+
+        public string EventListDetails
+        {
+            get { return this.eventListDetails; }
+            set
+            {
+                this.eventListDetails = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string eventListDetails;
+
+        private Guid widgetID;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
-            if (!string.IsNullOrEmpty(action.OverlayName))
-            {
-                this.SelectedOverlayEndpoint = action.OverlayName;
-            }
-            else
-            {
-                this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
-            }
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
 
-            if (action.WidgetID != Guid.Empty)
+            if (action.OverlayItemV3 != null)
+            {
+                OverlayEndpointV3Model overlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(action.OverlayItemV3.OverlayEndpointID);
+                if (overlayEndpoint != null)
+                {
+                    this.SelectedOverlayEndpoint = overlayEndpoint;
+                }
+
+                if (action.OverlayItemV3.Type == OverlayItemV3Type.Text)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.Text;
+                    this.Item = new OverlayTextV3ViewModel((OverlayTextV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.Image)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.Image;
+                    this.Item = new OverlayImageV3ViewModel((OverlayImageV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.Video)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.Video;
+                    this.Item = new OverlayVideoV3ViewModel((OverlayVideoV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.YouTube;
+                    this.Item = new OverlayYouTubeV3ViewModel((OverlayYouTubeV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.HTML)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.HTML;
+                    this.Item = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.Timer)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.Timer;
+                    this.Item = new OverlayTimerV3ViewModel((OverlayTimerV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.TwitchClip)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.TwitchClip;
+                    this.Item = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)action.OverlayItemV3);
+                }
+
+                this.Position = new OverlayPositionV3ViewModel(action.OverlayItemV3);
+                this.Duration = action.Duration;
+                this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, action.EntranceAnimation);
+                this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, action.ExitAnimation);
+
+                this.HTML = action.OverlayItemV3.HTML;
+                this.CSS = action.OverlayItemV3.CSS;
+                this.Javascript = action.OverlayItemV3.Javascript;
+            }
+            else if (action.WidgetID != Guid.Empty)
             {
                 this.SelectedActionType = OverlayActionTypeEnum.ShowHideWidget;
-                this.SelectedWidget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(action.WidgetID));
-                this.WidgetVisible = action.ShowWidget;
+                this.widgetID = action.WidgetID;
+                this.ShowHideWidgetValue = action.ShowWidget;
             }
-            else
+            else if (action.StreamBossID != Guid.Empty)
             {
-                if (action.OverlayItem != null)
+                this.SelectedActionType = OverlayActionTypeEnum.DamageStreamBoss;
+                this.widgetID = action.StreamBossID;
+                this.StreamBossDamageAmount = action.StreamBossDamageAmount;
+                this.StreamBossForceDamage = action.StreamBossForceDamage;
+            }
+            else if (action.GoalID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.AddToGoal;
+                this.widgetID = action.StreamBossID;
+                this.GoalAmount = action.GoalAmount;
+            }
+            else if (action.PersistentTimerID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.AddToPersistentTimer;
+                this.widgetID = action.PersistentTimerID;
+                this.TimeAmount = action.TimeAmount;
+            }
+            else if (action.EndCreditsID != Guid.Empty)
+            {
+                if (action.EndCreditsSectionID != Guid.Empty)
                 {
-                    if (action.OverlayItem.Effects != null)
-                    {
-                        this.ItemDuration = action.OverlayItem.Effects.Duration;
-                        this.SelectedEntranceAnimation = action.OverlayItem.Effects.EntranceAnimation;
-                        this.SelectedVisibleAnimation = action.OverlayItem.Effects.VisibleAnimation;
-                        this.SelectedExitAnimation = action.OverlayItem.Effects.ExitAnimation;
-                    }
-
-                    if (action.OverlayItem.Position != null)
-                    {
-                        this.ItemPosition.SetPosition(action.OverlayItem.Position);
-                    }
-
-                    if (action.OverlayItem is OverlayImageItemModel)
-                    {
-                        this.SelectedActionType = OverlayActionTypeEnum.Image;
-                        this.ImageItemViewModel = new OverlayImageItemViewModel((OverlayImageItemModel)action.OverlayItem);
-                    }
-                    else if (action.OverlayItem is OverlayTextItemModel)
-                    {
-                        this.SelectedActionType = OverlayActionTypeEnum.Text;
-                        this.TextItemViewModel = new OverlayTextItemViewModel((OverlayTextItemModel)action.OverlayItem);
-                    }
-                    else if (action.OverlayItem is OverlayYouTubeItemModel)
-                    {
-                        this.SelectedActionType = OverlayActionTypeEnum.YouTube;
-                        this.YouTubeItemViewModel = new OverlayYouTubeItemViewModel((OverlayYouTubeItemModel)action.OverlayItem);
-                    }
-                    else if (action.OverlayItem is OverlayVideoItemModel)
-                    {
-                        this.SelectedActionType = OverlayActionTypeEnum.Video;
-                        this.VideoItemViewModel = new OverlayVideoItemViewModel((OverlayVideoItemModel)action.OverlayItem);
-                    }
-                    else if (action.OverlayItem is OverlayWebPageItemModel)
-                    {
-                        this.SelectedActionType = OverlayActionTypeEnum.WebPage;
-                        this.WebPageItemViewModel = new OverlayWebPageItemViewModel((OverlayWebPageItemModel)action.OverlayItem);
-                    }
-                    else if (action.OverlayItem is OverlayHTMLItemModel)
-                    {
-                        this.SelectedActionType = OverlayActionTypeEnum.HTML;
-                        this.HTMLItemViewModel = new OverlayHTMLItemViewModel((OverlayHTMLItemModel)action.OverlayItem);
-                    }
+                    this.SelectedActionType = OverlayActionTypeEnum.AddToEndCredits;
+                    this.widgetID = action.EndCreditsID;
+                    this.endCreditsSectionID = action.EndCreditsSectionID;
+                    this.EndCreditsItemText = action.EndCreditsItemText;
                 }
+                else
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.PlayEndCredits;
+                    this.widgetID = action.EndCreditsID;
+                }
+            }
+            else if (action.EventListID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.AddToEventList;
+                this.widgetID = action.EventListID;
+                this.EventListDetails = action.EventListDetails;
             }
         }
 
         public OverlayActionEditorControlViewModel()
             : base()
         {
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+            this.SelectedActionType = OverlayActionTypeEnum.Text;
+
+            this.Item = new OverlayTextV3ViewModel();
+            this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
+            this.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(this.Item.DefaultCSS);
+            this.Javascript = this.Item.DefaultJavascript;
+
+            this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance);
+            this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit);
         }
 
         public override Task<Result> Validate()
         {
-            if (this.SelectedActionType == OverlayActionTypeEnum.ShowHideWidget)
+            if (this.ShowItem)
+            {
+                Result result = this.Item.Validate();
+                if (!result.Success)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.OverlayActionValidationErrorHeader + result.Message));
+                }
+
+                if (string.IsNullOrWhiteSpace(this.Duration))
+                {
+                    if (this.SelectedActionType != OverlayActionTypeEnum.Video && this.SelectedActionType != OverlayActionTypeEnum.YouTube &&
+                        this.SelectedActionType != OverlayActionTypeEnum.TwitchClip)
+                    {
+                        return Task.FromResult<Result>(new Result(Resources.OverlayActionDurationInvalid));
+                    }
+                }
+
+                result = this.Position.Validate();
+                if (!result.Success)
+                {
+                    return Task.FromResult<Result>(result);
+                }
+            }
+            else if (this.ShowWidget)
             {
                 if (this.SelectedWidget == null)
                 {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.OverlayActionMissingWidget));
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
-            else
+            else if (this.ShowDamageStreamBoss)
             {
-                if (this.ItemDuration <= 0)
+                if (this.SelectedStreamBoss == null)
                 {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.OverlayActionDurationInvalid));
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
 
-                if (this.SelectedItemViewModel == null)
+                if (string.IsNullOrEmpty(this.StreamBossDamageAmount))
                 {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.OverlayActionItemInvalid));
-                }
-
-                OverlayItemModelBase overlayItem = this.SelectedItemViewModel.GetOverlayItem();
-                if (overlayItem == null)
-                {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.OverlayActionItemInvalid));
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
+            else if (this.ShowAddGoal)
+            {
+                if (this.SelectedGoal == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.GoalAmount))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
+            else if (this.ShowAddPersistTimer)
+            {
+                if (this.SelectedPersistentTimer == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.TimeAmount))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
+            else if (this.ShowAddToEndCredits)
+            {
+                if (this.SelectedEndCredits == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (this.SelectedEndCreditsSection == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.EndCreditsItemText))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
+            else if (this.ShowPlayEndCredits)
+            {
+                if (this.SelectedEndCredits == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
+            else if (this.ShowAddToEventList)
+            {
+                if (this.SelectedEventList == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrEmpty(this.EventListDetails))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
+
             return Task.FromResult(new Result());
+        }
+
+        protected override async Task OnOpenInternal()
+        {
+            await base.OnOpenInternal();
+
+            foreach (OverlayWidgetV3Model widget in ChannelSession.Settings.OverlayWidgetsV3)
+            {
+                this.Widgets.Add(widget);
+                if (widget.Type == OverlayItemV3Type.StreamBoss)
+                {
+                    this.StreamBosses.Add(widget);
+                }
+                else if (widget.Type == OverlayItemV3Type.Goal)
+                {
+                    this.Goals.Add(widget);
+                }
+                else if (widget.Type == OverlayItemV3Type.PersistentTimer)
+                {
+                    this.PersistentTimers.Add(widget);
+                }
+                else if (widget.Type == OverlayItemV3Type.EndCredits)
+                {
+                    this.EndCredits.Add(widget);
+                }
+                else if (widget.Type == OverlayItemV3Type.EventList)
+                {
+                    this.EventLists.Add(widget);
+                }
+            }
+
+            if (this.ShowWidget)
+            {
+                this.SelectedWidget = this.Widgets.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowDamageStreamBoss)
+            {
+                this.SelectedStreamBoss = this.StreamBosses.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowAddGoal)
+            {
+                this.SelectedGoal = this.Goals.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowAddPersistTimer)
+            {
+                this.SelectedPersistentTimer = this.PersistentTimers.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowAddToEndCredits)
+            {
+                this.SelectedEndCredits = this.EndCredits.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+                if (this.SelectedEndCredits != null)
+                {
+                    OverlayEndCreditsV3Model endCredits = (OverlayEndCreditsV3Model)this.SelectedEndCredits.Item;
+                    this.EndCreditsSections.AddRange(endCredits.Sections.Where(s => s.Type == OverlayEndCreditsSectionV3Type.Custom));
+                    this.SelectedEndCreditsSection = this.EndCreditsSections.FirstOrDefault(s => s.ID == this.endCreditsSectionID);
+                }
+            }
+            else if (this.ShowPlayEndCredits)
+            {
+                this.SelectedEndCredits = this.EndCredits.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowAddToEventList)
+            {
+                this.SelectedEventList = this.EventLists.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
         }
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (this.SelectedActionType == OverlayActionTypeEnum.ShowHideWidget)
+            if (this.ShowItem)
             {
-                return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedWidget.Item.ID, this.WidgetVisible));
-            }
-            else
-            {
-                OverlayItemModelBase overlayItem = this.SelectedItemViewModel.GetOverlayItem();
-                if (overlayItem != null)
+                OverlayItemV3ModelBase item = this.Item.GetItem();
+                if (item != null)
                 {
-                    overlayItem.Position = this.ItemPosition.GetPosition();
-                    overlayItem.Effects = new OverlayItemEffectsModel(this.SelectedEntranceAnimation, this.SelectedVisibleAnimation, this.SelectedExitAnimation, this.ItemDuration);
-                    return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint, overlayItem));
+                    item.OverlayEndpointID = this.SelectedOverlayEndpoint.ID;
+                    item.HTML = this.HTML;
+                    item.CSS = this.CSS;
+                    item.Javascript = this.Javascript;
+                    this.Position.SetPosition(item);
+                    return Task.FromResult<ActionModelBase>(new OverlayActionModel(item, this.Duration, this.EntranceAnimation.GetAnimation(), this.ExitAnimation.GetAnimation()));
                 }
+            }
+            else if (this.ShowWidget)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedWidget, this.ShowHideWidgetValue));
+            }
+            else if (this.ShowDamageStreamBoss)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayStreamBossV3Model)this.SelectedStreamBoss.Item, this.StreamBossDamageAmount, this.StreamBossForceDamage));
+            }
+            else if (this.ShowAddGoal)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayGoalV3Model)this.SelectedGoal.Item, this.GoalAmount));
+            }
+            else if (this.ShowAddPersistTimer)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayPersistentTimerV3Model)this.SelectedPersistentTimer.Item, this.TimeAmount));
+            }
+            else if (this.ShowAddToEndCredits)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayEndCreditsV3Model)this.SelectedEndCredits.Item, this.SelectedEndCreditsSection, this.EndCreditsItemText));
+            }
+            else if (this.ShowPlayEndCredits)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayEndCreditsV3Model)this.SelectedEndCredits.Item));
+            }
+            else if (this.ShowAddToEventList)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayEventListV3Model)this.SelectedEventList.Item, this.EventListDetails));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

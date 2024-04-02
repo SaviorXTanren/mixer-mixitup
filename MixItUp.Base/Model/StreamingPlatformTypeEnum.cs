@@ -38,14 +38,14 @@ namespace MixItUp.Base.Model
         public const string YouTubeSmallLogoImageAssetFilePath = "/Assets/Images/YouTube-XS.png";
         public const string TrovoSmallLogoImageAssetFilePath = "/Assets/Images/Trovo-XS.png";
 
-        public static IEnumerable<StreamingPlatformTypeEnum> SupportedPlatforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
+        public static ISet<StreamingPlatformTypeEnum> SupportedPlatforms { get; private set; } = new HashSet<StreamingPlatformTypeEnum>()
         {
             StreamingPlatformTypeEnum.Twitch,
             StreamingPlatformTypeEnum.YouTube,
             StreamingPlatformTypeEnum.Trovo,
         };
 
-        public static IEnumerable<StreamingPlatformTypeEnum> SelectablePlatforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
+        public static ISet<StreamingPlatformTypeEnum> SelectablePlatforms { get; private set; } = new HashSet<StreamingPlatformTypeEnum>()
         {
             StreamingPlatformTypeEnum.All,
             StreamingPlatformTypeEnum.Twitch,
@@ -53,12 +53,18 @@ namespace MixItUp.Base.Model
             StreamingPlatformTypeEnum.Trovo,
         };
 
+        public static bool IsValidPlatform(StreamingPlatformTypeEnum platform) { return StreamingPlatforms.SupportedPlatforms.Contains(platform); }
+
         public static IStreamingPlatformSessionService GetPlatformSessionService(StreamingPlatformTypeEnum platform)
         {
             if (platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
             else if (platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>(); }
             else if (platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>(); }
             else if (platform == StreamingPlatformTypeEnum.Mock) { return ServiceManager.Get<MockSessionService>(); }
+            else if (platform == StreamingPlatformTypeEnum.All && ChannelSession.Settings != null)
+            {
+                return StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform);
+            }
             return null;
         }
 

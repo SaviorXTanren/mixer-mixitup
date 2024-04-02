@@ -18,16 +18,40 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Margin="0,0,0,10" Foreground="Red" Text="{x:Static resx:Resources.EnableOverlay}"/>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1">
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ProviderTypes}" SelectedItem="{Binding SelectedProviderType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Grid Grid.Column="1" Visibility="{Binding UsesOverlay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+                <TextBlock Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,10" Foreground="Red" Text="{x:Static resx:Resources.EnableOverlay}"/>
+
+                <ComboBox Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" HorizontalAlignment="Right" />
+            </Grid>
+
+            <Grid Grid.Column="1" Visibility="{Binding UsesAudioDevices, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+                <TextBlock Visibility="{Binding TTSMonsterNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,10" Foreground="Red" Text="{x:Static resx:Resources.EnableTTSMonster}"/>
+
+                <ComboBox Grid.Column="1" Visibility="{Binding AudioDeviceServiceConnected, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" HorizontalAlignment="Right" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="14" />
@@ -38,26 +62,28 @@
                 <ColumnDefinition Width="115" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Voices}" SelectedItem="{Binding SelectedVoice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Voice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Voices}" SelectedItem="{Binding SelectedVoice}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Voice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBox Grid.Column="2" Text="{Binding Volume}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Volume0to100}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" Text="{Binding Volume}" IsEnabled="{Binding VolumeChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Volume}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="4" Text="{Binding Pitch}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Pitch}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" Text="{Binding Pitch}" IsEnabled="{Binding PitchChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Pitch}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="6" Text="{Binding Rate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="6" Text="{Binding Rate}" IsEnabled="{Binding RateChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <TextBox Grid.Row="3" Text="{Binding Text}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpeechMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-        <Grid Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.TextToSpeechFunctionalityProvidedBy}" />
-            <TextBlock Grid.Column="2"><Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">https://responsivevoice.org/</Hyperlink></TextBlock>
+            <TextBox Grid.Row="0" Text="{Binding Text}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpeechMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.WaitForFinish}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <ToggleButton Grid.Column="4" IsChecked="{Binding WaitForFinish}" VerticalAlignment="Center" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

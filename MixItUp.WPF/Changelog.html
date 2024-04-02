@@ -5,85 +5,179 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h2 style="color: #2e6c80;">v1.0.0.3807:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.1600:</h2>
         <ul>
-            <li>Adding Lumia Stream service connectivity</li>
+            <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
             <ul>
-                <li>Lumia Stream can be connected by visiting the Services page.</li>
-                <li>The Lumia Stream action can be added to commands to allow you to set lighting settings for all your lights and trigger commands within Lumia Stream</li>
+                <li>All Overlay Endpoints now share the same port number and instead have unique URLs associated with them. If you use more than 1 Overlay Endpoint, you will need to update the web browser sources in your streaming software to use the new URLs, which can be found under Settings -> Overlay.</li>
+                <li>Overlay Widgets are now vastly more robust in the amount that can be customized for them. However, the differences in specific HTML formatting between old and new versions are incompatible and thus can not be directly migrated over. The vast majority of standard, drop-down or input values are converted over, but customized HTML can not be and is instead changed to the new format. All old customized HTML can be accessed from the Overlay Widgets page by editing the widget and clicking on the History button in the top-right corner of the window.</li>
+                <li>Certain features and functionality have been removed due to their low usage and may be replaced in the future. This includes the Web Page option and the Ticker Tape option.</li>
             </ul>
-            <li>YouTube membership levels are now usable on Role Requirements for YouTube users</li>
-            <li>The Music Player now supports infinite sub-folder checking from the selected folder for music</li>
-            <li>Fixing bug with Music Player not advancing to the next song when the current song has naturally finished</li>
+            <br />
+            <br />
+            <li>Overlay v3 large-scale updates:</li>
+            <ul>
+                <li>Overlay actions and widgets now have fully customizable HTML, CSS, and Javascript for users who are more adapt at web development</li>
+                <li>Overlay Actions:</li>
+                <ul>
+                    <li>New basic options have been added for creating dynamic timers and showing a Twitch clip for a user</li>
+                    <li>The Duration field for Overlay Actions now support Special Identifiers.</li>
+                    <li>New position option are available including the ability to have something display in a randomized location</li>
+                    <li>The same Overlay action will now no longer replace an old instance if it is still visible and instead will stack over it (EX: Triggering the same Overlay action 5 times in succession will now show 5 instances together rather than only 1).</li>
+                    <li>Image actions now can optionally use the native size of the image file instead of manually supplied a width and height if the fields are left blank.</li>
+                    <li>Image, Video, and YouTube actions now support size scaling if only a width or height is specified.</li>
+                    <li>New options have been added to allow for direct integration with widgets, such as the ability to dynamically damage a Stream Boss, add to a goal, and add custom events to an event list.</li>
+                    <li>New options will be added in subsequent updates.</li>
+                </ul>
+                <li>Overlay Widgets:</li>
+                <ul>
+                    <li>More detailed customization options are available for various widgets.</li>
+                    <li>A new Persistent Timer type is available which combines both of the features of the old Timer and Timer Train widgets.</li>
+                    <li>A new Labels type is available for displaying persistent information for your stream that can automatically rotate with time or as changes occur.</li>
+                    <li>Overlay Widgets can now be directly assigned to a dedicated URL for that widget only.</li>
+                    <li>New Overlay Widgets will be added in subsequent updates.</li>
+                </ul>
+                <li>The Overlay as as service is now enabled by default for all new profiles.</li>
+                <li>All Overlay Endpoints now share the exact same port number and instead have a unique URL associated with them.</li>
+                <li>The Overlay port number can now be fully customized.</li>
+            </ul>
+            <li>Text to Speech Action updates:</li>
+            <ul>
+                <li>Windows Text To Speech added as a provider, leveraging your natively installed text to speech languages on your Windows computer</li>
+                <li>TTS.Monster added as a provider, which can be enabled via the Services page after connecting your streaming account on their website: https://tts.monster/</li>
+                <li>New TTS providers will be added in subsequent updates.</li>
+                <li>A new toggle option has been added that will block the Text to Speech action until the audio of the speech has completed for providers that support it.</li>
+            </ul>
+            <li>The Script action has been added:</li>
+            <ul>
+                <li>The Script action allows you to add code scripts to your commands that will be run when the action is triggered.</li>
+                <li>Scripts can be written in either C#, Python, or Javascript.</li>
+                <li>Special Identifier replacement is supported in the text of the script.</li>
+                <li>Any value returned from the script is stored in the Special Identifier "$scriptresult" which can be leveraged in subsequent action.</li>
+                <li>There is not unique functionality provided in the Script action to directly interact with Mix It Up, the Script action simply is a means to perform more complex logic in a simpler form for experience users. However, you are able to leverage the Mix It Up Developer API from inside your Script action to perform some operations within Mix It Up.</li>
+            </ul>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.16:</h2>
+        <ul>
+            <li>Adding caching of data for VTube Studio and Twitch Integrated Throwing System to reduce the amount of requests made and improve performance &amp; reliability. Cached data will refresh every 30 minutes or can be manually refreshed by hitting the Refresh button from within the VTube Studio or Twitch Integrated Throwing System actions.</li>
+            <li>Migrating Tiltify to new v5 API support</li>
+            <li>Consumable Actions will now round DOWN to the nearest whole number for the amount used (EX: 0.9999 => 0, while 1.000001 => 1)</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.15:</h2>
+        <ul>
+            <li>Adding Pulsoid service connectivity</li>
+            <ul>
+                <li>Pulsoid can be connected by visiting the Services page.</li>
+                <li>A special 20% discount is available for new Pulsoid BRO plan user that also helps support Mix It Up development: https://pulsoid.net/s/WAoxz</li>
+                <li>The Pulsoid Heart Rate Changed Event command allows you to perform actions as your heart rate changes based on your Pulsoid service settings.</li>
+                <li>Adding $pulsoidheartrate Global Special Identifier</li>
+            </ul>
+            <li>Fixing bug related to certain Crowd Control packs and effects not loading properly within the Crowd Control command editor</li>
+            <li>Adding support for all Giveaway Special Identifiers to be usable globally across all commands</li>
+            <li>Services are now listed in alphabetical order on the Services page</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v1.0.0.3806:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.14:</h2>
         <ul>
-            <li>Adding Music Player feature</li>
-            <ul>
-                <li>The Music Player feature can be found on the main Mix It Up menu.</li>
-                <li>Music can be loaded by navigating to the Music Player page and clicking on the Folder icon on the right-side.</li>
-                <li>The following are the list of support music file formats: MP3, WAV, FLAC, MP4, M4A, AAC</li>
-                <li>The Music Player action can be added to commands to allow you to control the currently playing song from the Music Player and other options.</li>
-                <li>Recommended Music Sites: No Copyright Sounds, StreamBeats, Epidemic Sounds</li>
-            </ul>
+            <li>Adding YouTube section to Channel page</li>
+            <li>Fixing Unmod User and Unban User functionality for Moderation Action for YouTube</li>
+            <li>Adding count() function to Special Identifier action</li>
+            <li>Adding additional error handling to VTube Studio and Twitch Integrated Throwing System service connectivity</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v1.0.0.3805:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.13:</h2>
         <ul>
-            <li>Adding Twitch Integrated Throwing System service connectivity</li>
-            <ul>
-                <li>Twitch Integrated Throwing System can be connected by visiting the Services page.</li>
-                <li>The Twitch Integrated Throwing action can be added to commands to allow you to throw specific items or activate triggers created in the app.</li>
-                <li>The Twitch Integrated Throwing System service connectivity can be used with or without VTube Studio service connectivity, as the two systems are independent of each other.</li>
-            </ul>
+            <li>Adding Twitch Channel Ad Upcoming, Twitch Channel Ad Started, and Twitch Channel Ad Ended event commnads.</li>
+            <li>Adding Snooze Next Ad option to Twitch Action.</li>
+            <li>Adding $twitchadsnoozecount, $twitchadnextduration, $twitchadnextminutes, and $twitchadnexttime Global Special Identifiers.</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v1.0.0.3804:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.12:</h2>
         <ul>
-            <li>Adding Infinite Album service connectivity</li>
-            <ul>
-                <li>Infinite Album can be connected by visiting the Services page</li>
-                <li>The Infinite Album action can be added to commands to allow you to adjust the audio style, the instruments, and play various sound effects available from the Infinite Album application</li>
-            </ul>
-            <li>Adding Alejo Pronouns display support for Twitch chat. This can be enabled under Settings -> Chat</li>
-            <li>Adding "Set Command Cooldown" option to Command Action</li>
-            <li>Adding "Exit Current Command" option to Command Action</li>
-            <li>Adding support to "!quote" pre-made chat command for searching for quote based on text input</li>
-            <li>Adding settings option to clear all user data for users that have not been seen in X many days</li>
-            <li>Adding settings option to specify what text should be used to separated delimited arguments</li>
-            <li>Adding settings option for cooldown amount for notifications to reduce back-to-back notification sounds playing</li>
+            <li>Fixing bug with Tiltify donations not being properly processed</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.11:</h2>
+        <ul>
+            <li>Adding ability to specify the platform and user to test a command against</li>
+            <li>Adding "Ignore Usage Requirements" option to Command Action when running another command</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v1.0.0.3803:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.10:</h2>
         <ul>
-            <li>Updating CrowdControl service to new public release APIs</li>
-            <li>Updating JustGiving service connectivity logic</li>
-            <li>Adding Twitch Channel Hype Chat event command: $hypechatlevel, $hypechatamount, $hypechatamountnumber, $hypechatamountnumberdigits</li>
-            <li>Adding Set Content Classification Labels option to Twitch Action</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v1.0.0.3802:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.9:</h2>
         <ul>
-            <li>Adding DonorDrive service connectivity</li>
-            <ul>
-                <li>DonorDrive can be connected by visiting the Services page</li>
-                <li>DonorDrive Donation, DonorDrive Donation Incentive, &amp; DonorDrive Donation Milestone event commands have been added</li>
-            </ul>
-            <li>Extra Life service connectivity has been replaced with DonorDrive. To connect to Extra Life, you will need to visit the Services page and use DonorDrive to connect to Extra Life.</li>
-            <li>Adding Twitch Channel Outgoing Raid Completed event command for when you the user have completed a raid to another channel.</li>
-            <li>Updating Trovo connectivity to handle automatic re-authentication when valid</li>
-            <li>Fixing bug with the display of FrankerFaceZ emotes</li>
+            <li>Improvements to memory consumption issues and crashes related to out of memory exceptions. Thank you everyone who submitted logs and information to help us further track this issue down.</li>
+            <li>Adding logic to handle detecting and merging duplicated user data</li>
+            <li>Adding $quotetotal Special Identifier</li>
+            <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v1.0.0.3801:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.7-8:</h2>
+        <h3><b><u>IMPORTANT NOTE:</u></b> Due to performance and memory issues we have been seeing related to animated emotes within the Chat page, we have temporarily disabled all animated emotes and they will instead be replaced with their static counter-parts. This change only affects animated emotes that are rendered on the Chat page; this does not affect anything with animated images or videos through the Overlay. We have been hard at work attempting to improve the performance of emote rendering in the app to ensure it remains responsive and we have made large improvements to the rendering of static emote images. However the libraries available to use for rendering animated emotes are not to the level of performance and memory efficiency to ensure a quality experience for our users. We will be continuing to investigate alternatives to bring back animated emotes and will keep users aware of any progress we are able to make.</h3>
+        <ul>
+            <li>Fixing bug with Twitch Hype Chat event command triggering for regular chat messages</li>
+            <li>Performance and memory improvements for rendering emotes on the Chat page</li>
+            <li>Adding $streamdescription Special Identifier for use with YouTube streams</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.6:</h2>
+        <ul>
+            <li>Adding new Special Identifiers for Tiltify service campaign data</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.5:</h2>
+        <ul>
+            <li>Adding information on Mix It Up Online Alpha pre-registration</li>
+            <li>Adding Twitch Channel Updated event command</li>
+            <li>Adding Chat User First Message event command</li>
+            <li>Adding "Count Lines In File" option to File Action</li>
+            <li>Fixing crashing bug when using !uptime command and $streamuptime Special Identifiers</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.4:</h2>
+        <ul>
+            <li>Fixing crashing bug when using !uptime command and $streamuptime Special Identifiers</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.3:</h2>
+        <ul>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.2:</h2>
+        <ul>
+            <li>Adding the Random Action to allow for the random selection of one or more actions</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.1:</h2>
+        <ul>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.1.0.0:</h2>
         <ul>
             <li>Adding support for YouTube Live streaming connectivity</li>
+            <li>The following functionality has been added for YouTube</li>
+            <ul>
+                <li>Event Commands: YouTube Channel Stream Start, YouTube Channel Stream Stop, YouTube Channel New Member, YouTube Channel Member Milestone, YouTube Channel Membership Gifted, YouTube Channel Mass Membership Gifted, YouTube Channel Super Chat</li>
+                <li>YouTube Action: Updating Title &amp; Description, Running Ad Break</li>
+                <li>Integration with general features and commands where applicable (EX: !uptime, !title, etc)</li>
+                <li>BetterTTV emote support for YouTube if you have connected your YouTube account for BetterTTV and enable the feature within Mix It Up under Settings -> Chat</li>
+                <li>YouTube supports the ability for users to have spaces in their username, which adjusts how User Special Identifiers are processed. When using any User-based Special Identifier, if the user in question has spaces in their username, then you must use an '@' before their name and the user must be presently active in your chat for us to be able to correlate them.</li>
+            </ul>
             <li>Due to the naming conventions used for YouTube, there may be some confusion when using various features in Mix It Up. We are still working on the best way to help distinquish between these conflicting terms, but in the mean-time, a general rule of thumb is as follows:</li>
             <ul>
                 <li>On most streaming platforms, a user that is interested notifications for your channel is called a Follower, while a person that is paying money to your stream for special perks is a Subscriber.</li>
@@ -93,18 +187,11 @@
                 <li>If you see anywhere in the app where it specifically says <b>YouTube</b> Subscriber, you can safely assume it means a user who is getting notifications for your channel.</li>
                 <li>However, if it <b>does not</b> have the word YouTube in front of Subscriber, then it means a person who has paid money for perks in your channel</li>
             </ul>
-            <li>The following functionality has been added for YouTube</li>
+            <li>Adding Twitch Integrated Throwing System service connectivity</li>
             <ul>
-                <li>Event Commands: YouTube Channel Stream Start, YouTube Channel Stream Stop, YouTube Channel New Member, YouTube Channel Member Milestone, YouTube Channel Membership Gifted, YouTube Channel Mass Membership Gifted, YouTube Channel Super Chat</li>
-                <li>YouTube Action: Updating Title &amp; Description, Running Ad Break</li>
-                <li>Integration with general features and commands where applicable (EX: !uptime, !title, etc)</li>
-                <li>BetterTTV emote support for YouTube if you have connected your YouTube account for BetterTTV and enable the feature within Mix It Up under Settings -> Chat</li>
-                <li>YouTube supports the ability for users to have spaces in their username, which adjusts how User Special Identifiers are processed. When using any User-based Special Identifier, if the user in question has spaces in their username, then you must use an '@' before their name and the user must be presently active in your chat for us to be able to correlate them.</li>
-            </ul>
-            <li>The following functionality is not available currently for YouTube, but is planned to soon:</li>
-            <ul>
-                <li>Role Usage Requirement support for YouTube Membership tiers</li>
-                <li>Category/Game information</li>
+                <li>Twitch Integrated Throwing System can be connected by visiting the Services page.</li>
+                <li>The Twitch Integrated Throwing action can be added to commands to allow you to throw specific items or activate triggers created in the app.</li>
+                <li>The Twitch Integrated Throwing System service connectivity can be used with or without VTube Studio service connectivity, as the two systems are independent of each other.</li>
             </ul>
             <li>Adding Crowd Control service connectivity</li>
             <ul>
@@ -112,11 +199,51 @@
                 <li>A new Crowd Control menu has been added to make dedicated commands that will trigger when a specific game effect has been redeemed</li>
                 <li>Crowd Control Effect Redeemed event command has been added for when any effect is redeemed</li>
             </ul>
+            <li>Adding Lumia Stream service connectivity</li>
+            <ul>
+                <li>Lumia Stream can be connected by visiting the Services page.</li>
+                <li>The Lumia Stream action can be added to commands to allow you to set lighting settings for all your lights and trigger commands within Lumia Stream</li>
+            </ul>
+            <li>Adding DonorDrive service connectivity, replacing the previous Extra Life service connectivity</li>
+            <ul>
+                <li>DonorDrive can be connected by visiting the Services page</li>
+                <li>DonorDrive Donation, DonorDrive Donation Incentive, &amp; DonorDrive Donation Milestone event commands have been added</li>
+            </ul>
             <li>Adding SAMMI service connectivity</li>
             <ul>
                 <li>SAMMI can be connected by visiting the Services page</li>
                 <li>The SAMMI action can be added to commands to allow you to trigger buttons, release buttons, and set global variables within SAMMI</li>
             </ul>
+            <li>Adding Music Player feature</li>
+            <ul>
+                <li>The Music Player feature can be found on the main Mix It Up menu.</li>
+                <li>Music can be loaded by navigating to the Music Player page and clicking on the Folder icon on the right-side.</li>
+                <li>The following are the list of support music file formats: MP3, WAV, FLAC, MP4, M4A, AAC</li>
+                <li>The Music Player action can be added to commands to allow you to control the currently playing song from the Music Player and other options.</li>
+                <li>Recommended Music Sites: No Copyright Sounds, StreamBeats, Epidemic Sounds</li>
+            </ul>
+            <li>Adding Infinite Album service connectivity</li>
+            <ul>
+                <li>Infinite Album can be connected by visiting the Services page</li>
+                <li>The Infinite Album action can be added to commands to allow you to adjust the audio style, the instruments, and play various sound effects available from the Infinite Album application</li>
+            </ul>
+            <li>Adding Alejo Pronouns display support for Twitch chat. This can be enabled under Settings -> Chat</li>
+            <li>Adding Twitch Channel Hype Chat event command: $hypechatlevel, $hypechatamount, $hypechatamountnumber, $hypechatamountnumberdigits</li>
+            <li>Adding Twitch Channel Outgoing Raid Completed event command for when you the user have completed a raid to another channel.</li>
+            <li>Adding Set Content Classification Labels option to Twitch Action</li>
+            <li>Adding "Set Command Cooldown" &amp; "Exit Current Command" option to Command Action</li>
+            <li>Adding support to "!quote" pre-made chat command for searching for quote based on text input</li>
+            <li>Adding settings option to clear all user data for users that have not been seen in X many days</li>
+            <li>Adding settings option to specify what text should be used to separated delimited arguments</li>
+            <li>Adding settings option for cooldown amount for notifications to reduce back-to-back notification sounds playing</li>
+            <li>Updating Trovo connectivity to handle automatic re-authentication when valid</li>
+            <li>Fixing bug with the display of FrankerFaceZ emotes</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.0.0.39:</h2>
+        <ul>
+            <li>Updating Twitch event service version for follow events</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 

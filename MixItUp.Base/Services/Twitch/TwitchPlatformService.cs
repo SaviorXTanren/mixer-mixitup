@@ -30,12 +30,16 @@ namespace MixItUp.Base.Services.Twitch
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
 
+        public static event EventHandler<ClipModel> OnTwitchClipCreated = delegate { };
+        public static void TwitchClipCreated(ClipModel clip) { OnTwitchClipCreated(null, clip); }
+
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
             OAuthClientScopeEnum.bits__read,
 
             OAuthClientScopeEnum.channel__edit__commercial,
 
+            OAuthClientScopeEnum.channel__manage__ads,
             OAuthClientScopeEnum.channel__manage__broadcast,
             OAuthClientScopeEnum.channel__manage__moderators,
             OAuthClientScopeEnum.channel__manage__polls,
@@ -46,6 +50,7 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.channel__moderate,
 
+            OAuthClientScopeEnum.channel__read__ads,
             OAuthClientScopeEnum.channel__read__charity,
             OAuthClientScopeEnum.channel__read__editors,
             OAuthClientScopeEnum.channel__read__goals,
@@ -194,19 +199,19 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<UserModel> GetNewAPIUserByLogin(string login) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Users.GetUserByLogin(login)); }
 
-        public async Task<IEnumerable<UserFollowModel>> GetNewAPIFollowers(UserModel channel, int maxResult = 1)
+        public async Task<IEnumerable<ChannelFollowerModel>> GetNewAPIFollowers(UserModel channel, int maxResult = 1)
         {
-            return await this.RunAsync(this.Connection.NewAPI.Users.GetFollows(to: channel, maxResults: maxResult));
+            return await this.RunAsync(this.Connection.NewAPI.Channels.GetFollowers(channel, maxResults: maxResult));
         }
 
-        public async Task<UserFollowModel> CheckIfFollowsNewAPI(UserModel channel, UserModel userToCheck)
+        public async Task<ChannelFollowerModel> CheckIfFollowsNewAPI(UserModel channel, UserModel userToCheck)
         {
-            IEnumerable<UserFollowModel> follows = await this.RunAsync(this.Connection.NewAPI.Users.GetFollows(from: userToCheck, to: channel, maxResults: 1));
-            if (follows != null)
-            {
-                return follows.FirstOrDefault();
-            }
-            return null;
+            return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.CheckIfFollowing(channel, userToCheck));
+        }
+
+        public async Task<IEnumerable<SubscriptionModel>> GetSubscribers(UserModel channel, int maxResult = 1)
+        {
+            return await this.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscriptions(channel, maxResult));
         }
 
         public async Task<GameModel> GetNewAPIGameByID(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
@@ -269,6 +274,10 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<ClipModel> GetClip(ClipCreationModel clip) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetClip(clip)); }
 
+        public async Task<ClipModel> GetClip(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetClipByID(id)); }
+
+        public async Task<IEnumerable<ClipModel>> GetClips(UserModel broadcaster, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetBroadcasterClips(broadcaster, startedAt: startDate, endedAt: endDate, maxResults: maxResults)); }
+
         public async Task<BitsLeaderboardModel> GetBitsLeaderboard(BitsLeaderboardPeriodEnum period, int count) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Bits.GetBitsLeaderboard(startedAt: DateTimeOffset.Now, period: period, count: count)); }
 
         public async Task<IEnumerable<BitsCheermoteModel>> GetBitsCheermotes(UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Bits.GetCheermotes(channel)); }
@@ -323,12 +332,16 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<long> GetSubscriberPoints(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscriptionPoints(broadcaster)); }
 
-        public async Task<long> GetFollowerCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Users.GetFollowerCount(broadcaster)); }
+        public async Task<long> GetFollowerCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.GetFollowerCount(broadcaster)); }
 
         public async Task<IEnumerable<StreamModel>> GetStreams(IEnumerable<string> userIDs) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetStreamsByUserIDs(userIDs)); }
 
         public async Task<IEnumerable<StreamModel>> GetTopStreams(int maxResults) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetTopStreams(maxResults)); }
 
         public async Task<IEnumerable<StreamModel>> GetFollowedStreams(UserModel broadcaster, int maxResults) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetFollowedStreams(broadcaster, maxResults)); }
+
+        public async Task<AdScheduleModel> GetAdSchedule(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Ads.GetAdSchedule(broadcaster)); }
+
+        public async Task<AdSnoozeResponseModel> SnoozeNextAd(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Ads.SnoozeNextAd(broadcaster)); }
     }
 }

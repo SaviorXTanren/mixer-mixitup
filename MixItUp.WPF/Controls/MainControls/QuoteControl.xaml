@@ -49,7 +49,7 @@
 
         <DataGrid Grid.Row="2" ItemsSource="{Binding Quotes}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="#" IsReadOnly="True" Width="50">
+                <DataGridTemplateColumn Header="#" IsReadOnly="True" Width="75">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center" Text="{Binding ID}" />

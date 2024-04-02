@@ -25,7 +25,18 @@ namespace MixItUp.Base.ViewModel.Chat.Trovo
             this.MessageType = message.type;
             this.TrovoMessage = message;
 
-            string[] parts = message.content.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            this.ProcessMessageContents(message.content);
+        }
+
+        public TrovoChatMessageViewModel(UserV2ViewModel user, string message)
+            : base(string.Empty, StreamingPlatformTypeEnum.Trovo, user)
+        {
+            this.ProcessMessageContents(message);
+        }
+
+        private void ProcessMessageContents(string message)
+        {
+            string[] parts = message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string part in parts)
             {
                 this.AddStringMessagePart(part);

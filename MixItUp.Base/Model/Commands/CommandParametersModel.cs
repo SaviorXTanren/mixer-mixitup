@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.Commands
 
         public static List<string> GenerateArguments(string arguments)
         {
-            return (!string.IsNullOrEmpty(arguments)) ? arguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
+            return (!string.IsNullOrEmpty(arguments)) ? arguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
         }
 
         [DataMember]
@@ -143,7 +143,7 @@ namespace MixItUp.Base.Model.Commands
                             for (int j = i + 1; j < this.Arguments.Count; j++)
                             {
                                 usernameTag += " " + this.Arguments[j];
-                                UserV2ViewModel userTag = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.YouTube, usernameTag);
+                                UserV2ViewModel userTag = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformUsername: usernameTag);
                                 if (userTag != null)
                                 {
                                     newArguments.Add(usernameTag);
@@ -185,7 +185,7 @@ namespace MixItUp.Base.Model.Commands
                     string username = UserService.SanitizeUsername(this.Arguments.ElementAt(0));
                     if (this.Arguments.Count > 0)
                     {
-                        this.TargetUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, username, performPlatformSearch: true);
+                        this.TargetUser = await ServiceManager.Get<UserService>().GetUserByPlatform(this.Platform, platformUsername: username, performPlatformSearch: true);
                         if (this.TargetUser != null && !string.Equals(username, this.TargetUser.Username, StringComparison.OrdinalIgnoreCase))
                         {
                             this.TargetUser = null;

@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
@@ -26,7 +27,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV3Model
     {
-        public const int LatestVersion = 6;
+        public const int LatestVersion = 7;
 
         public const string SettingsDirectoryName = "Settings";
         public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
@@ -51,7 +52,7 @@ namespace MixItUp.Base.Model.Settings
                     {
                         ChannelSession.AppSettings.SettingsRestoreFilePath = filePath;
                         ChannelSession.AppSettings.SettingsToReplaceDuringRestore = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
-                        GlobalEvents.RestartRequested();
+                        ChannelSession.RestartRequested();
                     }
                     else
                     {
@@ -115,11 +116,15 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel LumiaStreamOAuthToken { get; set; }
         [DataMember]
+        public OAuthTokenModel PulsoidOAuthToken { get; set; }
+        [DataMember]
         public bool EnableVoicemodStudio { get; set; }
         [DataMember]
         public bool EnableCrowdControl { get; set; }
         [DataMember]
         public bool EnableSAMMI { get; set; }
+        [DataMember]
+        public OAuthTokenModel TTSMonsterOAuthToken { get; set; }
 
         #endregion Authentication
 
@@ -230,6 +235,10 @@ namespace MixItUp.Base.Model.Settings
         public int TwitchMassGiftedSubsFilterAmount { get; set; } = 1;
         [DataMember]
         public bool TwitchReplyToCommandChatMessages { get; set; }
+        [DataMember]
+        public bool TwitchSlashMeForAllChatMessages { get; set; }
+        [DataMember]
+        public int TwitchUpcomingAdCommandTriggerAmount { get; set; } = 5;
 
         [DataMember]
         public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();
@@ -249,6 +258,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string AlertUserJoinLeaveColor { get; set; }
         [DataMember]
+        public string AlertUserFirstMessageColor { get; set; }
+        [DataMember]
         public string AlertFollowColor { get; set; }
         [DataMember]
         public string AlertHostColor { get; set; }
@@ -266,6 +277,8 @@ namespace MixItUp.Base.Model.Settings
         public string AlertTwitchChannelPointsColor { get; set; }
         [DataMember]
         public string AlertTwitchHypeTrainColor { get; set; }
+        [DataMember]
+        public string AlertTwitchAdsColor { get; set; }
         [DataMember]
         public string AlertYouTubeSuperChatColor { get; set; }
         [DataMember]
@@ -458,14 +471,20 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool EnableOverlay { get; set; }
         [DataMember]
-        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; } = new Dictionary<string, int>();
+        public int OverlayPortNumber { get; set; } = OverlayV3Service.DefaultOverlayPort;
         [DataMember]
         public string OverlaySourceName { get; set; }
+        [DataMember]
+        public List<OverlayEndpointV3Model> OverlayEndpointsV3 { get; set; } = new List<OverlayEndpointV3Model>();
+        [DataMember]
+        public List<OverlayWidgetV3Model> OverlayWidgetsV3 { get; set; } = new List<OverlayWidgetV3Model>();
 
         [DataMember]
-        public List<OverlayWidgetModel> OverlayWidgets { get; set; } = new List<OverlayWidgetModel>();
+        [Obsolete]
+        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; } = new Dictionary<string, int>();
         [DataMember]
-        public int OverlayWidgetRefreshTime { get; set; } = 5;
+        [Obsolete]
+        public List<OverlayWidgetModel> OverlayWidgets { get; set; } = new List<OverlayWidgetModel>();
 
         #endregion Overlay
 
@@ -491,7 +510,10 @@ namespace MixItUp.Base.Model.Settings
         public bool EnableDeveloperAPIAdvancedMode { get; set; }
 
         [DataMember]
+        [Obsolete]
         public int TiltifyCampaign { get; set; }
+        [DataMember]
+        public string TiltifyCampaignV5 { get; set; }
 
         [DataMember]
         public string DonorDriveCharityURL { get; set; }
@@ -529,6 +551,11 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public string SAMMIAPIPassword { get; set; }
+
+        [DataMember]
+        public int PulsoidCommandTriggerDelay { get; set; } = 3;
+        [DataMember]
+        public List<Tuple<int, int>> PulsoidCommandHeartRateRangeTriggers { get; set; } = new List<Tuple<int, int>>();
 
         #endregion Services
 
@@ -784,15 +811,30 @@ namespace MixItUp.Base.Model.Settings
             }
 
             // Clear out unused Cooldown Groups and Command Groups
-            var allUsedCooldownGroupNames = this.Commands.Values.ToList().Select(c => c.Requirements?.Cooldown?.GroupName).Distinct();
-            var allUnusedCooldownGroupNames = this.CooldownGroupAmounts.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
-            foreach (var unused in allUnusedCooldownGroupNames)
+            var unusedCooldownGroupNames = this.CooldownGroupAmounts.Select(c => c.Key).ToList();
+            foreach (var command in this.Commands.Values.ToList())
             {
-                this.CooldownGroupAmounts.Remove(unused.Key);
+                if (!string.IsNullOrEmpty(command.Requirements?.Cooldown?.GroupName))
+                {
+                    unusedCooldownGroupNames.Remove(command.Requirements?.Cooldown?.GroupName);
+                }
+            }
+
+            foreach (var product in this.RedemptionStoreProducts)
+            {
+                if (!string.IsNullOrEmpty(product.Value.Requirements?.Cooldown?.GroupName))
+                {
+                    unusedCooldownGroupNames.Remove(product.Value.Requirements?.Cooldown?.GroupName);
+                }
+            }
+
+            foreach (var unused in unusedCooldownGroupNames)
+            {
+                this.CooldownGroupAmounts.Remove(unused);
             }
 
             var allUsedCommandGroupNames = this.Commands.Values.ToList().Select(c => c.GroupName).Distinct();
-            var allUnusedCommandGroupNames = this.CommandGroups.ToList().Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            var allUnusedCommandGroupNames = this.CommandGroups.ToList().Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.CurrentCulture));
             foreach (var unused in allUnusedCommandGroupNames)
             {
                 this.CommandGroups.Remove(unused.Key);
@@ -868,6 +910,14 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.TITSOAuthToken = ServiceManager.Get<TITSService>().GetOAuthTokenCopy();
             }
+            if (ServiceManager.Get<PulsoidService>().IsConnected)
+            {
+                this.PulsoidOAuthToken = ServiceManager.Get<PulsoidService>().GetOAuthTokenCopy();
+            }
+            if (ServiceManager.Get<ITTSMonsterService>().IsConnected)
+            {
+                this.TTSMonsterOAuthToken = ServiceManager.Get<ITTSMonsterService>().GetOAuthTokenCopy();
+            }
         }
 
         public async Task SaveDatabaseData()
@@ -925,17 +975,17 @@ namespace MixItUp.Base.Model.Settings
                 await CreateUserImportTable();
             }
 
-            try
-            {
-                await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Statistics(ID, DateTime, TypeID, PlatformID, Data) VALUES($ID, $DateTime, $TypeID, $PlatformID, $Data)",
-                    ServiceManager.Get<StatisticsService>().GetStatisticsToSave().Select(s => new Dictionary<string, object>() { { "$ID", s.ID.ToString() }, { "$DateTime", s.DateTime }, { "$TypeID", (int)s.Type },
-                        { "$PlatformID", (int)s.Platform }, { "$Data", JSONSerializerHelper.SerializeToString(s.Data) } }));
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-                await CreateStatisticsTable();
-            }
+            //try
+            //{
+            //    await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Statistics(ID, DateTime, TypeID, PlatformID, Data) VALUES($ID, $DateTime, $TypeID, $PlatformID, $Data)",
+            //        ServiceManager.Get<StatisticsService>().GetStatisticsToSave().Select(s => new Dictionary<string, object>() { { "$ID", s.ID.ToString() }, { "$DateTime", s.DateTime }, { "$TypeID", (int)s.Type },
+            //            { "$PlatformID", (int)s.Platform }, { "$Data", JSONSerializerHelper.SerializeToString(s.Data) } }));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Log(ex);
+            //    await CreateStatisticsTable();
+            //}
 
             await ServiceManager.Get<IDatabaseService>().CompressDb(this.DatabaseFilePath);
         }
@@ -1098,7 +1148,7 @@ namespace MixItUp.Base.Model.Settings
         private async void InitializeMissingData()
         {
             await this.CreateUserImportTable();
-            await this.CreateStatisticsTable();
+            //await this.CreateStatisticsTable();
 
             StreamingPlatforms.ForEachPlatform(p =>
             {
@@ -1107,6 +1157,16 @@ namespace MixItUp.Base.Model.Settings
                     this.StreamingPlatformAuthentications[p] = new StreamingPlatformAuthenticationSettingsModel(p);
                 }
             });
+
+            if (this.OverlayEndpointsV3.Count == 0)
+            {
+                this.OverlayEndpointsV3.Add(new OverlayEndpointV3Model(OverlayEndpointV3Model.DefaultOverlayName)
+                {
+                    ID = Guid.Empty
+                });
+
+                await ServiceManager.Get<OverlayV3Service>().Enable();
+            }
 
             if (this.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
             {

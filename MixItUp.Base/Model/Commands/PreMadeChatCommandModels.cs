@@ -223,45 +223,24 @@ namespace MixItUp.Base.Model.Commands
     {
         public static async Task<DateTimeOffset> GetStartTime(StreamingPlatformTypeEnum platform)
         {
-            if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (StreamingPlatforms.IsValidPlatform(platform))
             {
-                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                if (ServiceManager.Get<TwitchSessionService>().IsLive)
+                IStreamingPlatformSessionService platformService = StreamingPlatforms.GetPlatformSessionService(platform);
+                if (platformService.IsConnected)
                 {
-                    if (ServiceManager.Get<TwitchSessionService>().Stream != null)
-                    {
-                        return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
-                    }
-                    else
-                    {
-                        return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().LastStream?.started_at);
-                    }
+                    await platformService.RefreshChannel();
+                    return platformService.StreamStart;
                 }
             }
-
-            if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            else
             {
-                await ServiceManager.Get<YouTubeSessionService>().RefreshChannel();
-                if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.GetConnectedPlatforms())
                 {
-                    if (ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.HasValue)
+                    DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(p);
+                    if (startTime != DateTimeOffset.MinValue)
                     {
-                        DateTime dt = ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
-                        if (dt.Kind == DateTimeKind.Unspecified)
-                        {
-                            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
-                        }
-                        return new DateTimeOffset(dt, (dt.Kind == DateTimeKind.Utc) ? TimeSpan.Zero : DateTimeOffset.Now.Offset);
+                        return startTime;
                     }
-                }
-            }
-
-            if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<TrovoSessionService>().RefreshChannel();
-                if (ServiceManager.Get<TrovoSessionService>().IsLive)
-                {
-                    return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
                 }
             }
 
@@ -440,7 +419,7 @@ namespace MixItUp.Base.Model.Commands
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
-                    GlobalEvents.QuoteAdded(quote);
+                    UserQuoteModel.QuoteAdded(quote);
 
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QuoteAddedHeader + quote.ToString(), parameters);
                 }
@@ -779,7 +758,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string username = parameters.Arguments.ElementAt(0);
 
-                UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, username);
+                UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatform(parameters.Platform, platformUsername: username);
                 if (targetUser != null)
                 {
                     targetUser.CustomTitle = string.Join(" ", parameters.Arguments.Skip(1));
@@ -974,7 +953,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            if (parameters.Arguments != null && parameters.Arguments.Count() == 2)
+            if (parameters.Arguments != null && parameters.Arguments.Count() >= 2)
             {
                 string platformName = parameters.Arguments.First();
                 StreamingPlatformTypeEnum platform = EnumHelper.GetEnumValueFromString<StreamingPlatformTypeEnum>(platformName);
@@ -986,7 +965,7 @@ namespace MixItUp.Base.Model.Commands
                 }
 
                 string username = UserService.SanitizeUsername(string.Join(" ", parameters.Arguments.Skip(1)));
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, username, performPlatformSearch: true);
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformUsername: username, performPlatformSearch: true);
                 if (user == null)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUserNotFound, username), parameters);

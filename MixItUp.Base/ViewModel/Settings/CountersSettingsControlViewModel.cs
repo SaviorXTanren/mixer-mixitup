@@ -23,7 +23,9 @@ namespace MixItUp.Base.ViewModel.Settings
                 {
                     value = 0;
                 }
-                this.model.Amount = value;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                this.model.SetAmount(value);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 this.NotifyPropertyChanged();
             }
         }
@@ -132,7 +134,7 @@ namespace MixItUp.Base.ViewModel.Settings
         private void RefreshList()
         {
             this.Counters.Clear();
-            foreach (var kvp in ChannelSession.Settings.Counters.ToList())
+            foreach (var kvp in ChannelSession.Settings.Counters.ToList().OrderBy(c => c.Value.Name))
             {
                 this.Counters.Add(new CounterViewModel(this, kvp.Value));
             }

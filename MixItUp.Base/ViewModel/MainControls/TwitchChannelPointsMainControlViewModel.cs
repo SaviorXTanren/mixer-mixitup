@@ -79,7 +79,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ProcessHelper.LaunchLink($"https://dashboard.twitch.tv/u/{ServiceManager.Get<TwitchSessionService>().Username}/viewer-rewards/channel-points");
+                    ServiceManager.Get<IProcessService>().LaunchLink($"https://dashboard.twitch.tv/u/{ServiceManager.Get<TwitchSessionService>().Username}/viewer-rewards/channel-points");
                 }
             });
         }

@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Settings
@@ -25,8 +26,10 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericTextSettingsOptionControlViewModel DelimitedArgumentSeparator { get; set; }
 
         public GenericToggleSettingsOptionControlViewModel TwitchReplyToCommandChatMessages { get; set; }
+        public GenericToggleSettingsOptionControlViewModel TwitchSlashMeForAllChatMessages { get; set; }
+        public GenericNumberSettingsOptionControlViewModel TwitchUpcomingAdCommandTriggerAmount { get; set; }
 
-        public ThreadSafeObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ThreadSafeObservableCollection<GenericToggleSettingsOptionControlViewModel>();
+        public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>();
 
         public CommandsSettingsControlViewModel()
         {
@@ -54,6 +57,10 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.TwitchReplyToCommandChatMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchReplyToCommandChatMessages, ChannelSession.Settings.TwitchReplyToCommandChatMessages,
                 (value) => { ChannelSession.Settings.TwitchReplyToCommandChatMessages = value; });
+            this.TwitchSlashMeForAllChatMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchSlashMeForAllChatMessages, ChannelSession.Settings.TwitchSlashMeForAllChatMessages,
+                (value) => { ChannelSession.Settings.TwitchSlashMeForAllChatMessages = value; });
+            this.TwitchUpcomingAdCommandTriggerAmount = new GenericNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchUpcomingAdCommandTriggerAmount, ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount,
+                (value) => { ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount = value; });
 
             List<ActionTypeEnum> actions = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
             actions.Remove(ActionTypeEnum.Custom);

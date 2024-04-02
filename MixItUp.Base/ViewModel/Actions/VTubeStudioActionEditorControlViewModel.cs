@@ -4,6 +4,7 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -35,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowLoadModelGrid { get { return this.SelectedActionType == VTubeStudioActionTypeEnum.LoadModel; } }
 
-        public ThreadSafeObservableCollection<VTubeStudioModel> Models { get; set; } = new ThreadSafeObservableCollection<VTubeStudioModel>();
+        public ObservableCollection<VTubeStudioModel> Models { get; set; } = new ObservableCollection<VTubeStudioModel>();
 
         public VTubeStudioModel SelectedModel
         {
@@ -47,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedModel = value;
                 this.NotifyPropertyChanged();
 
-                if (updateOccurred)
+                if (updateOccurred && this.ShowRunHotKeyGrid)
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     this.LoadHotKeysForCurrentModel();
@@ -127,9 +128,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand GetCurrentModelMovementCommand { get; set; }
 
+        public ICommand RefreshCacheCommand { get; set; }
+
         public bool ShowRunHotKeyGrid { get { return this.SelectedActionType == VTubeStudioActionTypeEnum.RunHotKey; } }
 
-        public ThreadSafeObservableCollection<VTubeStudioHotKey> HotKeys { get; set; } = new ThreadSafeObservableCollection<VTubeStudioHotKey>();
+        public ObservableCollection<VTubeStudioHotKey> HotKeys { get; set; } = new ObservableCollection<VTubeStudioHotKey>();
 
         public VTubeStudioHotKey SelectedHotKey
         {
@@ -244,17 +247,40 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
             });
 
+            this.RefreshCacheCommand = this.CreateCommand(async () =>
+            {
+                await this.TryConnectToVTubeStudio();
+
+                if (this.VTubeStudioConnected)
+                {
+                    ServiceManager.Get<VTubeStudioService>().ClearCaches();
+                }
+
+                await this.LoadData();
+            });
+
+            await this.TryConnectToVTubeStudio();
+
+            await this.LoadData();
+
+            await base.OnOpenInternal();
+        }
+
+        private async Task<bool> TryConnectToVTubeStudio()
+        {
             if (ChannelSession.Settings.VTubeStudioOAuthToken != null && !this.VTubeStudioConnected)
             {
                 Result result = await ServiceManager.Get<VTubeStudioService>().Connect(ChannelSession.Settings.VTubeStudioOAuthToken);
-                if (!result.Success)
-                {
-                    return;
-                }
+                return result.Success;
             }
+            return false;
+        }
 
+        private async Task LoadData()
+        {
             if (this.VTubeStudioConnected)
             {
+                this.Models.Clear();
                 foreach (VTubeStudioModel model in await ServiceManager.Get<VTubeStudioService>().GetAllModels())
                 {
                     this.Models.Add(model);
@@ -264,8 +290,6 @@ namespace MixItUp.Base.ViewModel.Actions
                 await this.LoadHotKeysForCurrentModel();
                 this.SelectedHotKey = this.HotKeys.FirstOrDefault(hk => string.Equals(hk.hotkeyID, this.hotKeyID));
             }
-
-            await base.OnOpenInternal();
         }
 
         private async Task LoadHotKeysForCurrentModel()

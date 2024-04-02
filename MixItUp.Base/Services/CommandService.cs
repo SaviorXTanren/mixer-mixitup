@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
@@ -7,7 +6,6 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +23,12 @@ namespace MixItUp.Base.Services
 
     public class CommandService
     {
+        private static readonly HashSet<ActionTypeEnum> VisualAudioActionTypes = new HashSet<ActionTypeEnum>()
+        {
+            ActionTypeEnum.Overlay, ActionTypeEnum.OvrStream, ActionTypeEnum.PolyPop, ActionTypeEnum.Sound, ActionTypeEnum.StreamingSoftware, ActionTypeEnum.TextToSpeech,
+            ActionTypeEnum.MusicPlayer, ActionTypeEnum.TITS, ActionTypeEnum.Voicemod, ActionTypeEnum.VTubeStudio
+        };
+
         public bool IsPaused { get; private set; }
 
         public event EventHandler<CommandInstanceModel> OnCommandInstanceAdded = delegate { };
@@ -282,20 +286,20 @@ namespace MixItUp.Base.Services
 
         public async Task Pause()
         {
-            await this.commandQueueLock.WaitAndRelease(() =>
-            {
-                this.IsPaused = true;
-                return Task.CompletedTask;
-            });
+            await this.commandQueueLock.WaitAsync();
+
+            this.IsPaused = true;
+
+            this.commandQueueLock.Release();
         }
 
         public async Task Unpause()
         {
-            await this.commandQueueLock.WaitAndRelease(() =>
-            {
-                this.IsPaused = false;
-                return Task.CompletedTask;
-            });
+            await this.commandQueueLock.WaitAsync();
+
+            this.IsPaused = false;
+
+            this.commandQueueLock.Release();
 
             foreach (CommandInstanceModel commandInstance in this.pauseQueue)
             {
@@ -373,14 +377,16 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await this.commandQueueLock.WaitAndRelease(() =>
+                try
                 {
+                    await this.commandQueueLock.WaitAsync();
+
                     if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
                     {
-                        perCommandTypeInstances[type].Add(commandInstance);
-                        if (perCommandTypeTasks[type] == null)
+                        this.perCommandTypeInstances[type].Add(commandInstance);
+                        if (this.perCommandTypeTasks[type] == null)
                         {
-                            perCommandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                            this.perCommandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
                         }
                     }
                     else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
@@ -394,8 +400,7 @@ namespace MixItUp.Base.Services
                     else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
                     {
                         HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
-                        if (actionTypes.Contains(ActionTypeEnum.Overlay) || actionTypes.Contains(ActionTypeEnum.OvrStream) || actionTypes.Contains(ActionTypeEnum.PolyPop) ||
-                            actionTypes.Contains(ActionTypeEnum.Sound) || actionTypes.Contains(ActionTypeEnum.StreamingSoftware) || actionTypes.Contains(ActionTypeEnum.TextToSpeech))
+                        if (actionTypes.Any(a => VisualAudioActionTypes.Contains(a)))
                         {
                             singularInstances.Add(commandInstance);
                             if (singularTask == null)
@@ -418,45 +423,54 @@ namespace MixItUp.Base.Services
                             singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
                         }
                     }
-                    return Task.CompletedTask;
-                });
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    this.commandQueueLock.Release();
+                }
             }
         }
 
         private async Task BackgroundCommandTypeRunner(CommandTypeEnum type)
         {
-            CommandInstanceModel instance = null;
+            CommandInstanceModel currentInstance = null;
             do
             {
-                instance = await this.commandQueueLock.WaitAndRelease(() =>
+                try
                 {
-                    CommandInstanceModel commandInstance = null;
+                    await this.commandQueueLock.WaitAsync();
+
+                    CommandInstanceModel newInstance = null;
                     if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
                     {
-                        if (perCommandTypeInstances.ContainsKey(type) && perCommandTypeInstances[type].Count > 0)
+                        if (this.perCommandTypeInstances.ContainsKey(type) && this.perCommandTypeInstances[type].Count > 0)
                         {
-                            commandInstance = perCommandTypeInstances[type].RemoveFirst();
+                            newInstance = this.perCommandTypeInstances[type].RemoveFirst();
                         }
                         else
                         {
-                            perCommandTypeTasks[type] = null;
+                            this.perCommandTypeTasks[type] = null;
                         }
                     }
                     else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
                     {
-                        if (instance != null)
+                        if (currentInstance != null)
                         {
-                            foreach (ActionTypeEnum actionType in instance.GetActionTypes())
+                            foreach (ActionTypeEnum actionType in currentInstance.GetActionTypes())
                             {
                                 this.perActionTypeInUse.Remove(actionType);
                             }
                         }
 
-                        commandInstance = this.perActionTypeInstances.FirstOrDefault(c => this.CanCommandBeRunBasedOnActions(c));
-                        if (commandInstance != null)
+                        newInstance = this.perActionTypeInstances.FirstOrDefault(c => this.CanCommandBeRunBasedOnActions(c));
+                        if (newInstance != null)
                         {
-                            this.perActionTypeInstances.Remove(commandInstance);
-                            foreach (ActionTypeEnum actionType in commandInstance.GetActionTypes())
+                            this.perActionTypeInstances.Remove(newInstance);
+                            foreach (ActionTypeEnum actionType in newInstance.GetActionTypes())
                             {
                                 this.perActionTypeInUse.Add(actionType);
                             }
@@ -467,29 +481,38 @@ namespace MixItUp.Base.Services
                     {
                         if (singularInstances.Count > 0)
                         {
-                            commandInstance = singularInstances.RemoveFirst();
+                            newInstance = this.singularInstances.RemoveFirst();
                         }
                         else
                         {
-                            singularTask = null;
+                            this.singularTask = null;
                         }
                     }
-                    return Task.FromResult(commandInstance);
-                });
 
-                if (instance != null && instance.State == CommandInstanceStateEnum.Pending)
+                    currentInstance = newInstance;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    this.commandQueueLock.Release();
+                }
+
+                if (currentInstance != null && currentInstance.State == CommandInstanceStateEnum.Pending)
                 {
                     if (this.IsPaused)
                     {
-                        this.pauseQueue.Add(instance);
+                        this.pauseQueue.Add(currentInstance);
                     }
                     else
                     {
-                        await this.RunDirectly(instance);
+                        await this.RunDirectly(currentInstance);
                     }
                 }
 
-            } while (instance != null);
+            } while (currentInstance != null);
         }
 
         private async Task RunDirectlyInternal(CommandInstanceModel commandInstance, CommandParametersModel parameters)
@@ -522,26 +545,29 @@ namespace MixItUp.Base.Services
                     }
 
                     ActionModelBase action = actions[i];
-                    if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
+                    if (ServiceManager.Get<OverlayV3Service>().IsConnected)
                     {
-                        ServiceManager.Get<OverlayService>().StartBatching();
-                    }
-
-                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Action, description: ((int)action.Type).ToString());
-                    await action.Perform(parameters);
-
-                    if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
-                    {
-                        if (i == (actions.Count - 1) || !(actions[i + 1] is OverlayActionModel))
+                        if (action is OverlayActionModel)
                         {
-                            await ServiceManager.Get<OverlayService>().EndBatching();
+                            ServiceManager.Get<OverlayV3Service>().StartBatching();
+                        }
+                        else
+                        {
+                            await ServiceManager.Get<OverlayV3Service>().EndBatching();
                         }
                     }
+
+                    await action.Perform(parameters);
 
                     if (parameters.ExitCommand)
                     {
                         break;
                     }
+                }
+
+                if (ServiceManager.Get<OverlayV3Service>().IsConnected)
+                {
+                    await ServiceManager.Get<OverlayV3Service>().EndBatching();
                 }
             }
 

@@ -20,6 +20,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
         None,
         Chat,
         Alerts,
+        [Obsolete]
         Statistics,
         GameQueue,
         [Obsolete]
@@ -273,7 +274,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
             {
                 case DashboardItemTypeEnum.Chat: return this.ChatControl;
                 case DashboardItemTypeEnum.Alerts: return this.AlertsControl;
-                case DashboardItemTypeEnum.Statistics: return this.StatisticsControl;
+                
                 case DashboardItemTypeEnum.GameQueue: return this.GameQueueControl;
                 case DashboardItemTypeEnum.QuickCommands: return this.QuickCommandsControl;
                 case DashboardItemTypeEnum.RedemptionStore: return this.RedemptionStoreControl;

@@ -6,14 +6,13 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public class ActionGroupCommandModel : CommandModelBase
     {
+        [Obsolete]
         [DataMember]
         public bool RunOneRandomly { get; set; }
 
-        public ActionGroupCommandModel(string name, bool runOneRandomly)
+        public ActionGroupCommandModel(string name)
             : base(name, CommandTypeEnum.ActionGroup)
-        {
-            this.RunOneRandomly = runOneRandomly;
-        }
+        { }
 
         [Obsolete]
         public ActionGroupCommandModel() : base() { }

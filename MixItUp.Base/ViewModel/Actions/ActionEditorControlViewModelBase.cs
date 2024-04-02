@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -121,6 +120,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.ExternalProgram: actionPageName = "external-program-action"; break;
                     case ActionTypeEnum.File: actionPageName = "file-action"; break;
                     case ActionTypeEnum.GameQueue: actionPageName = "game-queue-action"; break;
+                    case ActionTypeEnum.Group: actionPageName = "group-action"; break;
                     case ActionTypeEnum.IFTTT: actionPageName = "ifttt-action"; break;
                     case ActionTypeEnum.InfiniteAlbum: actionPageName = "infinite-album"; break;
                     case ActionTypeEnum.Input: actionPageName = "input-action"; break;
@@ -131,9 +131,13 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.OvrStream: actionPageName = "ovrstream-action"; break;
                     case ActionTypeEnum.PixelChat: actionPageName = "pixel-chat-action"; break;
                     case ActionTypeEnum.PolyPop: actionPageName = "polypop-action"; break;
+                    case ActionTypeEnum.Random: actionPageName = "random-action"; break;
+                    case ActionTypeEnum.SAMMI: actionPageName = "sammi-action"; break;
+                    case ActionTypeEnum.Script: actionPageName = "script-action"; break;
                     case ActionTypeEnum.Serial: actionPageName = "serial-action"; break;
                     case ActionTypeEnum.Sound: actionPageName = "sound-action"; break;
                     case ActionTypeEnum.SpecialIdentifier: actionPageName = "special-identifier-action"; break;
+                    case ActionTypeEnum.StreamingSoftware: actionPageName = "streaming-software-action"; break;
                     case ActionTypeEnum.Streamlabs: actionPageName = "streamlabs-action"; break;
                     case ActionTypeEnum.TextToSpeech: actionPageName = "text-to-speech-action"; break;
                     case ActionTypeEnum.TITS: actionPageName = "tits-action"; break;
@@ -144,9 +148,12 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.Wait: actionPageName = "wait-action"; break;
                     case ActionTypeEnum.WebRequest: actionPageName = "web-request-action"; break;
                     case ActionTypeEnum.YouTube: actionPageName = "youtube-action"; break;
+                    default:
+                        actionPageName = this.Type.ToString().ToLower() + "-action";
+                        break;
                 }
 
-                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/actions/" + actionPageName);
+                ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/actions/" + actionPageName);
             });
 
             this.DeleteCommand = this.CreateCommand(() =>

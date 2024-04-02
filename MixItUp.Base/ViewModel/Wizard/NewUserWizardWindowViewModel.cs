@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel.Accounts;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -100,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Wizard
         private string settingsBackupLocation;
         public bool IsBackupLocationSet { get { return !string.IsNullOrEmpty(this.SettingsBackupLocation); } }
 
-        public ThreadSafeObservableCollection<SettingsBackupRateEnum> SettingsBackupOptions { get; private set; } = new ThreadSafeObservableCollection<SettingsBackupRateEnum>(EnumHelper.GetEnumList<SettingsBackupRateEnum>());
+        public ObservableCollection<SettingsBackupRateEnum> SettingsBackupOptions { get; private set; } = new ObservableCollection<SettingsBackupRateEnum>(EnumHelper.GetEnumList<SettingsBackupRateEnum>());
         public SettingsBackupRateEnum SelectedSettingsBackupOption
         {
             get { return this.selectedSettingsBackupOption; }
@@ -151,10 +152,10 @@ namespace MixItUp.Base.ViewModel.Wizard
 
         public NewUserWizardWindowViewModel()
         {
-            this.DiscordCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); });
-            this.TwitterCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); });
-            this.YouTubeCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://www.youtube.com/c/MixItUpApp"); });
-            this.WikiCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/"); });
+            this.DiscordCommand = this.CreateCommand(() => { ServiceManager.Get<IProcessService>().LaunchLink("https://mixitupapp.com/discord"); });
+            this.TwitterCommand = this.CreateCommand(() => { ServiceManager.Get<IProcessService>().LaunchLink("https://twitter.com/MixItUpApp"); });
+            this.YouTubeCommand = this.CreateCommand(() => { ServiceManager.Get<IProcessService>().LaunchLink("https://www.youtube.com/c/MixItUpApp"); });
+            this.WikiCommand = this.CreateCommand(() => { ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/"); });
 
             this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.Twitch.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };

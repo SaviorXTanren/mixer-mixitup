@@ -16,7 +16,7 @@
             <GenericSettingsControls:GenericSliderSettingsOptionControl DataContext="{Binding FontSize}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AddSeparatorsBetweenMessages}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding UseAlternatingBackgroundColors}" />
-            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DisableAnimatedEmotes}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DisableAnimatedEmotes}" Visibility="Collapsed" />
 
             <Separator Margin="10" />
 
