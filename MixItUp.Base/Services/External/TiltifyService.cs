@@ -217,22 +217,22 @@ namespace MixItUp.Base.Services.External
 
         public async Task<TiltifyCampaign> GetCampaign(string campaignID)
         {
-            return await this.GetObjectResult<TiltifyCampaign>("api/public/campaigns/" + campaignID.ToString());
+            return await this.GetObjectResult<TiltifyCampaign>($"api/public/campaigns/{campaignID}");
         }
 
         public async Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user)
         {
-            return await this.GetArrayResult<TiltifyCampaign>($"api/public/users/{user.id}/campaigns");
+            return await this.GetArrayResult<TiltifyCampaign>($"api/public/users/{user.id}/campaigns?limit=100", usePageCursor: true);
         }
 
         public async Task<IEnumerable<TiltifyTeam>> GetUserTeams(TiltifyUser user)
         {
-            return await this.GetArrayResult<TiltifyTeam>($"api/public/users/{user.id}/teams");
+            return await this.GetArrayResult<TiltifyTeam>($"api/public/users/{user.id}/teams?limit=100", usePageCursor: true);
         }
 
         public async Task<IEnumerable<TiltifyCampaign>> GetTeamCampaigns(TiltifyTeam team)
         {
-            return await this.GetArrayResult<TiltifyCampaign>($"api/public/teams/{team.id}/team_campaigns");
+            return await this.GetArrayResult<TiltifyCampaign>($"api/public/teams/{team.id}/team_campaigns?limit=100", usePageCursor: true);
         }
 
         public async Task<IEnumerable<TiltifyDonation>> GetCampaignDonations(TiltifyCampaign campaign)
@@ -336,19 +336,43 @@ namespace MixItUp.Base.Services.External
             return default(T);
         }
 
-        private async Task<IEnumerable<T>> GetArrayResult<T>(string url)
+        private async Task<IEnumerable<T>> GetArrayResult<T>(string url, bool usePageCursor = false)
         {
+            string afterCursor = null;
             List<T> results = new List<T>();
             try
             {
-                JObject result = await this.GetJObjectAsync(url);
-                if (result != null && result.ContainsKey("data"))
+                do
                 {
-                    foreach (JToken token in (JArray)result["data"])
+                    string queryUrl = url;
+                    if (!string.IsNullOrEmpty(afterCursor))
                     {
-                        results.Add(token.ToObject<T>());
+                        queryUrl += $"&after={afterCursor}";
                     }
-                }
+
+                    JObject result = await this.GetJObjectAsync(queryUrl);
+                    afterCursor = null;
+
+                    if (result != null)
+                    {
+                        if (result.ContainsKey("data"))
+                        {
+                            foreach (JToken token in (JArray)result["data"])
+                            {
+                                results.Add(token.ToObject<T>());
+                            }
+                        }
+
+                        if (usePageCursor && result.ContainsKey("metadata"))
+                        {
+                            JObject metadata = (JObject)result["metadata"];
+                            if (metadata.TryGetValue("after", out JToken after) && after != null)
+                            {
+                                afterCursor = after.ToString();
+                            }
+                        }
+                    }
+                } while (!string.IsNullOrEmpty(afterCursor));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return results;
