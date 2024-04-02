@@ -28,16 +28,6 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.ConnectCommand = this.CreateCommand(async () =>
             {
-                //Result result = await ServiceManager.Get<OverlayService>().Connect();
-                //if (result.Success)
-                //{
-                //    this.IsConnected = true;
-                //}
-                //else
-                //{
-                //    await this.ShowConnectFailureMessage(result);
-                //}
-
                 Result result = await ServiceManager.Get<OverlayV3Service>().Enable();
                 if (result.Success)
                 {

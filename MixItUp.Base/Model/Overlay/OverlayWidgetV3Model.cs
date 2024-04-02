@@ -61,6 +61,8 @@ namespace MixItUp.Base.Model.Overlay.Widgets
 
         public async Task Disable()
         {
+            this.IsEnabled = false;
+
             await this.Item.WidgetDisable();
 
             this.Item.LoadedInWidget -= Item_LoadedInWidget;
@@ -70,8 +72,6 @@ namespace MixItUp.Base.Model.Overlay.Widgets
                 this.refreshCancellationTokenSource.Cancel();
             }
             this.refreshCancellationTokenSource = null;
-
-            this.IsEnabled = false;
         }
 
         public async Task Reset()

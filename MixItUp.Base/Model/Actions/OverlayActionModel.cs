@@ -72,46 +72,19 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string EventListDetails { get; set; }
 
-        [Obsolete]
-        public OverlayActionModel(OverlayItemModelBase overlayItem)
-            : base(ActionTypeEnum.Overlay)
-        {
-            //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
-            //if (overlays.Contains(overlayName))
-            //{
-            //    this.OverlayName = overlayName;
-            //}
-            //else
-            //{
-            //    this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
-            //}
-
-            this.OverlayItem = overlayItem;
-        }
-
         public OverlayActionModel(OverlayItemV3ModelBase overlayItem, string duration, OverlayAnimationV3Model entranceAnimation, OverlayAnimationV3Model exitAnimation)
             : base(ActionTypeEnum.Overlay)
         {
-            //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
-            //if (overlays.Contains(overlayName))
-            //{
-            //    this.OverlayName = overlayName;
-            //}
-            //else
-            //{
-            //    this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
-            //}
-
             this.OverlayItemV3 = overlayItem;
             this.Duration = duration;
             this.EntranceAnimation = entranceAnimation;
             this.ExitAnimation = exitAnimation;
         }
 
-        public OverlayActionModel(Guid widgetID, bool showWidget)
+        public OverlayActionModel(OverlayWidgetV3Model widget, bool showWidget)
             : base(ActionTypeEnum.Overlay)
         {
-            this.WidgetID = widgetID;
+            this.WidgetID = widget.ID;
             this.ShowWidget = showWidget;
         }
 
@@ -165,20 +138,18 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.WidgetID != Guid.Empty)
             {
-#pragma warning disable CS0612 // Type or member is obsolete
-                OverlayWidgetModel widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
+                OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
                 if (widget != null)
                 {
                     if (this.ShowWidget)
                     {
-                        await widget.Enable(parameters);
+                        await widget.Enable();
                     }
                     else
                     {
                         await widget.Disable();
                     }
                 }
-#pragma warning restore CS0612 // Type or member is obsolete
             }
             else if (this.StreamBossID != Guid.Empty)
             {

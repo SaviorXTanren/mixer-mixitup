@@ -72,8 +72,8 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    
-                                    <TextBox Text="{Binding RefreshTime}" Grid.Column="0" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RefreshTimeSecs}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                    <TextBox Text="{Binding RefreshTime}" Visibility="{Binding IsBasicWidget, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="0" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RefreshTimeSecs}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                                 </Grid>
                             </Grid>
                         </TabItem>

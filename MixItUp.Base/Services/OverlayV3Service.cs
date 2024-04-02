@@ -169,7 +169,6 @@ namespace MixItUp.Base.Services
         public Task<Result> Enable()
         {
             ChannelSession.Settings.EnableOverlay = true;
-            this.IsConnected = true;
             return Task.FromResult(new Result());
         }
 
@@ -177,6 +176,8 @@ namespace MixItUp.Base.Services
         {
             try
             {
+                this.IsConnected = false;
+
                 this.httpListenerServer = new OverlayV3HttpListenerServer();
                 this.webSocketListenerServer = new OverlayV3WebSocketHttpListenerServer();
 
@@ -210,6 +211,11 @@ namespace MixItUp.Base.Services
 
                     foreach (OverlayWidgetV3Model widget in this.GetWidgets())
                     {
+                        if (widget.IsEnabled)
+                        {
+                            await widget.Enable();
+                        }
+
                         if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
                         {
                             this.ConnectOverlayWidgetEndpointService(widget);
@@ -217,6 +223,7 @@ namespace MixItUp.Base.Services
                     }
 
                     ServiceManager.Get<ITelemetryService>().TrackService("Overlay");
+                    this.IsConnected = true;
                     return new Result();
                 }
             }
@@ -235,6 +242,8 @@ namespace MixItUp.Base.Services
 
             this.httpListenerServer.Stop();
             await this.webSocketListenerServer.Stop();
+
+            this.IsConnected = false;
         }
 
         public Task<Result> Disable()

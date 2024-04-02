@@ -32,7 +32,14 @@ namespace MixItUp.Base.ViewModel.MainControls
             get { return this.Widget.IsEnabled; }
             set
             {
-                this.Widget.IsEnabled = value;
+                if (this.Widget.IsEnabled)
+                {
+                    this.Widget.Disable().Wait();
+                }
+                else
+                {
+                    this.Widget.Enable().Wait();
+                }
                 this.NotifyPropertyChanged();
             }
         }

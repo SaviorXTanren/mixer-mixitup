@@ -406,6 +406,13 @@ namespace MixItUp.Base.Services
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
+                ChannelSession.SetChannelSessionSettings(settings);
+
+                settings.OverlayEndpointsV3.Add(new OverlayEndpointV3Model(OverlayEndpointV3Model.DefaultOverlayName)
+                {
+                    ID = Guid.Empty
+                });
+
 #pragma warning disable CS0612 // Type or member is obsolete
                 foreach (var kvp in settings.OverlayCustomNameAndPorts)
                 {
@@ -420,9 +427,10 @@ namespace MixItUp.Base.Services
                         ActionGroupCommandModel command = (ActionGroupCommandModel)kvp.Value;
                         if (command.RunOneRandomly)
                         {
-                            RandomActionModel randomAction = new RandomActionModel(amount: "1", noDuplicates: false, command.Actions);
+                            RandomActionModel randomAction = new RandomActionModel(amount: "1", noDuplicates: false, command.Actions.ToList());
                             command.Actions.Clear();
                             command.Actions.Add(randomAction);
+                            settings.Commands.ManualValueChanged(command.ID);
                         }
                     }
 
@@ -434,36 +442,41 @@ namespace MixItUp.Base.Services
 
                             OverlayEndpointV3Model endpoint = settings.OverlayEndpointsV3.FirstOrDefault(e => string.Equals(e.Name, action.OverlayName));
 
-                            action.Duration = action.OverlayItem.Effects.Duration.ToString();
-                            if (action.OverlayItem.Effects.EntranceAnimation != OverlayItemEffectEntranceAnimationTypeEnum.None)
+                            if (action.WidgetID == Guid.Empty)
                             {
-                                action.EntranceAnimation = new OverlayAnimationV3Model()
+                                action.Duration = action.OverlayItem.Effects.Duration.ToString();
+                                if (action.OverlayItem.Effects.EntranceAnimation != OverlayItemEffectEntranceAnimationTypeEnum.None)
                                 {
-                                    AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.EntranceAnimation.ToString())
-                                };
-                            }
-                            if (action.OverlayItem.Effects.ExitAnimation != OverlayItemEffectExitAnimationTypeEnum.None)
-                            {
-                                action.ExitAnimation = new OverlayAnimationV3Model()
-                                {
-                                    AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.ExitAnimation.ToString())
-                                };
-                            }
-
-                            OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem);
-                            if (item != null)
-                            {
-                                action.OverlayItemV3 = item;
-                                if (endpoint != null && endpoint.ID != Guid.Empty)
-                                {
-                                    action.OverlayItemV3.OverlayEndpointID = endpoint.ID;
+                                    action.EntranceAnimation = new OverlayAnimationV3Model()
+                                    {
+                                        AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.EntranceAnimation.ToString())
+                                    };
                                 }
+                                if (action.OverlayItem.Effects.ExitAnimation != OverlayItemEffectExitAnimationTypeEnum.None)
+                                {
+                                    action.ExitAnimation = new OverlayAnimationV3Model()
+                                    {
+                                        AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.ExitAnimation.ToString())
+                                    };
+                                }
+
+                                OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem);
+                                if (item != null)
+                                {
+                                    action.OverlayItemV3 = item;
+                                    if (endpoint != null && endpoint.ID != Guid.Empty)
+                                    {
+                                        action.OverlayItemV3.OverlayEndpointID = endpoint.ID;
+                                    }
+                                }
+                                settings.Commands.ManualValueChanged(kvp.Key);
                             }
                         }
                         else if (actionModel is TextToSpeechActionModel)
                         {
                             TextToSpeechActionModel action = (TextToSpeechActionModel)actionModel;
                             action.ProviderType = TextToSpeechProviderType.ResponsiveVoice;
+                            settings.Commands.ManualValueChanged(kvp.Key);
                         }
                     }
                 }
@@ -476,20 +489,51 @@ namespace MixItUp.Base.Services
 
                     newWidget.Name = widget.Name;
                     newWidget.IsEnabled = widget.IsEnabled;
-                    newWidget.RefreshTime = widget.RefreshTime;
+                    if (widget.Item.ItemType == OverlayItemModelTypeEnum.HTML || widget.Item.ItemType == OverlayItemModelTypeEnum.Image ||
+                        widget.Item.ItemType == OverlayItemModelTypeEnum.Text || widget.Item.ItemType == OverlayItemModelTypeEnum.Video ||
+                        widget.Item.ItemType == OverlayItemModelTypeEnum.YouTube)
+                    {
+                        newWidget.RefreshTime = widget.RefreshTime;
+                    }
+
                     OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(widget.Item);
                     if (item != null)
                     {
+                        item.ID = widget.Item.ID;
                         newWidget.Item = item;
                         if (endpoint != null && endpoint.ID != Guid.Empty)
                         {
                             newWidget.Item.OverlayEndpointID = endpoint.ID;
                         }
+
+                        if (newWidget.Type == OverlayItemV3Type.Text)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayTextWidgetDefaultJavascript;
+                        }
+                        else if (newWidget.Type == OverlayItemV3Type.Image)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayImageWidgetDefaultJavascript;
+                        }
+                        else if (newWidget.Type == OverlayItemV3Type.Video)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayVideoWidgetDefaultJavascript;
+                        }
+                        else if (newWidget.Type == OverlayItemV3Type.YouTube)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayYouTubeWidgetDefaultJavascript;
+                        }
+                        else if (newWidget.Type == OverlayItemV3Type.HTML)
+                        {
+                            newWidget.Item.Javascript = OverlayResources.OverlayHTMLWidgetDefaultJavascript;
+                        }
+
                         settings.OverlayWidgetsV3.Add(newWidget);
                     }
                 }
                 settings.OverlayWidgets.Clear();
 #pragma warning restore CS0612 // Type or member is obsolete
+
+                ChannelSession.SetChannelSessionSettings(null);
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
@@ -509,15 +553,19 @@ namespace MixItUp.Base.Services
 #pragma warning disable CS0612 // Type or member is obsolete
         private static OverlayItemV3ModelBase ConvertOldOverlayItem(OverlayItemModelBase item)
         {
+            OverlayItemV3ViewModelBase vmResult = null;
             OverlayItemV3ModelBase result = null;
             if (item.ItemType == OverlayItemModelTypeEnum.ChatMessages)
             {
                 OverlayChatMessagesListItemModel oldItem = (OverlayChatMessagesListItemModel)item;
                 OverlayChatV3ViewModel newItem = new OverlayChatV3ViewModel();
+                vmResult = newItem;
                 newItem.BackgroundColor = oldItem.BackgroundColor;
                 newItem.BorderColor = oldItem.BorderColor;
                 newItem.FontColor = oldItem.TextColor;
                 newItem.FontName = oldItem.TextFont;
+                newItem.FontSize = oldItem.Height;
+                newItem.MessageRemovalTime = oldItem.FadeOut;
                 newItem.MessageAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
                 newItem.MessageRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
                 result = newItem.GetItem();
@@ -527,6 +575,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayEndCreditsItemModel oldItem = (OverlayEndCreditsItemModel)item;
                 OverlayEndCreditsV3ViewModel newItem = new OverlayEndCreditsV3ViewModel();
+                vmResult = newItem;
                 newItem.BackgroundColor = oldItem.BackgroundColor;
                 newItem.Header.FontColor = oldItem.SectionTextColor;
                 newItem.Header.FontName = oldItem.SectionTextFont;
@@ -594,6 +643,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayEventListItemModel oldItem = (OverlayEventListItemModel)item;
                 OverlayEventListV3ViewModel newItem = new OverlayEventListV3ViewModel();
+                vmResult = newItem;
                 newItem.BackgroundColor = oldItem.BackgroundColor;
                 newItem.BorderColor = oldItem.BorderColor;
                 newItem.FontColor = oldItem.TextColor;
@@ -631,6 +681,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayGameQueueListItemModel oldItem = (OverlayGameQueueListItemModel)item;
                 OverlayGameQueueV3ViewModel newItem = new OverlayGameQueueV3ViewModel();
+                vmResult = newItem;
                 newItem.BackgroundColor = oldItem.BackgroundColor;
                 newItem.BorderColor = oldItem.BorderColor;
                 newItem.FontColor = oldItem.TextColor;
@@ -645,6 +696,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayHTMLItemModel oldItem = (OverlayHTMLItemModel)item;
                 OverlayHTMLV3ViewModel newItem = new OverlayHTMLV3ViewModel();
+                vmResult = newItem;
                 result = newItem.GetItem();
                 result.OldCustomHTML = oldItem.HTML;
             }
@@ -652,6 +704,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayImageItemModel oldItem = (OverlayImageItemModel)item;
                 OverlayImageV3ViewModel newItem = new OverlayImageV3ViewModel();
+                vmResult = newItem;
                 newItem.FilePath = oldItem.FilePath;
                 newItem.Width = oldItem.Width.ToString();
                 newItem.Height = oldItem.Height.ToString();
@@ -661,6 +714,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayLeaderboardListItemModel oldItem = (OverlayLeaderboardListItemModel)item;
                 OverlayLeaderboardV3ViewModel newItem = new OverlayLeaderboardV3ViewModel();
+                vmResult = newItem;
                 if (oldItem.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
                 {
                     newItem.SelectedLeaderboardType = OverlayLeaderboardTypeV3Enum.Consumable;
@@ -694,6 +748,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayProgressBarItemModel oldItem = (OverlayProgressBarItemModel)item;
                 OverlayGoalV3ViewModel newItem = new OverlayGoalV3ViewModel();
+                vmResult = newItem;
                 newItem.ProgressColor = oldItem.ProgressColor;
                 newItem.GoalColor = oldItem.BackgroundColor;
                 newItem.FontColor = oldItem.TextColor;
@@ -737,6 +792,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayStreamBossItemModel oldItem = (OverlayStreamBossItemModel)item;
                 OverlayStreamBossV3ViewModel newItem = new OverlayStreamBossV3ViewModel();
+                vmResult = newItem;
                 newItem.FontColor = oldItem.TextColor;
                 newItem.FontName = oldItem.TextFont;
                 newItem.BorderColor = oldItem.BorderColor;
@@ -771,6 +827,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayTextItemModel oldItem = (OverlayTextItemModel)item;
                 OverlayTextV3ViewModel newItem = new OverlayTextV3ViewModel();
+                vmResult = newItem;
                 newItem.Text = oldItem.Text;
                 newItem.FontColor = oldItem.Color;
                 newItem.FontName = oldItem.Font;
@@ -785,6 +842,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayTimerItemModel oldItem = (OverlayTimerItemModel)item;
                 OverlayPersistentTimerV3ViewModel newItem = new OverlayPersistentTimerV3ViewModel();
+                vmResult = newItem;
                 newItem.InitialAmount = oldItem.TotalLength;
                 newItem.FontColor = oldItem.TextColor;
                 newItem.FontName = oldItem.TextFont;
@@ -796,6 +854,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayTimerTrainItemModel oldItem = (OverlayTimerTrainItemModel)item;
                 OverlayPersistentTimerV3ViewModel newItem = new OverlayPersistentTimerV3ViewModel();
+                vmResult = newItem;
                 newItem.FontColor = oldItem.TextColor;
                 newItem.FontName = oldItem.TextFont;
                 newItem.FontSize = oldItem.TextSize;
@@ -819,6 +878,7 @@ namespace MixItUp.Base.Services
             {
                 OverlayVideoItemModel oldItem = (OverlayVideoItemModel)item;
                 OverlayVideoV3ViewModel newItem = new OverlayVideoV3ViewModel();
+                vmResult = newItem;
                 newItem.FilePath = oldItem.FilePath;
                 newItem.Volume = oldItem.Volume;
                 newItem.Loop = oldItem.Loop;
@@ -830,12 +890,33 @@ namespace MixItUp.Base.Services
             {
                 OverlayYouTubeItemModel oldItem = (OverlayYouTubeItemModel)item;
                 OverlayYouTubeV3ViewModel newItem = new OverlayYouTubeV3ViewModel();
+                vmResult = newItem;
                 newItem.VideoID = oldItem.FilePath;
                 newItem.Volume = oldItem.Volume;
                 newItem.Width = oldItem.Width.ToString();
                 newItem.Height = oldItem.Height.ToString();
                 result = newItem.GetItem();
             }
+
+            if (result != null)
+            {
+                result.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(vmResult.DefaultHTML);
+                result.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(vmResult.DefaultCSS);
+                result.Javascript = vmResult.DefaultJavascript;
+
+                result.Layer = item.Position.Layer;
+                result.XPosition = item.Position.Horizontal;
+                result.YPosition = item.Position.Vertical;
+                if (item.Position.PositionType == OverlayItemPositionType.Pixel)
+                {
+                    result.PositionType = OverlayPositionV3Type.Pixel;
+                }
+                else if (item.Position.PositionType == OverlayItemPositionType.Percentage)
+                {
+                    result.PositionType = OverlayPositionV3Type.Percentage;
+                }
+            }
+
             return result;
         }
 #pragma warning restore CS0612 // Type or member is obsolete

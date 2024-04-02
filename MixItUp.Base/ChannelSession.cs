@@ -14,7 +14,6 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -499,6 +498,11 @@ namespace MixItUp.Base
         {
             Logger.ForceLog(LogLevel.Information, serviceName + " Service reconnection successful");
             ServiceManager.ServiceReconnect(serviceName);
+        }
+
+        internal static void SetChannelSessionSettings(SettingsV3Model settings)
+        {
+            ChannelSession.Settings = settings;
         }
 
         private static async Task SessionBackgroundTask(CancellationToken cancellationToken)
