@@ -14191,6 +14191,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Old HTML.
+        /// </summary>
+        public static string OldHTML {
+            get {
+                return ResourceManager.GetString("OldHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old HTML Copied To Clipboard.
+        /// </summary>
+        public static string OldHTMLCopiedToClipboard {
+            get {
+                return ResourceManager.GetString("OldHTMLCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One.
         /// </summary>
         public static string One {

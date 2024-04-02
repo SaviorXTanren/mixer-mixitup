@@ -42,6 +42,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     
                     <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -55,6 +56,8 @@
                     </ComboBox>
 
                     <ComboBox Grid.Column="4" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" Visibility="{Binding IsDisplayOptionOverlayEndpoint, Converter={StaticResource BooleanToVisibilityConverter}}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                    <Controls:IconButton x:Name="OldHTMLButton" Grid.Column="5" ToolTip="{x:Static resx:Resources.OldHTML}" Icon="History" Visibility="{Binding ShowOldCustomHTML, Converter={StaticResource BooleanToVisibilityConverter}}" Click="OldHTMLButton_Click" Margin="10,0,0,0" />
                 </Grid>
 
                 <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">

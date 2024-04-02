@@ -167,6 +167,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public bool IsTestable { get { return this.Item.IsTestable; } }
 
+        public string OldCustomHTML { get; private set; }
+        public bool ShowOldCustomHTML { get { return !string.IsNullOrEmpty(this.OldCustomHTML); } }
+
+        public ICommand ShowOldHTMLCustomCommand { get; set; }
         public ICommand SaveCommand { get; set; }
         public ICommand TestCommand { get; set; }
         public ICommand ExportCommand { get; set; }
@@ -256,6 +260,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Type = widget.Item.Type;
             this.Name = widget.Name;
             this.RefreshTime = widget.RefreshTime;
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            this.OldCustomHTML = widget.Item.OldCustomHTML;
+#pragma warning restore CS0612 // Type or member is obsolete
 
             this.SelectedDisplayOption = widget.Item.DisplayOption;
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();

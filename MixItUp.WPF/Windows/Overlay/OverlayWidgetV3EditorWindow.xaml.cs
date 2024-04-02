@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Overlay;
+using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -88,6 +90,12 @@ namespace MixItUp.WPF.Windows.Overlay
         private void ViewModel_OnCloseRequested(object sender, System.EventArgs e)
         {
             this.Close();
+        }
+
+        private async void OldHTMLButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await UIHelpers.CopyToClipboard(this.viewModel.OldCustomHTML);
+            await DialogHelper.ShowMessage(MixItUp.Base.Resources.OldHTMLCopiedToClipboard);
         }
     }
 }

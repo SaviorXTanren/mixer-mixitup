@@ -10161,4 +10161,10 @@ namespace CustomNamespace
   <data name="OverlayWidgetAValidRefreshTimeMustBeSpecified" xml:space="preserve">
     <value>A valid refresh time must be specified</value>
   </data>
+  <data name="OldHTML" xml:space="preserve">
+    <value>Old HTML</value>
+  </data>
+  <data name="OldHTMLCopiedToClipboard" xml:space="preserve">
+    <value>Old HTML Copied To Clipboard</value>
+  </data>
 </root>
