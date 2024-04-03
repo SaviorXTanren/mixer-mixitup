@@ -124,7 +124,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetEnableInternal();
 
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.ViewerCount].IsEnabled || this.Displays[OverlayLabelDisplayV3TypeEnum.ChatterCount].IsEnabled)
+            if (this.Displays.Count == 0)
+            {
+                return;
+            }
+
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.ViewerCount) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.ChatterCount))
             {
                 if (this.refreshCancellationTokenSource != null)
                 {
@@ -137,13 +142,13 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     do
                     {
-                        if (this.Displays[OverlayLabelDisplayV3TypeEnum.ViewerCount].IsEnabled)
+                        if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.ViewerCount))
                         {
                             this.Displays[OverlayLabelDisplayV3TypeEnum.ViewerCount].Amount = ServiceManager.Get<ChatService>().GetViewerCount();
                             await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.ViewerCount);
                         }
 
-                        if (this.Displays[OverlayLabelDisplayV3TypeEnum.ChatterCount].IsEnabled)
+                        if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.ChatterCount))
                         {
                             this.Displays[OverlayLabelDisplayV3TypeEnum.ChatterCount].Amount = ServiceManager.Get<UserService>().ActiveUserCount;
                             await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.ChatterCount);
@@ -157,11 +162,11 @@ namespace MixItUp.Base.Model.Overlay
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
             
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestFollower].IsEnabled || this.Displays[OverlayLabelDisplayV3TypeEnum.TotalFollowers].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalFollowers))
             {
                 EventService.OnFollowOccurred += EventService_OnFollowOccurred;
 
-                if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestFollower].IsEnabled)
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower))
                 {
                     UserV2ViewModel user = null;
                     if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
@@ -187,7 +192,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
 
-                if (this.Displays[OverlayLabelDisplayV3TypeEnum.TotalFollowers].IsEnabled)
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalFollowers))
                 {
                     long amount = 0;
                     if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
@@ -202,18 +207,18 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
             
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestRaid].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestRaid))
             {
                 EventService.OnRaidOccurred += EventService_OnRaidOccurred;
             }
             
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled || this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
             {
                 EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
                 EventService.OnResubscribeOccurred += EventService_OnResubscribeOccurred;
                 EventService.OnSubscriptionGiftedOccurred += EventService_OnSubscriptionGiftedOccurred;
 
-                if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled)
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
                 {
                     UserV2ViewModel user = null;
                     if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
@@ -232,7 +237,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
 
-                if (this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].IsEnabled)
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
                 {
                     EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
 
@@ -249,27 +254,27 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
             
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestDonation].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestDonation))
             {
                 EventService.OnDonationOccurred += EventService_OnDonationOccurred;
             }
             
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestTwitchBits].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestTwitchBits))
             {
                 EventService.OnTwitchBitsCheeredOccurred += EventService_OnTwitchBitsCheeredOccurred;
             }
             
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestTrovoElixir].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestTrovoElixir))
             {
                 EventService.OnTrovoSpellCastOccurred += EventService_OnTrovoSpellCastOccurred;
             }
 
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestYouTubeSuperChat].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestYouTubeSuperChat))
             {
                 EventService.OnYouTubeSuperChatOccurred += EventService_OnYouTubeSuperChatOccurred;
             }
             
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.Counter))
             {
                 CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
                 if (!string.IsNullOrEmpty(this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].CounterName) &&
@@ -299,13 +304,13 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestFollower].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower))
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestFollower].UserID = user.ID;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestFollower);
             }
 
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.TotalFollowers].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalFollowers))
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.TotalFollowers].Amount++;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalFollowers);
@@ -321,14 +326,14 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnSubscribeOccurred(object sender, SubscriptionDetailsModel subscription)
         {
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscription.User.ID;
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = 1;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriber);
             }
 
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount++;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
@@ -337,14 +342,14 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnResubscribeOccurred(object sender, SubscriptionDetailsModel subscription)
         {
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscription.User.ID;
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = subscription.Months;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriber);
             }
 
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount++;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
@@ -353,14 +358,14 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnSubscriptionGiftedOccurred(object sender, SubscriptionDetailsModel subscription)
         {
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscription.User.ID;
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = 1;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriber);
             }
 
-            if (this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].IsEnabled)
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount++;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
@@ -471,6 +476,11 @@ namespace MixItUp.Base.Model.Overlay
             data[nameof(display.Format)] = result;
 
             return data;
+        }
+
+        private bool IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum type)
+        {
+            return this.Displays.TryGetValue(type, out OverlayLabelDisplayV3Model display) && display.IsEnabled;
         }
     }
 }

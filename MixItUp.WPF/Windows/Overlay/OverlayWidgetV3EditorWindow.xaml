@@ -102,7 +102,7 @@
                             </ItemsControl>
                         </TabItem>
 
-                        <TabItem Header="{x:Static resx:Resources.HTML}">
+                        <TabItem Header="{Binding HTMLHeader}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -114,7 +114,7 @@
                             </Grid>
                         </TabItem>
 
-                        <TabItem Header="{x:Static resx:Resources.CSS}">
+                        <TabItem Header="{Binding CSSHeader}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -126,7 +126,7 @@
                             </Grid>
                         </TabItem>
 
-                        <TabItem Header="{x:Static resx:Resources.Javascript}">
+                        <TabItem Header="{Binding JavascriptHeader}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />

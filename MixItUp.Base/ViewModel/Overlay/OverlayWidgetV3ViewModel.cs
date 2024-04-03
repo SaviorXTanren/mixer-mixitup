@@ -139,9 +139,22 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.html = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.HTMLHeader));
             }
         }
         private string html;
+
+        private string defaultHTML;
+
+        public string HTMLHeader
+        {
+            get { return this.IsHTMLModified ? Resources.HTML + "*" : Resources.HTML; }
+        }
+
+        public bool IsHTMLModified
+        {
+            get { return !string.Equals(this.HTML, this.defaultHTML); }
+        }
 
         public string CSS
         {
@@ -150,9 +163,22 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.css = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.CSSHeader));
             }
         }
         private string css;
+
+        private string defaultCSS;
+
+        public string CSSHeader
+        {
+            get { return this.IsCSSModified ? Resources.CSS + "*" : Resources.CSS; }
+        }
+
+        public bool IsCSSModified
+        {
+            get { return !string.Equals(this.CSS, this.defaultCSS); }
+        }
 
         public string Javascript
         {
@@ -161,9 +187,22 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.javascript = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.JavascriptHeader));
             }
         }
         private string javascript;
+
+        private string defaultJavascript;
+
+        public string JavascriptHeader
+        {
+            get { return this.IsJavascriptModified ? Resources.Javascript + "*" : Resources.Javascript; }
+        }
+
+        public bool IsJavascriptModified
+        {
+            get { return !string.Equals(this.Javascript, this.defaultJavascript); }
+        }
 
         public bool IsTestable { get { return this.Item.IsTestable; } }
 
@@ -211,36 +250,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Leaderboard: this.Item = new OverlayLeaderboardV3ViewModel(); break;
             }
 
-            this.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(this.Item.DefaultHTML);
-            this.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(this.Item.DefaultCSS);
-            this.Javascript = this.Item.DefaultJavascript;
-
-            if (this.IsBasicWidget)
-            {
-                this.RefreshTime = 5;
-            }
-
-            // Add Widget-unique Javascript
-            if (this.Type == OverlayItemV3Type.Text)
-            {
-                this.Javascript = OverlayResources.OverlayTextWidgetDefaultJavascript;
-            }
-            else if (this.Type == OverlayItemV3Type.Image)
-            {
-                this.Javascript = OverlayResources.OverlayImageWidgetDefaultJavascript;
-            }
-            else if (this.Type == OverlayItemV3Type.Video)
-            {
-                this.Javascript = OverlayResources.OverlayVideoWidgetDefaultJavascript;
-            }
-            else if (this.Type == OverlayItemV3Type.YouTube)
-            {
-                this.Javascript = OverlayResources.OverlayYouTubeWidgetDefaultJavascript;
-            }
-            else if (this.Type == OverlayItemV3Type.HTML)
-            {
-                this.Javascript = OverlayResources.OverlayHTMLWidgetDefaultJavascript;
-            }
+            this.HTML = this.GetDefaultHTML(this.Item);
+            this.CSS = this.GetDefaultCSS(this.Item);
+            this.Javascript = this.GetDefaultJavascript(this.Item);
 
             if (this.Type == OverlayItemV3Type.EndCredits)
             {
@@ -383,6 +395,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         private void Initialize()
         {
+            this.defaultHTML = this.GetDefaultHTML(this.Item);
+            this.defaultCSS = this.GetDefaultCSS(this.Item);
+            this.defaultJavascript = this.GetDefaultJavascript(this.Item);
+
             foreach (OverlayAnimationV3ViewModel animation in this.Item.Animations)
             {
                 this.Animations.Add(animation);
@@ -464,6 +480,36 @@ namespace MixItUp.Base.ViewModel.Overlay
             await this.DisableTestWidget();
 
             await this.EnableTestWidget();
+        }
+
+        private string GetDefaultHTML(OverlayItemV3ViewModelBase item) { return OverlayItemV3ModelBase.GetPositionWrappedHTML(item.DefaultHTML); }
+
+        private string GetDefaultCSS(OverlayItemV3ViewModelBase item) { return OverlayItemV3ModelBase.GetPositionWrappedCSS(item.DefaultCSS); }
+
+        private string GetDefaultJavascript(OverlayItemV3ViewModelBase item)
+        {
+            // Add Widget-unique Javascript
+            if (item.Type == OverlayItemV3Type.Text)
+            {
+                return OverlayResources.OverlayTextWidgetDefaultJavascript;
+            }
+            else if (item.Type == OverlayItemV3Type.Image)
+            {
+                return OverlayResources.OverlayImageWidgetDefaultJavascript;
+            }
+            else if (item.Type == OverlayItemV3Type.Video)
+            {
+                return OverlayResources.OverlayVideoWidgetDefaultJavascript;
+            }
+            else if (item.Type == OverlayItemV3Type.YouTube)
+            {
+                return OverlayResources.OverlayYouTubeWidgetDefaultJavascript;
+            }
+            else if (item.Type == OverlayItemV3Type.HTML)
+            {
+                return OverlayResources.OverlayHTMLWidgetDefaultJavascript;
+            }
+            return item.DefaultJavascript;
         }
     }
 }
