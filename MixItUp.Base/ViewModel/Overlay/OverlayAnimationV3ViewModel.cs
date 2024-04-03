@@ -76,10 +76,18 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel(string name, OverlayAnimationV3Model animation)
         {
             this.Name = name;
-            if (animation.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
+            if (animation != null)
+            {
+                if (animation.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
+                {
+                    this.SelectedAnimationLibrary = OverlayItemAnimationLibraryType.AnimateCSS;
+                    this.SelectedAnimatedCSSAnimation = animation.AnimateCSSAnimation;
+                }
+            }
+            else
             {
                 this.SelectedAnimationLibrary = OverlayItemAnimationLibraryType.AnimateCSS;
-                this.SelectedAnimatedCSSAnimation = animation.AnimateCSSAnimation;
+                this.SelectedAnimatedCSSAnimation = OverlayAnimateCSSAnimationType.None;
             }
         }
 
