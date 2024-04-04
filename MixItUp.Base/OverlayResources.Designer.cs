@@ -279,29 +279,26 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const list = document.getElementById(&quot;list&quot;);
+        ///   Looks up a localized string similar to const scrollSpeed = {ScrollSpeed};
+        ///const runEndlessly = {RunEndlessly};
+        ///const fadeTime = 3000;
         ///
-        ///const itemTemplate = document.querySelector(&quot;#item&quot;);
+        ///const main = document.getElementById(&quot;maindiv&quot;);
+        ///const list = document.getElementById(&quot;list&quot;);
         ///
-        ///var items = [];
+        ///const spacerTemplate = document.querySelector(&quot;#spacer&quot;);
         ///
-        ///function clear(data)
+        ///function startCredits(data)
         ///{
-        ///    items = [];
-        ///    while (list.childElementCount &gt; 0)
-        ///    {
-        ///        list.removeChild(list.lastElementChild);
+        ///    while (list.firstChild) {
+        ///        list.removeChild(list.lastChild);
         ///    }
-        ///}
+        ///    
+        ///    let listTop = document.documentElement.clientHeight;
+        ///    list.style.top = listTop + &quot;px&quot;;
         ///
-        ///function update(data)
-        ///{
-        ///    for (let i = 0; i &lt; items.length &amp;&amp; i &lt; data.Items.length; i++)
-        ///    {
-        ///        if (items[i] !== data.Items[i].User.ID)
-        ///        {
-        ///            let oldItem = list.children[i];
-        ///            let newItem = cre [rest of string was truncated]&quot;;.
+        ///    data.Order.forEach((id) =&gt;
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {
