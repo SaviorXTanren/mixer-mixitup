@@ -109,6 +109,11 @@ namespace MixItUp.Base.Model.Overlay
                 return;
             }
 
+            if (user == null)
+            {
+                user = ChannelSession.User;
+            }
+
             Dictionary<string, object> data = new Dictionary<string, object>();
             data["User"] = JObject.FromObject(user);
             data["Type"] = type;
@@ -229,7 +234,16 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.OnDonation(this, new UserDonationModel()
                     {
-                        Amount = 12.34
+                        Source = UserDonationSourceEnum.Streamlabs,
+
+                        User = ChannelSession.User,
+                        Username = ChannelSession.User.Username,
+
+                        Message = "Text",
+
+                        Amount = 12.34,
+
+                        DateTime = DateTimeOffset.Now,
                     });
                     await Task.Delay(3000);
                 };

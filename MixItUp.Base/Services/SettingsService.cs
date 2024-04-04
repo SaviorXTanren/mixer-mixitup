@@ -1,13 +1,9 @@
-﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
-using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
@@ -434,50 +430,9 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    foreach (ActionModelBase actionModel in kvp.Value.Actions)
+                    if (UpdateActionsV7(settings, kvp.Value.Actions))
                     {
-                        if (actionModel is OverlayActionModel)
-                        {
-                            OverlayActionModel action = (OverlayActionModel)actionModel;
-
-                            OverlayEndpointV3Model endpoint = settings.OverlayEndpointsV3.FirstOrDefault(e => string.Equals(e.Name, action.OverlayName));
-
-                            if (action.WidgetID == Guid.Empty)
-                            {
-                                action.Duration = action.OverlayItem.Effects.Duration.ToString();
-                                if (action.OverlayItem.Effects.EntranceAnimation != OverlayItemEffectEntranceAnimationTypeEnum.None)
-                                {
-                                    action.EntranceAnimation = new OverlayAnimationV3Model()
-                                    {
-                                        AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.EntranceAnimation.ToString())
-                                    };
-                                }
-                                if (action.OverlayItem.Effects.ExitAnimation != OverlayItemEffectExitAnimationTypeEnum.None)
-                                {
-                                    action.ExitAnimation = new OverlayAnimationV3Model()
-                                    {
-                                        AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.ExitAnimation.ToString())
-                                    };
-                                }
-
-                                OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem);
-                                if (item != null)
-                                {
-                                    action.OverlayItemV3 = item;
-                                    if (endpoint != null && endpoint.ID != Guid.Empty)
-                                    {
-                                        action.OverlayItemV3.OverlayEndpointID = endpoint.ID;
-                                    }
-                                }
-                                settings.Commands.ManualValueChanged(kvp.Key);
-                            }
-                        }
-                        else if (actionModel is TextToSpeechActionModel)
-                        {
-                            TextToSpeechActionModel action = (TextToSpeechActionModel)actionModel;
-                            action.ProviderType = TextToSpeechProviderType.ResponsiveVoice;
-                            settings.Commands.ManualValueChanged(kvp.Key);
-                        }
+                        settings.Commands.ManualValueChanged(kvp.Key);
                     }
                 }
 
@@ -537,6 +492,82 @@ namespace MixItUp.Base.Services
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
+        }
+
+        private static bool UpdateActionsV7(SettingsV3Model settings, IEnumerable<ActionModelBase> actions)
+        {
+            bool updated = false;
+            foreach (ActionModelBase actionModel in actions)
+            {
+                if (actionModel is OverlayActionModel)
+                {
+                    OverlayActionModel action = (OverlayActionModel)actionModel;
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                    OverlayEndpointV3Model endpoint = settings.OverlayEndpointsV3.FirstOrDefault(e => string.Equals(e.Name, action.OverlayName));
+
+                    if (action.WidgetID == Guid.Empty)
+                    {
+                        action.Duration = action.OverlayItem.Effects.Duration.ToString();
+                        if (action.OverlayItem.Effects.EntranceAnimation != OverlayItemEffectEntranceAnimationTypeEnum.None)
+                        {
+                            action.EntranceAnimation = new OverlayAnimationV3Model()
+                            {
+                                AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.EntranceAnimation.ToString())
+                            };
+                        }
+                        else
+                        {
+                            action.EntranceAnimation = new OverlayAnimationV3Model()
+                            {
+                                AnimateCSSAnimation = OverlayAnimateCSSAnimationType.None
+                            };
+                        }
+
+                        if (action.OverlayItem.Effects.ExitAnimation != OverlayItemEffectExitAnimationTypeEnum.None)
+                        {
+                            action.ExitAnimation = new OverlayAnimationV3Model()
+                            {
+                                AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.ExitAnimation.ToString())
+                            };
+                        }
+                        else
+                        {
+                            action.ExitAnimation = new OverlayAnimationV3Model()
+                            {
+                                AnimateCSSAnimation = OverlayAnimateCSSAnimationType.None
+                            };
+                        }
+
+                        OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem);
+                        if (item != null)
+                        {
+                            action.OverlayItemV3 = item;
+                            if (endpoint != null && endpoint.ID != Guid.Empty)
+                            {
+                                action.OverlayItemV3.OverlayEndpointID = endpoint.ID;
+                            }
+                        }
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
+                    updated = true;
+                }
+                else if (actionModel is TextToSpeechActionModel)
+                {
+                    TextToSpeechActionModel action = (TextToSpeechActionModel)actionModel;
+                    action.ProviderType = TextToSpeechProviderType.ResponsiveVoice;
+                    updated = true;
+                }
+                else if (actionModel is GroupActionModel)
+                {
+                    GroupActionModel action = (GroupActionModel)actionModel;
+                    if (UpdateActionsV7(settings, action.Actions))
+                    {
+                        updated = true;
+                    }
+                }
+            }
+            return updated;
         }
 
         public static async Task<int> GetSettingsVersion(string filePath)
@@ -698,7 +729,9 @@ namespace MixItUp.Base.Services
                 OverlayHTMLV3ViewModel newItem = new OverlayHTMLV3ViewModel();
                 vmResult = newItem;
                 result = newItem.GetItem();
+                result.HTML = oldItem.HTML;
                 result.OldCustomHTML = oldItem.HTML;
+                result.HTML = oldItem.HTML;
             }
             else if (item.ItemType == OverlayItemModelTypeEnum.Image)
             {
@@ -900,7 +933,14 @@ namespace MixItUp.Base.Services
 
             if (result != null)
             {
-                result.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(vmResult.DefaultHTML);
+                if (string.IsNullOrEmpty(result.HTML))
+                {
+                    result.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(vmResult.DefaultHTML);
+                }
+                else
+                {
+                    result.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(result.HTML);
+                }
                 result.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(vmResult.DefaultCSS);
                 result.Javascript = vmResult.DefaultJavascript;
 

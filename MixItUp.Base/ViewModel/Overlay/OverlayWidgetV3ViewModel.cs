@@ -312,6 +312,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.CSS = widget.Item.CSS;
             this.Javascript = widget.Item.Javascript;
 
+            this.Position = new OverlayPositionV3ViewModel(widget.Item);
+
             this.testWidget = widget;
 
             this.Initialize();

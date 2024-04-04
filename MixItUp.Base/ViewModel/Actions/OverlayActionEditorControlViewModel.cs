@@ -95,6 +95,10 @@ namespace MixItUp.Base.ViewModel.Actions
                         this.defaultHTML = this.GetDefaultHTML(this.Item);
                         this.defaultCSS = this.GetDefaultCSS(this.Item);
                         this.defaultJavascript = this.GetDefaultJavascript(this.Item);
+
+                        this.NotifyPropertyChanged(nameof(this.HTMLHeader));
+                        this.NotifyPropertyChanged(nameof(this.CSSHeader));
+                        this.NotifyPropertyChanged(nameof(this.JavascriptHeader));
                     }
                 }
             }
