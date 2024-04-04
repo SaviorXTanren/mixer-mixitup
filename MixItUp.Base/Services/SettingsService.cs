@@ -698,7 +698,9 @@ namespace MixItUp.Base.Services
                 OverlayHTMLV3ViewModel newItem = new OverlayHTMLV3ViewModel();
                 vmResult = newItem;
                 result = newItem.GetItem();
+                result.HTML = oldItem.HTML;
                 result.OldCustomHTML = oldItem.HTML;
+                result.HTML = oldItem.HTML;
             }
             else if (item.ItemType == OverlayItemModelTypeEnum.Image)
             {
@@ -900,7 +902,14 @@ namespace MixItUp.Base.Services
 
             if (result != null)
             {
-                result.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(vmResult.DefaultHTML);
+                if (string.IsNullOrEmpty(result.HTML))
+                {
+                    result.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(vmResult.DefaultHTML);
+                }
+                else
+                {
+                    result.HTML = OverlayItemV3ModelBase.GetPositionWrappedHTML(result.HTML);
+                }
                 result.CSS = OverlayItemV3ModelBase.GetPositionWrappedCSS(vmResult.DefaultCSS);
                 result.Javascript = vmResult.DefaultJavascript;
 
