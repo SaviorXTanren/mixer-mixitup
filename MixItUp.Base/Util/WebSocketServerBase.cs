@@ -72,14 +72,22 @@ namespace MixItUp.Base.Util
         {
             if (!string.IsNullOrEmpty(packetJSON))
             {
-                JObject packetObj = JObject.Parse(packetJSON);
-                if (packetObj["Type"].ToString().Equals("Exception"))
+                try
                 {
-                    Logger.Log("WebSocket Client Exception: " + packetObj["Data"].ToString());
+                    JObject packetObj = JObject.Parse(packetJSON);
+                    if (packetObj["Type"].ToString().Equals("Exception"))
+                    {
+                        Logger.Log("WebSocket Client Exception: " + packetObj["Data"].ToString());
+                    }
+                    else if (packetObj["Type"].ToString().Equals("Test"))
+                    {
+                        this.connectionTestSuccessful = true;
+                    }
                 }
-                else if (packetObj["Type"].ToString().Equals("Test"))
+                catch (Exception ex)
                 {
-                    this.connectionTestSuccessful = true;
+                    Logger.Log(ex);
+                    Logger.Log("WebSocket Packet Error: " + packetJSON);
                 }
             }
             return Task.CompletedTask;
