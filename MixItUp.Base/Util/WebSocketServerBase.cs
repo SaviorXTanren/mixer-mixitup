@@ -87,7 +87,7 @@ namespace MixItUp.Base.Util
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    Logger.Log("WebSocket Packet Error: " + packetJSON);
+                    Logger.Log(LogLevel.Error, "WebSocket Packet Error: " + packetJSON);
                 }
             }
             return Task.CompletedTask;
