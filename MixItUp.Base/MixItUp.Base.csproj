@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <Content Include="Deprecated\OverlayPageOld.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="XSplit\Mix It Up.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
