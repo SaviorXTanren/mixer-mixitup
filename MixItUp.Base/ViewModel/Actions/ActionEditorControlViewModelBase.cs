@@ -132,6 +132,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.PixelChat: actionPageName = "pixel-chat-action"; break;
                     case ActionTypeEnum.PolyPop: actionPageName = "polypop-action"; break;
                     case ActionTypeEnum.Random: actionPageName = "random-action"; break;
+                    case ActionTypeEnum.Repeat: actionPageName = "repeat-action"; break;
                     case ActionTypeEnum.SAMMI: actionPageName = "sammi-action"; break;
                     case ActionTypeEnum.Script: actionPageName = "script-action"; break;
                     case ActionTypeEnum.Serial: actionPageName = "serial-action"; break;

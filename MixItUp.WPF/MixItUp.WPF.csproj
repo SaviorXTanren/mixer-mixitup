@@ -579,8 +579,11 @@
     <Compile Include="Controls\Actions\PixelChatActionEditorControl.xaml.cs">
       <DependentUpon>PixelChatActionEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\RandomActionControl.xaml.cs">
-      <DependentUpon>RandomActionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Actions\RandomActionEditorControl.xaml.cs">
+      <DependentUpon>RandomActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\RepeatActionEditorControl.xaml.cs">
+      <DependentUpon>RepeatActionEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\SAMMIActionEditorControl.xaml.cs">
       <DependentUpon>SAMMIActionEditorControl.xaml</DependentUpon>
@@ -1420,7 +1423,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\RandomActionControl.xaml">
+    <Page Include="Controls\Actions\RandomActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\RepeatActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
