@@ -172,7 +172,7 @@ namespace MixItUp.Base.Model.Overlay
                     if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
                         var followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
-                        if (followers != null)
+                        if (followers != null && followers.Count() > 0)
                         {
                             user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: followers.First().user_id, performPlatformSearch: true);
                         }
@@ -180,7 +180,7 @@ namespace MixItUp.Base.Model.Overlay
                     else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
                     {
                         var followers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, maxResults: 1);
-                        if (followers != null)
+                        if (followers != null && followers.Count() > 0)
                         {
                             user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: followers.First().user_id, platformUsername: followers.First().nickname, performPlatformSearch: true);
                         }
@@ -224,7 +224,7 @@ namespace MixItUp.Base.Model.Overlay
                     if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
                         var subscribers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
-                        if (subscribers != null)
+                        if (subscribers != null && subscribers.Count() > 0)
                         {
                             user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: subscribers.First().user_id, performPlatformSearch: true);
                         }
