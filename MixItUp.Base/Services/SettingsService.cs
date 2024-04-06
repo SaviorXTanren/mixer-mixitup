@@ -748,13 +748,10 @@ namespace MixItUp.Base.Services
                 OverlayLeaderboardListItemModel oldItem = (OverlayLeaderboardListItemModel)item;
                 OverlayLeaderboardV3ViewModel newItem = new OverlayLeaderboardV3ViewModel();
                 vmResult = newItem;
-                if (oldItem.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
+                if (oldItem.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank && ChannelSession.Settings.Currency.TryGetValue(oldItem.CurrencyID, out CurrencyModel currency))
                 {
+                    newItem.SelectedConsumable = currency;
                     newItem.SelectedLeaderboardType = OverlayLeaderboardTypeV3Enum.Consumable;
-                    if (ChannelSession.Settings.Currency.TryGetValue(oldItem.CurrencyID, out CurrencyModel currency))
-                    {
-                        newItem.SelectedConsumable = currency;
-                    }
                 }
                 else if (oldItem.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Bits)
                 {
