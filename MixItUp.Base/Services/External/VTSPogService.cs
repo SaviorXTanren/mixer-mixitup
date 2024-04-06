@@ -87,6 +87,14 @@ namespace MixItUp.Base.Services.External
         }
     }
 
+    public enum VTSPogAITextToSpeechPromptTypeEnum
+    {
+        Default = -1,
+        None = 0,
+        Prompt = 1,
+        PromptAndMessage = 2
+    }
+
     public class VTSPogService : IExternalService
     {
         private const string BaseAddress = "http://localhost:3800/";
@@ -165,7 +173,7 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task<bool> AITextToSpeech(string text, UserV2ViewModel user, int characterLimit = 0, string presentation = null, int prompt = 0)
+        public async Task<bool> AITextToSpeech(string text, UserV2ViewModel user, string presentation = null, VTSPogAITextToSpeechPromptTypeEnum prompt = VTSPogAITextToSpeechPromptTypeEnum.Default)
         {
             try
             {
@@ -176,9 +184,9 @@ namespace MixItUp.Base.Services.External
                     {
                         url += $"&presentation={Uri.EscapeDataString(presentation)}";
                     }
-                    if (prompt != 0)
+                    if (prompt >= 0)
                     {
-                        url += $"&prompt={prompt}";
+                        url += $"&prompt={(int)prompt}";
                     }
 
                     await client.GetAsync(url);
