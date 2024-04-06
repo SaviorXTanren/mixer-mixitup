@@ -930,6 +930,9 @@
     <Compile Include="Controls\Services\TTSMonsterServiceControl.xaml.cs">
       <DependentUpon>TTSMonsterServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\VTSPogServiceControl.xaml.cs">
+      <DependentUpon>VTSPogServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Deprecated\Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
       <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
     </Compile>
@@ -1880,6 +1883,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\TTSMonsterServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\VTSPogServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -24915,6 +24915,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G..
+        /// </summary>
+        public static string VTSPog {
+            get {
+                return ResourceManager.GetString("VTSPog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to VTS P.O.G. app. Please ensure the app is running and the API has been enabled under Technical -&gt; Api. If you do not see this section in the app, you may need to update to a newer version..
+        /// </summary>
+        public static string VTSPogFailedToConnect {
+            get {
+                return ResourceManager.GetString("VTSPogFailedToConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G. connectivity allows you to control functionality in the VTS P.O.G. software, such as triggering text to speech voices, playing sounds, and controling the text to speech queue. To connect to VTS P.O.G., please ensure the software is running and the Api is enabled under Technical -&gt; API. If you do not see this section in the app, you may need to update to a newer version..
+        /// </summary>
+        public static string VTSPogInfo {
+            get {
+                return ResourceManager.GetString("VTSPogInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VTube Studio.
         /// </summary>
         public static string VTubeStudio {
