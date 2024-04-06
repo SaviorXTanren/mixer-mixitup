@@ -175,11 +175,17 @@ namespace MixItUp.Base.ViewModel.Overlay
             : base(OverlayItemV3Type.Label)
         {
             this.Initialize();
+
+            this.Displays.First(d => d.Type == OverlayLabelDisplayV3TypeEnum.LatestSubscriber).IsEnabled = true;
+            this.Displays.First(d => d.Type == OverlayLabelDisplayV3TypeEnum.LatestRaid).IsEnabled = true;
         }
 
         public OverlayLabelV3ViewModel(OverlayLabelV3Model item)
             : base(item)
         {
+            this.SelectedDisplaySetting = item.DisplaySetting;
+            this.DisplayRotationSeconds = item.DisplayRotationSeconds;
+
             foreach (var display in item.Displays)
             {
                 this.Displays.Add(new OverlayLabelDisplayV3ViewModel(display.Value));
@@ -255,9 +261,6 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.NotifyPropertyChanged("X");
                 };
             }
-
-            this.Displays.First(d => d.Type == OverlayLabelDisplayV3TypeEnum.LatestSubscriber).IsEnabled = true;
-            this.Displays.First(d => d.Type == OverlayLabelDisplayV3TypeEnum.LatestRaid).IsEnabled = true;
         }
     }
 }
