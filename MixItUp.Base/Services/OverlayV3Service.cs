@@ -158,6 +158,7 @@ namespace MixItUp.Base.Services
         public bool IsConnected { get; private set; }
         public int TotalConnectedClients { get { return this.webSocketListenerServer.TotalConnectedClients; } }
 
+        public string HttpAddress { get { return string.Format(RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
         public string HttpListenerServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
         public string WebSocketServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.PortNumber); } }
 
@@ -418,9 +419,9 @@ namespace MixItUp.Base.Services
             {
                 if (this.ID == Guid.Empty)
                 {
-                    return $"{ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress}{OverlayV3HttpListenerServer.OverlayPathPrefix}";
+                    return $"{ServiceManager.Get<OverlayV3Service>().HttpAddress}{OverlayV3HttpListenerServer.OverlayPathPrefix}";
                 }
-                return $"{ServiceManager.Get<OverlayV3Service>().HttpListenerServerAddress}{OverlayV3HttpListenerServer.OverlayPathPrefix}/{this.ID}";
+                return $"{ServiceManager.Get<OverlayV3Service>().HttpAddress}{OverlayV3HttpListenerServer.OverlayPathPrefix}/{this.ID}";
             }
         }
         public virtual string WebSocketConnectionURL { get { return $"/ws/{this.ID}/"; } }
