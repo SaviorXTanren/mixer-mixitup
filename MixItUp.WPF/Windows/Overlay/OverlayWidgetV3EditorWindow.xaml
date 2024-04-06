@@ -12,6 +12,10 @@
         xmlns:Util="clr-namespace:MixItUp.WPF.Util"
         mc:Ignorable="d"
         Title="{x:Static resx:Resources.OverlayWidgetEditor}"
+                      
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+                           
         Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
