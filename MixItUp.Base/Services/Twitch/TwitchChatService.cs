@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
@@ -786,14 +785,14 @@ namespace MixItUp.Base.Services.Twitch
                     UserV2ViewModel gifter = null;
                     if (!TwitchMassGiftedSubEventModel.IsAnonymousGifter(userNotice))
                     {
-                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userNotice.UserID.ToString(), platformUsername: userNotice.Login);
-                        if (user == null)
+                        gifter = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userNotice.UserID.ToString(), platformUsername: userNotice.Login);
+                        if (gifter == null)
                         {
-                            user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
+                            gifter = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
                         }
                         else
                         {
-                            user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+                            gifter.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
                         }
                     }
                     else
@@ -867,7 +866,6 @@ namespace MixItUp.Base.Services.Twitch
             {
                 Logger.ForceLog(LogLevel.Debug, JSONSerializerHelper.SerializeToString(userNotice));
                 Logger.Log(ex);
-                throw ex;
             }
         }
 
