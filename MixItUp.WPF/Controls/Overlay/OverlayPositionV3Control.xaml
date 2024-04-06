@@ -54,15 +54,15 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Controls:IconButton Grid.Column="0" Grid.Row="0" Icon="ArrowTopLeft" Command="{Binding TopLeftSimplePositionCommand}" IsEnabled="{Binding IsTopLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-                <Controls:IconButton Grid.Column="1" Grid.Row="0" Icon="ArrowUp" Command="{Binding TopMiddleSimplePositionCommand}" IsEnabled="{Binding IsTopMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-                <Controls:IconButton Grid.Column="2" Grid.Row="0" Icon="ArrowTopRight" Command="{Binding TopRightSimplePositionCommand}" IsEnabled="{Binding IsTopRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-                <Controls:IconButton Grid.Column="0" Grid.Row="1" Icon="ArrowLeft" Command="{Binding MiddleLeftSimplePositionCommand}" IsEnabled="{Binding IsMiddleLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="0" Grid.Row="0" Icon="ImageFilterCenterFocus" Command="{Binding TopLeftSimplePositionCommand}" IsEnabled="{Binding IsTopLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="1" Grid.Row="0" Icon="ImageFilterCenterFocus" Command="{Binding TopMiddleSimplePositionCommand}" IsEnabled="{Binding IsTopMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="0" Icon="ImageFilterCenterFocus" Command="{Binding TopRightSimplePositionCommand}" IsEnabled="{Binding IsTopRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="0" Grid.Row="1" Icon="ImageFilterCenterFocus" Command="{Binding MiddleLeftSimplePositionCommand}" IsEnabled="{Binding IsMiddleLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
                 <Controls:IconButton Grid.Column="1" Grid.Row="1" Icon="ImageFilterCenterFocus" Command="{Binding MiddleMiddleSimplePositionCommand}" IsEnabled="{Binding IsMiddleMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-                <Controls:IconButton Grid.Column="2" Grid.Row="1" Icon="ArrowRight" Command="{Binding MiddleRightSimplePositionCommand}" IsEnabled="{Binding IsMiddleRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-                <Controls:IconButton Grid.Column="0" Grid.Row="2" Icon="ArrowBottomLeft" Command="{Binding BottomLeftSimplePositionCommand}" IsEnabled="{Binding IsBottomLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-                <Controls:IconButton Grid.Column="1" Grid.Row="2" Icon="ArrowDown" Command="{Binding BottomMiddleSimplePositionCommand}" IsEnabled="{Binding IsBottomMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-                <Controls:IconButton Grid.Column="2" Grid.Row="2" Icon="ArrowBottomRight" Command="{Binding BottomRightSimplePositionCommand}" IsEnabled="{Binding IsBottomRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="1" Icon="ImageFilterCenterFocus" Command="{Binding MiddleRightSimplePositionCommand}" IsEnabled="{Binding IsMiddleRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="0" Grid.Row="2" Icon="ImageFilterCenterFocus" Command="{Binding BottomLeftSimplePositionCommand}" IsEnabled="{Binding IsBottomLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="1" Grid.Row="2" Icon="ImageFilterCenterFocus" Command="{Binding BottomMiddleSimplePositionCommand}" IsEnabled="{Binding IsBottomMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="2" Icon="ImageFilterCenterFocus" Command="{Binding BottomRightSimplePositionCommand}" IsEnabled="{Binding IsBottomRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
             </Grid>
         </Grid>
 
