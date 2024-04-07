@@ -282,7 +282,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             if (this.SelectedDisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint)
             {
                 OverlayEndpointV3Model overlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(widget.Item.OverlayEndpointID);
-                if (overlayEndpoint == null)
+                if (overlayEndpoint != null)
                 {
                     this.SelectedOverlayEndpoint = overlayEndpoint;
                 }
