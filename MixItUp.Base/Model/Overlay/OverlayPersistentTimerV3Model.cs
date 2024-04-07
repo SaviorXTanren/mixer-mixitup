@@ -27,7 +27,7 @@ namespace MixItUp.Base.Model.Overlay
         public string DisplayFormat { get; set; }
 
         [DataMember]
-        public bool ResetOnLaunch { get; set; } = true;
+        public bool ResetOnEnable { get; set; } = true;
 
         [DataMember]
         public OverlayAnimationV3Model TimerAdjustedAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -80,7 +80,7 @@ namespace MixItUp.Base.Model.Overlay
 
         protected override async Task WidgetEnableInternal()
         {
-            if (this.ResetOnLaunch)
+            if (this.ResetOnEnable)
             {
                 this.CurrentAmount = this.InitialAmount;
             }

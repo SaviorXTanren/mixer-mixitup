@@ -10179,4 +10179,7 @@ namespace CustomNamespace
   <data name="ResetOnLaunch" xml:space="preserve">
     <value>Reset On Launch</value>
   </data>
+  <data name="ResetOnEnable" xml:space="preserve">
+    <value>Reset On Enable</value>
+  </data>
 </root>
