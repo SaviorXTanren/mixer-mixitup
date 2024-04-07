@@ -60,6 +60,7 @@ namespace MixItUp.Base.Model.Actions
         Script,
         Group,
         Repeat,
+        VTSPog,
     }
 
     [DataContract]

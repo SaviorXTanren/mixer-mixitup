@@ -48,9 +48,12 @@ namespace MixItUp.Base.Services.External
         private const string ConnectionShakeType = "shake";
         private const string TTSStartType = "startTTS";
         private const string TTSStopType = "stopTTS";
+        private const string TTSStateType = "ttsState";
 
         public event EventHandler<VTSPogWebSocketTTSStartData> OnTTSStart = delegate { };
         public event EventHandler OnTTSStop = delegate { };
+
+        public event EventHandler<bool> OnTTSStateChanged = delegate { };
 
         protected override async Task ProcessReceivedPacket(string packet)
         {
@@ -77,6 +80,17 @@ namespace MixItUp.Base.Services.External
                     else if (string.Equals(response.type, TTSStopType))
                     {
                         this.OnTTSStop(this, new EventArgs());
+                    }
+                    else if (string.Equals(response.type, TTSStateType))
+                    {
+                        if (response.data is JObject)
+                        {
+                            JObject jobj = (JObject)response.data;
+                            if (jobj.TryGetValue("state", out JToken value))
+                            {
+                                this.OnTTSStateChanged(this, (bool)value);
+                            }
+                        }
                     }
                 }
             }
@@ -111,13 +125,18 @@ namespace MixItUp.Base.Services.External
 
         public bool IsConnected { get; private set; }
 
+        public bool TTSState { get; private set; }
+
         public async Task<Result> Connect()
         {
             if (await this.Status())
             {
+                this.TTSState = false;
+
                 this.websocket = new VTSPogWebSocket();
                 this.websocket.OnTTSStart += Websocket_OnTTSStart;
                 this.websocket.OnTTSStop += Websocket_OnTTSStop;
+                this.websocket.OnTTSStateChanged += Websocket_OnTTSStateChanged;
                 this.websocket.OnDisconnectOccurred += Websocket_OnDisconnectOccurred;
                 if (await this.websocket.Connect(VTSPogService.WebSocketAddress))
                 {
@@ -134,6 +153,7 @@ namespace MixItUp.Base.Services.External
             {
                 this.websocket.OnTTSStart -= Websocket_OnTTSStart;
                 this.websocket.OnTTSStop -= Websocket_OnTTSStop;
+                this.websocket.OnTTSStateChanged -= Websocket_OnTTSStateChanged;
                 this.websocket.OnDisconnectOccurred -= Websocket_OnDisconnectOccurred;
                 await this.websocket.Disconnect();
             }
@@ -223,6 +243,22 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
+        public async Task EnableTTSQueue()
+        {
+            if (!this.TTSState)
+            {
+                await this.ToggleTTSQueue();
+            }
+        }
+
+        public async Task DisableTTSQueue()
+        {
+            if (this.TTSState)
+            {
+                await this.ToggleTTSQueue();
+            }
+        }
+
         public async Task<bool> ToggleTTSQueue()
         {
             try
@@ -286,6 +322,11 @@ namespace MixItUp.Base.Services.External
         private void Websocket_OnTTSStop(object sender, EventArgs e)
         {
             this.TTSCompleted(this, this.lastTTSID);
+        }
+
+        private void Websocket_OnTTSStateChanged(object sender, bool state)
+        {
+            this.TTSState = state;
         }
 
         private async void Websocket_OnDisconnectOccurred(object sender, WebSocketCloseStatus status)

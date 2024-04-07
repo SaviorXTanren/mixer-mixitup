@@ -10182,4 +10182,22 @@ namespace CustomNamespace
   <data name="ResetOnEnable" xml:space="preserve">
     <value>Reset On Enable</value>
   </data>
+  <data name="AITextToSpeech" xml:space="preserve">
+    <value>AI Text To Speech</value>
+  </data>
+  <data name="PlayAudioFile" xml:space="preserve">
+    <value>Play Audio File</value>
+  </data>
+  <data name="SetTextToSpeechQueue" xml:space="preserve">
+    <value>Set Text To Speech Queue</value>
+  </data>
+  <data name="SkipCurrentAudio" xml:space="preserve">
+    <value>Skip Current Audio</value>
+  </data>
+  <data name="EnableDisableTextToSpeechQueue" xml:space="preserve">
+    <value>Enable/Disable Text To Speech Queue</value>
+  </data>
+  <data name="ToggleTextToSpeechQueue" xml:space="preserve">
+    <value>Toggle Text To Speech Queue</value>
+  </data>
 </root>

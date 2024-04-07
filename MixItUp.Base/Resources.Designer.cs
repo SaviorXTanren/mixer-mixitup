@@ -709,6 +709,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AI Text To Speech.
+        /// </summary>
+        public static string AITextToSpeech {
+            get {
+                return ResourceManager.GetString("AITextToSpeech", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A JSON parameter name must be specified..
         /// </summary>
         public static string AJSONParameterNameMustBeSpecified {
@@ -5861,6 +5870,15 @@ namespace MixItUp.Base {
         public static string EnableDisableQueue {
             get {
                 return ResourceManager.GetString("EnableDisableQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable/Disable Text To Speech Queue.
+        /// </summary>
+        public static string EnableDisableTextToSpeechQueue {
+            get {
+                return ResourceManager.GetString("EnableDisableTextToSpeechQueue", resourceCulture);
             }
         }
         
@@ -15712,6 +15730,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Play Audio File.
+        /// </summary>
+        public static string PlayAudioFile {
+            get {
+                return ResourceManager.GetString("PlayAudioFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play End Credits.
         /// </summary>
         public static string PlayEndCredits {
@@ -18914,6 +18941,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Text To Speech Queue.
+        /// </summary>
+        public static string SetTextToSpeechQueue {
+            get {
+                return ResourceManager.GetString("SetTextToSpeechQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Settings {
@@ -19488,6 +19524,15 @@ namespace MixItUp.Base {
         public static string Skip {
             get {
                 return ResourceManager.GetString("Skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip Current Audio.
+        /// </summary>
+        public static string SkipCurrentAudio {
+            get {
+                return ResourceManager.GetString("SkipCurrentAudio", resourceCulture);
             }
         }
         
@@ -21966,6 +22011,15 @@ namespace MixItUp.Base {
         public static string ToggleCommand {
             get {
                 return ResourceManager.GetString("ToggleCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle Text To Speech Queue.
+        /// </summary>
+        public static string ToggleTextToSpeechQueue {
+            get {
+                return ResourceManager.GetString("ToggleTextToSpeechQueue", resourceCulture);
             }
         }
         
