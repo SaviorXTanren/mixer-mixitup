@@ -102,8 +102,8 @@
 
             <TextBox Grid.Column="4" Text="{Binding DisplayFormat}" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DisplayFormat}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ResetOnLaunch}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="7" IsChecked="{Binding ResetOnLaunch}" VerticalAlignment="Center" Margin="5,0,0,0" />
+            <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ResetOnEnable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="7" IsChecked="{Binding ResetOnEnable}" VerticalAlignment="Center" Margin="5,0,0,0" />
         </Grid>
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">
