@@ -103,7 +103,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.EndDate}">
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.EndDate}" Visibility="Collapsed">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -113,7 +113,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.ResetCadence}">
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.ResetCadence}" Visibility="Collapsed">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
