@@ -27,6 +27,9 @@ namespace MixItUp.Base.Model.Overlay
         public string DisplayFormat { get; set; }
 
         [DataMember]
+        public bool ResetOnLaunch { get; set; } = true;
+
+        [DataMember]
         public OverlayAnimationV3Model TimerAdjustedAnimation { get; set; } = new OverlayAnimationV3Model();
         [DataMember]
         public OverlayAnimationV3Model TimerCompletedAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -77,7 +80,10 @@ namespace MixItUp.Base.Model.Overlay
 
         protected override async Task WidgetEnableInternal()
         {
-            this.CurrentAmount = this.InitialAmount;
+            if (this.ResetOnLaunch)
+            {
+                this.CurrentAmount = this.InitialAmount;
+            }
 
             this.cancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

@@ -10176,4 +10176,7 @@ namespace CustomNamespace
   <data name="VTSPogInfo" xml:space="preserve">
     <value>VTS P.O.G. connectivity allows you to control functionality in the VTS P.O.G. software, such as triggering text to speech voices, playing sounds, and controling the text to speech queue. To connect to VTS P.O.G., please ensure the software is running and the Api is enabled under Technical -&gt; API. If you do not see this section in the app, you may need to update to a newer version.</value>
   </data>
+  <data name="ResetOnLaunch" xml:space="preserve">
+    <value>Reset On Launch</value>
+  </data>
 </root>

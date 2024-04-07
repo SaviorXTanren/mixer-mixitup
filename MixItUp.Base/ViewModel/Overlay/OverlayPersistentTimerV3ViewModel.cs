@@ -37,6 +37,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string displayFormat;
 
+        public bool ResetOnLaunch
+        {
+            get { return this.resetOnLaunch; }
+            set
+            {
+                this.resetOnLaunch = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool resetOnLaunch;
+
         public CustomCommandModel TimerAdjustedCommand
         {
             get { return this.timerAdjustedCommand; }
@@ -68,6 +79,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             : base(OverlayItemV3Type.PersistentTimer)
         {
             this.DisplayFormat = OverlayTimerV3Model.DefaultDisplayFormat;
+            this.ResetOnLaunch = true;
 
             this.TimerAdjustedCommand = this.CreateEmbeddedCommand(Resources.TimerAdjusted);
             this.TimerCompletedCommand = this.CreateEmbeddedCommand(Resources.TimerCompleted);
@@ -84,6 +96,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.InitialAmount = item.InitialAmount;
             this.DisplayFormat = item.DisplayFormat;
+            this.ResetOnLaunch = item.ResetOnLaunch;
 
             this.TimerAdjustedCommand = this.GetEmbeddedCommand(item.TimerAdjustedCommandID, Resources.TimerAdjusted);
             this.TimerCompletedCommand = this.GetEmbeddedCommand(item.TimerCompletedCommandID, Resources.TimerCompleted);
@@ -120,6 +133,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 InitialAmount = this.InitialAmount,
                 DisplayFormat = this.DisplayFormat,
+                ResetOnLaunch = this.ResetOnLaunch,
             };
 
             this.AssignProperties(result);

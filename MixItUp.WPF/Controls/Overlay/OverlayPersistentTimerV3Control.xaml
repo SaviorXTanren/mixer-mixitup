@@ -26,6 +26,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -53,12 +55,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
 
             <ListBox Grid.Column="0" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
@@ -87,14 +83,30 @@
                     <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                 </ListBoxItem>
             </ListBox>
-
-            <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.InitialAmount}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
-            <TextBox Text="{Binding InitialAmount}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Seconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
-
-            <TextBox Grid.Column="8" Text="{Binding DisplayFormat}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DisplayFormat}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid Grid.Row="4" HorizontalAlignment="Center">
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.InitialAmount}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <TextBox Text="{Binding InitialAmount}" Grid.Column="2" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Seconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+
+            <TextBox Grid.Column="4" Text="{Binding DisplayFormat}" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DisplayFormat}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ResetOnLaunch}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="7" IsChecked="{Binding ResetOnLaunch}" VerticalAlignment="Center" Margin="5,0,0,0" />
+        </Grid>
+
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="50" />
@@ -106,7 +118,7 @@
             <CommandControls:CustomCommandListingControl Grid.Column="2" DataContext="{Binding TimerCompletedCommand}" Header="{x:Static resx:Resources.TimerCompleted}" />
         </Grid>
 
-        <Grid Grid.Row="6">
+        <Grid Grid.Row="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />

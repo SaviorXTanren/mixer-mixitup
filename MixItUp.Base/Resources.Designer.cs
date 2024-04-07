@@ -17492,6 +17492,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset On Launch.
+        /// </summary>
+        public static string ResetOnLaunch {
+            get {
+                return ResourceManager.GetString("ResetOnLaunch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset On Load.
         /// </summary>
         public static string ResetOnLoad {
