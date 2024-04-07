@@ -42,7 +42,7 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultJavascript = OverlayResources.OverlayGoalDefaultJavascript;
 
         [DataMember]
-        public int TotalAmount { get; set; }
+        public double TotalAmount { get; set; }
         [DataMember]
         public List<OverlayGoalSegmentV3Model> Segments { get; set; } = new List<OverlayGoalSegmentV3Model>();
 
@@ -77,7 +77,16 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayGoalSegmentV3Model CurrentSegment { get; private set; }
 
         [JsonIgnore]
-        public int GoalBarCompletionPercentage { get { return Math.Max(Math.Min((int)Math.Round(this.CurrentAmount / this.CurrentSegment.Amount), 100), 0); } }
+        public int GoalBarCompletionPercentage
+        {
+            get
+            {
+                double percentage = (this.CurrentAmount / this.CurrentSegment.Amount) * 100;
+                percentage = Math.Min(percentage, 100);
+                percentage = Math.Max(percentage, 0);
+                return (int)Math.Round(percentage);
+            }
+        }
 
         [JsonIgnore]
         public string GoalEndText
@@ -101,11 +110,27 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
-            if (amount > 0)
+            if (amount != 0)
             {
-                amount = Math.Round(amount);
-                this.TotalAmount += (int)amount;
-                this.CurrentAmount += (int)amount;
+                if (amount > 0)
+                {
+                    this.TotalAmount += amount;
+                    this.CurrentAmount += amount;
+                }
+                else
+                {
+                    double diff = this.CurrentAmount + amount;
+                    if (diff >= 0)
+                    {
+                        this.TotalAmount += amount;
+                        this.CurrentAmount += amount;
+                    }
+                    else
+                    {
+                        this.TotalAmount -= this.CurrentAmount;
+                        this.CurrentAmount = 0;
+                    }
+                }
 
                 if (this.CurrentAmount < this.CurrentSegment.Amount || this.CurrentSegment == this.Segments.Last())
                 {

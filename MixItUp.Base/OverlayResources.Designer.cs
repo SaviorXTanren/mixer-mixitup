@@ -506,38 +506,37 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to .mainContainer {
-        ///  width: {Width};
+        ///    width: {Width};
         ///}
         ///
         ///.goalName {
-        ///  text-align: center;
-        ///  margin-bottom: 5px;
+        ///    text-align: center;
+        ///    margin-bottom: 5px;
         ///}
         ///
         ///.goalContainer {
-        ///  position: relative;
-        ///  border-style: solid;
-        ///  border-width: 5px;
-        ///  border-color: {BorderColor};
-        ///  height: {Height};
+        ///    position: relative;
+        ///    border-style: solid;
+        ///    border-width: 5px;
+        ///    border-color: {BorderColor};
+        ///    height: {Height};
         ///}
         ///
         ///.goalBar {
-        ///  background-color: {GoalColor};
-        ///  height: 100%;
+        ///    background-color: {GoalColor};
+        ///    height: 100%;
         ///}
         ///
         ///.goalBarCompleted {
-        ///  background-color: {ProgressColor};
-        ///  height: 100%;
-        ///  width: 50%;
+        ///    background-color: {ProgressColor};
+        ///    height: 100%;
+        ///    width: 50%;
         ///}
         ///
         ///.goalBarText {
-        ///  position: absolute;
-        ///  top: 50%;
-        ///  left: 50%;
-        ///  transform: translate(-50%, -5 [rest of string was truncated]&quot;;.
+        ///    position: absolute;
+        ///    top: 50%;
+        ///    left: 50%;        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultCSS {
             get {
