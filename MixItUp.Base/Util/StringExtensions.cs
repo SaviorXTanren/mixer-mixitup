@@ -71,5 +71,7 @@ namespace MixItUp.Base.Util
         public static string ToNumberDisplayString(this int number) { return number.ToString("N0"); }
 
         public static string ToNumberDisplayString(this double number) { return (Math.Floor(number) == number) ? ((int)number).ToString("N0") : number.ToString("N"); }
+
+        public static string ToInvariantNumberString(this double number) { return number.ToString(CultureInfo.InvariantCulture); }
     }
 }

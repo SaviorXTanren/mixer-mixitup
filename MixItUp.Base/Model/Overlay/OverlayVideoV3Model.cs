@@ -32,7 +32,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.FilePath)] = RandomHelper.PickRandomFileFromDelimitedString(this.FilePath);
-            properties[nameof(this.Volume)] = this.Volume.ToString();
+            properties[nameof(this.Volume)] = this.Volume.ToInvariantNumberString();
             properties[nameof(this.Loop)] = this.Loop ? "loop" : string.Empty;
             return properties;
         }
