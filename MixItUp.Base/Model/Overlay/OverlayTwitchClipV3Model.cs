@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
@@ -46,7 +47,7 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.ClipID)] = this.ClipID;
             properties[nameof(this.ClipDirectLink)] = this.ClipDirectLink;
-            properties[nameof(this.Volume)] = this.Volume.ToString();
+            properties[nameof(this.Volume)] = this.Volume.ToInvariantNumberString();
             properties[nameof(this.ClipHeight)] = this.ClipHeight;
             properties[nameof(this.ClipWidth)] = this.ClipWidth;
             return properties;
