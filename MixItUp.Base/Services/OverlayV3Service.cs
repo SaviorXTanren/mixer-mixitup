@@ -375,6 +375,7 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
+                    Logger.Log(LogLevel.Debug, $"Overlay - Setting HTML - {id} - {html}");
                     this.httpListenerServer.SetHTMLData(id, html);
                 }
             }
@@ -474,6 +475,7 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
+                    Logger.Log(LogLevel.Debug, $"Overlay - Adding HTML - {id} - {html}");
                     ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
                     await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)));
                 }
@@ -490,6 +492,7 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id))
                 {
+                    Logger.Log(LogLevel.Debug, $"Overlay - Removing HTML - {id}");
                     await this.Send(new OverlayV3Packet(nameof(this.Remove), new OverlayItemDataV3Model(id)));
                 }
             }
@@ -517,6 +520,7 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(functionName))
                 {
+                    Logger.Log(LogLevel.Debug, $"Overlay - Calling Function - {id} - {functionName} - {{{string.Join(" ", parameters)}}}");
                     await this.Send(new OverlayV3Packet(nameof(this.Function), new OverlayFunctionV3Model(id, functionName, parameters)));
                 }
             }
