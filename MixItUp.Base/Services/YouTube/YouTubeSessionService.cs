@@ -30,6 +30,7 @@ namespace MixItUp.Base.Services.YouTube
         public string Botname { get { return this.Bot?.Snippet?.Title; } }
         public string ChannelID { get { return this.User?.Id; } }
         public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
+        public string StreamLink { get { return $"https://youtube.com/watch?v={ServiceManager.Get<YouTubeSessionService>().Broadcast?.Id}"; } }
 
         public bool HasMembershipCapabilities { get { return this.MembershipLevels.Count > 0; } }
 
