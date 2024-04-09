@@ -3,9 +3,6 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -320,7 +317,11 @@ namespace MixItUp.Base.Model.Commands
                         if (quote == null)
                         {
                             string searchText = string.Join(" ", parameters.Arguments).ToLower();
-                            quote = ChannelSession.Settings.Quotes.FirstOrDefault(q => q.Quote.ToLower().Contains(searchText));
+                            var applicableQuotes = ChannelSession.Settings.Quotes.Where(q => q.Quote.ToLower().Contains(searchText));
+                            if (applicableQuotes.Count() > 0)
+                            {
+                                quote = applicableQuotes.Random();
+                            }
                         }
 
                         if (quote == null)
