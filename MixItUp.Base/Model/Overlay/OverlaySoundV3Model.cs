@@ -39,7 +39,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.FilePath)] = this.FilePath;
-            properties[nameof(this.Volume)] = this.Volume.ToString();
+            properties[nameof(this.Volume)] = this.Volume.ToInvariantNumberString();
             return properties;
         }
 
