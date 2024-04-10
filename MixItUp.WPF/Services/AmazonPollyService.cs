@@ -131,7 +131,7 @@ namespace MixItUp.WPF.Services
                             response.AudioStream.CopyTo(stream);
                             stream.Position = 0;
                         }
-                        await ServiceManager.Get<IAudioService>().PlayMP3(stream, volume, outputDevice, waitForFinish: waitForFinish);
+                        await ServiceManager.Get<IAudioService>().PlayMP3Stream(stream, volume, outputDevice, waitForFinish: waitForFinish);
                     }
                 }
             }

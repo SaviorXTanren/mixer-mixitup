@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -25,7 +26,8 @@ namespace MixItUp.Base.Services
         Task<string> ReadFile(string filePath);
         Task<byte[]> ReadFileAsBytes(string filePath);
         Task SaveFile(string filePath, string data);
-        Task SaveFileAsBytes(string filePath, byte[] data);
+        Task SaveFile(string filePath, byte[] data);
+        Task SaveFile(string filePath, Stream data);
         Task AppendFile(string filePath, string data);
 
         string ShowOpenFolderDialog();

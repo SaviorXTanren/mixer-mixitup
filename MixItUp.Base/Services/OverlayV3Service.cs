@@ -545,6 +545,17 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task<Guid> PlayAudio(string filePath, double volume)
+        {
+            Guid id = Guid.NewGuid();
+            OverlaySoundV3Model overlayItem = new OverlaySoundV3Model(filePath, volume)
+            {
+                ID = id
+            };
+            await this.Add(id.ToString(), await OverlayV3Service.PerformBasicOverlayItemProcessing(this, overlayItem));
+            return id;
+        }
+
         public void StartBatching()
         {
             this.isBatching = true;
