@@ -226,7 +226,7 @@ namespace MixItUp.WPF.Services
             }
         }
 
-        public async Task SaveFileAsBytes(string filePath, byte[] data)
+        public async Task SaveFile(string filePath, byte[] data)
         {
             filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
@@ -239,6 +239,32 @@ namespace MixItUp.WPF.Services
                     }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
+            }
+        }
+
+        public async Task SaveFile(string filePath, Stream data)
+        {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                try
+                {
+                    await WindowsFileService.fileLock.WaitAsync();
+
+                    data.Seek(0, SeekOrigin.Begin);
+                    using (FileStream reader = File.OpenWrite(filePath))
+                    {
+                        data.CopyTo(reader);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    WindowsFileService.fileLock.Release();
+                }
             }
         }
 

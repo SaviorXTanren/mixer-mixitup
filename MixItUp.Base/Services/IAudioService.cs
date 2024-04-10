@@ -12,15 +12,15 @@ namespace MixItUp.Base.Services
 
         ISet<string> ApplicableAudioFileExtensions { get; }
 
-        Task Play(string filePath, int volume, bool track = true, bool waitForFinish = false);
+        Task Play(string filePath, int volume, string deviceName, bool waitForFinish = false);
 
-        Task Play(string filePath, int volume, string deviceName, bool track = true, bool waitForFinish = false);
+        Task PlayMP3Stream(Stream stream, int volume, string deviceName, bool waitForFinish = false);
 
-        Task PlayMP3(Stream stream, int volume, string deviceName, bool track = true, bool waitForFinish = false);
+        Task PlayPCMStream(Stream stream, int volume, string deviceName, bool waitForFinish = false);
 
-        Task PlayPCM(Stream stream, int volume, string deviceName, bool track = true, bool waitForFinish = false);
+        Task PlayOnOverlay(string filePath, double volume, bool waitForFinish = false);
 
-        Task PlayNotification(string filePath, int volume, bool track = true);
+        Task PlayNotification(string filePath, int volume);
 
         Task StopAllSounds();
 
@@ -29,5 +29,7 @@ namespace MixItUp.Base.Services
         IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false);
 
         IEnumerable<string> GetOutputDevices();
+
+        string GetOutputDeviceName(string deviceName);
     }
 }

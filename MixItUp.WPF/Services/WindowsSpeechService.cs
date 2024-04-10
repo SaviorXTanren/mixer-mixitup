@@ -44,9 +44,20 @@ namespace MixItUp.WPF.Services
         public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
         {
             MemoryStream stream = new MemoryStream();
+            string filePath = null;
             using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
             {
-                synthesizer.SetOutputToAudioStream(stream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 88200, 16, 1, 16000, 2, null));
+                outputDevice = ServiceManager.Get<IAudioService>().GetOutputDeviceName(outputDevice);
+                if (string.Equals(outputDevice, ServiceManager.Get<IAudioService>().MixItUpOverlay))
+                {
+                    filePath = Path.Combine(ServiceManager.Get<IFileService>().GetTempFolder(), $"{Guid.NewGuid()}.wav");
+                    synthesizer.SetOutputToWaveFile(filePath);
+                }
+                else
+                {
+                    synthesizer.SetOutputToAudioStream(stream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 88200, 16, 1, 16000, 2, null));
+                }
+
                 if (!string.IsNullOrWhiteSpace(voice))
                 {
                     synthesizer.SelectVoice(voice);
@@ -54,11 +65,20 @@ namespace MixItUp.WPF.Services
                 synthesizer.Rate = rate;
                 synthesizer.Volume = volume;
                 synthesizer.Speak(text);
-
-                stream.Position = 0;
             }
 
-            await ServiceManager.Get<IAudioService>().PlayPCM(stream, volume, outputDevice, waitForFinish: waitForFinish);
+            // Buffer to ensure synthesizer audio gets fully written out
+            await Task.Delay(100);
+
+            if (string.Equals(outputDevice, ServiceManager.Get<IAudioService>().MixItUpOverlay))
+            {
+                await ServiceManager.Get<IAudioService>().PlayOnOverlay(filePath, volume, waitForFinish: waitForFinish);
+            }
+            else
+            {
+                stream.Position = 0;
+                await ServiceManager.Get<IAudioService>().PlayPCMStream(stream, volume, outputDevice, waitForFinish: waitForFinish);
+            }
         }
     }
 }
