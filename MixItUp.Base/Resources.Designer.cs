@@ -1105,6 +1105,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Animalese.
+        /// </summary>
+        public static string Animalese {
+            get {
+                return ResourceManager.GetString("Animalese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Animate.css.
         /// </summary>
         public static string AnimateCSS {
@@ -5771,6 +5780,15 @@ namespace MixItUp.Base {
         public static string EffectName {
             get {
                 return ResourceManager.GetString("EffectName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elevenlabs.
+        /// </summary>
+        public static string Elevenlabs {
+            get {
+                return ResourceManager.GetString("Elevenlabs", resourceCulture);
             }
         }
         
@@ -18194,6 +18212,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SAM Software Automatic Mouth.
+        /// </summary>
+        public static string SAMSoftwareAutomaticMouth {
+            get {
+                return ResourceManager.GetString("SAMSoftwareAutomaticMouth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Save {
@@ -21570,6 +21597,15 @@ namespace MixItUp.Base {
         public static string Tier3 {
             get {
                 return ResourceManager.GetString("Tier3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TikTok TTS.
+        /// </summary>
+        public static string TikTokTTS {
+            get {
+                return ResourceManager.GetString("TikTokTTS", resourceCulture);
             }
         }
         
@@ -24992,6 +25028,24 @@ namespace MixItUp.Base {
         public static string VTSPog {
             get {
                 return ResourceManager.GetString("VTSPog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS Pog Action: Missing Audio File.
+        /// </summary>
+        public static string VTSPogActionMissingAudioFile {
+            get {
+                return ResourceManager.GetString("VTSPogActionMissingAudioFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS Pog Action: Missing text.
+        /// </summary>
+        public static string VTSPogActionMissingText {
+            get {
+                return ResourceManager.GetString("VTSPogActionMissingText", resourceCulture);
             }
         }
         

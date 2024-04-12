@@ -10,6 +10,28 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
+    public enum VTSPogAITextToSpeechPromptTypeEnum
+    {
+        Default = -1,
+        None = 0,
+        Prompt = 1,
+        PromptAndMessage = 2
+    }
+
+    public enum VTSPogTextToSpeechProvider
+    {
+        AmazonPolly,
+        TTSMonster,
+        StreamElements,
+        Animalese,
+        WindowsTextToSpeech,
+        TikTokTTS,
+        SAMSoftwareAutomaticMouth,
+        Elevenlabs,
+
+        Random = 99,
+    }
+
     public class VTSPogWebSocketPacket
     {
         public string type { get; set; }
@@ -101,14 +123,6 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public enum VTSPogAITextToSpeechPromptTypeEnum
-    {
-        Default = -1,
-        None = 0,
-        Prompt = 1,
-        PromptAndMessage = 2
-    }
-
     public class VTSPogService : IExternalService
     {
         private const string BaseAddress = "http://localhost:3800/";
@@ -193,17 +207,13 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task<bool> AITextToSpeech(string text, UserV2ViewModel user, string presentation = null, VTSPogAITextToSpeechPromptTypeEnum prompt = VTSPogAITextToSpeechPromptTypeEnum.Default)
+        public async Task<bool> AITextToSpeech(string text, UserV2ViewModel user, VTSPogAITextToSpeechPromptTypeEnum prompt = VTSPogAITextToSpeechPromptTypeEnum.Default)
         {
             try
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(VTSPogService.BaseAddress))
                 {
-                    string url = $"gpt?text={Uri.EscapeDataString(text)}&user={user.DisplayName}";
-                    if (!string.IsNullOrEmpty(presentation))
-                    {
-                        url += $"&presentation={Uri.EscapeDataString(presentation)}";
-                    }
+                    string url = $"gpt?text={Uri.EscapeDataString(text)}&user={user.DisplayName}&presentation=1";
                     if (prompt >= 0)
                     {
                         url += $"&prompt={(int)prompt}";
@@ -220,17 +230,13 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task<bool> PlayAudioFile(string filePath, string pet = null)
+        public async Task<bool> PlayAudioFile(string filePath)
         {
             try
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(VTSPogService.BaseAddress))
                 {
                     string url = $"pogu?text={Uri.EscapeDataString(filePath)}";
-                    if (!string.IsNullOrEmpty(pet))
-                    {
-                        url += $"&pet={pet}";
-                    }
 
                     await client.GetAsync(url);
                     return true;

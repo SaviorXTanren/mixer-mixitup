@@ -10200,4 +10200,22 @@ namespace CustomNamespace
   <data name="ToggleTextToSpeechQueue" xml:space="preserve">
     <value>Toggle Text To Speech Queue</value>
   </data>
+  <data name="Animalese" xml:space="preserve">
+    <value>Animalese</value>
+  </data>
+  <data name="Elevenlabs" xml:space="preserve">
+    <value>Elevenlabs</value>
+  </data>
+  <data name="SAMSoftwareAutomaticMouth" xml:space="preserve">
+    <value>SAM Software Automatic Mouth</value>
+  </data>
+  <data name="TikTokTTS" xml:space="preserve">
+    <value>TikTok TTS</value>
+  </data>
+  <data name="VTSPogActionMissingText" xml:space="preserve">
+    <value>VTS Pog Action: Missing text</value>
+  </data>
+  <data name="VTSPogActionMissingAudioFile" xml:space="preserve">
+    <value>VTS Pog Action: Missing Audio File</value>
+  </data>
 </root>
