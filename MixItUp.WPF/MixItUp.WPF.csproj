@@ -630,6 +630,9 @@
     <Compile Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml.cs">
       <DependentUpon>InfiniteAlbumActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\VTSPogActionEditorControl.xaml.cs">
+      <DependentUpon>VTSPogActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\VTubeStudioActionEditorControl.xaml.cs">
       <DependentUpon>VTubeStudioActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1493,6 +1496,10 @@
     <Page Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Actions\VTSPogActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\VTubeStudioActionEditorControl.xaml">
       <SubType>Designer</SubType>
