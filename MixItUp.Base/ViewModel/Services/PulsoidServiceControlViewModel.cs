@@ -80,8 +80,10 @@ namespace MixItUp.Base.ViewModel.Services
                 }
                 else
                 {
-                    await this.ShowConnectFailureMessage(result);
+                    await ServiceManager.Get<PulsoidService>().Disconnect();
                     ChannelSession.Settings.PulsoidOAuthToken = null;
+
+                    await this.ShowConnectFailureMessage(result);
                 }
             });
 
