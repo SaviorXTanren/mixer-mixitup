@@ -81,6 +81,7 @@ namespace MixItUp.Base.ViewModel.Services
                 else
                 {
                     await this.ShowConnectFailureMessage(result);
+                    ChannelSession.Settings.PulsoidOAuthToken = null;
                 }
             });
 
