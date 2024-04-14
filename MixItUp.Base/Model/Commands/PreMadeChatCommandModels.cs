@@ -726,10 +726,11 @@ namespace MixItUp.Base.Model.Commands
 
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
+                    IStreamingPlatformSessionService session = StreamingPlatforms.GetPlatformSessionService(p);
+                    if (session.IsConnected)
                     {
-                        results[p] = await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
-                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
+                        results[p] = await session.SetGame(name);
+                        await session.RefreshChannel();
                     }
                 });
 
