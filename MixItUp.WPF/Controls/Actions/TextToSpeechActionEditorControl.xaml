@@ -47,7 +47,7 @@
             <Grid Grid.Column="1" Visibility="{Binding UsesAudioDevices, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
                 <TextBlock Visibility="{Binding TTSMonsterNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,10" Foreground="Red" Text="{x:Static resx:Resources.EnableTTSMonster}"/>
 
-                <ComboBox Visibility="{Binding AudioDeviceServiceConnected, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" HorizontalAlignment="Right" />
+                <ComboBox Grid.Column="1" Visibility="{Binding AudioDeviceServiceConnected, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" HorizontalAlignment="Right" />
             </Grid>
         </Grid>
 

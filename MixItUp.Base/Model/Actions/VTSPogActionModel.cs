@@ -14,6 +14,7 @@ namespace MixItUp.Base.Model.Actions
         AITextToSpeech,
         PlayAudioFile,
         EnableDisableTextToSpeechQueue,
+        ToggleTextToSpeechQueue,
         SkipCurrentAudio,
     }
 
@@ -143,6 +144,10 @@ namespace MixItUp.Base.Model.Actions
                     {
                         await ServiceManager.Get<VTSPogService>().DisableTTSQueue();
                     }
+                }
+                else if (this.ActionType == VTSPogActionTypeEnum.ToggleTextToSpeechQueue)
+                {
+                    await ServiceManager.Get<VTSPogService>().ToggleTTSQueue();
                 }
                 else if (this.ActionType == VTSPogActionTypeEnum.SkipCurrentAudio)
                 {
