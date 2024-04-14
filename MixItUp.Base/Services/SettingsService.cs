@@ -658,7 +658,7 @@ namespace MixItUp.Base.Services
 
                     if (newSection != null)
                     {
-                        newSection.Name = oldSection.Value.SectionHTML;
+                        newSection.Name = EnumLocalizationHelper.GetLocalizedName(newSection.SelectedType);
                         newItem.Sections.Add(newSection);
                     }
                 }

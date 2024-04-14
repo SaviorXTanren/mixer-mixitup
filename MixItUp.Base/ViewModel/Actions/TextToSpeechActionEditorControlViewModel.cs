@@ -35,6 +35,7 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return this.SelectedProviderType == TextToSpeechProviderType.WindowsTextToSpeech ||
                     this.SelectedProviderType == TextToSpeechProviderType.AmazonPolly ||
+                    this.SelectedProviderType == TextToSpeechProviderType.MicrosoftAzureSpeech ||
                     this.SelectedProviderType == TextToSpeechProviderType.TTSMonster;
             }
         }
