@@ -55,6 +55,9 @@ namespace MixItUp.Base.Model.Overlay
         public DateTimeOffset ResetCadence { get; set; }
 
         [DataMember]
+        public int StartingAmountCustom { get; set; }
+
+        [DataMember]
         public string BorderColor { get; set; }
         [DataMember]
         public string GoalColor { get; set; }
@@ -248,6 +251,13 @@ namespace MixItUp.Base.Model.Overlay
             this.TotalAmount = 0;
             this.CurrentAmount = 0;
             this.CurrentSegment = this.Segments.First();
+
+            if (this.StartingAmountCustom > 0)
+            {
+                this.TotalAmount += this.StartingAmountCustom;
+                this.CurrentAmount += this.StartingAmountCustom;
+                this.ProgressSegments();
+            }
         }
     }
 }

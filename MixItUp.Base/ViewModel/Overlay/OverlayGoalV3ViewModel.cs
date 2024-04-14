@@ -107,6 +107,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string progressColor;
 
+        public int StartingAmountCustom
+        {
+            get { return this.startingAmountCustom; }
+            set
+            {
+                this.startingAmountCustom = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int startingAmountCustom;
+
         public ObservableCollection<OverlayGoalSegmentV3ViewModel> Segments { get; set; } = new ObservableCollection<OverlayGoalSegmentV3ViewModel>();
 
         public CustomCommandModel ProgressOccurredCommand
@@ -177,6 +188,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.GoalColor = item.GoalColor;
             this.ProgressColor = item.ProgressColor;
 
+            this.StartingAmountCustom = item.StartingAmountCustom;
+
             foreach (OverlayGoalSegmentV3Model segment in item.Segments)
             {
                 this.Segments.Add(new OverlayGoalSegmentV3ViewModel(this, segment));
@@ -237,6 +250,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.BorderColor = this.BorderColor;
             result.GoalColor = this.GoalColor;
             result.ProgressColor = this.ProgressColor;
+
+            result.StartingAmountCustom = this.StartingAmountCustom;
 
             result.Segments.Clear();
             foreach (OverlayGoalSegmentV3ViewModel segment in this.Segments)
