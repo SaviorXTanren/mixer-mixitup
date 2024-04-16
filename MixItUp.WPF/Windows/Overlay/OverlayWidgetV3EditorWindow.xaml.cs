@@ -34,6 +34,24 @@ namespace MixItUp.WPF.Windows.Overlay
             this.Initialize();
         }
 
+        public void ForceShow()
+        {
+            if (!this.IsVisible)
+            {
+                this.Show();
+            }
+
+            if (this.WindowState == System.Windows.WindowState.Minimized)
+            {
+                this.WindowState = System.Windows.WindowState.Normal;
+            }
+
+            this.Activate();
+            this.Topmost = true;  // important
+            this.Topmost = false; // important
+            this.Focus();         // important
+        }
+
         protected override async Task OnLoaded()
         {
             this.DataContext = this.viewModel;

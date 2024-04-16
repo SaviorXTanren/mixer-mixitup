@@ -1,12 +1,16 @@
 ﻿using Google.Apis.YouTube.v3.Data;
+using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Commands;
 using MixItUp.WPF.Windows.Overlay;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,6 +24,8 @@ namespace MixItUp.WPF.Controls.MainControls
     public partial class OverlayWidgetsControl : MainControlBase
     {
         private OverlayWidgetsMainControlViewModel viewModel;
+
+        private static Dictionary<Guid, OverlayWidgetV3EditorWindow> OpenWindows = new Dictionary<Guid, OverlayWidgetV3EditorWindow>();
 
         public OverlayWidgetsControl()
         {
@@ -42,6 +48,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
+                var kvp = OpenWindows.FirstOrDefault(w => w.Value == sender);
+                OpenWindows.Remove(kvp.Key);
                 await this.viewModel.OnVisible();
                 return Task.CompletedTask;
             });
@@ -74,9 +82,14 @@ namespace MixItUp.WPF.Controls.MainControls
             OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
             if (widget != null)
             {
-                OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget.Widget);
-                window.Closed += Window_Closed;
-                window.Show();
+                if (!OpenWindows.TryGetValue(widget.Widget.ID, out OverlayWidgetV3EditorWindow window))
+                {
+                    window = new OverlayWidgetV3EditorWindow(widget.Widget);
+                    window.Closed += Window_Closed;
+
+                    OpenWindows.Add(widget.Widget.ID, window);
+                }
+                window.ForceShow();
             }
         }
 
