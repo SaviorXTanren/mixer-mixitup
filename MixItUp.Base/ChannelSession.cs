@@ -83,6 +83,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new TITSService());
             ServiceManager.Add(new LumiaStreamService());
             ServiceManager.Add(new PulsoidService());
+            ServiceManager.Add(new MtionStudioService());
 
             try
             {

@@ -213,6 +213,8 @@ namespace MixItUp.Base.Services.External
 
         public override async Task Disconnect()
         {
+            this.ClearCaches();
+
             this.token = null;
             this.WebSocketConnected = false;
 

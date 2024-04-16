@@ -61,6 +61,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.Input: editorViewModel = new InputActionEditorControlViewModel(); break;
                         case ActionTypeEnum.LumiaStream: editorViewModel = new LumiaStreamActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Moderation: editorViewModel = new ModerationActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.MtionStudio: editorViewModel = new MtionStudioActionViewModel(); break;
                         case ActionTypeEnum.MusicPlayer: editorViewModel = new MusicPlayerActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Overlay: editorViewModel = new OverlayActionEditorControlViewModel(); break;
                         case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel(); break;
@@ -147,6 +148,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.Input: editorViewModel = new InputActionEditorControlViewModel((InputActionModel)action); break;
                 case ActionTypeEnum.LumiaStream: editorViewModel = new LumiaStreamActionEditorControlViewModel((LumiaStreamActionModel)action); break;
                 case ActionTypeEnum.Moderation: editorViewModel = new ModerationActionEditorControlViewModel((ModerationActionModel)action); break;
+                case ActionTypeEnum.MtionStudio: editorViewModel = new MtionStudioActionViewModel((MtionStudioActionModel)action); break;
                 case ActionTypeEnum.MusicPlayer: editorViewModel = new MusicPlayerActionEditorControlViewModel((MusicPlayerActionModel)action); break;
                 case ActionTypeEnum.Overlay: editorViewModel = new OverlayActionEditorControlViewModel((OverlayActionModel)action); break;
                 case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel((OvrStreamActionModel)action); break;

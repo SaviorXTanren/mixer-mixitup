@@ -546,6 +546,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public List<Tuple<int, int>> PulsoidCommandHeartRateRangeTriggers { get; set; } = new List<Tuple<int, int>>();
 
+        [DataMember]
+        public bool MtionStudioEnabled { get; set; }
+
         #endregion Services
 
         #region Dashboard

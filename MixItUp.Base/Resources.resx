@@ -10377,4 +10377,22 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
+  <data name="EnableMtionStudio" xml:space="preserve">
+    <value>Please enable mtion studio on the Services page!</value>
+  </data>
+  <data name="MtionStudio" xml:space="preserve">
+    <value>mtion studio</value>
+  </data>
+  <data name="MtionStudioActionMissingTrigger" xml:space="preserve">
+    <value>mtion studio Action: Missing Trigger</value>
+  </data>
+  <data name="MtionStudioFailedToGetClubhouseData" xml:space="preserve">
+    <value>Failed to get clubhouse data</value>
+  </data>
+  <data name="MtionStudioInfo" xml:space="preserve">
+    <value>mtion studio connectivity allows you to run API triggers within mtion studio to have a wide variety of effects within your mtion studio clubhouses. API triggers are supported in version 0.39 and higher, so ensure your installation of mtion studio is updated to the latest version before attempting to connect. To connect to mtion studio, ensure the app is running and you are loaded into an active clubhouse, then simply click on the Connect button.</value>
+  </data>
+  <data name="APITrigger" xml:space="preserve">
+    <value>API Trigger</value>
+  </data>
 </root>
