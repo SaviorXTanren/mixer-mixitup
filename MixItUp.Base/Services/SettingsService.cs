@@ -617,7 +617,7 @@ namespace MixItUp.Base.Services
                 newItem.SelectedScrollSpeed = EnumHelper.GetEnumValueFromString<OverlayEndCreditsSpeedV3TypeEnum>(oldItem.Speed.ToString());
                 foreach (var oldSection in oldItem.SectionTemplates)
                 {
-                    OverlayEndCreditsSectionV3ViewModel newSection = new OverlayEndCreditsSectionV3ViewModel();
+                    OverlayEndCreditsSectionV3ViewModel newSection = new OverlayEndCreditsSectionV3ViewModel(newItem);
                     switch (oldSection.Key)
                     {
                         case OverlayEndCreditsSectionTypeEnum.Followers:

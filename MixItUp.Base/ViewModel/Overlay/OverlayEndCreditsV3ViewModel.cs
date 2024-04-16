@@ -103,22 +103,36 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string html;
 
-        public OverlayEndCreditsSectionV3ViewModel()
+        public ICommand MoveUpCommand { get; private set; }
+        public ICommand MoveDownCommand { get; private set; }
+        public ICommand DeleteCommand { get; private set; }
+
+        private OverlayEndCreditsV3ViewModel endCredits;
+
+        public OverlayEndCreditsSectionV3ViewModel(OverlayEndCreditsV3ViewModel endCredits)
         {
+            this.endCredits = endCredits;
+
             this.ID = Guid.NewGuid();
             this.SelectedType = OverlayEndCreditsSectionV3Type.Chatters;
             this.Columns = 1;
             this.HTML = OverlayEndCreditsSectionV3Model.DefaultHTML;
+
+            this.Initialize();
         }
 
-        public OverlayEndCreditsSectionV3ViewModel(OverlayEndCreditsSectionV3Model section)
+        public OverlayEndCreditsSectionV3ViewModel(OverlayEndCreditsV3ViewModel endCredits, OverlayEndCreditsSectionV3Model section)
         {
+            this.endCredits = endCredits;
+
             this.ID = section.ID;
             this.SelectedType = section.Type;
             this.Name = section.Name;
             this.ItemTemplate = section.ItemTemplate;
             this.Columns = section.Columns;
             this.HTML = section.HTML;
+
+            this.Initialize();
         }
 
         public OverlayEndCreditsSectionV3Model GetModel()
@@ -132,6 +146,24 @@ namespace MixItUp.Base.ViewModel.Overlay
                 Columns = this.Columns,
                 HTML = this.HTML
             };
+        }
+
+        private void Initialize()
+        {
+            this.MoveUpCommand = this.CreateCommand(() =>
+            {
+                this.endCredits.MoveSectionUp(this);
+            });
+
+            this.MoveDownCommand = this.CreateCommand(() =>
+            {
+                this.endCredits.MoveSectionDown(this);
+            });
+
+            this.DeleteCommand = this.CreateCommand(() =>
+            {
+                this.endCredits.DeleteSection(this);
+            });
         }
     }
 
@@ -294,7 +326,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             foreach (OverlayEndCreditsSectionV3Model section in item.Sections)
             {
-                this.Sections.Add(new OverlayEndCreditsSectionV3ViewModel(section));
+                this.Sections.Add(new OverlayEndCreditsSectionV3ViewModel(this, section));
                 this.Sections.Last().PropertyChanged += (sender, e) =>
                 {
                     this.NotifyPropertyChanged("X");
@@ -356,6 +388,31 @@ namespace MixItUp.Base.ViewModel.Overlay
             await base.TestWidget(widget);
         }
 
+        public void MoveSectionUp(OverlayEndCreditsSectionV3ViewModel section)
+        {
+            int index = this.Sections.IndexOf(section);
+            if (index > 0)
+            {
+                this.Sections.Remove(section);
+                this.Sections.Insert(index - 1, section);
+            }
+        }
+
+        public void MoveSectionDown(OverlayEndCreditsSectionV3ViewModel section)
+        {
+            int index = this.Sections.IndexOf(section);
+            if (index < this.Sections.Count - 1)
+            {
+                this.Sections.Remove(section);
+                this.Sections.Insert(index + 1, section);
+            }
+        }
+
+        public void DeleteSection(OverlayEndCreditsSectionV3ViewModel section)
+        {
+            this.Sections.Remove(section);
+        }
+
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
             OverlayEndCreditsV3Model result = new OverlayEndCreditsV3Model();
@@ -398,7 +455,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.AddSectionCommand = this.CreateCommand(() =>
             {
-                this.Sections.Add(new OverlayEndCreditsSectionV3ViewModel());
+                this.Sections.Add(new OverlayEndCreditsSectionV3ViewModel(this));
                 this.Sections.Last().PropertyChanged += (sender, e) =>
                 {
                     this.NotifyPropertyChanged("X");
