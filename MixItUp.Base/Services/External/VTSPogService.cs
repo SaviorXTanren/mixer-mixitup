@@ -4,9 +4,11 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using static Google.Apis.Requests.BatchRequest;
 
 namespace MixItUp.Base.Services.External
 {
@@ -14,12 +16,14 @@ namespace MixItUp.Base.Services.External
     {
         Default = -1,
         None = 0,
-        Prompt = 1,
-        PromptAndMessage = 2
+        IncludePrompt = 1,
+        IncludePromptAndMessage = 2
     }
 
     public enum VTSPogTextToSpeechProvider
     {
+        Default = 0,
+
         AmazonPolly,
         TTSMonster,
         StreamElements,
@@ -30,6 +34,12 @@ namespace MixItUp.Base.Services.External
         Elevenlabs,
 
         Random = 99,
+    }
+
+    public enum VTSPogAudioFileOutputType
+    {
+        Pet,
+        Soundboard,
     }
 
     public class VTSPogWebSocketPacket
@@ -183,10 +193,6 @@ namespace MixItUp.Base.Services.External
                 using (AdvancedHttpClient client = new AdvancedHttpClient(VTSPogService.BaseAddress))
                 {
                     string url = $"pog?text={Uri.EscapeDataString(text)}&user={user.DisplayName}";
-                    if (characterLimit > 0)
-                    {
-                        url += $"&limit={characterLimit}";
-                    }
                     if (!string.IsNullOrEmpty(ttsProvider))
                     {
                         url += $"&tts={ttsProvider}";
@@ -195,9 +201,13 @@ namespace MixItUp.Base.Services.External
                     {
                         url += $"&voice={Uri.EscapeDataString(voice)}";
                     }
+                    if (characterLimit > 0)
+                    {
+                        url += $"&limit={characterLimit}";
+                    }
 
-                    await client.GetAsync(url);
-                    return true;
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    return response.IsSuccessStatusCode;
                 }
             }
             catch (Exception ex)
@@ -207,20 +217,21 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task<bool> AITextToSpeech(string text, UserV2ViewModel user, VTSPogAITextToSpeechPromptTypeEnum prompt = VTSPogAITextToSpeechPromptTypeEnum.Default)
+        public async Task<bool> AITextToSpeech(string text, UserV2ViewModel user, VTSPogAITextToSpeechPromptTypeEnum prompt = VTSPogAITextToSpeechPromptTypeEnum.Default, bool storeInMemory = false)
         {
             try
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(VTSPogService.BaseAddress))
                 {
-                    string url = $"gpt?text={Uri.EscapeDataString(text)}&user={user.DisplayName}&presentation=1";
+                    int presentation = storeInMemory ? 1 : 0;
+                    string url = $"gpt?text={Uri.EscapeDataString(text)}&user={user.DisplayName}&presentation={presentation}";
                     if (prompt >= 0)
                     {
                         url += $"&prompt={(int)prompt}";
                     }
 
-                    await client.GetAsync(url);
-                    return true;
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    return response.IsSuccessStatusCode;
                 }
             }
             catch (Exception ex)
@@ -230,16 +241,20 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task<bool> PlayAudioFile(string filePath)
+        public async Task<bool> PlayAudioFile(string filePath, VTSPogAudioFileOutputType outputType = VTSPogAudioFileOutputType.Pet)
         {
             try
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(VTSPogService.BaseAddress))
                 {
                     string url = $"pogu?text={Uri.EscapeDataString(filePath)}";
+                    if (outputType == VTSPogAudioFileOutputType.Soundboard)
+                    {
+                        url += "&pet=soundboard";
+                    }
 
-                    await client.GetAsync(url);
-                    return true;
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    return response.IsSuccessStatusCode;
                 }
             }
             catch (Exception ex)
@@ -271,8 +286,8 @@ namespace MixItUp.Base.Services.External
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(VTSPogService.BaseAddress))
                 {
-                    await client.GetAsync("stopTTS");
-                    return true;
+                    HttpResponseMessage response = await client.GetAsync("stopTTS");
+                    return response.IsSuccessStatusCode;
                 }
             }
             catch (Exception ex)
@@ -288,8 +303,8 @@ namespace MixItUp.Base.Services.External
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(VTSPogService.BaseAddress))
                 {
-                    await client.GetAsync("skip");
-                    return true;
+                    HttpResponseMessage response = await client.GetAsync("skip");
+                    return response.IsSuccessStatusCode;
                 }
             }
             catch (Exception ex)

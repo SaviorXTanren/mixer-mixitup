@@ -2384,6 +2384,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Character Limit.
+        /// </summary>
+        public static string CharacterLimit {
+            get {
+                return ResourceManager.GetString("CharacterLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Charities.
         /// </summary>
         public static string Charities {
@@ -10785,6 +10794,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Include Prompt.
+        /// </summary>
+        public static string IncludePrompt {
+            get {
+                return ResourceManager.GetString("IncludePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Prompt And Message.
+        /// </summary>
+        public static string IncludePromptAndMessage {
+            get {
+                return ResourceManager.GetString("IncludePromptAndMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Include Username With Requirement Errors.
         /// </summary>
         public static string IncludeUsernameWithRequirementErrors {
@@ -15532,6 +15559,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pet.
+        /// </summary>
+        public static string Pet {
+            get {
+                return ResourceManager.GetString("Pet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pin.
         /// </summary>
         public static string Pin {
@@ -16374,6 +16410,24 @@ namespace MixItUp.Base {
         public static string PromoteUserPrompt {
             get {
                 return ResourceManager.GetString("PromoteUserPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prompt Type.
+        /// </summary>
+        public static string PromptType {
+            get {
+                return ResourceManager.GetString("PromptType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider.
+        /// </summary>
+        public static string Provider {
+            get {
+                return ResourceManager.GetString("Provider", resourceCulture);
             }
         }
         
@@ -19708,6 +19762,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Soundboard.
+        /// </summary>
+        public static string Soundboard {
+            get {
+                return ResourceManager.GetString("Soundboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sound Effects.
         /// </summary>
         public static string SoundEffects {
@@ -20148,6 +20211,15 @@ namespace MixItUp.Base {
         public static string StopCommand {
             get {
                 return ResourceManager.GetString("StopCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store In Memory.
+        /// </summary>
+        public static string StoreInMemory {
+            get {
+                return ResourceManager.GetString("StoreInMemory", resourceCulture);
             }
         }
         
@@ -25032,7 +25104,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VTS Pog Action: Missing Audio File.
+        ///   Looks up a localized string similar to VTS P.O.G. Action: Missing Audio File.
         /// </summary>
         public static string VTSPogActionMissingAudioFile {
             get {
@@ -25041,7 +25113,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VTS Pog Action: Missing text.
+        ///   Looks up a localized string similar to VTS P.O.G. Action: Missing text.
         /// </summary>
         public static string VTSPogActionMissingText {
             get {
@@ -25064,6 +25136,24 @@ namespace MixItUp.Base {
         public static string VTSPogInfo {
             get {
                 return ResourceManager.GetString("VTSPogInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G. not connected, please ensure the software is running and is connected on the Services page..
+        /// </summary>
+        public static string VTSPogNotConnected {
+            get {
+                return ResourceManager.GetString("VTSPogNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G. Voice Reference List.
+        /// </summary>
+        public static string VTSPogVoiceReferenceList {
+            get {
+                return ResourceManager.GetString("VTSPogVoiceReferenceList", resourceCulture);
             }
         }
         

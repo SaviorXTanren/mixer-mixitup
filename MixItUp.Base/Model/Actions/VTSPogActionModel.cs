@@ -13,8 +13,11 @@ namespace MixItUp.Base.Model.Actions
         TextToSpeech,
         AITextToSpeech,
         PlayAudioFile,
+        [Obsolete]
         EnableDisableTextToSpeechQueue,
+        [Obsolete]
         ToggleTextToSpeechQueue,
+        [Obsolete]
         SkipCurrentAudio,
     }
 
@@ -23,7 +26,7 @@ namespace MixItUp.Base.Model.Actions
     {
         public static VTSPogActionModel CreateForTextToSpeech(string text, int characterLimit, VTSPogTextToSpeechProvider provider, string voice)
         {
-            return new VTSPogActionModel(VTSPogActionTypeEnum.AITextToSpeech)
+            return new VTSPogActionModel(VTSPogActionTypeEnum.TextToSpeech)
             {
                 TextToSpeechText = text,
                 TextToSpeechCharacterLimit = characterLimit,
@@ -32,20 +35,22 @@ namespace MixItUp.Base.Model.Actions
             };
         }
 
-        public static VTSPogActionModel CreateForAITextToSpeech(string text, VTSPogAITextToSpeechPromptTypeEnum type)
+        public static VTSPogActionModel CreateForAITextToSpeech(string text, VTSPogAITextToSpeechPromptTypeEnum type, bool storeInMemory)
         {
             return new VTSPogActionModel(VTSPogActionTypeEnum.AITextToSpeech)
             {
                 TextToSpeechText = text,
                 AITextToSpeechPromptType = type,
+                AITextToSpeechStoreInMemory = storeInMemory,
             };
         }
 
-        public static VTSPogActionModel CreateForPlayAudioFile(string audioFilePath)
+        public static VTSPogActionModel CreateForPlayAudioFile(string audioFilePath, VTSPogAudioFileOutputType audioOutputType)
         {
             return new VTSPogActionModel(VTSPogActionTypeEnum.PlayAudioFile)
             {
                 AudioFilePath = audioFilePath,
+                AudioOutputType = audioOutputType,
             };
         }
 
@@ -71,10 +76,14 @@ namespace MixItUp.Base.Model.Actions
         public string TextToSpeechVoice { get; set; }
 
         [DataMember]
+        public bool AITextToSpeechStoreInMemory { get; set; }
+        [DataMember]
         public VTSPogAITextToSpeechPromptTypeEnum AITextToSpeechPromptType { get; set; }
 
         [DataMember]
         public string AudioFilePath { get; set; }
+        [DataMember]
+        public VTSPogAudioFileOutputType AudioOutputType { get; set; }
 
         [DataMember]
         public bool EnableDisableTextToSpeechQueue { get; set; }
@@ -119,7 +128,7 @@ namespace MixItUp.Base.Model.Actions
                         case VTSPogTextToSpeechProvider.Random: provider = "random"; break;
                     }
 
-                    if (!string.IsNullOrEmpty(provider))
+                    if (!string.IsNullOrEmpty(text))
                     {
                         await ServiceManager.Get<VTSPogService>().TextToSpeech(text, parameters.User, this.TextToSpeechCharacterLimit, provider, voice);
                     }
@@ -127,12 +136,15 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == VTSPogActionTypeEnum.AITextToSpeech)
                 {
                     string text = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TextToSpeechText, parameters);
-                    await ServiceManager.Get<VTSPogService>().AITextToSpeech(text, parameters.User, this.AITextToSpeechPromptType);
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        await ServiceManager.Get<VTSPogService>().AITextToSpeech(text, parameters.User, this.AITextToSpeechPromptType, this.AITextToSpeechStoreInMemory);
+                    }
                 }
                 else if (this.ActionType == VTSPogActionTypeEnum.PlayAudioFile)
                 {
                     string audioFilePath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.AudioFilePath, parameters);
-                    await ServiceManager.Get<VTSPogService>().PlayAudioFile(audioFilePath);
+                    await ServiceManager.Get<VTSPogService>().PlayAudioFile(audioFilePath, this.AudioOutputType);
                 }
                 else if (this.ActionType == VTSPogActionTypeEnum.EnableDisableTextToSpeechQueue)
                 {

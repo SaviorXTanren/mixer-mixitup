@@ -10213,9 +10213,39 @@ namespace CustomNamespace
     <value>TikTok TTS</value>
   </data>
   <data name="VTSPogActionMissingText" xml:space="preserve">
-    <value>VTS Pog Action: Missing text</value>
+    <value>VTS P.O.G. Action: Missing text</value>
   </data>
   <data name="VTSPogActionMissingAudioFile" xml:space="preserve">
-    <value>VTS Pog Action: Missing Audio File</value>
+    <value>VTS P.O.G. Action: Missing Audio File</value>
+  </data>
+  <data name="VTSPogNotConnected" xml:space="preserve">
+    <value>VTS P.O.G. not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="VTSPogVoiceReferenceList" xml:space="preserve">
+    <value>VTS P.O.G. Voice Reference List</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Provider</value>
+  </data>
+  <data name="CharacterLimit" xml:space="preserve">
+    <value>Character Limit</value>
+  </data>
+  <data name="PromptType" xml:space="preserve">
+    <value>Prompt Type</value>
+  </data>
+  <data name="IncludePrompt" xml:space="preserve">
+    <value>Include Prompt</value>
+  </data>
+  <data name="IncludePromptAndMessage" xml:space="preserve">
+    <value>Include Prompt And Message</value>
+  </data>
+  <data name="StoreInMemory" xml:space="preserve">
+    <value>Store In Memory</value>
+  </data>
+  <data name="Pet" xml:space="preserve">
+    <value>Pet</value>
+  </data>
+  <data name="Soundboard" xml:space="preserve">
+    <value>Soundboard</value>
   </data>
 </root>

@@ -45,17 +45,6 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowTextToSpeechGrid { get { return this.SelectedActionType == VTSPogActionTypeEnum.TextToSpeech; } }
 
-        public string TextToSpeechCharacterLimit
-        {
-            get { return (this.textToSpeechCharacterLimit > 0) ? this.textToSpeechCharacterLimit.ToString() : string.Empty; }
-            set
-            {
-                this.textToSpeechCharacterLimit = this.GetPositiveIntFromString(value);
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int textToSpeechCharacterLimit;
-
         public IEnumerable<VTSPogTextToSpeechProvider> TextToSpeechProviders { get; set; } = EnumHelper.GetEnumList<VTSPogTextToSpeechProvider>();
 
         public VTSPogTextToSpeechProvider SelectedTextToSpeechProvider
@@ -65,9 +54,16 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedTextToSpeechProvider = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.CanTextToSpeechVoiceBeSpecified));
+                if (!this.CanTextToSpeechVoiceBeSpecified)
+                {
+                    this.TextToSpeechVoice = string.Empty;
+                }
             }
         }
         private VTSPogTextToSpeechProvider selectedTextToSpeechProvider;
+
+        public bool CanTextToSpeechVoiceBeSpecified { get { return this.SelectedTextToSpeechProvider != VTSPogTextToSpeechProvider.Random; } }
 
         public string TextToSpeechVoice
         {
@@ -79,6 +75,17 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string textToSpeechVoice;
+
+        public string TextToSpeechCharacterLimit
+        {
+            get { return (this.textToSpeechCharacterLimit > 0) ? this.textToSpeechCharacterLimit.ToString() : string.Empty; }
+            set
+            {
+                this.textToSpeechCharacterLimit = this.GetPositiveIntFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int textToSpeechCharacterLimit;
 
         public bool ShowAITextToSpeechGrid { get { return this.SelectedActionType == VTSPogActionTypeEnum.AITextToSpeech; } }
 
@@ -93,7 +100,18 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private VTSPogAITextToSpeechPromptTypeEnum selectedAITextToSpeechPromptType;
+        private VTSPogAITextToSpeechPromptTypeEnum selectedAITextToSpeechPromptType = VTSPogAITextToSpeechPromptTypeEnum.Default;
+
+        public bool AITextToSpeechStoreInMemory
+        {
+            get { return this.aiTextToSpeechStoreInMemory; }
+            set
+            {
+                this.aiTextToSpeechStoreInMemory = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool aiTextToSpeechStoreInMemory;
 
         public bool ShowPlayAudioFileGrid { get { return this.SelectedActionType == VTSPogActionTypeEnum.PlayAudioFile; } }
 
@@ -107,6 +125,19 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string audioFilePath;
+
+        public IEnumerable<VTSPogAudioFileOutputType> AudioOutputTypes { get; set; } = EnumHelper.GetEnumList<VTSPogAudioFileOutputType>();
+
+        public VTSPogAudioFileOutputType SelectedAudioOutputType
+        {
+            get { return this.selectedAudioOutputType; }
+            set
+            {
+                this.selectedAudioOutputType = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private VTSPogAudioFileOutputType selectedAudioOutputType;
 
         public bool ShowEnableDisableTextToSpeechQueueGrid { get { return this.SelectedActionType == VTSPogActionTypeEnum.EnableDisableTextToSpeechQueue; } }
 
@@ -136,10 +167,12 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.TextToSpeechText = action.TextToSpeechText;
                 this.SelectedAITextToSpeechPromptType = action.AITextToSpeechPromptType;
+                this.AITextToSpeechStoreInMemory = action.AITextToSpeechStoreInMemory;
             }
             else if (this.ShowPlayAudioFileGrid)
             {
                 this.AudioFilePath = action.AudioFilePath;
+                this.SelectedAudioOutputType = action.AudioOutputType;
             }
             else if (this.ShowEnableDisableTextToSpeechQueueGrid)
             {
@@ -183,11 +216,11 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowAITextToSpeechGrid)
             {
-                return Task.FromResult<ActionModelBase>(VTSPogActionModel.CreateForAITextToSpeech(this.TextToSpeechText, this.SelectedAITextToSpeechPromptType));
+                return Task.FromResult<ActionModelBase>(VTSPogActionModel.CreateForAITextToSpeech(this.TextToSpeechText, this.SelectedAITextToSpeechPromptType, this.AITextToSpeechStoreInMemory));
             }
             else if (this.ShowPlayAudioFileGrid)
             {
-                return Task.FromResult<ActionModelBase>(VTSPogActionModel.CreateForPlayAudioFile(this.AudioFilePath));
+                return Task.FromResult<ActionModelBase>(VTSPogActionModel.CreateForPlayAudioFile(this.AudioFilePath, this.SelectedAudioOutputType));
             }
             else if (this.ShowEnableDisableTextToSpeechQueueGrid)
             {
