@@ -8,7 +8,6 @@ using System.Net.Http;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using static Google.Apis.Requests.BatchRequest;
 
 namespace MixItUp.Base.Services.External
 {
