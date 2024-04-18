@@ -37,7 +37,8 @@ namespace MixItUp.Base.Services.External
 
     public enum VTSPogAudioFileOutputType
     {
-        Pet,
+        TTSPet,
+        AIPet,
         Soundboard,
     }
 
@@ -240,14 +241,18 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task<bool> PlayAudioFile(string filePath, VTSPogAudioFileOutputType outputType = VTSPogAudioFileOutputType.Pet)
+        public async Task<bool> PlayAudioFile(string filePath, VTSPogAudioFileOutputType outputType = VTSPogAudioFileOutputType.TTSPet)
         {
             try
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(VTSPogService.BaseAddress))
                 {
                     string url = $"pogu?text={Uri.EscapeDataString(filePath)}";
-                    if (outputType == VTSPogAudioFileOutputType.Soundboard)
+                    if (outputType == VTSPogAudioFileOutputType.AIPet)
+                    {
+                        url += "&pet=ai";
+                    }
+                    else if (outputType == VTSPogAudioFileOutputType.Soundboard)
                     {
                         url += "&pet=soundboard";
                     }

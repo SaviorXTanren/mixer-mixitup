@@ -10248,4 +10248,10 @@ namespace CustomNamespace
   <data name="Soundboard" xml:space="preserve">
     <value>Soundboard</value>
   </data>
+  <data name="AIPet" xml:space="preserve">
+    <value>AI Pet</value>
+  </data>
+  <data name="TTSPet" xml:space="preserve">
+    <value>TTS Pet</value>
+  </data>
 </root>

@@ -709,6 +709,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AI Pet.
+        /// </summary>
+        public static string AIPet {
+            get {
+                return ResourceManager.GetString("AIPet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AI Text To Speech.
         /// </summary>
         public static string AITextToSpeech {
@@ -22866,6 +22875,15 @@ namespace MixItUp.Base {
         public static string TTSMonsterOverlayURL {
             get {
                 return ResourceManager.GetString("TTSMonsterOverlayURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTS Pet.
+        /// </summary>
+        public static string TTSPet {
+            get {
+                return ResourceManager.GetString("TTSPet", resourceCulture);
             }
         }
         
