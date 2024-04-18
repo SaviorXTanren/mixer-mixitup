@@ -192,6 +192,14 @@ namespace MixItUp.Base.Model.Overlay
         public const string EndCreditsStartedPacketType = "EndCreditsStarted";
         public const string EndCreditsCompletedPacketType = "EndCreditsCompleted";
 
+        private static readonly HashSet<OverlayEndCreditsSectionV3Type> AllSubscriberSectionTypes = new HashSet<OverlayEndCreditsSectionV3Type>()
+        {
+            OverlayEndCreditsSectionV3Type.Subscribers,
+            OverlayEndCreditsSectionV3Type.NewSubscribers,
+            OverlayEndCreditsSectionV3Type.GiftedSubscriptions,
+            OverlayEndCreditsSectionV3Type.AllSubscriptions
+        };
+
         public static readonly string DefaultHTML = OverlayResources.OverlayEndCreditsDefaultHTML;
         public static readonly string DefaultCSS =  OverlayResources.OverlayEndCreditsDefaultCSS + "\n\n" + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayEndCreditsDefaultJavascript;
@@ -215,6 +223,33 @@ namespace MixItUp.Base.Model.Overlay
         public Guid StartedCommandID { get; set; }
         [DataMember]
         public Guid EndedCommandID { get; set; }
+
+        [DataMember]
+        public override bool Chatters { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Chatters); } set { } }
+
+        [DataMember]
+        public override bool Follows { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Followers || s.Type == OverlayEndCreditsSectionV3Type.NewFollowers); } set { } }
+
+        [DataMember]
+        public override bool Raids { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Raids); } set { } }
+
+        [DataMember]
+        public override bool TwitchSubscriptions { get { return this.Sections.Any(s => OverlayEndCreditsV3Model.AllSubscriberSectionTypes.Contains(s.Type)); } set { } }
+        [DataMember]
+        public override bool TwitchBits { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.TwitchBits); } set { } }
+
+        [DataMember]
+        public override bool YouTubeMemberships { get { return this.Sections.Any(s => OverlayEndCreditsV3Model.AllSubscriberSectionTypes.Contains(s.Type)); } set { } }
+        [DataMember]
+        public override bool YouTubeSuperChats { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.YouTubeSuperChats); } set { } }
+
+        [DataMember]
+        public override bool TrovoSubscriptions { get { return this.Sections.Any(s => OverlayEndCreditsV3Model.AllSubscriberSectionTypes.Contains(s.Type)); } set { } }
+        [DataMember]
+        public override bool TrovoElixirSpells { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.TrovoSpells); } set { } }
+
+        [DataMember]
+        public override bool Donations { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Donations); } set { } }
 
         public OverlayEndCreditsV3Model() : base(OverlayItemV3Type.EndCredits) { }
 
@@ -313,15 +348,22 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task PlayCredits()
         {
-            Dictionary<string, IEnumerable<string>> sectionItems = new Dictionary<string, IEnumerable<string>>();
+            List<OverlayEndCreditsSectionV3Model> applicableSections = new List<OverlayEndCreditsSectionV3Model>();
+
+            Dictionary<Guid, IEnumerable<string>> sectionItems = new Dictionary<Guid, IEnumerable<string>>();
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
             {
-                sectionItems[section.ID.ToString()] = await section.GetItems();
+                IEnumerable<string> items = await section.GetItems();
+                if (items.Count() > 0)
+                {
+                    sectionItems[section.ID] = items;
+                    applicableSections.Add(section);
+                }
             }
 
             Dictionary<string, object> data = new Dictionary<string, object>();
-            data["Order"] = this.Sections.Select(s => s.ID);
-            data["Columns"] = this.Sections.ToDictionary(s => s.ID, s => s.Columns);
+            data["Order"] = applicableSections.Select(s => s.ID);
+            data["Columns"] = applicableSections.ToDictionary(s => s.ID, s => s.Columns);
             data["Items"] = sectionItems;
 
             await this.CallFunction("startCredits", data);
