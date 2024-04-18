@@ -51,6 +51,29 @@ namespace MixItUp.Base.ViewModel.Actions
         public bool MtionStudioConnected { get { return ServiceManager.Get<MtionStudioService>().IsConnected; } }
         public bool MtionStudioNotConnected { get { return !this.MtionStudioConnected; } }
 
+        public ObservableCollection<MtionStudioClubhouse> Clubhouses { get; set; } = new ObservableCollection<MtionStudioClubhouse>();
+
+        public MtionStudioClubhouse SelectedClubhouse
+        {
+            get { return this.selectedClubhouse; }
+            set
+            {
+                bool updateOccurred = value != this.selectedClubhouse;
+
+                this.selectedClubhouse = value;
+                this.NotifyPropertyChanged();
+
+                if (updateOccurred && this.selectedClubhouse != null)
+                {
+                    this.Triggers.Clear();
+                    this.Triggers.AddRange(this.SelectedClubhouse.external_trigger_datas);
+
+                    this.SelectedTrigger = this.Triggers.FirstOrDefault();
+                }
+            }
+        }
+        private MtionStudioClubhouse selectedClubhouse;
+
         public ObservableCollection<MtionStudioTrigger> Triggers { get; set; } = new ObservableCollection<MtionStudioTrigger>();
 
         public MtionStudioTrigger SelectedTrigger
@@ -157,14 +180,11 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (this.MtionStudioConnected)
             {
-                this.Triggers.Clear();
-                MtionStudioClubhouse clubhouse = await ServiceManager.Get<MtionStudioService>().GetCurrentClubhouseTriggers();
-                if (clubhouse != null)
+                this.Clubhouses.Clear();
+                IEnumerable<MtionStudioClubhouse> clubhouses = await ServiceManager.Get<MtionStudioService>().GetAllClubhouses();
+                if (clubhouses != null)
                 {
-                    foreach (MtionStudioTrigger trigger in clubhouse.triggers)
-                    {
-                        this.Triggers.Add(trigger);
-                    }
+                    this.Clubhouses.AddRange(clubhouses);
                 }
             }
         }

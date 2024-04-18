@@ -10395,4 +10395,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="APITrigger" xml:space="preserve">
     <value>API Trigger</value>
   </data>
+  <data name="Clubhouse" xml:space="preserve">
+    <value>Clubhouse</value>
+  </data>
 </root>

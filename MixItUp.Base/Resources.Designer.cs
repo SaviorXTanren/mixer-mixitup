@@ -2798,6 +2798,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clubhouse.
+        /// </summary>
+        public static string Clubhouse {
+            get {
+                return ResourceManager.GetString("Clubhouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coin Pusher.
         /// </summary>
         public static string CoinPusher {

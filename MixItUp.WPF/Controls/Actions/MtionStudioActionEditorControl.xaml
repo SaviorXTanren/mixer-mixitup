@@ -19,14 +19,20 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox Grid.Column="0" ItemsSource="{Binding Triggers}" SelectedItem="{Binding SelectedTrigger}" HorizontalAlignment="Left" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.APITrigger}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
-        <TextBlock Grid.Column="0" Visibility="{Binding MtionStudioNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="Red" HorizontalAlignment="Right" Text="{x:Static resx:Resources.EnableMtionStudio}"/>
+        <TextBlock Grid.Row="0" Visibility="{Binding MtionStudioNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EnableMtionStudio}" Margin="0,0,10,0"/>
 
-        <ItemsControl Grid.Row="2" ItemsSource="{Binding Parameters}">
+        <ComboBox Grid.Row="1" ItemsSource="{Binding Clubhouses}" SelectedItem="{Binding SelectedClubhouse}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Clubhouse}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
+
+        <ComboBox Grid.Row="3" ItemsSource="{Binding Triggers}" SelectedItem="{Binding SelectedTrigger}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.APITrigger}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
+
+        <ItemsControl Grid.Row="5" ItemsSource="{Binding Parameters}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
