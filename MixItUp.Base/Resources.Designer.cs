@@ -709,6 +709,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AI Pet.
+        /// </summary>
+        public static string AIPet {
+            get {
+                return ResourceManager.GetString("AIPet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AI Text To Speech.
+        /// </summary>
+        public static string AITextToSpeech {
+            get {
+                return ResourceManager.GetString("AITextToSpeech", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A JSON parameter name must be specified..
         /// </summary>
         public static string AJSONParameterNameMustBeSpecified {
@@ -1092,6 +1110,15 @@ namespace MixItUp.Base {
         public static string ANewUpdateIsAvailableForMixItUp {
             get {
                 return ResourceManager.GetString("ANewUpdateIsAvailableForMixItUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Animalese.
+        /// </summary>
+        public static string Animalese {
+            get {
+                return ResourceManager.GetString("Animalese", resourceCulture);
             }
         }
         
@@ -2362,6 +2389,15 @@ namespace MixItUp.Base {
         public static string ChannelUnfollowed {
             get {
                 return ResourceManager.GetString("ChannelUnfollowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Character Limit.
+        /// </summary>
+        public static string CharacterLimit {
+            get {
+                return ResourceManager.GetString("CharacterLimit", resourceCulture);
             }
         }
         
@@ -5766,6 +5802,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Elevenlabs.
+        /// </summary>
+        public static string Elevenlabs {
+            get {
+                return ResourceManager.GetString("Elevenlabs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Elixir.
         /// </summary>
         public static string Elixir {
@@ -5861,6 +5906,15 @@ namespace MixItUp.Base {
         public static string EnableDisableQueue {
             get {
                 return ResourceManager.GetString("EnableDisableQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable/Disable Text To Speech Queue.
+        /// </summary>
+        public static string EnableDisableTextToSpeechQueue {
+            get {
+                return ResourceManager.GetString("EnableDisableTextToSpeechQueue", resourceCulture);
             }
         }
         
@@ -10749,6 +10803,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Include Prompt.
+        /// </summary>
+        public static string IncludePrompt {
+            get {
+                return ResourceManager.GetString("IncludePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Prompt And Message.
+        /// </summary>
+        public static string IncludePromptAndMessage {
+            get {
+                return ResourceManager.GetString("IncludePromptAndMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Include Username With Requirement Errors.
         /// </summary>
         public static string IncludeUsernameWithRequirementErrors {
@@ -15496,6 +15568,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pet.
+        /// </summary>
+        public static string Pet {
+            get {
+                return ResourceManager.GetString("Pet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pin.
         /// </summary>
         public static string Pin {
@@ -15708,6 +15789,15 @@ namespace MixItUp.Base {
         public static string Play {
             get {
                 return ResourceManager.GetString("Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play Audio File.
+        /// </summary>
+        public static string PlayAudioFile {
+            get {
+                return ResourceManager.GetString("PlayAudioFile", resourceCulture);
             }
         }
         
@@ -16329,6 +16419,24 @@ namespace MixItUp.Base {
         public static string PromoteUserPrompt {
             get {
                 return ResourceManager.GetString("PromoteUserPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prompt Type.
+        /// </summary>
+        public static string PromptType {
+            get {
+                return ResourceManager.GetString("PromptType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider.
+        /// </summary>
+        public static string Provider {
+            get {
+                return ResourceManager.GetString("Provider", resourceCulture);
             }
         }
         
@@ -18167,6 +18275,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SAM Software Automatic Mouth.
+        /// </summary>
+        public static string SAMSoftwareAutomaticMouth {
+            get {
+                return ResourceManager.GetString("SAMSoftwareAutomaticMouth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Save {
@@ -18914,6 +19031,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Text To Speech Queue.
+        /// </summary>
+        public static string SetTextToSpeechQueue {
+            get {
+                return ResourceManager.GetString("SetTextToSpeechQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Settings {
@@ -19492,6 +19618,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skip Current Audio.
+        /// </summary>
+        public static string SkipCurrentAudio {
+            get {
+                return ResourceManager.GetString("SkipCurrentAudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Slide In Down.
         /// </summary>
         public static string SlideInDown {
@@ -19632,6 +19767,15 @@ namespace MixItUp.Base {
         public static string SoundActionMissingFilePath {
             get {
                 return ResourceManager.GetString("SoundActionMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Soundboard.
+        /// </summary>
+        public static string Soundboard {
+            get {
+                return ResourceManager.GetString("Soundboard", resourceCulture);
             }
         }
         
@@ -20076,6 +20220,15 @@ namespace MixItUp.Base {
         public static string StopCommand {
             get {
                 return ResourceManager.GetString("StopCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store In Memory.
+        /// </summary>
+        public static string StoreInMemory {
+            get {
+                return ResourceManager.GetString("StoreInMemory", resourceCulture);
             }
         }
         
@@ -21529,6 +21682,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TikTok TTS.
+        /// </summary>
+        public static string TikTokTTS {
+            get {
+                return ResourceManager.GetString("TikTokTTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tiltify.
         /// </summary>
         public static string Tiltify {
@@ -21966,6 +22128,15 @@ namespace MixItUp.Base {
         public static string ToggleCommand {
             get {
                 return ResourceManager.GetString("ToggleCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle Text To Speech Queue.
+        /// </summary>
+        public static string ToggleTextToSpeechQueue {
+            get {
+                return ResourceManager.GetString("ToggleTextToSpeechQueue", resourceCulture);
             }
         }
         
@@ -22704,6 +22875,15 @@ namespace MixItUp.Base {
         public static string TTSMonsterOverlayURL {
             get {
                 return ResourceManager.GetString("TTSMonsterOverlayURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTS Pet.
+        /// </summary>
+        public static string TTSPet {
+            get {
+                return ResourceManager.GetString("TTSPet", resourceCulture);
             }
         }
         
@@ -24929,6 +25109,69 @@ namespace MixItUp.Base {
         public static string VolumeUp {
             get {
                 return ResourceManager.GetString("VolumeUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G..
+        /// </summary>
+        public static string VTSPog {
+            get {
+                return ResourceManager.GetString("VTSPog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G. Action: Missing Audio File.
+        /// </summary>
+        public static string VTSPogActionMissingAudioFile {
+            get {
+                return ResourceManager.GetString("VTSPogActionMissingAudioFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G. Action: Missing text.
+        /// </summary>
+        public static string VTSPogActionMissingText {
+            get {
+                return ResourceManager.GetString("VTSPogActionMissingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to VTS P.O.G. app. Please ensure the app is running and the API has been enabled under Technical -&gt; Api. If you do not see this section in the app, you may need to update to a newer version..
+        /// </summary>
+        public static string VTSPogFailedToConnect {
+            get {
+                return ResourceManager.GetString("VTSPogFailedToConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G. connectivity allows you to control functionality in the VTS P.O.G. software, such as triggering text to speech voices, playing sounds, and controling the text to speech queue. To connect to VTS P.O.G., please ensure the software is running and the Api is enabled under Technical -&gt; API. If you do not see this section in the app, you may need to update to a newer version..
+        /// </summary>
+        public static string VTSPogInfo {
+            get {
+                return ResourceManager.GetString("VTSPogInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G. not connected, please ensure the software is running and is connected on the Services page..
+        /// </summary>
+        public static string VTSPogNotConnected {
+            get {
+                return ResourceManager.GetString("VTSPogNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTS P.O.G. Voice Reference List.
+        /// </summary>
+        public static string VTSPogVoiceReferenceList {
+            get {
+                return ResourceManager.GetString("VTSPogVoiceReferenceList", resourceCulture);
             }
         }
         

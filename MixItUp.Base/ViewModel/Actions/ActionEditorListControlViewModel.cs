@@ -68,6 +68,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel(); break;
                         case ActionTypeEnum.PolyPop: editorViewModel = new PolyPopActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Random: editorViewModel = new RandomActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.Repeat: editorViewModel = new RepeatActionEditorControlViewModel(); break;
                         case ActionTypeEnum.SAMMI: editorViewModel = new SAMMIActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Script: editorViewModel = new ScriptActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Serial: editorViewModel = new SerialActionEditorControlViewModel(); break;
@@ -80,6 +81,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.Trovo: editorViewModel = new TrovoActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Twitch: editorViewModel = new TwitchActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Voicemod: editorViewModel = new VoicemodActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.VTSPog: editorViewModel = new VTSPogActionEditorControlViewModel(); break;
                         case ActionTypeEnum.VTubeStudio: editorViewModel = new VTubeStudioActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel(); break;
                         case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel(); break;
@@ -156,6 +158,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel((PixelChatActionModel)action); break;
                 case ActionTypeEnum.PolyPop: editorViewModel = new PolyPopActionEditorControlViewModel((PolyPopActionModel)action); break;
                 case ActionTypeEnum.Random: editorViewModel = new RandomActionEditorControlViewModel((RandomActionModel)action); break;
+                case ActionTypeEnum.Repeat: editorViewModel = new RepeatActionEditorControlViewModel((RepeatActionModel)action); break;
                 case ActionTypeEnum.SAMMI: editorViewModel = new SAMMIActionEditorControlViewModel((SAMMIActionModel)action); break;
                 case ActionTypeEnum.Script: editorViewModel = new ScriptActionEditorControlViewModel((ScriptActionModel)action); break;
                 case ActionTypeEnum.Serial: editorViewModel = new SerialActionEditorControlViewModel((SerialActionModel)action); break;
@@ -168,6 +171,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.Trovo: editorViewModel = new TrovoActionEditorControlViewModel((TrovoActionModel)action); break;
                 case ActionTypeEnum.Twitch: editorViewModel = new TwitchActionEditorControlViewModel((TwitchActionModel)action); break;
                 case ActionTypeEnum.Voicemod: editorViewModel = new VoicemodActionEditorControlViewModel((VoicemodActionModel)action); break;
+                case ActionTypeEnum.VTSPog: editorViewModel = new VTSPogActionEditorControlViewModel((VTSPogActionModel)action); break;
                 case ActionTypeEnum.VTubeStudio: editorViewModel = new VTubeStudioActionEditorControlViewModel((VTubeStudioActionModel)action); break;
                 case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel((WaitActionModel)action); break;
                 case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel((WebRequestActionModel)action); break;

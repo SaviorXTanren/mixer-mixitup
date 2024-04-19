@@ -72,6 +72,8 @@ namespace MixItUp.Base.Services
         public string ID { get; set; }
         [DataMember]
         public string URL { get; set; }
+        [DataMember]
+        public int Layer { get; set; }
 
         public OverlayItemDataV3Model(string id)
         {
@@ -469,7 +471,7 @@ namespace MixItUp.Base.Services
 
         public string GetItemIFrameHTML() { return this.itemIFrameHTML; }
 
-        public async Task Add(string id, string html)
+        public async Task Add(string id, string html, int layer = 0)
         {
             try
             {
@@ -477,7 +479,10 @@ namespace MixItUp.Base.Services
                 {
                     Logger.Log(LogLevel.Debug, $"Overlay - Adding HTML - {id} - {html}");
                     ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
-                    await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)));
+                    await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)
+                    {
+                        Layer = layer
+                    }));
                 }
             }
             catch (Exception ex)

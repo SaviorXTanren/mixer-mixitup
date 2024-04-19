@@ -58,7 +58,9 @@ namespace MixItUp.Base.Model.Actions
         LumiaStream,
         Random,
         Script,
-        Group
+        Group,
+        Repeat,
+        VTSPog,
     }
 
     [DataContract]

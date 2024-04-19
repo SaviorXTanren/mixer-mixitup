@@ -30,6 +30,7 @@ namespace MixItUp.Base.Services.YouTube
         public string Botname { get { return this.Bot?.Snippet?.Title; } }
         public string ChannelID { get { return this.User?.Id; } }
         public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
+        public string StreamLink { get { return $"https://youtube.com/watch?v={ServiceManager.Get<YouTubeSessionService>().Broadcast?.Id}"; } }
 
         public bool HasMembershipCapabilities { get { return this.MembershipLevels.Count > 0; } }
 
@@ -354,11 +355,24 @@ namespace MixItUp.Base.Services.YouTube
 
         public Task<string> GetTitle() { return Task.FromResult<string>(this.Broadcast?.Snippet?.Title); }
 
-        public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
+        public async Task<bool> SetTitle(string title)
+        {
+            if (this.IsLive)
+            {
+                Video video = ServiceManager.Get<YouTubeSessionService>().Video;
+                video = await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>().Video, title: title, description: video.Snippet?.Description ?? title);
+                if (video != null && string.Equals(video.Snippet.Title, title))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return true;
+        }
 
         public Task<string> GetGame() { return Task.FromResult(string.Empty); }
 
-        public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
+        public Task<bool> SetGame(string gameName) { return Task.FromResult(true); }
 
         private async Task<Result> SetMembershipLevels()
         {

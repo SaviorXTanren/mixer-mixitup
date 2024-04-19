@@ -107,6 +107,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.EndDate}" Visibility="Collapsed">
@@ -131,9 +133,11 @@
                 </Grid>
             </GroupBox>
 
-            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
+            <TextBox Grid.Column="4" Text="{Binding StartingAmountCustom}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-            <CommandControls:CustomCommandListingControl Grid.Column="6" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
+            <CommandControls:CustomCommandListingControl Grid.Column="6" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
+
+            <CommandControls:CustomCommandListingControl Grid.Column="8" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
         </Grid>
 
         <GroupBox Grid.Row="8" Header="{x:Static resx:Resources.Segments}">

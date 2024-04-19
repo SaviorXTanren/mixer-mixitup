@@ -118,7 +118,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.layer; }
             set
             {
-                this.layer = value;
+                this.layer = value > 0 ? value : 0;
                 this.NotifyPropertyChanged();
             }
         }

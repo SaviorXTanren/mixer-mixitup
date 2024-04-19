@@ -579,8 +579,11 @@
     <Compile Include="Controls\Actions\PixelChatActionEditorControl.xaml.cs">
       <DependentUpon>PixelChatActionEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\RandomActionControl.xaml.cs">
-      <DependentUpon>RandomActionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Actions\RandomActionEditorControl.xaml.cs">
+      <DependentUpon>RandomActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\RepeatActionEditorControl.xaml.cs">
+      <DependentUpon>RepeatActionEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\SAMMIActionEditorControl.xaml.cs">
       <DependentUpon>SAMMIActionEditorControl.xaml</DependentUpon>
@@ -626,6 +629,9 @@
     </Compile>
     <Compile Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml.cs">
       <DependentUpon>InfiniteAlbumActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\VTSPogActionEditorControl.xaml.cs">
+      <DependentUpon>VTSPogActionEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\VTubeStudioActionEditorControl.xaml.cs">
       <DependentUpon>VTubeStudioActionEditorControl.xaml</DependentUpon>
@@ -926,6 +932,9 @@
     </Compile>
     <Compile Include="Controls\Services\TTSMonsterServiceControl.xaml.cs">
       <DependentUpon>TTSMonsterServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\VTSPogServiceControl.xaml.cs">
+      <DependentUpon>VTSPogServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Deprecated\Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
       <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
@@ -1420,7 +1429,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\RandomActionControl.xaml">
+    <Page Include="Controls\Actions\RandomActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\RepeatActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1483,6 +1496,10 @@
     <Page Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Actions\VTSPogActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\VTubeStudioActionEditorControl.xaml">
       <SubType>Designer</SubType>
@@ -1873,6 +1890,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\TTSMonsterServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\VTSPogServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

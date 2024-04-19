@@ -10,13 +10,15 @@ namespace MixItUp.Base.Services.External
 {
     public class SAMMIService : IExternalService
     {
-        private const string ConnectionURL = "http://localhost:9450/api";
-
         public string Name { get { return Resources.SAMMI; } }
 
         public bool IsEnabled { get { return ChannelSession.Settings.EnableSAMMI; } }
 
         public bool IsConnected { get; private set; }
+
+        public int SAMMIPortNumber { get { return ChannelSession.Settings.SAMMIPortNumber; } }
+
+        public string BaseAddressURL { get { return $"http://localhost:{this.SAMMIPortNumber}/api"; } }
 
         public async Task<Result> Connect()
         {
@@ -26,7 +28,7 @@ namespace MixItUp.Base.Services.External
 
                 using (var client = new AdvancedHttpClient())
                 {
-                    JObject result = await client.GetJObjectAsync($"{ConnectionURL}?request=getVariable&name=Architecture");
+                    JObject result = await client.GetJObjectAsync($"{this.BaseAddressURL}?request=getVariable&name=Architecture");
                     if (result != null && result.ContainsKey("data"))
                     {
                         this.IsConnected = true;
@@ -58,7 +60,7 @@ namespace MixItUp.Base.Services.External
                     jobj["request"] = "triggerButton";
                     jobj["buttonID"] = buttonID;
 
-                    HttpResponseMessage response = await client.PostAsync(ConnectionURL, AdvancedHttpClient.CreateContentFromObject(jobj));
+                    HttpResponseMessage response = await client.PostAsync(this.BaseAddressURL, AdvancedHttpClient.CreateContentFromObject(jobj));
                     if (!response.IsSuccessStatusCode)
                     {
                         Logger.Log("SAMMI Failure: " + await response.Content.ReadAsStringAsync());
@@ -81,7 +83,7 @@ namespace MixItUp.Base.Services.External
                     jobj["request"] = "releaseButton";
                     jobj["buttonID"] = buttonID;
 
-                    HttpResponseMessage response = await client.PostAsync(ConnectionURL, AdvancedHttpClient.CreateContentFromObject(jobj));
+                    HttpResponseMessage response = await client.PostAsync(this.BaseAddressURL, AdvancedHttpClient.CreateContentFromObject(jobj));
                     if (!response.IsSuccessStatusCode)
                     {
                         Logger.Log("SAMMI Failure: " + await response.Content.ReadAsStringAsync());
@@ -109,7 +111,7 @@ namespace MixItUp.Base.Services.External
                         jobj["buttonID"] = buttonID;
                     }
 
-                    HttpResponseMessage response = await client.PostAsync(ConnectionURL, AdvancedHttpClient.CreateContentFromObject(jobj));
+                    HttpResponseMessage response = await client.PostAsync(this.BaseAddressURL, AdvancedHttpClient.CreateContentFromObject(jobj));
                     if (!response.IsSuccessStatusCode)
                     {
                         Logger.Log("SAMMI Failure: " + await response.Content.ReadAsStringAsync());

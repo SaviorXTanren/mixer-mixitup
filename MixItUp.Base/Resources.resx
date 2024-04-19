@@ -10182,4 +10182,76 @@ namespace CustomNamespace
   <data name="ResetOnEnable" xml:space="preserve">
     <value>Reset On Enable</value>
   </data>
+  <data name="AITextToSpeech" xml:space="preserve">
+    <value>AI Text To Speech</value>
+  </data>
+  <data name="PlayAudioFile" xml:space="preserve">
+    <value>Play Audio File</value>
+  </data>
+  <data name="SetTextToSpeechQueue" xml:space="preserve">
+    <value>Set Text To Speech Queue</value>
+  </data>
+  <data name="SkipCurrentAudio" xml:space="preserve">
+    <value>Skip Current Audio</value>
+  </data>
+  <data name="EnableDisableTextToSpeechQueue" xml:space="preserve">
+    <value>Enable/Disable Text To Speech Queue</value>
+  </data>
+  <data name="ToggleTextToSpeechQueue" xml:space="preserve">
+    <value>Toggle Text To Speech Queue</value>
+  </data>
+  <data name="Animalese" xml:space="preserve">
+    <value>Animalese</value>
+  </data>
+  <data name="Elevenlabs" xml:space="preserve">
+    <value>Elevenlabs</value>
+  </data>
+  <data name="SAMSoftwareAutomaticMouth" xml:space="preserve">
+    <value>SAM Software Automatic Mouth</value>
+  </data>
+  <data name="TikTokTTS" xml:space="preserve">
+    <value>TikTok TTS</value>
+  </data>
+  <data name="VTSPogActionMissingText" xml:space="preserve">
+    <value>VTS P.O.G. Action: Missing text</value>
+  </data>
+  <data name="VTSPogActionMissingAudioFile" xml:space="preserve">
+    <value>VTS P.O.G. Action: Missing Audio File</value>
+  </data>
+  <data name="VTSPogNotConnected" xml:space="preserve">
+    <value>VTS P.O.G. not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="VTSPogVoiceReferenceList" xml:space="preserve">
+    <value>VTS P.O.G. Voice Reference List</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Provider</value>
+  </data>
+  <data name="CharacterLimit" xml:space="preserve">
+    <value>Character Limit</value>
+  </data>
+  <data name="PromptType" xml:space="preserve">
+    <value>Prompt Type</value>
+  </data>
+  <data name="IncludePrompt" xml:space="preserve">
+    <value>Include Prompt</value>
+  </data>
+  <data name="IncludePromptAndMessage" xml:space="preserve">
+    <value>Include Prompt And Message</value>
+  </data>
+  <data name="StoreInMemory" xml:space="preserve">
+    <value>Store In Memory</value>
+  </data>
+  <data name="Pet" xml:space="preserve">
+    <value>Pet</value>
+  </data>
+  <data name="Soundboard" xml:space="preserve">
+    <value>Soundboard</value>
+  </data>
+  <data name="AIPet" xml:space="preserve">
+    <value>AI Pet</value>
+  </data>
+  <data name="TTSPet" xml:space="preserve">
+    <value>TTS Pet</value>
+  </data>
 </root>

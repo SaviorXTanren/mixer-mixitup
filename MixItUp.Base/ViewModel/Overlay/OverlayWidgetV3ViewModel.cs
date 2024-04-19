@@ -346,7 +346,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             return new Result();
         }
 
-        public OverlayWidgetV3Model GetWidget()
+        public async Task<OverlayWidgetV3Model> GetWidget()
         {
             OverlayItemV3ModelBase item = this.Item.GetItem();
             item.ID = this.ID;
@@ -356,6 +356,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             item.Javascript = this.Javascript;
             item.DisplayOption = this.SelectedDisplayOption;
             this.Position.SetPosition(item);
+
+            await item.WidgetReset();
 
             OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
             widget.Name = this.Name;
@@ -427,7 +429,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                     await ServiceManager.Get<OverlayV3Service>().RemoveWidget(this.existingWidget);
                 }
 
-                this.newWidget = this.GetWidget();
+                this.newWidget = await this.GetWidget();
                 await ServiceManager.Get<OverlayV3Service>().AddWidget(this.newWidget);
 
                 this.OnCloseRequested(this, new EventArgs());
@@ -450,7 +452,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                     return;
                 }
 
-                OverlayWidgetV3Model widget = this.GetWidget();
+                OverlayWidgetV3Model widget = await this.GetWidget();
             });
         }
 
@@ -472,7 +474,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         private async Task EnableTestWidget()
         {
-            OverlayWidgetV3Model widget = this.GetWidget();
+            OverlayWidgetV3Model widget = await this.GetWidget();
             this.testWidget = widget;
             await widget.Enable();
         }

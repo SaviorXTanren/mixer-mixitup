@@ -124,6 +124,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool EnableSAMMI { get; set; }
         [DataMember]
+        public int SAMMIPortNumber { get; set; } = 9450;
+        [DataMember]
         public OAuthTokenModel TTSMonsterOAuthToken { get; set; }
 
         #endregion Authentication
@@ -556,6 +558,9 @@ namespace MixItUp.Base.Model.Settings
         public int PulsoidCommandTriggerDelay { get; set; } = 3;
         [DataMember]
         public List<Tuple<int, int>> PulsoidCommandHeartRateRangeTriggers { get; set; } = new List<Tuple<int, int>>();
+
+        [DataMember]
+        public bool VTSPogEnabled { get; set; }
 
         #endregion Services
 

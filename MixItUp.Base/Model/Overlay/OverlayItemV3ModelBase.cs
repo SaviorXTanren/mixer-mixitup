@@ -149,6 +149,19 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public virtual int LatestVersion { get { return 0; } }
 
+        [JsonIgnore]
+        public int LayerProcessed
+        {
+            get
+            {
+                if (this.Layer == 0)
+                {
+                    return OverlayItemV3ModelBase.zIndexCounter;
+                }
+                return this.Layer;
+            }
+        }
+
         protected OverlayItemV3ModelBase()
         {
             this.Version = this.LatestVersion;
@@ -158,15 +171,15 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Dictionary<string, object> GetGenerationProperties()
         {
+            if (this.Layer == 0)
+            {
+                OverlayItemV3ModelBase.zIndexCounter++;
+            }
+
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[nameof(this.ID)] = (this.ID == Guid.Empty) ? Guid.NewGuid().ToString() : this.ID.ToString();
             properties[nameof(this.Width)] = (this.Width > 0) ? $"{this.Width}px" : "max-content";
             properties[nameof(this.Height)] = (this.Height > 0) ? $"{this.Height}px" : "max-content";
-
-            if (this.Layer == 0)
-            {
-                zIndexCounter++;
-            }
 
             if (this.PositionType == OverlayPositionV3Type.Random)
             {
@@ -185,7 +198,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.PositionTypeUnit)] = this.PositionTypeUnit;
             properties[nameof(this.XTranslation)] = this.XTranslation;
             properties[nameof(this.YTranslation)] = this.YTranslation;
-            properties[nameof(this.Layer)] = (this.Layer == 0) ? zIndexCounter : this.Layer;
+            properties[nameof(this.Layer)] = this.LayerProcessed;
 
             return properties;
         }
@@ -256,7 +269,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parametersModel);
 
-                await overlay.Add(this.ID.ToString(), iframeHTML);
+                await overlay.Add(this.ID.ToString(), iframeHTML, this.LayerProcessed);
             }
         }
 

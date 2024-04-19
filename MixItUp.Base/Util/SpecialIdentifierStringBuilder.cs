@@ -570,6 +570,11 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "description", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Snippet?.Description);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<YouTubeSessionService>().IsLive.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<YouTubeSessionService>().User.Statistics.SubscriberCount.GetValueOrDefault().ToString());
+                    if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                    {
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "youtubeid", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Id);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "youtubeurl", ServiceManager.Get<YouTubeSessionService>().StreamLink);
+                    }
                 }
                 else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
