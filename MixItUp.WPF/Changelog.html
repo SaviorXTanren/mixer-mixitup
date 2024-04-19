@@ -5,9 +5,32 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
+
+        <h2 style="color: #2e6c80;">v1.1.0.1604:</h2>
+        <ul>
+            <li>The VTS P.O.G. action has been added:</li>
+            <ul>
+                <li>The VTS P.O.G. action allows you to interact with your instance of VTS P.O.G. to trigger functionality within the application</li>
+                <li>The "Text To Speech" option allows you to trigger text to speech sound from a variety of providers supported within the application</li>
+                <li>The "AI Text To Speech" option allows you to generate AI responses based on a specified prompt, which is then spoken through text to speech within the application</li>
+                <li>The "Play Audio File" option allows you to specify a local audio file to be played via the TTS pet, AI pet, or soundboard within the application</li>
+            </ul>
+            <li>The Repeat action has been added:</li>
+            <ul>
+                <li>The Repeat action allows you to easily build a set of actions that will be repeatedly run in sequence based on the number of times you specify</li>
+                <li>The amount of times the Repeat action runs can either take a raw number or a Special Identifier that translated to a number</li>
+            </ul>
+            <li>Adding $streamyoutubeid and $streamyoutubeurl Special Identifiers for the active YouTube Live stream</li>
+            <li>Adding starting amount property to Goal Overlay Widget</li>
+            <li>Fixing bug related to End Credits Overlay Widget not properly tracking data for the specified sections when the credits are triggered under normal circumstances</li>
+            <li>Fixing bug related to the audio of Overlay Videos &amp; YouTube not properly handling volume levels below 100% for certain user computer locales</li>
+            <li>Fixing bug related to Windows Text To Speech provider in the Text to Speech Action not properly playing over the Mix It Up Overlay when selected as the output audio device</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.1.0.1600-1603:</h2>
         <ul>
-            <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
             <ul>
                 <li>All Overlay Endpoints now share the same port number and instead have unique URLs associated with them. If you use more than 1 Overlay Endpoint, you will need to update the web browser sources in your streaming software to use the new URLs, which can be found under Settings -> Overlay.</li>
                 <li>Overlay Widgets are now vastly more robust in the amount that can be customized for them. However, the differences in specific HTML formatting between old and new versions are incompatible and thus can not be directly migrated over. The vast majority of standard, drop-down or input values are converted over, but customized HTML can not be and is instead changed to the new format. All old customized HTML can be accessed from the Overlay Widgets page by editing the widget and clicking on the History button in the top-right corner of the window.</li>
