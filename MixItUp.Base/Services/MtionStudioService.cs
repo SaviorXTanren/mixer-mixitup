@@ -14,7 +14,7 @@ namespace MixItUp.Base.Services
 {
     public enum MtionStudioParameterTypeEnum
     {
-        String,
+        Text,
         Number,
         Boolean,
         Enum,
@@ -47,7 +47,7 @@ namespace MixItUp.Base.Services
     [DataContract]
     public class MtionStudioTriggerParameter
     {
-        private const string StringParameterType = "string";
+        private const string TextParameterType = "string";
         private const string NumberParameterType = "number";
         private const string BooleanParameterType = "bool";
         private const string EnumParameterType = "enum";
@@ -76,12 +76,12 @@ namespace MixItUp.Base.Services
                 {
                     return MtionStudioParameterTypeEnum.Boolean;
                 }
-                return MtionStudioParameterTypeEnum.String;
+                return MtionStudioParameterTypeEnum.Text;
             }
         }
 
         [JsonIgnore]
-        public bool IsString { get { return string.Equals(StringParameterType, this.data_type, StringComparison.OrdinalIgnoreCase); } }
+        public bool IsText { get { return string.Equals(TextParameterType, this.data_type, StringComparison.OrdinalIgnoreCase); } }
         [JsonIgnore]
         public bool IsNumber { get { return string.Equals(NumberParameterType, this.data_type, StringComparison.OrdinalIgnoreCase); } }
         [JsonIgnore]
@@ -111,9 +111,6 @@ namespace MixItUp.Base.Services
 
         private List<MtionStudioClubhouse> clubhouseCache = new List<MtionStudioClubhouse>();
         private DateTimeOffset clubhouseCacheExpiration = DateTimeOffset.MinValue;
-
-        private Dictionary<string, MtionStudioTrigger> triggerCache = new Dictionary<string, MtionStudioTrigger>();
-        private DateTimeOffset triggerCacheExpiration = DateTimeOffset.MinValue;
 
         public async Task<Result> Connect()
         {
@@ -194,66 +191,6 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        //public async Task<MtionStudioClubhouse> GetCurrentClubhouseTriggers()
-        //{
-        //    try
-        //    {
-        //        if (this.clubhouseCacheExpiration <= DateTimeOffset.Now || this.clubhouseCache == null)
-        //        {
-        //            using (AdvancedHttpClient client = new AdvancedHttpClient(MtionStudioService.BaseAddress))
-        //            {
-        //                List<MtionStudioTrigger> triggers = await client.GetAsync<List<MtionStudioTrigger>>("external-trigger/triggers");
-        //                if (triggers != null)
-        //                {
-        //                    this.clubhouseCache = new MtionStudioClubhouse()
-        //                    {
-        //                        triggers = triggers
-        //                    };
-        //                }
-        //            }
-        //        }
-
-        //        if (this.clubhouseCache != null)
-        //        {
-        //            return this.clubhouseCache;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.Log(ex);
-        //    }
-        //    return null;
-        //}
-
-        //public async Task<MtionStudioTrigger> GetTrigger(string id)
-        //{
-        //    try
-        //    {
-        //        if (this.triggerCacheExpiration <= DateTimeOffset.Now || !this.triggerCache.ContainsKey(id))
-        //        {
-        //            using (AdvancedHttpClient client = new AdvancedHttpClient(MtionStudioService.BaseAddress))
-        //            {
-        //                MtionStudioTrigger trigger = await client.GetAsync<MtionStudioTrigger>($"external-trigger/trigger/{id}");
-        //                if (trigger != null)
-        //                {
-        //                    this.triggerCache[id] = trigger;
-        //                    this.triggerCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
-        //                }
-        //            }
-        //        }
-
-        //        if (this.triggerCache.ContainsKey(id))
-        //        {
-        //            return this.triggerCache[id];
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.Log(ex);
-        //    }
-        //    return null;
-        //}
-
         public async Task<bool> FireTrigger(string id, IEnumerable<object> parameters)
         {
             try
@@ -285,9 +222,6 @@ namespace MixItUp.Base.Services
         {
             this.clubhouseCache.Clear();
             this.clubhouseCacheExpiration = DateTimeOffset.MinValue;
-
-            this.triggerCache.Clear();
-            this.triggerCacheExpiration = DateTimeOffset.MinValue;
         }
     }
 }

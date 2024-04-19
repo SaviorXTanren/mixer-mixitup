@@ -86,12 +86,15 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedTrigger = value;
                 this.NotifyPropertyChanged();
 
-                if (updateOccurred && this.SelectedTrigger != null)
+                if (updateOccurred)
                 {
                     this.Parameters.Clear();
-                    foreach (MtionStudioTriggerParameter parameter in value.output_parameters)
+                    if (this.SelectedTrigger != null)
                     {
-                        this.Parameters.Add(new MtionStudioInputParameterViewModel(parameter));
+                        foreach (MtionStudioTriggerParameter parameter in value.output_parameters)
+                        {
+                            this.Parameters.Add(new MtionStudioInputParameterViewModel(parameter));
+                        }
                     }
                     this.NotifyPropertyChanged(nameof(this.Parameters));
                 }
@@ -103,12 +106,14 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand RefreshCacheCommand { get; set; }
 
+        private string clubhouseID;
         private string triggerID;
         private IEnumerable<MtionStudioActionParameterModel> parameters;
 
         public MtionStudioActionViewModel(MtionStudioActionModel action)
             : base(action)
         {
+            this.clubhouseID = action.ClubhouseID;
             this.triggerID = action.TriggerID;
             this.parameters = action.Parameters;
         }
@@ -130,7 +135,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            return Task.FromResult<ActionModelBase>(new MtionStudioActionModel(this.SelectedTrigger?.id ?? this.triggerID, this.Parameters.Select(p => p.ToModel())));
+            return Task.FromResult<ActionModelBase>(new MtionStudioActionModel(this.SelectedClubhouse?.id ?? this.clubhouseID, this.SelectedTrigger?.id ?? this.triggerID, this.Parameters.Select(p => p.ToModel())));
         }
 
         protected override async Task OnOpenInternal()
@@ -151,14 +156,18 @@ namespace MixItUp.Base.ViewModel.Actions
 
             await this.LoadData();
 
-            if (!string.IsNullOrEmpty(this.triggerID) && this.Triggers.Count > 0)
+            if (!string.IsNullOrEmpty(this.clubhouseID) && !string.IsNullOrEmpty(this.triggerID))
             {
-                this.SelectedTrigger = this.Triggers.FirstOrDefault(t => string.Equals(t.id, this.triggerID));
-                if (this.SelectedTrigger != null && this.parameters != null)
+                this.SelectedClubhouse = this.Clubhouses.FirstOrDefault(c => string.Equals(c.id, this.clubhouseID));
+                if (this.SelectedClubhouse != null)
                 {
-                    for (int i = 0; i < this.Parameters.Count && i < this.parameters.Count(); i++)
+                    this.SelectedTrigger = this.Triggers.FirstOrDefault(t => string.Equals(t.id, this.triggerID));
+                    if (this.SelectedTrigger != null && this.parameters != null)
                     {
-                        this.Parameters[i].Value = this.parameters.ElementAt(i).Value;
+                        for (int i = 0; i < this.Parameters.Count && i < this.parameters.Count(); i++)
+                        {
+                            this.Parameters[i].Value = this.parameters.ElementAt(i).Value;
+                        }
                     }
                 }
             }
@@ -178,9 +187,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         private async Task LoadData()
         {
+            this.Clubhouses.Clear();
+            this.Triggers.Clear();
+
             if (this.MtionStudioConnected)
             {
-                this.Clubhouses.Clear();
                 IEnumerable<MtionStudioClubhouse> clubhouses = await ServiceManager.Get<MtionStudioService>().GetAllClubhouses();
                 if (clubhouses != null)
                 {

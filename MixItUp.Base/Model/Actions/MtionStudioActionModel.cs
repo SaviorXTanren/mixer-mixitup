@@ -22,13 +22,16 @@ namespace MixItUp.Base.Model.Actions
     public class MtionStudioActionModel : ActionModelBase
     {
         [DataMember]
+        public string ClubhouseID { get; set; }
+        [DataMember]
         public string TriggerID { get; set; }
         [DataMember]
         public IEnumerable<MtionStudioActionParameterModel> Parameters { get; set; }
 
-        public MtionStudioActionModel(string triggerID, IEnumerable<MtionStudioActionParameterModel> parameters)
+        public MtionStudioActionModel(string clubhouseID, string triggerID, IEnumerable<MtionStudioActionParameterModel> parameters)
             : base(ActionTypeEnum.MtionStudio)
         {
+            this.ClubhouseID = clubhouseID;
             this.TriggerID = triggerID;
             this.Parameters = parameters;
         }
