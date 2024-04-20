@@ -10257,4 +10257,7 @@ namespace CustomNamespace
   <data name="CustomSection" xml:space="preserve">
     <value>Custom Section</value>
   </data>
+  <data name="VoiceKeycode" xml:space="preserve">
+    <value>Voice Keycode</value>
+  </data>
 </root>
