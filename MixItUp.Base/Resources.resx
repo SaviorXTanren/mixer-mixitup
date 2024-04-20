@@ -10254,4 +10254,7 @@ namespace CustomNamespace
   <data name="TTSPet" xml:space="preserve">
     <value>TTS Pet</value>
   </data>
+  <data name="CustomSection" xml:space="preserve">
+    <value>Custom Section</value>
+  </data>
 </root>

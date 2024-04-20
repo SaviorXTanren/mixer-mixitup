@@ -4406,6 +4406,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Section.
+        /// </summary>
+        public static string CustomSection {
+            get {
+                return ResourceManager.GetString("CustomSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom Settings.
         /// </summary>
         public static string CustomSettings {

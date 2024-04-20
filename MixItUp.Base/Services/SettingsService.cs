@@ -644,7 +644,7 @@ namespace MixItUp.Base.Services
                         case OverlayEndCreditsSectionTypeEnum.FreeFormHTML:
                         case OverlayEndCreditsSectionTypeEnum.FreeFormHTML2:
                         case OverlayEndCreditsSectionTypeEnum.FreeFormHTML3:
-                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.Custom;
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.CustomSection;
                             newSection.HTML = oldSection.Value.UserHTML;
                             break;
                         case OverlayEndCreditsSectionTypeEnum.Bits:

@@ -485,29 +485,32 @@ function startCredits(data)
         let sectionTemplate = document.querySelector("#section-" + id);
         let section = sectionTemplate.content.cloneNode(true);
         
-        let columnCount = data.Columns[id];
-        let columns = section.firstElementChild.querySelector(".columns-" + id);
-        let columnTemplate = document.querySelector("#column-" + id);
-        for (let i = 0; i &lt; columnCount; i++)
+        if (data.Items[id].length &gt; 0)
         {
-            let column = columnTemplate.content.cloneNode(true);
-            columns.appendChild(column.firstElementChild);
-        }
-        
-        let columnIndex = 0;
-        data.Items[id].forEach((item) =&gt;
-        {
-            let lineTemplate = document.querySelector("#item-" + id);
-            let line = lineTemplate.content.cloneNode(true);
-            line.firstElementChild.innerHTML = item;
-            columns.children[columnIndex].appendChild(line);
-            
-            columnIndex++;
-            if (columnIndex &gt;= columnCount)
+            let columnCount = data.Columns[id];
+            let columns = section.firstElementChild.querySelector(".columns-" + id);
+            let columnTemplate = document.querySelector("#column-" + id);
+            for (let i = 0; i &lt; columnCount; i++)
             {
-                columnIndex = 0;
+                let column = columnTemplate.content.cloneNode(true);
+                columns.appendChild(column.firstElementChild);
             }
-        });
+            
+            let columnIndex = 0;
+            data.Items[id].forEach((item) =&gt;
+            {
+                let lineTemplate = document.querySelector("#item-" + id);
+                let line = lineTemplate.content.cloneNode(true);
+                line.firstElementChild.innerHTML = item;
+                columns.children[columnIndex].appendChild(line);
+                
+                columnIndex++;
+                if (columnIndex &gt;= columnCount)
+                {
+                    columnIndex = 0;
+                }
+            });
+        }
         
         list.appendChild(section);
         list.appendChild(spacerTemplate.content.cloneNode(true));

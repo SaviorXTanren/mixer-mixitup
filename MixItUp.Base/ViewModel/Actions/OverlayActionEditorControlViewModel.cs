@@ -741,7 +741,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (this.SelectedEndCredits != null)
                 {
                     OverlayEndCreditsV3Model endCredits = (OverlayEndCreditsV3Model)this.SelectedEndCredits.Item;
-                    this.EndCreditsSections.AddRange(endCredits.Sections.Where(s => s.Type == OverlayEndCreditsSectionV3Type.Custom));
+                    this.EndCreditsSections.AddRange(endCredits.Sections.Where(s => s.Type == OverlayEndCreditsSectionV3Type.CustomSection));
                     this.SelectedEndCreditsSection = this.EndCreditsSections.FirstOrDefault(s => s.ID == this.endCreditsSectionID);
                 }
             }
