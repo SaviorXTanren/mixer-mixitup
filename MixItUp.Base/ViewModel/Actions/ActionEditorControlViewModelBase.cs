@@ -127,6 +127,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.Input: actionPageName = "input-action"; break;
                     case ActionTypeEnum.LumiaStream: actionPageName = "lumia-stream-action"; break;
                     case ActionTypeEnum.Moderation: actionPageName = "moderation-action"; break;
+                    case ActionTypeEnum.MtionStudio: actionPageName = "mtion-studio-action"; break;
                     case ActionTypeEnum.MusicPlayer: actionPageName = "music-player-action"; break;
                     case ActionTypeEnum.Overlay: actionPageName = "overlay-action"; break;
                     case ActionTypeEnum.OvrStream: actionPageName = "ovrstream-action"; break;
