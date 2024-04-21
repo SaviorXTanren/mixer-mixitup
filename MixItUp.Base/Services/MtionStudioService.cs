@@ -200,11 +200,14 @@ namespace MixItUp.Base.Services
                     List<MtionStudioTriggerInputParameter> inputs = new List<MtionStudioTriggerInputParameter>();
                     for (int i = 0; parameters != null && i < parameters.Count(); i++)
                     {
-                        inputs.Add(new MtionStudioTriggerInputParameter()
+                        if (parameters.ElementAt(i) != null)
                         {
-                            parameter_index = i,
-                            value = parameters.ElementAt(i)
-                        });
+                            inputs.Add(new MtionStudioTriggerInputParameter()
+                            {
+                                parameter_index = i,
+                                value = parameters.ElementAt(i)
+                            });
+                        }
                     }
 
                     HttpResponseMessage response = await client.PatchAsync($"external-trigger/fire-trigger/{id}", AdvancedHttpClient.CreateContentFromObject(inputs));

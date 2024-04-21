@@ -57,20 +57,33 @@ namespace MixItUp.Base.Model.Actions
                 {
                     MtionStudioActionParameterModel parameter = this.Parameters.ElementAt(i);
                     string value = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(parameter.Value, parameters);
-
-                    if (parameter.Type == MtionStudioParameterTypeEnum.Number || parameter.Type == MtionStudioParameterTypeEnum.Enum)
+                    if (!string.IsNullOrEmpty(value))
                     {
-                        int.TryParse(value, out int v);
-                        inputs.Add(v);
-                    }
-                    else if (parameter.Type == MtionStudioParameterTypeEnum.Boolean)
-                    {
-                        bool.TryParse(value, out bool v);
-                        inputs.Add(v);
+                        if (parameter.Type == MtionStudioParameterTypeEnum.Number || parameter.Type == MtionStudioParameterTypeEnum.Enum)
+                        {
+                            int.TryParse(value, out int v);
+                            inputs.Add(v);
+                        }
+                        else if (parameter.Type == MtionStudioParameterTypeEnum.Boolean)
+                        {
+                            value = value.ToLower();
+                            if (bool.TryParse(value, out bool v))
+                            {
+                                inputs.Add(v);
+                            }
+                            else if (int.TryParse(value, out int iv))
+                            {
+                                inputs.Add(iv > 0);
+                            }
+                        }
+                        else
+                        {
+                            inputs.Add(value);
+                        }
                     }
                     else
                     {
-                        inputs.Add(value);
+                        inputs.Add(null);
                     }
                 }
                 await ServiceManager.Get<MtionStudioService>().FireTrigger(this.TriggerID, inputs);
