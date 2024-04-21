@@ -12965,7 +12965,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to mtion studio connectivity allows you to run API triggers within mtion studio to have a wide variety of effects within your mtion studio clubhouses. API triggers are supported in version 0.39 and higher, so ensure your installation of mtion studio is updated to the latest version before attempting to connect. To connect to mtion studio, ensure the app is running and you are loaded into an active clubhouse, then simply click on the Connect button..
+        ///   Looks up a localized string similar to mtion studio connectivity allows you to run API triggers within mtion studio to have a wide variety of effects within your mtion studio clubhouses. API triggers are supported in version 0.39.1 and higher, so ensure your installation of mtion studio is updated to the latest version before attempting to connect. To connect to mtion studio, ensure the app is running and you are loaded into an active clubhouse, then simply click on the Connect button..
         /// </summary>
         public static string MtionStudioInfo {
             get {
