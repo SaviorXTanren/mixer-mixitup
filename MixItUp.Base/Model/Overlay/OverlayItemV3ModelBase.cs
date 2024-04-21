@@ -226,6 +226,11 @@ namespace MixItUp.Base.Model.Overlay
         public async Task WidgetReset()
         {
             await this.WidgetResetInternal();
+        }
+
+        public async Task WidgetFullReset()
+        {
+            await this.WidgetReset();
 
             await this.WidgetDisable();
 

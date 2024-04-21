@@ -49,13 +49,16 @@ namespace MixItUp.Base.Model.Overlay.Widgets
 
         public async Task Enable()
         {
-            this.IsEnabled = true;
-
-            await this.Item.WidgetEnable();
-
-            if (this.RefreshTime > 0)
+            if (!this.IsEnabled)
             {
-                this.Item.LoadedInWidget += Item_LoadedInWidget;
+                this.IsEnabled = true;
+
+                await this.Item.WidgetEnable();
+
+                if (this.RefreshTime > 0)
+                {
+                    this.Item.LoadedInWidget += Item_LoadedInWidget;
+                }
             }
         }
 
@@ -74,9 +77,9 @@ namespace MixItUp.Base.Model.Overlay.Widgets
             this.refreshCancellationTokenSource = null;
         }
 
-        public async Task Reset()
+        public async Task WidgetFullReset()
         {
-            await this.Item.WidgetReset();
+            await this.Item.WidgetFullReset();
         }
 
         public async Task SendInitial()
