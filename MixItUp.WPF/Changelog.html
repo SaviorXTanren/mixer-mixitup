@@ -5,59 +5,14 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h2 style="color: #2e6c80;">v1.1.0.1600-1601:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.17:</h2>
         <ul>
-            <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
+            <li>Adding mtion studio service connectivity:</li>
             <ul>
-                <li>All Overlay Endpoints now share the same port number and instead have unique URLs associated with them. If you use more than 1 Overlay Endpoint, you will need to update the web browser sources in your streaming software to use the new URLs, which can be found under Settings -> Overlay.</li>
-                <li>Overlay Widgets are now vastly more robust in the amount that can be customized for them. However, the differences in specific HTML formatting between old and new versions are incompatible and thus can not be directly migrated over. The vast majority of standard, drop-down or input values are converted over, but customized HTML can not be and is instead changed to the new format. All old customized HTML can be accessed from the Overlay Widgets page by editing the widget and clicking on the History button in the top-right corner of the window.</li>
-                <li>Certain features and functionality have been removed due to their low usage and may be replaced in the future. This includes the Web Page option and the Ticker Tape option.</li>
+                <li>mtion studio can be connected by visiting the Services page</li>
+                <li>mtion studio version 0.39.1 or higher is required for this integration</li>
+                <li>The mtion studio action allows you to run API Triggers within mtion studio and supply values for parameters to include when run</li>
             </ul>
-            <br />
-            <br />
-            <li>Overlay v3 large-scale updates:</li>
-            <ul>
-                <li>Overlay actions and widgets now have fully customizable HTML, CSS, and Javascript for users who are more adapt at web development</li>
-                <li>Overlay Actions:</li>
-                <ul>
-                    <li>New basic options have been added for creating dynamic timers and showing a Twitch clip for a user</li>
-                    <li>The Duration field for Overlay Actions now support Special Identifiers.</li>
-                    <li>New position option are available including the ability to have something display in a randomized location</li>
-                    <li>The same Overlay action will now no longer replace an old instance if it is still visible and instead will stack over it (EX: Triggering the same Overlay action 5 times in succession will now show 5 instances together rather than only 1).</li>
-                    <li>Image actions now can optionally use the native size of the image file instead of manually supplied a width and height if the fields are left blank.</li>
-                    <li>Overlay actions that use width and height now support size scaling if only a width or height is specified.</li>
-                    <li>Video, YouTube, and Twitch Clip actions now support not specifying a duration amount and will automatically remove the content when it has finished.</li>
-                    <li>New options have been added to allow for direct integration with widgets, such as the ability to dynamically damage a Stream Boss, add to a goal, and add custom events to an event list.</li>
-                    <li>New options will be added in subsequent updates.</li>
-                </ul>
-                <li>Overlay Widgets:</li>
-                <ul>
-                    <li>More detailed customization options are available for various widgets.</li>
-                    <li>A new Persistent Timer type is available which combines both of the features of the old Timer and Timer Train widgets.</li>
-                    <li>A new Labels type is available for displaying persistent information for your stream that can automatically rotate with time or as changes occur.</li>
-                    <li>Overlay Widgets can now be directly assigned to a dedicated URL for that widget only.</li>
-                    <li>New Overlay Widgets will be added in subsequent updates.</li>
-                </ul>
-                <li>The Overlay as as service is now enabled by default for all new profiles.</li>
-                <li>All Overlay Endpoints now share the exact same port number and instead have a unique URL associated with them.</li>
-                <li>The Overlay port number can now be fully customized.</li>
-            </ul>
-            <li>Text to Speech Action updates:</li>
-            <ul>
-                <li>Windows Text To Speech added as a provider, leveraging your natively installed text to speech languages on your Windows computer</li>
-                <li>TTS.Monster added as a provider, which can be enabled via the Services page after connecting your streaming account on their website: https://tts.monster/</li>
-                <li>New TTS providers will be added in subsequent updates.</li>
-                <li>A new toggle option has been added that will block the Text to Speech action until the audio of the speech has completed for providers that support it.</li>
-            </ul>
-            <li>The Script action has been added:</li>
-            <ul>
-                <li>The Script action allows you to add code scripts to your commands that will be run when the action is triggered.</li>
-                <li>Scripts can be written in either C#, Python, or Javascript.</li>
-                <li>Special Identifier replacement is supported in the text of the script.</li>
-                <li>Any value returned from the script is stored in the Special Identifier "$scriptresult" which can be leveraged in subsequent action.</li>
-                <li>There is not unique functionality provided in the Script action to directly interact with Mix It Up, the Script action simply is a means to perform more complex logic in a simpler form for experience users. However, you are able to leverage the Mix It Up Developer API from inside your Script action to perform some operations within Mix It Up.</li>
-            </ul>
-            <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
         <h2 style="color: #2e6c80;">v1.1.0.16:</h2>

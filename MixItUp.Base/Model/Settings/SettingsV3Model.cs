@@ -562,6 +562,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool VTSPogEnabled { get; set; }
 
+        [DataMember]
+        public bool MtionStudioEnabled { get; set; }
+
         #endregion Services
 
         #region Dashboard
