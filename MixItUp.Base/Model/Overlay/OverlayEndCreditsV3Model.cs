@@ -40,7 +40,8 @@ namespace MixItUp.Base.Model.Overlay
 
         Donations = 200,
 
-        Custom = 999,
+        HTML = 900,
+        CustomSection = 999,
     }
 
     [DataContract]
@@ -145,7 +146,13 @@ namespace MixItUp.Base.Model.Overlay
         public async Task<IEnumerable<string>> GetItems()
         {
             List<string> items = new List<string>();
-            if (this.Type == OverlayEndCreditsSectionV3Type.Custom)
+
+            if (this.Type == OverlayEndCreditsSectionV3Type.HTML)
+            {
+                items.Add(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.ItemTemplate, new CommandParametersModel()));
+                return items;
+            }
+            else if (this.Type == OverlayEndCreditsSectionV3Type.CustomSection)
             {
                 foreach (var item in this.customTracking)
                 {
@@ -338,7 +345,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
             {
-                if (section.ID.Equals(sectionID) && section.Type == OverlayEndCreditsSectionV3Type.Custom)
+                if (section.ID.Equals(sectionID) && section.Type == OverlayEndCreditsSectionV3Type.CustomSection)
                 {
                     section.Track(user, text);
                     return;
@@ -364,6 +371,7 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> data = new Dictionary<string, object>();
             data["Order"] = applicableSections.Select(s => s.ID);
             data["Columns"] = applicableSections.ToDictionary(s => s.ID, s => s.Columns);
+            data["Types"] = applicableSections.ToDictionary(s => s.ID, s => s.Type.ToString());
             data["Items"] = sectionItems;
 
             await this.CallFunction("startCredits", data);

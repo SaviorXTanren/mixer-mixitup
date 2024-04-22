@@ -266,7 +266,7 @@
 
                                     <TextBox Text="{Binding Name}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                    <TextBox Text="{Binding Columns}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Columns}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                                    <TextBox Text="{Binding Columns}" IsEnabled="{Binding IsColumnsEditable}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Columns}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
                                 </Grid>
 
                                 <TextBox Text="{Binding ItemTemplate}" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemTemplate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />

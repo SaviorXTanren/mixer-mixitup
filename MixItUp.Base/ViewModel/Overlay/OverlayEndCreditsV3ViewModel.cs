@@ -39,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
                 switch (this.SelectedType)
                 {
-                    case OverlayEndCreditsSectionV3Type.Custom:
+                    case OverlayEndCreditsSectionV3Type.CustomSection:
                         this.ItemTemplate = OverlayEndCreditsSectionV3Model.TextItemTemplate;
                         break;
                     case OverlayEndCreditsSectionV3Type.Raids:
@@ -51,10 +51,19 @@ namespace MixItUp.Base.ViewModel.Overlay
                     case OverlayEndCreditsSectionV3Type.Donations:
                         this.ItemTemplate = OverlayEndCreditsSectionV3Model.UsernameAmountItemTemplate;
                         break;
+                    case OverlayEndCreditsSectionV3Type.HTML:
+                        this.ItemTemplate = string.Empty;
+                        break;
                     default:
                         this.ItemTemplate = OverlayEndCreditsSectionV3Model.UsernameItemTemplate;
                         break;
                 }
+
+                if (this.SelectedType == OverlayEndCreditsSectionV3Type.HTML)
+                {
+                    this.Columns = 1;
+                }
+                this.NotifyPropertyChanged(nameof(this.IsColumnsEditable));
             }
         }
         private OverlayEndCreditsSectionV3Type selectedType;
@@ -91,6 +100,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private int columns;
+
+        public bool IsColumnsEditable { get { return this.SelectedType != OverlayEndCreditsSectionV3Type.HTML; } }
 
         public string HTML
         {
@@ -364,7 +375,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 {
                     switch (section.Type)
                     {
-                        case OverlayEndCreditsSectionV3Type.Custom:
+                        case OverlayEndCreditsSectionV3Type.CustomSection:
                             section.Track(user, Resources.Text);
                             break;
                         case OverlayEndCreditsSectionV3Type.Raids:

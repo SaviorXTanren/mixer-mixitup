@@ -88,6 +88,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new ResponsiveVoiceService());
             ServiceManager.Add(new MicrosoftAzureSpeechService());
             ServiceManager.Add(new VTSPogService());
+            ServiceManager.Add(new MtionStudioService());
 
             try
             {
@@ -339,6 +340,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.TTSMonsterOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<ITTSMonsterService>()] = ChannelSession.Settings.TTSMonsterOAuthToken; }
                 if (ChannelSession.Settings.VTSPogEnabled) { externalServiceToConnect[ServiceManager.Get<VTSPogService>()] = null; }
                 if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ServiceManager.Get<OverlayV3Service>()] = null; }
+                if (ChannelSession.Settings.MtionStudioEnabled) { externalServiceToConnect[ServiceManager.Get<MtionStudioService>()] = null; }
                 if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ServiceManager.Get<IDeveloperAPIService>()] = null; }
 
                 if (externalServiceToConnect.Count > 0)

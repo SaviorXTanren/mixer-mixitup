@@ -1195,6 +1195,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API Trigger.
+        /// </summary>
+        public static string APITrigger {
+            get {
+                return ResourceManager.GetString("APITrigger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apostrophe.
         /// </summary>
         public static string Apostrophe {
@@ -2978,6 +2987,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clubhouse.
+        /// </summary>
+        public static string Clubhouse {
+            get {
+                return ResourceManager.GetString("Clubhouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coin Pusher.
         /// </summary>
         public static string CoinPusher {
@@ -4402,6 +4420,15 @@ namespace MixItUp.Base {
         public static string CustomRedemption {
             get {
                 return ResourceManager.GetString("CustomRedemption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Section.
+        /// </summary>
+        public static string CustomSection {
+            get {
+                return ResourceManager.GetString("CustomSection", resourceCulture);
             }
         }
         
@@ -5951,6 +5978,15 @@ namespace MixItUp.Base {
         public static string EnableIFTTT {
             get {
                 return ResourceManager.GetString("EnableIFTTT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enable mtion studio on the Services page!.
+        /// </summary>
+        public static string EnableMtionStudio {
+            get {
+                return ResourceManager.GetString("EnableMtionStudio", resourceCulture);
             }
         }
         
@@ -13501,6 +13537,42 @@ namespace MixItUp.Base {
         public static string MoveUp {
             get {
                 return ResourceManager.GetString("MoveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mtion studio.
+        /// </summary>
+        public static string MtionStudio {
+            get {
+                return ResourceManager.GetString("MtionStudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mtion studio Action: Missing Trigger.
+        /// </summary>
+        public static string MtionStudioActionMissingTrigger {
+            get {
+                return ResourceManager.GetString("MtionStudioActionMissingTrigger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get clubhouse data.
+        /// </summary>
+        public static string MtionStudioFailedToGetClubhouseData {
+            get {
+                return ResourceManager.GetString("MtionStudioFailedToGetClubhouseData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mtion studio connectivity allows you to run API triggers within mtion studio to have a wide variety of effects within your mtion studio clubhouses. API triggers are supported in version 0.39.1 and higher, so ensure your installation of mtion studio is updated to the latest version before attempting to connect. To connect to mtion studio, ensure the app is running and you are loaded into an active clubhouse, then simply click on the Connect button..
+        /// </summary>
+        public static string MtionStudioInfo {
+            get {
+                return ResourceManager.GetString("MtionStudioInfo", resourceCulture);
             }
         }
         
@@ -24983,6 +25055,15 @@ namespace MixItUp.Base {
         public static string VoiceChangerOnOff {
             get {
                 return ResourceManager.GetString("VoiceChangerOnOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voice Keycode.
+        /// </summary>
+        public static string VoiceKeycode {
+            get {
+                return ResourceManager.GetString("VoiceKeycode", resourceCulture);
             }
         }
         

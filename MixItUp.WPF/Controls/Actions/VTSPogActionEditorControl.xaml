@@ -72,7 +72,7 @@
                     <ColumnDefinition Width="150" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Text="{Binding TextToSpeechVoice}" IsEnabled="{Binding CanTextToSpeechVoiceBeSpecified}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Voice}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" Text="{Binding TextToSpeechVoice}" IsEnabled="{Binding CanTextToSpeechVoiceBeSpecified}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VoiceKeycode}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <TextBox Grid.Column="2" Text="{Binding TextToSpeechCharacterLimit}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CharacterLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>

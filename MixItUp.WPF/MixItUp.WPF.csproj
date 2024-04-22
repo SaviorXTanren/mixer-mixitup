@@ -567,6 +567,9 @@
     <Compile Include="Controls\Actions\ModerationActionEditorControl.xaml.cs">
       <DependentUpon>ModerationActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\MtionStudioActionEditorControl.xaml.cs">
+      <DependentUpon>MtionStudioActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\OverlayActionEditorControl.xaml.cs">
       <DependentUpon>OverlayActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1072,6 +1075,9 @@
     <Compile Include="Controls\Services\LumiaStreamServiceControl.xaml.cs">
       <DependentUpon>LumiaStreamServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\MtionStudioServiceControl.xaml.cs">
+      <DependentUpon>MtionStudioServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1410,6 +1416,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\ModerationActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\MtionStudioActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2078,6 +2088,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\LumiaStreamServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\MtionStudioServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
