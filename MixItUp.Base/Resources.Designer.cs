@@ -14956,6 +14956,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to updated port number for the Overlay. Please see the error below for more information:.
+        /// </summary>
+        public static string OverlayPortNumberFailedToUpdate {
+            get {
+                return ResourceManager.GetString("OverlayPortNumberFailedToUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Port numbers for the Overlay must be between 0 and 65353.
+        /// </summary>
+        public static string OverlayPortNumberValidRange {
+            get {
+                return ResourceManager.GetString("OverlayPortNumberValidRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Percentage positions must be between 0 and 100.
         /// </summary>
         public static string OverlayPositionPercentageBetween0And100 {

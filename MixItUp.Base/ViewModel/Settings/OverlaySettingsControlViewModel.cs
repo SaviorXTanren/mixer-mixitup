@@ -86,11 +86,22 @@ namespace MixItUp.Base.ViewModel.Settings
         {
             this.UpdatePortNumberCommand = this.CreateCommand(async () =>
             {
+                if (this.PortNumber <= 0 || this.PortNumber > 65353)
+                {
+                    await DialogHelper.ShowMessage(Resources.OverlayPortNumberValidRange);
+                    return;
+                }
+
                 await ServiceManager.Get<OverlayV3Service>().Disconnect();
 
                 ChannelSession.Settings.OverlayPortNumber = this.PortNumber;
 
-                await ServiceManager.Get<OverlayV3Service>().Connect();
+                Result result = await ServiceManager.Get<OverlayV3Service>().Connect();
+                if (!result.Success)
+                {
+                    await ServiceManager.Get<OverlayV3Service>().Disconnect();
+                    await DialogHelper.ShowMessage(Resources.OverlayPortNumberFailedToUpdate + Environment.NewLine + Environment.NewLine + result.ToString());
+                }
             });
 
             this.AddCommand = this.CreateCommand(() =>

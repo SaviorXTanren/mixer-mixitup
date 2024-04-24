@@ -230,7 +230,11 @@ namespace MixItUp.Base.Services
                     return new Result();
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
             return new Result(string.Format(Resources.OverlayAddFailed, Resources.Default));
         }
 
