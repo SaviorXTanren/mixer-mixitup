@@ -253,6 +253,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.YouTubeMemberships.Add(new OverlayEventTrackingYouTubeMembershipViewModel(membershipsLevel.Snippet.LevelDetails.DisplayName, 0));
                 }
             }
+
+            this.InitializeInternal();
         }
 
         public OverlayEventTrackingV3ViewModelBase(OverlayEventCountingV3ModelBase item)
@@ -290,6 +292,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.TrovoElixirSpellAmount = item.TrovoElixirSpellAmount;
 
             this.DonationAmount = item.DonationAmount;
+
+            this.InitializeInternal();
         }
 
         public override Result Validate()
@@ -324,6 +328,17 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.TrovoElixirSpellAmount = this.TrovoElixirSpellAmount;
 
             result.DonationAmount = this.DonationAmount;
+        }
+
+        private void InitializeInternal()
+        {
+            foreach (OverlayEventTrackingYouTubeMembershipViewModel membership in this.YouTubeMemberships)
+            {
+                membership.PropertyChanged += (sender, e) =>
+                {
+                    this.NotifyPropertyChanged("X");
+                };
+            }
         }
     }
 }
