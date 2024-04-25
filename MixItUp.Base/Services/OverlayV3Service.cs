@@ -245,10 +245,16 @@ namespace MixItUp.Base.Services
                 await this.DisconnectOverlayEndpointService(overlayEndpoint.ID);
             }
 
-            this.webSocketListenerServer.OnConnectedOccurred -= WebSocketListenerServer_OnConnectedOccurred;
+            if (this.webSocketListenerServer != null)
+            {
+                this.webSocketListenerServer.OnConnectedOccurred -= WebSocketListenerServer_OnConnectedOccurred;
+                await this.webSocketListenerServer.Stop();
+            }
 
-            this.httpListenerServer.Stop();
-            await this.webSocketListenerServer.Stop();
+            if (this.httpListenerServer != null)
+            {
+                this.httpListenerServer.Stop();
+            }
 
             this.IsConnected = false;
         }
