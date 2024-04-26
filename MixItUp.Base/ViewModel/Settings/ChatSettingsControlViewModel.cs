@@ -34,6 +34,8 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel HideUserRoleBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel HideUserSubscriberBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel HideUserSpecialtyBadge { get; set; }
+        public GenericTextSettingsOptionControlViewModel HideSpecificUserMessages { get; set; }
+
         public GenericToggleSettingsOptionControlViewModel UseCustomUsernameColors { get; set; }
         public ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
 
@@ -112,6 +114,22 @@ namespace MixItUp.Base.ViewModel.Settings
                 {
                     ChannelSession.Settings.HideUserSpecialtyBadge = value;
                     ChatService.ChatVisualSettingsChanged();
+                });
+            this.HideSpecificUserMessages = new GenericTextSettingsOptionControlViewModel(MixItUp.Base.Resources.HideSpecificUserMessagesSpaceSeparated, string.Join(" ", ChannelSession.Settings.HideSpecificUserMessages),
+                (value) =>
+                {
+                    ChannelSession.Settings.HideSpecificUserMessages.Clear();
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        string[] splits = value.Split(' ');
+                        if (splits != null)
+                        {
+                            foreach (string split in splits)
+                            {
+                                ChannelSession.Settings.HideSpecificUserMessages.Add(split.ToLower());
+                            }
+                        }
+                    }
                 });
 
             this.UseCustomUsernameColors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UseCustomUsernameColors, ChannelSession.Settings.UseCustomUsernameColors,

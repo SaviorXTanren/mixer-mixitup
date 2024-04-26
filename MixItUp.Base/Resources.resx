@@ -10287,4 +10287,7 @@ namespace CustomNamespace
   <data name="OverlayPortNumberValidRange" xml:space="preserve">
     <value>Port numbers for the Overlay must be between 0 and 65353</value>
   </data>
+  <data name="HideSpecificUserMessagesSpaceSeparated" xml:space="preserve">
+    <value>Hide Specific User Messages (Space Separated)</value>
+  </data>
 </root>

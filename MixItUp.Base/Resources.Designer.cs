@@ -10353,6 +10353,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide Specific User Messages (Space Separated).
+        /// </summary>
+        public static string HideSpecificUserMessagesSpaceSeparated {
+            get {
+                return ResourceManager.GetString("HideSpecificUserMessagesSpaceSeparated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Title.
         /// </summary>
         public static string HideTitle {
