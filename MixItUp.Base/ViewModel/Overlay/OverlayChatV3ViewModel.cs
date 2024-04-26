@@ -6,12 +6,38 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.Chat.YouTube;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
+    public class OverlayChatApplicableStreamingPlatformV3ViewModel : UIViewModelBase
+    {
+        public StreamingPlatformTypeEnum StreamingPlatform { get; set; }
+
+        public string Name { get { return Resources.ResourceManager.GetString(this.StreamingPlatform.ToString()); } }
+
+        public bool IsEnabled
+        {
+            get { return this.isEnabled; }
+            set
+            {
+                this.isEnabled = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool isEnabled;
+
+        public OverlayChatApplicableStreamingPlatformV3ViewModel(StreamingPlatformTypeEnum streamingPlatform, bool isEnabled = true)
+        {
+            this.StreamingPlatform = streamingPlatform;
+            this.IsEnabled = isEnabled;
+        }
+    }
+
     public class OverlayChatV3ViewModel : OverlayVisualTextV3ViewModelBase
     {
         public override string DefaultHTML { get { return OverlayChatV3Model.DefaultHTML; } }
@@ -150,6 +176,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool showSpecialtyBadge;
 
+        public ObservableCollection<OverlayChatApplicableStreamingPlatformV3ViewModel> ApplicableStreamingPlatforms { get; set; } = new ObservableCollection<OverlayChatApplicableStreamingPlatformV3ViewModel>();
+
         public OverlayAnimationV3ViewModel MessageAddedAnimation;
         public OverlayAnimationV3ViewModel MessageRemovedAnimation;
 
@@ -167,11 +195,18 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.ShowSubscriberBadge = true;
             this.ShowSpecialtyBadge = true;
 
+            foreach (StreamingPlatformTypeEnum streamingPlatform in StreamingPlatforms.SupportedPlatforms)
+            {
+                this.ApplicableStreamingPlatforms.Add(new OverlayChatApplicableStreamingPlatformV3ViewModel(streamingPlatform));
+            }
+
             this.MessageAddedAnimation = new OverlayAnimationV3ViewModel(Resources.MessageAdded, new OverlayAnimationV3Model());
             this.MessageRemovedAnimation = new OverlayAnimationV3ViewModel(Resources.MessageRemoved, new OverlayAnimationV3Model());
 
             this.Animations.Add(this.MessageAddedAnimation);
             this.Animations.Add(this.MessageRemovedAnimation);
+
+            this.InitializeInternal();
         }
 
         public OverlayChatV3ViewModel(OverlayChatV3Model item)
@@ -194,11 +229,18 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.ShowSubscriberBadge = item.ShowSubscriberBadge;
             this.ShowSpecialtyBadge = item.ShowSpecialtyBadge;
 
+            foreach (StreamingPlatformTypeEnum streamingPlatform in StreamingPlatforms.SupportedPlatforms)
+            {
+                this.ApplicableStreamingPlatforms.Add(new OverlayChatApplicableStreamingPlatformV3ViewModel(streamingPlatform, item.ApplicableStreamingPlatforms.Contains(streamingPlatform)));
+            }
+
             this.MessageAddedAnimation = new OverlayAnimationV3ViewModel(Resources.MessageAdded, item.MessageAddedAnimation);
             this.MessageRemovedAnimation = new OverlayAnimationV3ViewModel(Resources.MessageRemoved, item.MessageRemovedAnimation);
 
             this.Animations.Add(this.MessageAddedAnimation);
             this.Animations.Add(this.MessageRemovedAnimation);
+
+            this.InitializeInternal();
         }
 
         public override Result Validate()
@@ -268,12 +310,35 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
             }
 
+            foreach (OverlayChatApplicableStreamingPlatformV3ViewModel streamingPlatform in this.ApplicableStreamingPlatforms)
+            {
+                if (streamingPlatform.IsEnabled)
+                {
+                    result.ApplicableStreamingPlatforms.Add(streamingPlatform.StreamingPlatform);
+                }
+                else
+                {
+                    result.ApplicableStreamingPlatforms.Remove(streamingPlatform.StreamingPlatform);
+                }
+            }
+
             result.MessageAddedAnimation = this.MessageAddedAnimation.GetAnimation();
             result.MessageRemovedAnimation = this.MessageRemovedAnimation.GetAnimation();
 
             this.AssignProperties(result);
 
             return result;
+        }
+
+        private void InitializeInternal()
+        {
+            foreach (OverlayChatApplicableStreamingPlatformV3ViewModel streamingPlatform in this.ApplicableStreamingPlatforms)
+            {
+                streamingPlatform.PropertyChanged += (sender, e) =>
+                {
+                    this.NotifyPropertyChanged("X");
+                };
+            }
         }
     }
 }
