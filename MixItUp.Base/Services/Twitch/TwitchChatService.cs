@@ -937,22 +937,6 @@ namespace MixItUp.Base.Services.Twitch
                         await ServiceManager.Get<ChatService>().AddMessage(twitchMessage);
                     }
                 }
-
-                if (int.TryParse(message.PinnedChatPaidAmount, out int amount) && int.TryParse(message.PinnedChatPaidExponent, out int exponent) && amount > 0)
-                {
-                    double decimalNumber = (double)amount;
-                    if (exponent > 0)
-                    {
-                        decimalNumber = decimalNumber / Math.Pow(10.0, exponent);
-                    }
-
-                    CommandParametersModel parameters = (twitchMessage != null) ? new CommandParametersModel(twitchMessage) : new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
-                    parameters.SpecialIdentifiers["hypechatamountnumberdigits"] = amount.ToString();
-                    parameters.SpecialIdentifiers["hypechatamountnumber"] = decimalNumber.ToString();
-                    parameters.SpecialIdentifiers["hypechatamount"] = CurrencyHelper.ToCurrencyString(message.PinnedChatPaidCurrency, decimalNumber);
-                    parameters.SpecialIdentifiers["hypechatlevel"] = message.PinnedChatPaidLevel;
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeChat, parameters);
-                }
             }
         }
 

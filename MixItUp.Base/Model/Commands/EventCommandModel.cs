@@ -111,13 +111,6 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["adduration"] = "60";
                     specialIdentifiers["adisautomatic"] = "true";
                     break;
-                case EventTypeEnum.TwitchChannelHypeChat:
-                    specialIdentifiers["hypechatamountnumberdigits"] = "123";
-                    specialIdentifiers["hypechatamountnumber"] = "1.23";
-                    specialIdentifiers["hypechatamount"] = "$1.23";
-                    specialIdentifiers["hypechatlevel"] = "THREE";
-                    specialIdentifiers["message"] = "Test Message";
-                    break;
                 case EventTypeEnum.TwitchChannelHypeTrainBegin:
                     specialIdentifiers["hypetraintotalpoints"] = "1";
                     specialIdentifiers["hypetrainlevelpoints"] = "123";
