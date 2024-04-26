@@ -270,7 +270,7 @@ function add(data)
     avatar.firstElementChild.src = data.User.AvatarLink;
     messageSpan.appendChild(avatar);
 
-    addBadge(messageSpan, data.User.PlatformImageLink, {ShowPlatformBadge});
+    addBadge(messageSpan, data.User.PlatformBadgeFullLink, {ShowPlatformBadge});
     addBadge(messageSpan, data.User.PlatformRoleBadgeLink, {ShowRoleBadge});
     addBadge(messageSpan, data.User.PlatformSubscriberBadgeLink, {ShowSubscriberBadge});
     addBadge(messageSpan, data.User.PlatformSpecialtyBadgeLink, {ShowSpecialtyBadge});
@@ -353,9 +353,9 @@ function clear(data)
     }
 }
 
-function addBadge(messageSpan, url)
+function addBadge(messageSpan, url, include)
 {
-    if (url != null &amp;&amp; url.length &gt; 0)
+    if (include &amp;&amp; url != null &amp;&amp; url.length &gt; 0)
     {
         let badge = badgeTemplate.content.cloneNode(true);
         badge.firstElementChild.src = url;
