@@ -461,7 +461,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             });
 
             this.loaded = true;
-            this.RefreshWidgetPreview();
         }
 
         private void Animation_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
