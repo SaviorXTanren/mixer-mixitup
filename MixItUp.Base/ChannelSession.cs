@@ -137,7 +137,10 @@ namespace MixItUp.Base
 
             foreach (IExternalService service in ServiceManager.GetAll<IExternalService>())
             {
-                await service.Disconnect();
+                if (service.IsConnected)
+                {
+                    await service.Disconnect();
+                }
             }
 
             if (ChannelSession.Settings != null)

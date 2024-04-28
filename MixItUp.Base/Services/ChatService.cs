@@ -481,9 +481,13 @@ namespace MixItUp.Base.Services
 
                 // Add message to chat list
                 bool showMessage = true;
-                if (ChannelSession.Settings.HideBotMessages && message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
+                if (message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                    if (ChannelSession.Settings.HideBotMessages && StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                    {
+                        showMessage = false;
+                    }
+                    else if (ChannelSession.Settings.HideSpecificUserMessages.Contains(message.User?.Username.ToLower()))
                     {
                         showMessage = false;
                     }

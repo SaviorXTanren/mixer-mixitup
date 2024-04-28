@@ -10281,4 +10281,13 @@ namespace CustomNamespace
   <data name="Clubhouse" xml:space="preserve">
     <value>Clubhouse</value>
   </data>
+  <data name="OverlayPortNumberFailedToUpdate" xml:space="preserve">
+    <value>Failed to updated port number for the Overlay. Please see the error below for more information:</value>
+  </data>
+  <data name="OverlayPortNumberValidRange" xml:space="preserve">
+    <value>Port numbers for the Overlay must be between 0 and 65353</value>
+  </data>
+  <data name="HideSpecificUserMessagesSpaceSeparated" xml:space="preserve">
+    <value>Hide Specific User Messages (Space Separated)</value>
+  </data>
 </root>

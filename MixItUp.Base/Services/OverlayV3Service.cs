@@ -230,7 +230,11 @@ namespace MixItUp.Base.Services
                     return new Result();
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
             return new Result(string.Format(Resources.OverlayAddFailed, Resources.Default));
         }
 
@@ -241,10 +245,16 @@ namespace MixItUp.Base.Services
                 await this.DisconnectOverlayEndpointService(overlayEndpoint.ID);
             }
 
-            this.webSocketListenerServer.OnConnectedOccurred -= WebSocketListenerServer_OnConnectedOccurred;
+            if (this.webSocketListenerServer != null)
+            {
+                this.webSocketListenerServer.OnConnectedOccurred -= WebSocketListenerServer_OnConnectedOccurred;
+                await this.webSocketListenerServer.Stop();
+            }
 
-            this.httpListenerServer.Stop();
-            await this.webSocketListenerServer.Stop();
+            if (this.httpListenerServer != null)
+            {
+                this.httpListenerServer.Stop();
+            }
 
             this.IsConnected = false;
         }

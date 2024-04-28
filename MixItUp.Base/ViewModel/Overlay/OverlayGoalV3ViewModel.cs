@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
@@ -231,14 +232,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             await base.TestWidget(widget);
         }
 
-        protected void InitializeInternal()
-        {
-            this.AddSegmentCommand = this.CreateCommand(() =>
-            {
-                this.Segments.Add(new OverlayGoalSegmentV3ViewModel(this));
-            });
-        }
-
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
             OverlayGoalV3Model result = new OverlayGoalV3Model();
@@ -273,6 +266,27 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.SegmentCompletedAnimation = this.SegmentCompletedAnimation.GetAnimation();
 
             return result;
+        }
+
+        private void InitializeInternal()
+        {
+            this.AddSegmentCommand = this.CreateCommand(() =>
+            {
+                OverlayGoalSegmentV3ViewModel segment = new OverlayGoalSegmentV3ViewModel(this);
+                segment.PropertyChanged += (sender, e) =>
+                {
+                    this.NotifyPropertyChanged("X");
+                };
+                this.Segments.Add(segment);
+            });
+
+            foreach (OverlayGoalSegmentV3ViewModel segment in this.Segments)
+            {
+                segment.PropertyChanged += (sender, e) =>
+                {
+                    this.NotifyPropertyChanged("X");
+                };
+            }
         }
     }
 }

@@ -10353,6 +10353,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide Specific User Messages (Space Separated).
+        /// </summary>
+        public static string HideSpecificUserMessagesSpaceSeparated {
+            get {
+                return ResourceManager.GetString("HideSpecificUserMessagesSpaceSeparated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Title.
         /// </summary>
         public static string HideTitle {
@@ -14952,6 +14961,24 @@ namespace MixItUp.Base {
         public static string OverlayMissingFilePath {
             get {
                 return ResourceManager.GetString("OverlayMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to updated port number for the Overlay. Please see the error below for more information:.
+        /// </summary>
+        public static string OverlayPortNumberFailedToUpdate {
+            get {
+                return ResourceManager.GetString("OverlayPortNumberFailedToUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Port numbers for the Overlay must be between 0 and 65353.
+        /// </summary>
+        public static string OverlayPortNumberValidRange {
+            get {
+                return ResourceManager.GetString("OverlayPortNumberValidRange", resourceCulture);
             }
         }
         

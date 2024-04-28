@@ -58,6 +58,9 @@ namespace MixItUp.Base.Model.Overlay
         public bool ShowSpecialtyBadge { get; set; }
 
         [DataMember]
+        public HashSet<StreamingPlatformTypeEnum> ApplicableStreamingPlatforms { get; set; } = new HashSet<StreamingPlatformTypeEnum>(StreamingPlatforms.SupportedPlatforms);
+
+        [DataMember]
         public OverlayAnimationV3Model MessageAddedAnimation { get; set; } = new OverlayAnimationV3Model();
         [DataMember]
         public OverlayAnimationV3Model MessageRemovedAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -155,6 +158,11 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             if (this.UsernamesToIgnore.Contains(message.User.Username.ToLower()))
+            {
+                return;
+            }
+
+            if (!this.ApplicableStreamingPlatforms.Contains(message.Platform))
             {
                 return;
             }

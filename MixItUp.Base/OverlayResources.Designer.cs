@@ -1307,6 +1307,49 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayWheelDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayWheelDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;canvas id=&quot;canvas&quot; width=&quot;600&quot; height=&quot;600&quot; /&gt;.
+        /// </summary>
+        public static string OverlayWheelDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayWheelDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const canvas = document.getElementById(&quot;canvas&quot;);
+        ///const context = canvas.getContext(&quot;2d&quot;);
+        ///
+        ///const slices = [0.25, 0.40, 0.15, 0.20];
+        ///const names = [&quot;Foo&quot;, &quot;Bar&quot;, &quot;Joe&quot;, &quot;Alice&quot;];
+        ///const colors = [&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;, &quot;purple&quot;];
+        ///
+        ///drawCircleSlices(context, 300, 300, 300, slices, names, colors);
+        ///
+        /////spin(canvas, 0);
+        ///
+        ///function drawCircleSlices(context, x, y, radius, slices, names, colors)
+        ///{
+        ///    var startingAngle = 0;
+        ///    for (let i = 0; i &lt; slices.length; i++)
+        ///    {
+        ///        var endingAngle = st [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayWheelDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayWheelDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .youtubeVideo {
         ///
         ///}.

@@ -270,7 +270,7 @@ function add(data)
     avatar.firstElementChild.src = data.User.AvatarLink;
     messageSpan.appendChild(avatar);
 
-    addBadge(messageSpan, data.User.PlatformImageLink, {ShowPlatformBadge});
+    addBadge(messageSpan, data.User.PlatformBadgeFullLink, {ShowPlatformBadge});
     addBadge(messageSpan, data.User.PlatformRoleBadgeLink, {ShowRoleBadge});
     addBadge(messageSpan, data.User.PlatformSubscriberBadgeLink, {ShowSubscriberBadge});
     addBadge(messageSpan, data.User.PlatformSpecialtyBadgeLink, {ShowSpecialtyBadge});
@@ -353,9 +353,9 @@ function clear(data)
     }
 }
 
-function addBadge(messageSpan, url)
+function addBadge(messageSpan, url, include)
 {
-    if (url != null &amp;&amp; url.length &gt; 0)
+    if (include &amp;&amp; url != null &amp;&amp; url.length &gt; 0)
     {
         let badge = badgeTemplate.content.cloneNode(true);
         badge.firstElementChild.src = url;
@@ -2080,6 +2080,78 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
     <value>&lt;iframe frameborder="0" width="{Width}" height="{Height}" src="{URL}" /&gt;</value>
+  </data>
+  <data name="OverlayWheelDefaultCSS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayWheelDefaultHTML" xml:space="preserve">
+    <value>&lt;canvas id="canvas" width="600" height="600" /&gt;</value>
+  </data>
+  <data name="OverlayWheelDefaultJavascript" xml:space="preserve">
+    <value>const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+
+const slices = [0.25, 0.40, 0.15, 0.20];
+const names = ["Foo", "Bar", "Joe", "Alice"];
+const colors = ["red", "blue", "green", "purple"];
+
+drawCircleSlices(context, 300, 300, 300, slices, names, colors);
+
+//spin(canvas, 0);
+
+function drawCircleSlices(context, x, y, radius, slices, names, colors)
+{
+    var startingAngle = 0;
+    for (let i = 0; i &lt; slices.length; i++)
+    {
+        var endingAngle = startingAngle + (Math.PI * slices[i] * 2);
+        drawCircleSlice(context, x, y, radius, startingAngle, endingAngle, colors[i]);
+		drawCircleName(context, x, y, radius, startingAngle, endingAngle, names[i], "black");
+        startingAngle = endingAngle;
+    }
+}
+
+function drawCircleSlice(context, x, y, radius, startAngle, endAngle, color)
+{
+    context.beginPath();
+	context.fillStyle = color;
+	context.moveTo(x, y);
+    context.arc(x, y, radius, startAngle, endAngle);
+    context.fill();
+    context.stroke();
+}
+
+function drawCircleName(context, x, y, radius, startingAngle, endingAngle, text, color)
+{
+	const halfRadius = (3 * radius / 5);	
+	const rotation = ((endingAngle - startingAngle) / 2) + startingAngle;
+
+	context.save();
+	context.translate(x + (halfRadius * Math.cos(rotation)), y + (halfRadius * Math.sin(rotation)));
+	context.rotate(rotation);
+	context.fillStyle = color;
+	context.font = "40px Arial";
+	context.textAlign = "center";
+	context.textBaseline = "middle";
+	context.fillText(text, 0, 0);
+	context.restore();
+}
+
+function spin(canvas, rotation)
+{
+	setTimeout(() =&gt;
+	{
+		canvas.style.transform = "rotate(" + rotation + "deg)";
+		
+		rotation += 10;
+		if (rotation &gt;= 360)
+		{
+			rotation -= 360;
+		}
+	
+		spin(canvas, rotation);
+	}, 1);
+}</value>
   </data>
   <data name="OverlayYouTubeDefaultCSS" xml:space="preserve">
     <value>.youtubeVideo {

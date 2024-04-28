@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -104,6 +103,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.refreshTime = value;
                 NotifyPropertyChanged();
+                this.RefreshWidgetPreview();
             }
         }
         private int refreshTime;
@@ -140,6 +140,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.html = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.HTMLHeader));
+                this.RefreshWidgetPreview();
             }
         }
         private string html;
@@ -164,6 +165,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.css = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.CSSHeader));
+                this.RefreshWidgetPreview();
             }
         }
         private string css;
@@ -188,6 +190,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.javascript = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.JavascriptHeader));
+                this.RefreshWidgetPreview();
             }
         }
         private string javascript;
@@ -221,6 +224,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         private OverlayWidgetV3Model testWidget;
 
         private OverlayWidgetV3Model newWidget;
+
+        private bool loaded = false;
 
         public OverlayWidgetV3ViewModel(OverlayItemV3Type type)
         {
@@ -454,22 +459,18 @@ namespace MixItUp.Base.ViewModel.Overlay
 
                 OverlayWidgetV3Model widget = await this.GetWidget();
             });
+
+            this.loaded = true;
         }
 
         private void Animation_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            Item_PropertyChanged(sender, e);
+            this.RefreshWidgetPreview();
         }
 
         private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (this.Validate().Success)
-            {
-                Task.Run(async () =>
-                {
-                    await this.RefreshTestWidget();
-                });
-            }
+            this.RefreshWidgetPreview();
         }
 
         private async Task EnableTestWidget()
@@ -514,6 +515,17 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return OverlayResources.OverlayHTMLWidgetDefaultJavascript;
             }
             return item.DefaultJavascript;
+        }
+
+        private void RefreshWidgetPreview()
+        {
+            if (this.loaded && this.Validate().Success)
+            {
+                Task.Run(async () =>
+                {
+                    await this.RefreshTestWidget();
+                });
+            }
         }
     }
 }
