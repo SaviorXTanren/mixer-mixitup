@@ -47,9 +47,18 @@ namespace MixItUp.Base.Model.Overlay
             {
                 properties[nameof(this.VideoID)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.VideoID)].ToString(), parameters);
                 properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://www.youtube.com/watch?v=", "");
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtube.com/watch?v=", "");
                 properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("www.youtube.com/watch?v=", "");
                 properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("youtube.com/watch?v=", "");
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://www.youtube.com/shorts/", "");
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtube.com/shorts/", "");
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("www.youtube.com/shorts/", "");
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("youtube.com/shorts/", "");
                 properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtu.be/", "");
+                if (properties[nameof(this.VideoID)].ToString().Contains("?"))
+                {
+                    properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Substring(0, properties[nameof(this.VideoID)].ToString().IndexOf("?"));
+                }
                 if (properties[nameof(this.VideoID)].ToString().Contains("&"))
                 {
                     properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Substring(0, properties[nameof(this.VideoID)].ToString().IndexOf("&"));
