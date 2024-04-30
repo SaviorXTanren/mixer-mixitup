@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -367,7 +368,7 @@ namespace MixItUp.Base.Services
 
         public void StartBatching()
         {
-            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values)
+            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values.ToList())
             {
                 overlay.StartBatching();
             }
@@ -375,7 +376,7 @@ namespace MixItUp.Base.Services
 
         public async Task EndBatching()
         {
-            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values)
+            foreach (OverlayEndpointV3Service overlay in this.overlayEndpoints.Values.ToList())
             {
                 await overlay.EndBatching();
             }
@@ -444,6 +445,8 @@ namespace MixItUp.Base.Services
 
         private string mainHTML;
         private string itemIFrameHTML;
+
+        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
         private List<OverlayV3WebSocketServer> webSocketServers = new List<OverlayV3WebSocketServer>();
 
@@ -579,13 +582,20 @@ namespace MixItUp.Base.Services
         public async Task EndBatching()
         {
             this.isBatching = false;
-            if (this.batchPackets.Count > 0)
+
+            await this.semaphore.WaitAsync();
+
+            IEnumerable<OverlayV3Packet> packets = this.batchPackets.ToList();
+            this.batchPackets.Clear();
+
+            this.semaphore.Release();
+
+            if (packets.Count() > 0)
             {
                 foreach (var webSocketServer in this.webSocketServers)
                 {
-                    await webSocketServer.Send(this.batchPackets.ToList());
+                    await webSocketServer.Send(packets);
                 }
-                this.batchPackets.Clear();
             }
         }
 
@@ -613,7 +623,11 @@ namespace MixItUp.Base.Services
         {
             if (this.isBatching)
             {
+                await this.semaphore.WaitAsync();
+
                 this.batchPackets.Add(packet);
+
+                this.semaphore.Release();
             }
             else
             {
