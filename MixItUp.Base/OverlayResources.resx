@@ -2087,48 +2087,35 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   <data name="OverlayWheelDefaultHTML" xml:space="preserve">
     <value>&lt;div style="display: flex"&gt;
     &lt;div&gt;
-        &lt;canvas id="wheelCanvas" width="600" height="600" /&gt;
+        &lt;canvas id="wheelCanvas" width="{Width}" height="{Height}" /&gt;
     &lt;/div&gt;
     &lt;div&gt;
-        &lt;canvas id="arrowCanvas" width="50" height="600" /&gt;
+        &lt;canvas id="arrowCanvas" width="50" height="{Height}" /&gt;
     &lt;/div&gt;
 &lt;/div&gt;</value>
   </data>
   <data name="OverlayWheelDefaultJavascript" xml:space="preserve">
-    <value>const wheelCanvas = document.getElementById("wheelCanvas");
+    <value>const main = document.getElementById("maindiv");
+const wheelCanvas = document.getElementById("wheelCanvas");
 const arrowCanvas = document.getElementById("arrowCanvas");
+
+main.style.visibility.visibility = 'hidden';
 
 const startingSpeed = 10;
 const spinsPerSpeed = 100;
 const totalIntervals = 15;
 const intervalDivider = 1.5;
 
-const xPosition = 300;
-const yPosition = 300;
-const radius = 300;
-const slices = [0.25, 0.40, 0.15, 0.20];
-const names = ["Foo", "Bar", "Joe", "Alice"];
-const colors = ["red", "blue", "green", "purple"];
-const resultAngle = Math.floor(0.15 * 360);
-
-drawWheel(wheelCanvas.getContext("2d"), xPosition, yPosition, radius, slices, names, colors);
-
-drawArrow(arrowCanvas.getContext("2d"), yPosition + radius);
-
 var speed = startingSpeed;
 var intervals = 0;
 var spins = 0;
 
-var startingAngle = resultAngle;
-var trackingSpeed = startingSpeed;
-for (var i = 0; i &lt; totalIntervals; i++)
-{
-    startingAngle -= trackingSpeed * spinsPerSpeed;
-    trackingSpeed = trackingSpeed / intervalDivider;
-}
-startingAngle = Math.floor(startingAngle) % 360;
-
-spin(startingAngle);
+const xPosition = {Width} / 2;
+const yPosition = {Height} / 2;
+const radius = {Width} / 2;
+const slices = [{SlicePercentages}];
+const names = [{SliceNames}];
+const colors = [{SliceColors}];
 
 function drawWheel(context, x, y, radius, slices, names, colors)
 {
@@ -2137,7 +2124,7 @@ function drawWheel(context, x, y, radius, slices, names, colors)
     {
         var endingAngle = startingAngle + (Math.PI * slices[i] * 2);
         drawSlice(context, x, y, radius, startingAngle, endingAngle, colors[i]);
-		    drawName(context, x, y, radius, startingAngle, endingAngle, names[i], "black");
+        drawName(context, x, y, radius, startingAngle, endingAngle, names[i], "black");
         startingAngle = endingAngle;
     }
 }
@@ -2145,8 +2132,8 @@ function drawWheel(context, x, y, radius, slices, names, colors)
 function drawSlice(context, x, y, radius, startAngle, endAngle, color)
 {
     context.beginPath();
-	  context.fillStyle = color;
-	  context.moveTo(x, y);
+    context.fillStyle = color;
+    context.moveTo(x, y);
     context.arc(x, y, radius, startAngle, endAngle);
     context.fill();
     context.stroke();
@@ -2170,11 +2157,11 @@ function drawName(context, x, y, radius, startingAngle, endingAngle, text, color
 
 function drawArrow(context, height)
 {
-		var startingY = height / 2;
+    var startingY = height / 2;
 
     context.beginPath();
-	  context.fillStyle = "black";
-	  context.moveTo(0, startingY);
+    context.fillStyle = "black";
+    context.moveTo(0, startingY);
     context.lineTo(50, startingY - 25);
     context.lineTo(50, startingY + 25);
     context.lineTo(0, startingY);
@@ -2182,15 +2169,57 @@ function drawArrow(context, height)
     context.stroke();
 }
 
-function spin(rotation)
+function startSpin(winningPercentage)
+{
+    main.style.visibility.visibility = 'visible';
+    performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main).then((result) =&gt;
+    {
+        var modifiedAngle = winningPercentage * 360;
+        var trackingSpeed = startingSpeed;
+        for (var i = 0; i &lt; totalIntervals; i++)
+        {
+            modifiedAngle -= trackingSpeed * spinsPerSpeed;
+            trackingSpeed = trackingSpeed / intervalDivider;
+        }
+        modifiedAngle = modifiedAngle % 360;
+		
+        initialSpin(0, modifiedAngle);
+    });
+}
+
+function initialSpin(rotation, modifiedAngle)
 {
     setTimeout(() =&gt;
     {		
         rotation += speed;
-      	if (rotation &gt;= 360)
-      	{
-        		rotation -= 360;
-      	}
+        if (rotation &gt;= 360)
+        {
+            rotation -= 360;
+        }
+        wheelCanvas.style.transform = "rotate(" + rotation + "deg)";
+        
+        spins++;
+        if (spins &gt;= spinsPerSpeed)
+        {
+            spins = 0;
+            slowdownSpin(modifiedAngle);
+        }
+        else
+        {
+            initialSpin(rotation, modifiedAngle);
+        }
+    }, 5);
+}
+
+function slowdownSpin(rotation)
+{
+    setTimeout(() =&gt;
+    {		
+        rotation += speed;
+        if (rotation &gt;= 360)
+        {
+            rotation -= 360;
+        }
         wheelCanvas.style.transform = "rotate(" + rotation + "deg)";
         
         spins++;
@@ -2203,7 +2232,18 @@ function spin(rotation)
         
         if (intervals &lt; totalIntervals)
         {
-            spin(rotation);
+            slowdownSpin(rotation);
+        }
+        else
+        {
+            sendParentMessage({ Type: "WheelLanded", ID: "{ID}" });
+            performAnimation("{OutcomeSelectedAnimationFramework}", "{OutcomeSelectedAnimationName}", main).then((result) =&gt;
+            {
+                performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", main).then((result) =&gt;
+                {
+                    
+                });
+            });
         }
     }, 5);
 }</value>

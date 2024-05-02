@@ -304,6 +304,7 @@ namespace MixItUp.Base.Model.Overlay
                     await this.PlayCredits();
                 }
             }
+
             if (string.Equals(packet.Type, OverlayEndCreditsV3Model.EndCreditsStartedPacketType))
             {
                 await ServiceManager.Get<CommandService>().Queue(this.StartedCommandID);

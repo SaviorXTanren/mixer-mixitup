@@ -32,6 +32,9 @@ namespace MixItUp.Base.Util
             { "Yellow", "#ffeb3b" },
         };
 
+        /// <summary>
+        /// https://w3schools.sinsixx.com/css/css_colornames.asp.htm
+        /// </summary>
         public static readonly HashSet<string> HTMLColors = new HashSet<string>()
         {
             "AliceBlue",

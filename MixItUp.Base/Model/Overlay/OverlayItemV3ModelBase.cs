@@ -32,6 +32,7 @@ namespace MixItUp.Base.Model.Overlay
         GameQueue,
         EventList,
         Leaderboard,
+        Wheel,
     }
 
     public enum OverlayItemV3DisplayOptionsType
