@@ -209,12 +209,12 @@ namespace MixItUp.Base.ViewModel.Overlay
             : this()
         {
             this.speed = item.Speed;
-            this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
+            //this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
             this.SectionTextFont = item.SectionTextFont;
-            this.SectionTextColor = ColorSchemes.GetColorName(item.SectionTextColor);
+            //this.SectionTextColor = ColorSchemes.GetColorName(item.SectionTextColor);
             this.sectionTextSize = item.SectionTextSize;
             this.ItemTextFont = item.ItemTextFont;
-            this.ItemTextColor = ColorSchemes.GetColorName(item.ItemTextColor);
+            //this.ItemTextColor = ColorSchemes.GetColorName(item.ItemTextColor);
             this.itemTextSize = item.ItemTextSize;
 
             this.HTML = item.TitleTemplate;
@@ -227,9 +227,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             if (!string.IsNullOrEmpty(this.SectionTextFont) && !string.IsNullOrEmpty(this.SectionTextColor) && this.sectionTextSize > 0 &&
                 !string.IsNullOrEmpty(this.ItemTextFont) && !string.IsNullOrEmpty(this.ItemTextColor) && this.itemTextSize > 0 && !string.IsNullOrEmpty(this.HTML) && this.SectionItems.Count > 0)
             {
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
-                this.SectionTextColor = ColorSchemes.GetColorCode(this.SectionTextColor);
-                this.ItemTextColor = ColorSchemes.GetColorCode(this.ItemTextColor);
+                //this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+                //this.SectionTextColor = ColorSchemes.GetColorCode(this.SectionTextColor);
+                //this.ItemTextColor = ColorSchemes.GetColorCode(this.ItemTextColor);
 
                 Dictionary<OverlayEndCreditsSectionTypeEnum, OverlayEndCreditsSectionModel> sections = new Dictionary<OverlayEndCreditsSectionTypeEnum, OverlayEndCreditsSectionModel>();
                 foreach (OverlayEndCreditsSectionItemViewModel section in this.SectionItems)

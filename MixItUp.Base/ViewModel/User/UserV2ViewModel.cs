@@ -728,9 +728,9 @@ namespace MixItUp.Base.ViewModel.User
                     if (ChannelSession.Settings.CustomUsernameRoleColors.ContainsKey(role))
                     {
                         string name = ChannelSession.Settings.CustomUsernameRoleColors[role];
-                        if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
+                        if (ColorSchemes.MaterialDesignColors.ContainsKey(name))
                         {
-                            this.Color = ColorSchemes.HTMLColorSchemeDictionary[name];
+                            this.Color = ColorSchemes.MaterialDesignColors[name];
                             break;
                         }
                     }

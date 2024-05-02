@@ -101,9 +101,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             if (this.Validate())
             {
-                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
-                this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+                //this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                //this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
+                //this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
                 if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
                 {

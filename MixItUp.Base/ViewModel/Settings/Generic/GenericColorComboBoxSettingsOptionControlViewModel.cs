@@ -40,7 +40,7 @@ namespace MixItUp.Base.ViewModel.Settings.Generic
     {
         public const string NoneOption = "None";
 
-        private static IEnumerable<ColorOptionViewModel> AvailableColors = ColorSchemes.HTMLColorSchemeDictionary.Select(c => new ColorOptionViewModel(c.Key, c.Value));
+        private static IEnumerable<ColorOptionViewModel> AvailableColors = ColorSchemes.MaterialDesignColors.Select(c => new ColorOptionViewModel(c.Key, c.Value));
 
         public GenericColorComboBoxSettingsOptionControlViewModel(string name, string initialValue, Action<string> valueSetter, string tooltip = null)
             : base(name, AvailableColors, null, (value) => { valueSetter(value?.Name); }, tooltip)

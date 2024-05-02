@@ -264,10 +264,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.height = item.Height;
             this.Font = item.TextFont;
 
-            this.TextColor = ColorSchemes.GetColorName(item.TextColor);
-            this.BorderColor = ColorSchemes.GetColorName(item.BorderColor);
-            this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
-            this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
+            //this.TextColor = ColorSchemes.GetColorName(item.TextColor);
+            //this.BorderColor = ColorSchemes.GetColorName(item.BorderColor);
+            //this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
+            //this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
             this.damageAnimation = item.DamageAnimation;
             this.newBossAnimation = item.NewBossAnimation;
@@ -281,10 +281,10 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             if (this.startingHealth > 0 && this.width > 0 && this.height > 0 && !string.IsNullOrEmpty(this.HTML))
             {
-                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
-                this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+                //this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                //this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+                //this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
+                //this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
                 return new OverlayStreamBossItemModel(this.HTML, this.startingHealth, this.width, this.height, this.TextColor, this.Font, this.BorderColor, this.BackgroundColor,
                     this.ProgressColor, this.followBonus, this.hostBonus, this.raidBonus, this.subBonus, this.donationBonus, this.bitsBonus, this.healingBonus, this.overkillBonus,
