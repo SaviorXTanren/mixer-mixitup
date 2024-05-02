@@ -2085,72 +2085,127 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     <value />
   </data>
   <data name="OverlayWheelDefaultHTML" xml:space="preserve">
-    <value>&lt;canvas id="canvas" width="600" height="600" /&gt;</value>
+    <value>&lt;div style="display: flex"&gt;
+    &lt;div&gt;
+        &lt;canvas id="wheelCanvas" width="600" height="600" /&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+        &lt;canvas id="arrowCanvas" width="50" height="600" /&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
   </data>
   <data name="OverlayWheelDefaultJavascript" xml:space="preserve">
-    <value>const canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
+    <value>const wheelCanvas = document.getElementById("wheelCanvas");
+const arrowCanvas = document.getElementById("arrowCanvas");
 
+const startingSpeed = 10;
+const spinsPerSpeed = 100;
+const totalIntervals = 15;
+const intervalDivider = 1.5;
+
+const xPosition = 300;
+const yPosition = 300;
+const radius = 300;
 const slices = [0.25, 0.40, 0.15, 0.20];
 const names = ["Foo", "Bar", "Joe", "Alice"];
 const colors = ["red", "blue", "green", "purple"];
+const resultAngle = Math.floor(0.15 * 360);
 
-drawCircleSlices(context, 300, 300, 300, slices, names, colors);
+drawWheel(wheelCanvas.getContext("2d"), xPosition, yPosition, radius, slices, names, colors);
 
-//spin(canvas, 0);
+drawArrow(arrowCanvas.getContext("2d"), yPosition + radius);
 
-function drawCircleSlices(context, x, y, radius, slices, names, colors)
+var speed = startingSpeed;
+var intervals = 0;
+var spins = 0;
+
+var startingAngle = resultAngle;
+var trackingSpeed = startingSpeed;
+for (var i = 0; i &lt; totalIntervals; i++)
+{
+    startingAngle -= trackingSpeed * spinsPerSpeed;
+    trackingSpeed = trackingSpeed / intervalDivider;
+}
+startingAngle = Math.floor(startingAngle) % 360;
+
+spin(startingAngle);
+
+function drawWheel(context, x, y, radius, slices, names, colors)
 {
     var startingAngle = 0;
     for (let i = 0; i &lt; slices.length; i++)
     {
         var endingAngle = startingAngle + (Math.PI * slices[i] * 2);
-        drawCircleSlice(context, x, y, radius, startingAngle, endingAngle, colors[i]);
-		drawCircleName(context, x, y, radius, startingAngle, endingAngle, names[i], "black");
+        drawSlice(context, x, y, radius, startingAngle, endingAngle, colors[i]);
+		    drawName(context, x, y, radius, startingAngle, endingAngle, names[i], "black");
         startingAngle = endingAngle;
     }
 }
 
-function drawCircleSlice(context, x, y, radius, startAngle, endAngle, color)
+function drawSlice(context, x, y, radius, startAngle, endAngle, color)
 {
     context.beginPath();
-	context.fillStyle = color;
-	context.moveTo(x, y);
+	  context.fillStyle = color;
+	  context.moveTo(x, y);
     context.arc(x, y, radius, startAngle, endAngle);
     context.fill();
     context.stroke();
 }
 
-function drawCircleName(context, x, y, radius, startingAngle, endingAngle, text, color)
+function drawName(context, x, y, radius, startingAngle, endingAngle, text, color)
 {
-	const halfRadius = (3 * radius / 5);	
-	const rotation = ((endingAngle - startingAngle) / 2) + startingAngle;
+    const halfRadius = (3 * radius / 5);	
+    const rotation = ((endingAngle - startingAngle) / 2) + startingAngle;
 
-	context.save();
-	context.translate(x + (halfRadius * Math.cos(rotation)), y + (halfRadius * Math.sin(rotation)));
-	context.rotate(rotation);
-	context.fillStyle = color;
-	context.font = "40px Arial";
-	context.textAlign = "center";
-	context.textBaseline = "middle";
-	context.fillText(text, 0, 0);
-	context.restore();
+    context.save();
+    context.translate(x + (halfRadius * Math.cos(rotation)), y + (halfRadius * Math.sin(rotation)));
+    context.rotate(rotation);
+    context.fillStyle = color;
+    context.font = "40px Arial";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(text, 0, 0);
+    context.restore();
 }
 
-function spin(canvas, rotation)
+function drawArrow(context, height)
 {
-	setTimeout(() =&gt;
-	{
-		canvas.style.transform = "rotate(" + rotation + "deg)";
-		
-		rotation += 10;
-		if (rotation &gt;= 360)
-		{
-			rotation -= 360;
-		}
-	
-		spin(canvas, rotation);
-	}, 1);
+		var startingY = height / 2;
+
+    context.beginPath();
+	  context.fillStyle = "black";
+	  context.moveTo(0, startingY);
+    context.lineTo(50, startingY - 25);
+    context.lineTo(50, startingY + 25);
+    context.lineTo(0, startingY);
+    context.fill();
+    context.stroke();
+}
+
+function spin(rotation)
+{
+    setTimeout(() =&gt;
+    {		
+        rotation += speed;
+      	if (rotation &gt;= 360)
+      	{
+        		rotation -= 360;
+      	}
+        wheelCanvas.style.transform = "rotate(" + rotation + "deg)";
+        
+        spins++;
+        if (spins &gt;= spinsPerSpeed)
+        {
+            speed = speed / intervalDivider;
+            intervals++;
+            spins = 0;
+        }
+        
+        if (intervals &lt; totalIntervals)
+        {
+            spin(rotation);
+        }
+    }, 5);
 }</value>
   </data>
   <data name="OverlayYouTubeDefaultCSS" xml:space="preserve">
