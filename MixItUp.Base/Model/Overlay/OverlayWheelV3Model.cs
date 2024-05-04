@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayWheelSliceV3Model
+    public class OverlayWheelOutcomeV3Model
     {
         [DataMember]
         public string Name { get; set; }
@@ -30,16 +30,6 @@ namespace MixItUp.Base.Model.Overlay
 
         [JsonIgnore]
         public double CurrentPercentage { get; set; }
-
-        public OverlayWheelSliceV3Model(string name, double percentage, double notSelectedModifier, string color)
-        {
-            this.Name = name;
-            this.Percentage = percentage;
-            this.NotSelectedModifier = notSelectedModifier;
-            this.Color = color;
-
-            this.CurrentPercentage = this.Percentage;
-        }
     }
 
     [DataContract]
@@ -54,7 +44,7 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultJavascript = OverlayResources.OverlayWheelDefaultJavascript;
 
         [DataMember]
-        public List<OverlayWheelSliceV3Model> Slices { get; set; } = new List<OverlayWheelSliceV3Model>();
+        public List<OverlayWheelOutcomeV3Model> Outcomes { get; set; } = new List<OverlayWheelOutcomeV3Model>();
 
         [DataMember]
         public OverlayAnimationV3Model EntranceAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -64,17 +54,17 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
 
         [JsonIgnore]
-        public string SlicePercentages { get { return string.Join(", ", this.Slices.Select(s => s.DecimalPercentage)); } }
+        public string OutcomePercentages { get { return string.Join(", ", this.Outcomes.Select(s => s.DecimalPercentage)); } }
 
         [JsonIgnore]
-        public string SliceNames { get { return string.Join(", ", this.Slices.Select(s => s.Name)); } }
+        public string OutcomeNames { get { return string.Join(", ", this.Outcomes.Select(s => s.Name)); } }
 
         [JsonIgnore]
-        public string SliceColors { get { return string.Join(", ", this.Slices.Select(s => s.Color)); } }
+        public string OutcomeColors { get { return string.Join(", ", this.Outcomes.Select(s => s.Color)); } }
 
         private CommandParametersModel spinningParameters = null;
         private double winningPercentage = 0.0;
-        private OverlayWheelSliceV3Model winningSlice = null;
+        private OverlayWheelOutcomeV3Model winningOutcome = null;
 
         public OverlayWheelV3Model() : base(OverlayItemV3Type.Wheel) { }
 
@@ -82,9 +72,9 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
-            properties[nameof(this.SlicePercentages)] = this.SlicePercentages;
-            properties[nameof(this.SliceNames)] = this.SliceNames;
-            properties[nameof(this.SliceColors)] = this.SliceColors;
+            properties[nameof(this.OutcomePercentages)] = this.OutcomePercentages;
+            properties[nameof(this.OutcomeNames)] = this.OutcomeNames;
+            properties[nameof(this.OutcomeColors)] = this.OutcomeColors;
 
             properties["EntranceAnimationFramework"] = this.EntranceAnimation.AnimationFramework;
             properties["EntranceAnimationName"] = this.EntranceAnimation.AnimationName;
@@ -96,26 +86,35 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
+        protected override async Task WidgetEnableInternal()
+        {
+            await base.WidgetEnableInternal();
+
+            foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
+            {
+                outcome.CurrentPercentage = outcome.Percentage;
+            }
+        }
+
         public async Task Spin(CommandParametersModel parametersModel)
         {
             this.spinningParameters = parametersModel;
             this.winningPercentage = RandomHelper.GenerateDecimalProbability();
-            this.winningSlice = null;
+            this.winningOutcome = null;
 
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[OverlayWheelV3Model.WinningPercentagePropertyName] = this.winningPercentage.ToString();
             await this.CallFunction("startSpin", properties);
 
-            OverlayWheelSliceV3Model winningSlice = null;
             double tempPercentage = this.winningPercentage;
-            foreach (OverlayWheelSliceV3Model slice in this.Slices)
+            foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
             {
-                if (tempPercentage <= slice.DecimalPercentage)
+                if (tempPercentage <= outcome.DecimalPercentage)
                 {
-                    winningSlice = slice;
+                    winningOutcome = outcome;
                     break;
                 }
-                tempPercentage += slice.DecimalPercentage;
+                tempPercentage += outcome.DecimalPercentage;
             }
         }
 
@@ -125,12 +124,12 @@ namespace MixItUp.Base.Model.Overlay
 
             if (string.Equals(packet.Type, OverlayWheelV3Model.WheelLandedPacketType))
             {
-                if (this.winningSlice != null && this.winningSlice.CommandID != Guid.Empty)
+                if (this.winningOutcome != null && this.winningOutcome.CommandID != Guid.Empty)
                 {
                     CommandParametersModel parameters = new CommandParametersModel(this.spinningParameters.User);
                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                    specialIdentifiers["outcomename"] = this.winningSlice.Name;
-                    await ServiceManager.Get<CommandService>().Queue(winningSlice.CommandID, parameters);
+                    specialIdentifiers["outcomename"] = this.winningOutcome.Name;
+                    await ServiceManager.Get<CommandService>().Queue(winningOutcome.CommandID, parameters);
                 }
             }
         }

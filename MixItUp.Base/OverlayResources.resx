@@ -2113,23 +2113,27 @@ var spins = 0;
 const xPosition = {Width} / 2;
 const yPosition = {Height} / 2;
 const radius = {Width} / 2;
-const slices = [{SlicePercentages}];
-const names = [{SliceNames}];
-const colors = [{SliceColors}];
+const outcomes = [{OutcomePercentages}];
+const names = [{OutcomeNames}];
+const colors = [{OutcomeColors}];
 
-function drawWheel(context, x, y, radius, slices, names, colors)
+drawWheel(wheelCanvas.getContext("2d"), xPosition, yPosition, radius, outcomes, names, colors);
+
+drawArrow(arrowCanvas.getContext("2d"), yPosition + radius);
+
+function drawWheel(context, x, y, radius, outcomes, names, colors)
 {
     var startingAngle = 0;
-    for (let i = 0; i &lt; slices.length; i++)
+    for (let i = 0; i &lt; outcomes.length; i++)
     {
-        var endingAngle = startingAngle + (Math.PI * slices[i] * 2);
-        drawSlice(context, x, y, radius, startingAngle, endingAngle, colors[i]);
+        var endingAngle = startingAngle + (Math.PI * outcomes[i] * 2);
+        drawOutcome(context, x, y, radius, startingAngle, endingAngle, colors[i]);
         drawName(context, x, y, radius, startingAngle, endingAngle, names[i], "black");
         startingAngle = endingAngle;
     }
 }
 
-function drawSlice(context, x, y, radius, startAngle, endAngle, color)
+function drawOutcome(context, x, y, radius, startAngle, endAngle, color)
 {
     context.beginPath();
     context.fillStyle = color;
@@ -2147,8 +2151,8 @@ function drawName(context, x, y, radius, startingAngle, endingAngle, text, color
     context.save();
     context.translate(x + (halfRadius * Math.cos(rotation)), y + (halfRadius * Math.sin(rotation)));
     context.rotate(rotation);
-    context.fillStyle = color;
-    context.font = "40px Arial";
+    context.fillStyle = "{FontColor}";
+    context.font = "{FontSize}px {FontFamily}";
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillText(text, 0, 0);
@@ -2241,7 +2245,7 @@ function slowdownSpin(rotation)
             {
                 performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", main).then((result) =&gt;
                 {
-                    
+                    main.style.visibility.visibility = 'hidden';
                 });
             });
         }

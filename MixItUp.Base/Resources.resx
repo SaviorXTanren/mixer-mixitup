@@ -10290,4 +10290,16 @@ namespace CustomNamespace
   <data name="HideSpecificUserMessagesSpaceSeparated" xml:space="preserve">
     <value>Hide Specific User Messages (Space Separated)</value>
   </data>
+  <data name="OutcomeSelected" xml:space="preserve">
+    <value>Outcome Selected</value>
+  </data>
+  <data name="OverlayWheelOutcomeInvalidProbability" xml:space="preserve">
+    <value>An outcome can not have a probability lower than 0% or higher than 100%</value>
+  </data>
+  <data name="OverlayWheelOutcomeMissingName" xml:space="preserve">
+    <value>An outcome is missing a name</value>
+  </data>
+  <data name="OverlayWheelOutcomeTotalPercentageMustEqual100" xml:space="preserve">
+    <value>The total percentage of all outcomes must equal 100%</value>
+  </data>
 </root>

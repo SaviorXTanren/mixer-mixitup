@@ -1350,7 +1350,7 @@ namespace MixItUp.Base {
         ///const xPosition = {Width} / 2;
         ///const yPosition = {Height} / 2;
         ///const radius = {Width} / 2;
-        ///const slices =  [rest of string was truncated]&quot;;.
+        ///const outcomes  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayWheelDefaultJavascript {
             get {

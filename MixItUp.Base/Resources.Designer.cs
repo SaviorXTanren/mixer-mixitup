@@ -14677,6 +14677,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Outcome Selected.
+        /// </summary>
+        public static string OutcomeSelected {
+            get {
+                return ResourceManager.GetString("OutcomeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output.
         /// </summary>
         public static string Output {
@@ -15096,6 +15105,33 @@ namespace MixItUp.Base {
         public static string OverlayWebPageMissingURL {
             get {
                 return ResourceManager.GetString("OverlayWebPageMissingURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An outcome can not have a probability lower than 0% or higher than 100%.
+        /// </summary>
+        public static string OverlayWheelOutcomeInvalidProbability {
+            get {
+                return ResourceManager.GetString("OverlayWheelOutcomeInvalidProbability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An outcome is missing a name.
+        /// </summary>
+        public static string OverlayWheelOutcomeMissingName {
+            get {
+                return ResourceManager.GetString("OverlayWheelOutcomeMissingName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The total percentage of all outcomes must equal 100%.
+        /// </summary>
+        public static string OverlayWheelOutcomeTotalPercentageMustEqual100 {
+            get {
+                return ResourceManager.GetString("OverlayWheelOutcomeTotalPercentageMustEqual100", resourceCulture);
             }
         }
         
