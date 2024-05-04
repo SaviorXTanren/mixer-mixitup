@@ -531,7 +531,7 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (action.GoalID != Guid.Empty)
             {
                 this.SelectedActionType = OverlayActionTypeEnum.AddToGoal;
-                this.widgetID = action.StreamBossID;
+                this.widgetID = action.GoalID;
                 this.GoalAmount = action.GoalAmount;
             }
             else if (action.PersistentTimerID != Guid.Empty)
