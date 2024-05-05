@@ -70,6 +70,9 @@ namespace MixItUp.Base.Util
 
         public const string QuoteSpecialIdentifierHeader = "quote";
 
+        public const string GameQueueSpecialIdentifierHeader = "gamequeue";
+        public const string GameQueueUsersRegexSpecialIdentifier = GameQueueSpecialIdentifierHeader + "users\\d+";
+
         public const string DonationSourceSpecialIdentifier = "donationsource";
         public const string DonationTypeSpecialIdentifier = "donationtype";
         public const string DonationAmountNumberSpecialIdentifier = "donationamountnumber";
@@ -278,12 +281,23 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier("streamcurrentscene", currentScene);
             }
 
-            int gameQueueCount = 0;
-            if (ServiceManager.Get<GameQueueService>().IsEnabled)
+            if (ServiceManager.Get<GameQueueService>().IsEnabled && this.ContainsSpecialIdentifier(GameQueueSpecialIdentifierHeader))
             {
-                gameQueueCount = ServiceManager.Get<GameQueueService>().Queue.Count();
+                this.ReplaceSpecialIdentifier(GameQueueSpecialIdentifierHeader + "total", ServiceManager.Get<GameQueueService>().Queue.Count().ToString());
+                if (this.ContainsRegexSpecialIdentifier(GameQueueUsersRegexSpecialIdentifier))
+                {
+                    await this.ReplaceNumberBasedRegexSpecialIdentifier(GameQueueUsersRegexSpecialIdentifier, (total) =>
+                    {
+                        IEnumerable<CommandParametersModel> applicableUsers = ServiceManager.Get<GameQueueService>().Queue.Take(total).ToList();
+                        string result = MixItUp.Base.Resources.NoUsersFound;
+                        if (applicableUsers.Count() > 0)
+                        {
+                            result = string.Join(" ", applicableUsers.Select(p => $"@{p.User.Username}"));
+                        }
+                        return Task.FromResult(result);
+                    });
+                }
             }
-            this.ReplaceSpecialIdentifier("gamequeuetotal", gameQueueCount.ToString());
 
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader))
             {
