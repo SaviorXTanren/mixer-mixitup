@@ -7,7 +7,7 @@
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -19,6 +19,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
@@ -50,7 +52,23 @@
             <TextBox Text="{Binding Size}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Size}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.Outcomes}">
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Text="{Binding WheelClickSoundFilePath}" Grid.Column="0" VerticalAlignment="Bottom" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWheelClickSoundFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}" Content="{x:Static resx:Resources.Browse}" VerticalAlignment="Bottom"/>
+
+            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding DefaultOutcomeCommand}" Header="{x:Static resx:Resources.DefaultOutcome}" />
+        </Grid>
+
+        <GroupBox Grid.Row="4" Header="{x:Static resx:Resources.Outcomes}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -98,7 +116,7 @@
 
                                 <TextBox Grid.Column="6" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Color}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <CommandsControls:CommandListingButtonsControl Grid.Column="8" DataContext="{Binding Command}" EditClicked="CommandListingButtonsControl_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                                <CommandControls:CommandListingButtonsControl Grid.Column="8" EditClicked="CommandListingButtonsControl_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
 
                                 <Controls:IconButton Grid.Column="12" Command="{Binding DeleteCommand}" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                             </Grid>

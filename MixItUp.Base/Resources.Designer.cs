@@ -4721,6 +4721,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Outcome.
+        /// </summary>
+        public static string DefaultOutcome {
+            get {
+                return ResourceManager.GetString("DefaultOutcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Output.
         /// </summary>
         public static string DefaultOutput {
@@ -15114,6 +15123,15 @@ namespace MixItUp.Base {
         public static string OverlayWebPageMissingURL {
             get {
                 return ResourceManager.GetString("OverlayWebPageMissingURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wheel Click Sound File Path.
+        /// </summary>
+        public static string OverlayWheelClickSoundFilePath {
+            get {
+                return ResourceManager.GetString("OverlayWheelClickSoundFilePath", resourceCulture);
             }
         }
         

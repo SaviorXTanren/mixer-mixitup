@@ -14,6 +14,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayWidgetV3ViewModel : UIViewModelBase
     {
+        public static Dictionary<Guid, OverlayWidgetV3ViewModel> WidgetsInEditing = new Dictionary<Guid, OverlayWidgetV3ViewModel>();
+
         public Guid ID
         {
             get { return this.id; }
@@ -377,6 +379,14 @@ namespace MixItUp.Base.ViewModel.Overlay
             if (this.testWidget != null)
             {
                 await this.testWidget.Disable();
+            }
+        }
+
+        public async Task ProcessPacket(OverlayV3Packet packet)
+        {
+            if (this.testWidget != null)
+            {
+                await this.testWidget.Item.ProcessPacket(packet);
             }
         }
 

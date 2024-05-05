@@ -72,6 +72,9 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string EventListDetails { get; set; }
 
+        [DataMember]
+        public Guid WheelID { get; set; }
+
         public OverlayActionModel(OverlayItemV3ModelBase overlayItem, string duration, OverlayAnimationV3Model entranceAnimation, OverlayAnimationV3Model exitAnimation)
             : base(ActionTypeEnum.Overlay)
         {
@@ -129,6 +132,12 @@ namespace MixItUp.Base.Model.Actions
         {
             this.EventListID = eventList.ID;
             this.EventListDetails = details;
+        }
+
+        public OverlayActionModel(OverlayWheelV3Model wheel)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.WheelID = wheel.ID;
         }
 
         [Obsolete]
@@ -210,6 +219,14 @@ namespace MixItUp.Base.Model.Actions
                 {
                     string details = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.EventListDetails, parameters);
                     await ((OverlayEventListV3Model)widget.Item).AddEvent(parameters.User, "Custom", details, new Dictionary<string, string>());
+                }
+            }
+            else if (this.WheelID != Guid.Empty)
+            {
+                OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.WheelID));
+                if (widget != null && widget.Type == OverlayItemV3Type.Wheel)
+                {
+                    await ((OverlayWheelV3Model)widget.Item).Spin(parameters);
                 }
             }
             else

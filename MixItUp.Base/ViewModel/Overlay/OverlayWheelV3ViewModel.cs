@@ -1,9 +1,11 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -157,6 +159,28 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int size;
 
+        public string WheelClickSoundFilePath
+        {
+            get { return this.wheelClickSoundFilePath; }
+            set
+            {
+                this.wheelClickSoundFilePath = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string wheelClickSoundFilePath;
+
+        public CustomCommandModel DefaultOutcomeCommand
+        {
+            get { return this.defaultOutcomeCommand; }
+            set
+            {
+                this.defaultOutcomeCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel defaultOutcomeCommand;
+
         public ObservableCollection<OverlayWheelOutcomeV3ViewModel> Outcomes { get; set; } = new ObservableCollection<OverlayWheelOutcomeV3ViewModel>();
 
         public string TotalProbability
@@ -192,12 +216,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel OutcomeSelectedAnimation;
         public OverlayAnimationV3ViewModel ExitAnimation;
 
+        public ICommand BrowseFilePathCommand { get; set; }
+
         public ICommand AddOutcomeCommand { get; set; }
 
         public OverlayWheelV3ViewModel()
             : base(OverlayItemV3Type.Wheel)
         {
             this.Size = 600;
+            this.WheelClickSoundFilePath = OverlayWheelV3Model.DefaultWheelClickSoundFilePath;
+            this.DefaultOutcomeCommand = this.CreateEmbeddedCommand(Resources.DefaultOutcome);
+
             this.FontSize = 40;
             this.FontColor = "Black";
 
@@ -224,6 +253,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             : base(item)
         {
             this.Size = item.Size;
+            this.WheelClickSoundFilePath = item.WheelClickSoundFilePath;
+            this.DefaultOutcomeCommand = this.GetEmbeddedCommand(item.DefaultOutcomeCommand, Resources.DefaultOutcome);
 
             foreach (OverlayWheelOutcomeV3Model outcome in item.Outcomes)
             {
@@ -295,6 +326,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.AssignProperties(result);
 
             result.Size = this.Size;
+            result.WheelClickSoundFilePath = this.WheelClickSoundFilePath;
+
+            result.DefaultOutcomeCommand = this.DefaultOutcomeCommand.ID;
+            ChannelSession.Settings.SetCommand(this.DefaultOutcomeCommand);
 
             foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
             {
@@ -326,6 +361,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.AddOutcomeCommand = this.CreateCommand(() =>
             {
                 this.AddOutcome(new OverlayWheelOutcomeV3ViewModel(this));
+            });
+
+            this.BrowseFilePathCommand = this.CreateCommand(() =>
+            {
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().SoundFileFilter());
+                if (string.IsNullOrWhiteSpace(filepath))
+                {
+                    this.WheelClickSoundFilePath = filepath;
+                }
             });
         }
 

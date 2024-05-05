@@ -44,10 +44,16 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayWheelDefaultJavascript;
 
-        public static readonly string WheelClickSoundFilePath = Path.Combine(ServiceManager.Get<IFileService>().GetApplicationDirectory(), "Assets/Sounds/WheelClick.mp3");
+        public static readonly string DefaultWheelClickSoundFilePath = Path.Combine(ServiceManager.Get<IFileService>().GetApplicationDirectory(), "Assets\\Sounds\\WheelClick.mp3");
 
         [DataMember]
         public int Size { get; set; }
+
+        [DataMember]
+        public string WheelClickSoundFilePath { get; set; }
+
+        [DataMember]
+        public Guid DefaultOutcomeCommand { get; set; }
 
         [DataMember]
         public List<OverlayWheelOutcomeV3Model> Outcomes { get; set; } = new List<OverlayWheelOutcomeV3Model>();
@@ -69,7 +75,7 @@ namespace MixItUp.Base.Model.Overlay
         public string OutcomeColors { get { return string.Join(", ", this.Outcomes.Select(s => $"\"{s.Color}\"")); } }
 
         [JsonIgnore]
-        public string WheelClickSoundURL { get { return ServiceManager.Get<OverlayV3Service>().GetURLForFile(OverlayWheelV3Model.WheelClickSoundFilePath, "sound"); } }
+        public string WheelClickSoundURL { get { return ServiceManager.Get<OverlayV3Service>().GetURLForFile(this.WheelClickSoundFilePath, "sound"); } }
 
         private CommandParametersModel spinningParameters = null;
         private double winningProbability = 0.0;
@@ -103,20 +109,20 @@ namespace MixItUp.Base.Model.Overlay
             this.winningProbability = RandomHelper.GenerateDecimalProbability();
             this.winningOutcome = null;
 
-            Dictionary<string, object> properties = new Dictionary<string, object>();
-            properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability.ToString();
-            await this.CallFunction("startSpin", properties);
-
-            double tempPercentage = this.winningProbability;
+            double tempPercentage = 0;
             foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
             {
-                if (tempPercentage <= outcome.DecimalProbability)
+                tempPercentage += outcome.DecimalProbability;
+                if (tempPercentage >= this.winningProbability)
                 {
                     winningOutcome = outcome;
                     break;
                 }
-                tempPercentage += outcome.DecimalProbability;
             }
+
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+            properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability.ToString();
+            await this.CallFunction("startSpin", properties);
         }
 
         public async Task ShowWheel()
@@ -130,12 +136,17 @@ namespace MixItUp.Base.Model.Overlay
 
             if (string.Equals(packet.Type, OverlayWheelV3Model.WheelLandedPacketType))
             {
-                if (this.winningOutcome != null && this.winningOutcome.CommandID != Guid.Empty)
+                if (this.winningOutcome != null)
                 {
+                    Guid commandID = this.DefaultOutcomeCommand;
+                    if (ChannelSession.Settings.Commands.TryGetValue(this.winningOutcome.CommandID, out CommandModelBase command) && command.Actions.Count > 0)
+                    {
+                        commandID = this.winningOutcome.CommandID;
+                    }
+
                     CommandParametersModel parameters = new CommandParametersModel(this.spinningParameters.User);
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                    specialIdentifiers["outcomename"] = this.winningOutcome.Name;
-                    await ServiceManager.Get<CommandService>().Queue(winningOutcome.CommandID, parameters);
+                    parameters.SpecialIdentifiers["outcomename"] = this.winningOutcome.Name;
+                    await ServiceManager.Get<CommandService>().Queue(commandID, parameters);
                 }
             }
         }

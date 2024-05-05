@@ -2184,7 +2184,7 @@ function startSpin(data)
 
     performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main).then((result) =&gt;
     {
-        var modifiedRotation = data.WinningProbability * 360;
+        var modifiedRotation = (1.0 - data.WinningProbability) * 360;
         var trackingSpeed = startingSpeed;
         for (var i = 0; i &lt; totalIntervals; i++)
         {

@@ -10311,4 +10311,10 @@ namespace CustomNamespace
   <data name="Probability" xml:space="preserve">
     <value>Probability</value>
   </data>
+  <data name="OverlayWheelClickSoundFilePath" xml:space="preserve">
+    <value>Wheel Click Sound File Path</value>
+  </data>
+  <data name="DefaultOutcome" xml:space="preserve">
+    <value>Default Outcome</value>
+  </data>
 </root>
