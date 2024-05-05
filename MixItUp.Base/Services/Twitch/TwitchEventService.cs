@@ -21,13 +21,21 @@ using Twitch.Base.Models.Clients.PubSub;
 using Twitch.Base.Models.Clients.PubSub.Messages;
 using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.EventSub;
-using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
 {
     public class TwitchSubEventModel
     {
+        public static int GetSubPoints(int tier)
+        {
+            if (tier == 3)
+            {
+                return 6;
+            }
+            return tier;
+        }
+
         public UserV2ViewModel User { get; set; }
 
         public string PlanTier { get; set; }
@@ -990,6 +998,7 @@ namespace MixItUp.Base.Services.Twitch
             parameters.SpecialIdentifiers["message"] = subEvent.Message;
             parameters.SpecialIdentifiers["usersubplanname"] = subEvent.PlanName;
             parameters.SpecialIdentifiers["usersubplan"] = subEvent.PlanTier;
+            parameters.SpecialIdentifiers["usersubpoints"] = TwitchSubEventModel.GetSubPoints(subEvent.PlanTierNumber).ToString();
             parameters.SpecialIdentifiers["isprimeupgrade"] = subEvent.IsPrimeUpgrade.ToString();
             parameters.SpecialIdentifiers["isgiftupgrade"] = subEvent.IsGiftedUpgrade.ToString();
 
@@ -1190,6 +1199,7 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
                 parameters.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchPubSubService.GetSubTierNameFromText(packet.sub_plan);
                 parameters.SpecialIdentifiers["usersubplan"] = planTier;
+                parameters.SpecialIdentifiers["usersubpoints"] = TwitchSubEventModel.GetSubPoints(user.SubscriberTier).ToString();
                 parameters.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
 
                 string moderation = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, message);
@@ -1337,6 +1347,7 @@ namespace MixItUp.Base.Services.Twitch
                 CommandParametersModel parameters = new CommandParametersModel(giftedSubEvent.Gifter, StreamingPlatformTypeEnum.Twitch);
                 parameters.SpecialIdentifiers["usersubplanname"] = giftedSubEvent.PlanName;
                 parameters.SpecialIdentifiers["usersubplan"] = giftedSubEvent.PlanTier;
+                parameters.SpecialIdentifiers["usersubpoints"] = TwitchSubEventModel.GetSubPoints(giftedSubEvent.PlanTierNumber).ToString();
                 parameters.SpecialIdentifiers["usersubmonthsgifted"] = giftedSubEvent.MonthsGifted.ToString();
                 parameters.SpecialIdentifiers["isanonymous"] = giftedSubEvent.IsAnonymous.ToString();
                 parameters.Arguments.Add(giftedSubEvent.Receiver.Username);
@@ -1353,6 +1364,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             CommandParametersModel parameters = new CommandParametersModel(massGiftedSubEvent.Gifter, StreamingPlatformTypeEnum.Twitch);
             parameters.SpecialIdentifiers["subsgiftedamount"] = massGiftedSubEvent.TotalGifted.ToString();
+            parameters.SpecialIdentifiers["substotalpoints"] = (massGiftedSubEvent.TotalGifted * TwitchSubEventModel.GetSubPoints(massGiftedSubEvent.PlanTierNumber)).ToString();
             parameters.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
             parameters.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
             parameters.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();

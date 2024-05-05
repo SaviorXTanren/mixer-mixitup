@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Overlay;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
@@ -666,6 +667,11 @@ namespace MixItUp.Base.Services
                     {
                         await widget.Item.ProcessPacket(packet);
                     }
+
+                    if (OverlayWidgetV3ViewModel.WidgetsInEditing.TryGetValue(id, out OverlayWidgetV3ViewModel widgetViewModel))
+                    {
+                        await widgetViewModel.ProcessPacket(packet);
+                    }
                 }
             }
         }
@@ -725,6 +731,11 @@ namespace MixItUp.Base.Services
 
         public string GetURLForFile(string filePath, string fileType)
         {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return string.Empty;
+            }
+
             if (ServiceManager.Get<IFileService>().IsURLPath(filePath))
             {
                 return filePath;

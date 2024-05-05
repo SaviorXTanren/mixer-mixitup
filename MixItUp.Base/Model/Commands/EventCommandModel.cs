@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using StreamingClient.Base.Util;
@@ -63,6 +64,7 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["message"] = "Test Message";
                     specialIdentifiers["usersubplanname"] = "Plan Name";
                     specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["usersubpoints"] = "1";
                     specialIdentifiers["isprimeupgrade"] = "False";
                     specialIdentifiers["isgiftupgrade"] = "False";
                     break;
@@ -70,17 +72,20 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["message"] = "Test Message";
                     specialIdentifiers["usersubplanname"] = "Plan Name";
                     specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["usersubpoints"] = "1";
                     specialIdentifiers["usersubmonths"] = "5";
                     specialIdentifiers["usersubstreak"] = "3";
                     break;
                 case EventTypeEnum.TwitchChannelSubscriptionGifted:
                     specialIdentifiers["usersubplanname"] = "Plan Name";
                     specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["usersubpoints"] = "1";
                     specialIdentifiers["usersubmonthsgifted"] = "3";
                     specialIdentifiers["isanonymous"] = "false";
                     break;
                 case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
                     specialIdentifiers["subsgiftedamount"] = "5";
+                    specialIdentifiers["substotalpoints"] = "5";
                     specialIdentifiers["subsgiftedlifetimeamount"] = "100";
                     specialIdentifiers["usersubplan"] = "Tier 1";
                     specialIdentifiers["isanonymous"] = "false";

@@ -152,9 +152,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.height = height;
             this.Font = textFont;
 
-            this.TextColor = ColorSchemes.GetColorName(textColor);
-            this.BorderColor = ColorSchemes.GetColorName(borderColor);
-            this.BackgroundColor = ColorSchemes.GetColorName(backgroundColor);
+            //this.TextColor = ColorSchemes.GetColorName(textColor);
+            //this.BorderColor = ColorSchemes.GetColorName(borderColor);
+            //this.BackgroundColor = ColorSchemes.GetColorName(backgroundColor);
 
             this.alignment = alignment;
             this.entranceAnimation = entranceAnimation;

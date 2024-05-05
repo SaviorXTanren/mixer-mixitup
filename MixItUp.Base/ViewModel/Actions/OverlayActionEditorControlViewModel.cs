@@ -29,6 +29,7 @@ namespace MixItUp.Base.ViewModel.Actions
         AddToEndCredits,
         PlayEndCredits,
         AddToEventList,
+        SpinWheel,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -56,6 +57,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.ShowAddToEndCredits));
                     this.NotifyPropertyChanged(nameof(this.ShowPlayEndCredits));
                     this.NotifyPropertyChanged(nameof(this.ShowAddToEventList));
+                    this.NotifyPropertyChanged(nameof(this.ShowSpinWheel));
 
                     if (this.ShowItem)
                     {
@@ -451,6 +453,21 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string eventListDetails;
 
+        public bool ShowSpinWheel { get { return this.SelectedActionType == OverlayActionTypeEnum.SpinWheel; } }
+
+        public ObservableCollection<OverlayWidgetV3Model> Wheels { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
+
+        public OverlayWidgetV3Model SelectedWheel
+        {
+            get { return this.selectedWheel; }
+            set
+            {
+                this.selectedWheel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayWidgetV3Model selectedWheel;
+
         private Guid widgetID;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
@@ -531,7 +548,7 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (action.GoalID != Guid.Empty)
             {
                 this.SelectedActionType = OverlayActionTypeEnum.AddToGoal;
-                this.widgetID = action.StreamBossID;
+                this.widgetID = action.GoalID;
                 this.GoalAmount = action.GoalAmount;
             }
             else if (action.PersistentTimerID != Guid.Empty)
@@ -560,6 +577,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.SelectedActionType = OverlayActionTypeEnum.AddToEventList;
                 this.widgetID = action.EventListID;
                 this.EventListDetails = action.EventListDetails;
+            }
+            else if (action.WheelID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.SpinWheel;
+                this.widgetID = action.WheelID;
             }
         }
 
@@ -686,6 +708,13 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
+            else if (this.ShowSpinWheel)
+            {
+                if (this.SelectedWheel == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
 
             return Task.FromResult(new Result());
         }
@@ -716,6 +745,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 else if (widget.Type == OverlayItemV3Type.EventList)
                 {
                     this.EventLists.Add(widget);
+                }
+                else if (widget.Type == OverlayItemV3Type.Wheel)
+                {
+                    this.Wheels.Add(widget);
                 }
             }
 
@@ -752,6 +785,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowAddToEventList)
             {
                 this.SelectedEventList = this.EventLists.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+            else if (this.ShowSpinWheel)
+            {
+                this.SelectedWheel = this.Wheels.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
         }
 
@@ -797,6 +834,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowAddToEventList)
             {
                 return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayEventListV3Model)this.SelectedEventList.Item, this.EventListDetails));
+            }
+            else if (this.ShowSpinWheel)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayWheelV3Model)this.SelectedWheel.Item));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

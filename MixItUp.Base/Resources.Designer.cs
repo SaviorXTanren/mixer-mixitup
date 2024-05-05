@@ -4721,6 +4721,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Outcome.
+        /// </summary>
+        public static string DefaultOutcome {
+            get {
+                return ResourceManager.GetString("DefaultOutcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Output.
         /// </summary>
         public static string DefaultOutput {
@@ -13451,6 +13460,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modifier.
+        /// </summary>
+        public static string Modifier {
+            get {
+                return ResourceManager.GetString("Modifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mod Payout %.
         /// </summary>
         public static string ModPayoutPercentage {
@@ -14677,6 +14695,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Outcome Selected.
+        /// </summary>
+        public static string OutcomeSelected {
+            get {
+                return ResourceManager.GetString("OutcomeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output.
         /// </summary>
         public static string Output {
@@ -14817,6 +14844,15 @@ namespace MixItUp.Base {
         public static string OverlayGoalAtLeastOneSegmentMustBeAdded {
             get {
                 return ResourceManager.GetString("OverlayGoalAtLeastOneSegmentMustBeAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Cumulative Amounts.
+        /// </summary>
+        public static string OverlayGoalDisplayCumulativeAmounts {
+            get {
+                return ResourceManager.GetString("OverlayGoalDisplayCumulativeAmounts", resourceCulture);
             }
         }
         
@@ -15096,6 +15132,60 @@ namespace MixItUp.Base {
         public static string OverlayWebPageMissingURL {
             get {
                 return ResourceManager.GetString("OverlayWebPageMissingURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wheel Click Sound File Path.
+        /// </summary>
+        public static string OverlayWheelClickSoundFilePath {
+            get {
+                return ResourceManager.GetString("OverlayWheelClickSoundFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An outcome can not have a probability lower than 0% or higher than 100%.
+        /// </summary>
+        public static string OverlayWheelOutcomeInvalidProbability {
+            get {
+                return ResourceManager.GetString("OverlayWheelOutcomeInvalidProbability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An outcome is missing a name.
+        /// </summary>
+        public static string OverlayWheelOutcomeMissingName {
+            get {
+                return ResourceManager.GetString("OverlayWheelOutcomeMissingName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The total modifier of all outcomes must equal 0.
+        /// </summary>
+        public static string OverlayWheelOutcomeTotalModifierMustEqual0 {
+            get {
+                return ResourceManager.GetString("OverlayWheelOutcomeTotalModifierMustEqual0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The total percentage of all outcomes must equal 100%.
+        /// </summary>
+        public static string OverlayWheelOutcomeTotalPercentageMustEqual100 {
+            get {
+                return ResourceManager.GetString("OverlayWheelOutcomeTotalPercentageMustEqual100", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The size must be greater than 0.
+        /// </summary>
+        public static string OverlayWheelSizeMustBeGreaterThan0 {
+            get {
+                return ResourceManager.GetString("OverlayWheelSizeMustBeGreaterThan0", resourceCulture);
             }
         }
         
@@ -16356,6 +16446,15 @@ namespace MixItUp.Base {
         public static string Pro {
             get {
                 return ResourceManager.GetString("Pro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Probability.
+        /// </summary>
+        public static string Probability {
+            get {
+                return ResourceManager.GetString("Probability", resourceCulture);
             }
         }
         
@@ -20116,7 +20215,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Spin the Wheel.
+        ///   Looks up a localized string similar to Spin Wheel.
         /// </summary>
         public static string SpinWheel {
             get {

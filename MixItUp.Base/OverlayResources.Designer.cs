@@ -1316,7 +1316,14 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;canvas id=&quot;canvas&quot; width=&quot;600&quot; height=&quot;600&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;div style=&quot;display: flex&quot;&gt;
+        ///    &lt;div&gt;
+        ///        &lt;canvas id=&quot;wheelCanvas&quot; width=&quot;{Size}&quot; height=&quot;{Size}&quot; /&gt;
+        ///    &lt;/div&gt;
+        ///    &lt;div&gt;
+        ///        &lt;canvas id=&quot;arrowCanvas&quot; width=&quot;50&quot; height=&quot;{Size}&quot; /&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/div&gt;.
         /// </summary>
         public static string OverlayWheelDefaultHTML {
             get {
@@ -1325,23 +1332,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const canvas = document.getElementById(&quot;canvas&quot;);
-        ///const context = canvas.getContext(&quot;2d&quot;);
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///const wheelCanvas = document.getElementById(&quot;wheelCanvas&quot;);
+        ///const arrowCanvas = document.getElementById(&quot;arrowCanvas&quot;);
         ///
-        ///const slices = [0.25, 0.40, 0.15, 0.20];
-        ///const names = [&quot;Foo&quot;, &quot;Bar&quot;, &quot;Joe&quot;, &quot;Alice&quot;];
-        ///const colors = [&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;, &quot;purple&quot;];
+        ///hideWheel();
         ///
-        ///drawCircleSlices(context, 300, 300, 300, slices, names, colors);
+        ///const startingSpeed = 10;
+        ///const spinsPerSpeed = 100;
+        ///const totalIntervals = 15;
+        ///const intervalDivider = 1.5;
+        ///const soundInterval = 75;
         ///
-        /////spin(canvas, 0);
-        ///
-        ///function drawCircleSlices(context, x, y, radius, slices, names, colors)
-        ///{
-        ///    var startingAngle = 0;
-        ///    for (let i = 0; i &lt; slices.length; i++)
-        ///    {
-        ///        var endingAngle = st [rest of string was truncated]&quot;;.
+        ///const xPosition = {Size} / 2;
+        ///const yPosition = {Size} / 2;
+        ///const radius = {Size} / 2;
+        ///const names = [{OutcomeNames}];
+        ///const colors = [{OutcomeColors}];
+        ///const wheelClickSoundU [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayWheelDefaultJavascript {
             get {

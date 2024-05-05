@@ -1,13 +1,9 @@
-﻿using Google.Apis.YouTube.v3.Data;
-using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Commands;
 using MixItUp.WPF.Windows.Overlay;
 using StreamingClient.Base.Util;
 using System;
@@ -120,24 +116,15 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>()
+                List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>();
+                foreach (OverlayItemV3Type value in Enum.GetValues(typeof(OverlayItemV3Type)))
                 {
-                    OverlayItemV3Type.Text,
-                    OverlayItemV3Type.Image,
-                    OverlayItemV3Type.Video,
-                    OverlayItemV3Type.YouTube,
-                    OverlayItemV3Type.HTML,
-
-                    OverlayItemV3Type.PersistentTimer,
-                    OverlayItemV3Type.Label,
-                    OverlayItemV3Type.StreamBoss,
-                    OverlayItemV3Type.Goal,
-                    OverlayItemV3Type.Chat,
-                    OverlayItemV3Type.EndCredits,
-                    OverlayItemV3Type.GameQueue,
-                    OverlayItemV3Type.EventList,
-                    OverlayItemV3Type.Leaderboard,
-                };
+                    var attributes = (OverlayWidgetAttribute[])value.GetType().GetField(value.ToString()).GetCustomAttributes(typeof(OverlayWidgetAttribute), false);
+                    if (attributes != null && attributes.Length > 0)
+                    {
+                        widgetTypes.Add(value);
+                    }
+                }
 
                 string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames(widgetTypes).OrderBy(s => s), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
                 if (!string.IsNullOrEmpty(result))

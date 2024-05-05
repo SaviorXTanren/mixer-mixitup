@@ -22,9 +22,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             if (this.Validate())
             {
-                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
-                this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+                //this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                //this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
+                //this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
                 return new OverlayChatMessagesListItemModel(this.HTML, totalToShow, fadeOut, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation);
             }

@@ -100,9 +100,7 @@
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="50" />
@@ -111,33 +109,22 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.EndDate}" Visibility="Collapsed">
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                </Grid>
-            </GroupBox>
+            <TextBox Grid.Column="0" Text="{Binding StartingAmountCustom}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.ResetCadence}" Visibility="Collapsed">
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                </Grid>
-            </GroupBox>
+            <Grid Grid.Column="2" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="4" Text="{Binding StartingAmountCustom}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.OverlayGoalDisplayCumulativeAmounts}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Column="2" IsChecked="{Binding DisplayCumulativeAmounts}" />
+            </Grid>
 
-            <CommandControls:CustomCommandListingControl Grid.Column="6" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
+            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
 
-            <CommandControls:CustomCommandListingControl Grid.Column="8" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
+            <CommandControls:CustomCommandListingControl Grid.Column="6" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
         </Grid>
 
         <GroupBox Grid.Row="8" Header="{x:Static resx:Resources.Segments}">

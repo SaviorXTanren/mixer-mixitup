@@ -42,8 +42,6 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultJavascript = OverlayResources.OverlayGoalDefaultJavascript;
 
         [DataMember]
-        public double TotalAmount { get; set; }
-        [DataMember]
         public List<OverlayGoalSegmentV3Model> Segments { get; set; } = new List<OverlayGoalSegmentV3Model>();
 
         [DataMember]
@@ -56,6 +54,9 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int StartingAmountCustom { get; set; }
+
+        [DataMember]
+        public bool displayCumulativeAmounts { get; set; }
 
         [DataMember]
         public string BorderColor { get; set; }
@@ -74,6 +75,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public Guid SegmentCompletedCommandID { get; set; }
 
+        [DataMember]
+        public double TotalAmount { get; set; }
+
         [JsonIgnore]
         public double CurrentAmount { get; internal set; }
         [JsonIgnore]
@@ -85,6 +89,27 @@ namespace MixItUp.Base.Model.Overlay
             get
             {
                 double percentage = (this.CurrentAmount / this.CurrentSegment.Amount) * 100;
+                percentage = Math.Min(percentage, 100);
+                percentage = Math.Max(percentage, 0);
+                return (int)Math.Round(percentage);
+            }
+        }
+
+        [JsonIgnore]
+        public double GoalBarCumulativeMaxAmount
+        {
+            get
+            {
+                return this.TotalAmount - this.CurrentAmount + this.CurrentSegment.Amount;
+            }
+        }
+
+        [JsonIgnore]
+        public int GoalBarCumulativeCompletionPercentage
+        {
+            get
+            {
+                double percentage = (this.TotalAmount / this.GoalBarCumulativeMaxAmount) * 100;
                 percentage = Math.Min(percentage, 100);
                 percentage = Math.Max(percentage, 0);
                 return (int)Math.Round(percentage);
@@ -231,9 +256,20 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> data = new Dictionary<string, object>();
             data[GoalNameProperty] = this.CurrentSegment.Name;
             data[GoalEndProperty] = this.GoalEndText;
-            data[GoalAmountProperty] = this.CurrentAmount;
-            data[GoalMaxAmountProperty] = this.CurrentSegment.Amount;
-            data[GoalBarCompletionPercentageProperty] = this.GoalBarCompletionPercentage;
+
+            if (this.displayCumulativeAmounts)
+            {
+                data[GoalAmountProperty] = this.TotalAmount;
+                data[GoalMaxAmountProperty] = this.GoalBarCumulativeMaxAmount;
+                data[GoalBarCompletionPercentageProperty] = this.GoalBarCumulativeCompletionPercentage;
+            }
+            else
+            {
+                data[GoalAmountProperty] = this.CurrentAmount;
+                data[GoalMaxAmountProperty] = this.CurrentSegment.Amount;
+                data[GoalBarCompletionPercentageProperty] = this.GoalBarCompletionPercentage;
+            }
+
             return data;
         }
 

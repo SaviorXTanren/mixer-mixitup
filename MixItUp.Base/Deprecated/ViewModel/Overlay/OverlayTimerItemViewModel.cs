@@ -81,7 +81,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.totalLength = item.TotalLength;
             this.size = item.TextSize;
             this.Font = item.TextFont;
-            this.Color = ColorSchemes.GetColorName(item.TextColor);
+            //this.Color = ColorSchemes.GetColorName(item.TextColor);
 
             this.HTML = item.HTML;
 
@@ -92,7 +92,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             if (!string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && !string.IsNullOrEmpty(this.HTML) && this.size > 0 && this.totalLength > 0)
             {
-                this.Color = ColorSchemes.GetColorCode(this.Color);
+                //this.Color = ColorSchemes.GetColorCode(this.Color);
 
                 return new OverlayTimerItemModel(this.HTML, this.totalLength, this.Color, this.Font, size, this.TimerCompleteCommand);
             }

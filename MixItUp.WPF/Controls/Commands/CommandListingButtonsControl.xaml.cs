@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModel.Currency;
 using MixItUp.Base.ViewModel.Games;
 using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel.Overlay;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Commands
@@ -58,6 +59,11 @@ namespace MixItUp.WPF.Controls.Commands
                 else if (commandListingButtonsControl.DataContext is GameOutcomeViewModel)
                 {
                     GameOutcomeViewModel commandItem = (GameOutcomeViewModel)commandListingButtonsControl.DataContext;
+                    return (T)(CommandModelBase)commandItem.Command;
+                }
+                else if (commandListingButtonsControl.DataContext is OverlayWheelOutcomeV3ViewModel)
+                {
+                    OverlayWheelOutcomeV3ViewModel commandItem = (OverlayWheelOutcomeV3ViewModel)commandListingButtonsControl.DataContext;
                     return (T)(CommandModelBase)commandItem.Command;
                 }
                 else if (commandListingButtonsControl.DataContext is WebhookCommandItemViewModel)

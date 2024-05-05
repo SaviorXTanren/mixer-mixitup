@@ -237,5 +237,13 @@
 
             <TextBox Grid.Column="2" Text="{Binding EventListDetails}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Details}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowSpinWheel, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ComboBox Grid.Row="0" ItemsSource="{Binding Wheels}" SelectedItem="{Binding SelectedWheel}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

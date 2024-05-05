@@ -930,6 +930,9 @@
     <Compile Include="Controls\Overlay\OverlayVideoV3Control.xaml.cs">
       <DependentUpon>OverlayVideoV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayWheelV3Control.xaml.cs">
+      <DependentUpon>OverlayWheelV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayYouTubeV3Control.xaml.cs">
       <DependentUpon>OverlayYouTubeV3Control.xaml</DependentUpon>
     </Compile>
@@ -1895,6 +1898,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayVideoV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayWheelV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -3082,6 +3089,9 @@
     <Resource Include="Assets\Images\Twitch-XS.png" />
     <Resource Include="Assets\Images\Trovo-XS.png" />
     <Resource Include="Assets\Images\Patreon.png" />
+    <Content Include="Assets\Sounds\WheelClick.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

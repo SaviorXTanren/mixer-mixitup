@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -9,6 +10,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayPositionV3ViewModel : UIViewModelBase
     {
+        public event EventHandler PositionUpdated = delegate { };
+
         public IEnumerable<OverlayPositionV3Type> PositionTypes { get; } = EnumHelper.GetEnumList<OverlayPositionV3Type>();
         public OverlayPositionV3Type SelectedPositionType
         {
@@ -124,6 +127,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int layer;
 
+        private DelayedCountSemaphore delayedCountSemaphore = new DelayedCountSemaphore(delay: 200);
+
         public ICommand TopLeftSimplePositionCommand { get; set; }
         public ICommand TopMiddleSimplePositionCommand { get; set; }
         public ICommand TopRightSimplePositionCommand { get; set; }
@@ -137,6 +142,10 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayPositionV3ViewModel()
         {
             this.SelectedPositionType = OverlayPositionV3Type.Simple;
+
+            this.PropertyChanged += OverlayPositionV3ViewModel_PropertyChanged;
+
+            this.delayedCountSemaphore.Completed += DelayedCountSemaphore_Completed;
 
             this.SetCommands();
         }
@@ -224,6 +233,16 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.NotifyPropertyChanged(nameof(IsBottomLeftSimplePosition));
             this.NotifyPropertyChanged(nameof(IsBottomMiddleSimplePosition));
             this.NotifyPropertyChanged(nameof(IsBottomRightSimplePosition));
+        }
+
+        private void OverlayPositionV3ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            this.delayedCountSemaphore.Add();
+        }
+
+        private void DelayedCountSemaphore_Completed(object sender, EventArgs e)
+        {
+            this.PositionUpdated(this, new EventArgs());
         }
     }
 }

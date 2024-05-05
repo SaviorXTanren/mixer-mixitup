@@ -139,7 +139,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.minimumSecondsToShow = item.MinimumSecondsToShow;
             this.size = item.TextSize;
             this.Font = item.TextFont;
-            this.Color = ColorSchemes.GetColorName(item.TextColor);
+            //this.Color = ColorSchemes.GetColorName(item.TextColor);
 
             this.followBonus = item.FollowBonus;
             this.hostBonus = item.HostBonus;
@@ -155,7 +155,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             if (!string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && !string.IsNullOrEmpty(this.HTML) && this.size > 0 && this.minimumSecondsToShow > 0)
             {
-                this.Color = ColorSchemes.GetColorCode(this.Color);
+                //this.Color = ColorSchemes.GetColorCode(this.Color);
 
                 return new OverlayTimerTrainItemModel(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus, this.raidBonus,
                     this.subBonus, this.donationBonus, this.bitsBonus);

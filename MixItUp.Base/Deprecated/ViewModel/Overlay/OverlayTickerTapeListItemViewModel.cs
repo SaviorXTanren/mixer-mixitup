@@ -57,8 +57,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.width = 1920;
             this.height = 40;
 
-            this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
-            this.BorderColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
+            //this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
+            //this.BorderColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
 
             this.HTML = OverlayTickerTapeListItemModel.HTMLTemplate;
         }
@@ -69,15 +69,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.tickerTapeType = item.TickerTapeType;
             this.minimumAmountRequiredToShow = item.MinimumAmountRequiredToShow;
 
-            this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
-            this.BorderColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
+            //this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
+            //this.BorderColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
         }
 
         public override OverlayItemModelBase GetOverlayItem()
         {
             if (this.Validate() && this.minimumAmountRequiredToShow >= 0)
             {
-                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                //this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
 
                 if (!this.ShowMinimumAmountRequiredToShow)
                 {

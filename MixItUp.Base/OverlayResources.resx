@@ -2085,73 +2085,213 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     <value />
   </data>
   <data name="OverlayWheelDefaultHTML" xml:space="preserve">
-    <value>&lt;canvas id="canvas" width="600" height="600" /&gt;</value>
+    <value>&lt;div style="display: flex"&gt;
+    &lt;div&gt;
+        &lt;canvas id="wheelCanvas" width="{Size}" height="{Size}" /&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+        &lt;canvas id="arrowCanvas" width="50" height="{Size}" /&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
   </data>
   <data name="OverlayWheelDefaultJavascript" xml:space="preserve">
-    <value>const canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
+    <value>const main = document.getElementById("maindiv");
+const wheelCanvas = document.getElementById("wheelCanvas");
+const arrowCanvas = document.getElementById("arrowCanvas");
 
-const slices = [0.25, 0.40, 0.15, 0.20];
-const names = ["Foo", "Bar", "Joe", "Alice"];
-const colors = ["red", "blue", "green", "purple"];
+hideWheel();
 
-drawCircleSlices(context, 300, 300, 300, slices, names, colors);
+const startingSpeed = 10;
+const spinsPerSpeed = 100;
+const totalIntervals = 15;
+const intervalDivider = 1.5;
+const soundInterval = 75;
 
-//spin(canvas, 0);
+const xPosition = {Size} / 2;
+const yPosition = {Size} / 2;
+const radius = {Size} / 2;
+const names = [{OutcomeNames}];
+const colors = [{OutcomeColors}];
+const wheelClickSoundURL = "{WheelClickSoundURL}";
 
-function drawCircleSlices(context, x, y, radius, slices, names, colors)
+var probabilities = [{OutcomeProbability}];
+
+drawArrow(arrowCanvas.getContext("2d"), yPosition + radius);
+
+if ({IsLivePreview})
 {
-    var startingAngle = 0;
-    for (let i = 0; i &lt; slices.length; i++)
+    showWheel({});
+}
+
+function showWheel(data)
+{
+    drawWheel(wheelCanvas.getContext("2d"), xPosition, yPosition, radius, probabilities, names, colors);
+
+    main.style.visibility = 'visible';
+}
+
+function startSpin(data)
+{
+    probabilities = data.ModifiedProbabilities;
+
+    showWheel(data);
+
+    performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main).then((result) =&gt;
     {
-        var endingAngle = startingAngle + (Math.PI * slices[i] * 2);
-        drawCircleSlice(context, x, y, radius, startingAngle, endingAngle, colors[i]);
-		drawCircleName(context, x, y, radius, startingAngle, endingAngle, names[i], "black");
+        var modifiedRotation = (1.0 - data.WinningProbability) * 360;
+        var trackingSpeed = startingSpeed;
+        for (var i = 0; i &lt; totalIntervals; i++)
+        {
+            modifiedRotation -= trackingSpeed * spinsPerSpeed;
+            trackingSpeed = trackingSpeed / intervalDivider;
+        }
+        modifiedRotation = modifiedRotation % 360;
+		
+        initialSpin(startingSpeed, 0, 0, 0, modifiedRotation);
+    });
+}
+
+function initialSpin(speed, spins, rotation, soundRotation, modifiedRotation)
+{
+    setTimeout(() =&gt;
+    {		
+        rotation += speed;
+        if (rotation &gt;= 360)
+        {
+            rotation -= 360;
+        }
+        wheelCanvas.style.transform = "rotate(" + rotation + "deg)";
+        
+        soundRotation = playWheelClickSound(soundRotation, speed);
+        
+        spins++;
+        if (spins &gt;= spinsPerSpeed)
+        {
+            spins = 0;
+            slowdownSpin(speed, spins, modifiedRotation, 0, soundRotation);
+        }
+        else
+        {
+            initialSpin(speed, spins, rotation, soundRotation, modifiedRotation);
+        }
+    }, 5);
+}
+
+function slowdownSpin(speed, spins, rotation, intervals, soundRotation)
+{
+    setTimeout(() =&gt;
+    {		
+        rotation += speed;
+        if (rotation &gt;= 360)
+        {
+            rotation -= 360;
+        }
+        wheelCanvas.style.transform = "rotate(" + rotation + "deg)";
+
+        soundRotation = playWheelClickSound(soundRotation, speed);
+        
+        spins++;
+        if (spins &gt;= spinsPerSpeed)
+        {
+            speed = speed / intervalDivider;
+            intervals++;
+            spins = 0;
+        }
+        
+        if (intervals &lt; totalIntervals)
+        {
+            slowdownSpin(speed, spins, rotation, intervals, soundRotation);
+        }
+        else
+        {
+            sendParentMessage({ Type: "WheelLanded", ID: "{ID}" });
+            performAnimation("{OutcomeSelectedAnimationFramework}", "{OutcomeSelectedAnimationName}", main).then((result) =&gt;
+            {
+                setTimeout(() =&gt;
+                {
+                    performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", main).then((result) =&gt;
+                    {
+                        hideWheel();
+                    });
+                }, 2000);
+            });
+        }
+    }, 5);
+}
+
+function hideWheel()
+{
+    main.style.visibility = 'hidden';
+}
+
+function playWheelClickSound(soundRotation, speed)
+{
+    soundRotation += speed;
+    if (soundRotation &gt;= soundInterval)
+    {
+        soundRotation = 0;
+        var audio = new Audio(wheelClickSoundURL);
+        audio.volume = 1.0;
+        audio.play();
+    }
+    return soundRotation;
+}
+
+function drawWheel(context, x, y, radius, probabilities, names, colors)
+{
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+    var startingAngle = 0;
+    for (let i = 0; i &lt; probabilities.length; i++)
+    {
+        var endingAngle = startingAngle + (Math.PI * probabilities[i] * 2);
+        drawOutcome(context, x, y, radius, startingAngle, endingAngle, colors[i]);
+        drawName(context, x, y, radius, startingAngle, endingAngle, names[i]);
         startingAngle = endingAngle;
     }
 }
 
-function drawCircleSlice(context, x, y, radius, startAngle, endAngle, color)
+function drawOutcome(context, x, y, radius, startAngle, endAngle, color)
 {
     context.beginPath();
-	context.fillStyle = color;
-	context.moveTo(x, y);
+    context.fillStyle = color;
+    context.moveTo(x, y);
     context.arc(x, y, radius, startAngle, endAngle);
     context.fill();
     context.stroke();
 }
 
-function drawCircleName(context, x, y, radius, startingAngle, endingAngle, text, color)
+function drawName(context, x, y, radius, startingAngle, endingAngle, text)
 {
-	const halfRadius = (3 * radius / 5);	
-	const rotation = ((endingAngle - startingAngle) / 2) + startingAngle;
+    const halfRadius = (3 * radius / 5);	
+    const rotation = ((endingAngle - startingAngle) / 2) + startingAngle;
 
-	context.save();
-	context.translate(x + (halfRadius * Math.cos(rotation)), y + (halfRadius * Math.sin(rotation)));
-	context.rotate(rotation);
-	context.fillStyle = color;
-	context.font = "40px Arial";
-	context.textAlign = "center";
-	context.textBaseline = "middle";
-	context.fillText(text, 0, 0);
-	context.restore();
+    context.save();
+    context.translate(x + (halfRadius * Math.cos(rotation)), y + (halfRadius * Math.sin(rotation)));
+    context.rotate(rotation);
+    context.fillStyle = "{FontColor}";
+    context.font = "{FontSize}px {FontFamily}";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(text, 0, 0);
+    context.restore();
 }
 
-function spin(canvas, rotation)
+function drawArrow(context, height)
 {
-	setTimeout(() =&gt;
-	{
-		canvas.style.transform = "rotate(" + rotation + "deg)";
-		
-		rotation += 10;
-		if (rotation &gt;= 360)
-		{
-			rotation -= 360;
-		}
-	
-		spin(canvas, rotation);
-	}, 1);
-}</value>
+    var startingY = height / 2;
+
+    context.beginPath();
+    context.fillStyle = "black";
+    context.moveTo(0, startingY);
+    context.lineTo(50, startingY - 25);
+    context.lineTo(50, startingY + 25);
+    context.lineTo(0, startingY);
+    context.fill();
+    context.stroke();
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayYouTubeDefaultCSS" xml:space="preserve">
     <value>.youtubeVideo {

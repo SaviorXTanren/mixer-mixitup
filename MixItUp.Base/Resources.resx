@@ -5335,7 +5335,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Clip</value>
   </data>
   <data name="SpinWheel" xml:space="preserve">
-    <value>Spin the Wheel</value>
+    <value>Spin Wheel</value>
   </data>
   <data name="EmptyJar" xml:space="preserve">
     <value>Empty the Jar</value>
@@ -10289,5 +10289,38 @@ namespace CustomNamespace
   </data>
   <data name="HideSpecificUserMessagesSpaceSeparated" xml:space="preserve">
     <value>Hide Specific User Messages (Space Separated)</value>
+  </data>
+  <data name="OutcomeSelected" xml:space="preserve">
+    <value>Outcome Selected</value>
+  </data>
+  <data name="Modifier" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="OverlayWheelOutcomeInvalidProbability" xml:space="preserve">
+    <value>An outcome can not have a probability lower than 0% or higher than 100%</value>
+  </data>
+  <data name="OverlayWheelOutcomeMissingName" xml:space="preserve">
+    <value>An outcome is missing a name</value>
+  </data>
+  <data name="OverlayWheelOutcomeTotalPercentageMustEqual100" xml:space="preserve">
+    <value>The total percentage of all outcomes must equal 100%</value>
+  </data>
+  <data name="OverlayWheelSizeMustBeGreaterThan0" xml:space="preserve">
+    <value>The size must be greater than 0</value>
+  </data>
+  <data name="Probability" xml:space="preserve">
+    <value>Probability</value>
+  </data>
+  <data name="OverlayWheelClickSoundFilePath" xml:space="preserve">
+    <value>Wheel Click Sound File Path</value>
+  </data>
+  <data name="DefaultOutcome" xml:space="preserve">
+    <value>Default Outcome</value>
+  </data>
+  <data name="OverlayWheelOutcomeTotalModifierMustEqual0" xml:space="preserve">
+    <value>The total modifier of all outcomes must equal 0</value>
+  </data>
+  <data name="OverlayGoalDisplayCumulativeAmounts" xml:space="preserve">
+    <value>Display Cumulative Amounts</value>
   </data>
 </root>

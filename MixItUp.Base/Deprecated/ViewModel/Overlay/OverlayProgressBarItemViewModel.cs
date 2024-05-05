@@ -217,9 +217,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.height = item.Height;
             this.Font = item.TextFont;
 
-            this.TextColor = ColorSchemes.GetColorName(item.TextColor);
-            this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
-            this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
+            //this.TextColor = ColorSchemes.GetColorName(item.TextColor);
+            //this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
+            //this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
             this.OnGoalReachedCommand = item.ProgressGoalReachedCommand;
 
@@ -231,9 +231,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             if (!string.IsNullOrEmpty(this.HTML) && !string.IsNullOrEmpty(this.StartingAmount) && !string.IsNullOrEmpty(this.GoalAmount) &&
                 !string.IsNullOrEmpty(this.Font) && this.width > 0 && this.height > 0)
             {
-                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
-                this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+                //this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                //this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
+                //this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
                 if (this.progressBarType == OverlayProgressBarItemTypeEnum.Custom)
                 {

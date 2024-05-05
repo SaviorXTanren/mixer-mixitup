@@ -19,6 +19,16 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultCSS = string.Empty;
         public static readonly string DefaultJavascript = OverlayResources.OverlaySoundDefaultJavascript;
 
+        public static string GetAudioFileSourceType(string filePath)
+        {
+            int fileExtensionIndex = filePath.LastIndexOf(".");
+            if (fileExtensionIndex > 0)
+            {
+                return "audio/" + filePath.Substring(fileExtensionIndex + 1);
+            }
+            return string.Empty;
+        }
+
         [DataMember]
         public string FilePath { get; set; }
 
@@ -49,13 +59,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)].ToString(), parameters);
                 properties[URLPathPropertyName] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)].ToString(), "sound");
-
-                properties[SourceTypePropertyName] = "";
-                int fileExtensionIndex = properties[nameof(this.FilePath)].ToString().LastIndexOf(".");
-                if (fileExtensionIndex > 0)
-                {
-                    properties[SourceTypePropertyName] = "audio/" + properties[nameof(this.FilePath)].ToString().Substring(fileExtensionIndex + 1);
-                }
+                properties[SourceTypePropertyName] = OverlaySoundV3Model.GetAudioFileSourceType(properties[nameof(this.FilePath)].ToString());
             }
         }
     }

@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         protected abstract OverlayItemV3ModelBase GetItemInternal();
 
-        protected CustomCommandModel CreateEmbeddedCommand(string name)
+        public CustomCommandModel CreateEmbeddedCommand(string name)
         {
             return new CustomCommandModel(name)
             {
@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             };
         }
 
-        protected CustomCommandModel GetEmbeddedCommand(Guid id, string name)
+        public CustomCommandModel GetEmbeddedCommand(Guid id, string name)
         {
             if (ChannelSession.Settings.Commands.TryGetValue(id, out CommandModelBase command))
             {
