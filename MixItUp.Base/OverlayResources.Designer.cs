@@ -1347,9 +1347,9 @@ namespace MixItUp.Base {
         ///const xPosition = {Size} / 2;
         ///const yPosition = {Size} / 2;
         ///const radius = {Size} / 2;
-        ///const outcomes = [{OutcomeProbability}];
         ///const names = [{OutcomeNames}];
-        ///const colors =  [rest of string was truncated]&quot;;.
+        ///const colors = [{OutcomeColors}];
+        ///const wheelClickSoundU [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayWheelDefaultJavascript {
             get {

@@ -276,6 +276,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
 
             double totalPercentage = 0.0;
+            double totalModifier = 0.0;
             foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
             {
                 Result result = outcome.Validate();
@@ -285,11 +286,17 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
 
                 totalPercentage += outcome.Probability;
+                totalModifier += outcome.Modifier;
             }
 
             if (totalPercentage != 100.0)
             {
                 return new Result(Resources.OverlayWheelOutcomeTotalPercentageMustEqual100);
+            }
+
+            if (totalPercentage != 0.0)
+            {
+                return new Result(Resources.OverlayWheelOutcomeTotalModifierMustEqual0);
             }
 
             return new Result();

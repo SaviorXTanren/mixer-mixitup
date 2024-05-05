@@ -15154,6 +15154,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The total modifier of all outcomes must equal 0.
+        /// </summary>
+        public static string OverlayWheelOutcomeTotalModifierMustEqual0 {
+            get {
+                return ResourceManager.GetString("OverlayWheelOutcomeTotalModifierMustEqual0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The total percentage of all outcomes must equal 100%.
         /// </summary>
         public static string OverlayWheelOutcomeTotalPercentageMustEqual100 {

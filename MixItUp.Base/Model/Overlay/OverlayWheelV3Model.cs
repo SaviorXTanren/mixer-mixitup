@@ -39,6 +39,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string WheelLandedPacketType = "WheelLanded";
 
         public const string WinningProbabilityPropertyName = "WinningProbability";
+        public const string ModifiedProbabilitiesPropertyName = "ModifiedProbabilities";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayWheelDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
@@ -115,14 +116,33 @@ namespace MixItUp.Base.Model.Overlay
                 tempPercentage += outcome.DecimalProbability;
                 if (tempPercentage >= this.winningProbability)
                 {
-                    winningOutcome = outcome;
+                    this.winningOutcome = outcome;
                     break;
                 }
             }
 
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability.ToString();
+            properties[OverlayWheelV3Model.ModifiedProbabilitiesPropertyName] = this.Outcomes.Select(s => s.DecimalProbability);
             await this.CallFunction("startSpin", properties);
+
+            if (this.winningOutcome != null)
+            {
+                if (this.winningOutcome.Modifier > 0)
+                {
+                    foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
+                    {
+                        outcome.CurrentProbability = outcome.Probability;
+                    }
+                }
+                else
+                {
+                    foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
+                    {
+                        outcome.CurrentProbability += outcome.Modifier;
+                    }
+                }
+            }
         }
 
         public async Task ShowWheel()

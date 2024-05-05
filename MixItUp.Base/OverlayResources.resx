@@ -2110,12 +2110,11 @@ const soundInterval = 75;
 const xPosition = {Size} / 2;
 const yPosition = {Size} / 2;
 const radius = {Size} / 2;
-const outcomes = [{OutcomeProbability}];
 const names = [{OutcomeNames}];
 const colors = [{OutcomeColors}];
 const wheelClickSoundURL = "{WheelClickSoundURL}";
 
-drawWheel(wheelCanvas.getContext("2d"), xPosition, yPosition, radius, outcomes, names, colors);
+var probabilities = [{OutcomeProbability}];
 
 drawArrow(arrowCanvas.getContext("2d"), yPosition + radius);
 
@@ -2124,63 +2123,18 @@ if ({IsLivePreview})
     showWheel({});
 }
 
-function drawWheel(context, x, y, radius, outcomes, names, colors)
+function showWheel(data)
 {
-    var startingAngle = 0;
-    for (let i = 0; i &lt; outcomes.length; i++)
-    {
-        var endingAngle = startingAngle + (Math.PI * outcomes[i] * 2);
-        drawOutcome(context, x, y, radius, startingAngle, endingAngle, colors[i]);
-        drawName(context, x, y, radius, startingAngle, endingAngle, names[i]);
-        startingAngle = endingAngle;
-    }
-}
+    drawWheel(wheelCanvas.getContext("2d"), xPosition, yPosition, radius, probabilities, names, colors);
 
-function drawOutcome(context, x, y, radius, startAngle, endAngle, color)
-{
-    context.beginPath();
-    context.fillStyle = color;
-    context.moveTo(x, y);
-    context.arc(x, y, radius, startAngle, endAngle);
-    context.fill();
-    context.stroke();
-}
-
-function drawName(context, x, y, radius, startingAngle, endingAngle, text)
-{
-    const halfRadius = (3 * radius / 5);	
-    const rotation = ((endingAngle - startingAngle) / 2) + startingAngle;
-
-    context.save();
-    context.translate(x + (halfRadius * Math.cos(rotation)), y + (halfRadius * Math.sin(rotation)));
-    context.rotate(rotation);
-    context.fillStyle = "{FontColor}";
-    context.font = "{FontSize}px {FontFamily}";
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.fillText(text, 0, 0);
-    context.restore();
-}
-
-function drawArrow(context, height)
-{
-    var startingY = height / 2;
-
-    context.beginPath();
-    context.fillStyle = "black";
-    context.moveTo(0, startingY);
-    context.lineTo(50, startingY - 25);
-    context.lineTo(50, startingY + 25);
-    context.lineTo(0, startingY);
-    context.fill();
-    context.stroke();
+    main.style.visibility = 'visible';
 }
 
 function startSpin(data)
 {
+    probabilities = data.ModifiedProbabilities;
+
     showWheel(data);
-	
-    wheelCanvas.style.transform = "rotate(0deg)";
 
     performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main).then((result) =&gt;
     {
@@ -2265,11 +2219,6 @@ function slowdownSpin(speed, spins, rotation, intervals, soundRotation)
     }, 5);
 }
 
-function showWheel(data)
-{
-    main.style.visibility = 'visible';
-}
-
 function hideWheel()
 {
     main.style.visibility = 'hidden';
@@ -2286,6 +2235,60 @@ function playWheelClickSound(soundRotation, speed)
         audio.play();
     }
     return soundRotation;
+}
+
+function drawWheel(context, x, y, radius, probabilities, names, colors)
+{
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+    var startingAngle = 0;
+    for (let i = 0; i &lt; probabilities.length; i++)
+    {
+        var endingAngle = startingAngle + (Math.PI * probabilities[i] * 2);
+        drawOutcome(context, x, y, radius, startingAngle, endingAngle, colors[i]);
+        drawName(context, x, y, radius, startingAngle, endingAngle, names[i]);
+        startingAngle = endingAngle;
+    }
+}
+
+function drawOutcome(context, x, y, radius, startAngle, endAngle, color)
+{
+    context.beginPath();
+    context.fillStyle = color;
+    context.moveTo(x, y);
+    context.arc(x, y, radius, startAngle, endAngle);
+    context.fill();
+    context.stroke();
+}
+
+function drawName(context, x, y, radius, startingAngle, endingAngle, text)
+{
+    const halfRadius = (3 * radius / 5);	
+    const rotation = ((endingAngle - startingAngle) / 2) + startingAngle;
+
+    context.save();
+    context.translate(x + (halfRadius * Math.cos(rotation)), y + (halfRadius * Math.sin(rotation)));
+    context.rotate(rotation);
+    context.fillStyle = "{FontColor}";
+    context.font = "{FontSize}px {FontFamily}";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(text, 0, 0);
+    context.restore();
+}
+
+function drawArrow(context, height)
+{
+    var startingY = height / 2;
+
+    context.beginPath();
+    context.fillStyle = "black";
+    context.moveTo(0, startingY);
+    context.lineTo(50, startingY - 25);
+    context.lineTo(50, startingY + 25);
+    context.lineTo(0, startingY);
+    context.fill();
+    context.stroke();
 }
 
 sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
