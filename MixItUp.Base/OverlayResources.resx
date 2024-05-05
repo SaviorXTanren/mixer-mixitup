@@ -2087,10 +2087,10 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   <data name="OverlayWheelDefaultHTML" xml:space="preserve">
     <value>&lt;div style="display: flex"&gt;
     &lt;div&gt;
-        &lt;canvas id="wheelCanvas" width="{Width}" height="{Height}" /&gt;
+        &lt;canvas id="wheelCanvas" width="{Size}" height="{Size}" /&gt;
     &lt;/div&gt;
     &lt;div&gt;
-        &lt;canvas id="arrowCanvas" width="50" height="{Height}" /&gt;
+        &lt;canvas id="arrowCanvas" width="50" height="{Size}" /&gt;
     &lt;/div&gt;
 &lt;/div&gt;</value>
   </data>
@@ -2099,27 +2099,30 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 const wheelCanvas = document.getElementById("wheelCanvas");
 const arrowCanvas = document.getElementById("arrowCanvas");
 
-main.style.visibility.visibility = 'hidden';
+hideWheel();
 
 const startingSpeed = 10;
 const spinsPerSpeed = 100;
 const totalIntervals = 15;
 const intervalDivider = 1.5;
+const soundInterval = 75;
 
-var speed = startingSpeed;
-var intervals = 0;
-var spins = 0;
-
-const xPosition = {Width} / 2;
-const yPosition = {Height} / 2;
-const radius = {Width} / 2;
-const outcomes = [{OutcomePercentages}];
+const xPosition = {Size} / 2;
+const yPosition = {Size} / 2;
+const radius = {Size} / 2;
+const outcomes = [{OutcomeProbability}];
 const names = [{OutcomeNames}];
 const colors = [{OutcomeColors}];
+const wheelClickSoundURL = "{WheelClickSoundURL}";
 
 drawWheel(wheelCanvas.getContext("2d"), xPosition, yPosition, radius, outcomes, names, colors);
 
 drawArrow(arrowCanvas.getContext("2d"), yPosition + radius);
+
+if ({IsLivePreview})
+{
+    showWheel({});
+}
 
 function drawWheel(context, x, y, radius, outcomes, names, colors)
 {
@@ -2128,7 +2131,7 @@ function drawWheel(context, x, y, radius, outcomes, names, colors)
     {
         var endingAngle = startingAngle + (Math.PI * outcomes[i] * 2);
         drawOutcome(context, x, y, radius, startingAngle, endingAngle, colors[i]);
-        drawName(context, x, y, radius, startingAngle, endingAngle, names[i], "black");
+        drawName(context, x, y, radius, startingAngle, endingAngle, names[i]);
         startingAngle = endingAngle;
     }
 }
@@ -2143,7 +2146,7 @@ function drawOutcome(context, x, y, radius, startAngle, endAngle, color)
     context.stroke();
 }
 
-function drawName(context, x, y, radius, startingAngle, endingAngle, text, color)
+function drawName(context, x, y, radius, startingAngle, endingAngle, text)
 {
     const halfRadius = (3 * radius / 5);	
     const rotation = ((endingAngle - startingAngle) / 2) + startingAngle;
@@ -2173,25 +2176,28 @@ function drawArrow(context, height)
     context.stroke();
 }
 
-function startSpin(winningPercentage)
+function startSpin(data)
 {
-    main.style.visibility.visibility = 'visible';
+    showWheel(data);
+	
+    wheelCanvas.style.transform = "rotate(0deg)";
+
     performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main).then((result) =&gt;
     {
-        var modifiedAngle = winningPercentage * 360;
+        var modifiedRotation = data.WinningProbability * 360;
         var trackingSpeed = startingSpeed;
         for (var i = 0; i &lt; totalIntervals; i++)
         {
-            modifiedAngle -= trackingSpeed * spinsPerSpeed;
+            modifiedRotation -= trackingSpeed * spinsPerSpeed;
             trackingSpeed = trackingSpeed / intervalDivider;
         }
-        modifiedAngle = modifiedAngle % 360;
+        modifiedRotation = modifiedRotation % 360;
 		
-        initialSpin(0, modifiedAngle);
+        initialSpin(startingSpeed, 0, 0, 0, modifiedRotation);
     });
 }
 
-function initialSpin(rotation, modifiedAngle)
+function initialSpin(speed, spins, rotation, soundRotation, modifiedRotation)
 {
     setTimeout(() =&gt;
     {		
@@ -2202,20 +2208,22 @@ function initialSpin(rotation, modifiedAngle)
         }
         wheelCanvas.style.transform = "rotate(" + rotation + "deg)";
         
+        soundRotation = playWheelClickSound(soundRotation, speed);
+        
         spins++;
         if (spins &gt;= spinsPerSpeed)
         {
             spins = 0;
-            slowdownSpin(modifiedAngle);
+            slowdownSpin(speed, spins, modifiedRotation, 0, soundRotation);
         }
         else
         {
-            initialSpin(rotation, modifiedAngle);
+            initialSpin(speed, spins, rotation, soundRotation, modifiedRotation);
         }
     }, 5);
 }
 
-function slowdownSpin(rotation)
+function slowdownSpin(speed, spins, rotation, intervals, soundRotation)
 {
     setTimeout(() =&gt;
     {		
@@ -2225,6 +2233,8 @@ function slowdownSpin(rotation)
             rotation -= 360;
         }
         wheelCanvas.style.transform = "rotate(" + rotation + "deg)";
+
+        soundRotation = playWheelClickSound(soundRotation, speed);
         
         spins++;
         if (spins &gt;= spinsPerSpeed)
@@ -2236,21 +2246,49 @@ function slowdownSpin(rotation)
         
         if (intervals &lt; totalIntervals)
         {
-            slowdownSpin(rotation);
+            slowdownSpin(speed, spins, rotation, intervals, soundRotation);
         }
         else
         {
             sendParentMessage({ Type: "WheelLanded", ID: "{ID}" });
             performAnimation("{OutcomeSelectedAnimationFramework}", "{OutcomeSelectedAnimationName}", main).then((result) =&gt;
             {
-                performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", main).then((result) =&gt;
+                setTimeout(() =&gt;
                 {
-                    main.style.visibility.visibility = 'hidden';
-                });
+                    performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", main).then((result) =&gt;
+                    {
+                        hideWheel();
+                    });
+                }, 2000);
             });
         }
     }, 5);
-}</value>
+}
+
+function showWheel(data)
+{
+    main.style.visibility = 'visible';
+}
+
+function hideWheel()
+{
+    main.style.visibility = 'hidden';
+}
+
+function playWheelClickSound(soundRotation, speed)
+{
+    soundRotation += speed;
+    if (soundRotation &gt;= soundInterval)
+    {
+        soundRotation = 0;
+        var audio = new Audio(wheelClickSoundURL);
+        audio.volume = 1.0;
+        audio.play();
+    }
+    return soundRotation;
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayYouTubeDefaultCSS" xml:space="preserve">
     <value>.youtubeVideo {

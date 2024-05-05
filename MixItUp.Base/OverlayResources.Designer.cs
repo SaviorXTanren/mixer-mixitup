@@ -1318,10 +1318,10 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to &lt;div style=&quot;display: flex&quot;&gt;
         ///    &lt;div&gt;
-        ///        &lt;canvas id=&quot;wheelCanvas&quot; width=&quot;{Width}&quot; height=&quot;{Height}&quot; /&gt;
+        ///        &lt;canvas id=&quot;wheelCanvas&quot; width=&quot;{Size}&quot; height=&quot;{Size}&quot; /&gt;
         ///    &lt;/div&gt;
         ///    &lt;div&gt;
-        ///        &lt;canvas id=&quot;arrowCanvas&quot; width=&quot;50&quot; height=&quot;{Height}&quot; /&gt;
+        ///        &lt;canvas id=&quot;arrowCanvas&quot; width=&quot;50&quot; height=&quot;{Size}&quot; /&gt;
         ///    &lt;/div&gt;
         ///&lt;/div&gt;.
         /// </summary>
@@ -1336,21 +1336,20 @@ namespace MixItUp.Base {
         ///const wheelCanvas = document.getElementById(&quot;wheelCanvas&quot;);
         ///const arrowCanvas = document.getElementById(&quot;arrowCanvas&quot;);
         ///
-        ///main.style.visibility.visibility = &apos;hidden&apos;;
+        ///hideWheel();
         ///
         ///const startingSpeed = 10;
         ///const spinsPerSpeed = 100;
         ///const totalIntervals = 15;
         ///const intervalDivider = 1.5;
+        ///const soundInterval = 75;
         ///
-        ///var speed = startingSpeed;
-        ///var intervals = 0;
-        ///var spins = 0;
-        ///
-        ///const xPosition = {Width} / 2;
-        ///const yPosition = {Height} / 2;
-        ///const radius = {Width} / 2;
-        ///const outcomes  [rest of string was truncated]&quot;;.
+        ///const xPosition = {Size} / 2;
+        ///const yPosition = {Size} / 2;
+        ///const radius = {Size} / 2;
+        ///const outcomes = [{OutcomeProbability}];
+        ///const names = [{OutcomeNames}];
+        ///const colors =  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayWheelDefaultJavascript {
             get {

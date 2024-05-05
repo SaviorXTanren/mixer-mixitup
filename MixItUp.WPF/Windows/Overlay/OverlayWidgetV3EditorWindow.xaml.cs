@@ -88,6 +88,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.GameQueue: overlayControl = new OverlayGameQueueV3Control(); break;
                 case OverlayItemV3Type.EventList: overlayControl = new OverlayEventListV3Control(); break;
                 case OverlayItemV3Type.Leaderboard: overlayControl = new OverlayLeaderboardV3Control(); break;
+                case OverlayItemV3Type.Wheel: overlayControl = new OverlayWheelV3Control(); break;
             }
 
             if (overlayControl != null)

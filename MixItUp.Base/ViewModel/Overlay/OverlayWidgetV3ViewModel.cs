@@ -253,6 +253,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.GameQueue: this.Item = new OverlayGameQueueV3ViewModel(); break;
                 case OverlayItemV3Type.EventList: this.Item = new OverlayEventListV3ViewModel(); break;
                 case OverlayItemV3Type.Leaderboard: this.Item = new OverlayLeaderboardV3ViewModel(); break;
+                case OverlayItemV3Type.Wheel: this.Item = new OverlayWheelV3ViewModel(); break;
             }
 
             this.HTML = this.GetDefaultHTML(this.Item);
@@ -311,6 +312,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.GameQueue: this.Item = new OverlayGameQueueV3ViewModel((OverlayGameQueueV3Model)widget.Item); break;
                 case OverlayItemV3Type.EventList: this.Item = new OverlayEventListV3ViewModel((OverlayEventListV3Model)widget.Item); break;
                 case OverlayItemV3Type.Leaderboard: this.Item = new OverlayLeaderboardV3ViewModel((OverlayLeaderboardV3Model)widget.Item); break;
+                case OverlayItemV3Type.Wheel: this.Item = new OverlayWheelV3ViewModel((OverlayWheelV3Model)widget.Item); break;
             }
 
             this.HTML = widget.Item.HTML;
@@ -477,6 +479,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             OverlayWidgetV3Model widget = await this.GetWidget();
             this.testWidget = widget;
+#pragma warning disable CS0612 // Type or member is obsolete
+            this.testWidget.Item.IsLivePreview = true;
+#pragma warning restore CS0612 // Type or member is obsolete
             await widget.Enable();
         }
 

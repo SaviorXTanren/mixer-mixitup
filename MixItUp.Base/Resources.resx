@@ -10293,6 +10293,9 @@ namespace CustomNamespace
   <data name="OutcomeSelected" xml:space="preserve">
     <value>Outcome Selected</value>
   </data>
+  <data name="Modifier" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
   <data name="OverlayWheelOutcomeInvalidProbability" xml:space="preserve">
     <value>An outcome can not have a probability lower than 0% or higher than 100%</value>
   </data>
@@ -10301,5 +10304,11 @@ namespace CustomNamespace
   </data>
   <data name="OverlayWheelOutcomeTotalPercentageMustEqual100" xml:space="preserve">
     <value>The total percentage of all outcomes must equal 100%</value>
+  </data>
+  <data name="OverlayWheelSizeMustBeGreaterThan0" xml:space="preserve">
+    <value>The size must be greater than 0</value>
+  </data>
+  <data name="Probability" xml:space="preserve">
+    <value>Probability</value>
   </data>
 </root>

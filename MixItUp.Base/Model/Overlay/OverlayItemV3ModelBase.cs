@@ -13,25 +13,40 @@ namespace MixItUp.Base.Model.Overlay
 {
     public enum OverlayItemV3Type
     {
+        [OverlayWidget]
         Text,
+        [OverlayWidget]
         Image,
+        [OverlayWidget]
         Video,
+        [OverlayWidget]
         YouTube,
+        [OverlayWidget]
         HTML,
         Timer,
         TwitchClip,
 
         Sound,
 
+        [OverlayWidget]
         PersistentTimer,
+        [OverlayWidget]
         Label,
+        [OverlayWidget]
         StreamBoss,
+        [OverlayWidget]
         Goal,
+        [OverlayWidget]
         Chat,
+        [OverlayWidget]
         EndCredits,
+        [OverlayWidget]
         GameQueue,
+        [OverlayWidget]
         EventList,
+        [OverlayWidget]
         Leaderboard,
+        [OverlayWidget]
         Wheel,
     }
 
@@ -47,6 +62,16 @@ namespace MixItUp.Base.Model.Overlay
         Percentage,
         Pixel,
         Random
+    }
+
+    [AttributeUsage(AttributeTargets.All)]
+    public class OverlayWidgetAttribute : Attribute
+    {
+        public static readonly OverlayWidgetAttribute Default;
+
+        public OverlayWidgetAttribute() { }
+
+        public override bool IsDefaultAttribute() { return this.Equals(OverlayWidgetAttribute.Default); }
     }
 
     [DataContract]
@@ -113,6 +138,10 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int Layer { get; set; }
+
+        [Obsolete]
+        [DataMember]
+        public bool IsLivePreview { get; set; }
 
         [Obsolete]
         [DataMember]
@@ -200,6 +229,10 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.XTranslation)] = this.XTranslation;
             properties[nameof(this.YTranslation)] = this.YTranslation;
             properties[nameof(this.Layer)] = this.LayerProcessed;
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            properties[nameof(this.IsLivePreview)] = this.IsLivePreview.ToString().ToLower();
+#pragma warning restore CS0612 // Type or member is obsolete
 
             return properties;
         }

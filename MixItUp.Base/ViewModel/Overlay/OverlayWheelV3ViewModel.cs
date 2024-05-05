@@ -3,7 +3,9 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -22,16 +24,29 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string name;
 
-        public double Percentage
+        public double Probability
         {
-            get { return this.percentage; }
+            get { return this.probability; }
             set
             {
-                this.percentage = value;
+                this.probability = value;
                 this.NotifyPropertyChanged();
+                this.wheel.UpdateTotalProbability();
             }
         }
-        private double percentage;
+        private double probability;
+
+        public double Modifier
+        {
+            get { return this.modifier; }
+            set
+            {
+                this.modifier = value;
+                this.NotifyPropertyChanged();
+                this.wheel.UpdateTotalModifier();
+            }
+        }
+        private double modifier;
 
         public string Color
         {
@@ -44,6 +59,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string color;
 
+        public CustomCommandModel Command
+        {
+            get { return this.command; }
+            set
+            {
+                this.command = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel command;
+
         public ICommand DeleteCommand { get; private set; }
 
         private OverlayWheelV3ViewModel wheel;
@@ -52,16 +78,21 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.wheel = wheel;
 
+            this.Command = this.wheel.CreateEmbeddedCommand(Resources.OutcomeSelected);
+
             this.Initialize();
         }
 
-        public OverlayWheelOutcomeV3ViewModel(OverlayWheelV3ViewModel wheel, OverlayWheelOutcomeV3Model slice)
+        public OverlayWheelOutcomeV3ViewModel(OverlayWheelV3ViewModel wheel, OverlayWheelOutcomeV3Model outcome)
         {
             this.wheel = wheel;
 
-            this.Name = slice.Name;
-            this.Percentage = slice.Percentage;
-            this.Color = slice.Color;
+            this.Name = outcome.Name;
+            this.Probability = outcome.Probability;
+            this.modifier = outcome.Modifier;
+            this.Color = outcome.Color;
+
+            this.Command = this.wheel.GetEmbeddedCommand(outcome.CommandID, Resources.OutcomeSelected);
 
             this.Initialize();
         }
@@ -73,8 +104,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return new Result(Resources.OverlayWheelOutcomeMissingName);
             }
 
-            if (this.Percentage < 0 ||
-                this.Percentage > 100)
+            if (this.Probability < 0 ||
+                this.Probability > 100)
             {
                 return new Result(Resources.OverlayWheelOutcomeInvalidProbability);
             }
@@ -84,12 +115,18 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayWheelOutcomeV3Model GetModel()
         {
-            return new OverlayWheelOutcomeV3Model()
+            OverlayWheelOutcomeV3Model result = new OverlayWheelOutcomeV3Model()
             {
                 Name = this.Name,
-                Percentage = this.Percentage,
+                Probability = this.Probability,
+                Modifier = this.Modifier,
                 Color = this.Color,
+                CommandID = this.Command.ID,
             };
+
+            ChannelSession.Settings.SetCommand(this.Command);
+
+            return result;
         }
 
         private void Initialize()
@@ -109,16 +146,76 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override bool IsTestable { get { return true; } }
 
+        public int Size
+        {
+            get { return this.size; }
+            set
+            {
+                this.size = (value > 0) ? value : 0;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int size;
+
         public ObservableCollection<OverlayWheelOutcomeV3ViewModel> Outcomes { get; set; } = new ObservableCollection<OverlayWheelOutcomeV3ViewModel>();
+
+        public string TotalProbability
+        {
+            get
+            {
+                double total = 0.0;
+                foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
+                {
+                    total += outcome.Probability;
+                }
+                return total + " %";
+            }
+        }
+
+        public string TotalModifier
+        {
+            get
+            {
+                double total = 0.0;
+                foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
+                {
+                    total += outcome.Modifier;
+                }
+
+                if (total > 0) { return $"+ {total}"; }
+                else if (total < 0) { return $"- {Math.Abs(total)}"; }
+                else { return "0"; }
+            }
+        }
+
+        public OverlayAnimationV3ViewModel EntranceAnimation;
+        public OverlayAnimationV3ViewModel OutcomeSelectedAnimation;
+        public OverlayAnimationV3ViewModel ExitAnimation;
 
         public ICommand AddOutcomeCommand { get; set; }
 
         public OverlayWheelV3ViewModel()
             : base(OverlayItemV3Type.Wheel)
         {
-            this.Width = "300";
+            this.Size = 600;
             this.FontSize = 40;
             this.FontColor = "Black";
+
+            this.AddOutcome(new OverlayWheelOutcomeV3ViewModel(this)
+            {
+                Name = "Yes",
+                Probability = 50,
+            });
+
+            this.AddOutcome(new OverlayWheelOutcomeV3ViewModel(this)
+            {
+                Name = "No",
+                Probability = 50,
+            });
+
+            this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, new OverlayAnimationV3Model());
+            this.OutcomeSelectedAnimation = new OverlayAnimationV3ViewModel(Resources.OutcomeSelected, new OverlayAnimationV3Model());
+            this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, new OverlayAnimationV3Model());
 
             this.Initialize();
         }
@@ -126,21 +223,27 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayWheelV3ViewModel(OverlayWheelV3Model item)
             : base(item)
         {
+            this.Size = item.Size;
+
             foreach (OverlayWheelOutcomeV3Model outcome in item.Outcomes)
             {
-                OverlayWheelOutcomeV3ViewModel outcomeVM = new OverlayWheelOutcomeV3ViewModel(this, outcome);
-                this.Outcomes.Add(outcomeVM);
-                outcomeVM.PropertyChanged += (sender, e) =>
-                {
-                    this.NotifyPropertyChanged("X");
-                };
+                this.AddOutcome(new OverlayWheelOutcomeV3ViewModel(this, outcome));
             }
+
+            this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, item.EntranceAnimation);
+            this.OutcomeSelectedAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, item.OutcomeSelectedAnimation);
+            this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, item.ExitAnimation);
 
             this.Initialize();
         }
 
         public override Result Validate()
         {
+            if (this.Size <= 0)
+            {
+                return new Result(Resources.OverlayWheelSizeMustBeGreaterThan0);
+            }
+
             double totalPercentage = 0.0;
             foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
             {
@@ -150,7 +253,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                     return result;
                 }
 
-                totalPercentage += outcome.Percentage;
+                totalPercentage += outcome.Probability;
             }
 
             if (totalPercentage != 100.0)
@@ -170,6 +273,16 @@ namespace MixItUp.Base.ViewModel.Overlay
             await base.TestWidget(widget);
         }
 
+        public void UpdateTotalProbability()
+        {
+            this.NotifyPropertyChanged(nameof(this.TotalProbability));
+        }
+
+        public void UpdateTotalModifier()
+        {
+            this.NotifyPropertyChanged(nameof(this.TotalModifier));
+        }
+
         public void DeleteOutcome(OverlayWheelOutcomeV3ViewModel outcome)
         {
             this.Outcomes.Remove(outcome);
@@ -181,25 +294,48 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.AssignProperties(result);
 
+            result.Size = this.Size;
+
             foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
             {
                 result.Outcomes.Add(outcome.GetModel());
             }
+
+            foreach (OverlayWheelOutcomeV3Model outcome in result.Outcomes)
+            {
+                if (string.IsNullOrWhiteSpace(outcome.Color))
+                {
+                    int index = Math.Abs(outcome.Name.GetHashCode() % ColorSchemes.HTMLColors.Count);
+                    outcome.Color = ColorSchemes.HTMLColors.ElementAt(index);
+                }
+            }
+
+            result.EntranceAnimation = this.EntranceAnimation.GetAnimation();
+            result.OutcomeSelectedAnimation = this.OutcomeSelectedAnimation.GetAnimation();
+            result.ExitAnimation = this.ExitAnimation.GetAnimation();
 
             return result;
         }
 
         private void Initialize()
         {
+            this.Animations.Add(this.EntranceAnimation);
+            this.Animations.Add(this.OutcomeSelectedAnimation);
+            this.Animations.Add(this.ExitAnimation);
+
             this.AddOutcomeCommand = this.CreateCommand(() =>
             {
-                OverlayWheelOutcomeV3ViewModel outcome = new OverlayWheelOutcomeV3ViewModel(this);
-                this.Outcomes.Add(outcome);
-                outcome.PropertyChanged += (sender, e) =>
-                {
-                    this.NotifyPropertyChanged("X");
-                };
+                this.AddOutcome(new OverlayWheelOutcomeV3ViewModel(this));
             });
+        }
+
+        private void AddOutcome(OverlayWheelOutcomeV3ViewModel outcome)
+        {
+            this.Outcomes.Add(outcome);
+            outcome.PropertyChanged += (sender, e) =>
+            {
+                this.NotifyPropertyChanged("X");
+            };
         }
     }
 }

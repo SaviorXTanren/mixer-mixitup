@@ -13451,6 +13451,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modifier.
+        /// </summary>
+        public static string Modifier {
+            get {
+                return ResourceManager.GetString("Modifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mod Payout %.
         /// </summary>
         public static string ModPayoutPercentage {
@@ -15136,6 +15145,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The size must be greater than 0.
+        /// </summary>
+        public static string OverlayWheelSizeMustBeGreaterThan0 {
+            get {
+                return ResourceManager.GetString("OverlayWheelSizeMustBeGreaterThan0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid refresh time must be specified.
         /// </summary>
         public static string OverlayWidgetAValidRefreshTimeMustBeSpecified {
@@ -16392,6 +16410,15 @@ namespace MixItUp.Base {
         public static string Pro {
             get {
                 return ResourceManager.GetString("Pro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Probability.
+        /// </summary>
+        public static string Probability {
+            get {
+                return ResourceManager.GetString("Probability", resourceCulture);
             }
         }
         

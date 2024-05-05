@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
@@ -16,9 +17,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string Name { get; set; }
         [DataMember]
-        public double Percentage { get; set; }
+        public double Probability { get; set; }
         [DataMember]
-        public double NotSelectedModifier { get; set; }
+        public double Modifier { get; set; }
         [DataMember]
         public string Color { get; set; }
 
@@ -26,10 +27,10 @@ namespace MixItUp.Base.Model.Overlay
         public Guid CommandID { get; set; }
 
         [JsonIgnore]
-        public double DecimalPercentage { get { return this.CurrentPercentage / 100.0; } }
+        public double DecimalProbability { get { return this.CurrentProbability / 100.0; } }
 
         [JsonIgnore]
-        public double CurrentPercentage { get; set; }
+        public double CurrentProbability { get; set; }
     }
 
     [DataContract]
@@ -37,11 +38,16 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string WheelLandedPacketType = "WheelLanded";
 
-        public const string WinningPercentagePropertyName = "winningPercentage";
+        public const string WinningProbabilityPropertyName = "WinningProbability";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayWheelDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayWheelDefaultJavascript;
+
+        public static readonly string WheelClickSoundFilePath = Path.Combine(ServiceManager.Get<IFileService>().GetApplicationDirectory(), "Assets/Sounds/WheelClick.mp3");
+
+        [DataMember]
+        public int Size { get; set; }
 
         [DataMember]
         public List<OverlayWheelOutcomeV3Model> Outcomes { get; set; } = new List<OverlayWheelOutcomeV3Model>();
@@ -54,16 +60,19 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
 
         [JsonIgnore]
-        public string OutcomePercentages { get { return string.Join(", ", this.Outcomes.Select(s => s.DecimalPercentage)); } }
+        public string OutcomeProbability { get { return string.Join(", ", this.Outcomes.Select(s => s.DecimalProbability)); } }
 
         [JsonIgnore]
-        public string OutcomeNames { get { return string.Join(", ", this.Outcomes.Select(s => s.Name)); } }
+        public string OutcomeNames { get { return string.Join(", ", this.Outcomes.Select(s => $"\"{s.Name}\"")); } }
 
         [JsonIgnore]
-        public string OutcomeColors { get { return string.Join(", ", this.Outcomes.Select(s => s.Color)); } }
+        public string OutcomeColors { get { return string.Join(", ", this.Outcomes.Select(s => $"\"{s.Color}\"")); } }
+
+        [JsonIgnore]
+        public string WheelClickSoundURL { get { return ServiceManager.Get<OverlayV3Service>().GetURLForFile(OverlayWheelV3Model.WheelClickSoundFilePath, "sound"); } }
 
         private CommandParametersModel spinningParameters = null;
-        private double winningPercentage = 0.0;
+        private double winningProbability = 0.0;
         private OverlayWheelOutcomeV3Model winningOutcome = null;
 
         public OverlayWheelV3Model() : base(OverlayItemV3Type.Wheel) { }
@@ -72,9 +81,11 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
-            properties[nameof(this.OutcomePercentages)] = this.OutcomePercentages;
+            properties[nameof(this.Size)] = this.Size.ToString();
+            properties[nameof(this.OutcomeProbability)] = this.OutcomeProbability;
             properties[nameof(this.OutcomeNames)] = this.OutcomeNames;
             properties[nameof(this.OutcomeColors)] = this.OutcomeColors;
+            properties[nameof(this.WheelClickSoundURL)] = this.WheelClickSoundURL;
 
             properties["EntranceAnimationFramework"] = this.EntranceAnimation.AnimationFramework;
             properties["EntranceAnimationName"] = this.EntranceAnimation.AnimationName;
@@ -86,36 +97,31 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
-
-            foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
-            {
-                outcome.CurrentPercentage = outcome.Percentage;
-            }
-        }
-
         public async Task Spin(CommandParametersModel parametersModel)
         {
             this.spinningParameters = parametersModel;
-            this.winningPercentage = RandomHelper.GenerateDecimalProbability();
+            this.winningProbability = RandomHelper.GenerateDecimalProbability();
             this.winningOutcome = null;
 
             Dictionary<string, object> properties = new Dictionary<string, object>();
-            properties[OverlayWheelV3Model.WinningPercentagePropertyName] = this.winningPercentage.ToString();
+            properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability.ToString();
             await this.CallFunction("startSpin", properties);
 
-            double tempPercentage = this.winningPercentage;
+            double tempPercentage = this.winningProbability;
             foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
             {
-                if (tempPercentage <= outcome.DecimalPercentage)
+                if (tempPercentage <= outcome.DecimalProbability)
                 {
                     winningOutcome = outcome;
                     break;
                 }
-                tempPercentage += outcome.DecimalPercentage;
+                tempPercentage += outcome.DecimalProbability;
             }
+        }
+
+        public async Task ShowWheel()
+        {
+            await this.CallFunction("showWheel", new Dictionary<string, object>());
         }
 
         public override async Task ProcessPacket(OverlayV3Packet packet)
@@ -131,6 +137,16 @@ namespace MixItUp.Base.Model.Overlay
                     specialIdentifiers["outcomename"] = this.winningOutcome.Name;
                     await ServiceManager.Get<CommandService>().Queue(winningOutcome.CommandID, parameters);
                 }
+            }
+        }
+
+        protected override async Task WidgetEnableInternal()
+        {
+            await base.WidgetEnableInternal();
+
+            foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
+            {
+                outcome.CurrentProbability = outcome.Probability;
             }
         }
     }
