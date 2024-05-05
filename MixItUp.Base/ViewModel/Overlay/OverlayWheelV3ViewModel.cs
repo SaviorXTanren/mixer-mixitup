@@ -5,7 +5,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -304,11 +303,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override async Task TestWidget(OverlayWidgetV3Model widget)
         {
+            await base.TestWidget(widget);
+
             OverlayWheelV3Model wheel = (OverlayWheelV3Model)widget.Item;
 
             await wheel.Spin(new CommandParametersModel());
-
-            await base.TestWidget(widget);
         }
 
         public void UpdateTotalProbability()

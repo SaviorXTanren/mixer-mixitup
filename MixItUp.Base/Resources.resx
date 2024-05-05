@@ -5335,7 +5335,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Clip</value>
   </data>
   <data name="SpinWheel" xml:space="preserve">
-    <value>Spin the Wheel</value>
+    <value>Spin Wheel</value>
   </data>
   <data name="EmptyJar" xml:space="preserve">
     <value>Empty the Jar</value>

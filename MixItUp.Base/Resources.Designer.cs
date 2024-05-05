@@ -20206,7 +20206,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Spin the Wheel.
+        ///   Looks up a localized string similar to Spin Wheel.
         /// </summary>
         public static string SpinWheel {
             get {
