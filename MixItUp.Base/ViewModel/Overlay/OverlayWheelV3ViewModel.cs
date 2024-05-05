@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
@@ -224,7 +225,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Size = 600;
             this.WheelClickSoundFilePath = OverlayWheelV3Model.DefaultWheelClickSoundFilePath;
+
             this.DefaultOutcomeCommand = this.CreateEmbeddedCommand(Resources.DefaultOutcome);
+            this.DefaultOutcomeCommand.Actions.Add(new ChatActionModel("Outcome Selected: $outcomename"));
 
             this.FontSize = 40;
             this.FontColor = "Black";
@@ -293,7 +296,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return new Result(Resources.OverlayWheelOutcomeTotalPercentageMustEqual100);
             }
 
-            if (totalPercentage != 0.0)
+            if (totalModifier != 0.0)
             {
                 return new Result(Resources.OverlayWheelOutcomeTotalModifierMustEqual0);
             }
