@@ -14848,6 +14848,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display Cumulative Amounts.
+        /// </summary>
+        public static string OverlayGoalDisplayCumulativeAmounts {
+            get {
+                return ResourceManager.GetString("OverlayGoalDisplayCumulativeAmounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height must be a valid value.
         /// </summary>
         public static string OverlayHeightMustBeValidValue {

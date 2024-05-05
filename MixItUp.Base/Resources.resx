@@ -10320,4 +10320,7 @@ namespace CustomNamespace
   <data name="OverlayWheelOutcomeTotalModifierMustEqual0" xml:space="preserve">
     <value>The total modifier of all outcomes must equal 0</value>
   </data>
+  <data name="OverlayGoalDisplayCumulativeAmounts" xml:space="preserve">
+    <value>Display Cumulative Amounts</value>
+  </data>
 </root>

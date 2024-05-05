@@ -1,5 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
@@ -119,6 +118,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int startingAmountCustom;
 
+        public bool DisplayCumulativeAmounts
+        {
+            get { return this.displayCumulativeAmounts; }
+            set
+            {
+                this.displayCumulativeAmounts = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool displayCumulativeAmounts;
+
         public ObservableCollection<OverlayGoalSegmentV3ViewModel> Segments { get; set; } = new ObservableCollection<OverlayGoalSegmentV3ViewModel>();
 
         public CustomCommandModel ProgressOccurredCommand
@@ -190,6 +200,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.ProgressColor = item.ProgressColor;
 
             this.StartingAmountCustom = item.StartingAmountCustom;
+            this.DisplayCumulativeAmounts = item.displayCumulativeAmounts;
 
             foreach (OverlayGoalSegmentV3Model segment in item.Segments)
             {
@@ -245,6 +256,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.ProgressColor = this.ProgressColor;
 
             result.StartingAmountCustom = this.StartingAmountCustom;
+            result.displayCumulativeAmounts = this.DisplayCumulativeAmounts;
 
             result.Segments.Clear();
             foreach (OverlayGoalSegmentV3ViewModel segment in this.Segments)
