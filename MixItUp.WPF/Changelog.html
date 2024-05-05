@@ -7,6 +7,25 @@
 
         <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
 
+        <h2 style="color: #2e6c80;">v1.1.0.1707:</h2>
+        <ul>
+            <li>Adding Wheel Overlay Widget:</li>
+            <ul>
+                <li>The Wheel Overlay Widget allows you to present a visual prize wheel to your stream with various outcomes that can be randomly selected</li>
+                <li>In addition to setting the probability on each outcome, you can also set a positive or negative modifier on each outcome to adjust the probability of the outcome</li>
+                <ul>
+                    <li>If any outcome with a negative modifier is selected, the probabilities for all outcomes are adjusted by their modifier amount</li>
+                    <li>If any outcome with a positive modifier is selected, all outcomes are reset to their initial probabilities</li>
+                </ul>
+                <li>Each outcome can have a customized command for it that will be triggered when the outcome is selected or the default outcome command will be triggered instead if the outcome-specific command has no actions in it</li>
+                <li>The Wheel Overlay Widget can be triggered dynamically via the Overlay Action -> Spin Wheel</li>
+            </ul>
+            <li>Adding option to Goal Overlay Widget to display goal percentage and amounts as cumulative totals instead of individual segment amounts</li>
+            <li>Adding $usersubpoints Special Identifier to the Twitch Channel Subscribed, Twitch Channel Resubscribed, and Twitch Channel Gifted Subscription event commands to indicate the amount of Twitch Sub Points gained for the channel from the subscription</li>
+            <li>Adding $substotalpoints Special Identifier to Twitch Channel Mass Gifted Subscriptions event command to indicate the total amount of Twitch Sub Points gained for the channel from all of the subscriptions gifted</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.1.0.1706:</h2>
         <ul>
             <li>Fixing bug with Chat Overlay Widget javascript code to properly disable badges for users. <b><u>REQUIRES RE-CREATING CHAT OVERLAY WIDGET</u></b></li>
