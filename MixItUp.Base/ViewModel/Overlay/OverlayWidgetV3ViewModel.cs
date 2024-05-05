@@ -416,6 +416,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         private void Initialize()
         {
+            this.Position.PositionUpdated += (sender, e) =>
+            {
+                this.RefreshWidgetPreview();
+            };
+
             this.defaultHTML = this.GetDefaultHTML(this.Item);
             this.defaultCSS = this.GetDefaultCSS(this.Item);
             this.defaultJavascript = this.GetDefaultJavascript(this.Item);
