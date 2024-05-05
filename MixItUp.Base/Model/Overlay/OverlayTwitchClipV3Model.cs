@@ -19,6 +19,8 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultCSS = OverlayResources.OverlayTwitchClipVideoDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + "\n\n" + OverlayResources.OverlayVideoActionDefaultJavascript;
 
+        public const string TwitchClipURLPrefix = "https://clips.twitch.tv/";
+
         [DataMember]
         public OverlayTwitchClipV3ClipType ClipType { get; set; }
 
