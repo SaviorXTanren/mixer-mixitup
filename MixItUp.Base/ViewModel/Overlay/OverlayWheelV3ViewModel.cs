@@ -347,7 +347,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             foreach (OverlayWheelOutcomeV3Model outcome in result.Outcomes)
             {
-                if (string.IsNullOrWhiteSpace(outcome.Color))
+                if (!string.IsNullOrEmpty(outcome.Name) && string.IsNullOrWhiteSpace(outcome.Color))
                 {
                     int index = Math.Abs(outcome.Name.GetHashCode() % ColorSchemes.HTMLColors.Count);
                     outcome.Color = ColorSchemes.HTMLColors.ElementAt(index);

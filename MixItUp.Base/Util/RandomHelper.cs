@@ -8,7 +8,7 @@ namespace MixItUp.Base.Util
 
         public static int GenerateProbability() { return RandomHelper.GenerateRandomNumber(100) + 1; }
 
-        public static double GenerateDecimalProbability() { return ((double)RandomHelper.GenerateProbability()) / 100.0; }
+        public static double GenerateDecimalProbability() { return ((double)RandomHelper.GenerateRandomNumber(0, 1000000)) / 1000000.0; }
 
         public static int GenerateRandomNumber(int maxValue) { return RandomHelper.GenerateRandomNumber(0, maxValue); }
 
