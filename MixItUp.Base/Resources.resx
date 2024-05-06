@@ -9706,8 +9706,8 @@ namespace CustomNamespace
   <data name="TopClip" xml:space="preserve">
     <value>Top Clip</value>
   </data>
-  <data name="ClipID" xml:space="preserve">
-    <value>Clip ID</value>
+  <data name="ClipIDURL" xml:space="preserve">
+    <value>Clip ID / URL</value>
   </data>
   <data name="OverlayTwitchClipErrorUnableToFindValidClip" xml:space="preserve">
     <value>ERROR: Unable to find a valid clip</value>

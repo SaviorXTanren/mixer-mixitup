@@ -2951,11 +2951,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Clip ID.
+        ///   Looks up a localized string similar to Clip ID / URL.
         /// </summary>
-        public static string ClipID {
+        public static string ClipIDURL {
             get {
-                return ResourceManager.GetString("ClipID", resourceCulture);
+                return ResourceManager.GetString("ClipIDURL", resourceCulture);
             }
         }
         
