@@ -57,8 +57,6 @@ namespace MixItUp.Base.Util
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "subscriber";
         public const string RandomRegularSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "regular";
 
-        public const string StreamBossSpecialIdentifierHeader = "streamboss";
-
         public const string StreamSpecialIdentifierHeader = "stream";
         public const string StreamUptimeSpecialIdentifierHeader = StreamSpecialIdentifierHeader + "uptime";
         public const string StreamStartSpecialIdentifierHeader = StreamSpecialIdentifierHeader + "start";
@@ -680,7 +678,7 @@ namespace MixItUp.Base.Util
                 await this.HandleUserSpecialIdentifiers(ChannelSession.User, StreamerSpecialIdentifierHeader);
             }
 
-            if (this.ContainsSpecialIdentifier(StreamBossSpecialIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(OverlayStreamBossV3Model.StreamBossSpecialIdentifierPrefix))
             {
                 OverlayWidgetV3Model streamBossWidget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.Type == OverlayItemV3Type.StreamBoss);
                 if (streamBossWidget != null)
@@ -688,9 +686,10 @@ namespace MixItUp.Base.Util
                     OverlayStreamBossV3Model streamBossOverlay = (OverlayStreamBossV3Model)streamBossWidget.Item;
                     if (streamBossOverlay != null)
                     {
+                        this.ReplaceSpecialIdentifier(OverlayStreamBossV3Model.StreamBossHealthSpecialIdentifier, streamBossOverlay.CurrentHealth.ToString());
+
                         UserV2ViewModel streamBossUser = await streamBossOverlay.GetCurrentBoss();
-                        await this.HandleUserSpecialIdentifiers(streamBossUser, StreamBossSpecialIdentifierHeader);
-                        this.ReplaceSpecialIdentifier("streambosshealth", streamBossOverlay.CurrentHealth.ToString());
+                        await this.HandleUserSpecialIdentifiers(streamBossUser, OverlayStreamBossV3Model.StreamBossSpecialIdentifierPrefix);
                     }
                 }
             }

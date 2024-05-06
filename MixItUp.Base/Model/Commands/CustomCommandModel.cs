@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,16 @@ namespace MixItUp.Base.Model.Commands
             else if (name.Equals(MixItUp.Base.Resources.GameQueueUserJoinedCommandName) || name.Equals(MixItUp.Base.Resources.GameQueueUserSelectedCommandName))
             {
                 specialIdentifiers["queueposition"] = "1";
+            }
+            else if (name.Equals(Resources.DamageOccurred) || name.Equals(Resources.NewBoss))
+            {
+                specialIdentifiers[OverlayStreamBossV3Model.StreamBossHealthSpecialIdentifier] = "500";
+                specialIdentifiers[OverlayStreamBossV3Model.StreamBossDamageSpecialIdentifier] = "100";
+            }
+            else if (name.Equals(Resources.HealingOccurred))
+            {
+                specialIdentifiers[OverlayStreamBossV3Model.StreamBossHealthSpecialIdentifier] = "500";
+                specialIdentifiers[OverlayStreamBossV3Model.StreamBossHealingSpecialIdentifier] = "100";
             }
             return specialIdentifiers;
         }
