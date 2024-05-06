@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -124,6 +125,7 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability.ToString();
             properties[OverlayWheelV3Model.ModifiedProbabilitiesPropertyName] = this.Outcomes.Select(s => s.DecimalProbability);
+            properties[UserProperty] = JObject.FromObject(parametersModel.User);
             await this.CallFunction("startSpin", properties);
 
             if (this.winningOutcome != null)

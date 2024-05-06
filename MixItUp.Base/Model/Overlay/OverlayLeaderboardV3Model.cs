@@ -93,7 +93,7 @@ namespace MixItUp.Base.Model.Overlay
             foreach (var kvp in users.Take(this.TotalToShow))
             {
                 JObject jobj = new JObject();
-                jobj["User"] = JObject.FromObject(kvp.Item1);
+                jobj[UserProperty] = JObject.FromObject(kvp.Item1);
                 jobj["Details"] = kvp.Item2;
                 jarr.Add(jobj);
             }

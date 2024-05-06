@@ -15,7 +15,6 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string MessageIDProperty = "MessageID";
         public const string UsernameProperty = "Username";
-        public const string UserProperty = "User";
         public const string MessageProperty = "Message";
 
         public const string MessagePartTypeProperty = "Type";

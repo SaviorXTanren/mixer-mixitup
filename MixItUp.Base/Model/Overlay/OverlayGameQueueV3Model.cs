@@ -51,7 +51,7 @@ namespace MixItUp.Base.Model.Overlay
             foreach (UserV2ViewModel user in users.Take(this.TotalToShow))
             {
                 JObject jobj = new JObject();
-                jobj["User"] = JObject.FromObject(user);
+                jobj[UserProperty] = JObject.FromObject(user);
                 jarr.Add(jobj);
             }
 
