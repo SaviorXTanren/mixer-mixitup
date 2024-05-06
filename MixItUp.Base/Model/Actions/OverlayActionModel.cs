@@ -286,6 +286,10 @@ namespace MixItUp.Base.Model.Actions
                             }
                             else if (overlayTwitchClipItemV3.ClipType == OverlayTwitchClipV3ClipType.SpecificClip && !string.IsNullOrEmpty(clipReferenceID))
                             {
+                                if (clipReferenceID.StartsWith(OverlayTwitchClipV3Model.TwitchClipURLPrefix))
+                                {
+                                    clipReferenceID = clipReferenceID.Replace(OverlayTwitchClipV3Model.TwitchClipURLPrefix, "");
+                                }
                                 clip = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClip(clipReferenceID);
                             }
 

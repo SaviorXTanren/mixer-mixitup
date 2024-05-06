@@ -18,6 +18,11 @@ namespace MixItUp.Base.Model.Overlay
         public const string BossMaxHealthProperty = "BossMaxHealth";
         public const string BossHealthBarRemainingProperty = "BossHealthBarRemaining";
 
+        public const string StreamBossSpecialIdentifierPrefix = "streamboss";
+        public const string StreamBossHealthSpecialIdentifier = StreamBossSpecialIdentifierPrefix + "health";
+        public const string StreamBossDamageSpecialIdentifier = StreamBossSpecialIdentifierPrefix + "damage";
+        public const string StreamBossHealingSpecialIdentifier = StreamBossSpecialIdentifierPrefix + "healing";
+
         public static readonly string DefaultHTML = OverlayResources.OverlayStreamBossDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS + "\n\n" + OverlayResources.OverlayStreamBossDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayStreamBossDefaultJavascript;
@@ -87,19 +92,25 @@ namespace MixItUp.Base.Model.Overlay
             {
                 int damage = (int)Math.Round(amount);
 
+                CommandParametersModel parameters = new CommandParametersModel(user, this.GetSpecialIdentifiers());
+                parameters.TargetUser = await this.GetCurrentBoss();
+
                 if (!forceDamage && this.CurrentBoss == user.ID && this.SelfHealingMultiplier > 0)
                 {
                     this.CurrentHealth = Math.Min(damage + this.CurrentHealth, this.CurrentMaxHealth);
                     await this.Heal();
-                    await ServiceManager.Get<CommandService>().Queue(this.HealingOccurredCommandID, new CommandParametersModel(user));
+                    parameters.SpecialIdentifiers[StreamBossHealingSpecialIdentifier] = damage.ToString();
+                    await ServiceManager.Get<CommandService>().Queue(this.HealingOccurredCommandID, parameters);
                 }
                 else
                 {
+                    parameters.SpecialIdentifiers[StreamBossDamageSpecialIdentifier] = damage.ToString();
                     this.CurrentHealth -= damage;
                     if (this.CurrentHealth > 0)
                     {
                         await this.Damage();
-                        await ServiceManager.Get<CommandService>().Queue(this.DamageOccurredCommandID, new CommandParametersModel(user));
+                        
+                        await ServiceManager.Get<CommandService>().Queue(this.DamageOccurredCommandID, parameters);
                     }
                     else
                     {
@@ -109,7 +120,7 @@ namespace MixItUp.Base.Model.Overlay
                         this.CurrentHealth = this.CurrentMaxHealth;
 
                         await this.NewBoss(user);
-                        await ServiceManager.Get<CommandService>().Queue(this.NewBossCommandID, new CommandParametersModel(user));
+                        await ServiceManager.Get<CommandService>().Queue(this.NewBossCommandID, parameters);
                     }
                 }
             }
@@ -200,6 +211,13 @@ namespace MixItUp.Base.Model.Overlay
             data[BossMaxHealthProperty] = this.CurrentMaxHealth;
             data[BossHealthBarRemainingProperty] = this.HealthRemainingPercentage;
             return data;
+        }
+
+        private Dictionary<string, string> GetSpecialIdentifiers()
+        {
+            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+            specialIdentifiers[StreamBossHealthSpecialIdentifier] = this.CurrentHealth.ToString();
+            return specialIdentifiers;
         }
     }
 }
