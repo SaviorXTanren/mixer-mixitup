@@ -10320,13 +10320,13 @@ namespace CustomNamespace
   <data name="OverlayWheelOutcomeTotalModifierMustEqual0" xml:space="preserve">
     <value>The total modifier of all outcomes must equal 0</value>
   </data>
-  <data name="OverlayGoalDisplayCumulativeAmounts" xml:space="preserve">
-    <value>Display Cumulative Amounts</value>
-  </data>
   <data name="LatestFeaturedClip" xml:space="preserve">
     <value>Latest Featured Clip</value>
   </data>
   <data name="RandomFeaturedClip" xml:space="preserve">
     <value>Random Featured Clip</value>
+  </data>
+  <data name="SegmentType" xml:space="preserve">
+    <value>Segment Type</value>
   </data>
 </root>

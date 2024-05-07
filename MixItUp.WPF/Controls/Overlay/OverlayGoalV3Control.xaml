@@ -105,26 +105,13 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Text="{Binding StartingAmountCustom}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-            <Grid Grid.Column="2" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <CommandControls:CustomCommandListingControl Grid.Column="2" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
 
-                <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.OverlayGoalDisplayCumulativeAmounts}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-                <CheckBox Grid.Column="2" IsChecked="{Binding DisplayCumulativeAmounts}" />
-            </Grid>
-
-            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
-
-            <CommandControls:CustomCommandListingControl Grid.Column="6" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
+            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
         </Grid>
 
         <GroupBox Grid.Row="8" Header="{x:Static resx:Resources.Segments}">
@@ -135,7 +122,23 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button Grid.Row="0" Command="{Binding AddSegmentCommand}" Content="{x:Static resx:Resources.Add}" Width="100" />
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding SegmentTypes}" SelectedItem="{Binding SelectedSegmentType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SegmentType}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <Button Grid.Column="2" Command="{Binding AddSegmentCommand}" Content="{x:Static resx:Resources.Add}" Width="100" />
+                </Grid>
 
                 <ItemsControl Grid.Row="2" ItemsSource="{Binding Segments}">
                     <ItemsControl.ItemTemplate>

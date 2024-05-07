@@ -816,7 +816,7 @@ namespace MixItUp.Base.Services
                 });
                 result = newItem.GetItem();
                 result.OldCustomHTML = oldItem.HTML;
-                ((OverlayGoalV3Model)result).CurrentAmount = oldItem.CurrentAmount;
+                ((OverlayGoalV3Model)result).TotalAmount = oldItem.CurrentAmount;
             }
             else if (item.ItemType == OverlayItemModelTypeEnum.StreamBoss)
             {

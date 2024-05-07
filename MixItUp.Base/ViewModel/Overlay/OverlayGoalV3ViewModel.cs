@@ -3,7 +3,9 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -118,16 +120,18 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int startingAmountCustom;
 
-        public bool DisplayCumulativeAmounts
+        public IEnumerable<OverlayGoalSegmentV3Type> SegmentTypes { get; set; } = EnumHelper.GetEnumList<OverlayGoalSegmentV3Type>();
+
+        public OverlayGoalSegmentV3Type SelectedSegmentType
         {
-            get { return this.displayCumulativeAmounts; }
+            get { return this.selectedSegmentType; }
             set
             {
-                this.displayCumulativeAmounts = value;
+                this.selectedSegmentType = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private bool displayCumulativeAmounts;
+        private OverlayGoalSegmentV3Type selectedSegmentType = OverlayGoalSegmentV3Type.Cumulative;
 
         public ObservableCollection<OverlayGoalSegmentV3ViewModel> Segments { get; set; } = new ObservableCollection<OverlayGoalSegmentV3ViewModel>();
 
@@ -200,7 +204,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.ProgressColor = item.ProgressColor;
 
             this.StartingAmountCustom = item.StartingAmountCustom;
-            this.DisplayCumulativeAmounts = item.displayCumulativeAmounts;
+            this.SelectedSegmentType = item.SegmentType;
 
             foreach (OverlayGoalSegmentV3Model segment in item.Segments)
             {
@@ -256,7 +260,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.ProgressColor = this.ProgressColor;
 
             result.StartingAmountCustom = this.StartingAmountCustom;
-            result.displayCumulativeAmounts = this.DisplayCumulativeAmounts;
+            result.SegmentType = this.SelectedSegmentType;
 
             result.Segments.Clear();
             foreach (OverlayGoalSegmentV3ViewModel segment in this.Segments)

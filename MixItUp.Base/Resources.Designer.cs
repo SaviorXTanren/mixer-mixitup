@@ -14857,15 +14857,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Display Cumulative Amounts.
-        /// </summary>
-        public static string OverlayGoalDisplayCumulativeAmounts {
-            get {
-                return ResourceManager.GetString("OverlayGoalDisplayCumulativeAmounts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Height must be a valid value.
         /// </summary>
         public static string OverlayHeightMustBeValidValue {
@@ -18865,6 +18856,15 @@ namespace MixItUp.Base {
         public static string Segments {
             get {
                 return ResourceManager.GetString("Segments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Segment Type.
+        /// </summary>
+        public static string SegmentType {
+            get {
+                return ResourceManager.GetString("SegmentType", resourceCulture);
             }
         }
         
