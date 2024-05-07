@@ -10323,4 +10323,10 @@ namespace CustomNamespace
   <data name="OverlayGoalDisplayCumulativeAmounts" xml:space="preserve">
     <value>Display Cumulative Amounts</value>
   </data>
+  <data name="LatestFeaturedClip" xml:space="preserve">
+    <value>Latest Featured Clip</value>
+  </data>
+  <data name="RandomFeaturedClip" xml:space="preserve">
+    <value>Random Featured Clip</value>
+  </data>
 </root>

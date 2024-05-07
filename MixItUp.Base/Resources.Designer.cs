@@ -11775,6 +11775,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Latest Featured Clip.
+        /// </summary>
+        public static string LatestFeaturedClip {
+            get {
+                return ResourceManager.GetString("LatestFeaturedClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latest Follower.
         /// </summary>
         public static string LatestFollower {
@@ -17088,6 +17097,15 @@ namespace MixItUp.Base {
         public static string RandomClip {
             get {
                 return ResourceManager.GetString("RandomClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Random Featured Clip.
+        /// </summary>
+        public static string RandomFeaturedClip {
+            get {
+                return ResourceManager.GetString("RandomFeaturedClip", resourceCulture);
             }
         }
         
