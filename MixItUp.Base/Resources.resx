@@ -10332,4 +10332,7 @@ namespace CustomNamespace
   <data name="EqualProbabilityForOutcomes" xml:space="preserve">
     <value>Equal Probability For Outcomes</value>
   </data>
+  <data name="Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
 </root>

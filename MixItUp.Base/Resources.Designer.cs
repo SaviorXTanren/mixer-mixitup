@@ -4640,6 +4640,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debug.
+        /// </summary>
+        public static string Debug {
+            get {
+                return ResourceManager.GetString("Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decimal.
         /// </summary>
         public static string Decimal {
