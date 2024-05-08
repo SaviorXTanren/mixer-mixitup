@@ -565,6 +565,15 @@ namespace MixItUp.Base.Services
                     {
                         updated = true;
                     }
+
+                    if (actionModel is ConditionalActionModel)
+                    {
+                        ConditionalActionModel conditionalAction = (ConditionalActionModel)actionModel;
+                        if (conditionalAction.Clauses.Count == 0)
+                        {
+                            conditionalAction.Clauses.Add(new ConditionalClauseModel(ConditionalComparisionTypeEnum.Equals, "1", "1", null));
+                        }
+                    }
                 }
             }
             return updated;
