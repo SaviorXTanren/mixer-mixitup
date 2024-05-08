@@ -6252,6 +6252,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Equal Probability For Outcomes.
+        /// </summary>
+        public static string EqualProbabilityForOutcomes {
+            get {
+                return ResourceManager.GetString("EqualProbabilityForOutcomes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to =.
         /// </summary>
         public static string EqualsCompare {

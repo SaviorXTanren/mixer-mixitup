@@ -10329,4 +10329,7 @@ namespace CustomNamespace
   <data name="SegmentType" xml:space="preserve">
     <value>Segment Type</value>
   </data>
+  <data name="EqualProbabilityForOutcomes" xml:space="preserve">
+    <value>Equal Probability For Outcomes</value>
+  </data>
 </root>

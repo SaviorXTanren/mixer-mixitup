@@ -39,6 +39,8 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string WheelLandedPacketType = "WheelLanded";
 
+        public const string OutcomeProbabilityPropertyName = "OutcomeProbability";
+
         public const string WinningProbabilityPropertyName = "WinningProbability";
         public const string ModifiedProbabilitiesPropertyName = "ModifiedProbabilities";
 
@@ -58,6 +60,8 @@ namespace MixItUp.Base.Model.Overlay
         public Guid DefaultOutcomeCommand { get; set; }
 
         [DataMember]
+        public bool EqualProbabilityForOutcomes { get; set; }
+        [DataMember]
         public List<OverlayWheelOutcomeV3Model> Outcomes { get; set; } = new List<OverlayWheelOutcomeV3Model>();
 
         [DataMember]
@@ -68,7 +72,35 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
 
         [JsonIgnore]
-        public string OutcomeProbability { get { return string.Join(", ", this.Outcomes.Select(s => s.DecimalProbability)); } }
+        public IEnumerable<double> OutcomeProbabilities
+        {
+            get
+            {
+                if (this.EqualProbabilityForOutcomes)
+                {
+                    double probability = 100.0 / this.Outcomes.Count;
+                    double additive = 0.0;
+                    if (100 % this.Outcomes.Count > 0)
+                    {
+                        probability = MathHelper.Truncate(probability, 2);
+                        additive = MathHelper.Truncate(100.0 - (probability * this.Outcomes.Count), 2);
+                    }
+
+                    List<double> probabilities = new List<double>();
+                    for (int i = 0; i < this.Outcomes.Count; i++)
+                    {
+                        probabilities.Add(probability);
+                    }
+                    probabilities[0] = Math.Round(probabilities[0] + additive, 2);
+
+                    return probabilities.Select(p => p / 100.0);
+                }
+                else
+                {
+                    return this.Outcomes.Select(s => s.DecimalProbability);
+                }
+            }
+        }
 
         [JsonIgnore]
         public string OutcomeNames { get { return string.Join(", ", this.Outcomes.Select(s => $"\"{s.Name}\"")); } }
@@ -90,7 +122,7 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
             properties[nameof(this.Size)] = this.Size.ToString();
-            properties[nameof(this.OutcomeProbability)] = this.OutcomeProbability;
+            properties[OutcomeProbabilityPropertyName] = string.Join(", ", this.OutcomeProbabilities);
             properties[nameof(this.OutcomeNames)] = this.OutcomeNames;
             properties[nameof(this.OutcomeColors)] = this.OutcomeColors;
             properties[nameof(this.WheelClickSoundURL)] = this.WheelClickSoundURL;
@@ -112,23 +144,24 @@ namespace MixItUp.Base.Model.Overlay
             this.winningOutcome = null;
 
             double tempPercentage = 0;
-            foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
+            IEnumerable<double> probabilities = this.OutcomeProbabilities;
+            for (int i = 0; i < probabilities.Count(); i++)
             {
-                tempPercentage += outcome.DecimalProbability;
+                tempPercentage += probabilities.ElementAt(i);
                 if (tempPercentage >= this.winningProbability)
                 {
-                    this.winningOutcome = outcome;
+                    this.winningOutcome = this.Outcomes[i];
                     break;
                 }
             }
 
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability.ToString();
-            properties[OverlayWheelV3Model.ModifiedProbabilitiesPropertyName] = this.Outcomes.Select(s => s.DecimalProbability);
+            properties[OverlayWheelV3Model.ModifiedProbabilitiesPropertyName] = probabilities;
             properties[UserProperty] = JObject.FromObject(parametersModel.User);
             await this.CallFunction("startSpin", properties);
 
-            if (this.winningOutcome != null)
+            if (this.winningOutcome != null && !this.EqualProbabilityForOutcomes)
             {
                 if (this.winningOutcome.Modifier > 0)
                 {

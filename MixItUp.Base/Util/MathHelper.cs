@@ -22,6 +22,12 @@ namespace MixItUp.Base.Util
             return number >= min && number <= max;
         }
 
+        public static double Truncate(double number, int places)
+        {
+            double divisor = Math.Pow(10, -1 * places);
+            return number - (number % divisor);
+        }
+
         public static double ProcessMathEquation(string equation)
         {
             double result = 0;
