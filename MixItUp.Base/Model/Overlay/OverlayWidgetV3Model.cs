@@ -24,6 +24,9 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         public bool IsEnabled { get; set; }
 
         [JsonIgnore]
+        public bool IsInitialized { get; set; }
+
+        [JsonIgnore]
         public Guid ID { get { return this.Item.ID; } }
         [JsonIgnore]
         public OverlayItemV3Type Type { get { return this.Item.Type; } }
@@ -49,9 +52,10 @@ namespace MixItUp.Base.Model.Overlay.Widgets
 
         public async Task Enable()
         {
-            if (!this.IsEnabled)
+            this.IsEnabled = true;
+            if (!this.IsInitialized)
             {
-                this.IsEnabled = true;
+                this.IsInitialized = true;
 
                 await this.Item.WidgetEnable();
 
@@ -75,6 +79,8 @@ namespace MixItUp.Base.Model.Overlay.Widgets
                 this.refreshCancellationTokenSource.Cancel();
             }
             this.refreshCancellationTokenSource = null;
+
+            this.IsInitialized = false;
         }
 
         public async Task WidgetFullReset()
