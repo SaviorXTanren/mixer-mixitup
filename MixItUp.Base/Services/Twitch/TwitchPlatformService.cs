@@ -276,7 +276,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<ClipModel> GetClip(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetClipByID(id)); }
 
-        public async Task<IEnumerable<ClipModel>> GetClips(UserModel broadcaster, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetBroadcasterClips(broadcaster, startedAt: startDate, endedAt: endDate, maxResults: maxResults)); }
+        public async Task<IEnumerable<ClipModel>> GetClips(UserModel broadcaster, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, bool featured = false, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetBroadcasterClips(broadcaster, startedAt: startDate, endedAt: endDate, featured: featured, maxResults: maxResults)); }
 
         public async Task<BitsLeaderboardModel> GetBitsLeaderboard(BitsLeaderboardPeriodEnum period, int count) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Bits.GetBitsLeaderboard(startedAt: DateTimeOffset.Now, period: period, count: count)); }
 

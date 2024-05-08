@@ -10,6 +10,8 @@ namespace MixItUp.Base.Model.Overlay
         LatestClip,
         RandomClip,
         SpecificClip,
+        LatestFeaturedClip,
+        RandomFeaturedClip,
     }
 
     [DataContract]

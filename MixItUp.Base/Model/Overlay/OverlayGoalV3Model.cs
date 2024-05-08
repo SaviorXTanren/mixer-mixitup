@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -11,6 +12,12 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    public enum OverlayGoalSegmentV3Type
+    {
+        Individual,
+        Cumulative
+    }
+
     public enum OverlayGoalResetV3Type
     {
         None,
@@ -42,6 +49,8 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultJavascript = OverlayResources.OverlayGoalDefaultJavascript;
 
         [DataMember]
+        public OverlayGoalSegmentV3Type SegmentType { get; set; }
+        [DataMember]
         public List<OverlayGoalSegmentV3Model> Segments { get; set; } = new List<OverlayGoalSegmentV3Model>();
 
         [DataMember]
@@ -54,9 +63,6 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int StartingAmountCustom { get; set; }
-
-        [DataMember]
-        public bool displayCumulativeAmounts { get; set; }
 
         [DataMember]
         public string BorderColor { get; set; }
@@ -79,37 +85,36 @@ namespace MixItUp.Base.Model.Overlay
         public double TotalAmount { get; set; }
 
         [JsonIgnore]
-        public double CurrentAmount { get; internal set; }
-        [JsonIgnore]
         public OverlayGoalSegmentV3Model CurrentSegment { get; private set; }
+
+        [JsonIgnore]
+        public double GoalAmount { get { return this.CurrentSegment.Amount; } }
+        [JsonIgnore]
+        public double PreviousGoalAmount { get; set; }
+
+        [JsonIgnore]
+        public double CurrentAmount
+        {
+            get
+            {
+                if (this.SegmentType == OverlayGoalSegmentV3Type.Individual)
+                {
+                    return this.TotalAmount - this.PreviousGoalAmount;
+                }
+                else if (this.SegmentType == OverlayGoalSegmentV3Type.Cumulative)
+                {
+                    return this.TotalAmount;
+                }
+                return 0;
+            }
+        }
 
         [JsonIgnore]
         public int GoalBarCompletionPercentage
         {
             get
             {
-                double percentage = (this.CurrentAmount / this.CurrentSegment.Amount) * 100;
-                percentage = Math.Min(percentage, 100);
-                percentage = Math.Max(percentage, 0);
-                return (int)Math.Round(percentage);
-            }
-        }
-
-        [JsonIgnore]
-        public double GoalBarCumulativeMaxAmount
-        {
-            get
-            {
-                return this.TotalAmount - this.CurrentAmount + this.CurrentSegment.Amount;
-            }
-        }
-
-        [JsonIgnore]
-        public int GoalBarCumulativeCompletionPercentage
-        {
-            get
-            {
-                double percentage = (this.TotalAmount / this.GoalBarCumulativeMaxAmount) * 100;
+                double percentage = (this.CurrentAmount / this.GoalAmount) * 100;
                 percentage = Math.Min(percentage, 100);
                 percentage = Math.Max(percentage, 0);
                 return (int)Math.Round(percentage);
@@ -143,24 +148,13 @@ namespace MixItUp.Base.Model.Overlay
                 if (amount > 0)
                 {
                     this.TotalAmount += amount;
-                    this.CurrentAmount += amount;
                 }
-                else
+                else if (amount < 0)
                 {
-                    double diff = this.CurrentAmount + amount;
-                    if (diff >= 0)
-                    {
-                        this.TotalAmount += amount;
-                        this.CurrentAmount += amount;
-                    }
-                    else
-                    {
-                        this.TotalAmount -= this.CurrentAmount;
-                        this.CurrentAmount = 0;
-                    }
+                    this.TotalAmount = Math.Max(this.TotalAmount + amount, this.PreviousGoalAmount);
                 }
 
-                if (this.CurrentAmount < this.CurrentSegment.Amount || this.CurrentSegment == this.Segments.Last())
+                if (this.CurrentAmount < this.GoalAmount || this.CurrentSegment == this.Segments.Last())
                 {
                     await this.Update();
 
@@ -213,7 +207,6 @@ namespace MixItUp.Base.Model.Overlay
         protected override async Task WidgetEnableInternal()
         {
             this.CurrentSegment = this.Segments.First();
-            this.CurrentAmount = this.TotalAmount;
             this.ProgressSegments();
 
             DateTimeOffset newResetDate = DateTimeOffset.MinValue;
@@ -256,28 +249,24 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> data = new Dictionary<string, object>();
             data[GoalNameProperty] = this.CurrentSegment.Name;
             data[GoalEndProperty] = this.GoalEndText;
-
-            if (this.displayCumulativeAmounts)
-            {
-                data[GoalAmountProperty] = this.TotalAmount;
-                data[GoalMaxAmountProperty] = this.GoalBarCumulativeMaxAmount;
-                data[GoalBarCompletionPercentageProperty] = this.GoalBarCumulativeCompletionPercentage;
-            }
-            else
-            {
-                data[GoalAmountProperty] = this.CurrentAmount;
-                data[GoalMaxAmountProperty] = this.CurrentSegment.Amount;
-                data[GoalBarCompletionPercentageProperty] = this.GoalBarCompletionPercentage;
-            }
-
+            data[GoalAmountProperty] = this.CurrentAmount;
+            data[GoalMaxAmountProperty] = this.GoalAmount;
+            data[GoalBarCompletionPercentageProperty] = this.GoalBarCompletionPercentage;
             return data;
         }
 
         private void ProgressSegments()
         {
-            while (this.CurrentSegment != this.Segments.Last() && this.CurrentAmount >= this.CurrentSegment.Amount)
+            while (this.CurrentSegment != this.Segments.Last() && this.CurrentAmount >= this.GoalAmount)
             {
-                this.CurrentAmount -= this.CurrentSegment.Amount;
+                if (this.SegmentType == OverlayGoalSegmentV3Type.Individual)
+                {
+                    this.PreviousGoalAmount += this.CurrentSegment.Amount;
+                }
+                else if (this.SegmentType == OverlayGoalSegmentV3Type.Cumulative)
+                {
+                    this.PreviousGoalAmount = this.CurrentSegment.Amount;
+                }
                 this.CurrentSegment = this.Segments[this.Segments.IndexOf(this.CurrentSegment) + 1];
             }
         }
@@ -285,14 +274,12 @@ namespace MixItUp.Base.Model.Overlay
         private void Reset()
         {
             this.TotalAmount = 0;
-            this.CurrentAmount = 0;
+            this.PreviousGoalAmount = 0;
             this.CurrentSegment = this.Segments.First();
 
             if (this.StartingAmountCustom > 0)
             {
                 this.TotalAmount += this.StartingAmountCustom;
-                this.CurrentAmount += this.StartingAmountCustom;
-                this.ProgressSegments();
             }
         }
     }

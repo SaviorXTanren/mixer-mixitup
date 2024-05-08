@@ -2951,11 +2951,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Clip ID.
+        ///   Looks up a localized string similar to Clip ID / URL.
         /// </summary>
-        public static string ClipID {
+        public static string ClipIDURL {
             get {
-                return ResourceManager.GetString("ClipID", resourceCulture);
+                return ResourceManager.GetString("ClipIDURL", resourceCulture);
             }
         }
         
@@ -4640,6 +4640,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debug.
+        /// </summary>
+        public static string Debug {
+            get {
+                return ResourceManager.GetString("Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decimal.
         /// </summary>
         public static string Decimal {
@@ -6248,6 +6257,15 @@ namespace MixItUp.Base {
         public static string Equal {
             get {
                 return ResourceManager.GetString("Equal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Equal Probability For Outcomes.
+        /// </summary>
+        public static string EqualProbabilityForOutcomes {
+            get {
+                return ResourceManager.GetString("EqualProbabilityForOutcomes", resourceCulture);
             }
         }
         
@@ -11775,6 +11793,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Latest Featured Clip.
+        /// </summary>
+        public static string LatestFeaturedClip {
+            get {
+                return ResourceManager.GetString("LatestFeaturedClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latest Follower.
         /// </summary>
         public static string LatestFollower {
@@ -14848,15 +14875,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Display Cumulative Amounts.
-        /// </summary>
-        public static string OverlayGoalDisplayCumulativeAmounts {
-            get {
-                return ResourceManager.GetString("OverlayGoalDisplayCumulativeAmounts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Height must be a valid value.
         /// </summary>
         public static string OverlayHeightMustBeValidValue {
@@ -17092,6 +17110,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Random Featured Clip.
+        /// </summary>
+        public static string RandomFeaturedClip {
+            get {
+                return ResourceManager.GetString("RandomFeaturedClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Randomize Timers.
         /// </summary>
         public static string RandomizeTimers {
@@ -18847,6 +18874,15 @@ namespace MixItUp.Base {
         public static string Segments {
             get {
                 return ResourceManager.GetString("Segments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Segment Type.
+        /// </summary>
+        public static string SegmentType {
+            get {
+                return ResourceManager.GetString("SegmentType", resourceCulture);
             }
         }
         

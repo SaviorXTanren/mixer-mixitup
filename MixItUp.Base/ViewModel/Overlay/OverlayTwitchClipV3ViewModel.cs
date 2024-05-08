@@ -24,14 +24,16 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged(nameof(this.ShowClipID));
             }
         }
-        private OverlayTwitchClipV3ClipType selectedClipType = OverlayTwitchClipV3ClipType.LatestClip;
+        private OverlayTwitchClipV3ClipType selectedClipType = OverlayTwitchClipV3ClipType.LatestFeaturedClip;
 
         public bool ShowUsername
         {
             get
             {
                 return this.SelectedClipType == OverlayTwitchClipV3ClipType.RandomClip ||
-                    this.SelectedClipType == OverlayTwitchClipV3ClipType.LatestClip;
+                    this.SelectedClipType == OverlayTwitchClipV3ClipType.LatestClip ||
+                    this.SelectedClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip ||
+                    this.SelectedClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip;
             }
         }
 

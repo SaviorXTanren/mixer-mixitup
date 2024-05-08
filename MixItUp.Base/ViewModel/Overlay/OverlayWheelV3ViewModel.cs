@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.wheel.UpdateTotalProbability();
             }
         }
-        private double probability;
+        private double probability = 0.0;
 
         public double Modifier
         {
@@ -48,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.wheel.UpdateTotalModifier();
             }
         }
-        private double modifier;
+        private double modifier = 0;
 
         public string Color
         {
@@ -71,6 +71,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private CustomCommandModel command;
+
+        public bool CanSetProbabilities { get { return !this.wheel.EqualProbabilityForOutcomes; } }
 
         public ICommand DeleteCommand { get; private set; }
 
@@ -131,6 +133,11 @@ namespace MixItUp.Base.ViewModel.Overlay
             return result;
         }
 
+        public void UpdateCanSetProbabilities()
+        {
+            this.NotifyPropertyChanged(nameof(this.CanSetProbabilities));
+        }
+
         private void Initialize()
         {
             this.DeleteCommand = this.CreateCommand(() =>
@@ -181,6 +188,22 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private CustomCommandModel defaultOutcomeCommand;
 
+        public bool EqualProbabilityForOutcomes
+        {
+            get { return this.equalProbabilityForOutcomes; }
+            set
+            {
+                this.equalProbabilityForOutcomes = value;
+                this.NotifyPropertyChanged();
+
+                foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
+                {
+                    outcome.UpdateCanSetProbabilities();
+                }
+            }
+        }
+        private bool equalProbabilityForOutcomes = true;
+
         public ObservableCollection<OverlayWheelOutcomeV3ViewModel> Outcomes { get; set; } = new ObservableCollection<OverlayWheelOutcomeV3ViewModel>();
 
         public string TotalProbability
@@ -223,14 +246,16 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayWheelV3ViewModel()
             : base(OverlayItemV3Type.Wheel)
         {
+            this.FontSize = 40;
+            this.FontColor = "Black";
+
             this.Size = 600;
             this.WheelClickSoundFilePath = OverlayWheelV3Model.DefaultWheelClickSoundFilePath;
 
             this.DefaultOutcomeCommand = this.CreateEmbeddedCommand(Resources.DefaultOutcome);
             this.DefaultOutcomeCommand.Actions.Add(new ChatActionModel("Outcome Selected: $outcomename"));
 
-            this.FontSize = 40;
-            this.FontColor = "Black";
+            this.EqualProbabilityForOutcomes = true;
 
             this.AddOutcome(new OverlayWheelOutcomeV3ViewModel(this)
             {
@@ -256,7 +281,10 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Size = item.Size;
             this.WheelClickSoundFilePath = item.WheelClickSoundFilePath;
+
             this.DefaultOutcomeCommand = this.GetEmbeddedCommand(item.DefaultOutcomeCommand, Resources.DefaultOutcome);
+
+            this.EqualProbabilityForOutcomes = item.EqualProbabilityForOutcomes;
 
             foreach (OverlayWheelOutcomeV3Model outcome in item.Outcomes)
             {
@@ -277,28 +305,31 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return new Result(Resources.OverlayWheelSizeMustBeGreaterThan0);
             }
 
-            double totalPercentage = 0.0;
-            double totalModifier = 0.0;
-            foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
+            if (!this.EqualProbabilityForOutcomes)
             {
-                Result result = outcome.Validate();
-                if (!result.Success)
+                double totalPercentage = 0.0;
+                double totalModifier = 0.0;
+                foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
                 {
-                    return result;
+                    Result result = outcome.Validate();
+                    if (!result.Success)
+                    {
+                        return result;
+                    }
+
+                    totalPercentage += outcome.Probability;
+                    totalModifier += outcome.Modifier;
                 }
 
-                totalPercentage += outcome.Probability;
-                totalModifier += outcome.Modifier;
-            }
+                if (totalPercentage != 100.0)
+                {
+                    return new Result(Resources.OverlayWheelOutcomeTotalPercentageMustEqual100);
+                }
 
-            if (totalPercentage != 100.0)
-            {
-                return new Result(Resources.OverlayWheelOutcomeTotalPercentageMustEqual100);
-            }
-
-            if (totalModifier != 0.0)
-            {
-                return new Result(Resources.OverlayWheelOutcomeTotalModifierMustEqual0);
+                if (totalModifier != 0.0)
+                {
+                    return new Result(Resources.OverlayWheelOutcomeTotalModifierMustEqual0);
+                }
             }
 
             return new Result();
@@ -340,6 +371,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.DefaultOutcomeCommand = this.DefaultOutcomeCommand.ID;
             ChannelSession.Settings.SetCommand(this.DefaultOutcomeCommand);
 
+            result.EqualProbabilityForOutcomes = this.EqualProbabilityForOutcomes;
+
             foreach (OverlayWheelOutcomeV3ViewModel outcome in this.Outcomes)
             {
                 result.Outcomes.Add(outcome.GetModel());
@@ -347,7 +380,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             foreach (OverlayWheelOutcomeV3Model outcome in result.Outcomes)
             {
-                if (string.IsNullOrWhiteSpace(outcome.Color))
+                if (!string.IsNullOrEmpty(outcome.Name) && string.IsNullOrWhiteSpace(outcome.Color))
                 {
                     int index = Math.Abs(outcome.Name.GetHashCode() % ColorSchemes.HTMLColors.Count);
                     outcome.Color = ColorSchemes.HTMLColors.ElementAt(index);

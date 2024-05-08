@@ -39,7 +39,7 @@
             </ComboBox>
 
             <TextBox Text="{Binding Username}" Grid.Column="2" Visibility="{Binding ShowUsername, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Username}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            <TextBox Text="{Binding ClipID}" Grid.Column="2" Visibility="{Binding ShowClipID, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ClipID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding ClipID}" Grid.Column="2" Visibility="{Binding ShowClipID, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ClipIDURL}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2">

@@ -80,7 +80,20 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button Grid.Row="0" Command="{Binding AddOutcomeCommand}" Content="{x:Static resx:Resources.Add}" Width="100" />
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.EqualProbabilityForOutcomes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="2" IsChecked="{Binding EqualProbabilityForOutcomes}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                    <Button Grid.Column="4" Command="{Binding AddOutcomeCommand}" Content="{x:Static resx:Resources.Add}" Width="100" />
+                </Grid>
 
                 <ItemsControl Grid.Row="2" ItemsSource="{Binding Outcomes}">
                     <ItemsControl.ItemTemplate>
@@ -108,11 +121,11 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Grid.Column="0" Text="{Binding Probability}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Probability}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <TextBox Grid.Column="0" Text="{Binding Probability}" IsEnabled="{Binding CanSetProbabilities}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Probability}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                                     <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="0,10,0,0">%</TextBlock>
                                 </Grid>
 
-                                <TextBox Grid.Column="4" Text="{Binding Modifier}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Modifier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="4" Text="{Binding Modifier}" IsEnabled="{Binding CanSetProbabilities}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Modifier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                                 <TextBox Grid.Column="6" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Color}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

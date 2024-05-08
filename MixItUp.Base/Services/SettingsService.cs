@@ -565,6 +565,15 @@ namespace MixItUp.Base.Services
                     {
                         updated = true;
                     }
+
+                    if (actionModel is ConditionalActionModel)
+                    {
+                        ConditionalActionModel conditionalAction = (ConditionalActionModel)actionModel;
+                        if (conditionalAction.Clauses.Count == 0)
+                        {
+                            conditionalAction.Clauses.Add(new ConditionalClauseModel(ConditionalComparisionTypeEnum.Equals, "1", "1", null));
+                        }
+                    }
                 }
             }
             return updated;
@@ -816,7 +825,7 @@ namespace MixItUp.Base.Services
                 });
                 result = newItem.GetItem();
                 result.OldCustomHTML = oldItem.HTML;
-                ((OverlayGoalV3Model)result).CurrentAmount = oldItem.CurrentAmount;
+                ((OverlayGoalV3Model)result).TotalAmount = oldItem.CurrentAmount;
             }
             else if (item.ItemType == OverlayItemModelTypeEnum.StreamBoss)
             {

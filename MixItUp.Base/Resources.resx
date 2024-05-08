@@ -9706,8 +9706,8 @@ namespace CustomNamespace
   <data name="TopClip" xml:space="preserve">
     <value>Top Clip</value>
   </data>
-  <data name="ClipID" xml:space="preserve">
-    <value>Clip ID</value>
+  <data name="ClipIDURL" xml:space="preserve">
+    <value>Clip ID / URL</value>
   </data>
   <data name="OverlayTwitchClipErrorUnableToFindValidClip" xml:space="preserve">
     <value>ERROR: Unable to find a valid clip</value>
@@ -10320,7 +10320,19 @@ namespace CustomNamespace
   <data name="OverlayWheelOutcomeTotalModifierMustEqual0" xml:space="preserve">
     <value>The total modifier of all outcomes must equal 0</value>
   </data>
-  <data name="OverlayGoalDisplayCumulativeAmounts" xml:space="preserve">
-    <value>Display Cumulative Amounts</value>
+  <data name="LatestFeaturedClip" xml:space="preserve">
+    <value>Latest Featured Clip</value>
+  </data>
+  <data name="RandomFeaturedClip" xml:space="preserve">
+    <value>Random Featured Clip</value>
+  </data>
+  <data name="SegmentType" xml:space="preserve">
+    <value>Segment Type</value>
+  </data>
+  <data name="EqualProbabilityForOutcomes" xml:space="preserve">
+    <value>Equal Probability For Outcomes</value>
+  </data>
+  <data name="Debug" xml:space="preserve">
+    <value>Debug</value>
   </data>
 </root>

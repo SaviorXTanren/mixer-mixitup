@@ -81,6 +81,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public const string InnerHTMLProperty = "InnerHTML";
 
+        public const string UserProperty = "User";
+
         public static int zIndexCounter = 0;
 
         public static readonly string PositionedHTML = OverlayResources.OverlayPositionedItemDefaultHTML;
