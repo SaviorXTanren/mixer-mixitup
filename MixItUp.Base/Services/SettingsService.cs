@@ -494,7 +494,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private static bool UpdateActionsV7(SettingsV3Model settings, IEnumerable<ActionModelBase> actions)
+        public static bool UpdateActionsV7(SettingsV3Model settings, IEnumerable<ActionModelBase> actions)
         {
             bool updated = false;
             foreach (ActionModelBase actionModel in actions)
