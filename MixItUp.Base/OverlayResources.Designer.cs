@@ -232,6 +232,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayEmoteEffectDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayEmoteEffectDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayEmoteEffectDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .list {
         ///    position: absolute;
         ///    margin: 0;

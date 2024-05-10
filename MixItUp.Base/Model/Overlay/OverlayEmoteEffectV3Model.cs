@@ -15,18 +15,41 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    public enum OverlayEmoteEffectV3AnimationType
+    {
+        Rain,
+        Fade,
+        Explosion,
+        Bounce,
+        Float,
+        FallingLeaves,
+        ShootingStars,
+        Zoom,
+        Chaos,
+
+        Random = 1000,
+    }
+
     public class OverlayEmoteEffectV3Model : OverlayItemV3ModelBase
     {
         public const string EmojiPrefix = "emoji://";
 
         public const string EmotesPropertyName = "Emotes";
 
-        public static readonly string DefaultHTML = OverlayResources.OverlayImageDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayImageDefaultCSS;
-        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript;
+        public static readonly string DefaultHTML = OverlayResources.OverlayEmoteEffectDefaultHTML;
+        public static readonly string DefaultCSS = OverlayResources.OverlayEmoteEffectDefaultCSS;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + "\n\n" + OverlayResources.OverlayEmoteEffectDefaultJavascript;
 
         [DataMember]
         public string EmoteText { get; set; }
+
+        [DataMember]
+        public OverlayEmoteEffectV3AnimationType AnimationType { get; set; }
+
+        [DataMember]
+        public int PerEmoteShown { get; set; }
+        [DataMember]
+        public int MaxAmountShown { get; set; }
 
         [DataMember]
         public bool AllowURLs { get; set; }
@@ -39,6 +62,9 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[EmotesPropertyName] = new List<string>();
+            properties[nameof(this.AnimationType)] = this.AnimationType.ToString();
+            properties[nameof(this.PerEmoteShown)] = this.PerEmoteShown;
+            properties[nameof(this.MaxAmountShown)] = this.MaxAmountShown;
             return properties;
         }
 

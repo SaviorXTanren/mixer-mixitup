@@ -2402,6 +2402,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chaos.
+        /// </summary>
+        public static string Chaos {
+            get {
+                return ResourceManager.GetString("Chaos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Character Limit.
         /// </summary>
         public static string CharacterLimit {
@@ -6470,6 +6479,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Explosion.
+        /// </summary>
+        public static string Explosion {
+            get {
+                return ResourceManager.GetString("Explosion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export Actions to File.
         /// </summary>
         public static string ExportActions {
@@ -6727,6 +6745,15 @@ namespace MixItUp.Base {
         public static string F9 {
             get {
                 return ResourceManager.GetString("F9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fade.
+        /// </summary>
+        public static string Fade {
+            get {
+                return ResourceManager.GetString("Fade", resourceCulture);
             }
         }
         
@@ -7082,6 +7109,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Falling Leaves.
+        /// </summary>
+        public static string FallingLeaves {
+            get {
+                return ResourceManager.GetString("FallingLeaves", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fan Progression.
         /// </summary>
         public static string FanProgression {
@@ -7321,6 +7357,15 @@ namespace MixItUp.Base {
         public static string FlipOutY {
             get {
                 return ResourceManager.GetString("FlipOutY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Float.
+        /// </summary>
+        public static string Float {
+            get {
+                return ResourceManager.GetString("Float", resourceCulture);
             }
         }
         
@@ -17038,6 +17083,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rain.
+        /// </summary>
+        public static string Rain {
+            get {
+                return ResourceManager.GetString("Rain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rainmaker.
         /// </summary>
         public static string Rainmaker {
@@ -19434,6 +19488,15 @@ namespace MixItUp.Base {
         public static string Shift {
             get {
                 return ResourceManager.GetString("Shift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shooting Stars.
+        /// </summary>
+        public static string ShootingStars {
+            get {
+                return ResourceManager.GetString("ShootingStars", resourceCulture);
             }
         }
         
@@ -26553,6 +26616,15 @@ namespace MixItUp.Base {
         public static string YScale {
             get {
                 return ResourceManager.GetString("YScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom.
+        /// </summary>
+        public static string Zoom {
+            get {
+                return ResourceManager.GetString("Zoom", resourceCulture);
             }
         }
         

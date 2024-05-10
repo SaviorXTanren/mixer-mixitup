@@ -10335,4 +10335,28 @@ namespace CustomNamespace
   <data name="Debug" xml:space="preserve">
     <value>Debug</value>
   </data>
+  <data name="Chaos" xml:space="preserve">
+    <value>Chaos</value>
+  </data>
+  <data name="Explosion" xml:space="preserve">
+    <value>Explosion</value>
+  </data>
+  <data name="Fade" xml:space="preserve">
+    <value>Fade</value>
+  </data>
+  <data name="FallingLeaves" xml:space="preserve">
+    <value>Falling Leaves</value>
+  </data>
+  <data name="Float" xml:space="preserve">
+    <value>Float</value>
+  </data>
+  <data name="Rain" xml:space="preserve">
+    <value>Rain</value>
+  </data>
+  <data name="ShootingStars" xml:space="preserve">
+    <value>Shooting Stars</value>
+  </data>
+  <data name="Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
 </root>
