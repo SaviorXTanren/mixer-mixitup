@@ -55,6 +55,10 @@ namespace MixItUp.Base.Model
 
         public static bool IsValidPlatform(StreamingPlatformTypeEnum platform) { return StreamingPlatforms.SupportedPlatforms.Contains(platform); }
 
+        public static bool ContainsPlatform(StreamingPlatformTypeEnum platform, StreamingPlatformTypeEnum check) { return (platform & check) == check; }
+
+        public static bool IsPlatformConnected(StreamingPlatformTypeEnum platform) { return StreamingPlatforms.GetPlatformSessionService(platform).IsConnected; }
+
         public static IStreamingPlatformSessionService GetPlatformSessionService(StreamingPlatformTypeEnum platform)
         {
             if (platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
@@ -89,7 +93,7 @@ namespace MixItUp.Base.Model
             List<StreamingPlatformTypeEnum> platforms = new List<StreamingPlatformTypeEnum>();
             foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
             {
-                if (StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
+                if (StreamingPlatforms.IsPlatformConnected(platform))
                 {
                     platforms.Add(platform);
                 }

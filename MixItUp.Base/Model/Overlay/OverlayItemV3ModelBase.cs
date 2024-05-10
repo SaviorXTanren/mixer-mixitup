@@ -48,6 +48,7 @@ namespace MixItUp.Base.Model.Overlay
         Leaderboard,
         [OverlayWidget]
         Wheel,
+        EmoteEffect,
     }
 
     public enum OverlayItemV3DisplayOptionsType

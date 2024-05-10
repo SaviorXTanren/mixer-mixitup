@@ -84,10 +84,7 @@ namespace MixItUp.Base.Services.YouTube
         public YouTubeChatService() { }
 
         public IEnumerable<YouTubeChatEmoteModel> Emotes { get; private set; } = new List<YouTubeChatEmoteModel>();
-        public Dictionary<string, YouTubeChatEmoteModel> EmoteDictionary { get; private set; } = new Dictionary<string, YouTubeChatEmoteModel>();
-
-        public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
-        private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
+        public Dictionary<string, YouTubeChatEmoteViewModel> EmoteDictionary { get; private set; } = new Dictionary<string, YouTubeChatEmoteViewModel>();
 
         private Dictionary<string, YouTubeMembershipsGiftedModel> userGiftedMembershipDictionary = new Dictionary<string, YouTubeMembershipsGiftedModel>();
 
@@ -116,7 +113,7 @@ namespace MixItUp.Base.Services.YouTube
                                 {
                                     foreach (string shortcut in emote.shortcuts)
                                     {
-                                        this.EmoteDictionary[shortcut] = emote;
+                                        this.EmoteDictionary[shortcut] = new YouTubeChatEmoteViewModel(emote);
                                     }
                                 }
                             }

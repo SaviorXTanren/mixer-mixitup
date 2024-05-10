@@ -40,7 +40,7 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
                 {
                     if (ServiceManager.Get<YouTubeChatService>().EmoteDictionary.ContainsKey(part))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = new YouTubeChatEmoteViewModel(ServiceManager.Get<YouTubeChatService>().EmoteDictionary[part]);
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<YouTubeChatService>().EmoteDictionary[part];
                     }
                 }
                 else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.ContainsKey(part))
