@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
@@ -977,7 +978,7 @@ namespace MixItUp.Base.Model.Commands
                 if (LinkedAccounts.ContainsKey(user.ID) && LinkedAccounts[user.ID] == parameters.User.ID)
                 {
                     LinkedAccounts.Remove(user.ID);
-                    await parameters.User.MergeUserData(user);
+                    UserV2ViewModel.MergeUserData(user, parameters.User);
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.LinkAccountCommandAccountsLinkedSuccessfully, parameters);
                 }
                 else
