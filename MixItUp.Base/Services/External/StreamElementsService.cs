@@ -157,6 +157,8 @@ namespace MixItUp.Base.Services.External
 
         public bool WebSocketConnected { get; private set; }
 
+        private HashSet<string> donationsProcessed = new HashSet<string>();
+
         private StreamElementsChannel channel;
 
         private ISocketIOConnection socket;
@@ -319,16 +321,23 @@ namespace MixItUp.Base.Services.External
                                 if (string.Equals(e.type, StreamElementsWebSocketEventModel.TipEvent, StringComparison.OrdinalIgnoreCase))
                                 {
                                     StreamElementsTipEventModel tipEvent = e.data.ToObject<StreamElementsTipEventModel>();
-                                    if (tipEvent.amount.GetValueOrDefault() > 0)
+
+                                    if (!this.donationsProcessed.Contains(tipEvent.tipId))
                                     {
-                                        await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsDonation, tipEvent.ToGenericDonation());
+                                        this.donationsProcessed.Add(tipEvent.tipId);
+                                        if (tipEvent.amount.GetValueOrDefault() > 0)
+                                        {
+                                            await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsDonation, tipEvent.ToGenericDonation());
+                                        }
                                     }
                                 }
                                 else if (string.Equals(e.type, StreamElementsWebSocketEventModel.MerchEvent, StringComparison.OrdinalIgnoreCase))
                                 {
                                     StreamElementsTipEventModel tipEvent = e.data.ToObject<StreamElementsTipEventModel>();
-                                    if (tipEvent.items.Count > 0)
+                                    if (!this.donationsProcessed.Contains(tipEvent.tipId) && tipEvent.items.Count > 0)
                                     {
+                                        this.donationsProcessed.Add(tipEvent.tipId);
+
                                         List<string> arguments = new List<string>(tipEvent.items.Select(i => $"{i.name} x{i.quantity.GetValueOrDefault()}"));
                                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                                         specialIdentifiers[StreamElementsService.MerchAllItemsSpecialIdentifier] = string.Join(", ", arguments);
