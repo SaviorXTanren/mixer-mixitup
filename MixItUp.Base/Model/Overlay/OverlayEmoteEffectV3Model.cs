@@ -52,6 +52,8 @@ namespace MixItUp.Base.Model.Overlay
         public int MaxAmountShown { get; set; }
 
         [DataMember]
+        public bool AllowLocalFiles { get; set; }
+        [DataMember]
         public bool AllowURLs { get; set; }
         [DataMember]
         public bool AllowEmoji { get; set; }
@@ -80,6 +82,60 @@ namespace MixItUp.Base.Model.Overlay
                     List<string> emoteURLs = new List<string>();
                     foreach (string split in splits)
                     {
+                        if (StreamingPlatforms.ContainsPlatform(parameters.Platform, StreamingPlatformTypeEnum.Twitch))
+                        {
+                            if (ServiceManager.Get<TwitchChatService>().Emotes.TryGetValue(split, out TwitchChatEmoteViewModel twitchEmote))
+                            {
+                                emoteURLs.Add(twitchEmote.ImageURL);
+                                continue;
+                            }
+                        }
+
+                        if (StreamingPlatforms.ContainsPlatform(parameters.Platform, StreamingPlatformTypeEnum.YouTube))
+                        {
+                            if (ServiceManager.Get<YouTubeChatService>().EmoteDictionary.TryGetValue(split, out YouTubeChatEmoteViewModel youtubeEmote))
+                            {
+                                emoteURLs.Add(youtubeEmote.ImageURL);
+                                continue;
+                            }
+                        }
+
+                        if (StreamingPlatforms.ContainsPlatform(parameters.Platform, StreamingPlatformTypeEnum.Trovo))
+                        {
+                            if (ServiceManager.Get<TrovoChatEventService>().ChannelEmotes.TryGetValue(split, out TrovoChatEmoteViewModel trovoChannelEmote))
+                            {
+                                emoteURLs.Add(trovoChannelEmote.ImageURL);
+                                continue;
+                            }
+                            else if (ServiceManager.Get<TrovoChatEventService>().EventEmotes.TryGetValue(split, out TrovoChatEmoteViewModel trovoEventEmote))
+                            {
+                                emoteURLs.Add(trovoEventEmote.ImageURL);
+                                continue;
+                            }
+                            else if (ServiceManager.Get<TrovoChatEventService>().GlobalEmotes.TryGetValue(split, out TrovoChatEmoteViewModel trovoGlobalEmote))
+                            {
+                                emoteURLs.Add(trovoGlobalEmote.ImageURL);
+                                continue;
+                            }
+                        }
+
+                        if (ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.TryGetValue(split, out BetterTTVEmoteModel bttvEmote))
+                        {
+                            emoteURLs.Add(bttvEmote.ImageURL);
+                            continue;
+                        }
+                        else if (ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes.TryGetValue(split, out FrankerFaceZEmoteModel ffzEmote))
+                        {
+                            emoteURLs.Add(ffzEmote.ImageURL);
+                            continue;
+                        }
+
+                        if (this.AllowEmoji && ModerationService.EmojiRegex.IsMatch(split))
+                        {
+                            emoteURLs.Add(EmojiPrefix + split);
+                            continue;
+                        }
+
                         if (Uri.IsWellFormedUriString(split, UriKind.Absolute))
                         {
                             if (this.AllowURLs)
@@ -88,60 +144,14 @@ namespace MixItUp.Base.Model.Overlay
                             }
                             continue;
                         }
-                        else if (this.AllowEmoji && ModerationService.EmojiRegex.IsMatch(split))
+
+                        if (ServiceManager.Get<IFileService>().FileExists(split))
                         {
-                            emoteURLs.Add(EmojiPrefix + split);
+                            if (this.AllowLocalFiles)
+                            {
+                                emoteURLs.Add(ServiceManager.Get<OverlayV3Service>().GetURLForFile(split, "image"));
+                            }
                             continue;
-                        }
-                        else
-                        {
-                            if (StreamingPlatforms.ContainsPlatform(parameters.Platform, StreamingPlatformTypeEnum.Twitch))
-                            {
-                                if (ServiceManager.Get<TwitchChatService>().Emotes.TryGetValue(split, out TwitchChatEmoteViewModel twitchEmote))
-                                {
-                                    emoteURLs.Add(twitchEmote.ImageURL);
-                                    continue;
-                                }
-                            }
-
-                            if (StreamingPlatforms.ContainsPlatform(parameters.Platform, StreamingPlatformTypeEnum.YouTube))
-                            {
-                                if (ServiceManager.Get<YouTubeChatService>().EmoteDictionary.TryGetValue(split, out YouTubeChatEmoteViewModel youtubeEmote))
-                                {
-                                    emoteURLs.Add(youtubeEmote.ImageURL);
-                                    continue;
-                                }
-                            }
-
-                            if (StreamingPlatforms.ContainsPlatform(parameters.Platform, StreamingPlatformTypeEnum.Trovo))
-                            {
-                                if (ServiceManager.Get<TrovoChatEventService>().ChannelEmotes.TryGetValue(split, out TrovoChatEmoteViewModel trovoChannelEmote))
-                                {
-                                    emoteURLs.Add(trovoChannelEmote.ImageURL);
-                                    continue;
-                                }
-                                else if (ServiceManager.Get<TrovoChatEventService>().EventEmotes.TryGetValue(split, out TrovoChatEmoteViewModel trovoEventEmote))
-                                {
-                                    emoteURLs.Add(trovoEventEmote.ImageURL);
-                                    continue;
-                                }
-                                else if (ServiceManager.Get<TrovoChatEventService>().GlobalEmotes.TryGetValue(split, out TrovoChatEmoteViewModel trovoGlobalEmote))
-                                {
-                                    emoteURLs.Add(trovoGlobalEmote.ImageURL);
-                                    continue;
-                                }
-                            }
-
-                            if (ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.TryGetValue(split, out BetterTTVEmoteModel bttvEmote))
-                            {
-                                emoteURLs.Add(bttvEmote.ImageURL);
-                                continue;
-                            }
-                            else if (ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes.TryGetValue(split, out FrankerFaceZEmoteModel ffzEmote))
-                            {
-                                emoteURLs.Add(ffzEmote.ImageURL);
-                                continue;
-                            }
                         }
                     }
 
