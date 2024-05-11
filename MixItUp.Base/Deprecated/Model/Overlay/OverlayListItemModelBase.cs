@@ -59,11 +59,11 @@ namespace MixItUp.Base.Model.Overlay
                 this.cachedUser = ServiceManager.Get<UserService>().GetActiveUserByID(this.UserID);
                 if (this.cachedUser == null)
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(this.UserID);
-                    if (user != null)
-                    {
-                        this.cachedUser = user;
-                    }
+                    //UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(this.UserID);
+                    //if (user != null)
+                    //{
+                    //    this.cachedUser = user;
+                    //}
                 }
             }
             return this.cachedUser;
