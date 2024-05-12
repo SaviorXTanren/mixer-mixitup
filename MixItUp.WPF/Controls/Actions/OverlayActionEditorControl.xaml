@@ -73,7 +73,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}" >
+                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}" IsEnabled="{Binding ShowStandardActionAnimations}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="10" />
@@ -84,7 +84,7 @@
                                 <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
                             </Grid>
 
-                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}" >
+                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}" IsEnabled="{Binding ShowStandardActionAnimations}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="10" />

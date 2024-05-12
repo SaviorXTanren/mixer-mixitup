@@ -988,6 +988,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allow Emoji.
+        /// </summary>
+        public static string AllowEmoji {
+            get {
+                return ResourceManager.GetString("AllowEmoji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow Past Winners.
         /// </summary>
         public static string AllowPastWinners {
@@ -1002,6 +1011,15 @@ namespace MixItUp.Base {
         public static string AllowProfanity {
             get {
                 return ResourceManager.GetString("AllowProfanity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow URLs.
+        /// </summary>
+        public static string AllowURLs {
+            get {
+                return ResourceManager.GetString("AllowURLs", resourceCulture);
             }
         }
         
@@ -12695,6 +12713,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max Amount Shown.
+        /// </summary>
+        public static string MaxAmountShown {
+            get {
+                return ResourceManager.GetString("MaxAmountShown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max Caps.
         /// </summary>
         public static string MaxCaps {
@@ -14880,6 +14907,33 @@ namespace MixItUp.Base {
         public static string OverlayConnectionSuccess {
             get {
                 return ResourceManager.GetString("OverlayConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid value must be specified for Emote Text.
+        /// </summary>
+        public static string OverlayEmoteEffectEmoteTextInvalid {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectEmoteTextInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emote Text (Space Separated).
+        /// </summary>
+        public static string OverlayEmoteEffectEmoteTextSpaceSeparated {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectEmoteTextSpaceSeparated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Per Emote Shown.
+        /// </summary>
+        public static string OverlayEmoteEffectPerEmoteShown {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectPerEmoteShown", resourceCulture);
             }
         }
         

@@ -56,6 +56,10 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     overlayControl = new OverlayTwitchClipV3Control();
                 }
+                else if (this.viewModel.SelectedActionType == OverlayActionTypeEnum.EmoteEffect)
+                {
+                    overlayControl = new OverlayEmoteEffectV3Control();
+                }
 
                 if (overlayControl != null)
                 {

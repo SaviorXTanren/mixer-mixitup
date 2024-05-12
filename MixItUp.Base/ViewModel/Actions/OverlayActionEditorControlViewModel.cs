@@ -22,7 +22,10 @@ namespace MixItUp.Base.ViewModel.Actions
         HTML,
         Timer,
         TwitchClip,
+        EmoteEffect,
+
         ShowHideWidget,
+
         DamageStreamBoss,
         AddToGoal,
         AddToPersistentTimer,
@@ -50,6 +53,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));
                     this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
                     this.NotifyPropertyChanged(nameof(this.ShowItem));
+                    this.NotifyPropertyChanged(nameof(this.ShowStandardActionAnimations));
                     this.NotifyPropertyChanged(nameof(this.ShowWidget));
                     this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
                     this.NotifyPropertyChanged(nameof(this.ShowAddGoal));
@@ -88,6 +92,10 @@ namespace MixItUp.Base.ViewModel.Actions
                         else if (this.SelectedActionType == OverlayActionTypeEnum.TwitchClip)
                         {
                             this.Item = new OverlayTwitchClipV3ViewModel();
+                        }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.TwitchClip)
+                        {
+                            this.Item = new OverlayEmoteEffectV3ViewModel();
                         }
 
                         this.HTML = this.GetDefaultHTML(this.Item);
@@ -139,7 +147,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 return this.SelectedActionType == OverlayActionTypeEnum.Text || this.SelectedActionType == OverlayActionTypeEnum.Image ||
                     this.SelectedActionType == OverlayActionTypeEnum.Video || this.SelectedActionType == OverlayActionTypeEnum.YouTube ||
                     this.SelectedActionType == OverlayActionTypeEnum.HTML || this.SelectedActionType == OverlayActionTypeEnum.Timer ||
-                    this.SelectedActionType == OverlayActionTypeEnum.TwitchClip;
+                    this.SelectedActionType == OverlayActionTypeEnum.TwitchClip || this.SelectedActionType == OverlayActionTypeEnum.EmoteEffect;
             }
         }
 
@@ -175,6 +183,8 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string duration;
+
+        public bool ShowStandardActionAnimations { get { return this.Item != null && this.Item.SupportsStandardActionAnimations; } }
 
         public OverlayAnimationV3ViewModel EntranceAnimation
         {
@@ -517,6 +527,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.TwitchClip;
                     this.Item = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.EmoteEffect)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.EmoteEffect;
+                    this.Item = new OverlayEmoteEffectV3ViewModel((OverlayEmoteEffectV3Model)action.OverlayItemV3);
                 }
 
                 this.Position = new OverlayPositionV3ViewModel(action.OverlayItemV3);

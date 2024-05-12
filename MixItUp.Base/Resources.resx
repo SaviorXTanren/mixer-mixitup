@@ -10359,4 +10359,22 @@ namespace CustomNamespace
   <data name="Zoom" xml:space="preserve">
     <value>Zoom</value>
   </data>
+  <data name="OverlayEmoteEffectEmoteTextInvalid" xml:space="preserve">
+    <value>A valid value must be specified for Emote Text</value>
+  </data>
+  <data name="OverlayEmoteEffectEmoteTextSpaceSeparated" xml:space="preserve">
+    <value>Emote Text (Space Separated)</value>
+  </data>
+  <data name="AllowEmoji" xml:space="preserve">
+    <value>Allow Emoji</value>
+  </data>
+  <data name="AllowURLs" xml:space="preserve">
+    <value>Allow URLs</value>
+  </data>
+  <data name="MaxAmountShown" xml:space="preserve">
+    <value>Max Amount Shown</value>
+  </data>
+  <data name="OverlayEmoteEffectPerEmoteShown" xml:space="preserve">
+    <value>Per Emote Shown</value>
+  </data>
 </root>

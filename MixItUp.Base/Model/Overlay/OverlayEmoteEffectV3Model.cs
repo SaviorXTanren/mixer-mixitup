@@ -38,7 +38,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public static readonly string DefaultHTML = OverlayResources.OverlayEmoteEffectDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayEmoteEffectDefaultCSS;
-        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + "\n\n" + OverlayResources.OverlayEmoteEffectDefaultJavascript;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayEmoteEffectDefaultJavascript;
 
         [DataMember]
         public string EmoteText { get; set; }
@@ -47,12 +47,15 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayEmoteEffectV3AnimationType AnimationType { get; set; }
 
         [DataMember]
-        public int PerEmoteShown { get; set; }
+        public string PerEmoteShown { get; set; }
         [DataMember]
-        public int MaxAmountShown { get; set; }
+        public string MaxAmountShown { get; set; }
 
         [DataMember]
-        public bool AllowLocalFiles { get; set; }
+        public int EmoteWidth { get; set; }
+        [DataMember]
+        public int EmoteHeight { get; set; }
+
         [DataMember]
         public bool AllowURLs { get; set; }
         [DataMember]
@@ -65,8 +68,11 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[EmotesPropertyName] = new List<string>();
             properties[nameof(this.AnimationType)] = this.AnimationType.ToString();
-            properties[nameof(this.PerEmoteShown)] = this.PerEmoteShown;
-            properties[nameof(this.MaxAmountShown)] = this.MaxAmountShown;
+            properties[nameof(this.EmoteWidth)] = this.EmoteWidth;
+            properties[nameof(this.EmoteHeight)] = this.EmoteHeight;
+            properties[nameof(this.PerEmoteShown)] = 0;
+            properties[nameof(this.MaxAmountShown)] = 0;
+
             return properties;
         }
 
@@ -87,6 +93,13 @@ namespace MixItUp.Base.Model.Overlay
                             if (ServiceManager.Get<TwitchChatService>().Emotes.TryGetValue(split, out TwitchChatEmoteViewModel twitchEmote))
                             {
                                 emoteURLs.Add(twitchEmote.ImageURL);
+                                continue;
+                            }
+
+                            TwitchBitsCheerViewModel twitchBitCheer = TwitchBitsCheerViewModel.GetBitCheermote(split);
+                            if (twitchBitCheer != null)
+                            {
+                                emoteURLs.Add(twitchBitCheer.ImageURL);
                                 continue;
                             }
                         }
@@ -144,18 +157,18 @@ namespace MixItUp.Base.Model.Overlay
                             }
                             continue;
                         }
-
-                        if (ServiceManager.Get<IFileService>().FileExists(split))
-                        {
-                            if (this.AllowLocalFiles)
-                            {
-                                emoteURLs.Add(ServiceManager.Get<OverlayV3Service>().GetURLForFile(split, "image"));
-                            }
-                            continue;
-                        }
                     }
 
                     properties[EmotesPropertyName] = emoteURLs;
+
+                    if (int.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.PerEmoteShown, parameters), out int perEmoteShown) && perEmoteShown > 0)
+                    {
+                        properties[nameof(this.PerEmoteShown)] = perEmoteShown;
+                    }
+                    if (int.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.MaxAmountShown, parameters), out int maxAmountShown) && maxAmountShown > 0)
+                    {
+                        properties[nameof(this.MaxAmountShown)] = maxAmountShown;
+                    }
                 }
             }
         }

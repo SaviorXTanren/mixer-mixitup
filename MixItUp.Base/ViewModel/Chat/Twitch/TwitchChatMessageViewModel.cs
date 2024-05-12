@@ -78,6 +78,22 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
     public class TwitchBitsCheerViewModel : ChatEmoteViewModelBase
     {
+        public static TwitchBitsCheerViewModel GetBitCheermote(string part)
+        {
+            foreach (TwitchBitsCheermoteViewModel cheermote in ServiceManager.Get<TwitchChatService>().BitsCheermotes)
+            {
+                if (part.StartsWith(cheermote.ID, StringComparison.InvariantCultureIgnoreCase) && int.TryParse(part.ToLower().Replace(cheermote.ID.ToLower(), ""), out int amount) && amount > 0)
+                {
+                    TwitchBitsCheermoteTierViewModel tier = cheermote.GetAppropriateTier(amount);
+                    if (tier != null)
+                    {
+                        return new TwitchBitsCheerViewModel(part, amount, tier);
+                    }
+                }
+            }
+            return null;
+        }
+
         public override string ID { get; protected set; }
         public override string Name { get; protected set; }
         public override string ImageURL { get; protected set; }
@@ -210,7 +226,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     this.AddStringMessagePart(part);
                     if (this.HasBits)
                     {
-                        TwitchBitsCheerViewModel bitCheermote = this.GetBitCheermote(part);
+                        TwitchBitsCheerViewModel bitCheermote = TwitchBitsCheerViewModel.GetBitCheermote(part);
                         if (bitCheermote != null)
                         {
                             this.MessageParts[this.MessageParts.Count - 1] = bitCheermote;
@@ -249,22 +265,6 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             {
                 this.PlainTextMessageNoCheermotes = this.PlainTextMessage;
             }
-        }
-
-        private TwitchBitsCheerViewModel GetBitCheermote(string part)
-        {
-            foreach (TwitchBitsCheermoteViewModel cheermote in ServiceManager.Get<TwitchChatService>().BitsCheermotes)
-            {
-                if (part.StartsWith(cheermote.ID, StringComparison.InvariantCultureIgnoreCase) && int.TryParse(part.ToLower().Replace(cheermote.ID.ToLower(), ""), out int amount) && amount > 0)
-                {
-                    TwitchBitsCheermoteTierViewModel tier = cheermote.GetAppropriateTier(amount);
-                    if (tier != null)
-                    {
-                        return new TwitchBitsCheerViewModel(part, amount, tier);
-                    }
-                }
-            }
-            return null;
         }
     }
 }

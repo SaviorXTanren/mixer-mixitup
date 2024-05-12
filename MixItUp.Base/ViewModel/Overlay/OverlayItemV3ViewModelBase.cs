@@ -30,6 +30,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public virtual bool IsTestable { get { return false; } }
 
+        public virtual bool SupportsStandardActionAnimations { get { return true; } }
+
         public OverlayItemV3ViewModelBase(OverlayItemV3Type type)
         {
             this.Type = type;
