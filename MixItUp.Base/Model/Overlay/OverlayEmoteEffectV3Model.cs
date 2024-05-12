@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.Overlay
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
-            properties[EmotesPropertyName] = new List<string>();
+            properties[EmotesPropertyName] = "[]";
             properties[nameof(this.AnimationType)] = this.AnimationType.ToString();
             properties[nameof(this.EmoteWidth)] = this.EmoteWidth;
             properties[nameof(this.EmoteHeight)] = this.EmoteHeight;
@@ -159,7 +159,7 @@ namespace MixItUp.Base.Model.Overlay
                         }
                     }
 
-                    properties[EmotesPropertyName] = emoteURLs;
+                    properties[EmotesPropertyName] = $"\"{string.Join("\", \"", emoteURLs)}\"";
 
                     if (int.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.PerEmoteShown, parameters), out int perEmoteShown) && perEmoteShown > 0)
                     {

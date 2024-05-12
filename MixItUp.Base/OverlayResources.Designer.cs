@@ -241,7 +241,14 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to @keyframes rain-keyframes {
+        ///    0% { transform: translateY(-20vh); }
+        ///    100% { transform: translateY(120vh); }
+        ///}
+        ///
+        ///.rain {
+        ///    animation: rain-keyframes {Duration}s linear;
+        ///}.
         /// </summary>
         public static string OverlayEmoteEffectDefaultHTML {
             get {
@@ -250,7 +257,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///
+        ///const maxWidth = window.screen.width;
+        ///const maxHeight = window.screen.height;
+        ///
+        ///const duration = {Duration} * 1000;
+        ///
+        ///const emote = [{Emotes}];
+        ///const animation = &quot;{AnimationType}&quot;;
+        ///
+        ///const emoteWidth = {EmoteWidth};
+        ///const emoteHeight = {EmoteHeight};
+        ///
+        ///const perEmoteShown = {PerEmoteShown};
+        ///const maxAmountShown = {MaxAmountShown};
+        ///
+        ///var emoteFunctions = {};
+        ///
+        ///var totalEmotes = 0;
+        ///
+        ///function sleep(ms)
+        ///{
+        ///    return new Promise(resolve =&gt; setTime [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEmoteEffectDefaultJavascript {
             get {

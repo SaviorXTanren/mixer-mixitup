@@ -417,10 +417,109 @@ function removeInternal(message)
     <value />
   </data>
   <data name="OverlayEmoteEffectDefaultHTML" xml:space="preserve">
-    <value />
+    <value>@keyframes rain-keyframes {
+    0% { transform: translateY(-20vh); }
+    100% { transform: translateY(120vh); }
+}
+
+.rain {
+    animation: rain-keyframes {Duration}s linear;
+}</value>
   </data>
   <data name="OverlayEmoteEffectDefaultJavascript" xml:space="preserve">
-    <value />
+    <value>const main = document.getElementById("maindiv");
+
+const maxWidth = window.screen.width;
+const maxHeight = window.screen.height;
+
+const duration = {Duration} * 1000;
+
+const emote = [{Emotes}];
+const animation = "{AnimationType}";
+
+const emoteWidth = {EmoteWidth};
+const emoteHeight = {EmoteHeight};
+
+const perEmoteShown = {PerEmoteShown};
+const maxAmountShown = {MaxAmountShown};
+
+var emoteFunctions = {};
+
+var totalEmotes = 0;
+
+function sleep(ms)
+{
+    return new Promise(resolve =&gt; setTimeout(resolve, ms));
+}
+
+function randomNumber(min, max)
+{
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function randomXPosition()
+{
+    return randomNumber(0, maxWidth - emoteWidth);
+}
+
+function randomYPosition()
+{
+    return randomNumber(0, maxHeight - emoteHeight);
+}
+
+function createEmote(url)
+{
+    var emote = document.createElement("img");
+    emote.src = url;
+    emote.width = emoteWidth;
+    emote.height = emoteHeight;
+    main.appendChild(emote);
+    return emote;
+}
+
+function rain(emote)
+{
+    emote.style.position = "absolute";
+    emote.style.left = `${randomXPosition()}px`;
+    emote.style.top = `-${emoteHeight}px`;
+    emote.className = "rain";
+}
+
+async function addEmotes()
+{
+    for (let e = 0; e &lt; emotes.length; e++)
+    {
+        for (let i = 0; i &lt; perEmoteShown &amp;&amp; totalEmotes &lt; maxAmountShown; i++)
+        {
+            totalEmotes++;
+        
+            var emote = createEmote(emotes[e]);
+            
+            if (animation === "Random")
+            {
+                const entries = Object.entries(emoteFunctions);
+                const fn = entries[randomNumber(0, entries.length)];
+                fn[1](emote);
+            }
+            else
+            {
+                emoteFunctions[animation](emote);
+            }
+        
+            await sleep(200);
+        }
+    }
+}
+
+emoteFunctions["Rain"] = rain;
+
+addEmotes();
+
+setTimeout(() =&gt;
+{
+    main.style.visibility='hidden';
+    sendParentMessage({ Type: "Remove", ID: "{ID}" });
+}, duration);</value>
   </data>
   <data name="OverlayEndCreditsDefaultCSS" xml:space="preserve">
     <value>.list {
