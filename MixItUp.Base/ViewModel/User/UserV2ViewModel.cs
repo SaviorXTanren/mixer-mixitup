@@ -35,7 +35,6 @@ namespace MixItUp.Base.ViewModel.User
             ServiceManager.Get<UserService>().SetUserData(primary.model);
         }
 
-        private StreamingPlatformTypeEnum platform;
         private UserV2Model model;
         private UserPlatformV2ModelBase platformModel;
 
@@ -45,9 +44,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.model = model;
 
-            if (this.platform != StreamingPlatformTypeEnum.None)
+            if (platform != StreamingPlatformTypeEnum.None)
             {
-                this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
+                this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(platform);
             }
 
             if (this.platformModel == null && this.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
@@ -60,11 +59,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.Model.GetPlatforms().First());
             }
 
-            if (this.platformModel != null)
-            {
-                this.platform = this.platformModel.Platform;
-            }
-            else
+            if (this.platformModel == null)
             {
                 throw new InvalidOperationException($"User data does not contain any platform data - {model.ID} - {platform}");
             }
@@ -78,7 +73,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public Guid ID { get { return this.Model.ID; } }
 
-        public StreamingPlatformTypeEnum Platform { get { return this.platform; } }
+        public StreamingPlatformTypeEnum Platform { get { return this.PlatformModel.Platform; } }
 
         public HashSet<StreamingPlatformTypeEnum> AllPlatforms { get { return this.Model.GetPlatforms(); } }
 

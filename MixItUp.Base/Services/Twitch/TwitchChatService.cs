@@ -854,7 +854,7 @@ namespace MixItUp.Base.Services.Twitch
 
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertBanned, user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
 
-                    await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
+                    await ServiceManager.Get<UserService>().RemoveActiveUser(user);
 
                     ChatService.ChatUserBanned(user);
                 }

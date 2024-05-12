@@ -78,7 +78,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task<UserV2ViewModel> GetCurrentBoss()
         {
-            UserV2ViewModel boss = await ServiceManager.Get<UserService>().GetUserByID(this.CurrentBoss);
+            UserV2ViewModel boss = await ServiceManager.Get<UserService>().GetUserByID(StreamingPlatformTypeEnum.All, this.CurrentBoss);
             if (boss == null)
             {
                 boss = ChannelSession.User;
