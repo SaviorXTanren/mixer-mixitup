@@ -47,9 +47,9 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayEmoteEffectV3AnimationType AnimationType { get; set; }
 
         [DataMember]
-        public string PerEmoteShown { get; set; }
+        public int PerEmoteShown { get; set; }
         [DataMember]
-        public string MaxAmountShown { get; set; }
+        public int MaxAmountShown { get; set; }
 
         [DataMember]
         public int EmoteWidth { get; set; }
@@ -66,12 +66,12 @@ namespace MixItUp.Base.Model.Overlay
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
-            properties[EmotesPropertyName] = "[]";
+            properties[EmotesPropertyName] = string.Empty;
             properties[nameof(this.AnimationType)] = this.AnimationType.ToString();
             properties[nameof(this.EmoteWidth)] = this.EmoteWidth;
             properties[nameof(this.EmoteHeight)] = this.EmoteHeight;
-            properties[nameof(this.PerEmoteShown)] = 0;
-            properties[nameof(this.MaxAmountShown)] = 0;
+            properties[nameof(this.PerEmoteShown)] = this.PerEmoteShown;
+            properties[nameof(this.MaxAmountShown)] = this.MaxAmountShown;
 
             return properties;
         }
@@ -81,7 +81,6 @@ namespace MixItUp.Base.Model.Overlay
             string emoteText = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.EmoteText, parameters);
             if (!string.IsNullOrWhiteSpace(emoteText))
             {
-                emoteText = emoteText.ToLower();
                 string[] splits = emoteText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 if (splits != null && splits.Length > 0)
                 {
@@ -160,15 +159,6 @@ namespace MixItUp.Base.Model.Overlay
                     }
 
                     properties[EmotesPropertyName] = $"\"{string.Join("\", \"", emoteURLs)}\"";
-
-                    if (int.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.PerEmoteShown, parameters), out int perEmoteShown) && perEmoteShown > 0)
-                    {
-                        properties[nameof(this.PerEmoteShown)] = perEmoteShown;
-                    }
-                    if (int.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.MaxAmountShown, parameters), out int maxAmountShown) && maxAmountShown > 0)
-                    {
-                        properties[nameof(this.MaxAmountShown)] = maxAmountShown;
-                    }
                 }
             }
         }

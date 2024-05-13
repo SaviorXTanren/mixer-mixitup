@@ -10377,4 +10377,7 @@ namespace CustomNamespace
   <data name="OverlayEmoteEffectPerEmoteShown" xml:space="preserve">
     <value>Per Emote Shown</value>
   </data>
+  <data name="EmoteEffect" xml:space="preserve">
+    <value>Emote Effect</value>
+  </data>
 </root>

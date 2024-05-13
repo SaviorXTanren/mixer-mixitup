@@ -414,10 +414,19 @@ function removeInternal(message)
 }</value>
   </data>
   <data name="OverlayEmoteEffectDefaultCSS" xml:space="preserve">
-    <value />
-  </data>
-  <data name="OverlayEmoteEffectDefaultHTML" xml:space="preserve">
-    <value>@keyframes rain-keyframes {
+    <value>.maindiv {
+    position: absolute;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    margin: 0px;
+    z-index: {Layer};
+}
+
+@keyframes rain-keyframes {
     0% { transform: translateY(-20vh); }
     100% { transform: translateY(120vh); }
 }
@@ -425,6 +434,11 @@ function removeInternal(message)
 .rain {
     animation: rain-keyframes {Duration}s linear;
 }</value>
+  </data>
+  <data name="OverlayEmoteEffectDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="maindiv" class="maindiv"&gt;
+
+&lt;/div&gt;</value>
   </data>
   <data name="OverlayEmoteEffectDefaultJavascript" xml:space="preserve">
     <value>const main = document.getElementById("maindiv");
@@ -434,7 +448,7 @@ const maxHeight = window.screen.height;
 
 const duration = {Duration} * 1000;
 
-const emote = [{Emotes}];
+const emotes = [{Emotes}];
 const animation = "{AnimationType}";
 
 const emoteWidth = {EmoteWidth};

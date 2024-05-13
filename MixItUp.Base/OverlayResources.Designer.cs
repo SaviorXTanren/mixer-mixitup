@@ -232,7 +232,26 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to .maindiv {
+        ///    position: absolute;
+        ///    width: 100%;
+        ///    max-width: 100%;
+        ///    min-width: 100%;
+        ///    height: 100%;
+        ///    max-height: 100%;
+        ///    min-height: 100%;
+        ///    margin: 0px;
+        ///    z-index: {Layer};
+        ///}
+        ///
+        ///@keyframes rain-keyframes {
+        ///    0% { transform: translateY(-20vh); }
+        ///    100% { transform: translateY(120vh); }
+        ///}
+        ///
+        ///.rain {
+        ///    animation: rain-keyframes {Duration}s linear;
+        ///}.
         /// </summary>
         public static string OverlayEmoteEffectDefaultCSS {
             get {
@@ -241,14 +260,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @keyframes rain-keyframes {
-        ///    0% { transform: translateY(-20vh); }
-        ///    100% { transform: translateY(120vh); }
-        ///}
+        ///   Looks up a localized string similar to &lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
         ///
-        ///.rain {
-        ///    animation: rain-keyframes {Duration}s linear;
-        ///}.
+        ///&lt;/div&gt;.
         /// </summary>
         public static string OverlayEmoteEffectDefaultHTML {
             get {
@@ -264,7 +278,7 @@ namespace MixItUp.Base {
         ///
         ///const duration = {Duration} * 1000;
         ///
-        ///const emote = [{Emotes}];
+        ///const emotes = [{Emotes}];
         ///const animation = &quot;{AnimationType}&quot;;
         ///
         ///const emoteWidth = {EmoteWidth};
@@ -279,7 +293,7 @@ namespace MixItUp.Base {
         ///
         ///function sleep(ms)
         ///{
-        ///    return new Promise(resolve =&gt; setTime [rest of string was truncated]&quot;;.
+        ///    return new Promise(resolve =&gt; setTim [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEmoteEffectDefaultJavascript {
             get {

@@ -61,11 +61,11 @@
                         <ContentControl x:Name="InnerContent" Margin="10" />
                     </TabItem>
 
-                    <TabItem Header="{x:Static resx:Resources.Position}" HorizontalContentAlignment="Stretch">
+                    <TabItem Header="{x:Static resx:Resources.Position}" HorizontalContentAlignment="Stretch" IsEnabled="{Binding SupportsStandardActionPositioning}">
                         <OverlayControls:OverlayPositionV3Control x:Name="Position" DataContext="{Binding Position}" Margin="10" />
                     </TabItem>
 
-                    <TabItem Header="{x:Static resx:Resources.Animation}">
+                    <TabItem Header="{x:Static resx:Resources.Animation}" IsEnabled="{Binding SupportsStandardActionAnimations}">
                         <Grid HorizontalAlignment="Center" Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -73,7 +73,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}" IsEnabled="{Binding ShowStandardActionAnimations}">
+                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="10" />
@@ -84,7 +84,7 @@
                                 <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
                             </Grid>
 
-                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}" IsEnabled="{Binding ShowStandardActionAnimations}">
+                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="10" />

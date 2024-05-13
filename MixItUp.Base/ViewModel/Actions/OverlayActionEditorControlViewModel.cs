@@ -53,7 +53,8 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));
                     this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
                     this.NotifyPropertyChanged(nameof(this.ShowItem));
-                    this.NotifyPropertyChanged(nameof(this.ShowStandardActionAnimations));
+                    this.NotifyPropertyChanged(nameof(this.SupportsStandardActionPositioning));
+                    this.NotifyPropertyChanged(nameof(this.SupportsStandardActionAnimations));
                     this.NotifyPropertyChanged(nameof(this.ShowWidget));
                     this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
                     this.NotifyPropertyChanged(nameof(this.ShowAddGoal));
@@ -93,7 +94,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         {
                             this.Item = new OverlayTwitchClipV3ViewModel();
                         }
-                        else if (this.SelectedActionType == OverlayActionTypeEnum.TwitchClip)
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.EmoteEffect)
                         {
                             this.Item = new OverlayEmoteEffectV3ViewModel();
                         }
@@ -184,7 +185,9 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string duration;
 
-        public bool ShowStandardActionAnimations { get { return this.Item != null && this.Item.SupportsStandardActionAnimations; } }
+        public bool SupportsStandardActionPositioning { get { return this.Item != null && this.Item.SupportsStandardActionPositioning; } }
+
+        public bool SupportsStandardActionAnimations { get { return this.Item != null && this.Item.SupportsStandardActionAnimations; } }
 
         public OverlayAnimationV3ViewModel EntranceAnimation
         {
@@ -857,9 +860,9 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult<ActionModelBase>(null);
         }
 
-        private string GetDefaultHTML(OverlayItemV3ViewModelBase item) { return OverlayItemV3ModelBase.GetPositionWrappedHTML(item.DefaultHTML); }
+        private string GetDefaultHTML(OverlayItemV3ViewModelBase item) { return item.AddPositionedWrappedHTMLCSS ? OverlayItemV3ModelBase.GetPositionWrappedHTML(item.DefaultHTML) : item.DefaultHTML; }
 
-        private string GetDefaultCSS(OverlayItemV3ViewModelBase item) { return OverlayItemV3ModelBase.GetPositionWrappedCSS(item.DefaultCSS); }
+        private string GetDefaultCSS(OverlayItemV3ViewModelBase item) { return item.AddPositionedWrappedHTMLCSS ? OverlayItemV3ModelBase.GetPositionWrappedCSS(item.DefaultCSS) : item.DefaultCSS; }
 
         private string GetDefaultJavascript(OverlayItemV3ViewModelBase item) { return item.DefaultJavascript; }
     }

@@ -35,7 +35,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayEmoteEffectV3AnimationType selectedAnimationType;
 
-        public string PerEmoteShown
+        public int PerEmoteShown
         {
             get { return this.perEmoteShown; }
             set
@@ -44,8 +44,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private string perEmoteShown;
-        public string MaxAmountShown
+        private int perEmoteShown;
+        public int MaxAmountShown
         {
             get { return this.maxAmountShown; }
             set
@@ -54,29 +54,29 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private string maxAmountShown;
+        private int maxAmountShown;
 
-        public int Width
+        public int EmoteWidth
         {
-            get { return this.width; }
+            get { return this.emoteWidth; }
             set
             {
-                this.width = value > 0 ? value : 1;
+                this.emoteWidth = value > 1 ? value : 1;
                 this.NotifyPropertyChanged();
             }
         }
-        private int width;
+        private int emoteWidth;
 
-        public int Height
+        public int EmoteHeight
         {
-            get { return this.height; }
+            get { return this.emoteHeight; }
             set
             {
-                this.height = value > 0 ? value : 1;
+                this.emoteHeight = value > 0 ? value : 1;
                 this.NotifyPropertyChanged();
             }
         }
-        private int height;
+        private int emoteHeight;
 
         public bool AllowURLs
         {
@@ -99,6 +99,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool allowEmoji;
 
+        public override bool AddPositionedWrappedHTMLCSS { get { return false; } }
+        public override bool SupportsStandardActionPositioning { get { return false; } }
         public override bool SupportsStandardActionAnimations { get { return false; } }
 
         public OverlayEmoteEffectV3ViewModel()
@@ -106,8 +108,11 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.SelectedAnimationType = OverlayEmoteEffectV3AnimationType.Rain;
 
-            this.PerEmoteShown = "1";
-            this.MaxAmountShown = "1";
+            this.PerEmoteShown = 1;
+            this.MaxAmountShown = 1;
+
+            this.EmoteWidth = 50;
+            this.EmoteHeight = 50;
         }
 
         public OverlayEmoteEffectV3ViewModel(OverlayEmoteEffectV3Model item)
@@ -120,8 +125,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.PerEmoteShown = item.PerEmoteShown;
             this.MaxAmountShown = item.MaxAmountShown;
 
-            this.width = item.EmoteWidth;
-            this.height = item.EmoteHeight;
+            this.emoteWidth = item.EmoteWidth;
+            this.emoteHeight = item.EmoteHeight;
 
             this.AllowURLs = item.AllowURLs;
             this.AllowEmoji = item.AllowEmoji;
@@ -148,8 +153,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 PerEmoteShown = this.PerEmoteShown,
                 MaxAmountShown = this.MaxAmountShown,
 
-                EmoteWidth = this.width,
-                EmoteHeight = this.height,
+                EmoteWidth = this.emoteWidth,
+                EmoteHeight = this.emoteHeight,
 
                 AllowURLs = this.AllowURLs,
                 AllowEmoji = this.AllowEmoji,
