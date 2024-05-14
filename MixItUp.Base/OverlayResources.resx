@@ -1234,11 +1234,11 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     &lt;meta charset="utf-8" /&gt;
     &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
 
-    &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/scripts/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
 
-    &lt;script src="video.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/scripts/video.min.js"&gt;&lt;/script&gt;
 
-    &lt;link rel="stylesheet" type="text/css" href="animate.min.css"&gt;
+    &lt;link rel="stylesheet" type="text/css" href="/scripts/animate.min.css"&gt;
 
     &lt;style type="text/css"&gt;
         {CSS}
@@ -1619,7 +1619,7 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
         }
     &lt;/script&gt;
 
-    &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/scripts/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
 
     &lt;script src="https://code.responsivevoice.org/responsivevoice.js?key=PkwySfvE"&gt;&lt;/script&gt;
 &lt;/head&gt;

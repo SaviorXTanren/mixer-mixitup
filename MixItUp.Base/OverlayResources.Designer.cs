@@ -745,17 +745,17 @@ namespace MixItUp.Base {
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
         ///
-        ///    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+        ///    &lt;script src=&quot;/scripts/jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
         ///
-        ///    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
+        ///    &lt;script src=&quot;/scripts/video.min.js&quot;&gt;&lt;/script&gt;
         ///
-        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
+        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/scripts/animate.min.css&quot;&gt;
         ///
         ///    &lt;style type=&quot;text/css&quot;&gt;
         ///        {CSS}
         ///    &lt;/style&gt;
         ///&lt;/head&gt;
-        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max- [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayItemIFrameHTML {
             get {
