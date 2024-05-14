@@ -18,10 +18,9 @@ namespace MixItUp.Base.Model.Overlay
     public enum OverlayEmoteEffectV3AnimationType
     {
         Rain,
+        Float,
         Fade,
         Explosion,
-        Bounce,
-        Float,
         FallingLeaves,
         ShootingStars,
         Zoom,

@@ -232,7 +232,8 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .maindiv {
+        ///   Looks up a localized string similar to .maindiv
+        ///{
         ///    position: absolute;
         ///    width: 100%;
         ///    max-width: 100%;
@@ -244,22 +245,25 @@ namespace MixItUp.Base {
         ///    z-index: {Layer};
         ///}
         ///
-        ///@keyframes rain-keyframes {
-        ///    0% { transform: translateY(-20vh); }
+        ///.emote
+        ///{
+        ///    visibility: hidden;
+        ///}
+        ///
+        ///@keyframes rain-keyframes
+        ///{
+        ///    0% { transform: translateY(-20vh); visibility: visible; }
         ///    100% { transform: translateY(120vh); }
         ///}
         ///
-        ///.rain {
+        ///.rain
+        ///{
         ///    animation: rain-keyframes {Duration}s linear;
         ///}
         ///
-        ///@keyframes fade-keyframes {
-        ///    0% { opacity: 0; }
-        ///    50% { opacity: 1; }
-        ///    100% { opacity: 0; }
-        ///}
-        ///
-        ///.fade {        /// [rest of string was truncated]&quot;;.
+        ///@keyframes float-keyframes
+        ///{
+        ///    0% { transform: t [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEmoteEffectDefaultCSS {
             get {

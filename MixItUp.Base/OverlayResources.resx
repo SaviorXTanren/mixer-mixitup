@@ -414,7 +414,8 @@ function removeInternal(message)
 }</value>
   </data>
   <data name="OverlayEmoteEffectDefaultCSS" xml:space="preserve">
-    <value>.maindiv {
+    <value>.maindiv
+{
     position: absolute;
     width: 100%;
     max-width: 100%;
@@ -426,23 +427,43 @@ function removeInternal(message)
     z-index: {Layer};
 }
 
-@keyframes rain-keyframes {
-    0% { transform: translateY(-20vh); }
+.emote
+{
+    visibility: hidden;
+}
+
+@keyframes rain-keyframes
+{
+    0% { transform: translateY(-20vh); visibility: visible; }
     100% { transform: translateY(120vh); }
 }
 
-.rain {
+.rain
+{
     animation: rain-keyframes {Duration}s linear;
 }
 
-@keyframes fade-keyframes {
-    0% { opacity: 0; }
+@keyframes float-keyframes
+{
+    0% { transform: translateY(120vh); visibility: visible; }
+    100% { transform: translateY(-20vh); }
+}
+
+.float
+{
+    animation: float-keyframes {Duration}s linear;
+}
+
+@keyframes fade-keyframes
+{
+    0% { opacity: 0; visibility: visible; }
     50% { opacity: 1; }
     100% { opacity: 0; }
 }
 
-.fade {
-    animation: fade-keyframes 5s linear;
+.fade
+{
+    animation: fade-keyframes {Duration}s linear;
 }</value>
   </data>
   <data name="OverlayEmoteEffectDefaultHTML" xml:space="preserve">
@@ -497,29 +518,33 @@ function createEmote(url)
     emote.src = url;
     emote.width = emoteWidth;
     emote.height = emoteHeight;
+    emote.style.position = "absolute";
+    emote.classList.add("emote");
     main.appendChild(emote);
     return emote;
 }
 
 function rain(emote)
 {
-    emote.style.position = "absolute";
     emote.style.left = `${randomXPosition()}px`;
-    emote.style.top = `-${emoteHeight}px`;
-    emote.className = "rain";
+    emote.classList.add("rain");
+}
+
+function float(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.classList.add("float");
 }
 
 function fade(emote)
 {
-    emote.style.position = "absolute";
     emote.style.left = `${randomXPosition()}px`;
     emote.style.top = `${randomYPosition()}px`;
-    emote.className = "fade";
+    emote.classList.add("fade");
 }
 
 function explosion(emote)
 {
-    emote.style.position = "absolute";
     emote.style.left = `${(maxWidth / 2) - (emoteWidth / 2)}px`;
     emote.style.top = `${(maxHeight / 2) - (emoteHeight / 2)}px`;
 
@@ -528,7 +553,7 @@ function explosion(emote)
 
     const animationKeyframes =
     [
-        { transform: `rotate(${turnAmount}turn) scale(0)`, offset: 0 },
+        { transform: `rotate(${turnAmount}turn) scale(0)`, visibility: "visible", offset: 0 },
         { transform: `rotate(${turnAmount}turn) scale(1)`, offset: 0.1 },
         { transform: `rotate(${turnAmount}turn) translateY(${movementPixels}px)`, offset: 1 },
     ];
@@ -560,19 +585,20 @@ async function addEmotes()
             await sleep(200);
         }
     }
+    
+    setTimeout(() =&gt;
+    {
+        main.style.visibility='hidden';
+        sendParentMessage({ Type: "Remove", ID: "{ID}" });
+    }, duration);
 }
 
 emoteFunctions["Rain"] = rain;
+emoteFunctions["Float"] = float;
 emoteFunctions["Fade"] = fade;
 emoteFunctions["Explosion"] = explosion;
 
-addEmotes();
-
-setTimeout(() =&gt;
-{
-    main.style.visibility='hidden';
-    sendParentMessage({ Type: "Remove", ID: "{ID}" });
-}, duration);</value>
+addEmotes();</value>
   </data>
   <data name="OverlayEndCreditsDefaultCSS" xml:space="preserve">
     <value>.list {
