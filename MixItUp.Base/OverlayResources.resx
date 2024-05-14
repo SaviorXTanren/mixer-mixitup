@@ -517,6 +517,25 @@ function fade(emote)
     emote.className = "fade";
 }
 
+function explosion(emote)
+{
+    emote.style.position = "absolute";
+    emote.style.left = `${(maxWidth / 2) - (emoteWidth / 2)}px`;
+    emote.style.top = `${(maxHeight / 2) - (emoteHeight / 2)}px`;
+
+    const turnAmount = Math.random();
+    const movementPixels = Math.max(maxWidth, maxHeight);
+
+    const animationKeyframes =
+    [
+        { transform: `rotate(${turnAmount}turn) scale(0)`, offset: 0 },
+        { transform: `rotate(${turnAmount}turn) scale(1)`, offset: 0.1 },
+        { transform: `rotate(${turnAmount}turn) translateY(${movementPixels}px)`, offset: 1 },
+    ];
+    
+    emote.animate(animationKeyframes, duration);
+}
+
 async function addEmotes()
 {
     for (let e = 0; e &lt; emotes.length; e++)
@@ -545,6 +564,7 @@ async function addEmotes()
 
 emoteFunctions["Rain"] = rain;
 emoteFunctions["Fade"] = fade;
+emoteFunctions["Explosion"] = explosion;
 
 addEmotes();
 
