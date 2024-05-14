@@ -143,7 +143,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
-            if (amount != 0)
+            if (this.CurrentSegment != null && amount != 0)
             {
                 if (amount > 0)
                 {
