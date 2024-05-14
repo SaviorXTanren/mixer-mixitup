@@ -504,9 +504,7 @@ namespace MixItUp.Base.Services
                     OverlayActionModel action = (OverlayActionModel)actionModel;
 
 #pragma warning disable CS0612 // Type or member is obsolete
-                    OverlayEndpointV3Model endpoint = settings.OverlayEndpointsV3.FirstOrDefault(e => string.Equals(e.Name, action.OverlayName));
-
-                    if (action.WidgetID == Guid.Empty)
+                    if (action.WidgetID == Guid.Empty && action.OverlayItem != null)
                     {
                         action.Duration = action.OverlayItem.Effects.Duration.ToString();
                         if (action.OverlayItem.Effects.EntranceAnimation != OverlayItemEffectEntranceAnimationTypeEnum.None)
@@ -543,6 +541,7 @@ namespace MixItUp.Base.Services
                         if (item != null)
                         {
                             action.OverlayItemV3 = item;
+                            OverlayEndpointV3Model endpoint = settings.OverlayEndpointsV3.FirstOrDefault(e => string.Equals(e.Name, action.OverlayName));
                             if (endpoint != null && endpoint.ID != Guid.Empty)
                             {
                                 action.OverlayItemV3.OverlayEndpointID = endpoint.ID;
@@ -555,7 +554,6 @@ namespace MixItUp.Base.Services
                 else if (actionModel is TextToSpeechActionModel)
                 {
                     TextToSpeechActionModel action = (TextToSpeechActionModel)actionModel;
-                    action.ProviderType = TextToSpeechProviderType.ResponsiveVoice;
                     updated = true;
                 }
                 else if (actionModel is GroupActionModel)
