@@ -53,8 +53,6 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));
                     this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
                     this.NotifyPropertyChanged(nameof(this.ShowItem));
-                    this.NotifyPropertyChanged(nameof(this.SupportsStandardActionPositioning));
-                    this.NotifyPropertyChanged(nameof(this.SupportsStandardActionAnimations));
                     this.NotifyPropertyChanged(nameof(this.ShowWidget));
                     this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
                     this.NotifyPropertyChanged(nameof(this.ShowAddGoal));
@@ -111,6 +109,9 @@ namespace MixItUp.Base.ViewModel.Actions
                         this.NotifyPropertyChanged(nameof(this.CSSHeader));
                         this.NotifyPropertyChanged(nameof(this.JavascriptHeader));
                     }
+
+                    this.NotifyPropertyChanged(nameof(this.SupportsStandardActionPositioning));
+                    this.NotifyPropertyChanged(nameof(this.SupportsStandardActionAnimations));
                 }
             }
         }

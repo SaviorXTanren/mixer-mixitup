@@ -40,8 +40,13 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.perEmoteShown; }
             set
             {
-                this.perEmoteShown = value;
+                this.perEmoteShown = value > 1 ? value : 1;
                 this.NotifyPropertyChanged();
+
+                if (this.MaxAmountShown < this.PerEmoteShown)
+                {
+                    this.MaxAmountShown = this.PerEmoteShown;
+                }
             }
         }
         private int perEmoteShown;
@@ -50,7 +55,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.maxAmountShown; }
             set
             {
-                this.maxAmountShown = value;
+                this.maxAmountShown = value > this.PerEmoteShown ? value : this.PerEmoteShown;
                 this.NotifyPropertyChanged();
             }
         }
@@ -72,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.emoteHeight; }
             set
             {
-                this.emoteHeight = value > 0 ? value : 1;
+                this.emoteHeight = value > 1 ? value : 1;
                 this.NotifyPropertyChanged();
             }
         }

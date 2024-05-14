@@ -43,16 +43,16 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBox Text="{Binding PerEmoteShown}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEmoteEffectPerEmoteShown}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding EmoteWidth}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding MaxAmountShown}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmountShown}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding EmoteHeight}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -61,9 +61,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding EmoteWidth}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding PerEmoteShown}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEmoteEffectPerEmoteShown}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding EmoteHeight}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding MaxAmountShown}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmountShown}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowURLs}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="5" IsChecked="{Binding AllowURLs}" VerticalAlignment="Center" Margin="5,0,0,0" />
