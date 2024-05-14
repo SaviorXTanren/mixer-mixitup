@@ -433,6 +433,16 @@ function removeInternal(message)
 
 .rain {
     animation: rain-keyframes {Duration}s linear;
+}
+
+@keyframes fade-keyframes {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.fade {
+    animation: fade-keyframes 5s linear;
 }</value>
   </data>
   <data name="OverlayEmoteEffectDefaultHTML" xml:space="preserve">
@@ -499,6 +509,14 @@ function rain(emote)
     emote.className = "rain";
 }
 
+function fade(emote)
+{
+    emote.style.position = "absolute";
+    emote.style.left = `${randomXPosition()}px`;
+    emote.style.top = `${randomYPosition()}px`;
+    emote.className = "fade";
+}
+
 async function addEmotes()
 {
     for (let e = 0; e &lt; emotes.length; e++)
@@ -526,6 +544,7 @@ async function addEmotes()
 }
 
 emoteFunctions["Rain"] = rain;
+emoteFunctions["Fade"] = fade;
 
 addEmotes();
 

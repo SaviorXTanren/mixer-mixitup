@@ -251,7 +251,15 @@ namespace MixItUp.Base {
         ///
         ///.rain {
         ///    animation: rain-keyframes {Duration}s linear;
-        ///}.
+        ///}
+        ///
+        ///@keyframes fade-keyframes {
+        ///    0% { opacity: 0; }
+        ///    50% { opacity: 1; }
+        ///    100% { opacity: 0; }
+        ///}
+        ///
+        ///.fade {        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEmoteEffectDefaultCSS {
             get {
