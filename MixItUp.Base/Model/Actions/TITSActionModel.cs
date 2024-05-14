@@ -25,12 +25,12 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public double ThrowDelayTime { get; set; }
         [DataMember]
-        public int ThrowAmount { get; set; }
+        public string ThrowAmount { get; set; }
 
         [DataMember]
         public string TriggerID { get; set; }
 
-        public TITSActionModel(TITSActionTypeEnum actionType, string throwItemID, double throwDelayTime, int throwAmount)
+        public TITSActionModel(TITSActionTypeEnum actionType, string throwItemID, double throwDelayTime, string throwAmount)
             : this(actionType)
         {
             this.ThrowItemID = throwItemID;
@@ -64,7 +64,12 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (this.ActionType == TITSActionTypeEnum.ThrowItem)
                 {
-                    await ServiceManager.Get<TITSService>().ThrowItem(this.ThrowItemID, this.ThrowDelayTime, this.ThrowAmount);
+                    int.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.ThrowAmount, parameters), out int amount);
+                    if (amount <= 0)
+                    {
+                        amount = 1;
+                    }
+                    await ServiceManager.Get<TITSService>().ThrowItem(this.ThrowItemID, this.ThrowDelayTime, amount);
                 }
                 else if (this.ActionType == TITSActionTypeEnum.ActivateTrigger)
                 {
