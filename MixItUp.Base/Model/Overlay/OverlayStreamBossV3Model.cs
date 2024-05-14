@@ -51,6 +51,8 @@ namespace MixItUp.Base.Model.Overlay
         public double OverkillBonusHealthMultiplier { get; set; }
         [DataMember]
         public double SelfHealingMultiplier { get; set; }
+        [DataMember]
+        public bool CompoundPreviousBossHealth { get; set; } = true;
 
         [DataMember]
         public OverlayAnimationV3Model DamageAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -115,6 +117,10 @@ namespace MixItUp.Base.Model.Overlay
                     else
                     {
                         this.CurrentBoss = user.ID;
+                        if (!this.CompoundPreviousBossHealth)
+                        {
+                            this.CurrentMaxHealth = this.BaseHealth;
+                        }
                         this.CurrentMaxHealth += this.KillBonusHealth;
                         this.CurrentMaxHealth += (int)Math.Round(Math.Abs(this.CurrentHealth) * this.OverkillBonusHealthMultiplier);
                         this.CurrentHealth = this.CurrentMaxHealth;

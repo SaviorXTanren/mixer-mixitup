@@ -122,6 +122,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private double selfHealingMultiplier;
 
+        public bool CompoundPreviousBossHealth
+        {
+            get { return this.compoundPreviousBossHealth; }
+            set
+            {
+                this.compoundPreviousBossHealth = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool compoundPreviousBossHealth;
+
         public CustomCommandModel DamageOccurredCommand
         {
             get { return this.damageOccurredCommand; }
@@ -178,6 +189,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.KillBonusHealth = 100;
             this.OverkillBonusHealthMultiplier = 1.5;
             this.SelfHealingMultiplier = 1.5;
+            this.CompoundPreviousBossHealth = true;
 
             this.FollowAmount = 10;
 
@@ -226,6 +238,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.KillBonusHealth = item.KillBonusHealth;
             this.OverkillBonusHealthMultiplier = item.OverkillBonusHealthMultiplier;
             this.SelfHealingMultiplier = item.SelfHealingMultiplier;
+            this.CompoundPreviousBossHealth = item.CompoundPreviousBossHealth;
 
             this.DamageOccurredCommand = this.GetEmbeddedCommand(item.DamageOccurredCommandID, Resources.DamageOccurred);
             this.HealingOccurredCommand = this.GetEmbeddedCommand(item.HealingOccurredCommandID, Resources.HealingOccurred);
@@ -285,6 +298,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.KillBonusHealth = this.KillBonusHealth;
             result.OverkillBonusHealthMultiplier = this.OverkillBonusHealthMultiplier;
             result.SelfHealingMultiplier = this.SelfHealingMultiplier;
+            result.CompoundPreviousBossHealth = this.CompoundPreviousBossHealth;
 
             result.DamageOccurredCommandID = this.DamageOccurredCommand.ID;
             ChannelSession.Settings.SetCommand(this.DamageOccurredCommand);

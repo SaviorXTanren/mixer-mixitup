@@ -10380,4 +10380,7 @@ namespace CustomNamespace
   <data name="EmoteEffect" xml:space="preserve">
     <value>Emote Effect</value>
   </data>
+  <data name="CompoundPreviousBossHealth" xml:space="preserve">
+    <value>Compound Previous Boss Health</value>
+  </data>
 </root>

@@ -3532,6 +3532,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Compound Previous Boss Health.
+        /// </summary>
+        public static string CompoundPreviousBossHealth {
+            get {
+                return ResourceManager.GetString("CompoundPreviousBossHealth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Conditional.
         /// </summary>
         public static string Conditional {
