@@ -279,19 +279,6 @@ namespace MixItUp.Base.Services.External
 
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            if (ChannelSession.Settings.TiltifyCampaign > 0)
-            {
-                // Legacy upgrade to new V5 API
-                campaign = await this.GetCampaign(ChannelSession.Settings.TiltifyCampaign.ToString());
-                if (campaign != null)
-                {
-                    ChannelSession.Settings.TiltifyCampaignV5 = campaign.id;
-                    ChannelSession.Settings.TiltifyCampaign = 0;
-                }
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
-
             if (string.IsNullOrWhiteSpace(ChannelSession.Settings.TiltifyCampaignV5))
             {
                 campaign = null;
