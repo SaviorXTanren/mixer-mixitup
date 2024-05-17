@@ -408,6 +408,22 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
+        public void SubtractAmount(UserV2Model user, Guid itemID, int amount)
+        {
+            if (this.ItemExists(itemID))
+            {
+                this.SubtractAmount(user, this.GetItem(itemID), amount);
+            }
+        }
+
+        public void SubtractAmount(UserV2Model user, InventoryItemModel item, int amount)
+        {
+            if (!user.IsSpecialtyExcluded)
+            {
+                this.SetAmount(user, item, this.GetAmount(user, item) - amount);
+            }
+        }
+
         public void SubtractAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
