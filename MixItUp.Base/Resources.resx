@@ -10383,4 +10383,10 @@ namespace CustomNamespace
   <data name="CompoundPreviousBossHealth" xml:space="preserve">
     <value>Compound Previous Boss Health</value>
   </data>
+  <data name="ChangeFolder" xml:space="preserve">
+    <value>Change Folder</value>
+  </data>
+  <data name="FolderPath" xml:space="preserve">
+    <value>Folder Path</value>
+  </data>
 </root>

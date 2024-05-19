@@ -237,6 +237,14 @@ namespace MixItUp.WPF.Services
             }
         }
 
+        public async Task ChangeFolder(string folderPath)
+        {
+            ChannelSession.Settings.MusicPlayerFolders.Clear();
+            ChannelSession.Settings.MusicPlayerFolders.Add(folderPath);
+
+            await ServiceManager.Get<IMusicPlayerService>().LoadSongs();
+        }
+
         public async Task LoadSongs()
         {
             await Task.Run(async () =>

@@ -2195,6 +2195,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change Folder.
+        /// </summary>
+        public static string ChangeFolder {
+            get {
+                return ResourceManager.GetString("ChangeFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog.
         /// </summary>
         public static string Changelog {
@@ -7402,6 +7411,15 @@ namespace MixItUp.Base {
         public static string Float {
             get {
                 return ResourceManager.GetString("Float", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder Path.
+        /// </summary>
+        public static string FolderPath {
+            get {
+                return ResourceManager.GetString("FolderPath", resourceCulture);
             }
         }
         

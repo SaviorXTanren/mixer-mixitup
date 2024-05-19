@@ -21,6 +21,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.ShowVolume));
                 this.NotifyPropertyChanged(nameof(this.ShowSearchText));
+                this.NotifyPropertyChanged(nameof(this.ShowFolderPath));
             }
         }
         private MusicPlayerActionTypeEnum selectedActionType;
@@ -51,6 +52,19 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string searchText;
 
+        public bool ShowFolderPath { get { return this.SelectedActionType == MusicPlayerActionTypeEnum.ChangeFolder; } }
+
+        public string FolderPath
+        {
+            get { return this.folderPath; }
+            set
+            {
+                this.folderPath = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string folderPath;
+
         public MusicPlayerActionEditorControlViewModel(MusicPlayerActionModel action)
             : base(action)
         {
@@ -62,6 +76,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.SelectedActionType == MusicPlayerActionTypeEnum.PlaySpecificSong)
             {
                 this.SearchText = action.SearchText;
+            }
+            else if (this.SelectedActionType == MusicPlayerActionTypeEnum.ChangeFolder)
+            {
+                this.FolderPath = action.FolderPath;
             }
         }
 
@@ -81,6 +99,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowSearchText)
             {
                 return Task.FromResult<ActionModelBase>(new MusicPlayerActionModel(this.SelectedActionType) { SearchText = this.SearchText });
+            }
+            else if (this.ShowFolderPath)
+            {
+                return Task.FromResult<ActionModelBase>(new MusicPlayerActionModel(this.SelectedActionType) { FolderPath = this.FolderPath });
             }
             else
             {
