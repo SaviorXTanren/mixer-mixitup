@@ -445,11 +445,13 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ServiceManager.Get<TiltifyService>().IsConnected && !string.IsNullOrWhiteSpace(ChannelSession.Settings.TiltifyCampaignV5))
+            if (ServiceManager.Get<TiltifyService>().IsConnected)
             {
                 if (this.ContainsSpecialIdentifier(TiltifySpecialIdentifierHeader))
                 {
-                    TiltifyCampaign campaign = await ServiceManager.Get<TiltifyService>().GetCampaign(ChannelSession.Settings.TiltifyCampaignV5);
+                    await ServiceManager.Get<TiltifyService>().RefreshCampaign();
+
+                    TiltifyCampaign campaign = ServiceManager.Get<TiltifyService>().Campaign;
                     if (campaign != null)
                     {
                         this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "campaignurl", campaign.url);
