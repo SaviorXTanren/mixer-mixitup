@@ -25,10 +25,12 @@ namespace MixItUp.Base.ViewModel.Services
                 if (this.SelectedCampaign != null)
                 {
                     ChannelSession.Settings.TiltifyCampaignV5 = this.SelectedCampaign.id;
+                    ChannelSession.Settings.TiltifyCampaignV5IsTeam = this.SelectedCampaign.IsPartOfTeam;
                 }
                 else
                 {
                     ChannelSession.Settings.TiltifyCampaignV5 = null;
+                    ChannelSession.Settings.TiltifyCampaignV5IsTeam = false;
                 }
             }
         }
@@ -62,6 +64,7 @@ namespace MixItUp.Base.ViewModel.Services
 
                 ChannelSession.Settings.TiltifyOAuthToken = null;
                 ChannelSession.Settings.TiltifyCampaignV5 = null;
+                ChannelSession.Settings.TiltifyCampaignV5IsTeam = false;
 
                 this.IsConnected = false;
             });

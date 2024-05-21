@@ -515,6 +515,8 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public string TiltifyCampaignV5 { get; set; }
+        [DataMember]
+        public bool TiltifyCampaignV5IsTeam { get; set; }
 
         [DataMember]
         public string DonorDriveCharityURL { get; set; }
