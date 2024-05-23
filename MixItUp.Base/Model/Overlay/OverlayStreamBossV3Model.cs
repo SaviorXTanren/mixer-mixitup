@@ -190,9 +190,9 @@ namespace MixItUp.Base.Model.Overlay
             properties[BossNameProperty] = boss.DisplayName;
         }
 
-        protected override async Task WidgetEnableInternal()
+        protected override async Task WidgetInitializeInternal()
         {
-            await base.WidgetEnableInternal();
+            await base.WidgetInitializeInternal();
 
             if (this.CurrentBoss == Guid.Empty)
             {

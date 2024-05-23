@@ -196,6 +196,7 @@ namespace MixItUp.Base.Services
 
                     foreach (OverlayWidgetV3Model widget in this.GetWidgets())
                     {
+                        await widget.Initialize();
                         if (widget.IsEnabled)
                         {
                             await widget.Enable();

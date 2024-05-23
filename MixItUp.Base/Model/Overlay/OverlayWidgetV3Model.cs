@@ -50,12 +50,22 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         [Obsolete]
         public OverlayWidgetV3Model() { }
 
-        public async Task Enable()
+        public async Task Initialize()
         {
-            this.IsEnabled = true;
             if (!this.IsInitialized)
             {
                 this.IsInitialized = true;
+                await this.Item.WidgetInitialize();
+            }
+        }
+
+        public async Task Enable()
+        {
+            await this.Initialize();
+
+            if (!this.IsEnabled)
+            {
+                this.IsEnabled = true;
 
                 await this.Item.WidgetEnable();
 
@@ -68,19 +78,20 @@ namespace MixItUp.Base.Model.Overlay.Widgets
 
         public async Task Disable()
         {
-            this.IsEnabled = false;
-
-            await this.Item.WidgetDisable();
-
-            this.Item.LoadedInWidget -= Item_LoadedInWidget;
-
-            if (this.refreshCancellationTokenSource != null)
+            if (this.IsEnabled)
             {
-                this.refreshCancellationTokenSource.Cancel();
-            }
-            this.refreshCancellationTokenSource = null;
+                this.IsEnabled = false;
 
-            this.IsInitialized = false;
+                await this.Item.WidgetDisable();
+
+                this.Item.LoadedInWidget -= Item_LoadedInWidget;
+
+                if (this.refreshCancellationTokenSource != null)
+                {
+                    this.refreshCancellationTokenSource.Cancel();
+                }
+                this.refreshCancellationTokenSource = null;
+            }
         }
 
         public async Task WidgetFullReset()

@@ -497,7 +497,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 #pragma warning disable CS0612 // Type or member is obsolete
             this.testWidget.Item.IsLivePreview = true;
 #pragma warning restore CS0612 // Type or member is obsolete
-            await widget.Enable();
+            await this.testWidget.Enable();
         }
 
         private async Task RefreshTestWidget()
