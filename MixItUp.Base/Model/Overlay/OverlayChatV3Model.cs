@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -57,7 +58,7 @@ namespace MixItUp.Base.Model.Overlay
         public bool ShowSpecialtyBadge { get; set; }
 
         [DataMember]
-        public HashSet<StreamingPlatformTypeEnum> ApplicableStreamingPlatforms { get; set; } = new HashSet<StreamingPlatformTypeEnum>(StreamingPlatforms.SupportedPlatforms);
+        public HashSet<StreamingPlatformTypeEnum> ApplicableStreamingPlatforms { get; set; } = new HashSet<StreamingPlatformTypeEnum>();
 
         [DataMember]
         public OverlayAnimationV3Model MessageAddedAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -120,6 +121,16 @@ namespace MixItUp.Base.Model.Overlay
             properties[MessageProperty] = messageParts;
 
             await this.CallFunction("add", properties);
+        }
+
+        protected override async Task WidgetInitializeInternal()
+        {
+            await base.WidgetInitializeInternal();
+
+            if (this.ApplicableStreamingPlatforms.Count == 0)
+            {
+                this.ApplicableStreamingPlatforms.AddRange(StreamingPlatforms.SupportedPlatforms);
+            }
         }
 
         protected override async Task WidgetEnableInternal()
