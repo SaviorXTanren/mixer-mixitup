@@ -506,6 +506,21 @@ function removeInternal(message)
 .falling-leaves
 {
     animation: falling-leaves-keyframes {Duration}s linear;
+}
+
+@keyframes shooting-stars-keyframes
+{
+    0% { transform: scale(0.01); visibility: visible; }
+    20% { transform: translateX(-10vw) translateY(3vh) scale(1); }
+    40% { transform: translateX(-20vw) translateY(9vh) scale(1); }
+    60% { transform: translateX(-30vw) translateY(15vh) scale(1); }
+    80% { transform: translateX(-40vw) translateY(22vh) scale(1); }
+    100% { transform: translateX(-50vw) translateY(30vh) scale(0); }
+}
+
+.shooting-stars
+{
+    animation: shooting-stars-keyframes {Duration}s linear;
 }</value>
   </data>
   <data name="OverlayEmoteEffectDefaultHTML" xml:space="preserve">
@@ -612,6 +627,13 @@ function FallingLeaves(emote)
 {
     emote.style.left = `${randomXPosition()}px`;
     emote.classList.add("falling-leaves");
+}
+
+function ShootingStars(emote)
+{
+    emote.style.left = `${randomNumber(maxWidth / 2, maxWidth - emoteWidth)}px`;
+    emote.style.top = `${randomNumber(0, (maxHeight - emoteHeight) / 2)}px`;
+    emote.classList.add("shooting-stars");
 }
 
 async function addEmotes()
