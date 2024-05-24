@@ -531,6 +531,8 @@ function removeInternal(message)
   <data name="OverlayEmoteEffectDefaultJavascript" xml:space="preserve">
     <value>const main = document.getElementById("maindiv");
 
+const emojiPrefix = "emoji://";
+
 const maxWidth = window.screen.width;
 const maxHeight = window.screen.height;
 
@@ -569,10 +571,22 @@ function randomYPosition()
 
 function createEmote(url)
 {
-    var emote = document.createElement("img");
-    emote.src = url;
-    emote.width = emoteWidth;
-    emote.height = emoteHeight;
+    var emote;
+    if (url.startsWith(emojiPrefix))
+    {
+        emote = document.createElement("div");
+        emote.innerText = url.replace(emojiPrefix, "");
+        emote.style.fontSize = `${emoteHeight}px`;
+        emote.style.fontFamily = "Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji";
+    }
+    else
+    {
+        emote = document.createElement("img");
+        emote.src = url;
+        emote.width = emoteWidth;
+        emote.height = emoteHeight;
+    }
+    
     emote.style.position = "absolute";
     emote.classList.add("emote");
     main.appendChild(emote);
@@ -645,6 +659,7 @@ async function addEmotes()
             totalEmotes++;
 
             var emote = createEmote(emotes[e]);
+
             window[animation](emote);
         
             await sleep(200);

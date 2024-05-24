@@ -32,7 +32,7 @@ namespace MixItUp.Base.Model.Overlay
 
     public class OverlayEmoteEffectV3Model : OverlayItemV3ModelBase
     {
-        public const string EmojiPrefix = "emoji://";
+        public const string EmojiURLPrefix = "emoji://";
 
         public const string EmotesPropertyName = "Emotes";
 
@@ -153,12 +153,6 @@ namespace MixItUp.Base.Model.Overlay
                             continue;
                         }
 
-                        if (this.AllowEmoji && ModerationService.EmojiRegex.IsMatch(split))
-                        {
-                            emoteURLs.Add(EmojiPrefix + split);
-                            continue;
-                        }
-
                         if (Uri.IsWellFormedUriString(split, UriKind.Absolute))
                         {
                             if (this.AllowURLs)
@@ -166,6 +160,22 @@ namespace MixItUp.Base.Model.Overlay
                                 emoteURLs.Add(split);
                             }
                             continue;
+                        }
+
+                        if (this.AllowEmoji)
+                        {
+                            for (int i = 0; i < split.Length; i++)
+                            {
+                                if (ModerationService.EmojiRegex.IsMatch(split[i].ToString()))
+                                {
+                                    emoteURLs.Add(EmojiURLPrefix + split[i]);
+                                }
+                                else if (i + 1 < split.Length && ModerationService.EmojiRegex.IsMatch(split[i].ToString() + split[i + 1].ToString()))
+                                {
+                                    emoteURLs.Add(EmojiURLPrefix + split[i] + split[i + 1]);
+                                    i++;
+                                }
+                            }
                         }
                     }
 

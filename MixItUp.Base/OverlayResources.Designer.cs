@@ -285,6 +285,8 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
         ///
+        ///const emojiPrefix = &quot;emoji://&quot;;
+        ///
         ///const maxWidth = window.screen.width;
         ///const maxHeight = window.screen.height;
         ///
@@ -303,10 +305,7 @@ namespace MixItUp.Base {
         ///
         ///function sleep(ms)
         ///{
-        ///    return new Promise(resolve =&gt; setTimeout(resolve, ms));
-        ///}
-        ///
-        ///fu [rest of string was truncated]&quot;;.
+        ///    return new Promise(resolve =&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEmoteEffectDefaultJavascript {
             get {
