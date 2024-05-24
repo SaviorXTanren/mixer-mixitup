@@ -22,11 +22,10 @@ namespace MixItUp.Base.Model.Overlay
         Rain,
         Float,
         Fade,
+        Zoom,
         Explosion,
         FallingLeaves,
         ShootingStars,
-        Zoom,
-        Chaos,
 
         Random = 1000,
     }

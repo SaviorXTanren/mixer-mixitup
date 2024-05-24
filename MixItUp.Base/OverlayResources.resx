@@ -466,16 +466,16 @@ function removeInternal(message)
     animation: fade-keyframes {Duration}s linear;
 }
 
-@keyframes fade-keyframes
+@keyframes zoom-keyframes
 {
-    0% { opacity: 0; visibility: visible; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
+    0% { transform: scale(0); visibility: visible; }
+    50% { transform: scale(1); }
+    100% { transform: scale(0); }
 }
 
-.fade
+.zoom
 {
-    animation: fade-keyframes {Duration}s linear;
+    animation: zoom-keyframes {Duration}s ease-in-out;
 }
 
 @keyframes falling-leaves-keyframes
@@ -581,6 +581,13 @@ function Fade(emote)
     emote.style.left = `${randomXPosition()}px`;
     emote.style.top = `${randomYPosition()}px`;
     emote.classList.add("fade");
+}
+
+function Zoom(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.style.top = `${randomYPosition()}px`;
+    emote.classList.add("zoom");
 }
 
 function Explosion(emote)

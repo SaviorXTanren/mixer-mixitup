@@ -23293,6 +23293,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twinkling Stars.
+        /// </summary>
+        public static string TwinklingStars {
+            get {
+                return ResourceManager.GetString("TwinklingStars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch.
         /// </summary>
         public static string Twitch {

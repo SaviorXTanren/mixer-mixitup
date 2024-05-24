@@ -10389,4 +10389,7 @@ namespace CustomNamespace
   <data name="FolderPath" xml:space="preserve">
     <value>Folder Path</value>
   </data>
+  <data name="TwinklingStars" xml:space="preserve">
+    <value>Twinkling Stars</value>
+  </data>
 </root>
