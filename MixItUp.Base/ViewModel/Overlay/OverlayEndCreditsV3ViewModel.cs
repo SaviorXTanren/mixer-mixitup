@@ -204,6 +204,10 @@ namespace MixItUp.Base.ViewModel.Overlay
         public const int MediumScrollSpeed = 25;
         public const int SlowScrollSpeed = 50;
 
+        public const double FastScrollRate = 3;
+        public const double MediumScrollRate = 8;
+        public const double SlowScrollRate = 13;
+
         public override string DefaultHTML { get { return OverlayEndCreditsV3Model.DefaultHTML; } }
         public override string DefaultCSS { get { return OverlayEndCreditsV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayEndCreditsV3Model.DefaultJavascript; } }
@@ -322,11 +326,19 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Header = new OverlayEndCreditsHeaderV3ViewModel(item.Header);
 
-            switch (item.ScrollSpeed)
+            switch (item.ScrollRate)
             {
-                case FastScrollSpeed: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Fast; break;
-                case MediumScrollSpeed: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Medium; break;
-                case SlowScrollSpeed: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Slow; break;
+                case FastScrollRate: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Fast; break;
+                case MediumScrollRate: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Medium; break;
+                case SlowScrollRate: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Slow; break;
+                case 0.0:
+                    switch (item.ScrollSpeed)
+                    {
+                        case FastScrollSpeed: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Fast; break;
+                        case MediumScrollSpeed: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Medium; break;
+                        case SlowScrollSpeed: this.SelectedScrollSpeed = OverlayEndCreditsSpeedV3TypeEnum.Slow; break;
+                    }
+                    break;
             }
             this.BackgroundColor = item.BackgroundColor;
             this.RunCreditsWhenVisible = item.RunCreditsWhenVisible;
@@ -439,6 +451,15 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayEndCreditsSpeedV3TypeEnum.Fast: result.ScrollSpeed = FastScrollSpeed; break;
                 default: result.ScrollSpeed = MediumScrollSpeed; break;
             }
+
+            switch (this.SelectedScrollSpeed)
+            {
+                case OverlayEndCreditsSpeedV3TypeEnum.Slow: result.ScrollRate = SlowScrollRate; break;
+                case OverlayEndCreditsSpeedV3TypeEnum.Medium: result.ScrollRate = MediumScrollRate; break;
+                case OverlayEndCreditsSpeedV3TypeEnum.Fast: result.ScrollRate = FastScrollRate; break;
+                default: result.ScrollRate = MediumScrollRate; break;
+            }
+
             result.BackgroundColor = this.BackgroundColor;
             result.RunCreditsWhenVisible = this.RunCreditsWhenVisible;
             result.RunEndlessly = this.RunEndlessly;

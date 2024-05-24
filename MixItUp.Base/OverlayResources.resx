@@ -623,7 +623,7 @@ addEmotes();</value>
 }</value>
   </data>
   <data name="OverlayEndCreditsDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
+    <value>&lt;div id="list" class="list" style="top: 100vh"&gt;&lt;/div&gt;
 
 &lt;template id="spacer"&gt;
     &lt;div class="spacer"&gt;&lt;/div&gt;
@@ -632,8 +632,14 @@ addEmotes();</value>
 {Sections}</value>
   </data>
   <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
-    <value>const scrollSpeed = {ScrollSpeed};
-const runEndlessly = {RunEndlessly};
+    <value>const animationKeyframes =
+[
+    { transform: "translateY(0vh)", offset: 0 },
+    { transform: "translateY(-100%) translateY(-100vh)", offset: 1 },
+];
+
+const scrollRate = {ScrollRate};
+const animationIterations = {AnimationIterations};
 const fadeTime = 3000;
 
 const main = document.getElementById("maindiv");
@@ -641,14 +647,21 @@ const list = document.getElementById("list");
 
 const spacerTemplate = document.querySelector("#spacer");
 
+var running = false;
+
 function startCredits(data)
 {
+    if (running)
+    {
+        return;
+    }
+    running = true;
+
     while (list.firstChild) {
         list.removeChild(list.lastChild);
     }
     
-    let listTop = document.documentElement.clientHeight;
-    list.style.top = listTop + "px";
+    let totalElements = 0;
 
     data.Order.forEach((id) =&gt;
     {
@@ -662,6 +675,8 @@ function startCredits(data)
         {
             let column = columnTemplate.content.cloneNode(true);
             columns.appendChild(column.firstElementChild);
+            
+            totalElements++;
         }
         
         let columnIndex = 0;
@@ -671,6 +686,8 @@ function startCredits(data)
             let line = lineTemplate.content.cloneNode(true);
             line.firstElementChild.innerHTML = item;
             columns.children[columnIndex].appendChild(line);
+            
+            totalElements++;
             
             columnIndex++;
             if (columnIndex &gt;= columnCount)
@@ -682,42 +699,30 @@ function startCredits(data)
         list.appendChild(section);
         list.appendChild(spacerTemplate.content.cloneNode(true));
     });
+
+    let rect = list.getBoundingClientRect();
     
     main.style.display = "none";
     main.style.backgroundColor = "{BackgroundColor}";
     
     sendParentMessage({ Type: "EndCreditsStarted", ID: "{ID}" });
     $(main).fadeIn(fadeTime);
+    
     setTimeout(() =&gt; {
-        moveCredits(listTop);
-    }, fadeTime);
-}
+        let animation = list.animate(animationKeyframes,
+        {
+            duration: (rect.bottom + document.documentElement.clientHeight) * scrollRate,
+            easing: "linear",
+            iterations: animationIterations,
+        });
 
-function moveCredits(listTop)
-{
-    setTimeout(() =&gt; {
-        let rect = list.getBoundingClientRect();
-        if (rect.bottom &gt; 0)
+        animation.finished.then(() =&gt;
         {
-            listTop = listTop - 1;
-            list.style.top = listTop + 'px';
-            moveCredits(listTop);
-        }
-        else
-        {
-            if (runEndlessly)
-            {
-                listTop = document.documentElement.clientHeight;
-                list.style.top = listTop + 'px';
-                moveCredits(listTop);
-            }
-            else
-            {
-                $(main).fadeOut(fadeTime);
-                sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
-            }
-        }
-    }, scrollSpeed);
+            $(main).fadeOut(fadeTime);
+            sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
+            running = false;
+        });
+    }, fadeTime);
 }
 
 sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>

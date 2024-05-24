@@ -347,7 +347,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot; style=&quot;top: 100vh&quot;&gt;&lt;/div&gt;
         ///
         ///&lt;template id=&quot;spacer&quot;&gt;
         ///    &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
@@ -362,8 +362,14 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const scrollSpeed = {ScrollSpeed};
-        ///const runEndlessly = {RunEndlessly};
+        ///   Looks up a localized string similar to const animationKeyframes =
+        ///[
+        ///    { transform: &quot;translateY(0vh)&quot;, offset: 0 },
+        ///    { transform: &quot;translateY(-100%) translateY(-100vh)&quot;, offset: 1 },
+        ///];
+        ///
+        ///const scrollRate = {ScrollRate};
+        ///const animationIterations = {AnimationIterations};
         ///const fadeTime = 3000;
         ///
         ///const main = document.getElementById(&quot;maindiv&quot;);
@@ -371,17 +377,13 @@ namespace MixItUp.Base {
         ///
         ///const spacerTemplate = document.querySelector(&quot;#spacer&quot;);
         ///
+        ///var running = false;
+        ///
         ///function startCredits(data)
         ///{
-        ///    while (list.firstChild) {
-        ///        list.removeChild(list.lastChild);
-        ///    }
-        ///    
-        ///    let listTop = document.documentElement.clientHeight;
-        ///    list.style.top = listTop + &quot;px&quot;;
-        ///
-        ///    data.Order.forEach((id) =&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///    if (running)
+        ///    {
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {

@@ -217,6 +217,8 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int ScrollSpeed { get; set; }
         [DataMember]
+        public double ScrollRate { get; set; }
+        [DataMember]
         public string BackgroundColor { get; set; }
         [DataMember]
         public bool RunCreditsWhenVisible { get; set; }
@@ -258,6 +260,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public override bool Donations { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Donations); } set { } }
 
+        [JsonIgnore]
+        public string AnimationIterations { get { return this.RunEndlessly ? "Infinity" : "1"; } }
+
         public OverlayEndCreditsV3Model() : base(OverlayItemV3Type.EndCredits) { }
 
         public override Dictionary<string, object> GetGenerationProperties()
@@ -270,9 +275,13 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             properties[nameof(this.ScrollSpeed)] = this.ScrollSpeed.ToString();
+            properties[nameof(this.ScrollRate)] = this.ScrollRate.ToString();
+
+            properties[nameof(this.RunEndlessly)] = this.RunEndlessly.ToString().ToLower();
+            properties[nameof(this.AnimationIterations)] = this.AnimationIterations;
+
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.RunCreditsWhenVisible)] = this.RunCreditsWhenVisible.ToString().ToLower();
-            properties[nameof(this.RunEndlessly)] = this.RunEndlessly.ToString().ToLower();
 
             List<string> sectionsHTML = new List<string>();
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
@@ -313,11 +322,6 @@ namespace MixItUp.Base.Model.Overlay
             {
                 await ServiceManager.Get<CommandService>().Queue(this.EndedCommandID);
             }
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
         }
 
         protected override async Task WidgetDisableInternal()
