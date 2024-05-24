@@ -1518,6 +1518,7 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 &lt;head&gt;
     &lt;meta charset="utf-8" /&gt;
     &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+    &lt;link rel="icon" type="image/x-icon" href="https://mixitupapp.com/favicon.ico"&gt;
 
     &lt;script&gt;
         var connection;
