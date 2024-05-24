@@ -33,7 +33,7 @@
         </ComboBox>
 
         <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">
-            <TextBox Text="{Binding Script}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Script}" Style="{StaticResource MultiLineTextBox}" Height="300" Width="700" />
+            <TextBox Text="{Binding Script}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Script}" Style="{StaticResource MultiLineTextBox}" MinHeight="300" MinWidth="700" />
         </Border>
 
         <Grid Grid.Row="4" Visibility="{Binding ShowPlainTextGrid, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Margin="0,10,0,0">
