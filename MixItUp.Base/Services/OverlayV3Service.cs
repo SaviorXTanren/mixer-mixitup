@@ -643,15 +643,17 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(id);
-                    if (widget != null)
-                    {
-                        await widget.Item.ProcessPacket(packet);
-                    }
-
                     if (OverlayWidgetV3ViewModel.WidgetsInEditing.TryGetValue(id, out OverlayWidgetV3ViewModel widgetViewModel))
                     {
                         await widgetViewModel.ProcessPacket(packet);
+                    }
+                    else
+                    {
+                        OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(id);
+                        if (widget != null)
+                        {
+                            await widget.Item.ProcessPacket(packet);
+                        }
                     }
                 }
             }

@@ -208,6 +208,41 @@ namespace MixItUp.Base.ViewModel.Overlay
         public const double MediumScrollRate = 8;
         public const double SlowScrollRate = 13;
 
+        public static async Task LoadTestData(OverlayEndCreditsV3Model endCredits)
+        {
+            List<UserV2ViewModel> users = new List<UserV2ViewModel>();
+            foreach (UserV2Model user in await ServiceManager.Get<UserService>().LoadQuantityOfUserData(20))
+            {
+                users.Add(new UserV2ViewModel(user));
+            }
+
+            foreach (OverlayEndCreditsSectionV3Model section in endCredits.Sections)
+            {
+                section.ClearTracking();
+                foreach (UserV2ViewModel user in users)
+                {
+                    switch (section.Type)
+                    {
+                        case OverlayEndCreditsSectionV3Type.CustomSection:
+                            section.Track(user, Resources.Text);
+                            break;
+                        case OverlayEndCreditsSectionV3Type.Raids:
+                        case OverlayEndCreditsSectionV3Type.Resubscribers:
+                        case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
+                        case OverlayEndCreditsSectionV3Type.TwitchBits:
+                        case OverlayEndCreditsSectionV3Type.TrovoSpells:
+                        case OverlayEndCreditsSectionV3Type.YouTubeSuperChats:
+                        case OverlayEndCreditsSectionV3Type.Donations:
+                            section.Track(user, RandomHelper.GenerateRandomNumber(1, 100));
+                            break;
+                        default:
+                            section.Track(user);
+                            break;
+                    }
+                }
+            }
+        }
+
         public override string DefaultHTML { get { return OverlayEndCreditsV3Model.DefaultHTML; } }
         public override string DefaultCSS { get { return OverlayEndCreditsV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayEndCreditsV3Model.DefaultJavascript; } }
@@ -374,37 +409,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             OverlayEndCreditsV3Model endCredits = (OverlayEndCreditsV3Model)widget.Item;
 
-            List<UserV2ViewModel> users = new List<UserV2ViewModel>();
-            foreach (UserV2Model user in await ServiceManager.Get<UserService>().LoadQuantityOfUserData(20))
-            {
-                users.Add(new UserV2ViewModel(user));
-            }
-
-            foreach (OverlayEndCreditsSectionV3Model section in endCredits.Sections)
-            {
-                section.ClearTracking();
-                foreach (UserV2ViewModel user in users)
-                {
-                    switch (section.Type)
-                    {
-                        case OverlayEndCreditsSectionV3Type.CustomSection:
-                            section.Track(user, Resources.Text);
-                            break;
-                        case OverlayEndCreditsSectionV3Type.Raids:
-                        case OverlayEndCreditsSectionV3Type.Resubscribers:
-                        case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
-                        case OverlayEndCreditsSectionV3Type.TwitchBits:
-                        case OverlayEndCreditsSectionV3Type.TrovoSpells:
-                        case OverlayEndCreditsSectionV3Type.YouTubeSuperChats:
-                        case OverlayEndCreditsSectionV3Type.Donations:
-                            section.Track(user, RandomHelper.GenerateRandomNumber(1, 100));
-                            break;
-                        default:
-                            section.Track(user);
-                            break;
-                    }
-                }
-            }
+            await OverlayEndCreditsV3ViewModel.LoadTestData(endCredits);
 
             await endCredits.PlayCredits();
 

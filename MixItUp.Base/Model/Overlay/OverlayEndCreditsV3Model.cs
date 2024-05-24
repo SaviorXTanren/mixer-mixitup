@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
+using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -360,6 +361,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task PlayCredits()
         {
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.IsLivePreview)
+            {
+                await OverlayEndCreditsV3ViewModel.LoadTestData(this);
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
             List<OverlayEndCreditsSectionV3Model> applicableSections = new List<OverlayEndCreditsSectionV3Model>();
 
             Dictionary<Guid, IEnumerable<string>> sectionItems = new Dictionary<Guid, IEnumerable<string>>();
