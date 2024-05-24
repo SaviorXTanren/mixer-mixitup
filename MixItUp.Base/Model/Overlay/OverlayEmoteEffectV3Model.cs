@@ -8,8 +8,10 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.Chat.YouTube;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -39,6 +41,8 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultCSS = OverlayResources.OverlayEmoteEffectDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayEmoteEffectDefaultJavascript;
 
+        private static readonly IEnumerable<OverlayEmoteEffectV3AnimationType> ValidAnimationTypes = EnumHelper.GetEnumList<OverlayEmoteEffectV3AnimationType>().Where(e => e != OverlayEmoteEffectV3AnimationType.Random);
+
         [DataMember]
         public string EmoteText { get; set; }
 
@@ -66,7 +70,16 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[EmotesPropertyName] = string.Empty;
-            properties[nameof(this.AnimationType)] = this.AnimationType.ToString();
+
+            if (this.AnimationType == OverlayEmoteEffectV3AnimationType.Random)
+            {
+                properties[nameof(this.AnimationType)] = OverlayEmoteEffectV3Model.ValidAnimationTypes.Random().ToString();
+            }
+            else
+            {
+                properties[nameof(this.AnimationType)] = this.AnimationType.ToString();
+            }
+
             properties[nameof(this.EmoteWidth)] = this.EmoteWidth;
             properties[nameof(this.EmoteHeight)] = this.EmoteHeight;
             properties[nameof(this.PerEmoteShown)] = this.PerEmoteShown;

@@ -299,13 +299,14 @@ namespace MixItUp.Base {
         ///const perEmoteShown = {PerEmoteShown};
         ///const maxAmountShown = {MaxAmountShown};
         ///
-        ///var emoteFunctions = {};
-        ///
         ///var totalEmotes = 0;
         ///
         ///function sleep(ms)
         ///{
-        ///    return new Promise(resolve =&gt; setTim [rest of string was truncated]&quot;;.
+        ///    return new Promise(resolve =&gt; setTimeout(resolve, ms));
+        ///}
+        ///
+        ///fu [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEmoteEffectDefaultJavascript {
             get {

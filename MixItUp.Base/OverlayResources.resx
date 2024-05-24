@@ -488,8 +488,6 @@ const emoteHeight = {EmoteHeight};
 const perEmoteShown = {PerEmoteShown};
 const maxAmountShown = {MaxAmountShown};
 
-var emoteFunctions = {};
-
 var totalEmotes = 0;
 
 function sleep(ms)
@@ -524,26 +522,26 @@ function createEmote(url)
     return emote;
 }
 
-function rain(emote)
+function Rain(emote)
 {
     emote.style.left = `${randomXPosition()}px`;
     emote.classList.add("rain");
 }
 
-function float(emote)
+function Float(emote)
 {
     emote.style.left = `${randomXPosition()}px`;
     emote.classList.add("float");
 }
 
-function fade(emote)
+function Fade(emote)
 {
     emote.style.left = `${randomXPosition()}px`;
     emote.style.top = `${randomYPosition()}px`;
     emote.classList.add("fade");
 }
 
-function explosion(emote)
+function Explosion(emote)
 {
     emote.style.left = `${(maxWidth / 2) - (emoteWidth / 2)}px`;
     emote.style.top = `${(maxHeight / 2) - (emoteHeight / 2)}px`;
@@ -568,19 +566,9 @@ async function addEmotes()
         for (let i = 0; i &lt; perEmoteShown &amp;&amp; totalEmotes &lt; maxAmountShown; i++)
         {
             totalEmotes++;
-        
+
             var emote = createEmote(emotes[e]);
-            
-            if (animation === "Random")
-            {
-                const entries = Object.entries(emoteFunctions);
-                const fn = entries[randomNumber(0, entries.length)];
-                fn[1](emote);
-            }
-            else
-            {
-                emoteFunctions[animation](emote);
-            }
+            window[animation](emote);
         
             await sleep(200);
         }
@@ -592,11 +580,6 @@ async function addEmotes()
         sendParentMessage({ Type: "Remove", ID: "{ID}" });
     }, duration);
 }
-
-emoteFunctions["Rain"] = rain;
-emoteFunctions["Float"] = float;
-emoteFunctions["Fade"] = fade;
-emoteFunctions["Explosion"] = explosion;
 
 addEmotes();</value>
   </data>
