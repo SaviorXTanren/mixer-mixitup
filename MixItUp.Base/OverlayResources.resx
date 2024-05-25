@@ -392,15 +392,15 @@ function addInternal(message)
         }, messageRemovalTime * 1000);
     }
     
-    while (list.childElementCount &gt; maxMessages)
+    if (list.childElementCount &gt; maxMessages)
     {
         if (addMessagesToTop)
         {
-            removeInternal(list.lastChild);
+            list.removeChild(list.lastChild);
         }
         else
         {
-            removeInternal(list.firstChild);
+            list.removeChild(list.firstChild);
         }
     }
 }
