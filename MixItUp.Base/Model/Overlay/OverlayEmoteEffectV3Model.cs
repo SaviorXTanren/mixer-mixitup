@@ -26,6 +26,7 @@ namespace MixItUp.Base.Model.Overlay
         Explosion,
         FallingLeaves,
         ShootingStars,
+        Bounce,
 
         Random = 1000,
     }
@@ -35,67 +36,27 @@ namespace MixItUp.Base.Model.Overlay
         public const string EmojiURLPrefix = "emoji://";
 
         public const string EmotesPropertyName = "Emotes";
+        public const string IncludeDelayPropertyName = "IncludeDelay";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayEmoteEffectDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayEmoteEffectDefaultCSS;
-        public static readonly string DefaultJavascript = OverlayResources.OverlayEmoteEffectDefaultJavascript;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayEmoteEffectBaseDefaultJavascript + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayEmoteEffectDefaultJavascript;
 
-        private static readonly IEnumerable<OverlayEmoteEffectV3AnimationType> ValidAnimationTypes = EnumHelper.GetEnumList<OverlayEmoteEffectV3AnimationType>().Where(e => e != OverlayEmoteEffectV3AnimationType.Random);
+        public static readonly IEnumerable<OverlayEmoteEffectV3AnimationType> ValidAnimationTypes = EnumHelper.GetEnumList<OverlayEmoteEffectV3AnimationType>().Where(e => e != OverlayEmoteEffectV3AnimationType.Random);
 
-        [DataMember]
-        public string EmoteText { get; set; }
-
-        [DataMember]
-        public OverlayEmoteEffectV3AnimationType AnimationType { get; set; }
-
-        [DataMember]
-        public int PerEmoteShown { get; set; }
-        [DataMember]
-        public int MaxAmountShown { get; set; }
-
-        [DataMember]
-        public int EmoteWidth { get; set; }
-        [DataMember]
-        public int EmoteHeight { get; set; }
-
-        [DataMember]
-        public bool AllowURLs { get; set; }
-        [DataMember]
-        public bool AllowEmoji { get; set; }
-
-        public OverlayEmoteEffectV3Model() : base(OverlayItemV3Type.EmoteEffect) { }
-
-        public override Dictionary<string, object> GetGenerationProperties()
+        public static readonly HashSet<OverlayEmoteEffectV3AnimationType> DontDelayAnimations = new HashSet<OverlayEmoteEffectV3AnimationType>()
         {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-            properties[EmotesPropertyName] = string.Empty;
+            OverlayEmoteEffectV3AnimationType.Explosion
+        };
 
-            if (this.AnimationType == OverlayEmoteEffectV3AnimationType.Random)
-            {
-                properties[nameof(this.AnimationType)] = OverlayEmoteEffectV3Model.ValidAnimationTypes.Random().ToString();
-            }
-            else
-            {
-                properties[nameof(this.AnimationType)] = this.AnimationType.ToString();
-            }
-
-            properties[nameof(this.EmoteWidth)] = this.EmoteWidth;
-            properties[nameof(this.EmoteHeight)] = this.EmoteHeight;
-            properties[nameof(this.PerEmoteShown)] = this.PerEmoteShown;
-            properties[nameof(this.MaxAmountShown)] = this.MaxAmountShown;
-
-            return properties;
-        }
-
-        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
+        public static IEnumerable<string> GetEmoteURLs(string text, CommandParametersModel parameters, bool allowURLs, bool allowEmoji)
         {
-            string emoteText = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.EmoteText, parameters);
-            if (!string.IsNullOrWhiteSpace(emoteText))
+            List<string> emoteURLs = new List<string>();
+            if (!string.IsNullOrWhiteSpace(text))
             {
-                string[] splits = emoteText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                string[] splits = text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 if (splits != null && splits.Length > 0)
                 {
-                    List<string> emoteURLs = new List<string>();
                     foreach (string split in splits)
                     {
                         if (StreamingPlatforms.ContainsPlatform(parameters.Platform, StreamingPlatformTypeEnum.Twitch))
@@ -155,33 +116,91 @@ namespace MixItUp.Base.Model.Overlay
 
                         if (Uri.IsWellFormedUriString(split, UriKind.Absolute))
                         {
-                            if (this.AllowURLs)
+                            if (allowURLs)
                             {
                                 emoteURLs.Add(split);
                             }
                             continue;
                         }
 
-                        if (this.AllowEmoji)
+                        if (allowEmoji)
                         {
-                            for (int i = 0; i < split.Length; i++)
-                            {
-                                if (ModerationService.EmojiRegex.IsMatch(split[i].ToString()))
-                                {
-                                    emoteURLs.Add(EmojiURLPrefix + split[i]);
-                                }
-                                else if (i + 1 < split.Length && ModerationService.EmojiRegex.IsMatch(split[i].ToString() + split[i + 1].ToString()))
-                                {
-                                    emoteURLs.Add(EmojiURLPrefix + split[i] + split[i + 1]);
-                                    i++;
-                                }
-                            }
+                            emoteURLs.AddRange(OverlayEmoteEffectV3Model.GetEmojisFromText(split));
                         }
                     }
-
-                    properties[EmotesPropertyName] = $"\"{string.Join("\", \"", emoteURLs)}\"";
                 }
             }
+
+            return emoteURLs;
+        }
+
+        public static IEnumerable<string> GetEmojisFromText(string text)
+        {
+            List<string> emoteURLs = new List<string>();
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (ModerationService.EmojiRegex.IsMatch(text[i].ToString()))
+                {
+                    emoteURLs.Add(EmojiURLPrefix + text[i]);
+                }
+                else if (i + 1 < text.Length && ModerationService.EmojiRegex.IsMatch(text[i].ToString() + text[i + 1].ToString()))
+                {
+                    emoteURLs.Add(EmojiURLPrefix + text[i] + text[i + 1]);
+                    i++;
+                }
+            }
+            return emoteURLs;
+        }
+
+        [DataMember]
+        public string EmoteText { get; set; }
+
+        [DataMember]
+        public OverlayEmoteEffectV3AnimationType AnimationType { get; set; }
+
+        [DataMember]
+        public int PerEmoteShown { get; set; }
+        [DataMember]
+        public int MaxAmountShown { get; set; }
+
+        [DataMember]
+        public int EmoteWidth { get; set; }
+        [DataMember]
+        public int EmoteHeight { get; set; }
+
+        [DataMember]
+        public bool AllowURLs { get; set; }
+        [DataMember]
+        public bool AllowEmoji { get; set; }
+
+        public OverlayEmoteEffectV3Model() : base(OverlayItemV3Type.EmoteEffect) { }
+
+        public override Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+            properties[EmotesPropertyName] = string.Empty;
+
+            OverlayEmoteEffectV3AnimationType animationType = this.AnimationType;
+            if (this.AnimationType == OverlayEmoteEffectV3AnimationType.Random)
+            {
+                animationType = OverlayEmoteEffectV3Model.ValidAnimationTypes.Random();
+            }
+
+            properties[nameof(this.AnimationType)] = animationType.ToString();
+            properties[OverlayEmoteEffectV3Model.IncludeDelayPropertyName] = (OverlayEmoteEffectV3Model.DontDelayAnimations.Contains(animationType) ? false : true).ToString().ToLower();
+            properties[nameof(this.EmoteWidth)] = this.EmoteWidth;
+            properties[nameof(this.EmoteHeight)] = this.EmoteHeight;
+            properties[nameof(this.PerEmoteShown)] = this.PerEmoteShown;
+            properties[nameof(this.MaxAmountShown)] = this.MaxAmountShown;
+
+            return properties;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
+        {
+            string text = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.EmoteText, parameters);
+            IEnumerable<string> emoteURLs = OverlayEmoteEffectV3Model.GetEmoteURLs(text, parameters, this.AllowURLs, this.AllowEmoji);
+            properties[EmotesPropertyName] = $"\"{string.Join("\", \"", emoteURLs)}\"";
         }
     }
 }

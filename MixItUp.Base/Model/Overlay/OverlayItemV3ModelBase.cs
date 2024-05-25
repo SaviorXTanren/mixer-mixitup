@@ -49,6 +49,8 @@ namespace MixItUp.Base.Model.Overlay
         [OverlayWidget]
         Wheel,
         EmoteEffect,
+        [OverlayWidget]
+        PersistentEmoteEffect,
     }
 
     public enum OverlayItemV3DisplayOptionsType

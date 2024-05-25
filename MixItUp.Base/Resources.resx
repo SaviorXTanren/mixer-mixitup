@@ -10392,4 +10392,7 @@ namespace CustomNamespace
   <data name="TwinklingStars" xml:space="preserve">
     <value>Twinkling Stars</value>
   </data>
+  <data name="PersistentEmoteEffect" xml:space="preserve">
+    <value>Persistent Emote Effect</value>
+  </data>
 </root>

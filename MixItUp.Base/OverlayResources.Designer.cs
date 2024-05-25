@@ -232,6 +232,39 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///
+        ///const emojiPrefix = &quot;emoji://&quot;;
+        ///
+        ///const maxWidth = window.screen.width;
+        ///const maxHeight = window.screen.height;
+        ///
+        ///const duration = {Duration} * 1000;
+        ///
+        ///const emoteWidth = {EmoteWidth};
+        ///const emoteHeight = {EmoteHeight};
+        ///
+        ///const perEmoteShown = {PerEmoteShown};
+        ///
+        ///function sleep(ms)
+        ///{
+        ///    return new Promise(resolve =&gt; setTimeout(resolve, ms));
+        ///}
+        ///
+        ///function randomNumber(min, max)
+        ///{
+        ///    return Math.floor(Math.random() * (max - min)) + min;
+        ///}
+        ///
+        ///f [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayEmoteEffectBaseDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectBaseDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .maindiv
         ///{
         ///    position: absolute;
@@ -283,29 +316,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///   Looks up a localized string similar to const animation = &quot;{AnimationType}&quot;;
         ///
-        ///const emojiPrefix = &quot;emoji://&quot;;
-        ///
-        ///const maxWidth = window.screen.width;
-        ///const maxHeight = window.screen.height;
-        ///
-        ///const duration = {Duration} * 1000;
-        ///
-        ///const emotes = [{Emotes}];
-        ///const animation = &quot;{AnimationType}&quot;;
-        ///
-        ///const emoteWidth = {EmoteWidth};
-        ///const emoteHeight = {EmoteHeight};
-        ///
-        ///const perEmoteShown = {PerEmoteShown};
-        ///const maxAmountShown = {MaxAmountShown};
-        ///
-        ///var totalEmotes = 0;
-        ///
-        ///function sleep(ms)
+        ///async function addEmotes(emotes)
         ///{
-        ///    return new Promise(resolve =&gt; [rest of string was truncated]&quot;;.
+        ///    let totalEmotes = 0;
+        ///    for (let e = 0; e &lt; emotes.length; e++)
+        ///    {
+        ///        for (let i = 0; i &lt; perEmoteShown &amp;&amp; totalEmotes &lt; {MaxAmountShown}; i++)
+        ///        {
+        ///            totalEmotes++;
+        ///
+        ///            var emote = createEmote(emotes[e]);
+        ///
+        ///            window[animation](emote);
+        ///            
+        ///            if ({IncludeDelay})
+        ///            {
+        ///                await sleep(200);
+        ///            }
+        ///        }
+        ///    }
+        ///    
+        ///    set [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEmoteEffectDefaultJavascript {
             get {
@@ -961,6 +994,36 @@ namespace MixItUp.Base {
         public static string OverlayMainHTML {
             get {
                 return ResourceManager.GetString("OverlayMainHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to function showEmote(data)
+        ///{
+        ///    for (let e = 0; e &lt; data.Amount; e++)
+        ///    {
+        ///        for (let i = 0; i &lt; perEmoteShown; i++)
+        ///        {
+        ///            var emote = createEmote(data.Emote);
+        ///
+        ///            window[data.AnimationType](emote);
+        ///            
+        ///            setTimeout(() =&gt;
+        ///            {
+        ///                main.removeChild(emote);
+        ///            }, duration);
+        ///            
+        ///            if (data.IncludeDelay)
+        ///            {
+        ///                await sleep(200);
+        ///            }
+        ///        }
+        ///    }
+        ///}.
+        /// </summary>
+        public static string OverlayPersistentEmoteEffectDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayPersistentEmoteEffectDefaultJavascript", resourceCulture);
             }
         }
         

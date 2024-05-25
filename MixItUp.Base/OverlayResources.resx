@@ -413,6 +413,122 @@ function removeInternal(message)
     });
 }</value>
   </data>
+  <data name="OverlayEmoteEffectBaseDefaultJavascript" xml:space="preserve">
+    <value>const main = document.getElementById("maindiv");
+
+const emojiPrefix = "emoji://";
+
+const maxWidth = window.screen.width;
+const maxHeight = window.screen.height;
+
+const duration = {Duration} * 1000;
+
+const emoteWidth = {EmoteWidth};
+const emoteHeight = {EmoteHeight};
+
+const perEmoteShown = {PerEmoteShown};
+
+function sleep(ms)
+{
+    return new Promise(resolve =&gt; setTimeout(resolve, ms));
+}
+
+function randomNumber(min, max)
+{
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function randomXPosition()
+{
+    return randomNumber(0, maxWidth - emoteWidth);
+}
+
+function randomYPosition()
+{
+    return randomNumber(0, maxHeight - emoteHeight);
+}
+
+function createEmote(url)
+{
+    var emote;
+    if (url.startsWith(emojiPrefix))
+    {
+        emote = document.createElement("div");
+        emote.innerText = url.replace(emojiPrefix, "");
+        emote.style.fontSize = `${emoteHeight}px`;
+        emote.style.fontFamily = "Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji";
+    }
+    else
+    {
+        emote = document.createElement("img");
+        emote.src = url;
+        emote.width = emoteWidth;
+        emote.height = emoteHeight;
+    }
+    
+    emote.style.position = "absolute";
+    emote.classList.add("emote");
+    main.appendChild(emote);
+    return emote;
+}
+
+function Rain(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.classList.add("rain");
+}
+
+function Float(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.classList.add("float");
+}
+
+function Fade(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.style.top = `${randomYPosition()}px`;
+    emote.classList.add("fade");
+}
+
+function Zoom(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.style.top = `${randomYPosition()}px`;
+    emote.classList.add("zoom");
+}
+
+function Explosion(emote)
+{
+    emote.style.left = `${(maxWidth / 2) - (emoteWidth / 2)}px`;
+    emote.style.top = `${(maxHeight / 2) - (emoteHeight / 2)}px`;
+
+    const turnAmount = Math.random();
+    const movementPixels = Math.max(maxWidth, maxHeight);
+
+    const animationKeyframes =
+    [
+        { transform: `rotate(${turnAmount}turn) scale(0)`, visibility: "visible", offset: 0 },
+        { transform: `rotate(${turnAmount}turn) scale(1)`, offset: 0.1 },
+        { transform: `rotate(${turnAmount}turn) translateY(${movementPixels}px)`, offset: 1 },
+    ];
+    
+    emote.animate(animationKeyframes, duration);
+}
+
+function FallingLeaves(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.classList.add("falling-leaves");
+}
+
+function ShootingStars(emote)
+{
+    emote.style.left = `${randomNumber(maxWidth / 2, maxWidth - emoteWidth)}px`;
+    emote.style.top = `${randomNumber(0, (maxHeight - emoteHeight) / 2)}px`;
+    emote.classList.add("shooting-stars");
+}</value>
+  </data>
   <data name="OverlayEmoteEffectDefaultCSS" xml:space="preserve">
     <value>.maindiv
 {
@@ -529,140 +645,25 @@ function removeInternal(message)
 &lt;/div&gt;</value>
   </data>
   <data name="OverlayEmoteEffectDefaultJavascript" xml:space="preserve">
-    <value>const main = document.getElementById("maindiv");
+    <value>const animation = "{AnimationType}";
 
-const emojiPrefix = "emoji://";
-
-const maxWidth = window.screen.width;
-const maxHeight = window.screen.height;
-
-const duration = {Duration} * 1000;
-
-const emotes = [{Emotes}];
-const animation = "{AnimationType}";
-
-const emoteWidth = {EmoteWidth};
-const emoteHeight = {EmoteHeight};
-
-const perEmoteShown = {PerEmoteShown};
-const maxAmountShown = {MaxAmountShown};
-
-var totalEmotes = 0;
-
-function sleep(ms)
+async function addEmotes(emotes)
 {
-    return new Promise(resolve =&gt; setTimeout(resolve, ms));
-}
-
-function randomNumber(min, max)
-{
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-function randomXPosition()
-{
-    return randomNumber(0, maxWidth - emoteWidth);
-}
-
-function randomYPosition()
-{
-    return randomNumber(0, maxHeight - emoteHeight);
-}
-
-function createEmote(url)
-{
-    var emote;
-    if (url.startsWith(emojiPrefix))
-    {
-        emote = document.createElement("div");
-        emote.innerText = url.replace(emojiPrefix, "");
-        emote.style.fontSize = `${emoteHeight}px`;
-        emote.style.fontFamily = "Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji";
-    }
-    else
-    {
-        emote = document.createElement("img");
-        emote.src = url;
-        emote.width = emoteWidth;
-        emote.height = emoteHeight;
-    }
-    
-    emote.style.position = "absolute";
-    emote.classList.add("emote");
-    main.appendChild(emote);
-    return emote;
-}
-
-function Rain(emote)
-{
-    emote.style.left = `${randomXPosition()}px`;
-    emote.classList.add("rain");
-}
-
-function Float(emote)
-{
-    emote.style.left = `${randomXPosition()}px`;
-    emote.classList.add("float");
-}
-
-function Fade(emote)
-{
-    emote.style.left = `${randomXPosition()}px`;
-    emote.style.top = `${randomYPosition()}px`;
-    emote.classList.add("fade");
-}
-
-function Zoom(emote)
-{
-    emote.style.left = `${randomXPosition()}px`;
-    emote.style.top = `${randomYPosition()}px`;
-    emote.classList.add("zoom");
-}
-
-function Explosion(emote)
-{
-    emote.style.left = `${(maxWidth / 2) - (emoteWidth / 2)}px`;
-    emote.style.top = `${(maxHeight / 2) - (emoteHeight / 2)}px`;
-
-    const turnAmount = Math.random();
-    const movementPixels = Math.max(maxWidth, maxHeight);
-
-    const animationKeyframes =
-    [
-        { transform: `rotate(${turnAmount}turn) scale(0)`, visibility: "visible", offset: 0 },
-        { transform: `rotate(${turnAmount}turn) scale(1)`, offset: 0.1 },
-        { transform: `rotate(${turnAmount}turn) translateY(${movementPixels}px)`, offset: 1 },
-    ];
-    
-    emote.animate(animationKeyframes, duration);
-}
-
-function FallingLeaves(emote)
-{
-    emote.style.left = `${randomXPosition()}px`;
-    emote.classList.add("falling-leaves");
-}
-
-function ShootingStars(emote)
-{
-    emote.style.left = `${randomNumber(maxWidth / 2, maxWidth - emoteWidth)}px`;
-    emote.style.top = `${randomNumber(0, (maxHeight - emoteHeight) / 2)}px`;
-    emote.classList.add("shooting-stars");
-}
-
-async function addEmotes()
-{
+    let totalEmotes = 0;
     for (let e = 0; e &lt; emotes.length; e++)
     {
-        for (let i = 0; i &lt; perEmoteShown &amp;&amp; totalEmotes &lt; maxAmountShown; i++)
+        for (let i = 0; i &lt; perEmoteShown &amp;&amp; totalEmotes &lt; {MaxAmountShown}; i++)
         {
             totalEmotes++;
 
             var emote = createEmote(emotes[e]);
 
             window[animation](emote);
-        
-            await sleep(200);
+            
+            if ({IncludeDelay})
+            {
+                await sleep(200);
+            }
         }
     }
     
@@ -673,7 +674,7 @@ async function addEmotes()
     }, duration);
 }
 
-addEmotes();</value>
+addEmotes([{Emotes}]);</value>
   </data>
   <data name="OverlayEndCreditsDefaultCSS" xml:space="preserve">
     <value>.list {
@@ -1865,6 +1866,30 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</value>
+  </data>
+  <data name="OverlayPersistentEmoteEffectDefaultJavascript" xml:space="preserve">
+    <value>function showEmote(data)
+{
+    for (let e = 0; e &lt; data.Amount; e++)
+    {
+        for (let i = 0; i &lt; perEmoteShown; i++)
+        {
+            var emote = createEmote(data.Emote);
+
+            window[data.AnimationType](emote);
+            
+            setTimeout(() =&gt;
+            {
+                main.removeChild(emote);
+            }, duration);
+            
+            if (data.IncludeDelay)
+            {
+                await sleep(200);
+            }
+        }
+    }
+}</value>
   </data>
   <data name="OverlayPersistentTimerDefaultJavascript" xml:space="preserve">
     <value>const displayFormat = "{DisplayFormat}";

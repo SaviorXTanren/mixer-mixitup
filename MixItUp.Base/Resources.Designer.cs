@@ -15901,6 +15901,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Persistent Emote Effect.
+        /// </summary>
+        public static string PersistentEmoteEffect {
+            get {
+                return ResourceManager.GetString("PersistentEmoteEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Persistent Timer.
         /// </summary>
         public static string PersistentTimer {
