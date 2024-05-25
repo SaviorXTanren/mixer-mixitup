@@ -26,7 +26,6 @@ namespace MixItUp.Base.Model.Overlay
         Explosion,
         FallingLeaves,
         ShootingStars,
-        Bounce,
 
         Random = 1000,
     }
