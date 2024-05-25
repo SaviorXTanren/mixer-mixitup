@@ -998,7 +998,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function showEmote(data)
+        ///   Looks up a localized string similar to async function showEmote(data)
         ///{
         ///    for (let e = 0; e &lt; data.Amount; e++)
         ///    {

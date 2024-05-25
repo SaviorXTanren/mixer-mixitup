@@ -10812,6 +10812,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignore Duplicates.
+        /// </summary>
+        public static string IgnoreDuplicates {
+            get {
+                return ResourceManager.GetString("IgnoreDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore Specialty Excluded Users.
         /// </summary>
         public static string IgnoreSpecialtyExcludedUsers {
@@ -15150,6 +15159,24 @@ namespace MixItUp.Base {
         public static string OverlayMissingFilePath {
             get {
                 return ResourceManager.GetString("OverlayMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combo Count.
+        /// </summary>
+        public static string OverlayPersistentEmoteEffectComboCount {
+            get {
+                return ResourceManager.GetString("OverlayPersistentEmoteEffectComboCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combo Timeframe.
+        /// </summary>
+        public static string OverlayPersistentEmoteEffectComboTimeframe {
+            get {
+                return ResourceManager.GetString("OverlayPersistentEmoteEffectComboTimeframe", resourceCulture);
             }
         }
         

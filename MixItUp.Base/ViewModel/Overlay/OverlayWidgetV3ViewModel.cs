@@ -256,6 +256,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.EventList: this.Item = new OverlayEventListV3ViewModel(); break;
                 case OverlayItemV3Type.Leaderboard: this.Item = new OverlayLeaderboardV3ViewModel(); break;
                 case OverlayItemV3Type.Wheel: this.Item = new OverlayWheelV3ViewModel(); break;
+                case OverlayItemV3Type.EmoteEffect: this.Item = new OverlayEmoteEffectV3ViewModel(); break;
+                case OverlayItemV3Type.PersistentEmoteEffect: this.Item = new OverlayPersistentEmoteEffectV3ViewModel(); break;
             }
 
             this.HTML = this.GetDefaultHTML(this.Item);
@@ -315,6 +317,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.EventList: this.Item = new OverlayEventListV3ViewModel((OverlayEventListV3Model)widget.Item); break;
                 case OverlayItemV3Type.Leaderboard: this.Item = new OverlayLeaderboardV3ViewModel((OverlayLeaderboardV3Model)widget.Item); break;
                 case OverlayItemV3Type.Wheel: this.Item = new OverlayWheelV3ViewModel((OverlayWheelV3Model)widget.Item); break;
+                case OverlayItemV3Type.EmoteEffect: this.Item = new OverlayEmoteEffectV3ViewModel((OverlayEmoteEffectV3Model)widget.Item); break;
+                case OverlayItemV3Type.PersistentEmoteEffect: this.Item = new OverlayPersistentEmoteEffectV3ViewModel((OverlayPersistentEmoteEffectV3Model)widget.Item); break;
             }
 
             this.HTML = widget.Item.HTML;

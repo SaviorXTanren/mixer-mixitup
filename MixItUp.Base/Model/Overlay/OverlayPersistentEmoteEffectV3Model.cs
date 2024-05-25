@@ -11,7 +11,6 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayPersistentEmoteEffectComboV3Model
     {
         public DateTimeOffset LastSeen { get; set; }
-        public HashSet<string> MessageIDs { get; set; } = new HashSet<string>();
         public int Count { get; set; }
     }
 
@@ -28,17 +27,20 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayEmoteEffectV3AnimationType AnimationType { get; set; }
 
         [DataMember]
+        public int Duration { get; set; }
+
+        [DataMember]
+        public int EmoteWidth { get; set; }
+        [DataMember]
+        public int EmoteHeight { get; set; }
+
+        [DataMember]
         public int PerEmoteShown { get; set; }
 
         [DataMember]
         public int ComboCount { get; set; }
         [DataMember]
         public int ComboTimeframe { get; set; }
-
-        [DataMember]
-        public int EmoteWidth { get; set; }
-        [DataMember]
-        public int EmoteHeight { get; set; }
 
         [DataMember]
         public bool AllowEmoji { get; set; }
@@ -54,11 +56,29 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
+            properties[nameof(this.Duration)] = this.Duration;
             properties[nameof(this.EmoteWidth)] = this.EmoteWidth;
             properties[nameof(this.EmoteHeight)] = this.EmoteHeight;
             properties[nameof(this.PerEmoteShown)] = this.PerEmoteShown;
 
             return properties;
+        }
+
+        public async Task ShowEmote(string emoteURL, int amount)
+        {
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+
+            OverlayEmoteEffectV3AnimationType animationType = this.AnimationType;
+            if (this.AnimationType == OverlayEmoteEffectV3AnimationType.Random)
+            {
+                animationType = OverlayEmoteEffectV3Model.ValidAnimationTypes.Random();
+            }
+
+            properties[EmotePropertyName] = emoteURL;
+            properties[nameof(this.AnimationType)] = animationType.ToString();
+            properties[OverlayEmoteEffectV3Model.IncludeDelayPropertyName] = OverlayEmoteEffectV3Model.DontDelayAnimations.Contains(animationType) ? false : true;
+            properties[AmountPropertyName] = amount;
+            await this.CallFunction("showEmote", properties);
         }
 
         protected override async Task WidgetEnableInternal()
@@ -111,31 +131,19 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.comboLastSeen[emoteURL].LastSeen = DateTimeOffset.Now;
                     this.comboLastSeen[emoteURL].Count = 1;
-                    this.comboLastSeen[emoteURL].MessageIDs.Add(message.ID);
                 }
                 else
                 {
                     this.comboLastSeen[emoteURL].Count++;
-                    this.comboLastSeen[emoteURL].MessageIDs.Add(message.ID);
                 }
 
-                if (this.comboLastSeen[emoteURL].MessageIDs.Count >= this.ComboCount)
+                if (this.comboLastSeen[emoteURL].Count == this.ComboCount)
                 {
-                    Dictionary<string, object> properties = new Dictionary<string, object>();
-
-                    OverlayEmoteEffectV3AnimationType animationType = this.AnimationType;
-                    if (this.AnimationType == OverlayEmoteEffectV3AnimationType.Random)
-                    {
-                        animationType = OverlayEmoteEffectV3Model.ValidAnimationTypes.Random();
-                    }
-
-                    properties[EmotePropertyName] = emoteURL;
-                    properties[nameof(this.AnimationType)] = animationType.ToString();
-                    properties[OverlayEmoteEffectV3Model.IncludeDelayPropertyName] = (OverlayEmoteEffectV3Model.DontDelayAnimations.Contains(animationType) ? false : true).ToString().ToLower();
-                    properties[AmountPropertyName] = this.comboLastSeen[emoteURL].Count.ToString();
-                    await this.CallFunction("showEmote", properties);
-
-                    this.comboLastSeen[emoteURL].Count = 0;
+                    await this.ShowEmote(emoteURL, this.comboLastSeen[emoteURL].Count);
+                }
+                else if (this.comboLastSeen[emoteURL].Count > this.ComboCount)
+                {
+                    await this.ShowEmote(emoteURL, 1);
                 }
             }
         }

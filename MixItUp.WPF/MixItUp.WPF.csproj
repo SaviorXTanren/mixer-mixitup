@@ -909,6 +909,9 @@
     <Compile Include="Controls\Overlay\OverlayLeaderboardV3Control.xaml.cs">
       <DependentUpon>OverlayLeaderboardV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayPersistentEmoteEffectV3Control.xaml.cs">
+      <DependentUpon>OverlayPersistentEmoteEffectV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayPersistentTimerV3Control.xaml.cs">
       <DependentUpon>OverlayPersistentTimerV3Control.xaml</DependentUpon>
     </Compile>
@@ -1876,6 +1879,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayLeaderboardV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayPersistentEmoteEffectV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

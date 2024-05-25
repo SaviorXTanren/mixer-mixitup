@@ -10395,4 +10395,13 @@ namespace CustomNamespace
   <data name="PersistentEmoteEffect" xml:space="preserve">
     <value>Persistent Emote Effect</value>
   </data>
+  <data name="IgnoreDuplicates" xml:space="preserve">
+    <value>Ignore Duplicates</value>
+  </data>
+  <data name="OverlayPersistentEmoteEffectComboCount" xml:space="preserve">
+    <value>Combo Count</value>
+  </data>
+  <data name="OverlayPersistentEmoteEffectComboTimeframe" xml:space="preserve">
+    <value>Combo Timeframe</value>
+  </data>
 </root>

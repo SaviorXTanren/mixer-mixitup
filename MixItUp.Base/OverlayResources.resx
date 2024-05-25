@@ -1868,7 +1868,7 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 &lt;/html&gt;</value>
   </data>
   <data name="OverlayPersistentEmoteEffectDefaultJavascript" xml:space="preserve">
-    <value>function showEmote(data)
+    <value>async function showEmote(data)
 {
     for (let e = 0; e &lt; data.Amount; e++)
     {
