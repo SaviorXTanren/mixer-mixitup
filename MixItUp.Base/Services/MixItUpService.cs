@@ -389,7 +389,14 @@ namespace MixItUp.Base.Services
         {
             Logger.Log($"Webhook - Sending Auth - {JSONSerializerHelper.SerializeToString(login)}");
 
-            await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, login));
+            try
+            {
+                await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, login));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         public async Task<GetWebhooksResponseModel> GetWebhooks()

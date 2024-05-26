@@ -220,7 +220,7 @@ namespace MixItUp.Base.Services
         {
             if (string.IsNullOrEmpty(platformID) && string.IsNullOrEmpty(platformUsername))
             {
-                throw new ArgumentException("Neither PlatformID or PlatformUsername were specified");
+                return Guid.Empty;
             }
 
             Guid userID;
