@@ -7,6 +7,38 @@
 
         <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
 
+        <h2 style="color: #2e6c80;">v1.1.0.1709:</h2>
+        <ul>
+            <li>Adding Emote Effect option to Overlay Action &amp; Persistent Emote Effect Overlay Widget:</li>
+            <ul>
+                <li>The Emote Effect allows you to apply a visual animation to emotes that occur in chat and your commands</li>
+                <li>You can specify how many are shown on screen for each emote that is detected to increase the effect</li>
+                <li>Overlay Action Emote Effect option:</li>
+                <ul>
+                    <li>The Emote Text allows you to specify the specific emotes to use for the effect and can contain emotes, emoji, or image URLs; as well as Special Identifiers such as $message for Chat Commands</li>
+                    <li>In addition to specifying how many are shown for each emote detected, you can also set a maximum number that can be shown overall</li>
+                </ul>
+                <li>Persistent Emote Effect Overlay Widget:</li>
+                <ul>
+                    <li>This overlay widget will automatically trigger the emote effect for all emotes or emojis detected in chat messages in your stream</li>
+                    <li>Combos can be enabled to ensure the emote effect will only trigger if a specific emote is detected a certain amount of times in chat messages over a certain period of seconds</li>
+                    <li>Duplicate emotes can also be ignored within the same chat message</li>
+                </ul>
+            </ul>
+            <li>The following bug fixes have been made to specific Overlay Widget, which <b><u>REQUIRES RE-CREATING THEM</u></b> to get these bug fixes</li>
+            <ul>
+                <li>The End Credits Overlay Widget has been adjusted to prevent duplicate runs of it from triggering and show a smoothing crawl animation</li>
+                <li>The Chat Overlay Widget has been adjusted to prevent messages from stopping to appear after the default maximum shown has been reached</li>
+            </ul>
+            <li>Commands containing Overlay actions in them from Community Commands or manually imported will now have their actions automatically upgraded to the new Overlay format</li>
+            <li>Viewers who have linked their accounts in Mix It Up across different streaming platforms will now properly show both accounts on the Users page when they are watching from both and the correct account information will be returned for commands triggered from each platform</li>
+            <li>The Throw Item option on the Twitch Integrated Throwing System action now supports Special Identifiers for the amount to throw</li>
+            <li>Fixing bug with Tiltify service not properly handling team-based campaigns</li>
+            <li>Adding Change Folder option to the Music Player Action</li>
+            <li>The volume level of the default click sound for the Wheel Overlay Widget has been decreased</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.1.0.1708:</h2>
         <ul>
             <li>Fixing bug related to Overlay Widgets not properly initializing on app launch if they are enabled, which could cause some Overlay Widgets to not set up their processes correctly (EX: The End Credits widget not properly starting to capture data to display when the end credits roll)</li>
