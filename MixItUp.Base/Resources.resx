@@ -10402,6 +10402,6 @@ namespace CustomNamespace
     <value>Combo Count</value>
   </data>
   <data name="OverlayPersistentEmoteEffectComboTimeframe" xml:space="preserve">
-    <value>Combo Timeframe</value>
+    <value>Combo Timeframe (Secs)</value>
   </data>
 </root>

@@ -15172,7 +15172,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Combo Timeframe.
+        ///   Looks up a localized string similar to Combo Timeframe (Secs).
         /// </summary>
         public static string OverlayPersistentEmoteEffectComboTimeframe {
             get {
