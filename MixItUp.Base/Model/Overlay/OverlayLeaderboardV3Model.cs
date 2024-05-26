@@ -185,7 +185,7 @@ namespace MixItUp.Base.Model.Overlay
                     break;
                 }
 
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(userData.ID);
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(StreamingPlatformTypeEnum.All, userData.ID);
                 if (user != null)
                 {
                     users.Add(user);
@@ -219,7 +219,7 @@ namespace MixItUp.Base.Model.Overlay
                         break;
                     }
 
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(userData.ID);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(StreamingPlatformTypeEnum.All, userData.ID);
                     if (user != null)
                     {
                         users.Add(user);

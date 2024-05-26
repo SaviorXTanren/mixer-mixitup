@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
+using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -217,6 +218,8 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int ScrollSpeed { get; set; }
         [DataMember]
+        public double ScrollRate { get; set; }
+        [DataMember]
         public string BackgroundColor { get; set; }
         [DataMember]
         public bool RunCreditsWhenVisible { get; set; }
@@ -258,6 +261,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public override bool Donations { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Donations); } set { } }
 
+        [JsonIgnore]
+        public string AnimationIterations { get { return this.RunEndlessly ? "Infinity" : "1"; } }
+
         public OverlayEndCreditsV3Model() : base(OverlayItemV3Type.EndCredits) { }
 
         public override Dictionary<string, object> GetGenerationProperties()
@@ -270,9 +276,13 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             properties[nameof(this.ScrollSpeed)] = this.ScrollSpeed.ToString();
+            properties[nameof(this.ScrollRate)] = this.ScrollRate.ToString();
+
+            properties[nameof(this.RunEndlessly)] = this.RunEndlessly.ToString().ToLower();
+            properties[nameof(this.AnimationIterations)] = this.AnimationIterations;
+
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.RunCreditsWhenVisible)] = this.RunCreditsWhenVisible.ToString().ToLower();
-            properties[nameof(this.RunEndlessly)] = this.RunEndlessly.ToString().ToLower();
 
             List<string> sectionsHTML = new List<string>();
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
@@ -315,11 +325,6 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
-        }
-
         protected override async Task WidgetDisableInternal()
         {
             this.Reset();
@@ -356,6 +361,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task PlayCredits()
         {
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.IsLivePreview)
+            {
+                await OverlayEndCreditsV3ViewModel.LoadTestData(this);
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
             List<OverlayEndCreditsSectionV3Model> applicableSections = new List<OverlayEndCreditsSectionV3Model>();
 
             Dictionary<Guid, IEnumerable<string>> sectionItems = new Dictionary<Guid, IEnumerable<string>>();

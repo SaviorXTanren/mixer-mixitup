@@ -168,11 +168,11 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.CurrentBossID != Guid.Empty)
             {
-                this.CurrentBoss = await ServiceManager.Get<UserService>().GetUserByID(this.CurrentBossID);
-                if (this.CurrentBoss == null)
-                {
-                    this.CurrentBossID = Guid.Empty;
-                }
+                //this.CurrentBoss = await ServiceManager.Get<UserService>().GetUserByID(this.CurrentBossID);
+                //if (this.CurrentBoss == null)
+                //{
+                //    this.CurrentBossID = Guid.Empty;
+                //}
             }
 
             if (this.CurrentBoss == null)

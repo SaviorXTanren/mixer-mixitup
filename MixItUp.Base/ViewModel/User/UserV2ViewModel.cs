@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
@@ -22,7 +23,18 @@ namespace MixItUp.Base.ViewModel.User
 
         public static UserV2ViewModel CreateUnassociated(string username = null) { return new UserV2ViewModel(StreamingPlatformTypeEnum.None, UserV2Model.CreateUnassociated(username)); }
 
-        private StreamingPlatformTypeEnum platform;
+        public static void MergeUserData(UserV2ViewModel primary, UserV2ViewModel secondary)
+        {
+            primary.model.AddPlatformData(secondary.platformModel);
+            primary.model.MergeUserData(secondary.Model);
+
+            UserV2Model oldData = secondary.model;
+            secondary.UpdateModel(primary.model);
+
+            ServiceManager.Get<UserService>().DeleteUserData(oldData.ID);
+            ServiceManager.Get<UserService>().SetUserData(primary.model);
+        }
+
         private UserV2Model model;
         private UserPlatformV2ModelBase platformModel;
 
@@ -32,9 +44,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.model = model;
 
-            if (this.platform != StreamingPlatformTypeEnum.None)
+            if (platform != StreamingPlatformTypeEnum.None)
             {
-                this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
+                this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(platform);
             }
 
             if (this.platformModel == null && this.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
@@ -47,11 +59,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.Model.GetPlatforms().First());
             }
 
-            if (this.platformModel != null)
-            {
-                this.platform = this.platformModel.Platform;
-            }
-            else
+            if (this.platformModel == null)
             {
                 throw new InvalidOperationException($"User data does not contain any platform data - {model.ID} - {platform}");
             }
@@ -65,7 +73,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public Guid ID { get { return this.Model.ID; } }
 
-        public StreamingPlatformTypeEnum Platform { get { return this.platform; } }
+        public StreamingPlatformTypeEnum Platform { get { return this.PlatformModel.Platform; } }
 
         public HashSet<StreamingPlatformTypeEnum> AllPlatforms { get { return this.Model.GetPlatforms(); } }
 
@@ -644,20 +652,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public async Task MergeUserData(UserV2ViewModel other)
-        {
-            this.model.AddPlatformData(other.platformModel);
-            this.model.MergeUserData(other.Model);
-
-            await ServiceManager.Get<UserService>().RemoveActiveUser(other.ID);
-            await ServiceManager.Get<UserService>().RemoveActiveUser(this.ID);
-
-            ServiceManager.Get<UserService>().DeleteUserData(other.ID);
-            ServiceManager.Get<UserService>().SetUserData(this.model);
-
-            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(this);
-        }
-
         public void MergeUserData(UserImportModel import)
         {
             this.OnlineViewingMinutes += import.OnlineViewingMinutes;
@@ -775,5 +769,10 @@ namespace MixItUp.Base.ViewModel.User
         public int CompareTo(UserV2ViewModel other) { return this.SortableID.CompareTo(other.SortableID); }
 
         public override string ToString() { return this.Username; }
+
+        private void UpdateModel(UserV2Model model)
+        {
+            this.model = model;
+        }
     }
 }

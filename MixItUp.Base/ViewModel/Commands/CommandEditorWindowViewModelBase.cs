@@ -24,15 +24,16 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
         {
-            CommandModelBase command = await ImportCommandFromFile<CommandModelBase>(filePath);
-            return command;
+            return await ImportCommandFromFile<CommandModelBase>(filePath);
         }
 
         public static async Task<T> ImportCommandFromFile<T>(string filePath) where T : CommandModelBase
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                return await FileSerializerHelper.DeserializeFromFile<T>(filePath);
+                T command = await FileSerializerHelper.DeserializeFromFile<T>(filePath);
+                SettingsV3Upgrader.UpdateActionsV7(ChannelSession.Settings, command.Actions);
+                return command;
             }
             return null;
         }

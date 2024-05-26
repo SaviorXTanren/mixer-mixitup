@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Dialogs;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Windows.Commands;
@@ -40,6 +42,8 @@ namespace MixItUp.WPF.Controls.Dialogs
             MaterialDesignThemes.Wpf.DialogHost.CloseDialogCommand.Execute(true, this);
 
             await Task.Delay(500);
+
+            SettingsV3Upgrader.UpdateActionsV7(ChannelSession.Settings, this.command.Actions);
 
             if (this.ViewModel.IsNewCommandSelected)
             {

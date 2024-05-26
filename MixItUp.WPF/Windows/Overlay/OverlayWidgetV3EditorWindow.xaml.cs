@@ -34,24 +34,6 @@ namespace MixItUp.WPF.Windows.Overlay
             this.Initialize();
         }
 
-        public void ForceShow()
-        {
-            if (!this.IsVisible)
-            {
-                this.Show();
-            }
-
-            if (this.WindowState == System.Windows.WindowState.Minimized)
-            {
-                this.WindowState = System.Windows.WindowState.Normal;
-            }
-
-            this.Activate();
-            this.Topmost = true;  // important
-            this.Topmost = false; // important
-            this.Focus();         // important
-        }
-
         protected override async Task OnLoaded()
         {
             this.DataContext = this.viewModel;
@@ -89,6 +71,8 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.EventList: overlayControl = new OverlayEventListV3Control(); break;
                 case OverlayItemV3Type.Leaderboard: overlayControl = new OverlayLeaderboardV3Control(); break;
                 case OverlayItemV3Type.Wheel: overlayControl = new OverlayWheelV3Control(); break;
+                case OverlayItemV3Type.EmoteEffect: overlayControl = new OverlayEmoteEffectV3Control(); break;
+                case OverlayItemV3Type.PersistentEmoteEffect: overlayControl = new OverlayPersistentEmoteEffectV3Control(); break;
             }
 
             if (overlayControl != null)

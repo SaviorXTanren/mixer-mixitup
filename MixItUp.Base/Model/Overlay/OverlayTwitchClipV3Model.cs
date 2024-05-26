@@ -1,7 +1,14 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services;
+using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Clips;
+using MixItUp.Base.Model.Commands;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -57,13 +64,90 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public void SetDirectLinkFromThumbnailURL(string thumbnailURL)
+        public async Task<bool> ProcessClip(CommandParametersModel parameters)
         {
-            int index = thumbnailURL.IndexOf("-preview-");
-            if (index >= 0)
+            this.ClipID = null;
+            this.ClipDuration = 0;
+            this.ClipDirectLink = null;
+
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                this.ClipDirectLink = thumbnailURL.Substring(0, index) + ".mp4";
+                string clipReferenceID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.ClipReferenceID, parameters);
+
+                Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = ServiceManager.Get<TwitchSessionService>().User;
+                if (!string.IsNullOrEmpty(clipReferenceID))
+                {
+                    if (this.ClipType == OverlayTwitchClipV3ClipType.RandomClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestClip ||
+                        this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
+                    {
+                        twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(clipReferenceID);
+                        if (twitchUser == null)
+                        {
+                            // No valid user found, fail out and send an error message
+                            await ServiceManager.Get<ChatService>().SendMessage(Resources.OverlayTwitchClipErrorUnableToFindValidClip, StreamingPlatformTypeEnum.Twitch);
+                            return false;
+                        }
+                    }
+                }
+
+                ClipModel clip = null;
+                if (this.ClipType == OverlayTwitchClipV3ClipType.RandomClip || this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip)
+                {
+                    DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(30 + RandomHelper.GenerateRandomNumber(365)));
+                    bool featured = this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip;
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: 100);
+                    if (clips != null && clips.Count() > 0)
+                    {
+                        clip = clips.Random();
+                    }
+                    else
+                    {
+                        clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, maxResults: 100);
+                        if (clips != null && clips.Count() > 0)
+                        {
+                            clip = clips.Random();
+                        }
+                    }
+                }
+                else if (this.ClipType == OverlayTwitchClipV3ClipType.LatestClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
+                {
+                    DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(30));
+                    bool featured = this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip;
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: int.MaxValue);
+                    if (clips != null && clips.Count() > 0)
+                    {
+                        clip = clips.OrderByDescending(c => c.created_at).First();
+                    }
+                }
+                else if (this.ClipType == OverlayTwitchClipV3ClipType.SpecificClip && !string.IsNullOrEmpty(clipReferenceID))
+                {
+                    if (clipReferenceID.StartsWith(OverlayTwitchClipV3Model.TwitchClipURLPrefix))
+                    {
+                        clipReferenceID = clipReferenceID.Replace(OverlayTwitchClipV3Model.TwitchClipURLPrefix, "");
+                    }
+                    clip = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClip(clipReferenceID);
+                }
+
+                if (clip == null)
+                {
+                    // No valid clip found, fail out and send an error message
+                    await ServiceManager.Get<ChatService>().SendMessage(Resources.OverlayTwitchClipErrorUnableToFindValidClip, StreamingPlatformTypeEnum.Twitch);
+                    return false;
+                }
+
+                this.ClipID = clip.id;
+                this.ClipDuration = clip.duration;
+
+                int index = clip.thumbnail_url.IndexOf("-preview-");
+                if (index >= 0)
+                {
+                    this.ClipDirectLink = clip.thumbnail_url.Substring(0, index) + ".mp4";
+                }
+
+                return true;
             }
+
+            return false;
         }
     }
 }

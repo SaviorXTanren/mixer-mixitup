@@ -119,26 +119,6 @@ namespace MixItUp.Base.Services
             return text.Replace($"{{{name}}}", (value != null) ? value.ToString() : string.Empty);
         }
 
-        public static string ReplaceScriptTag(string text, string fileName, string contents)
-        {
-            return text.Replace($"<script src=\"{fileName}\"></script>", $"<script>{contents}</script>");
-        }
-
-        public static string ReplaceCSSStyleSheetTag(string text, string fileName, string contents)
-        {
-            return text.Replace($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{fileName}\">", $"<style>{contents}</style>");
-        }
-
-        public static string ReplaceRemoteFiles(string html)
-        {
-            html = OverlayV3Service.ReplaceScriptTag(html, "jquery-3.6.0.min.js", OverlayResources.jqueryJS);
-            html = OverlayV3Service.ReplaceScriptTag(html, "video.min.js", OverlayResources.videoJS);
-
-            html = OverlayV3Service.ReplaceCSSStyleSheetTag(html, "animate.min.css", OverlayResources.animateCSS);
-
-            return html;
-        }
-
         public static async Task<string> PerformBasicOverlayItemProcessing(OverlayEndpointV3Service endpoint, OverlayItemV3ModelBase item)
         {
             string iframeHTML = endpoint.GetItemIFrameHTML();
@@ -216,6 +196,7 @@ namespace MixItUp.Base.Services
 
                     foreach (OverlayWidgetV3Model widget in this.GetWidgets())
                     {
+                        await widget.Initialize();
                         if (widget.IsEnabled)
                         {
                             await widget.Enable();
@@ -458,7 +439,7 @@ namespace MixItUp.Base.Services
 
         public void Connect()
         {
-            this.mainHTML = OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayMainHTML);
+            this.mainHTML = OverlayResources.OverlayMainHTML;
             this.mainHTML = OverlayV3Service.ReplaceProperty(this.mainHTML, nameof(WebSocketConnectionURL), WebSocketConnectionURL);
 
             this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML; //OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayItemIFrameHTML);
@@ -662,15 +643,17 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(id);
-                    if (widget != null)
-                    {
-                        await widget.Item.ProcessPacket(packet);
-                    }
-
                     if (OverlayWidgetV3ViewModel.WidgetsInEditing.TryGetValue(id, out OverlayWidgetV3ViewModel widgetViewModel))
                     {
                         await widgetViewModel.ProcessPacket(packet);
+                    }
+                    else
+                    {
+                        OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(id);
+                        if (widget != null)
+                        {
+                            await widget.Item.ProcessPacket(packet);
+                        }
                     }
                 }
             }
@@ -723,6 +706,7 @@ namespace MixItUp.Base.Services
         public const string OverlayPathPrefix = "overlay";
         public const string OverlayDataPrefix = "data";
         public const string OverlayFilesPrefix = "files";
+        public const string OverlayScriptsPrefix = "scripts";
 
         private Dictionary<string, string> localFiles = new Dictionary<string, string>();
         private Dictionary<string, string> htmlData = new Dictionary<string, string>();
@@ -765,7 +749,7 @@ namespace MixItUp.Base.Services
 
         public void SetHTMLData(string id, string data)
         {
-            this.htmlData[id] = OverlayV3Service.ReplaceRemoteFiles(data);
+            this.htmlData[id] = data;
         }
 
         public void RemoveHTMLData(string id)
@@ -807,7 +791,34 @@ namespace MixItUp.Base.Services
                     id = id.Trim(new char[] { '/' });
                     if (this.htmlData.TryGetValue(id, out string data))
                     {
-                        //this.htmlData.Remove(id);
+                        if (!ChannelSession.IsDebug())
+                        {
+                            this.htmlData.Remove(id);
+                        }    
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, data);
+                    }
+                }
+                else if (url.StartsWith(OverlayScriptsPrefix))
+                {
+                    string name = url.Replace(OverlayScriptsPrefix, string.Empty);
+                    name = name.Trim(new char[] { '/' });
+
+                    string data = null;
+                    if (string.Equals(name, "jquery-3.6.0.min.js"))
+                    {
+                        data = OverlayResources.jqueryJS;
+                    }
+                    else if (string.Equals(name, "video.min.js"))
+                    {
+                        data = OverlayResources.videoJS;
+                    }
+                    else if (string.Equals(name, "animate.min.css"))
+                    {
+                        data = OverlayResources.animateCSS;
+                    }
+
+                    if (data != null)
+                    {
                         await this.CloseConnection(listenerContext, HttpStatusCode.OK, data);
                     }
                 }

@@ -11,7 +11,7 @@ namespace MixItUp.Base.Model.Actions
     public class TextToSpeechActionModel : ActionModelBase
     {
         [DataMember]
-        public TextToSpeechProviderType ProviderType { get; set; }
+        public TextToSpeechProviderType ProviderType { get; set; } = TextToSpeechProviderType.ResponsiveVoice;
 
         [DataMember]
         public string OutputDevice { get; set; }

@@ -882,6 +882,9 @@
     <Compile Include="Controls\Overlay\OverlayChatV3Control.xaml.cs">
       <DependentUpon>OverlayChatV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayEmoteEffectV3Control.xaml.cs">
+      <DependentUpon>OverlayEmoteEffectV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayEndCreditsV3Control.xaml.cs">
       <DependentUpon>OverlayEndCreditsV3Control.xaml</DependentUpon>
     </Compile>
@@ -905,6 +908,9 @@
     </Compile>
     <Compile Include="Controls\Overlay\OverlayLeaderboardV3Control.xaml.cs">
       <DependentUpon>OverlayLeaderboardV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayPersistentEmoteEffectV3Control.xaml.cs">
+      <DependentUpon>OverlayPersistentEmoteEffectV3Control.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayPersistentTimerV3Control.xaml.cs">
       <DependentUpon>OverlayPersistentTimerV3Control.xaml</DependentUpon>
@@ -1840,6 +1846,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Overlay\OverlayEmoteEffectV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Overlay\OverlayEndCreditsV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1869,6 +1879,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayLeaderboardV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayPersistentEmoteEffectV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

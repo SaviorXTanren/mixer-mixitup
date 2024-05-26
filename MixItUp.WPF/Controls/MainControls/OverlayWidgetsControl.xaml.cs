@@ -21,8 +21,6 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         private OverlayWidgetsMainControlViewModel viewModel;
 
-        private static Dictionary<Guid, OverlayWidgetV3EditorWindow> OpenWindows = new Dictionary<Guid, OverlayWidgetV3EditorWindow>();
-
         public OverlayWidgetsControl()
         {
             InitializeComponent();
@@ -44,8 +42,6 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                var kvp = OpenWindows.FirstOrDefault(w => w.Value == sender);
-                OpenWindows.Remove(kvp.Key);
                 await this.viewModel.OnVisible();
                 return Task.CompletedTask;
             });
@@ -78,14 +74,9 @@ namespace MixItUp.WPF.Controls.MainControls
             OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
             if (widget != null)
             {
-                if (!OpenWindows.TryGetValue(widget.Widget.ID, out OverlayWidgetV3EditorWindow window))
-                {
-                    window = new OverlayWidgetV3EditorWindow(widget.Widget);
-                    window.Closed += Window_Closed;
-
-                    OpenWindows.Add(widget.Widget.ID, window);
-                }
-                window.ForceShow();
+                OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget.Widget);
+                window.Closed += Window_Closed;
+                window.Show();
             }
         }
 

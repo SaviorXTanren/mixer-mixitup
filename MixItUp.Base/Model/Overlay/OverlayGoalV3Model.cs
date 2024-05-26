@@ -1,5 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -143,7 +142,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
-            if (amount != 0)
+            if (this.CurrentSegment != null && amount != 0)
             {
                 if (amount > 0)
                 {
@@ -204,8 +203,10 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        protected override async Task WidgetEnableInternal()
+        protected override async Task WidgetInitializeInternal()
         {
+            await base.WidgetInitializeInternal();
+
             this.CurrentSegment = this.Segments.First();
             this.ProgressSegments();
 
@@ -233,8 +234,6 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.Reset();
             }
-
-            await base.WidgetEnableInternal();
         }
 
         protected override Task WidgetResetInternal()

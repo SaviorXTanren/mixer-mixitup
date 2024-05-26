@@ -542,11 +542,11 @@ namespace MixItUp.Base.Model.Overlay
             {
                 try
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(userID);
-                    if (user != null)
-                    {
-                        results[user] = string.Empty;
-                    }
+                    //UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(userID);
+                    //if (user != null)
+                    //{
+                    //    results[user] = string.Empty;
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -563,11 +563,11 @@ namespace MixItUp.Base.Model.Overlay
             {
                 try
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
-                    if (user != null)
-                    {
-                        results[user] = kvp.Value.ToString();
-                    }
+                    //UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
+                    //if (user != null)
+                    //{
+                    //    results[user] = kvp.Value.ToString();
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -584,11 +584,11 @@ namespace MixItUp.Base.Model.Overlay
             {
                 try
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
-                    if (user != null)
-                    {
-                        results[user] = CurrencyHelper.ToCurrencyString(kvp.Value);
-                    }
+                    //UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
+                    //if (user != null)
+                    //{
+                    //    results[user] = CurrencyHelper.ToCurrencyString(kvp.Value);
+                    //}
                 }
                 catch (Exception ex)
                 {

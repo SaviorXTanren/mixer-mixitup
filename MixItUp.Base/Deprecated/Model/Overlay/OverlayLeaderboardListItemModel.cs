@@ -286,11 +286,11 @@ namespace MixItUp.Base.Model.Overlay
             for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
             {
                 var kvp = orderedUsers.ElementAt(i);
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
-                if (user != null)
-                {
-                    items.Add(new OverlayLeaderboardItem(user, kvp.Value.GetAge()));
-                }
+                //UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
+                //if (user != null)
+                //{
+                //    items.Add(new OverlayLeaderboardItem(user, kvp.Value.GetAge()));
+                //}
             }
 
             await this.ProcessLeaderboardItems(items);
@@ -315,11 +315,11 @@ namespace MixItUp.Base.Model.Overlay
                 for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
                 {
                     var kvp = orderedUsers.ElementAt(i);
-                    UserV2ViewModel dUser = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
-                    if (user != null)
-                    {
-                        items.Add(new OverlayLeaderboardItem(dUser, kvp.Value.AmountText));
-                    }
+                    //UserV2ViewModel dUser = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
+                    //if (user != null)
+                    //{
+                    //    items.Add(new OverlayLeaderboardItem(dUser, kvp.Value.AmountText));
+                    //}
                 }
 
                 await this.ProcessLeaderboardItems(items);

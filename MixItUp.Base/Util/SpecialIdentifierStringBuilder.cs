@@ -344,7 +344,7 @@ namespace MixItUp.Base.Util
                 {
                     IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                     UserV2Model topUserData = applicableUsers.Top(u => u.OnlineViewingMinutes);
-                    UserV2ViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(topUserData.ID);
+                    UserV2ViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(parameters.Platform, topUserData.ID);
                     if (topUser == null)
                     {
                         topUser = new UserV2ViewModel(topUserData);
@@ -380,7 +380,7 @@ namespace MixItUp.Base.Util
                     {
                         IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         UserV2Model topUserData = applicableUsers.Top(u => currency.GetAmount(u));
-                        UserV2ViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(topUserData.ID);
+                        UserV2ViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(parameters.Platform, topUserData.ID);
                         if (topUser == null)
                         {
                             topUser = new UserV2ViewModel(topUserData);
@@ -463,11 +463,13 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ServiceManager.Get<TiltifyService>().IsConnected && !string.IsNullOrWhiteSpace(ChannelSession.Settings.TiltifyCampaignV5))
+            if (ServiceManager.Get<TiltifyService>().IsConnected)
             {
                 if (this.ContainsSpecialIdentifier(TiltifySpecialIdentifierHeader))
                 {
-                    TiltifyCampaign campaign = await ServiceManager.Get<TiltifyService>().GetCampaign(ChannelSession.Settings.TiltifyCampaignV5);
+                    await ServiceManager.Get<TiltifyService>().RefreshCampaign();
+
+                    TiltifyCampaign campaign = ServiceManager.Get<TiltifyService>().Campaign;
                     if (campaign != null)
                     {
                         this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "campaignurl", campaign.url);
@@ -1192,7 +1194,7 @@ namespace MixItUp.Base.Util
             {
                 if (Guid.TryParse(ChannelSession.Settings.LatestSpecialIdentifiersData[userkey].ToString(), out Guid userID))
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(userID);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(StreamingPlatformTypeEnum.All, userID);
                     if (user != null)
                     {
                         await this.HandleUserSpecialIdentifiers(user, userkey);

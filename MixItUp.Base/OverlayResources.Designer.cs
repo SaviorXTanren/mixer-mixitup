@@ -232,6 +232,121 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///
+        ///const emojiPrefix = &quot;emoji://&quot;;
+        ///
+        ///const maxWidth = window.screen.width;
+        ///const maxHeight = window.screen.height;
+        ///
+        ///const duration = {Duration} * 1000;
+        ///
+        ///const emoteWidth = {EmoteWidth};
+        ///const emoteHeight = {EmoteHeight};
+        ///
+        ///const perEmoteShown = {PerEmoteShown};
+        ///
+        ///function sleep(ms)
+        ///{
+        ///    return new Promise(resolve =&gt; setTimeout(resolve, ms));
+        ///}
+        ///
+        ///function randomNumber(min, max)
+        ///{
+        ///    return Math.floor(Math.random() * (max - min)) + min;
+        ///}
+        ///
+        ///f [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayEmoteEffectBaseDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectBaseDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .maindiv
+        ///{
+        ///    position: absolute;
+        ///    width: 100%;
+        ///    max-width: 100%;
+        ///    min-width: 100%;
+        ///    height: 100%;
+        ///    max-height: 100%;
+        ///    min-height: 100%;
+        ///    margin: 0px;
+        ///    z-index: {Layer};
+        ///}
+        ///
+        ///.emote
+        ///{
+        ///    visibility: hidden;
+        ///}
+        ///
+        ///@keyframes rain-keyframes
+        ///{
+        ///    0% { transform: translateY(-20vh); visibility: visible; }
+        ///    100% { transform: translateY(120vh); }
+        ///}
+        ///
+        ///.rain
+        ///{
+        ///    animation: rain-keyframes {Duration}s linear;
+        ///}
+        ///
+        ///@keyframes float-keyframes
+        ///{
+        ///    0% { transform: t [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayEmoteEffectDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
+        ///
+        ///&lt;/div&gt;.
+        /// </summary>
+        public static string OverlayEmoteEffectDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const animation = &quot;{AnimationType}&quot;;
+        ///
+        ///async function addEmotes(emotes)
+        ///{
+        ///    let totalEmotes = 0;
+        ///    for (let e = 0; e &lt; emotes.length; e++)
+        ///    {
+        ///        for (let i = 0; i &lt; perEmoteShown &amp;&amp; totalEmotes &lt; {MaxAmountShown}; i++)
+        ///        {
+        ///            totalEmotes++;
+        ///
+        ///            var emote = createEmote(emotes[e]);
+        ///
+        ///            window[animation](emote);
+        ///            
+        ///            if ({IncludeDelay})
+        ///            {
+        ///                await sleep(200);
+        ///            }
+        ///        }
+        ///    }
+        ///    
+        ///    set [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayEmoteEffectDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayEmoteEffectDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .list {
         ///    position: absolute;
         ///    margin: 0;
@@ -264,7 +379,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;&lt;/div&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot; style=&quot;top: 100vh&quot;&gt;&lt;/div&gt;
         ///
         ///&lt;template id=&quot;spacer&quot;&gt;
         ///    &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
@@ -279,8 +394,14 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const scrollSpeed = {ScrollSpeed};
-        ///const runEndlessly = {RunEndlessly};
+        ///   Looks up a localized string similar to const animationKeyframes =
+        ///[
+        ///    { transform: &quot;translateY(0vh)&quot;, offset: 0 },
+        ///    { transform: &quot;translateY(-100%) translateY(-100vh)&quot;, offset: 1 },
+        ///];
+        ///
+        ///const scrollRate = {ScrollRate};
+        ///const animationIterations = {AnimationIterations};
         ///const fadeTime = 3000;
         ///
         ///const main = document.getElementById(&quot;maindiv&quot;);
@@ -288,17 +409,13 @@ namespace MixItUp.Base {
         ///
         ///const spacerTemplate = document.querySelector(&quot;#spacer&quot;);
         ///
+        ///var running = false;
+        ///
         ///function startCredits(data)
         ///{
-        ///    while (list.firstChild) {
-        ///        list.removeChild(list.lastChild);
-        ///    }
-        ///    
-        ///    let listTop = document.documentElement.clientHeight;
-        ///    list.style.top = listTop + &quot;px&quot;;
-        ///
-        ///    data.Order.forEach((id) =&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///    if (running)
+        ///    {
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEndCreditsDefaultJavascript {
             get {
@@ -663,17 +780,17 @@ namespace MixItUp.Base {
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
         ///
-        ///    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+        ///    &lt;script src=&quot;/scripts/jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
         ///
-        ///    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
+        ///    &lt;script src=&quot;/scripts/video.min.js&quot;&gt;&lt;/script&gt;
         ///
-        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
+        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/scripts/animate.min.css&quot;&gt;
         ///
         ///    &lt;style type=&quot;text/css&quot;&gt;
         ///        {CSS}
         ///    &lt;/style&gt;
         ///&lt;/head&gt;
-        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max- [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayItemIFrameHTML {
             get {
@@ -862,6 +979,7 @@ namespace MixItUp.Base {
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+        ///    &lt;link rel=&quot;icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://mixitupapp.com/favicon.ico&quot;&gt;
         ///
         ///    &lt;script&gt;
         ///        var connection;
@@ -871,13 +989,41 @@ namespace MixItUp.Base {
         ///            openWebsocketConnectionWithAddressPort(window.location.hostname, window.location.port, path);
         ///        }
         ///
-        ///        function openWebsocketConnectionWithAddressPort(address, port, path) {
-        ///            try {
-        ///                va [rest of string was truncated]&quot;;.
+        ///        function openWebsocketCo [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayMainHTML {
             get {
                 return ResourceManager.GetString("OverlayMainHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to async function showEmote(data)
+        ///{
+        ///    for (let e = 0; e &lt; data.Amount; e++)
+        ///    {
+        ///        for (let i = 0; i &lt; perEmoteShown; i++)
+        ///        {
+        ///            var emote = createEmote(data.Emote);
+        ///
+        ///            window[data.AnimationType](emote);
+        ///            
+        ///            setTimeout(() =&gt;
+        ///            {
+        ///                main.removeChild(emote);
+        ///            }, duration);
+        ///            
+        ///            if (data.IncludeDelay)
+        ///            {
+        ///                await sleep(200);
+        ///            }
+        ///        }
+        ///    }
+        ///}.
+        /// </summary>
+        public static string OverlayPersistentEmoteEffectDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayPersistentEmoteEffectDefaultJavascript", resourceCulture);
             }
         }
         

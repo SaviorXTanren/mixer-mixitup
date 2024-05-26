@@ -445,7 +445,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (display.UserID != Guid.Empty)
             {
-                user = await ServiceManager.Get<UserService>().GetUserByID(display.UserID);
+                user = await ServiceManager.Get<UserService>().GetUserByID(StreamingPlatformTypeEnum.All, display.UserID);
             }
 
             if (user == null)

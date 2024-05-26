@@ -22,7 +22,10 @@ namespace MixItUp.Base.ViewModel.Actions
         HTML,
         Timer,
         TwitchClip,
+        EmoteEffect,
+
         ShowHideWidget,
+
         DamageStreamBoss,
         AddToGoal,
         AddToPersistentTimer,
@@ -89,6 +92,10 @@ namespace MixItUp.Base.ViewModel.Actions
                         {
                             this.Item = new OverlayTwitchClipV3ViewModel();
                         }
+                        else if (this.SelectedActionType == OverlayActionTypeEnum.EmoteEffect)
+                        {
+                            this.Item = new OverlayEmoteEffectV3ViewModel();
+                        }
 
                         this.HTML = this.GetDefaultHTML(this.Item);
                         this.CSS = this.GetDefaultCSS(this.Item);
@@ -102,6 +109,9 @@ namespace MixItUp.Base.ViewModel.Actions
                         this.NotifyPropertyChanged(nameof(this.CSSHeader));
                         this.NotifyPropertyChanged(nameof(this.JavascriptHeader));
                     }
+
+                    this.NotifyPropertyChanged(nameof(this.SupportsStandardActionPositioning));
+                    this.NotifyPropertyChanged(nameof(this.SupportsStandardActionAnimations));
                 }
             }
         }
@@ -139,7 +149,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 return this.SelectedActionType == OverlayActionTypeEnum.Text || this.SelectedActionType == OverlayActionTypeEnum.Image ||
                     this.SelectedActionType == OverlayActionTypeEnum.Video || this.SelectedActionType == OverlayActionTypeEnum.YouTube ||
                     this.SelectedActionType == OverlayActionTypeEnum.HTML || this.SelectedActionType == OverlayActionTypeEnum.Timer ||
-                    this.SelectedActionType == OverlayActionTypeEnum.TwitchClip;
+                    this.SelectedActionType == OverlayActionTypeEnum.TwitchClip || this.SelectedActionType == OverlayActionTypeEnum.EmoteEffect;
             }
         }
 
@@ -175,6 +185,10 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string duration;
+
+        public bool SupportsStandardActionPositioning { get { return this.Item != null && this.Item.SupportsStandardActionPositioning; } }
+
+        public bool SupportsStandardActionAnimations { get { return this.Item != null && this.Item.SupportsStandardActionAnimations; } }
 
         public OverlayAnimationV3ViewModel EntranceAnimation
         {
@@ -518,6 +532,11 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedActionType = OverlayActionTypeEnum.TwitchClip;
                     this.Item = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)action.OverlayItemV3);
                 }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.EmoteEffect)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.EmoteEffect;
+                    this.Item = new OverlayEmoteEffectV3ViewModel((OverlayEmoteEffectV3Model)action.OverlayItemV3);
+                }
 
                 this.Position = new OverlayPositionV3ViewModel(action.OverlayItemV3);
                 this.Duration = action.Duration;
@@ -842,9 +861,9 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult<ActionModelBase>(null);
         }
 
-        private string GetDefaultHTML(OverlayItemV3ViewModelBase item) { return OverlayItemV3ModelBase.GetPositionWrappedHTML(item.DefaultHTML); }
+        private string GetDefaultHTML(OverlayItemV3ViewModelBase item) { return item.AddPositionedWrappedHTMLCSS ? OverlayItemV3ModelBase.GetPositionWrappedHTML(item.DefaultHTML) : item.DefaultHTML; }
 
-        private string GetDefaultCSS(OverlayItemV3ViewModelBase item) { return OverlayItemV3ModelBase.GetPositionWrappedCSS(item.DefaultCSS); }
+        private string GetDefaultCSS(OverlayItemV3ViewModelBase item) { return item.AddPositionedWrappedHTMLCSS ? OverlayItemV3ModelBase.GetPositionWrappedCSS(item.DefaultCSS) : item.DefaultCSS; }
 
         private string GetDefaultJavascript(OverlayItemV3ViewModelBase item) { return item.DefaultJavascript; }
     }

@@ -11,7 +11,6 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-
 namespace MixItUp.Base.Services.External
 {
     [DataContract]
@@ -44,6 +43,8 @@ namespace MixItUp.Base.Services.External
         [DataMember]
         public int legacy_id { get; set; }
         [DataMember]
+        public string team_id { get; set; }
+        [DataMember]
         public string name { get; set; }
         [DataMember]
         public string cause_id { get; set; }
@@ -75,6 +76,8 @@ namespace MixItUp.Base.Services.External
         [JsonIgnore]
         public double OriginalGoal { get { return TiltifyService.GetValueFromTiltifyJObject(this.original_goal); } }
 
+        [JsonIgnore]
+        public bool IsPartOfTeam { get { return !string.IsNullOrWhiteSpace(this.team_id); } }
         [JsonIgnore]
         public bool IsRetired { get { return string.Equals(this.status, RetiredStatus); } }
     }
@@ -161,6 +164,8 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return MixItUp.Base.Resources.Tiltify; } }
 
+        public TiltifyCampaign Campaign { get { return this.campaign; } }
+
         public static double GetValueFromTiltifyJObject(JObject jobj)
         {
             if (jobj != null && jobj.ContainsKey("value") && double.TryParse(jobj["value"].ToString(), out double value))
@@ -215,9 +220,14 @@ namespace MixItUp.Base.Services.External
             return await this.GetObjectResult<TiltifyUser>("api/public/current-user");
         }
 
-        public async Task<TiltifyCampaign> GetCampaign(string campaignID)
+        public async Task<TiltifyCampaign> GetUserCampaign(string campaignID)
         {
             return await this.GetObjectResult<TiltifyCampaign>($"api/public/campaigns/{campaignID}");
+        }
+
+        public async Task<TiltifyCampaign> GetTeamCampaign(string campaignID)
+        {
+            return await this.GetObjectResult<TiltifyCampaign>($"api/public/team_campaigns/{campaignID}");
         }
 
         public async Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user)
@@ -237,7 +247,35 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<TiltifyDonation>> GetCampaignDonations(TiltifyCampaign campaign)
         {
-            return await this.GetArrayResult<TiltifyDonation>($"api/public/campaigns/{campaign.id}/donations?limit=20");
+            if (campaign.IsPartOfTeam)
+            {
+                return await this.GetArrayResult<TiltifyDonation>($"api/public/team_campaigns/{campaign.id}/donations?limit=20");
+            }
+            else
+            {
+                return await this.GetArrayResult<TiltifyDonation>($"api/public/campaigns/{campaign.id}/donations?limit=20");
+            }
+        }
+
+        public async Task RefreshCampaign()
+        {
+            if (this.campaign != null)
+            {
+                TiltifyCampaign campaign;
+                if (this.campaign.IsPartOfTeam)
+                {
+                    campaign = await this.GetUserCampaign(this.campaign.id);
+                }
+                else
+                {
+                    campaign = await this.GetTeamCampaign(this.campaign.id);
+                }
+
+                if (campaign != null)
+                {
+                    this.campaign = campaign;
+                }
+            }
         }
 
         protected override async Task RefreshOAuthToken()
@@ -279,39 +317,35 @@ namespace MixItUp.Base.Services.External
 
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            if (ChannelSession.Settings.TiltifyCampaign > 0)
-            {
-                // Legacy upgrade to new V5 API
-                campaign = await this.GetCampaign(ChannelSession.Settings.TiltifyCampaign.ToString());
-                if (campaign != null)
-                {
-                    ChannelSession.Settings.TiltifyCampaignV5 = campaign.id;
-                    ChannelSession.Settings.TiltifyCampaign = 0;
-                }
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
-
             if (string.IsNullOrWhiteSpace(ChannelSession.Settings.TiltifyCampaignV5))
             {
-                campaign = null;
+                this.campaign = null;
             }
-            else if (campaign == null || ChannelSession.Settings.TiltifyCampaignV5 != this.campaign.id)
+            else if (this.campaign == null || ChannelSession.Settings.TiltifyCampaignV5 != this.campaign.id)
             {
                 donationsReceived.Clear();
-                campaign = await this.GetCampaign(ChannelSession.Settings.TiltifyCampaignV5);
-                if (campaign != null)
+
+                if (ChannelSession.Settings.TiltifyCampaignV5IsTeam)
                 {
-                    foreach (TiltifyDonation donation in await this.GetCampaignDonations(campaign))
+                    this.campaign = await this.GetTeamCampaign(ChannelSession.Settings.TiltifyCampaignV5);
+                }
+                else
+                {
+                    this.campaign = await this.GetUserCampaign(ChannelSession.Settings.TiltifyCampaignV5);
+                }
+
+                if (this.campaign != null)
+                {
+                    foreach (TiltifyDonation donation in await this.GetCampaignDonations(this.campaign))
                     {
                         donationsReceived[donation.id] = donation;
                     }
                 }
             }
 
-            if (campaign != null)
+            if (this.campaign != null)
             {
-                foreach (TiltifyDonation tDonation in await this.GetCampaignDonations(campaign))
+                foreach (TiltifyDonation tDonation in await this.GetCampaignDonations(this.campaign))
                 {
                     if (!donationsReceived.ContainsKey(tDonation.id))
                     {

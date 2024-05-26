@@ -51,6 +51,8 @@ namespace MixItUp.Base.Model.Overlay
         public double OverkillBonusHealthMultiplier { get; set; }
         [DataMember]
         public double SelfHealingMultiplier { get; set; }
+        [DataMember]
+        public bool CompoundPreviousBossHealth { get; set; } = true;
 
         [DataMember]
         public OverlayAnimationV3Model DamageAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -78,7 +80,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task<UserV2ViewModel> GetCurrentBoss()
         {
-            UserV2ViewModel boss = await ServiceManager.Get<UserService>().GetUserByID(this.CurrentBoss);
+            UserV2ViewModel boss = await ServiceManager.Get<UserService>().GetUserByID(StreamingPlatformTypeEnum.All, this.CurrentBoss);
             if (boss == null)
             {
                 boss = ChannelSession.User;
@@ -115,6 +117,10 @@ namespace MixItUp.Base.Model.Overlay
                     else
                     {
                         this.CurrentBoss = user.ID;
+                        if (!this.CompoundPreviousBossHealth)
+                        {
+                            this.CurrentMaxHealth = this.BaseHealth;
+                        }
                         this.CurrentMaxHealth += this.KillBonusHealth;
                         this.CurrentMaxHealth += (int)Math.Round(Math.Abs(this.CurrentHealth) * this.OverkillBonusHealthMultiplier);
                         this.CurrentHealth = this.CurrentMaxHealth;
@@ -184,9 +190,9 @@ namespace MixItUp.Base.Model.Overlay
             properties[BossNameProperty] = boss.DisplayName;
         }
 
-        protected override async Task WidgetEnableInternal()
+        protected override async Task WidgetInitializeInternal()
         {
-            await base.WidgetEnableInternal();
+            await base.WidgetInitializeInternal();
 
             if (this.CurrentBoss == Guid.Empty)
             {

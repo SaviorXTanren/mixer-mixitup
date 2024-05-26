@@ -392,15 +392,15 @@ function addInternal(message)
         }, messageRemovalTime * 1000);
     }
     
-    while (list.childElementCount &gt; maxMessages)
+    if (list.childElementCount &gt; maxMessages)
     {
         if (addMessagesToTop)
         {
-            removeInternal(list.lastChild);
+            list.removeChild(list.lastChild);
         }
         else
         {
-            removeInternal(list.firstChild);
+            list.removeChild(list.firstChild);
         }
     }
 }
@@ -412,6 +412,269 @@ function removeInternal(message)
         list.removeChild(message);
     });
 }</value>
+  </data>
+  <data name="OverlayEmoteEffectBaseDefaultJavascript" xml:space="preserve">
+    <value>const main = document.getElementById("maindiv");
+
+const emojiPrefix = "emoji://";
+
+const maxWidth = window.screen.width;
+const maxHeight = window.screen.height;
+
+const duration = {Duration} * 1000;
+
+const emoteWidth = {EmoteWidth};
+const emoteHeight = {EmoteHeight};
+
+const perEmoteShown = {PerEmoteShown};
+
+function sleep(ms)
+{
+    return new Promise(resolve =&gt; setTimeout(resolve, ms));
+}
+
+function randomNumber(min, max)
+{
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function randomXPosition()
+{
+    return randomNumber(0, maxWidth - emoteWidth);
+}
+
+function randomYPosition()
+{
+    return randomNumber(0, maxHeight - emoteHeight);
+}
+
+function createEmote(url)
+{
+    var emote;
+    if (url.startsWith(emojiPrefix))
+    {
+        emote = document.createElement("div");
+        emote.innerText = url.replace(emojiPrefix, "");
+        emote.style.fontSize = `${emoteHeight}px`;
+        emote.style.fontFamily = "Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji";
+    }
+    else
+    {
+        emote = document.createElement("img");
+        emote.src = url;
+        emote.width = emoteWidth;
+        emote.height = emoteHeight;
+    }
+    
+    emote.style.position = "absolute";
+    emote.classList.add("emote");
+    main.appendChild(emote);
+    return emote;
+}
+
+function Rain(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.classList.add("rain");
+}
+
+function Float(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.classList.add("float");
+}
+
+function Fade(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.style.top = `${randomYPosition()}px`;
+    emote.classList.add("fade");
+}
+
+function Zoom(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.style.top = `${randomYPosition()}px`;
+    emote.classList.add("zoom");
+}
+
+function Explosion(emote)
+{
+    emote.style.left = `${(maxWidth / 2) - (emoteWidth / 2)}px`;
+    emote.style.top = `${(maxHeight / 2) - (emoteHeight / 2)}px`;
+
+    const turnAmount = Math.random();
+    const movementPixels = Math.max(maxWidth, maxHeight);
+
+    const animationKeyframes =
+    [
+        { transform: `rotate(${turnAmount}turn) scale(0)`, visibility: "visible", offset: 0 },
+        { transform: `rotate(${turnAmount}turn) scale(1)`, offset: 0.1 },
+        { transform: `rotate(${turnAmount}turn) translateY(${movementPixels}px)`, offset: 1 },
+    ];
+    
+    emote.animate(animationKeyframes, duration);
+}
+
+function FallingLeaves(emote)
+{
+    emote.style.left = `${randomXPosition()}px`;
+    emote.classList.add("falling-leaves");
+}
+
+function ShootingStars(emote)
+{
+    emote.style.left = `${randomNumber(maxWidth / 2, maxWidth - emoteWidth)}px`;
+    emote.style.top = `${randomNumber(0, (maxHeight - emoteHeight) / 2)}px`;
+    emote.classList.add("shooting-stars");
+}</value>
+  </data>
+  <data name="OverlayEmoteEffectDefaultCSS" xml:space="preserve">
+    <value>.maindiv
+{
+    position: absolute;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    margin: 0px;
+    z-index: {Layer};
+}
+
+.emote
+{
+    visibility: hidden;
+}
+
+@keyframes rain-keyframes
+{
+    0% { transform: translateY(-20vh); visibility: visible; }
+    100% { transform: translateY(120vh); }
+}
+
+.rain
+{
+    animation: rain-keyframes {Duration}s linear;
+}
+
+@keyframes float-keyframes
+{
+    0% { transform: translateY(120vh); visibility: visible; }
+    100% { transform: translateY(-20vh); }
+}
+
+.float
+{
+    animation: float-keyframes {Duration}s linear;
+}
+
+@keyframes fade-keyframes
+{
+    0% { opacity: 0; visibility: visible; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.fade
+{
+    animation: fade-keyframes {Duration}s linear;
+}
+
+@keyframes zoom-keyframes
+{
+    0% { transform: scale(0); visibility: visible; }
+    50% { transform: scale(1); }
+    100% { transform: scale(0); }
+}
+
+.zoom
+{
+    animation: zoom-keyframes {Duration}s ease-in-out;
+}
+
+@keyframes falling-leaves-keyframes
+{
+    0% { transform: translateY(-20vh); visibility: visible; }
+    5% { transform: translateY(0vh); }
+    10% { transform: translateY(10vh) translateX(30vw); }
+    15% { transform: translateY(5vh) translateX(15vw); }
+    20% { transform: translateY(20vh) translateX(-15vw); }
+    25% { transform: translateY(15vh) translateX(-30vw); }
+    30% { transform: translateY(30vh) translateX(15vw); }
+    35% { transform: translateY(25vh) translateX(30vw); }
+    40% { transform: translateY(40vh) translateX(-15vw); }
+    45% { transform: translateY(35vh) translateX(-30vw); }
+    50% { transform: translateY(50vh) translateX(15vw); }
+    55% { transform: translateY(45vh) translateX(30vw); }
+    60% { transform: translateY(60vh) translateX(-15vw); }
+    65% { transform: translateY(55vh) translateX(-30vw); }
+    70% { transform: translateY(70vh) translateX(15vw); }
+    75% { transform: translateY(65vh) translateX(30vw); }
+    80% { transform: translateY(80vh) translateX(-15vw); }
+    85% { transform: translateY(75vh) translateX(-30vw); }
+    90% { transform: translateY(90vh) translateX(15vw); }
+    95% { transform: translateY(85vh) translateX(30vw); }
+    100% { transform: translateY(100vh) translateX(-15vw); }
+}
+
+.falling-leaves
+{
+    animation: falling-leaves-keyframes {Duration}s linear;
+}
+
+@keyframes shooting-stars-keyframes
+{
+    0% { transform: scale(0.01); visibility: visible; }
+    20% { transform: translateX(-10vw) translateY(3vh) scale(1); }
+    40% { transform: translateX(-20vw) translateY(9vh) scale(1); }
+    60% { transform: translateX(-30vw) translateY(15vh) scale(1); }
+    80% { transform: translateX(-40vw) translateY(22vh) scale(1); }
+    100% { transform: translateX(-50vw) translateY(30vh) scale(0); }
+}
+
+.shooting-stars
+{
+    animation: shooting-stars-keyframes {Duration}s linear;
+}</value>
+  </data>
+  <data name="OverlayEmoteEffectDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="maindiv" class="maindiv"&gt;
+
+&lt;/div&gt;</value>
+  </data>
+  <data name="OverlayEmoteEffectDefaultJavascript" xml:space="preserve">
+    <value>const animation = "{AnimationType}";
+
+async function addEmotes(emotes)
+{
+    let totalEmotes = 0;
+    for (let e = 0; e &lt; emotes.length; e++)
+    {
+        for (let i = 0; i &lt; perEmoteShown &amp;&amp; totalEmotes &lt; {MaxAmountShown}; i++)
+        {
+            totalEmotes++;
+
+            var emote = createEmote(emotes[e]);
+
+            window[animation](emote);
+            
+            if ({IncludeDelay})
+            {
+                await sleep(200);
+            }
+        }
+    }
+    
+    setTimeout(() =&gt;
+    {
+        main.style.visibility='hidden';
+        sendParentMessage({ Type: "Remove", ID: "{ID}" });
+    }, duration);
+}
+
+addEmotes([{Emotes}]);</value>
   </data>
   <data name="OverlayEndCreditsDefaultCSS" xml:space="preserve">
     <value>.list {
@@ -453,7 +716,7 @@ function removeInternal(message)
 }</value>
   </data>
   <data name="OverlayEndCreditsDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list" class="list"&gt;&lt;/div&gt;
+    <value>&lt;div id="list" class="list" style="top: 100vh"&gt;&lt;/div&gt;
 
 &lt;template id="spacer"&gt;
     &lt;div class="spacer"&gt;&lt;/div&gt;
@@ -462,8 +725,14 @@ function removeInternal(message)
 {Sections}</value>
   </data>
   <data name="OverlayEndCreditsDefaultJavascript" xml:space="preserve">
-    <value>const scrollSpeed = {ScrollSpeed};
-const runEndlessly = {RunEndlessly};
+    <value>const animationKeyframes =
+[
+    { transform: "translateY(0vh)", offset: 0 },
+    { transform: "translateY(-100%) translateY(-100vh)", offset: 1 },
+];
+
+const scrollRate = {ScrollRate};
+const animationIterations = {AnimationIterations};
 const fadeTime = 3000;
 
 const main = document.getElementById("maindiv");
@@ -471,14 +740,21 @@ const list = document.getElementById("list");
 
 const spacerTemplate = document.querySelector("#spacer");
 
+var running = false;
+
 function startCredits(data)
 {
+    if (running)
+    {
+        return;
+    }
+    running = true;
+
     while (list.firstChild) {
         list.removeChild(list.lastChild);
     }
     
-    let listTop = document.documentElement.clientHeight;
-    list.style.top = listTop + "px";
+    let totalElements = 0;
 
     data.Order.forEach((id) =&gt;
     {
@@ -492,6 +768,8 @@ function startCredits(data)
         {
             let column = columnTemplate.content.cloneNode(true);
             columns.appendChild(column.firstElementChild);
+            
+            totalElements++;
         }
         
         let columnIndex = 0;
@@ -501,6 +779,8 @@ function startCredits(data)
             let line = lineTemplate.content.cloneNode(true);
             line.firstElementChild.innerHTML = item;
             columns.children[columnIndex].appendChild(line);
+            
+            totalElements++;
             
             columnIndex++;
             if (columnIndex &gt;= columnCount)
@@ -512,42 +792,30 @@ function startCredits(data)
         list.appendChild(section);
         list.appendChild(spacerTemplate.content.cloneNode(true));
     });
+
+    let rect = list.getBoundingClientRect();
     
     main.style.display = "none";
     main.style.backgroundColor = "{BackgroundColor}";
     
     sendParentMessage({ Type: "EndCreditsStarted", ID: "{ID}" });
     $(main).fadeIn(fadeTime);
+    
     setTimeout(() =&gt; {
-        moveCredits(listTop);
-    }, fadeTime);
-}
+        let animation = list.animate(animationKeyframes,
+        {
+            duration: (rect.bottom + document.documentElement.clientHeight) * scrollRate,
+            easing: "linear",
+            iterations: animationIterations,
+        });
 
-function moveCredits(listTop)
-{
-    setTimeout(() =&gt; {
-        let rect = list.getBoundingClientRect();
-        if (rect.bottom &gt; 0)
+        animation.finished.then(() =&gt;
         {
-            listTop = listTop - 1;
-            list.style.top = listTop + 'px';
-            moveCredits(listTop);
-        }
-        else
-        {
-            if (runEndlessly)
-            {
-                listTop = document.documentElement.clientHeight;
-                list.style.top = listTop + 'px';
-                moveCredits(listTop);
-            }
-            else
-            {
-                $(main).fadeOut(fadeTime);
-                sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
-            }
-        }
-    }, scrollSpeed);
+            $(main).fadeOut(fadeTime);
+            sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
+            running = false;
+        });
+    }, fadeTime);
 }
 
 sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
@@ -1047,11 +1315,11 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     &lt;meta charset="utf-8" /&gt;
     &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
 
-    &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/scripts/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
 
-    &lt;script src="video.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/scripts/video.min.js"&gt;&lt;/script&gt;
 
-    &lt;link rel="stylesheet" type="text/css" href="animate.min.css"&gt;
+    &lt;link rel="stylesheet" type="text/css" href="/scripts/animate.min.css"&gt;
 
     &lt;style type="text/css"&gt;
         {CSS}
@@ -1343,6 +1611,7 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 &lt;head&gt;
     &lt;meta charset="utf-8" /&gt;
     &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+    &lt;link rel="icon" type="image/x-icon" href="https://mixitupapp.com/favicon.ico"&gt;
 
     &lt;script&gt;
         var connection;
@@ -1432,7 +1701,7 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
         }
     &lt;/script&gt;
 
-    &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/scripts/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
 
     &lt;script src="https://code.responsivevoice.org/responsivevoice.js?key=PkwySfvE"&gt;&lt;/script&gt;
 &lt;/head&gt;
@@ -1597,6 +1866,30 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</value>
+  </data>
+  <data name="OverlayPersistentEmoteEffectDefaultJavascript" xml:space="preserve">
+    <value>async function showEmote(data)
+{
+    for (let e = 0; e &lt; data.Amount; e++)
+    {
+        for (let i = 0; i &lt; perEmoteShown; i++)
+        {
+            var emote = createEmote(data.Emote);
+
+            window[data.AnimationType](emote);
+            
+            setTimeout(() =&gt;
+            {
+                main.removeChild(emote);
+            }, duration);
+            
+            if (data.IncludeDelay)
+            {
+                await sleep(200);
+            }
+        }
+    }
+}</value>
   </data>
   <data name="OverlayPersistentTimerDefaultJavascript" xml:space="preserve">
     <value>const displayFormat = "{DisplayFormat}";
