@@ -235,7 +235,7 @@ namespace MixItUp.Base.Model.Actions
                     if (this.OverlayItemV3 is OverlayTwitchClipV3Model)
                     {
                         OverlayTwitchClipV3Model overlayTwitchClipItemV3 = (OverlayTwitchClipV3Model)this.OverlayItemV3;
-                        if (await overlayTwitchClipItemV3.ProcessClip(parameters))
+                        if (!await overlayTwitchClipItemV3.ProcessClip(parameters))
                         {
                             return;
                         }
