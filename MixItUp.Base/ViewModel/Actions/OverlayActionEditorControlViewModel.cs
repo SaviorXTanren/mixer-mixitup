@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Actions
         TwitchClip,
         EmoteEffect,
 
-        ShowHideWidget,
+        EnableDisableWidget,
 
         DamageStreamBoss,
         AddToGoal,
@@ -284,7 +284,7 @@ namespace MixItUp.Base.ViewModel.Actions
             get { return !string.Equals(this.Javascript, this.defaultJavascript); }
         }
 
-        public bool ShowWidget { get { return this.SelectedActionType == OverlayActionTypeEnum.ShowHideWidget; } }
+        public bool ShowWidget { get { return this.SelectedActionType == OverlayActionTypeEnum.EnableDisableWidget; } }
 
         public ObservableCollection<OverlayWidgetV3Model> Widgets { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
 
@@ -299,16 +299,16 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayWidgetV3Model selectedWidget;
 
-        public bool ShowHideWidgetValue
+        public bool EnableDisableWidgetValue
         {
-            get { return this.showHideWidgetValue; }
+            get { return this.enableDisableWidgetValue; }
             set
             {
-                this.showHideWidgetValue = value;
+                this.enableDisableWidgetValue = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private bool showHideWidgetValue;
+        private bool enableDisableWidgetValue;
 
         public bool ShowDamageStreamBoss { get { return this.SelectedActionType == OverlayActionTypeEnum.DamageStreamBoss; } }
 
@@ -553,9 +553,9 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (action.WidgetID != Guid.Empty)
             {
-                this.SelectedActionType = OverlayActionTypeEnum.ShowHideWidget;
+                this.SelectedActionType = OverlayActionTypeEnum.EnableDisableWidget;
                 this.widgetID = action.WidgetID;
-                this.ShowHideWidgetValue = action.ShowWidget;
+                this.EnableDisableWidgetValue = action.ShowWidget;
             }
             else if (action.StreamBossID != Guid.Empty)
             {
@@ -828,7 +828,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowWidget)
             {
-                return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedWidget, this.ShowHideWidgetValue));
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedWidget, this.EnableDisableWidgetValue));
             }
             else if (this.ShowDamageStreamBoss)
             {

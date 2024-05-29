@@ -6018,6 +6018,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable/Disable Widget.
+        /// </summary>
+        public static string EnableDisableWidget {
+            get {
+                return ResourceManager.GetString("EnableDisableWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Emote Only.
         /// </summary>
         public static string EnableEmoteOnly {
