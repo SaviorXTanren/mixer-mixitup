@@ -10404,4 +10404,7 @@ namespace CustomNamespace
   <data name="OverlayPersistentEmoteEffectComboTimeframe" xml:space="preserve">
     <value>Combo Timeframe (Secs)</value>
   </data>
+  <data name="EnableDisableWidget" xml:space="preserve">
+    <value>Enable/Disable Widget</value>
+  </data>
 </root>
