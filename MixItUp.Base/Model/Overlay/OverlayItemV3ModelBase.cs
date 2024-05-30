@@ -146,10 +146,6 @@ namespace MixItUp.Base.Model.Overlay
 
         [Obsolete]
         [DataMember]
-        public bool IsLivePreview { get; set; }
-
-        [Obsolete]
-        [DataMember]
         public string OldCustomHTML { get; set; }
 
         [JsonIgnore]
@@ -180,6 +176,9 @@ namespace MixItUp.Base.Model.Overlay
         public virtual bool IsTestable { get { return false; } }
         [JsonIgnore]
         public virtual bool IsResettable { get { return false; } }
+
+        [JsonIgnore]
+        public bool IsLivePreview { get; set; }
 
         [JsonIgnore]
         public virtual int LatestVersion { get { return 0; } }
