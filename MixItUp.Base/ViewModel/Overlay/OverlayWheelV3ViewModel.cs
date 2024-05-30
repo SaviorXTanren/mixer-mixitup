@@ -408,7 +408,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.BrowseFilePathCommand = this.CreateCommand(() =>
             {
                 string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().SoundFileFilter());
-                if (string.IsNullOrWhiteSpace(filepath))
+                if (!string.IsNullOrWhiteSpace(filepath))
                 {
                     this.WheelClickSoundFilePath = filepath;
                 }
