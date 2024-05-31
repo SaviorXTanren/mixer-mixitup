@@ -66,13 +66,9 @@ namespace MixItUp.Base.Model.Overlay.Widgets
             if (!this.IsEnabled)
             {
                 this.IsEnabled = true;
-
-                await this.Item.WidgetEnable();
-
-                if (this.RefreshTime > 0)
-                {
-                    this.Item.LoadedInWidget += Item_LoadedInWidget;
-                }
+#pragma warning disable CS0612 // Type or member is obsolete
+                await this.EnableInternal();
+#pragma warning restore CS0612 // Type or member is obsolete
             }
         }
 
@@ -102,6 +98,17 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         public async Task SendInitial()
         {
             await this.Item.WidgetSendInitial();
+        }
+
+        [Obsolete]
+        internal async Task EnableInternal()
+        {
+            await this.Item.WidgetEnable();
+
+            if (this.RefreshTime > 0)
+            {
+                this.Item.LoadedInWidget += Item_LoadedInWidget;
+            }
         }
 
         private void Item_LoadedInWidget(object sender, EventArgs e)
