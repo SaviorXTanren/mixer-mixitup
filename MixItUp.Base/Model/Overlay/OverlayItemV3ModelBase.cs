@@ -51,6 +51,8 @@ namespace MixItUp.Base.Model.Overlay
         EmoteEffect,
         [OverlayWidget]
         PersistentEmoteEffect,
+        [OverlayWidget]
+        Poll,
     }
 
     public enum OverlayItemV3DisplayOptionsType

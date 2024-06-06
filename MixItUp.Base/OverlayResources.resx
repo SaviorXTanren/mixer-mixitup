@@ -1975,6 +1975,161 @@ function checkForAdditionalTime()
 
 timerLoop();</value>
   </data>
+  <data name="OverlayPollDefaultCSS" xml:space="preserve">
+    <value>.mainContainer {
+  border-style: solid;
+  border-width: 5px;
+  border-color: {BorderColor};
+  background-color: {BackgroundColor};
+  width: {Width};
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: left;
+  justify-content: left;
+  flex-direction: column;
+}
+
+.name {
+  
+}
+
+.amount {
+  margin-left: 20px;
+}
+
+.percentage {
+  margin-left: 10px;
+}
+
+.bar {
+  height: 25px;
+  background-color: {BarColor};
+}
+
+@keyframes adjustBarAnimation {
+  from {
+    width: var(--startPercentage);
+  }
+  to {
+    width: var(--endPercentage);
+  }
+}
+
+.adjustBar {
+  --startPercentage: 0%;
+  --endPercentage: 0%;
+  animation-name: adjustBarAnimation;
+  animation-duration: 2s;
+}</value>
+  </data>
+  <data name="OverlayPollDefaultHTML" xml:space="preserve">
+    <value>&lt;div class="mainContainer"&gt;
+    &lt;span id="question" class="text"&gt;&lt;/span&gt;
+    &lt;div id="options" class="options"&gt;
+    
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;template id="option"&gt;
+    &lt;div class="option"&gt;
+        &lt;span class="text"&gt;
+            &lt;span class="name"&gt;&lt;/span&gt;
+            &lt;span class="amount"&gt;&lt;/span&gt; Votes
+            &lt;span class="percentage"&gt;&lt;/span&gt;
+        &lt;/span&gt;
+        &lt;div class="bar" style="width: 0%" /&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</value>
+  </data>
+  <data name="OverlayPollDefaultJavascript" xml:space="preserve">
+    <value>const question = document.getElementById("question");
+const options = document.getElementById("options");
+
+const optionTemplate = document.querySelector("#option");
+
+const optionData = new Map();
+
+function newpoll(data)
+{
+    while (options.firstChild) {
+        options.removeChild(options.lastChild);
+    }
+    optionData.clear();
+
+    question.innerHTML = data.Question;
+    data.Options.forEach((od) =&gt;
+    {
+        optionData.set(od.ID, od);
+        
+        let option = optionTemplate.content.cloneNode(true);
+        option.firstElementChild.setAttribute("id", "option" + od.ID);
+        
+        let name = option.firstElementChild.querySelector(".name");
+        name.innerHTML = od.Name;
+        
+        let amount = option.firstElementChild.querySelector(".amount");
+        amount.innerHTML = "0";
+        
+        let percentage = option.firstElementChild.querySelector(".percentage");
+        percentage.innerHTML = "(0%)";
+        
+        options.appendChild(option);
+    });
+}
+
+function update(data)
+{
+    data.Options.forEach((od) =&gt;
+    {
+        if (optionData.has(od.ID))
+        {
+            let option = document.getElementById("option" + od.ID);
+            
+            let amount = option.querySelector(".amount");
+            amount.innerHTML = od.Amount;
+            
+            let percentage = option.querySelector(".percentage");
+            percentage.innerHTML = `(${od.Percentage}%)`;
+            
+            let bar = option.querySelector(".bar");
+        
+            let previous = optionData.get(od.ID);
+            optionData.set(od.ID, od);
+            
+            if (previous.Percentage &gt; od.Percentage)
+            {
+                adjustProgress(bar, od.Percentage);
+                performAnimation("{IncreaseAnimationFramework}", "{IncreaseAnimationName}", main).then((result) =&gt;
+                {
+
+                });
+            }
+            else if (previous.Percentage &lt; od.Percentage)
+            {
+                adjustProgress(bar, od.Percentage);
+                performAnimation("{DecreaseAnimationFramework}", "{DecreaseAnimationName}", main).then((result) =&gt;
+                {
+
+                });
+            }
+        }
+    });
+}
+
+function adjustProgress(bar, newPercentage)
+{
+    bar.style.setProperty("--startPercentage", bar.style.width);
+    bar.style.setProperty("--endPercentage", newPercentage + "%");
+    bar.style.width = newPercentage + "%";
+    bar.classList.add("adjustBar");
+    setTimeout(() =&gt; {
+        bar.classList.remove("adjustBar");
+    }, 2000);
+}</value>
+  </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
     <value>.maindiv {
     position: absolute;

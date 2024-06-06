@@ -1058,6 +1058,103 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .mainContainer {
+        ///  border-style: solid;
+        ///  border-width: 5px;
+        ///  border-color: {BorderColor};
+        ///  background-color: {BackgroundColor};
+        ///  width: {Width};
+        ///}
+        ///
+        ///.options {
+        ///  display: flex;
+        ///  flex-wrap: wrap;
+        ///  align-items: left;
+        ///  justify-content: left;
+        ///  flex-direction: column;
+        ///}
+        ///
+        ///.name {
+        ///  
+        ///}
+        ///
+        ///.amount {
+        ///  margin-left: 20px;
+        ///}
+        ///
+        ///.percentage {
+        ///  margin-left: 10px;
+        ///}
+        ///
+        ///.bar {
+        ///  height: 25px;
+        ///  background-color: {BarColor};
+        ///}
+        ///
+        ///@keyframes adjustBarAnimation {
+        ///  from {
+        ///    width: var(--s [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayPollDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayPollDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;mainContainer&quot;&gt;
+        ///    &lt;span id=&quot;question&quot; class=&quot;text&quot;&gt;&lt;/span&gt;
+        ///    &lt;div id=&quot;options&quot; class=&quot;options&quot;&gt;
+        ///    
+        ///    &lt;/div&gt;
+        ///&lt;/div&gt;
+        ///
+        ///&lt;template id=&quot;option&quot;&gt;
+        ///    &lt;div class=&quot;option&quot;&gt;
+        ///        &lt;span class=&quot;text&quot;&gt;
+        ///            &lt;span class=&quot;name&quot;&gt;&lt;/span&gt;
+        ///            &lt;span class=&quot;amount&quot;&gt;&lt;/span&gt; Votes
+        ///            &lt;span class=&quot;percentage&quot;&gt;&lt;/span&gt;
+        ///        &lt;/span&gt;
+        ///        &lt;div class=&quot;bar&quot; style=&quot;width: 0%&quot; /&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/template&gt;.
+        /// </summary>
+        public static string OverlayPollDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayPollDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const question = document.getElementById(&quot;question&quot;);
+        ///const options = document.getElementById(&quot;options&quot;);
+        ///
+        ///const optionTemplate = document.querySelector(&quot;#option&quot;);
+        ///
+        ///const optionData = new Map();
+        ///
+        ///function newpoll(data)
+        ///{
+        ///    while (options.firstChild) {
+        ///        options.removeChild(options.lastChild);
+        ///    }
+        ///    optionData.clear();
+        ///
+        ///    question.innerHTML = data.Question;
+        ///    data.Options.forEach((od) =&gt;
+        ///    {
+        ///        optionData.set(od.ID, od);
+        ///        
+        ///        let option = optionTemplate. [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayPollDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayPollDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .maindiv {
         ///    position: absolute;
         ///    width: 100%;
