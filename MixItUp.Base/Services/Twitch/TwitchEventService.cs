@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
@@ -216,6 +218,104 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    public class TwitchPollEventModel
+    {
+        public class TwitchPollChoiceEventModel
+        {
+            public string ID { get; set; }
+            public string Title { get; set; }
+            public int Votes { get; set; }
+        }
+
+        public string ID { get; set; }
+        public string Title { get; set; }
+        public List<TwitchPollChoiceEventModel> Choices { get; set; } = new List<TwitchPollChoiceEventModel>();
+
+        public TwitchPollEventModel(JObject payload)
+        {
+            this.ID = payload["id"].Value<string>();
+            this.Title = payload["title"].Value<string>();
+
+            foreach (JObject choice in (JArray)payload["choices"])
+            {
+                int.TryParse(choice.GetValue("votes")?.Value<string>(), out int votes);
+
+                this.Choices.Add(new TwitchPollEventModel.TwitchPollChoiceEventModel()
+                {
+                    ID = choice["id"].Value<string>(),
+                    Title = choice["title"].Value<string>(),
+                    Votes = votes,
+                });
+            }
+        }
+    }
+
+    public class TwitchPredictionEventModel
+    {
+        public class TwitchPredictionOutcomeEventModel
+        {
+            public string ID { get; set; }
+            public string Title { get; set; }
+            public string Color { get; set; }
+            public int Users { get; set; }
+            public int ChannelPoints { get; set; }
+
+            public List<TwitchPredictionOutcomePredictorEventModel> TopPredictors { get; set; } = new List<TwitchPredictionOutcomePredictorEventModel>();
+        }
+
+        public class TwitchPredictionOutcomePredictorEventModel
+        {
+            public TwitchUserPlatformV2Model User { get; set; }
+            public int ChannelPointsUsed { get; set; }
+            public int ChannelPointsWon { get; set; }
+        }
+
+        public string ID { get; set; }
+        public string Title { get; set; }
+        public string WinningOutcomeID { get; set; }
+        public DateTimeOffset StartedAt { get; set; }
+        public DateTimeOffset LocksAt { get; set; }
+        public List<TwitchPredictionOutcomeEventModel> Outcomes { get; set; } = new List<TwitchPredictionOutcomeEventModel>();
+
+        public TwitchPredictionEventModel(JObject payload)
+        {
+            this.ID = payload["id"].Value<string>();
+            this.Title = payload["title"].Value<string>();
+
+            this.WinningOutcomeID = payload.GetValue("winning_outcome_id")?.Value<string>();
+
+            foreach (JObject oc in (JArray)payload["outcomes"])
+            {
+                int.TryParse(oc.GetValue("users")?.Value<string>(), out int users);
+                int.TryParse(oc.GetValue("channel_points")?.Value<string>(), out int channelPoints);
+
+                TwitchPredictionEventModel.TwitchPredictionOutcomeEventModel outcome = new TwitchPredictionEventModel.TwitchPredictionOutcomeEventModel()
+                {
+                    ID = oc["id"].Value<string>(),
+                    Title = oc["title"].Value<string>(),
+                    Color = oc["color"].Value<string>(),
+                    Users = users,
+                    ChannelPoints = channelPoints
+                };
+
+                this.Outcomes.Add(outcome);
+
+                foreach (JObject topPredictor in (JArray)oc["top_predictors"])
+                {
+                    int.TryParse(topPredictor.GetValue("channel_points_used")?.Value<string>(), out int channelPointsUsed);
+                    int.TryParse(topPredictor.GetValue("channel_points_won")?.Value<string>(), out int channelPointsWon);
+
+                    outcome.TopPredictors.Add(new TwitchPredictionEventModel.TwitchPredictionOutcomePredictorEventModel()
+                    {
+                        User = new TwitchUserPlatformV2Model(topPredictor["user_id"].Value<string>(), topPredictor["user_login"].Value<string>(), topPredictor["user_name"].Value<string>()),
+                        ChannelPointsUsed = channelPointsUsed,
+                        ChannelPointsWon = channelPointsWon,
+                    });
+                }
+            }
+        }
+    }
+
     public class TwitchEventSubService : StreamingPlatformServiceBase
     {
         private const string ChannelFollowEventSubSubscription = "channel.follow";
@@ -326,6 +426,15 @@ namespace MixItUp.Base.Services.Twitch
             { ChannelFollowEventSubSubscription, "2" },
             { ChannelRaidEventSubSubscription, null },
 
+            { "channel.poll.begin", null },
+            { "channel.poll.progress", null },
+            { "channel.poll.end", null },
+
+            { "channel.prediction.begin", null },
+            { "channel.prediction.progress", null },
+            { "channel.prediction.lock", null },
+            { "channel.prediction.end", null },
+
             { "channel.ad_break.begin", null },
 
             { "channel.hype_train.begin", null },
@@ -434,18 +543,45 @@ namespace MixItUp.Base.Services.Twitch
                     case "stream.offline":
                         await HandleOffline(message.Payload.Event);
                         break;
+
                     case "channel.update":
                         await HandleChannelUpdate(message.Payload.Event);
                         break;
+
                     case ChannelFollowEventSubSubscription:
                         await HandleFollow(message.Payload.Event);
                         break;
                     case ChannelRaidEventSubSubscription:
                         await HandleRaid(message.Payload.Event);
                         break;
+
+                    case "channel.poll.begin":
+                        await HandlePollStart(message.Payload.Event);
+                        break;
+                    case "channel.poll.progress":
+                        await HandlePollProgress(message.Payload.Event);
+                        break;
+                    case "channel.poll.end":
+                        await HandlePollEnd(message.Payload.Event);
+                        break;
+
+                    case "channel.prediction.begin":
+                        await HandlePredictionStart(message.Payload.Event);
+                        break;
+                    case "channel.prediction.progress":
+                        await HandlePredictionProgress(message.Payload.Event);
+                        break;
+                    case "channel.prediction.lock":
+                        await HandlePredictionLock(message.Payload.Event);
+                        break;
+                    case "channel.prediction.end":
+                        await HandlePredictionEnd(message.Payload.Event);
+                        break;
+
                     case "channel.ad_break.begin":
                         await HandleChannelAdBreakBegin(message.Payload.Event);
                         break;
+
                     case "channel.hype_train.begin":
                         await HandleHypeTrainBegin(message.Payload.Event);
                         break;
@@ -455,6 +591,7 @@ namespace MixItUp.Base.Services.Twitch
                     case "channel.hype_train.end":
                         await HandleHypeTrainEnd(message.Payload.Event);
                         break;
+
                     case "channel.charity_campaign.donate":
                         await HandleCharityCampaignDonation(message.Payload.Event);
                         break;
@@ -463,6 +600,7 @@ namespace MixItUp.Base.Services.Twitch
             catch (Exception ex)
             {
                 Logger.Log(ex);
+                Logger.ForceLog(LogLevel.Error, JSONSerializerHelper.SerializeToString(message.Payload));
             }
         }
 
@@ -572,6 +710,89 @@ namespace MixItUp.Base.Services.Twitch
             parameters.SpecialIdentifiers["streamgame"] = payload["category_name"].ToString();
 
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUpdated, parameters);
+        }
+
+        private async Task HandlePollStart(JObject payload)
+        {
+            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPolls: true);
+            if (widgets.Count() > 0)
+            {
+                TwitchPollEventModel poll = new TwitchPollEventModel(payload);
+                foreach (OverlayPollV3Model widget in widgets)
+                {
+                    await widget.NewTwitchPoll(poll);
+                }
+            }
+        }
+
+        private async Task HandlePollProgress(JObject payload)
+        {
+            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPolls: true);
+            if (widgets.Count() > 0)
+            {
+                TwitchPollEventModel poll = new TwitchPollEventModel(payload);
+                foreach (OverlayPollV3Model widget in widgets)
+                {
+                    await widget.UpdateTwitchPoll(poll);
+                }
+            }
+        }
+
+        private async Task HandlePollEnd(JObject payload)
+        {
+            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPolls: true);
+            if (widgets.Count() > 0)
+            {
+                TwitchPollEventModel poll = new TwitchPollEventModel(payload);
+                foreach (OverlayPollV3Model widget in widgets)
+                {
+                    await widget.End();
+                }
+            }
+        }
+
+        private async Task HandlePredictionStart(JObject payload)
+        {
+            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPredictions: true);
+            if (widgets.Count() > 0)
+            {
+                TwitchPredictionEventModel prediction = new TwitchPredictionEventModel(payload);
+                foreach (OverlayPollV3Model widget in widgets)
+                {
+                    await widget.NewTwitchPrediction(prediction);
+                }
+            }
+        }
+
+        private async Task HandlePredictionProgress(JObject payload)
+        {
+            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPredictions: true);
+            if (widgets.Count() > 0)
+            {
+                TwitchPredictionEventModel prediction = new TwitchPredictionEventModel(payload);
+                foreach (OverlayPollV3Model widget in widgets)
+                {
+                    await widget.UpdateTwitchPrediction(prediction);
+                }
+            }
+        }
+
+        private async Task HandlePredictionLock(JObject payload)
+        {
+
+        }
+
+        private async Task HandlePredictionEnd(JObject payload)
+        {
+            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPredictions: true);
+            if (widgets.Count() > 0)
+            {
+                TwitchPredictionEventModel prediction = new TwitchPredictionEventModel(payload);
+                foreach (OverlayPollV3Model widget in widgets)
+                {
+                    await widget.EndTwitchPrediction(prediction);
+                }
+            }
         }
 
         private async Task HandleChannelAdBreakBegin(JObject payload)
