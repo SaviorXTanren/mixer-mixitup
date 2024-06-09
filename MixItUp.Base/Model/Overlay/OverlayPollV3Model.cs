@@ -45,6 +45,12 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [DataContract]
+    public class OverlayPollHeaderV3Model : OverlayHeaderV3ModelBase
+    {
+        public OverlayPollHeaderV3Model() { }
+    }
+
     public class OverlayPollV3Model : OverlayVisualTextV3ModelBase
     {
         public static IEnumerable<OverlayPollV3Model> GetPollOverlayWidgets(bool forPolls = false, bool forPredictions = false, bool forBet = false, bool forTrivia = false)
@@ -72,11 +78,15 @@ namespace MixItUp.Base.Model.Overlay
 
         public const string QuestionPropertyName = "Question";
         public const string OptionsPropertyName = "Options";
-        public const string WinnerPropertyName = "Winner";
+        public const string TotalVotesPropertyName = "TotalVotes";
+        public const string WinnerIDPropertyName = "WinnerID";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayPollDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayPollDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
+        public static readonly string DefaultCSS = OverlayResources.OverlayPollDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayHeaderTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayPollDefaultJavascript;
+
+        [DataMember]
+        public OverlayPollHeaderV3Model Header { get; set; }
 
         [DataMember]
         public bool UseWithTwitchPolls { get; set; }
@@ -95,9 +105,12 @@ namespace MixItUp.Base.Model.Overlay
         public string BarColor { get; set; }
 
         [DataMember]
-        public OverlayAnimationV3Model IncreaseAnimation { get; set; } = new OverlayAnimationV3Model();
+        public bool UseTwitchPredictionColors { get; set; }
+
         [DataMember]
-        public OverlayAnimationV3Model DecreaseAnimation { get; set; } = new OverlayAnimationV3Model();
+        public OverlayAnimationV3Model EntranceAnimation { get; set; } = new OverlayAnimationV3Model();
+        [DataMember]
+        public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
 
         private Dictionary<string, OverlayPollOptionV3Model> currentOptions = new Dictionary<string, OverlayPollOptionV3Model>();
 
@@ -154,14 +167,19 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
+            foreach (var kvp in this.Header.GetGenerationProperties())
+            {
+                properties[kvp.Key] = kvp.Value;
+            }
+
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.BorderColor)] = this.BorderColor;
             properties[nameof(this.BarColor)] = this.BarColor;
 
-            properties["IncreaseAnimationFramework"] = this.IncreaseAnimation.AnimationFramework;
-            properties["IncreaseAnimationName"] = this.IncreaseAnimation.AnimationName;
-            properties["DecreaseAnimationFramework"] = this.DecreaseAnimation.AnimationFramework;
-            properties["DecreaseAnimationName"] = this.DecreaseAnimation.AnimationName;
+            properties["EntranceAnimationFramework"] = this.EntranceAnimation.AnimationFramework;
+            properties["EntranceAnimationName"] = this.EntranceAnimation.AnimationName;
+            properties["ExitAnimationFramework"] = this.ExitAnimation.AnimationFramework;
+            properties["ExitAnimationName"] = this.ExitAnimation.AnimationName;
 
             return properties;
         }
@@ -171,6 +189,10 @@ namespace MixItUp.Base.Model.Overlay
             this.currentOptions.Clear();
             foreach (OverlayPollOptionV3Model option in options)
             {
+                if (string.IsNullOrEmpty(option.Color) || !this.UseTwitchPredictionColors)
+                {
+                    option.Color = this.BarColor;
+                }
                 this.currentOptions[option.ID] = option;
             }
 
@@ -190,13 +212,14 @@ namespace MixItUp.Base.Model.Overlay
 
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[OptionsPropertyName] = this.currentOptions.Values;
+            properties[TotalVotesPropertyName] = total;
             await this.CallFunction("update", properties);
         }
 
         private async Task End(string id)
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
-            properties[OverlayPollV3Model.WinnerPropertyName] = id;
+            properties[OverlayPollV3Model.WinnerIDPropertyName] = id;
             await this.CallFunction("end", properties);
         }
     }
