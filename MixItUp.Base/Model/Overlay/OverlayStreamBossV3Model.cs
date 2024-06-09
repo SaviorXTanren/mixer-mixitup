@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string StreamBossHealingSpecialIdentifier = StreamBossSpecialIdentifierPrefix + "healing";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayStreamBossDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS + "\n\n" + OverlayResources.OverlayStreamBossDefaultCSS;
+        public static readonly string DefaultCSS = OverlayResources.OverlayStreamBossDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayStreamBossDefaultJavascript;
 
         [DataMember]

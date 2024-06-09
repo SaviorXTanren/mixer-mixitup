@@ -475,9 +475,7 @@ namespace MixItUp.Base {
         ///    align-self: end;
         ///    margin-bottom: 10px;
         ///    margin-right: 10px;
-        ///}
-        ///
-        ///.heade [rest of string was truncated]&quot;;.
+        ///}.
         /// </summary>
         public static string OverlayEventListDefaultCSS {
             get {
@@ -705,6 +703,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .header {
+        ///    font-size: {HeaderFontSize}px;
+        ///    color: {HeaderFontColor};
+        ///    font-family: &apos;{HeaderFontFamily}&apos;;
+        ///    font-weight: {HeaderFontWeight};
+        ///    text-decoration: {HeaderTextDecoration};
+        ///    font-style: {HeaderFontStyle};
+        ///    text-align: {HeaderTextAlignment};
+        ///    text-shadow: {HeaderShadowColor};
+        ///}.
+        /// </summary>
+        public static string OverlayHeaderTextDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayHeaderTextDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to function update(data)
         ///{
         ///
@@ -913,9 +929,7 @@ namespace MixItUp.Base {
         ///    align-self: end;
         ///    margin-bottom: 10px;
         ///    margin-right: 10px;
-        ///}
-        ///
-        ///.heade [rest of string was truncated]&quot;;.
+        ///}.
         /// </summary>
         public static string OverlayLeaderboardDefaultCSS {
             get {
@@ -1074,26 +1088,30 @@ namespace MixItUp.Base {
         ///  flex-direction: column;
         ///}
         ///
+        ///.question {
+        ///  float: left;
+        ///}
+        ///
+        ///.total {
+        ///  float: right;
+        ///}
+        ///
+        ///.time {
+        ///  margin-left: 20px;
+        ///  float: right;
+        ///}
+        ///
         ///.name {
-        ///  
+        ///  float: left;
         ///}
         ///
         ///.amount {
-        ///  margin-left: 20px;
+        ///  float: right;
         ///}
         ///
         ///.percentage {
-        ///  margin-left: 10px;
-        ///}
-        ///
-        ///.bar {
-        ///  height: 25px;
-        ///  background-color: {BarColor};
-        ///}
-        ///
-        ///@keyframes adjustBarAnimation {
-        ///  from {
-        ///    width: var(--s [rest of string was truncated]&quot;;.
+        ///  float: right;
+        ///  margin [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultCSS {
             get {
@@ -1103,7 +1121,12 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div class=&quot;mainContainer&quot;&gt;
-        ///    &lt;span id=&quot;question&quot; class=&quot;text&quot;&gt;&lt;/span&gt;
+        ///    &lt;div&gt;
+        ///        &lt;span id=&quot;question&quot; class=&quot;question header&quot;&gt;&lt;/span&gt;
+        ///        &lt;span id=&quot;total&quot; class=&quot;total header&quot;&gt;0&lt;/span&gt; Votes
+        ///        &lt;span id=&quot;time&quot; class=&quot;time header&quot;&gt;&lt;/span&gt;
+        ///    &lt;/div&gt;
+        ///    
         ///    &lt;div id=&quot;options&quot; class=&quot;options&quot;&gt;
         ///    
         ///    &lt;/div&gt;
@@ -1111,14 +1134,10 @@ namespace MixItUp.Base {
         ///
         ///&lt;template id=&quot;option&quot;&gt;
         ///    &lt;div class=&quot;option&quot;&gt;
-        ///        &lt;span class=&quot;text&quot;&gt;
-        ///            &lt;span class=&quot;name&quot;&gt;&lt;/span&gt;
-        ///            &lt;span class=&quot;amount&quot;&gt;&lt;/span&gt; Votes
-        ///            &lt;span class=&quot;percentage&quot;&gt;&lt;/span&gt;
-        ///        &lt;/span&gt;
-        ///        &lt;div class=&quot;bar&quot; style=&quot;width: 0%&quot; /&gt;
-        ///    &lt;/div&gt;
-        ///&lt;/template&gt;.
+        ///        &lt;div&gt;
+        ///            &lt;span class=&quot;name text&quot;&gt;&lt;/span&gt;
+        ///            &lt;span class=&quot;amount text&quot;&gt;0&lt;/span&gt; Votes
+        ///            &lt;span class=&quot;percentage text&quot;&gt;0%&lt;/ [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultHTML {
             get {
@@ -1127,7 +1146,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to const question = document.getElementById(&quot;question&quot;);
+        ///   Looks up a localized string similar to const mainContainer = document.getElementById(&quot;mainContainer&quot;);
+        ///
+        ///const question = document.getElementById(&quot;question&quot;);
+        ///const total = document.getElementById(&quot;total&quot;);
+        ///
         ///const options = document.getElementById(&quot;options&quot;);
         ///
         ///const optionTemplate = document.querySelector(&quot;#option&quot;);
@@ -1142,11 +1165,7 @@ namespace MixItUp.Base {
         ///    optionData.clear();
         ///
         ///    question.innerHTML = data.Question;
-        ///    data.Options.forEach((od) =&gt;
-        ///    {
-        ///        optionData.set(od.ID, od);
-        ///        
-        ///        let option = optionTemplate. [rest of string was truncated]&quot;;.
+        ///    d [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultJavascript {
             get {

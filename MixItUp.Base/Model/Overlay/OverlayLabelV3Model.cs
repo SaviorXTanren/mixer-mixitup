@@ -75,7 +75,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string AmountPropertyName = "Amount";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayLabelDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS + "\n\n" + OverlayResources.OverlayLabelDefaultCSS;
+        public static readonly string DefaultCSS = OverlayResources.OverlayLabelDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayLabelDefaultJavascript;
 
         [DataMember]

@@ -866,17 +866,6 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     align-self: end;
     margin-bottom: 10px;
     margin-right: 10px;
-}
-
-.header {
-    font-size: {HeaderFontSize}px;
-    color: {HeaderFontColor};
-    font-family: '{HeaderFontFamily}';
-    font-weight: {HeaderFontWeight};
-    text-decoration: {HeaderTextDecoration};
-    font-style: {HeaderFontStyle};
-    text-align: {HeaderTextAlignment};
-    text-shadow: {HeaderShadowColor};
 }</value>
   </data>
   <data name="OverlayEventListDefaultHTML" xml:space="preserve">
@@ -1269,6 +1258,18 @@ reset({
     "GoalMaxAmount": {GoalMaxAmount},
 });</value>
   </data>
+  <data name="OverlayHeaderTextDefaultCSS" xml:space="preserve">
+    <value>.header {
+    font-size: {HeaderFontSize}px;
+    color: {HeaderFontColor};
+    font-family: '{HeaderFontFamily}';
+    font-weight: {HeaderFontWeight};
+    text-decoration: {HeaderTextDecoration};
+    font-style: {HeaderFontStyle};
+    text-align: {HeaderTextAlignment};
+    text-shadow: {HeaderShadowColor};
+}</value>
+  </data>
   <data name="OverlayHTMLWidgetDefaultJavascript" xml:space="preserve">
     <value>function update(data)
 {
@@ -1496,17 +1497,6 @@ else
     align-self: end;
     margin-bottom: 10px;
     margin-right: 10px;
-}
-
-.header {
-    font-size: {HeaderFontSize}px;
-    color: {HeaderFontColor};
-    font-family: '{HeaderFontFamily}';
-    font-weight: {HeaderFontWeight};
-    text-decoration: {HeaderTextDecoration};
-    font-style: {HeaderFontStyle};
-    text-align: {HeaderTextAlignment};
-    text-shadow: {HeaderShadowColor};
 }</value>
   </data>
   <data name="OverlayLeaderboardDefaultHTML" xml:space="preserve">
@@ -1992,21 +1982,34 @@ timerLoop();</value>
   flex-direction: column;
 }
 
+.question {
+  float: left;
+}
+
+.total {
+  float: right;
+}
+
+.time {
+  margin-left: 20px;
+  float: right;
+}
+
 .name {
-  
+  float: left;
 }
 
 .amount {
-  margin-left: 20px;
+  float: right;
 }
 
 .percentage {
+  float: right;
   margin-left: 10px;
 }
 
 .bar {
   height: 25px;
-  background-color: {BarColor};
 }
 
 @keyframes adjustBarAnimation {
@@ -2023,11 +2026,27 @@ timerLoop();</value>
   --endPercentage: 0%;
   animation-name: adjustBarAnimation;
   animation-duration: 2s;
+}
+
+.header {
+    font-size: {HeaderFontSize}px;
+    color: {HeaderFontColor};
+    font-family: '{HeaderFontFamily}';
+    font-weight: {HeaderFontWeight};
+    text-decoration: {HeaderTextDecoration};
+    font-style: {HeaderFontStyle};
+    text-align: {HeaderTextAlignment};
+    text-shadow: {HeaderShadowColor};
 }</value>
   </data>
   <data name="OverlayPollDefaultHTML" xml:space="preserve">
     <value>&lt;div class="mainContainer"&gt;
-    &lt;span id="question" class="text"&gt;&lt;/span&gt;
+    &lt;div&gt;
+        &lt;span id="question" class="question header"&gt;&lt;/span&gt;
+        &lt;span id="total" class="total header"&gt;0&lt;/span&gt; Votes
+        &lt;span id="time" class="time header"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    
     &lt;div id="options" class="options"&gt;
     
     &lt;/div&gt;
@@ -2035,17 +2054,22 @@ timerLoop();</value>
 
 &lt;template id="option"&gt;
     &lt;div class="option"&gt;
-        &lt;span class="text"&gt;
-            &lt;span class="name"&gt;&lt;/span&gt;
-            &lt;span class="amount"&gt;&lt;/span&gt; Votes
-            &lt;span class="percentage"&gt;&lt;/span&gt;
-        &lt;/span&gt;
+        &lt;div&gt;
+            &lt;span class="name text"&gt;&lt;/span&gt;
+            &lt;span class="amount text"&gt;0&lt;/span&gt; Votes
+            &lt;span class="percentage text"&gt;0%&lt;/span&gt;
+        &lt;/div&gt;
+
         &lt;div class="bar" style="width: 0%" /&gt;
     &lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayPollDefaultJavascript" xml:space="preserve">
-    <value>const question = document.getElementById("question");
+    <value>const mainContainer = document.getElementById("mainContainer");
+
+const question = document.getElementById("question");
+const total = document.getElementById("total");
+
 const options = document.getElementById("options");
 
 const optionTemplate = document.querySelector("#option");
@@ -2070,18 +2094,22 @@ function newpoll(data)
         let name = option.firstElementChild.querySelector(".name");
         name.innerHTML = od.Name;
         
-        let amount = option.firstElementChild.querySelector(".amount");
-        amount.innerHTML = "0";
-        
-        let percentage = option.firstElementChild.querySelector(".percentage");
-        percentage.innerHTML = "(0%)";
-        
+        let bar = option.firstElementChild.querySelector(".bar");
+        bar.style.backgroundColor = od.Color;
+
         options.appendChild(option);
+    });
+    
+    performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", mainContainer).then((result) =&gt;
+    {
+
     });
 }
 
 function update(data)
 {
+    total.innerHTML = data.TotalVotes;
+
     data.Options.forEach((od) =&gt;
     {
         if (optionData.has(od.ID))
@@ -2099,24 +2127,37 @@ function update(data)
             let previous = optionData.get(od.ID);
             optionData.set(od.ID, od);
             
-            if (previous.Percentage &gt; od.Percentage)
+            if (previous.Percentage != od.Percentage)
             {
                 adjustProgress(bar, od.Percentage);
-                performAnimation("{IncreaseAnimationFramework}", "{IncreaseAnimationName}", main).then((result) =&gt;
-                {
-
-                });
-            }
-            else if (previous.Percentage &lt; od.Percentage)
-            {
-                adjustProgress(bar, od.Percentage);
-                performAnimation("{DecreaseAnimationFramework}", "{DecreaseAnimationName}", main).then((result) =&gt;
-                {
-
-                });
             }
         }
     });
+}
+
+function end(data)
+{
+    if (optionData.has(data.WinnerID))
+    {
+        optionData.forEach((value, key) =&gt; {
+            let option = document.getElementById("option" + od.ID);
+            let bar = option.querySelector(".bar");
+            bar.style.backgroundColor = "DimGray";
+        });
+        
+        let option = document.getElementById("option" + data.WinnerID);
+        let bar = option.querySelector(".bar");
+        bar.style.backgroundColor = "Gold";
+    
+        setTimeout(() =&gt;
+        {
+            performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", mainContainer).then((result) =&gt;
+            {
+                main.style.visibility='hidden';
+                sendParentMessage({ Type: "Remove", ID: "{ID}" });
+            });
+        }, 3000);
+    }
 }
 
 function adjustProgress(bar, newPercentage)

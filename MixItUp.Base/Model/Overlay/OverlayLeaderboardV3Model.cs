@@ -33,9 +33,9 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayLeaderboardHeaderV3Model : OverlayVisualTextV3ModelBase
+    public class OverlayLeaderboardHeaderV3Model : OverlayHeaderV3ModelBase
     {
-        public OverlayLeaderboardHeaderV3Model() : base(OverlayItemV3Type.Text) { }
+        public OverlayLeaderboardHeaderV3Model() { }
     }
 
     [DataContract]
@@ -44,7 +44,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string DetailsAmountPropertyName = "Amount";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayLeaderboardDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayLeaderboardDefaultCSS + "\n\n" + OverlayResources.OverlayTextDefaultCSS;
+        public static readonly string DefaultCSS = OverlayResources.OverlayLeaderboardDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayHeaderTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayLeaderboardDefaultJavascript;
 
         [DataMember]
@@ -109,7 +109,7 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (var kvp in this.Header.GetGenerationProperties())
             {
-                properties["Header" + kvp.Key] = kvp.Value;
+                properties[kvp.Key] = kvp.Value;
             }
 
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
