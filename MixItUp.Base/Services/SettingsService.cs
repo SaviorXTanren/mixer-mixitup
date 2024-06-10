@@ -17,6 +17,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services
@@ -922,6 +923,21 @@ namespace MixItUp.Base.Services
                 newItem.Width = oldItem.Width.ToString();
                 newItem.Height = oldItem.Height.ToString();
                 result = newItem.GetItem();
+            }
+            else if (item.ItemType == OverlayItemModelTypeEnum.WebPage)
+            {
+                OverlayWebPageItemModel oldItem = (OverlayWebPageItemModel)item;
+                OverlayHTMLV3ViewModel newItem = new OverlayHTMLV3ViewModel();
+                vmResult = newItem;
+                result = newItem.GetItem();
+                result.Javascript = "var iframe = document.createElement('iframe');" + Environment.NewLine +
+                    $"iframe.src = \"{oldItem.FilePath}\";" + Environment.NewLine +
+                    $"iframe.width = {oldItem.Width};" + Environment.NewLine +
+                    $"iframe.height = {oldItem.Height};" + Environment.NewLine +
+                    "iframe.frameBorder = 0;" + Environment.NewLine + Environment.NewLine +
+                    "const contentDiv = document.getElementById(\"contentdiv\");" + Environment.NewLine +
+                    "contentDiv.appendChild(iframe);" + Environment.NewLine +
+                    result.Javascript;
             }
             else if (item.ItemType == OverlayItemModelTypeEnum.YouTube)
             {
