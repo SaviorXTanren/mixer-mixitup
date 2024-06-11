@@ -171,12 +171,12 @@
             <TextBox Text="{Binding BarHeight}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BarHeight}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UseRandomColors}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="3" IsChecked="{Binding RunEndlessly}" VerticalAlignment="Center" Margin="5,0,0,0" />
+            <CheckBox Grid.Column="3" IsChecked="{Binding UseRandomColors}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
             <TextBox Text="{Binding BarColor}" Grid.Column="5" IsEnabled="{Binding CanSpecifyColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BarColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBlock Grid.Column="7" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UseTwitchPredictionColors}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="8" IsChecked="{Binding RunEndlessly}" VerticalAlignment="Center" Margin="5,0,0,0" />
+            <CheckBox Grid.Column="8" IsChecked="{Binding UseTwitchPredictionColors}" VerticalAlignment="Center" Margin="5,0,0,0" />
         </Grid>
 
         <Grid Grid.Row="8">

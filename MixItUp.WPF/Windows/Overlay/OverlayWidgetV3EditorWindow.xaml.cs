@@ -61,6 +61,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.Video: overlayControl = new OverlayVideoV3Control(); break;
                 case OverlayItemV3Type.YouTube: overlayControl = new OverlayYouTubeV3Control(); break;
                 case OverlayItemV3Type.HTML: overlayControl = new OverlayHTMLV3Control(); break;
+
                 case OverlayItemV3Type.Label: overlayControl = new OverlayLabelV3Control(); break;
                 case OverlayItemV3Type.StreamBoss: overlayControl = new OverlayStreamBossV3Control(); break;
                 case OverlayItemV3Type.Goal: overlayControl = new OverlayGoalV3Control(); break;
@@ -73,6 +74,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.Wheel: overlayControl = new OverlayWheelV3Control(); break;
                 case OverlayItemV3Type.EmoteEffect: overlayControl = new OverlayEmoteEffectV3Control(); break;
                 case OverlayItemV3Type.PersistentEmoteEffect: overlayControl = new OverlayPersistentEmoteEffectV3Control(); break;
+                case OverlayItemV3Type.Poll: overlayControl = new OverlayPollV3Control(); break;
             }
 
             if (overlayControl != null)

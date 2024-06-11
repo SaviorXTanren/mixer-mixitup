@@ -121,6 +121,28 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayPollV3Model() : base(OverlayItemV3Type.Poll) { }
 
+        public override async Task ProcessPacket(OverlayV3Packet packet)
+        {
+            await base.ProcessPacket(packet);
+
+            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
+            {
+                if (this.IsLivePreview)
+                {
+                    await this.NewPoll("This is a test poll", new List<OverlayPollOptionV3Model>()
+                    {
+                        new OverlayPollOptionV3Model() { ID = "1", Name = "Option 1", Amount = 10 },
+                        new OverlayPollOptionV3Model() { ID = "2", Name = "Option 2", Amount = 20 },
+                        new OverlayPollOptionV3Model() { ID = "3", Name = "Option 3", Amount = 30 },
+                    });
+
+                    await Task.Delay(1000);
+
+                    await this.Update();
+                }
+            }
+        }
+
         public async Task NewTwitchPoll(TwitchPollEventModel poll)
         {
             await this.NewPoll(poll.Title, poll.Choices.Select(c => new OverlayPollOptionV3Model(c)));
@@ -197,7 +219,14 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (string.IsNullOrEmpty(option.Color) || !this.UseTwitchPredictionColors)
                 {
-                    option.Color = this.BarColor;
+                    if (this.UseRandomColors)
+                    {
+                        option.Color = OverlayItemV3ModelBase.GetRandomHTMLColor(option.Name);
+                    }
+                    else
+                    {
+                        option.Color = this.BarColor;
+                    }
                 }
                 this.currentOptions[option.ID] = option;
             }
@@ -213,7 +242,7 @@ namespace MixItUp.Base.Model.Overlay
             int total = this.currentOptions.Values.Sum(o => o.Amount);
             foreach (var kvp in this.currentOptions.Values)
             {
-                kvp.Percentage = MathHelper.Truncate((double)kvp.Amount / total, 2);
+                kvp.Percentage = MathHelper.Truncate(((double)kvp.Amount / total) * 100, 2);
             }
 
             Dictionary<string, object> properties = new Dictionary<string, object>();

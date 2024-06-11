@@ -258,6 +258,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Wheel: this.Item = new OverlayWheelV3ViewModel(); break;
                 case OverlayItemV3Type.EmoteEffect: this.Item = new OverlayEmoteEffectV3ViewModel(); break;
                 case OverlayItemV3Type.PersistentEmoteEffect: this.Item = new OverlayPersistentEmoteEffectV3ViewModel(); break;
+                case OverlayItemV3Type.Poll: this.Item = new OverlayPollV3ViewModel(); break;
             }
 
             this.HTML = this.GetDefaultHTML(this.Item);
@@ -305,6 +306,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Video: this.Item = new OverlayVideoV3ViewModel((OverlayVideoV3Model)widget.Item); break;
                 case OverlayItemV3Type.YouTube: this.Item = new OverlayYouTubeV3ViewModel((OverlayYouTubeV3Model)widget.Item); break;
                 case OverlayItemV3Type.HTML: this.Item = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)widget.Item); break;
+
                 case OverlayItemV3Type.Timer: this.Item = new OverlayTimerV3ViewModel((OverlayTimerV3Model)widget.Item); break;
                 case OverlayItemV3Type.TwitchClip: this.Item = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)widget.Item); break;
                 case OverlayItemV3Type.Label: this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)widget.Item); break;
@@ -319,6 +321,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Wheel: this.Item = new OverlayWheelV3ViewModel((OverlayWheelV3Model)widget.Item); break;
                 case OverlayItemV3Type.EmoteEffect: this.Item = new OverlayEmoteEffectV3ViewModel((OverlayEmoteEffectV3Model)widget.Item); break;
                 case OverlayItemV3Type.PersistentEmoteEffect: this.Item = new OverlayPersistentEmoteEffectV3ViewModel((OverlayPersistentEmoteEffectV3Model)widget.Item); break;
+                case OverlayItemV3Type.Poll: this.Item = new OverlayPollV3ViewModel((OverlayPollV3Model)widget.Item); break;
             }
 
             this.HTML = widget.Item.HTML;

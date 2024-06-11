@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -145,6 +147,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel EntranceAnimation;
         public OverlayAnimationV3ViewModel ExitAnimation;
 
+        public override bool IsTestable { get { return true; } }
+
         public OverlayPollV3ViewModel()
             : base(OverlayItemV3Type.Poll)
         {
@@ -200,6 +204,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
 
             return new Result();
+        }
+
+        public override async Task TestWidget(OverlayWidgetV3Model widget)
+        {
+            OverlayPollV3Model goal = (OverlayPollV3Model)widget.Item;
+
+            //await goal.ProcessEvent(ChannelSession.User, 10);
+
+            await base.TestWidget(widget);
         }
 
         protected override OverlayItemV3ModelBase GetItemInternal()

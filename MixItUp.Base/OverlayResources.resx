@@ -1974,12 +1974,8 @@ timerLoop();</value>
   width: {Width};
 }
 
-.options {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: left;
-  justify-content: left;
-  flex-direction: column;
+.top {
+  margin: 10px;
 }
 
 .question {
@@ -1996,6 +1992,14 @@ timerLoop();</value>
 
 .time {
   margin-left: 20px;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: left;
+  justify-content: left;
+  flex-direction: column;
 }
 
 .option {
@@ -2036,8 +2040,8 @@ timerLoop();</value>
 }</value>
   </data>
   <data name="OverlayPollDefaultHTML" xml:space="preserve">
-    <value>&lt;div class="mainContainer"&gt;
-    &lt;span class="header"&gt;
+    <value>&lt;div id="mainContainer" class="mainContainer" style="visibility: hidden"&gt;
+    &lt;span class="header top"&gt;
         &lt;span id="question" class="question"&gt;&lt;/span&gt;
         &lt;span class="floatright"&gt;
             &lt;span id="total" class="total"&gt;0 Votes&lt;/span&gt;
@@ -2078,6 +2082,8 @@ const optionData = new Map();
 
 function newpoll(data)
 {
+    mainContainer.style.visibility = 'hidden';
+
     while (options.firstChild) {
         options.removeChild(options.lastChild);
     }
@@ -2100,6 +2106,8 @@ function newpoll(data)
         options.appendChild(option);
     });
     
+    mainContainer.style.visibility = 'visible';
+
     performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", mainContainer).then((result) =&gt;
     {
 
@@ -2153,8 +2161,7 @@ function end(data)
         {
             performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", mainContainer).then((result) =&gt;
             {
-                main.style.visibility='hidden';
-                sendParentMessage({ Type: "Remove", ID: "{ID}" });
+                mainContainer.style.visibility = 'hidden';
             });
         }, 3000);
     }
@@ -2169,7 +2176,9 @@ function adjustProgress(bar, newPercentage)
     setTimeout(() =&gt; {
         bar.classList.remove("adjustBar");
     }, 2000);
-}</value>
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
     <value>.maindiv {

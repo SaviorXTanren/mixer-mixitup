@@ -24,8 +24,7 @@ namespace MixItUp.Base.Util
 
         public static double Truncate(double number, int places)
         {
-            double divisor = Math.Pow(10, -1 * places);
-            return number - (number % divisor);
+            return Math.Floor(number * Math.Pow(10, places)) / Math.Pow(10, places);
         }
 
         public static double ProcessMathEquation(string equation)

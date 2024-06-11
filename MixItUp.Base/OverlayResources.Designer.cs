@@ -1080,12 +1080,8 @@ namespace MixItUp.Base {
         ///  width: {Width};
         ///}
         ///
-        ///.options {
-        ///  display: flex;
-        ///  flex-wrap: wrap;
-        ///  align-items: left;
-        ///  justify-content: left;
-        ///  flex-direction: column;
+        ///.top {
+        ///  margin: 10px;
         ///}
         ///
         ///.question {
@@ -1104,6 +1100,14 @@ namespace MixItUp.Base {
         ///  margin-left: 20px;
         ///}
         ///
+        ///.options {
+        ///  display: flex;
+        ///  flex-wrap: wrap;
+        ///  align-items: left;
+        ///  justify-content: left;
+        ///  flex-direction: column;
+        ///}
+        ///
         ///.option {
         ///  margin: 10px;
         ///}
@@ -1116,8 +1120,7 @@ namespace MixItUp.Base {
         ///  float: right;
         ///}
         ///
-        ///.percentage {
-        ///  float: right; [rest of string was truncated]&quot;;.
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultCSS {
             get {
@@ -1126,8 +1129,8 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;mainContainer&quot;&gt;
-        ///    &lt;span class=&quot;header&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;mainContainer&quot; class=&quot;mainContainer&quot; style=&quot;visibility: hidden&quot;&gt;
+        ///    &lt;span class=&quot;header top&quot;&gt;
         ///        &lt;span id=&quot;question&quot; class=&quot;question&quot;&gt;&lt;/span&gt;
         ///        &lt;span class=&quot;floatright&quot;&gt;
         ///            &lt;span id=&quot;total&quot; class=&quot;total&quot;&gt;0 Votes&lt;/span&gt;
@@ -1143,8 +1146,7 @@ namespace MixItUp.Base {
         ///&lt;template id=&quot;option&quot;&gt;
         ///    &lt;div class=&quot;option&quot;&gt;
         ///        &lt;span class=&quot;text&quot;&gt;
-        ///            &lt;span class=&quot;name&quot;&gt;&lt;/span&gt;
-        ///            &lt;span class=&quot;floatright [rest of string was truncated]&quot;;.
+        ///            &lt;span class=&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultHTML {
             get {
@@ -1166,13 +1168,12 @@ namespace MixItUp.Base {
         ///
         ///function newpoll(data)
         ///{
+        ///    mainContainer.style.visibility = &apos;hidden&apos;;
+        ///
         ///    while (options.firstChild) {
         ///        options.removeChild(options.lastChild);
         ///    }
-        ///    optionData.clear();
-        ///
-        ///    question.innerHTML = data.Question;
-        ///    d [rest of string was truncated]&quot;;.
+        ///    optionData.clear(); [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultJavascript {
             get {

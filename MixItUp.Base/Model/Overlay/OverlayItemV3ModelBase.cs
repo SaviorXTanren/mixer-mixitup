@@ -113,6 +113,16 @@ namespace MixItUp.Base.Model.Overlay
             return innerCSS;
         }
 
+        public static string GetRandomHTMLColor(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                text = Guid.NewGuid().ToString();
+            }
+            int index = Math.Abs(text.GetHashCode() % ColorSchemes.HTMLColors.Count);
+            return ColorSchemes.HTMLColors.ElementAt(index);
+        }
+
         [DataMember]
         public int Version { get; set; }
 

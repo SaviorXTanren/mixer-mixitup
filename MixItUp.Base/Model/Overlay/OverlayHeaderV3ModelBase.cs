@@ -12,7 +12,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
 
-            foreach (var kvp in this.GetGenerationProperties())
+            foreach (var kvp in base.GetGenerationProperties())
             {
                 properties["Header" + kvp.Key] = kvp.Value;
             }
