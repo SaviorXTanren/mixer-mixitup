@@ -89,6 +89,21 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayPollHeaderV3Model Header { get; set; }
 
         [DataMember]
+        public int BarHeight { get; set; }
+
+        [DataMember]
+        public bool UseRandomColors { get; set; }
+        [DataMember]
+        public string BarColor { get; set; }
+        [DataMember]
+        public bool UseTwitchPredictionColors { get; set; }
+
+        [DataMember]
+        public string BackgroundColor { get; set; }
+        [DataMember]
+        public string BorderColor { get; set; }
+
+        [DataMember]
         public bool UseWithTwitchPolls { get; set; }
         [DataMember]
         public bool UseWithTwitchPredictions { get; set; }
@@ -96,16 +111,6 @@ namespace MixItUp.Base.Model.Overlay
         public bool UseWithTriviaGameCommand { get; set; }
         [DataMember]
         public bool UseWithBetGameCommand { get; set; }
-
-        [DataMember]
-        public string BackgroundColor { get; set; }
-        [DataMember]
-        public string BorderColor { get; set; }
-        [DataMember]
-        public string BarColor { get; set; }
-
-        [DataMember]
-        public bool UseTwitchPredictionColors { get; set; }
 
         [DataMember]
         public OverlayAnimationV3Model EntranceAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -175,6 +180,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.BorderColor)] = this.BorderColor;
             properties[nameof(this.BarColor)] = this.BarColor;
+            properties[nameof(this.BarHeight)] = this.BarHeight;
 
             properties["EntranceAnimationFramework"] = this.EntranceAnimation.AnimationFramework;
             properties["EntranceAnimationName"] = this.EntranceAnimation.AnimationName;

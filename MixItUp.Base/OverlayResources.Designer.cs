@@ -1089,20 +1089,27 @@ namespace MixItUp.Base {
         ///}
         ///
         ///.question {
-        ///  float: left;
+        ///
+        ///}
+        ///
+        ///.floatright {
+        ///  float: right;
         ///}
         ///
         ///.total {
-        ///  float: right;
+        ///
         ///}
         ///
         ///.time {
         ///  margin-left: 20px;
-        ///  float: right;
+        ///}
+        ///
+        ///.option {
+        ///  margin: 10px;
         ///}
         ///
         ///.name {
-        ///  float: left;
+        ///
         ///}
         ///
         ///.amount {
@@ -1110,8 +1117,7 @@ namespace MixItUp.Base {
         ///}
         ///
         ///.percentage {
-        ///  float: right;
-        ///  margin [rest of string was truncated]&quot;;.
+        ///  float: right; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultCSS {
             get {
@@ -1121,11 +1127,13 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div class=&quot;mainContainer&quot;&gt;
-        ///    &lt;div&gt;
-        ///        &lt;span id=&quot;question&quot; class=&quot;question header&quot;&gt;&lt;/span&gt;
-        ///        &lt;span id=&quot;total&quot; class=&quot;total header&quot;&gt;0&lt;/span&gt; Votes
-        ///        &lt;span id=&quot;time&quot; class=&quot;time header&quot;&gt;&lt;/span&gt;
-        ///    &lt;/div&gt;
+        ///    &lt;span class=&quot;header&quot;&gt;
+        ///        &lt;span id=&quot;question&quot; class=&quot;question&quot;&gt;&lt;/span&gt;
+        ///        &lt;span class=&quot;floatright&quot;&gt;
+        ///            &lt;span id=&quot;total&quot; class=&quot;total&quot;&gt;0 Votes&lt;/span&gt;
+        ///            &lt;span id=&quot;time&quot; class=&quot;time&quot;&gt;&lt;/span&gt;
+        ///        &lt;/span&gt;
+        ///    &lt;/span&gt;
         ///    
         ///    &lt;div id=&quot;options&quot; class=&quot;options&quot;&gt;
         ///    
@@ -1134,10 +1142,9 @@ namespace MixItUp.Base {
         ///
         ///&lt;template id=&quot;option&quot;&gt;
         ///    &lt;div class=&quot;option&quot;&gt;
-        ///        &lt;div&gt;
-        ///            &lt;span class=&quot;name text&quot;&gt;&lt;/span&gt;
-        ///            &lt;span class=&quot;amount text&quot;&gt;0&lt;/span&gt; Votes
-        ///            &lt;span class=&quot;percentage text&quot;&gt;0%&lt;/ [rest of string was truncated]&quot;;.
+        ///        &lt;span class=&quot;text&quot;&gt;
+        ///            &lt;span class=&quot;name&quot;&gt;&lt;/span&gt;
+        ///            &lt;span class=&quot;floatright [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultHTML {
             get {

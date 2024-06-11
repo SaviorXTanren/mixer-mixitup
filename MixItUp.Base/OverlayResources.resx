@@ -1983,20 +1983,27 @@ timerLoop();</value>
 }
 
 .question {
-  float: left;
+
+}
+
+.floatright {
+  float: right;
 }
 
 .total {
-  float: right;
+
 }
 
 .time {
   margin-left: 20px;
-  float: right;
+}
+
+.option {
+  margin: 10px;
 }
 
 .name {
-  float: left;
+
 }
 
 .amount {
@@ -2009,7 +2016,7 @@ timerLoop();</value>
 }
 
 .bar {
-  height: 25px;
+  height: {BarHeight}px;
 }
 
 @keyframes adjustBarAnimation {
@@ -2026,26 +2033,17 @@ timerLoop();</value>
   --endPercentage: 0%;
   animation-name: adjustBarAnimation;
   animation-duration: 2s;
-}
-
-.header {
-    font-size: {HeaderFontSize}px;
-    color: {HeaderFontColor};
-    font-family: '{HeaderFontFamily}';
-    font-weight: {HeaderFontWeight};
-    text-decoration: {HeaderTextDecoration};
-    font-style: {HeaderFontStyle};
-    text-align: {HeaderTextAlignment};
-    text-shadow: {HeaderShadowColor};
 }</value>
   </data>
   <data name="OverlayPollDefaultHTML" xml:space="preserve">
     <value>&lt;div class="mainContainer"&gt;
-    &lt;div&gt;
-        &lt;span id="question" class="question header"&gt;&lt;/span&gt;
-        &lt;span id="total" class="total header"&gt;0&lt;/span&gt; Votes
-        &lt;span id="time" class="time header"&gt;&lt;/span&gt;
-    &lt;/div&gt;
+    &lt;span class="header"&gt;
+        &lt;span id="question" class="question"&gt;&lt;/span&gt;
+        &lt;span class="floatright"&gt;
+            &lt;span id="total" class="total"&gt;0 Votes&lt;/span&gt;
+            &lt;span id="time" class="time"&gt;&lt;/span&gt;
+        &lt;/span&gt;
+    &lt;/span&gt;
     
     &lt;div id="options" class="options"&gt;
     
@@ -2054,11 +2052,13 @@ timerLoop();</value>
 
 &lt;template id="option"&gt;
     &lt;div class="option"&gt;
-        &lt;div&gt;
-            &lt;span class="name text"&gt;&lt;/span&gt;
-            &lt;span class="amount text"&gt;0&lt;/span&gt; Votes
-            &lt;span class="percentage text"&gt;0%&lt;/span&gt;
-        &lt;/div&gt;
+        &lt;span class="text"&gt;
+            &lt;span class="name"&gt;&lt;/span&gt;
+            &lt;span class="floatright"&gt;
+                &lt;span class="amount"&gt;0 Votes&lt;/span&gt;
+                &lt;span class="percentage"&gt;0%&lt;/span&gt;
+            &lt;/span&gt;
+        &lt;/span&gt;
 
         &lt;div class="bar" style="width: 0%" /&gt;
     &lt;/div&gt;
@@ -2117,7 +2117,7 @@ function update(data)
             let option = document.getElementById("option" + od.ID);
             
             let amount = option.querySelector(".amount");
-            amount.innerHTML = od.Amount;
+            amount.innerHTML = `${od.Amount} Votes`;
             
             let percentage = option.querySelector(".percentage");
             percentage.innerHTML = `(${od.Percentage}%)`;

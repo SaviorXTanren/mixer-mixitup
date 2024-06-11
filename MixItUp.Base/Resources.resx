@@ -10407,4 +10407,40 @@ namespace CustomNamespace
   <data name="EnableDisableWidget" xml:space="preserve">
     <value>Enable/Disable Widget</value>
   </data>
+  <data name="OptionSettings" xml:space="preserve">
+    <value>Option Settings</value>
+  </data>
+  <data name="TitleSettings" xml:space="preserve">
+    <value>Title Settings</value>
+  </data>
+  <data name="BarColor" xml:space="preserve">
+    <value>Bar Color</value>
+  </data>
+  <data name="BarHeight" xml:space="preserve">
+    <value>Bar Height</value>
+  </data>
+  <data name="UseRandomColors" xml:space="preserve">
+    <value>Use Random Colors</value>
+  </data>
+  <data name="UseTwitchPredictionColors" xml:space="preserve">
+    <value>Use Twitch Prediction Colors</value>
+  </data>
+  <data name="ApplicableUses" xml:space="preserve">
+    <value>Applicable Uses</value>
+  </data>
+  <data name="UseWithBetGameCommand" xml:space="preserve">
+    <value>Use With Bet Game Command</value>
+  </data>
+  <data name="UseWithTriviaGameCommand" xml:space="preserve">
+    <value>Use With Trivia Game Command</value>
+  </data>
+  <data name="UseWithTwitchPolls" xml:space="preserve">
+    <value>Use With Twitch Polls</value>
+  </data>
+  <data name="UseWithTwitchPredictions" xml:space="preserve">
+    <value>Use With Twitch Predictions</value>
+  </data>
+  <data name="OverlayPollAtLeastOneApplicableUse" xml:space="preserve">
+    <value>At least one applicable use must be selected</value>
+  </data>
 </root>

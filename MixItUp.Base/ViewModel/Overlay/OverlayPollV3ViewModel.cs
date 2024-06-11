@@ -34,6 +34,73 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayPollHeaderV3ViewModel header;
 
+        public string BackgroundColor
+        {
+            get { return this.backgroundColor; }
+            set
+            {
+                this.backgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string backgroundColor;
+        public string BorderColor
+        {
+            get { return this.borderColor; }
+            set
+            {
+                this.borderColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string borderColor;
+
+        public int BarHeight
+        {
+            get { return this.barHeight; }
+            set
+            {
+                this.barHeight = (value > 0) ? value : 1;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int barHeight;
+
+        public bool UseRandomColors
+        {
+            get { return this.useRandomColors; }
+            set
+            {
+                this.useRandomColors = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.CanSpecifyColor));
+            }
+        }
+        private bool useRandomColors;
+
+        public bool CanSpecifyColor { get { return !this.UseRandomColors; } }
+        public string BarColor
+        {
+            get { return this.barColor; }
+            set
+            {
+                this.barColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string barColor;
+
+        public bool UseTwitchPredictionColors
+        {
+            get { return this.useTwitchPredictionColor; }
+            set
+            {
+                this.useTwitchPredictionColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool useTwitchPredictionColor;
+
         public bool UseWithTwitchPolls
         {
             get { return this.useWithTwitchPolls; }
@@ -63,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private bool useWithTriviaGameCommand;  
+        private bool useWithTriviaGameCommand;
         public bool UseWithBetGameCommand
         {
             get { return this.useWithBetGameCommand; }
@@ -75,48 +142,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool useWithBetGameCommand;
 
-        public string BackgroundColor
-        {
-            get { return this.backgroundColor; }
-            set
-            {
-                this.backgroundColor = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string backgroundColor;
-        public string BorderColor
-        {
-            get { return this.borderColor; }
-            set
-            {
-                this.borderColor = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string borderColor;
-        public string BarColor
-        {
-            get { return this.barColor; }
-            set
-            {
-                this.barColor = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string barColor;
-
-        public bool UseTwitchPredictionColors
-        {
-            get { return this.useTwitchPredictionColor; }
-            set
-            {
-                this.useTwitchPredictionColor = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private bool useTwitchPredictionColor;
-
         public OverlayAnimationV3ViewModel EntranceAnimation;
         public OverlayAnimationV3ViewModel ExitAnimation;
 
@@ -127,9 +152,13 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.Width = "400";
 
+            this.BarHeight = 25;
+            this.UseRandomColors = false;
+            this.BarColor = "Red";
+            this.UseTwitchPredictionColors = true;
+
             this.BackgroundColor = "DarkGreen";
             this.BorderColor = "Black";
-            this.BarColor = "Red";
 
             this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, new OverlayAnimationV3Model());
             this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, new OverlayAnimationV3Model());
@@ -144,16 +173,18 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.width = item.Width;
 
+            this.BarHeight = item.BarHeight;
+            this.UseRandomColors = item.UseRandomColors;
+            this.BarColor = item.BarColor;
+            this.UseTwitchPredictionColors = item.UseTwitchPredictionColors;
+
+            this.BackgroundColor = item.BackgroundColor;
+            this.BorderColor = item.BorderColor;
+
             this.UseWithTwitchPolls = item.UseWithTwitchPolls;
             this.UseWithTwitchPredictions = item.UseWithTwitchPredictions;
             this.UseWithBetGameCommand = item.UseWithBetGameCommand;
             this.UseWithTriviaGameCommand = item.UseWithTriviaGameCommand;
-
-            this.BackgroundColor = item.BackgroundColor;
-            this.BorderColor = item.BorderColor;
-            this.BarColor = item.BarColor;
-
-            this.UseTwitchPredictionColors = item.UseTwitchPredictionColors;
 
             this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, item.EntranceAnimation);
             this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, item.ExitAnimation);
@@ -163,6 +194,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override Result Validate()
         {
+            if (!this.UseWithTwitchPolls && !this.UseWithTwitchPredictions && !this.UseWithBetGameCommand && !this.UseWithTriviaGameCommand)
+            {
+                return new Result(Resources.OverlayPollAtLeastOneApplicableUse);
+            }
+
             return new Result();
         }
 
@@ -172,16 +208,18 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 Width = this.width,
 
+                BarHeight = this.BarHeight,
+                UseRandomColors = this.UseRandomColors,
+                BarColor = this.BarColor,
+                UseTwitchPredictionColors = this.UseTwitchPredictionColors,
+
+                BackgroundColor = this.BackgroundColor,
+                BorderColor = this.BorderColor,
+
                 UseWithTwitchPolls = this.UseWithTwitchPolls,
                 UseWithTwitchPredictions = this.UseWithTwitchPredictions,
                 UseWithBetGameCommand = this.UseWithBetGameCommand,
                 UseWithTriviaGameCommand = this.UseWithTriviaGameCommand,
-
-                BackgroundColor = this.BackgroundColor,
-                BorderColor = this.BorderColor,
-                BarColor = this.BarColor,
-
-                UseTwitchPredictionColors = this.UseTwitchPredictionColors
             };
 
             this.AssignProperties(result);

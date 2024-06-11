@@ -1249,6 +1249,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Applicable Uses.
+        /// </summary>
+        public static string ApplicableUses {
+            get {
+                return ResourceManager.GetString("ApplicableUses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Application Bot Token.
         /// </summary>
         public static string ApplicationBotToken {
@@ -1741,6 +1750,24 @@ namespace MixItUp.Base {
         public static string BanUserPrompt {
             get {
                 return ResourceManager.GetString("BanUserPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bar Color.
+        /// </summary>
+        public static string BarColor {
+            get {
+                return ResourceManager.GetString("BarColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bar Height.
+        /// </summary>
+        public static string BarHeight {
+            get {
+                return ResourceManager.GetString("BarHeight", resourceCulture);
             }
         }
         
@@ -14785,6 +14812,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Option Settings.
+        /// </summary>
+        public static string OptionSettings {
+            get {
+                return ResourceManager.GetString("OptionSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Opt-Out of Data Tracking.
         /// </summary>
         public static string OptOutofDataTracking {
@@ -15186,6 +15222,15 @@ namespace MixItUp.Base {
         public static string OverlayPersistentEmoteEffectComboTimeframe {
             get {
                 return ResourceManager.GetString("OverlayPersistentEmoteEffectComboTimeframe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one applicable use must be selected.
+        /// </summary>
+        public static string OverlayPollAtLeastOneApplicableUse {
+            get {
+                return ResourceManager.GetString("OverlayPollAtLeastOneApplicableUse", resourceCulture);
             }
         }
         
@@ -22456,6 +22501,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Title Settings.
+        /// </summary>
+        public static string TitleSettings {
+            get {
+                return ResourceManager.GetString("TitleSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title Updated: .
         /// </summary>
         public static string TitleUpdatedHeader {
@@ -24657,6 +24711,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use Random Colors.
+        /// </summary>
+        public static string UseRandomColors {
+            get {
+                return ResourceManager.GetString("UseRandomColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Chance %.
         /// </summary>
         public static string UserChancePercentage {
@@ -24983,6 +25046,51 @@ namespace MixItUp.Base {
         public static string UserWon {
             get {
                 return ResourceManager.GetString("UserWon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Twitch Prediction Colors.
+        /// </summary>
+        public static string UseTwitchPredictionColors {
+            get {
+                return ResourceManager.GetString("UseTwitchPredictionColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use With Bet Game Command.
+        /// </summary>
+        public static string UseWithBetGameCommand {
+            get {
+                return ResourceManager.GetString("UseWithBetGameCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use With Trivia Game Command.
+        /// </summary>
+        public static string UseWithTriviaGameCommand {
+            get {
+                return ResourceManager.GetString("UseWithTriviaGameCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use With Twitch Polls.
+        /// </summary>
+        public static string UseWithTwitchPolls {
+            get {
+                return ResourceManager.GetString("UseWithTwitchPolls", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use With Twitch Predictions.
+        /// </summary>
+        public static string UseWithTwitchPredictions {
+            get {
+                return ResourceManager.GetString("UseWithTwitchPredictions", resourceCulture);
             }
         }
         
