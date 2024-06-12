@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Overlay.Widgets;
+﻿using MixItUp.Base.Model.Commands.Games;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -31,6 +32,18 @@ namespace MixItUp.Base.Model.Overlay
             this.ID = outcome.ID;
             this.Name = outcome.Title;
             this.Color = outcome.Color;
+        }
+
+        public OverlayPollOptionV3Model(int id, GameOutcomeModel outcome)
+        {
+            this.ID = id.ToString();
+            this.Name = outcome.Name;
+        }
+
+        public OverlayPollOptionV3Model(int id, string option)
+        {
+            this.ID = id.ToString();
+            this.Name = option;
         }
 
         public Dictionary<string, object> GetGenerationProperties()
@@ -157,7 +170,6 @@ namespace MixItUp.Base.Model.Overlay
                     model.Amount = choice.Votes;
                 }
             }
-
             await this.Update();
         }
 
@@ -175,19 +187,42 @@ namespace MixItUp.Base.Model.Overlay
                     model.Amount = outcome.Users;
                 }
             }
-
             await this.Update();
         }
 
-        public async Task EndTwitchPrediction(TwitchPredictionEventModel prediction)
+        public async Task NewBetCommand(string question, List<GameOutcomeModel> outcomes)
         {
-            await this.End(prediction.WinningOutcomeID);
+            await this.NewPoll(question, outcomes.Select(o => new OverlayPollOptionV3Model(outcomes.IndexOf(o) + 1, o)));
         }
 
-        public async Task End()
+        public async Task UpdateBetCommand(int id)
         {
-            OverlayPollOptionV3Model option = this.currentOptions.Values.OrderByDescending(x => x.Amount).First();
-            await this.End(option.ID);
+            if (this.currentOptions.TryGetValue(id.ToString(), out OverlayPollOptionV3Model model))
+            {
+                model.Amount++;
+            }
+            await this.Update();
+        }
+
+        public async Task NewTriviaCommand(string question, Dictionary<int, string> answers)
+        {
+            await this.NewPoll(question, answers.Select(a => new OverlayPollOptionV3Model(a.Key, a.Value)));
+        }
+
+        public async Task UpdateTriviaCommand(int id)
+        {
+            if (this.currentOptions.TryGetValue(id.ToString(), out OverlayPollOptionV3Model model))
+            {
+                model.Amount++;
+            }
+            await this.Update();
+        }
+
+        public async Task End(string id)
+        {
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+            properties[OverlayPollV3Model.WinnerIDPropertyName] = id;
+            await this.CallFunction("end", properties);
         }
 
         public override Dictionary<string, object> GetGenerationProperties()
@@ -249,13 +284,6 @@ namespace MixItUp.Base.Model.Overlay
             properties[OptionsPropertyName] = this.currentOptions.Values;
             properties[TotalVotesPropertyName] = total;
             await this.CallFunction("update", properties);
-        }
-
-        private async Task End(string id)
-        {
-            Dictionary<string, object> properties = new Dictionary<string, object>();
-            properties[OverlayPollV3Model.WinnerIDPropertyName] = id;
-            await this.CallFunction("end", properties);
         }
     }
 }

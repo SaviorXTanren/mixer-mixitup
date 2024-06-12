@@ -746,7 +746,7 @@ namespace MixItUp.Base.Services.Twitch
                 TwitchPollEventModel poll = new TwitchPollEventModel(payload);
                 foreach (OverlayPollV3Model widget in widgets)
                 {
-                    await widget.End();
+                    await widget.End(poll.Choices.OrderByDescending(c => c.Votes).First().ID);
                 }
             }
         }
@@ -790,7 +790,7 @@ namespace MixItUp.Base.Services.Twitch
                 TwitchPredictionEventModel prediction = new TwitchPredictionEventModel(payload);
                 foreach (OverlayPollV3Model widget in widgets)
                 {
-                    await widget.EndTwitchPrediction(prediction);
+                    await widget.End(prediction.WinningOutcomeID);
                 }
             }
         }
