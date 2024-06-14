@@ -161,8 +161,13 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.BarColor = "Red";
             this.UseTwitchPredictionColors = true;
 
-            this.BackgroundColor = "DarkGreen";
+            this.BackgroundColor = "Azure";
             this.BorderColor = "Black";
+
+            this.UseWithTwitchPolls = true;
+            this.UseWithTwitchPredictions = true;
+            this.UseWithBetGameCommand = true;
+            this.UseWithTriviaGameCommand = true;
 
             this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, new OverlayAnimationV3Model());
             this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, new OverlayAnimationV3Model());
@@ -208,9 +213,9 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override async Task TestWidget(OverlayWidgetV3Model widget)
         {
-            OverlayPollV3Model goal = (OverlayPollV3Model)widget.Item;
+            OverlayPollV3Model poll = (OverlayPollV3Model)widget.Item;
 
-            //await goal.ProcessEvent(ChannelSession.User, 10);
+            await poll.TestPoll();
 
             await base.TestWidget(widget);
         }

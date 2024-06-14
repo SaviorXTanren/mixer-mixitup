@@ -86,7 +86,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
             }
-            return null;
+            return polls;
         }
 
         public const string QuestionPropertyName = "Question";
@@ -245,6 +245,27 @@ namespace MixItUp.Base.Model.Overlay
             properties["ExitAnimationName"] = this.ExitAnimation.AnimationName;
 
             return properties;
+        }
+
+        protected internal async Task TestPoll()
+        {
+            List<OverlayPollOptionV3Model> options = new List<OverlayPollOptionV3Model>();
+            options.Add(new OverlayPollOptionV3Model(1, "Option 1"));
+            options.Add(new OverlayPollOptionV3Model(2, "Option 2"));
+            options.Add(new OverlayPollOptionV3Model(3, "Option 3"));
+
+            await this.NewPoll("Here is a simple question", options);
+            await Task.Delay(2000);
+
+            for (int i = 0; i < 5; i++)
+            {
+                options[i % options.Count].Amount += i + 1;
+                await this.Update();
+                await Task.Delay(2000);
+            }
+
+            await this.End(options.OrderByDescending(o => o.Amount).First().ID);
+            await Task.Delay(2000);
         }
 
         private async Task NewPoll(string question, IEnumerable<OverlayPollOptionV3Model> options)

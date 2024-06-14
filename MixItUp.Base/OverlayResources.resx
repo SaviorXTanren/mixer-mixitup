@@ -2148,7 +2148,7 @@ function end(data)
     if (optionData.has(data.WinnerID))
     {
         optionData.forEach((value, key) =&gt; {
-            let option = document.getElementById("option" + od.ID);
+            let option = document.getElementById("option" + key);
             let bar = option.querySelector(".bar");
             bar.style.backgroundColor = "DimGray";
         });
