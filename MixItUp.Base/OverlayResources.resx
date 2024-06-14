@@ -1982,10 +1982,6 @@ timerLoop();</value>
 
 }
 
-.floatright {
-  float: right;
-}
-
 .total {
 
 }
@@ -2011,7 +2007,7 @@ timerLoop();</value>
 }
 
 .amount {
-  float: right;
+
 }
 
 .percentage {
@@ -2060,7 +2056,7 @@ timerLoop();</value>
             &lt;span class="name"&gt;&lt;/span&gt;
             &lt;span class="floatright"&gt;
                 &lt;span class="amount"&gt;0 Votes&lt;/span&gt;
-                &lt;span class="percentage"&gt;0%&lt;/span&gt;
+                &lt;span class="percentage"&gt;(0%)&lt;/span&gt;
             &lt;/span&gt;
         &lt;/span&gt;
 

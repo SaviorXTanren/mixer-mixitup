@@ -1088,10 +1088,6 @@ namespace MixItUp.Base {
         ///
         ///}
         ///
-        ///.floatright {
-        ///  float: right;
-        ///}
-        ///
         ///.total {
         ///
         ///}
@@ -1117,10 +1113,12 @@ namespace MixItUp.Base {
         ///}
         ///
         ///.amount {
-        ///  float: right;
+        ///
         ///}
         ///
-        /// [rest of string was truncated]&quot;;.
+        ///.percentage {
+        ///  float: right;
+        ///  margin-left: 10px; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultCSS {
             get {
