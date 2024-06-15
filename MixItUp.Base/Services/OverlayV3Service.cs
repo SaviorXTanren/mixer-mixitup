@@ -793,10 +793,14 @@ namespace MixItUp.Base.Services
                     id = id.Trim(new char[] { '/' });
                     if (this.htmlData.TryGetValue(id, out string data))
                     {
-                        if (!ChannelSession.IsDebug())
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () =>
                         {
+                            await Task.Delay(10000);
                             this.htmlData.Remove(id);
-                        }    
+                        });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                         await this.CloseConnection(listenerContext, HttpStatusCode.OK, data);
                     }
                 }
