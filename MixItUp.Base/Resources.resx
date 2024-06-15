@@ -10455,4 +10455,7 @@ namespace CustomNamespace
   <data name="Duration" xml:space="preserve">
     <value>Duration</value>
   </data>
+  <data name="ShowTwitchPredictionChannelPoints" xml:space="preserve">
+    <value>Show Twitch Prediction Channel Points</value>
+  </data>
 </root>

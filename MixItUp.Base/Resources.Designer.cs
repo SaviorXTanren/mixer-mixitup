@@ -20041,6 +20041,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Twitch Prediction Channel Points.
+        /// </summary>
+        public static string ShowTwitchPredictionChannelPoints {
+            get {
+                return ResourceManager.GetString("ShowTwitchPredictionChannelPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show User First Message.
         /// </summary>
         public static string ShowUserFirstMessage {

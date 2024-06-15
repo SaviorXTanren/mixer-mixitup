@@ -258,7 +258,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 foreach (OverlayPollV3Model widget in widgets)
                 {
-                    await widget.NewTriviaCommand(this.question.Question, this.numbersToAnswers);
+                    await widget.NewTriviaCommand(this.question.Question, this.TimeLimit, this.numbersToAnswers);
                 }
             }
         }

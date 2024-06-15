@@ -19,6 +19,8 @@ namespace MixItUp.Base.Model.Overlay
         public int Amount { get; set; }
         public double Percentage { get; set; }
 
+        public int ChannelPoints { get; set; }
+
         public OverlayPollOptionV3Model() { }
 
         public OverlayPollOptionV3Model(TwitchPollEventModel.TwitchPollChoiceEventModel choice)
@@ -32,6 +34,7 @@ namespace MixItUp.Base.Model.Overlay
             this.ID = outcome.ID;
             this.Name = outcome.Title;
             this.Color = outcome.Color;
+            this.ChannelPoints = outcome.ChannelPoints;
         }
 
         public OverlayPollOptionV3Model(int id, GameOutcomeModel outcome)
@@ -54,6 +57,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.Color)] = this.Color;
             properties[nameof(this.Amount)] = this.Amount;
             properties[nameof(this.Percentage)] = this.Percentage;
+            properties[nameof(this.ChannelPoints)] = this.ChannelPoints;
             return properties;
         }
     }
@@ -90,6 +94,7 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         public const string QuestionPropertyName = "Question";
+        public const string TimeLimitPropertyName = "TimeLimit";
         public const string OptionsPropertyName = "Options";
         public const string TotalVotesPropertyName = "TotalVotes";
         public const string WinnerIDPropertyName = "WinnerID";
@@ -110,6 +115,8 @@ namespace MixItUp.Base.Model.Overlay
         public string BarColor { get; set; }
         [DataMember]
         public bool UseTwitchPredictionColors { get; set; }
+        [DataMember]
+        public bool ShowTwitchPredictionChannelPoints { get; set; }
 
         [DataMember]
         public string BackgroundColor { get; set; }
@@ -142,12 +149,13 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (this.IsLivePreview)
                 {
-                    await this.NewPoll("This is a test poll", new List<OverlayPollOptionV3Model>()
+                    await this.NewPoll("This is a test poll", 60, new List<OverlayPollOptionV3Model>()
                     {
-                        new OverlayPollOptionV3Model() { ID = "1", Name = "Option 1", Amount = 10 },
-                        new OverlayPollOptionV3Model() { ID = "2", Name = "Option 2", Amount = 20 },
-                        new OverlayPollOptionV3Model() { ID = "3", Name = "Option 3", Amount = 30 },
-                    });
+                        new OverlayPollOptionV3Model() { ID = "1", Name = "Option 1", Amount = 100 },
+                        new OverlayPollOptionV3Model() { ID = "2", Name = "Option 2", Amount = 200 },
+                        new OverlayPollOptionV3Model() { ID = "3", Name = "Option 3", Amount = 300 },
+                    },
+                    hasChannelPoints: true);
 
                     await Task.Delay(1000);
 
@@ -158,7 +166,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task NewTwitchPoll(TwitchPollEventModel poll)
         {
-            await this.NewPoll(poll.Title, poll.Choices.Select(c => new OverlayPollOptionV3Model(c)));
+            int totalTime = (int)Math.Round((poll.EndsAt - poll.StartedAt).TotalSeconds);
+            await this.NewPoll(poll.Title, totalTime, poll.Choices.Select(c => new OverlayPollOptionV3Model(c)));
         }
 
         public async Task UpdateTwitchPoll(TwitchPollEventModel poll)
@@ -175,7 +184,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task NewTwitchPrediction(TwitchPredictionEventModel prediction)
         {
-            await this.NewPoll(prediction.Title, prediction.Outcomes.Select(o => new OverlayPollOptionV3Model(o)));
+            int totalTime = (int)Math.Round((prediction.LocksAt - prediction.StartedAt).TotalSeconds);
+            await this.NewPoll(prediction.Title, totalTime, prediction.Outcomes.Select(o => new OverlayPollOptionV3Model(o)), hasChannelPoints: true);
         }
 
         public async Task UpdateTwitchPrediction(TwitchPredictionEventModel prediction)
@@ -190,9 +200,9 @@ namespace MixItUp.Base.Model.Overlay
             await this.Update();
         }
 
-        public async Task NewBetCommand(string question, List<GameOutcomeModel> outcomes)
+        public async Task NewBetCommand(string question, int timeLimitSeconds, List<GameOutcomeModel> outcomes)
         {
-            await this.NewPoll(question, outcomes.Select(o => new OverlayPollOptionV3Model(outcomes.IndexOf(o) + 1, o)));
+            await this.NewPoll(question, timeLimitSeconds, outcomes.Select(o => new OverlayPollOptionV3Model(outcomes.IndexOf(o) + 1, o)));
         }
 
         public async Task UpdateBetCommand(int id)
@@ -204,9 +214,9 @@ namespace MixItUp.Base.Model.Overlay
             await this.Update();
         }
 
-        public async Task NewTriviaCommand(string question, Dictionary<int, string> answers)
+        public async Task NewTriviaCommand(string question, int timeLimitSeconds, Dictionary<int, string> answers)
         {
-            await this.NewPoll(question, answers.Select(a => new OverlayPollOptionV3Model(a.Key, a.Value)));
+            await this.NewPoll(question, timeLimitSeconds, answers.Select(a => new OverlayPollOptionV3Model(a.Key, a.Value)));
         }
 
         public async Task UpdateTriviaCommand(int id)
@@ -254,21 +264,21 @@ namespace MixItUp.Base.Model.Overlay
             options.Add(new OverlayPollOptionV3Model(2, "Option 2"));
             options.Add(new OverlayPollOptionV3Model(3, "Option 3"));
 
-            await this.NewPoll("Here is a simple question", options);
+            await this.NewPoll("Here is a simple question", 17, options, hasChannelPoints: true);
             await Task.Delay(2000);
 
             for (int i = 0; i < 5; i++)
             {
                 options[i % options.Count].Amount += i + 1;
+                options[i % options.Count].ChannelPoints += (i + 1) * 500;
                 await this.Update();
                 await Task.Delay(2000);
             }
 
             await this.End(options.OrderByDescending(o => o.Amount).First().ID);
-            await Task.Delay(2000);
         }
 
-        private async Task NewPoll(string question, IEnumerable<OverlayPollOptionV3Model> options)
+        private async Task NewPoll(string question, int timeLimitSeconds, IEnumerable<OverlayPollOptionV3Model> options, bool hasChannelPoints = false)
         {
             this.currentOptions.Clear();
             foreach (OverlayPollOptionV3Model option in options)
@@ -289,6 +299,8 @@ namespace MixItUp.Base.Model.Overlay
 
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[QuestionPropertyName] = question;
+            properties[TimeLimitPropertyName] = timeLimitSeconds;
+            properties[nameof(this.ShowTwitchPredictionChannelPoints)] = hasChannelPoints ? this.ShowTwitchPredictionChannelPoints : false;
             properties[OptionsPropertyName] = this.currentOptions.Values;
             await this.CallFunction("newpoll", properties);
         }

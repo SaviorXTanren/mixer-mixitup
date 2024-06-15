@@ -230,11 +230,15 @@ namespace MixItUp.Base.Services.Twitch
         public string ID { get; set; }
         public string Title { get; set; }
         public List<TwitchPollChoiceEventModel> Choices { get; set; } = new List<TwitchPollChoiceEventModel>();
+        public DateTimeOffset StartedAt { get; set; }
+        public DateTimeOffset EndsAt { get; set; }
 
         public TwitchPollEventModel(JObject payload)
         {
             this.ID = payload["id"].Value<string>();
             this.Title = payload["title"].Value<string>();
+            this.StartedAt = TwitchPlatformService.GetTwitchDateTime(payload["started_at"].Value<string>());
+            this.EndsAt = TwitchPlatformService.GetTwitchDateTime(payload["ends_at"].Value<string>());
 
             foreach (JObject choice in (JArray)payload["choices"])
             {
@@ -300,17 +304,20 @@ namespace MixItUp.Base.Services.Twitch
 
                 this.Outcomes.Add(outcome);
 
-                foreach (JObject topPredictor in (JArray)oc["top_predictors"])
+                if (oc.TryGetValue("top_predictors", out JToken topPredictors))
                 {
-                    int.TryParse(topPredictor.GetValue("channel_points_used")?.Value<string>(), out int channelPointsUsed);
-                    int.TryParse(topPredictor.GetValue("channel_points_won")?.Value<string>(), out int channelPointsWon);
-
-                    outcome.TopPredictors.Add(new TwitchPredictionEventModel.TwitchPredictionOutcomePredictorEventModel()
+                    foreach (JObject topPredictor in (JArray)topPredictors)
                     {
-                        User = new TwitchUserPlatformV2Model(topPredictor["user_id"].Value<string>(), topPredictor["user_login"].Value<string>(), topPredictor["user_name"].Value<string>()),
-                        ChannelPointsUsed = channelPointsUsed,
-                        ChannelPointsWon = channelPointsWon,
-                    });
+                        int.TryParse(topPredictor.GetValue("channel_points_used")?.Value<string>(), out int channelPointsUsed);
+                        int.TryParse(topPredictor.GetValue("channel_points_won")?.Value<string>(), out int channelPointsWon);
+
+                        outcome.TopPredictors.Add(new TwitchPredictionEventModel.TwitchPredictionOutcomePredictorEventModel()
+                        {
+                            User = new TwitchUserPlatformV2Model(topPredictor["user_id"].Value<string>(), topPredictor["user_login"].Value<string>(), topPredictor["user_name"].Value<string>()),
+                            ChannelPointsUsed = channelPointsUsed,
+                            ChannelPointsWon = channelPointsWon,
+                        });
+                    }
                 }
             }
         }

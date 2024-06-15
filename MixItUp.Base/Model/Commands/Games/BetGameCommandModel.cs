@@ -190,7 +190,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         foreach (OverlayPollV3Model widget in widgets)
                         {
-                            await widget.NewBetCommand(Resources.Bet, this.BetOptions);
+                            await widget.NewBetCommand(this.Name, this.TimeLimit, this.BetOptions);
                         }
                     }
 

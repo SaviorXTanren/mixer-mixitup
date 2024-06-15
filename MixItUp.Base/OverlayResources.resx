@@ -1967,19 +1967,30 @@ timerLoop();</value>
   </data>
   <data name="OverlayPollDefaultCSS" xml:space="preserve">
     <value>.mainContainer {
-  border-style: solid;
-  border-width: 5px;
-  border-color: {BorderColor};
-  background-color: {BackgroundColor};
   width: {Width};
 }
 
 .top {
-  margin: 10px;
+  padding: 10px;
+  margin-bottom: -5px;
+  border-style: solid;
+  border-width: 5px;
+  border-color: {BorderColor};
+  background-color: {BackgroundColor};
 }
 
 .question {
+  word-wrap: break-word;
+}
 
+.floatright {
+  float: right;
+}
+
+.box120 {
+  display: inline-grid;
+  justify-content: flex-end;
+  width: 120px;
 }
 
 .total {
@@ -1987,7 +1998,7 @@ timerLoop();</value>
 }
 
 .time {
-  margin-left: 20px;
+
 }
 
 .options {
@@ -1996,6 +2007,10 @@ timerLoop();</value>
   align-items: left;
   justify-content: left;
   flex-direction: column;
+  border-style: solid;
+  border-width: 5px;
+  border-color: {BorderColor};
+  background-color: {BackgroundColor};
 }
 
 .option {
@@ -2003,7 +2018,20 @@ timerLoop();</value>
 }
 
 .name {
+  word-wrap: break-word;
 
+}
+
+.channelpoints {
+  display: inline;
+}
+
+.channelpointamount {
+  
+}
+
+.channelpointimage {
+  margin-bottom: -3px;
 }
 
 .amount {
@@ -2011,11 +2039,11 @@ timerLoop();</value>
 }
 
 .percentage {
-  float: right;
-  margin-left: 10px;
+
 }
 
 .bar {
+  margin-top: 10px;
   height: {BarHeight}px;
 }
 
@@ -2037,16 +2065,19 @@ timerLoop();</value>
   </data>
   <data name="OverlayPollDefaultHTML" xml:space="preserve">
     <value>&lt;div id="mainContainer" class="mainContainer" style="visibility: hidden"&gt;
-    &lt;span class="header top"&gt;
-        &lt;span id="question" class="question"&gt;&lt;/span&gt;
-        &lt;span class="floatright"&gt;
-            &lt;span id="total" class="total"&gt;0 Votes&lt;/span&gt;
-            &lt;span id="time" class="time"&gt;&lt;/span&gt;
+    &lt;div class="top"&gt;
+        &lt;span class="header"&gt;
+            &lt;span id="question" class="question"&gt;&lt;/span&gt;
+            &lt;span class="floatright"&gt;
+                &lt;span id="total" class="total"&gt;0 Votes&lt;/span&gt;
+                &lt;div class="box120"&gt;
+                    &lt;span id="time"&gt;&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/span&gt;
         &lt;/span&gt;
-    &lt;/span&gt;
+    &lt;/div&gt;
     
     &lt;div id="options" class="options"&gt;
-    
     &lt;/div&gt;
 &lt;/div&gt;
 
@@ -2055,8 +2086,19 @@ timerLoop();</value>
         &lt;span class="text"&gt;
             &lt;span class="name"&gt;&lt;/span&gt;
             &lt;span class="floatright"&gt;
-                &lt;span class="amount"&gt;0 Votes&lt;/span&gt;
-                &lt;span class="percentage"&gt;(0%)&lt;/span&gt;
+                &lt;div class="channelpoints" style="visibility: hidden;"&gt;
+                    &lt;span class="channelpointamount"&gt;0 &lt;/span&gt;
+                    &lt;svg class="channelpointimage" width="{FontSize}" height="{FontSize}" viewBox="0 0 20 20"&gt;
+                        &lt;path d="M10 6a4 4 0 0 1 4 4h-2a2 2 0 0 0-2-2V6z"&gt;&lt;/path&gt;
+                        &lt;path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-2 0a6 6 0 1 1-12 0 6 6 0 0 1 12 0z" clip-rule="evenodd"&gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;div class="box120"&gt;
+                    &lt;span class="amount"&gt;0 Votes&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class="box120"&gt;
+                    &lt;span class="percentage"&gt;(0%)&lt;/span&gt;
+                &lt;/div&gt;
             &lt;/span&gt;
         &lt;/span&gt;
 
@@ -2069,6 +2111,7 @@ timerLoop();</value>
 
 const question = document.getElementById("question");
 const total = document.getElementById("total");
+const time = document.getElementById("time");
 
 const options = document.getElementById("options");
 
@@ -2076,9 +2119,14 @@ const optionTemplate = document.querySelector("#option");
 
 const optionData = new Map();
 
+var instance = 0;
+var totalSeconds = 0;
+
 function newpoll(data)
 {
     mainContainer.style.visibility = 'hidden';
+    
+    instance = Math.random();
 
     while (options.firstChild) {
         options.removeChild(options.lastChild);
@@ -2086,6 +2134,9 @@ function newpoll(data)
     optionData.clear();
 
     question.innerHTML = data.Question;
+    
+    totalSeconds = data.TimeLimit;
+    
     data.Options.forEach((od) =&gt;
     {
         optionData.set(od.ID, od);
@@ -2098,6 +2149,12 @@ function newpoll(data)
         
         let bar = option.firstElementChild.querySelector(".bar");
         bar.style.backgroundColor = od.Color;
+        
+        if (data.ShowTwitchPredictionChannelPoints)
+        {
+            let channelpoints = option.querySelector(".channelpoints");
+            channelpoints.style.visibility = 'visible';
+        }
 
         options.appendChild(option);
     });
@@ -2108,11 +2165,48 @@ function newpoll(data)
     {
 
     });
+    
+    timerLoop(instance);
+}
+
+function timerLoop(inst)
+{
+    let text = "MM:ss";
+
+    let seconds = totalSeconds % 60;
+    if (seconds &lt; 10) { seconds = "0" + seconds }
+    text = text.replace("SS", totalSeconds);
+    text = text.replace("ss", seconds);
+
+    let totalMinutes = Math.floor(totalSeconds / 60);
+    let minutes = totalMinutes % 60;
+    if (minutes &lt; 10) { minutes = "0" + minutes }
+    text = text.replace("MM", totalMinutes);
+    text = text.replace("mm", minutes);
+
+    let totalHours = Math.floor(totalMinutes / 60);
+    let hours = totalHours % 24;
+    if (hours &lt; 10) { hours = "0" + hours }
+    text = text.replace("HH", totalHours);
+    text = text.replace("hh", hours);
+
+    let days = Math.floor(totalHours / 24);
+    text = text.replace("DD", hours);
+
+    time.innerHTML = text;
+
+    setTimeout(function () {
+        if (totalSeconds &gt; 0 &amp;&amp; instance == inst)
+        {
+            totalSeconds--;
+            timerLoop(inst);
+        }
+    }, 1000);
 }
 
 function update(data)
 {
-    total.innerHTML = data.TotalVotes;
+    total.innerHTML = `${data.TotalVotes} Votes`;
 
     data.Options.forEach((od) =&gt;
     {
@@ -2126,13 +2220,15 @@ function update(data)
             let percentage = option.querySelector(".percentage");
             percentage.innerHTML = `(${od.Percentage}%)`;
             
-            let bar = option.querySelector(".bar");
-        
+            let channelpointamount = option.querySelector(".channelpointamount");
+            channelpointamount.innerHTML = od.ChannelPoints;
+            
             let previous = optionData.get(od.ID);
             optionData.set(od.ID, od);
             
             if (previous.Percentage != od.Percentage)
             {
+                let bar = option.querySelector(".bar");
                 adjustProgress(bar, od.Percentage);
             }
         }
@@ -2157,9 +2253,13 @@ function end(data)
         {
             performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", mainContainer).then((result) =&gt;
             {
+                while (options.firstChild) {
+                    options.removeChild(options.lastChild);
+                }
+                optionData.clear();
                 mainContainer.style.visibility = 'hidden';
             });
-        }, 3000);
+        }, 5000);
     }
 }
 
