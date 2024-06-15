@@ -10443,4 +10443,16 @@ namespace CustomNamespace
   <data name="OverlayPollAtLeastOneApplicableUse" xml:space="preserve">
     <value>At least one applicable use must be selected</value>
   </data>
+  <data name="Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="Years" xml:space="preserve">
+    <value>Years</value>
+  </data>
+  <data name="AutomaticRemoval" xml:space="preserve">
+    <value>Automatic Removal</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
 </root>

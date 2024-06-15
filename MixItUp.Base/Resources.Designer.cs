@@ -1484,6 +1484,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Automatic Removal.
+        /// </summary>
+        public static string AutomaticRemoval {
+            get {
+                return ResourceManager.GetString("AutomaticRemoval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatic Reset.
         /// </summary>
         public static string AutomaticReset {
@@ -4694,6 +4703,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Days.
+        /// </summary>
+        public static string Days {
+            get {
+                return ResourceManager.GetString("Days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deafen.
         /// </summary>
         public static string Deafen {
@@ -5834,6 +5852,15 @@ namespace MixItUp.Base {
         public static string DuplicateProfileName {
             get {
                 return ResourceManager.GetString("DuplicateProfileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duration.
+        /// </summary>
+        public static string Duration {
+            get {
+                return ResourceManager.GetString("Duration", resourceCulture);
             }
         }
         
@@ -26562,6 +26589,15 @@ namespace MixItUp.Base {
         public static string Yearly {
             get {
                 return ResourceManager.GetString("Yearly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Years.
+        /// </summary>
+        public static string Years {
+            get {
+                return ResourceManager.GetString("Years", resourceCulture);
             }
         }
         

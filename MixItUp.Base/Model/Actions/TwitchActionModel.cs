@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
@@ -210,6 +211,14 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
+        public static TwitchActionModel CreateVIPUserAction(string username, DurationSpan automaticRemovalDurationSpan = null)
+        {
+            TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.VIPUser);
+            actionModel.Username = username;
+            actionModel.VIPUserAutomaticRemovalDurationSpan = automaticRemovalDurationSpan;
+            return actionModel;
+        }
+
         public static TwitchActionModel CreateAction(TwitchActionType type)
         {
             return new TwitchActionModel(type);
@@ -317,7 +326,10 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool? ChatSettingsUniqueChatMode = null;
         [DataMember]
-        public int? ChatSettingsNonModeratorChatDuration = null; 
+        public int? ChatSettingsNonModeratorChatDuration = null;
+
+        [DataMember]
+        public DurationSpan VIPUserAutomaticRemovalDurationSpan = null;
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
@@ -422,6 +434,11 @@ namespace MixItUp.Base.Model.Actions
                         {
                             targetUser.Roles.Add(User.UserRoleEnum.TwitchVIP);
                             await ServiceManager.Get<TwitchSessionService>().UserConnection.VIPUser(ServiceManager.Get<TwitchSessionService>().User, twitchUser);
+
+                            if (this.VIPUserAutomaticRemovalDurationSpan != null)
+                            {
+                                ChannelSession.Settings.TwitchVIPAutomaticRemovals[twitchUser.id] = this.VIPUserAutomaticRemovalDurationSpan.GetDateTimeOffsetFromNow();
+                            }
                         }
                         else if (this.ActionType == TwitchActionType.UnVIPUser)
                         {
