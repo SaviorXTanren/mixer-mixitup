@@ -1077,6 +1077,7 @@ namespace MixItUp.Base {
         ///}
         ///
         ///.top {
+        ///  display: flex;
         ///  padding: 10px;
         ///  margin-bottom: -5px;
         ///  border-style: solid;
@@ -1086,7 +1087,7 @@ namespace MixItUp.Base {
         ///}
         ///
         ///.question {
-        ///  word-wrap: break-word;
+        ///
         ///}
         ///
         ///.floatright {
@@ -1111,7 +1112,8 @@ namespace MixItUp.Base {
         ///  display: flex;
         ///  flex-wrap: wrap;
         ///  align-items: left;
-        ///  justify-content: left [rest of string was truncated]&quot;;.
+        ///  justify-content: left;
+        ///  f [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPollDefaultCSS {
             get {

@@ -1971,6 +1971,7 @@ timerLoop();</value>
 }
 
 .top {
+  display: flex;
   padding: 10px;
   margin-bottom: -5px;
   border-style: solid;
@@ -1980,7 +1981,7 @@ timerLoop();</value>
 }
 
 .question {
-  word-wrap: break-word;
+
 }
 
 .floatright {
@@ -2018,19 +2019,18 @@ timerLoop();</value>
 }
 
 .name {
-  word-wrap: break-word;
 
 }
 
-.channelpoints {
+.channelPoints {
   display: inline;
 }
 
-.channelpointamount {
+.channelPointAmount {
   
 }
 
-.channelpointimage {
+.channelPointImage {
   margin-bottom: -3px;
 }
 
@@ -2045,6 +2045,10 @@ timerLoop();</value>
 .bar {
   margin-top: 10px;
   height: {BarHeight}px;
+}
+
+.barBackground {
+  background-color: Black;
 }
 
 @keyframes adjustBarAnimation {
@@ -2086,9 +2090,9 @@ timerLoop();</value>
         &lt;span class="text"&gt;
             &lt;span class="name"&gt;&lt;/span&gt;
             &lt;span class="floatright"&gt;
-                &lt;div class="channelpoints" style="visibility: hidden;"&gt;
-                    &lt;span class="channelpointamount"&gt;0 &lt;/span&gt;
-                    &lt;svg class="channelpointimage" width="{FontSize}" height="{FontSize}" viewBox="0 0 20 20"&gt;
+                &lt;div class="channelPoints" style="visibility: hidden;"&gt;
+                    &lt;span class="channelPointAmount"&gt;0 &lt;/span&gt;
+                    &lt;svg class="channelPointImage" width="{FontSize}" height="{FontSize}" viewBox="0 0 20 20"&gt;
                         &lt;path d="M10 6a4 4 0 0 1 4 4h-2a2 2 0 0 0-2-2V6z"&gt;&lt;/path&gt;
                         &lt;path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-2 0a6 6 0 1 1-12 0 6 6 0 0 1 12 0z" clip-rule="evenodd"&gt;&lt;/path&gt;
                     &lt;/svg&gt;
@@ -2102,7 +2106,9 @@ timerLoop();</value>
             &lt;/span&gt;
         &lt;/span&gt;
 
-        &lt;div class="bar" style="width: 0%" /&gt;
+        &lt;div class="barBackground" style="width: 100%"&gt;
+          &lt;div class="bar" style="width: 0%" /&gt;
+        &lt;/div&gt;
     &lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
@@ -2134,6 +2140,7 @@ function newpoll(data)
     optionData.clear();
 
     question.innerHTML = data.Question;
+    total.innerHTML = "0 Votes";
     
     totalSeconds = data.TimeLimit;
     
@@ -2152,8 +2159,8 @@ function newpoll(data)
         
         if (data.ShowTwitchPredictionChannelPoints)
         {
-            let channelpoints = option.querySelector(".channelpoints");
-            channelpoints.style.visibility = 'visible';
+            let channelPoints = option.querySelector(".channelPoints");
+            channelPoints.style.visibility = 'visible';
         }
 
         options.appendChild(option);
@@ -2220,8 +2227,8 @@ function update(data)
             let percentage = option.querySelector(".percentage");
             percentage.innerHTML = `(${od.Percentage}%)`;
             
-            let channelpointamount = option.querySelector(".channelpointamount");
-            channelpointamount.innerHTML = od.ChannelPoints;
+            let channelPointAmount = option.querySelector(".channelPointAmount");
+            channelPointAmount.innerHTML = od.ChannelPoints;
             
             let previous = optionData.get(od.ID);
             optionData.set(od.ID, od);
