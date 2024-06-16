@@ -165,9 +165,25 @@ namespace MixItUp.Base.Services
             }
             return null;
         }
-        public async Task<MixItUpUpdateModel> GetLatestPublicUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
-        public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
-        public async Task<MixItUpUpdateModel> GetLatestTestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/test"); }
+        public async Task<MixItUpUpdateModel> GetLatestPublicUpdate() { return await this.GetUpdate("public"); }
+        public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetUpdate("preview"); }
+        public async Task<MixItUpUpdateModel> GetLatestTestUpdate() { return await this.GetUpdate("test"); }
+
+        private async Task<MixItUpUpdateModel> GetUpdate(string type)
+        {
+            try
+            {
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                {
+                    return await client.GetAsync<MixItUpUpdateModel>($"https://raw.githubusercontent.com/mixitupapp/mixitupdesktop-data/main/Updates/{type}.json");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return null;
+        }
 
         public async Task SendIssueReport(IssueReportModel report)
         {

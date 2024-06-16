@@ -32,7 +32,7 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            this.NewVersionTextBlock.Text = this.update.Version.ToString();
+            this.NewVersionTextBlock.Text = this.update.FullVersion.ToString();
             this.CurrentVersionTextBlock.Text = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             if (this.update.IsPreview)
