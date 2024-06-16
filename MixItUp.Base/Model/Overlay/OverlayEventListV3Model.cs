@@ -20,9 +20,9 @@ using Twitch.Base.Models.Clients.PubSub.Messages;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayEventListHeaderV3Model : OverlayVisualTextV3ModelBase
+    public class OverlayEventListHeaderV3Model : OverlayHeaderV3ModelBase
     {
-        public OverlayEventListHeaderV3Model() : base(OverlayItemV3Type.Text) { }
+        public OverlayEventListHeaderV3Model() { }
     }
 
     [DataContract]
@@ -33,7 +33,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string DetailsMembershipNamePropertyName = "MembershipName";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayEventListDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayEventListDefaultCSS + "\n\n" + OverlayResources.OverlayTextDefaultCSS;
+        public static readonly string DefaultCSS = OverlayResources.OverlayEventListDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayHeaderTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayEventListDefaultJavascript;
 
         [DataMember]
@@ -258,7 +258,7 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (var kvp in this.Header.GetGenerationProperties())
             {
-                properties["Header" + kvp.Key] = kvp.Value;
+                properties[kvp.Key] = kvp.Value;
             }
 
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;

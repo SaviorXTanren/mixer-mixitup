@@ -382,8 +382,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 if (!string.IsNullOrEmpty(outcome.Name) && string.IsNullOrWhiteSpace(outcome.Color))
                 {
-                    int index = Math.Abs(outcome.Name.GetHashCode() % ColorSchemes.HTMLColors.Count);
-                    outcome.Color = ColorSchemes.HTMLColors.ElementAt(index);
+                    outcome.Color = OverlayItemV3ModelBase.GetRandomHTMLColor(outcome.Name);
                 }
             }
 

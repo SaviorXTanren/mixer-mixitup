@@ -46,9 +46,9 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayEndCreditsHeaderV3Model : OverlayVisualTextV3ModelBase
+    public class OverlayEndCreditsHeaderV3Model : OverlayHeaderV3ModelBase
     {
-        public OverlayEndCreditsHeaderV3Model() : base(OverlayItemV3Type.Text) { }
+        public OverlayEndCreditsHeaderV3Model() { }
     }
 
     [DataContract]
@@ -209,7 +209,7 @@ namespace MixItUp.Base.Model.Overlay
         };
 
         public static readonly string DefaultHTML = OverlayResources.OverlayEndCreditsDefaultHTML;
-        public static readonly string DefaultCSS =  OverlayResources.OverlayEndCreditsDefaultCSS + "\n\n" + OverlayResources.OverlayTextDefaultCSS;
+        public static readonly string DefaultCSS =  OverlayResources.OverlayEndCreditsDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayEndCreditsDefaultJavascript;
 
         [DataMember]
@@ -272,7 +272,7 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (var kvp in this.Header.GetGenerationProperties())
             {
-                properties["Header" + kvp.Key] = kvp.Value;
+                properties[kvp.Key] = kvp.Value;
             }
 
             properties[nameof(this.ScrollSpeed)] = this.ScrollSpeed.ToString();
@@ -295,7 +295,7 @@ namespace MixItUp.Base.Model.Overlay
                 sectionsHTML.Add(sectionHTML);
             }
 
-            properties[nameof(this.Sections)] = string.Join("\n\n", sectionsHTML);
+            properties[nameof(this.Sections)] = string.Join(Environment.NewLine + Environment.NewLine, sectionsHTML);
 
             //properties[nameof(this.ProgressOccurredAnimation)] = this.ProgressOccurredAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement);
             //properties[nameof(this.SegmentCompletedAnimation)] = this.SegmentCompletedAnimation.GenerateAnimationJavascript(OverlayItemV3ModelBase.MainDivElement);

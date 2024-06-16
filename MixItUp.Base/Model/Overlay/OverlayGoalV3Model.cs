@@ -44,7 +44,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string GoalBarCompletionPercentageProperty = "GoalBarCompletionPercentage";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayGoalDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS + "\n\n" + OverlayResources.OverlayGoalDefaultCSS;
+        public static readonly string DefaultCSS = OverlayResources.OverlayGoalDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayGoalDefaultJavascript;
 
         [DataMember]

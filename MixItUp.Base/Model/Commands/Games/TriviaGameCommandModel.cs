@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -205,6 +206,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaAnswersSpecialIdentifier] = string.Join(", ", this.numbersToAnswers.OrderBy(a => a.Key).Select(a => $"{a.Key}) {a.Value}"));
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaCorrectAnswerSpecialIdentifier] = this.question.CorrectAnswer;
 
+            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forTrivia: true);
+
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
             {
@@ -236,12 +239,28 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = (this.WinAmount * winners.Count).ToString();
                 await this.RunSubCommand(this.CorrectAnswerCommand, this.runParameters);
 
+                if (widgets.Count() > 0)
+                {
+                    foreach (OverlayPollV3Model widget in widgets)
+                    {
+                        await widget.End(correctAnswerNumber.ToString());
+                    }
+                }
+
                 await this.PerformCooldown(this.runParameters);
                 this.ClearData();
             }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             await this.RunSubCommand(this.StartedCommand, this.runParameters);
+
+            if (widgets.Count() > 0)
+            {
+                foreach (OverlayPollV3Model widget in widgets)
+                {
+                    await widget.NewTriviaCommand(this.question.Question, this.TimeLimit, this.numbersToAnswers);
+                }
+            }
         }
 
         private async void ChatService_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
@@ -254,6 +273,15 @@ namespace MixItUp.Base.Model.Commands.Games
                     this.runUsers[message.User] = parameters;
                     this.runUserSelections[message.User] = choice;
                     await this.RunSubCommand(this.UserJoinCommand, parameters);
+
+                    IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forTrivia: true);
+                    if (widgets.Count() > 0)
+                    {
+                        foreach (OverlayPollV3Model widget in widgets)
+                        {
+                            await widget.UpdateTriviaCommand(choice);
+                        }
+                    }
                 }
             }
             catch (Exception ex)

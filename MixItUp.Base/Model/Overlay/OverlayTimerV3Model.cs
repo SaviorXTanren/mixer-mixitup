@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
@@ -21,7 +22,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public static readonly string DefaultHTML = OverlayResources.OverlayTimerDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
-        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + "\n\n" + OverlayResources.OverlayTimerDefaultJavascript;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTimerDefaultJavascript;
 
         [DataMember]
         public string DisplayFormat { get; set; }

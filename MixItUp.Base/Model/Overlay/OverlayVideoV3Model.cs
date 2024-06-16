@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public static readonly string DefaultHTML = OverlayResources.OverlayVideoDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayVideoDefaultCSS;
-        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + "\n\n" + OverlayResources.OverlayVideoActionDefaultJavascript;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayVideoActionDefaultJavascript;
 
         [DataMember]
         public string FilePath { get; set; }

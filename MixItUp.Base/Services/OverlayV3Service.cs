@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services.External;
@@ -751,12 +752,18 @@ namespace MixItUp.Base.Services
 
         public void SetHTMLData(string id, string data)
         {
-            this.htmlData[id] = data;
+            lock (this.htmlData)
+            {
+                this.htmlData[id] = data;
+            }
         }
 
         public void RemoveHTMLData(string id)
         {
-            this.htmlData.Remove(id);
+            lock (this.htmlData)
+            {
+                this.htmlData.Remove(id);
+            }
         }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
@@ -791,12 +798,26 @@ namespace MixItUp.Base.Services
                 {
                     string id = url.Replace(OverlayDataPrefix, string.Empty);
                     id = id.Trim(new char[] { '/' });
-                    if (this.htmlData.TryGetValue(id, out string data))
+
+                    string data = null;
+                    lock (this.htmlData)
                     {
-                        if (!ChannelSession.IsDebug())
+                        this.htmlData.TryGetValue(id, out data);
+                    }
+
+                    if (!string.IsNullOrEmpty(data))
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () =>
                         {
-                            this.htmlData.Remove(id);
-                        }    
+                            await Task.Delay(1000);
+                            lock (this.htmlData)
+                            {
+                                this.htmlData.Remove(id);
+                            }
+                        });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                         await this.CloseConnection(listenerContext, HttpStatusCode.OK, data);
                     }
                 }

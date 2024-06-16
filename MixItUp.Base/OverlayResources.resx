@@ -866,17 +866,6 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     align-self: end;
     margin-bottom: 10px;
     margin-right: 10px;
-}
-
-.header {
-    font-size: {HeaderFontSize}px;
-    color: {HeaderFontColor};
-    font-family: '{HeaderFontFamily}';
-    font-weight: {HeaderFontWeight};
-    text-decoration: {HeaderTextDecoration};
-    font-style: {HeaderFontStyle};
-    text-align: {HeaderTextAlignment};
-    text-shadow: {HeaderShadowColor};
 }</value>
   </data>
   <data name="OverlayEventListDefaultHTML" xml:space="preserve">
@@ -1269,6 +1258,18 @@ reset({
     "GoalMaxAmount": {GoalMaxAmount},
 });</value>
   </data>
+  <data name="OverlayHeaderTextDefaultCSS" xml:space="preserve">
+    <value>.header {
+    font-size: {HeaderFontSize}px;
+    color: {HeaderFontColor};
+    font-family: '{HeaderFontFamily}';
+    font-weight: {HeaderFontWeight};
+    text-decoration: {HeaderTextDecoration};
+    font-style: {HeaderFontStyle};
+    text-align: {HeaderTextAlignment};
+    text-shadow: {HeaderShadowColor};
+}</value>
+  </data>
   <data name="OverlayHTMLWidgetDefaultJavascript" xml:space="preserve">
     <value>function update(data)
 {
@@ -1496,17 +1497,6 @@ else
     align-self: end;
     margin-bottom: 10px;
     margin-right: 10px;
-}
-
-.header {
-    font-size: {HeaderFontSize}px;
-    color: {HeaderFontColor};
-    font-family: '{HeaderFontFamily}';
-    font-weight: {HeaderFontWeight};
-    text-decoration: {HeaderTextDecoration};
-    font-style: {HeaderFontStyle};
-    text-align: {HeaderTextAlignment};
-    text-shadow: {HeaderShadowColor};
 }</value>
   </data>
   <data name="OverlayLeaderboardDefaultHTML" xml:space="preserve">
@@ -1974,6 +1964,324 @@ function checkForAdditionalTime()
 }
 
 timerLoop();</value>
+  </data>
+  <data name="OverlayPollDefaultCSS" xml:space="preserve">
+    <value>.mainContainer {
+  width: {Width};
+}
+
+.top {
+  display: flex;
+  padding: 10px;
+  margin-bottom: -5px;
+  border-style: solid;
+  border-width: 5px;
+  border-color: {BorderColor};
+  background-color: {BackgroundColor};
+}
+
+.question {
+
+}
+
+.floatright {
+  float: right;
+}
+
+.box120 {
+  display: inline-grid;
+  justify-content: flex-end;
+  width: 120px;
+}
+
+.total {
+
+}
+
+.time {
+
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: left;
+  justify-content: left;
+  flex-direction: column;
+  border-style: solid;
+  border-width: 5px;
+  border-color: {BorderColor};
+  background-color: {BackgroundColor};
+}
+
+.option {
+  margin: 10px;
+}
+
+.name {
+
+}
+
+.channelPoints {
+  display: inline;
+}
+
+.channelPointAmount {
+  
+}
+
+.channelPointImage {
+  margin-bottom: -3px;
+}
+
+.amount {
+
+}
+
+.percentage {
+
+}
+
+.bar {
+  margin-top: 10px;
+  height: {BarHeight}px;
+}
+
+.barBackground {
+  background-color: Black;
+}
+
+@keyframes adjustBarAnimation {
+  from {
+    width: var(--startPercentage);
+  }
+  to {
+    width: var(--endPercentage);
+  }
+}
+
+.adjustBar {
+  --startPercentage: 0%;
+  --endPercentage: 0%;
+  animation-name: adjustBarAnimation;
+  animation-duration: 2s;
+}</value>
+  </data>
+  <data name="OverlayPollDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="mainContainer" class="mainContainer" style="visibility: hidden"&gt;
+    &lt;div class="top"&gt;
+        &lt;span class="header"&gt;
+            &lt;span id="question" class="question"&gt;&lt;/span&gt;
+            &lt;span class="floatright"&gt;
+                &lt;span id="total" class="total"&gt;0 Votes&lt;/span&gt;
+                &lt;div class="box120"&gt;
+                    &lt;span id="time"&gt;&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/span&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+    
+    &lt;div id="options" class="options"&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;template id="option"&gt;
+    &lt;div class="option"&gt;
+        &lt;span class="text"&gt;
+            &lt;span class="name"&gt;&lt;/span&gt;
+            &lt;span class="floatright"&gt;
+                &lt;div class="channelPoints" style="visibility: hidden;"&gt;
+                    &lt;span class="channelPointAmount"&gt;0 &lt;/span&gt;
+                    &lt;svg class="channelPointImage" width="{FontSize}" height="{FontSize}" viewBox="0 0 20 20"&gt;
+                        &lt;path d="M10 6a4 4 0 0 1 4 4h-2a2 2 0 0 0-2-2V6z"&gt;&lt;/path&gt;
+                        &lt;path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-2 0a6 6 0 1 1-12 0 6 6 0 0 1 12 0z" clip-rule="evenodd"&gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;div class="box120"&gt;
+                    &lt;span class="amount"&gt;0 Votes&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class="box120"&gt;
+                    &lt;span class="percentage"&gt;(0%)&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/span&gt;
+        &lt;/span&gt;
+
+        &lt;div class="barBackground" style="width: 100%"&gt;
+          &lt;div class="bar" style="width: 0%" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</value>
+  </data>
+  <data name="OverlayPollDefaultJavascript" xml:space="preserve">
+    <value>const mainContainer = document.getElementById("mainContainer");
+
+const question = document.getElementById("question");
+const total = document.getElementById("total");
+const time = document.getElementById("time");
+
+const options = document.getElementById("options");
+
+const optionTemplate = document.querySelector("#option");
+
+const optionData = new Map();
+
+var instance = 0;
+var totalSeconds = 0;
+
+function newpoll(data)
+{
+    mainContainer.style.visibility = 'hidden';
+    
+    instance = Math.random();
+
+    while (options.firstChild) {
+        options.removeChild(options.lastChild);
+    }
+    optionData.clear();
+
+    question.innerHTML = data.Question;
+    total.innerHTML = "0 Votes";
+    
+    totalSeconds = data.TimeLimit;
+    
+    data.Options.forEach((od) =&gt;
+    {
+        optionData.set(od.ID, od);
+        
+        let option = optionTemplate.content.cloneNode(true);
+        option.firstElementChild.setAttribute("id", "option" + od.ID);
+        
+        let name = option.firstElementChild.querySelector(".name");
+        name.innerHTML = od.Name;
+        
+        let bar = option.firstElementChild.querySelector(".bar");
+        bar.style.backgroundColor = od.Color;
+        
+        if (data.ShowTwitchPredictionChannelPoints)
+        {
+            let channelPoints = option.querySelector(".channelPoints");
+            channelPoints.style.visibility = 'visible';
+        }
+
+        options.appendChild(option);
+    });
+    
+    mainContainer.style.visibility = 'visible';
+
+    performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", mainContainer).then((result) =&gt;
+    {
+
+    });
+    
+    timerLoop(instance);
+}
+
+function timerLoop(inst)
+{
+    let text = "MM:ss";
+
+    let seconds = totalSeconds % 60;
+    if (seconds &lt; 10) { seconds = "0" + seconds }
+    text = text.replace("SS", totalSeconds);
+    text = text.replace("ss", seconds);
+
+    let totalMinutes = Math.floor(totalSeconds / 60);
+    let minutes = totalMinutes % 60;
+    if (minutes &lt; 10) { minutes = "0" + minutes }
+    text = text.replace("MM", totalMinutes);
+    text = text.replace("mm", minutes);
+
+    let totalHours = Math.floor(totalMinutes / 60);
+    let hours = totalHours % 24;
+    if (hours &lt; 10) { hours = "0" + hours }
+    text = text.replace("HH", totalHours);
+    text = text.replace("hh", hours);
+
+    let days = Math.floor(totalHours / 24);
+    text = text.replace("DD", hours);
+
+    time.innerHTML = text;
+
+    setTimeout(function () {
+        if (totalSeconds &gt; 0 &amp;&amp; instance == inst)
+        {
+            totalSeconds--;
+            timerLoop(inst);
+        }
+    }, 1000);
+}
+
+function update(data)
+{
+    total.innerHTML = `${data.TotalVotes} Votes`;
+
+    data.Options.forEach((od) =&gt;
+    {
+        if (optionData.has(od.ID))
+        {
+            let option = document.getElementById("option" + od.ID);
+            
+            let amount = option.querySelector(".amount");
+            amount.innerHTML = `${od.Amount} Votes`;
+            
+            let percentage = option.querySelector(".percentage");
+            percentage.innerHTML = `(${od.Percentage}%)`;
+            
+            let channelPointAmount = option.querySelector(".channelPointAmount");
+            channelPointAmount.innerHTML = od.ChannelPoints;
+            
+            let previous = optionData.get(od.ID);
+            optionData.set(od.ID, od);
+            
+            if (previous.Percentage != od.Percentage)
+            {
+                let bar = option.querySelector(".bar");
+                adjustProgress(bar, od.Percentage);
+            }
+        }
+    });
+}
+
+function end(data)
+{
+    if (optionData.has(data.WinnerID))
+    {
+        optionData.forEach((value, key) =&gt; {
+            let option = document.getElementById("option" + key);
+            let bar = option.querySelector(".bar");
+            bar.style.backgroundColor = "DimGray";
+        });
+        
+        let option = document.getElementById("option" + data.WinnerID);
+        let bar = option.querySelector(".bar");
+        bar.style.backgroundColor = "Gold";
+    
+        setTimeout(() =&gt;
+        {
+            performAnimation("{ExitAnimationFramework}", "{ExitAnimationName}", mainContainer).then((result) =&gt;
+            {
+                while (options.firstChild) {
+                    options.removeChild(options.lastChild);
+                }
+                optionData.clear();
+                mainContainer.style.visibility = 'hidden';
+            });
+        }, 5000);
+    }
+}
+
+function adjustProgress(bar, newPercentage)
+{
+    bar.style.setProperty("--startPercentage", bar.style.width);
+    bar.style.setProperty("--endPercentage", newPercentage + "%");
+    bar.style.width = newPercentage + "%";
+    bar.classList.add("adjustBar");
+    setTimeout(() =&gt; {
+        bar.classList.remove("adjustBar");
+    }, 2000);
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
     <value>.maindiv {

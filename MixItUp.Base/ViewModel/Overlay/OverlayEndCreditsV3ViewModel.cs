@@ -178,15 +178,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
     }
 
-    public class OverlayEndCreditsHeaderV3ViewModel : OverlayVisualTextV3ViewModelBase
+    public class OverlayEndCreditsHeaderV3ViewModel : OverlayHeaderV3ViewModelBase
     {
-        public override string DefaultHTML { get { return string.Empty; } }
-
-        public override string DefaultCSS { get { return string.Empty; } }
-
-        public override string DefaultJavascript { get { return string.Empty; } }
-
-        public OverlayEndCreditsHeaderV3ViewModel() : base(OverlayItemV3Type.Text) { }
+        public OverlayEndCreditsHeaderV3ViewModel() { }
 
         public OverlayEndCreditsHeaderV3ViewModel(OverlayEndCreditsHeaderV3Model model) : base(model) { }
 

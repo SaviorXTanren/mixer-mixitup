@@ -475,9 +475,7 @@ namespace MixItUp.Base {
         ///    align-self: end;
         ///    margin-bottom: 10px;
         ///    margin-right: 10px;
-        ///}
-        ///
-        ///.heade [rest of string was truncated]&quot;;.
+        ///}.
         /// </summary>
         public static string OverlayEventListDefaultCSS {
             get {
@@ -705,6 +703,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .header {
+        ///    font-size: {HeaderFontSize}px;
+        ///    color: {HeaderFontColor};
+        ///    font-family: &apos;{HeaderFontFamily}&apos;;
+        ///    font-weight: {HeaderFontWeight};
+        ///    text-decoration: {HeaderTextDecoration};
+        ///    font-style: {HeaderFontStyle};
+        ///    text-align: {HeaderTextAlignment};
+        ///    text-shadow: {HeaderShadowColor};
+        ///}.
+        /// </summary>
+        public static string OverlayHeaderTextDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayHeaderTextDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to function update(data)
         ///{
         ///
@@ -913,9 +929,7 @@ namespace MixItUp.Base {
         ///    align-self: end;
         ///    margin-bottom: 10px;
         ///    margin-right: 10px;
-        ///}
-        ///
-        ///.heade [rest of string was truncated]&quot;;.
+        ///}.
         /// </summary>
         public static string OverlayLeaderboardDefaultCSS {
             get {
@@ -1054,6 +1068,109 @@ namespace MixItUp.Base {
         public static string OverlayPersistentTimerDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayPersistentTimerDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .mainContainer {
+        ///  width: {Width};
+        ///}
+        ///
+        ///.top {
+        ///  display: flex;
+        ///  padding: 10px;
+        ///  margin-bottom: -5px;
+        ///  border-style: solid;
+        ///  border-width: 5px;
+        ///  border-color: {BorderColor};
+        ///  background-color: {BackgroundColor};
+        ///}
+        ///
+        ///.question {
+        ///
+        ///}
+        ///
+        ///.floatright {
+        ///  float: right;
+        ///}
+        ///
+        ///.box120 {
+        ///  display: inline-grid;
+        ///  justify-content: flex-end;
+        ///  width: 120px;
+        ///}
+        ///
+        ///.total {
+        ///
+        ///}
+        ///
+        ///.time {
+        ///
+        ///}
+        ///
+        ///.options {
+        ///  display: flex;
+        ///  flex-wrap: wrap;
+        ///  align-items: left;
+        ///  justify-content: left;
+        ///  f [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayPollDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayPollDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div id=&quot;mainContainer&quot; class=&quot;mainContainer&quot; style=&quot;visibility: hidden&quot;&gt;
+        ///    &lt;div class=&quot;top&quot;&gt;
+        ///        &lt;span class=&quot;header&quot;&gt;
+        ///            &lt;span id=&quot;question&quot; class=&quot;question&quot;&gt;&lt;/span&gt;
+        ///            &lt;span class=&quot;floatright&quot;&gt;
+        ///                &lt;span id=&quot;total&quot; class=&quot;total&quot;&gt;0 Votes&lt;/span&gt;
+        ///                &lt;div class=&quot;box120&quot;&gt;
+        ///                    &lt;span id=&quot;time&quot;&gt;&lt;/span&gt;
+        ///                &lt;/div&gt;
+        ///            &lt;/span&gt;
+        ///        &lt;/span&gt;
+        ///    &lt;/div&gt;
+        ///    
+        ///    &lt;div id=&quot;options&quot; class=&quot;options&quot;&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/div&gt;
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayPollDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayPollDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const mainContainer = document.getElementById(&quot;mainContainer&quot;);
+        ///
+        ///const question = document.getElementById(&quot;question&quot;);
+        ///const total = document.getElementById(&quot;total&quot;);
+        ///const time = document.getElementById(&quot;time&quot;);
+        ///
+        ///const options = document.getElementById(&quot;options&quot;);
+        ///
+        ///const optionTemplate = document.querySelector(&quot;#option&quot;);
+        ///
+        ///const optionData = new Map();
+        ///
+        ///var instance = 0;
+        ///var totalSeconds = 0;
+        ///
+        ///function newpoll(data)
+        ///{
+        ///    mainContainer.style.visibility = &apos;hidden&apos;;
+        ///    
+        ///    instance = Mat [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayPollDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayPollDefaultJavascript", resourceCulture);
             }
         }
         

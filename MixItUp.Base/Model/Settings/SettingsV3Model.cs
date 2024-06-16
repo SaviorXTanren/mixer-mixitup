@@ -627,6 +627,13 @@ namespace MixItUp.Base.Model.Settings
 
         #endregion Currency
 
+        #region Twitch
+
+        [DataMember]
+        public Dictionary<string, DateTimeOffset> TwitchVIPAutomaticRemovals { get; set; } = new Dictionary<string, DateTimeOffset>();
+
+        #endregion Twitch
+
         [DataMember]
         public List<string> RecentStreamTitles { get; set; } = new List<string>();
         [DataMember]

@@ -14,15 +14,9 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
-    public class OverlayLeaderboardHeaderV3ViewModel : OverlayVisualTextV3ViewModelBase
+    public class OverlayLeaderboardHeaderV3ViewModel : OverlayHeaderV3ViewModelBase
     {
-        public override string DefaultHTML { get { return string.Empty; } }
-
-        public override string DefaultCSS { get { return string.Empty; } }
-
-        public override string DefaultJavascript { get { return string.Empty; } }
-
-        public OverlayLeaderboardHeaderV3ViewModel() : base(OverlayItemV3Type.Text) { }
+        public OverlayLeaderboardHeaderV3ViewModel() { }
 
         public OverlayLeaderboardHeaderV3ViewModel(OverlayLeaderboardHeaderV3Model model) : base(model) { }
 

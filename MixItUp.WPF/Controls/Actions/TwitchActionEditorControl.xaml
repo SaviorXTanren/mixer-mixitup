@@ -338,6 +338,32 @@
             </Grid>
         </Grid>
 
+        <Grid Grid.Row="2" Visibility="{Binding ShowVIPUserSettingsGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Row="0" Text="{Binding Username}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Username}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutomaticRemoval}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+
+            <TextBox Grid.Column="4" Width="80" Text="{Binding VIPUserAutomaticRemovalAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <ComboBox Grid.Column="6" Width="100" ItemsSource="{Binding VIPUserAutomaticRemovalDurations}" SelectedItem="{Binding SelectedVIPUserAutomaticRemovalDuration}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Duration}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+
         <ActionControls:SubActionContainerControl Grid.Row="3" Visibility="{Binding ShowSubActions, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0" />
     </Grid>
 </local:ActionEditorControlBase>

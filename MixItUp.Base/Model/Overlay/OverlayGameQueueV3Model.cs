@@ -1,13 +1,11 @@
 ﻿using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -16,7 +14,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayGameQueueV3Model : OverlayVisualTextV3ModelBase
     {
         public static readonly string DefaultHTML = OverlayResources.OverlayGameQueueDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayGameQueueDefaultCSS + "\n\n" + OverlayResources.OverlayTextDefaultCSS;
+        public static readonly string DefaultCSS = OverlayResources.OverlayGameQueueDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayGameQueueDefaultJavascript;
 
         [DataMember]

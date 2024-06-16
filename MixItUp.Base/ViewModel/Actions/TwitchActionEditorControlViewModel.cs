@@ -28,19 +28,20 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("ShowUsernameGrid");
-                this.NotifyPropertyChanged("ShowTextGrid");
-                this.NotifyPropertyChanged("ShowSetCustomTagsGrid");
-                this.NotifyPropertyChanged("ShowAdGrid");
-                this.NotifyPropertyChanged("ShowClipsGrid");
-                this.NotifyPropertyChanged("ShowStreamMarkerGrid");
-                this.NotifyPropertyChanged("ShowUpdateChannelPointRewardGrid");
-                this.NotifyPropertyChanged("ShowPollGrid");
-                this.NotifyPropertyChanged("ShowPredictionGrid");
-                this.NotifyPropertyChanged("ShowSubActions");
-                this.NotifyPropertyChanged("ShowSendAnnouncementGrid");
-                this.NotifyPropertyChanged("ShowSetContentClassificationLabelsGrid");
-                this.NotifyPropertyChanged("ShowSetChatSettingsGrid");
+                this.NotifyPropertyChanged(nameof(this.ShowUsernameGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowTextGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowSetCustomTagsGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowAdGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowClipsGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowStreamMarkerGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowUpdateChannelPointRewardGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowPollGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowPredictionGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowSubActions));
+                this.NotifyPropertyChanged(nameof(this.ShowSendAnnouncementGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowSetContentClassificationLabelsGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowSetChatSettingsGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowVIPUserSettingsGrid));
             }
         }
         private TwitchActionType selectedActionType;
@@ -63,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Actions
             get
             {
                 return this.SelectedActionType == TwitchActionType.Raid ||
-                    this.SelectedActionType == TwitchActionType.VIPUser || this.SelectedActionType == TwitchActionType.UnVIPUser ||
+                    this.SelectedActionType == TwitchActionType.UnVIPUser ||
                     this.SelectedActionType == TwitchActionType.SendShoutout;
             }
         }
@@ -599,6 +600,32 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private int selectedChatSettingsNonModeratorChatDuration;
 
+        public bool ShowVIPUserSettingsGrid { get { return this.SelectedActionType == TwitchActionType.VIPUser; } }
+
+        public int VIPUserAutomaticRemovalAmount
+        {
+            get { return this.vipUserAutomaticRemovalAmount; }
+            set
+            {
+                this.vipUserAutomaticRemovalAmount = value > 0 ? value : 0;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int vipUserAutomaticRemovalAmount;
+
+        public IEnumerable<DurationSpanTypeEnum> VIPUserAutomaticRemovalDurations { get; set; } = EnumHelper.GetEnumList<DurationSpanTypeEnum>();
+
+        public DurationSpanTypeEnum SelectedVIPUserAutomaticRemovalDuration
+        {
+            get { return this.selectedVIPUserAutomaticRemovalDuration; }
+            set
+            {
+                this.selectedVIPUserAutomaticRemovalDuration = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private DurationSpanTypeEnum selectedVIPUserAutomaticRemovalDuration = DurationSpanTypeEnum.Days;
+
         private IEnumerable<string> existingTags = null;
         private IEnumerable<string> existingContentClassificationLabelIDs = null;
 
@@ -725,6 +752,15 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.ChatSettingsEmoteMode = action.ChatSettingsEmoteMode;
                 this.ChatSettingsUniqueChatMode = action.ChatSettingsUniqueChatMode;
             }
+            else if (this.ShowVIPUserSettingsGrid)
+            {
+                this.Username = action.Username;
+                if (action.VIPUserAutomaticRemovalDurationSpan != null)
+                {
+                    this.SelectedVIPUserAutomaticRemovalDuration = action.VIPUserAutomaticRemovalDurationSpan.Type;
+                    this.VIPUserAutomaticRemovalAmount = action.VIPUserAutomaticRemovalDurationSpan.Amount;
+                }
+            }
         }
 
         public TwitchActionEditorControlViewModel() : base() { }
@@ -838,6 +874,13 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (string.IsNullOrEmpty(this.Message))
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionMessageMissing);
+                }
+            }
+            else if (this.ShowVIPUserSettingsGrid)
+            {
+                if (string.IsNullOrEmpty(this.Username))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionUsernameMissing);
                 }
             }
             return await base.Validate();
@@ -959,6 +1002,15 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
 
                 return TwitchActionModel.CreateSetChatSettingsAction(slowModeDuration, followerModeDuration, this.ChatSettingsSubscriberMode, this.ChatSettingsEmoteMode, this.ChatSettingsUniqueChatMode, nonModeratorChatDelayDuration);
+            }
+            else if (this.ShowVIPUserSettingsGrid)
+            {
+                DurationSpan duration = null;
+                if (this.VIPUserAutomaticRemovalAmount > 0)
+                {
+                    duration = new DurationSpan(this.SelectedVIPUserAutomaticRemovalDuration, this.VIPUserAutomaticRemovalAmount);
+                }
+                return TwitchActionModel.CreateVIPUserAction(this.Username, duration);
             }
             else
             {

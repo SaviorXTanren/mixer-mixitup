@@ -347,6 +347,14 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
+        public void SubtractAmount(UserV2Model user, int amount)
+        {
+            if (!user.IsSpecialtyExcluded)
+            {
+                this.SetAmount(user, this.GetAmount(user) - amount);
+            }
+        }
+
         public void ResetAmount(UserV2ViewModel user) { this.SetAmount(user, 0); }
 
         public RankModel GetRank(UserV2ViewModel user)
