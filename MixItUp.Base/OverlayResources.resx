@@ -1972,6 +1972,7 @@ timerLoop();</value>
 
 .top {
   display: flex;
+  justify-content: space-between;
   padding: 10px;
   margin-bottom: -5px;
   border-style: solid;
@@ -2031,7 +2032,7 @@ timerLoop();</value>
 }
 
 .channelPointImage {
-  margin-bottom: -3px;
+  margin-bottom: -4px;
 }
 
 .amount {
@@ -2043,7 +2044,6 @@ timerLoop();</value>
 }
 
 .bar {
-  margin-top: 10px;
   height: {BarHeight}px;
 }
 
@@ -2070,15 +2070,13 @@ timerLoop();</value>
   <data name="OverlayPollDefaultHTML" xml:space="preserve">
     <value>&lt;div id="mainContainer" class="mainContainer" style="visibility: hidden"&gt;
     &lt;div class="top"&gt;
-        &lt;span class="header"&gt;
-            &lt;span id="question" class="question"&gt;&lt;/span&gt;
-            &lt;span class="floatright"&gt;
-                &lt;span id="total" class="total"&gt;0 Votes&lt;/span&gt;
-                &lt;div class="box120"&gt;
-                    &lt;span id="time"&gt;&lt;/span&gt;
-                &lt;/div&gt;
-            &lt;/span&gt;
-        &lt;/span&gt;
+        &lt;span id="question" class="header question"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div class="top"&gt;
+        &lt;span id="total" class="header total"&gt;0 Votes&lt;/span&gt;
+
+        &lt;span id="time" class="header floatright time"&gt;&lt;/span&gt;
     &lt;/div&gt;
     
     &lt;div id="options" class="options"&gt;
@@ -2087,27 +2085,25 @@ timerLoop();</value>
 
 &lt;template id="option"&gt;
     &lt;div class="option"&gt;
-        &lt;span class="text"&gt;
-            &lt;span class="name"&gt;&lt;/span&gt;
-            &lt;span class="floatright"&gt;
-                &lt;div class="channelPoints" style="visibility: hidden;"&gt;
-                    &lt;span class="channelPointAmount"&gt;0 &lt;/span&gt;
-                    &lt;svg class="channelPointImage" width="{FontSize}" height="{FontSize}" viewBox="0 0 20 20"&gt;
-                        &lt;path d="M10 6a4 4 0 0 1 4 4h-2a2 2 0 0 0-2-2V6z"&gt;&lt;/path&gt;
-                        &lt;path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-2 0a6 6 0 1 1-12 0 6 6 0 0 1 12 0z" clip-rule="evenodd"&gt;&lt;/path&gt;
-                    &lt;/svg&gt;
-                &lt;/div&gt;
-                &lt;div class="box120"&gt;
-                    &lt;span class="amount"&gt;0 Votes&lt;/span&gt;
-                &lt;/div&gt;
-                &lt;div class="box120"&gt;
-                    &lt;span class="percentage"&gt;(0%)&lt;/span&gt;
-                &lt;/div&gt;
-            &lt;/span&gt;
-        &lt;/span&gt;
+        &lt;span class="text name"&gt;&lt;/span&gt;
 
         &lt;div class="barBackground" style="width: 100%"&gt;
-          &lt;div class="bar" style="width: 0%" /&gt;
+          &lt;div class="bar" style="width: 0%"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div&gt;
+            &lt;span class="text"&gt;
+                &lt;span class="amount"&gt;0 Votes&lt;/span&gt;
+                &lt;span class="percentage"&gt;(0%)&lt;/span&gt;
+            &lt;/span&gt;
+
+            &lt;div class="floatright text channelPoints" style="visibility: hidden;"&gt;
+                &lt;span class="channelPointAmount"&gt;0 &lt;/span&gt;
+                &lt;svg class="channelPointImage" width="{FontSize}" height="{FontSize}" viewBox="0 0 20 20"&gt;
+                    &lt;path d="M10 6a4 4 0 0 1 4 4h-2a2 2 0 0 0-2-2V6z"&gt;&lt;/path&gt;
+                    &lt;path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-2 0a6 6 0 1 1-12 0 6 6 0 0 1 12 0z" clip-rule="evenodd"&gt;&lt;/path&gt;
+                &lt;/svg&gt;
+            &lt;/div&gt;
         &lt;/div&gt;
     &lt;/div&gt;
 &lt;/template&gt;</value>
