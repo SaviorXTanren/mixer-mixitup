@@ -353,47 +353,28 @@ namespace MixItUp.Installer
             this.IsOperationIndeterminate = true;
             this.OperationProgress = 0;
 
-            string type = "public";
+            string url = "https://api.mixitupapp.com/api/updates";
             if (preview)
             {
-                type = "preview";
+                url = "https://api.mixitupapp.com/api/updates/preview";
             }
             else if (test)
             {
-                type = "test";
+                url = "https://api.mixitupapp.com/api/updates/test";
             }
 
-            string url = $"https://raw.githubusercontent.com/mixitupapp/mixitupdesktop-data/main/Updates/{type}.json";
-
-            Exception updateException = null;
-            for (int i = 0; i < 3; i++)
+            using (HttpClient client = new HttpClient())
             {
-                try
-                {
-                    using (HttpClient client = new HttpClient())
-                    {
-                        client.Timeout = new TimeSpan(0, 0, 5 * (i + 1));
+                client.Timeout = new TimeSpan(0, 0, 5);
 
-                        HttpResponseMessage response = await client.GetAsync(url);
-                        if (response.IsSuccessStatusCode)
-                        {
-                            string responseString = await response.Content.ReadAsStringAsync();
-                            JObject jobj = JObject.Parse(responseString);
-                            return jobj.ToObject<MixItUpUpdateModel>();
-                        }
-                    }
-                }
-                catch (Exception ex)
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
                 {
-                    updateException = ex;
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    JObject jobj = JObject.Parse(responseString);
+                    return jobj.ToObject<MixItUpUpdateModel>();
                 }
             }
-
-            if (updateException != null)
-            {
-                throw updateException;
-            }
-
             return null;
         }
 
