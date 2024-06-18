@@ -353,28 +353,47 @@ namespace MixItUp.Installer
             this.IsOperationIndeterminate = true;
             this.OperationProgress = 0;
 
-            string url = "https://api.mixitupapp.com/api/updates";
+            string type = "public";
             if (preview)
             {
-                url = "https://api.mixitupapp.com/api/updates/preview";
+                type = "preview";
             }
             else if (test)
             {
-                url = "https://api.mixitupapp.com/api/updates/test";
+                type = "test";
             }
 
-            using (HttpClient client = new HttpClient())
-            {
-                client.Timeout = new TimeSpan(0, 0, 5);
+            string url = $"https://raw.githubusercontent.com/mixitupapp/mixitupdesktop-data/main/Updates/{type}.json";
 
-                HttpResponseMessage response = await client.GetAsync(url);
-                if (response.IsSuccessStatusCode)
+            Exception updateException = null;
+            for (int i = 0; i < 3; i++)
+            {
+                try
                 {
-                    string responseString = await response.Content.ReadAsStringAsync();
-                    JObject jobj = JObject.Parse(responseString);
-                    return jobj.ToObject<MixItUpUpdateModel>();
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.Timeout = new TimeSpan(0, 0, 5 * (i + 1));
+
+                        HttpResponseMessage response = await client.GetAsync(url);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string responseString = await response.Content.ReadAsStringAsync();
+                            JObject jobj = JObject.Parse(responseString);
+                            return jobj.ToObject<MixItUpUpdateModel>();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    updateException = ex;
                 }
             }
+
+            if (updateException != null)
+            {
+                throw updateException;
+            }
+
             return null;
         }
 

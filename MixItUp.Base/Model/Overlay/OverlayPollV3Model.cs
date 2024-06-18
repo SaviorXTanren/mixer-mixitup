@@ -195,6 +195,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.currentOptions.TryGetValue(outcome.ID, out OverlayPollOptionV3Model model))
                 {
                     model.Amount = outcome.Users;
+                    model.ChannelPoints = outcome.ChannelPoints;
                 }
             }
             await this.Update();
