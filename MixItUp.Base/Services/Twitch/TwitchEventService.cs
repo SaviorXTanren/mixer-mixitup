@@ -1407,7 +1407,7 @@ namespace MixItUp.Base.Services.Twitch
             EventService.TwitchBitsCheeredOccurred(bitsCheered);
         }
 
-        private async void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel packet)
+        public async void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel packet)
         {
             UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: packet.user_id, platformUsername: packet.user_name);
             if (user == null)

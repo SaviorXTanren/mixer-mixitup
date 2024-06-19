@@ -51,6 +51,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetEnableInternal();
 
+            this.RemoveEventHandlers();
+
             ChatService.OnChatUserBanned += OnChatUserBanned;
 
             if (this.Chatters || this.ChatMessages)
@@ -107,20 +109,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetDisableInternal();
 
-            ChatService.OnChatUserBanned -= OnChatUserBanned;
-            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
-            ChatService.OnChatMessageDeleted -= OnChatMessageDeleted;
-            ChatService.OnChatCleared -= OnChatCleared;
-            EventService.OnFollowOccurred -= OnFollow;
-            EventService.OnRaidOccurred -= OnRaid;
-            EventService.OnSubscribeOccurred -= OnSubscribe;
-            EventService.OnResubscribeOccurred -= OnSubscribe;
-            EventService.OnSubscriptionGiftedOccurred -= OnSubscribe;
-            EventService.OnMassSubscriptionsGiftedOccurred -= OnMassSubscription;
-            EventService.OnDonationOccurred -= OnDonation;
-            EventService.OnTwitchBitsCheeredOccurred -= OnTwitchBits;
-            EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
-            EventService.OnYouTubeSuperChatOccurred -= OnYouTubeSuperChat;
+            this.RemoveEventHandlers();
         }
 
         protected virtual void OnChatUserBanned(object sender, UserV2ViewModel user) { }
@@ -153,6 +142,24 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.OnTrovoSpell(sender, spell);
             }
+        }
+
+        private void RemoveEventHandlers()
+        {
+            ChatService.OnChatUserBanned -= OnChatUserBanned;
+            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
+            ChatService.OnChatMessageDeleted -= OnChatMessageDeleted;
+            ChatService.OnChatCleared -= OnChatCleared;
+            EventService.OnFollowOccurred -= OnFollow;
+            EventService.OnRaidOccurred -= OnRaid;
+            EventService.OnSubscribeOccurred -= OnSubscribe;
+            EventService.OnResubscribeOccurred -= OnSubscribe;
+            EventService.OnSubscriptionGiftedOccurred -= OnSubscribe;
+            EventService.OnMassSubscriptionsGiftedOccurred -= OnMassSubscription;
+            EventService.OnDonationOccurred -= OnDonation;
+            EventService.OnTwitchBitsCheeredOccurred -= OnTwitchBits;
+            EventService.OnYouTubeSuperChatOccurred -= OnYouTubeSuperChat;
+            EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
         }
     }
 }

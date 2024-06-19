@@ -87,6 +87,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetEnableInternal();
 
+            GameQueueService.OnGameQueueUpdated -= GameQueueService_OnGameQueueUpdated;
             GameQueueService.OnGameQueueUpdated += GameQueueService_OnGameQueueUpdated;
         }
 
