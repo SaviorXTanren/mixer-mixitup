@@ -165,9 +165,58 @@ namespace MixItUp.Base.Services
             }
             return null;
         }
-        public async Task<MixItUpUpdateModel> GetLatestPublicUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
-        public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
-        public async Task<MixItUpUpdateModel> GetLatestTestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/test"); }
+
+        public async Task<MixItUpUpdateModel> GetLatestPublicUpdate()
+        {
+            MixItUpUpdateModel update = await this.GetLatestPublicUpdateV2();
+            if (update == null)
+            {
+                update = await this.GetAsync<MixItUpUpdateModel>("updates");
+            }
+            return update;
+        }
+        public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate()
+        {
+            MixItUpUpdateModel update = await this.GetLatestPreviewUpdateV2();
+            if (update == null)
+            {
+                update = await this.GetAsync<MixItUpUpdateModel>("updates/preview");
+            }
+            return update;
+        }
+        public async Task<MixItUpUpdateModel> GetLatestTestUpdate()
+        {
+            MixItUpUpdateModel update = await this.GetLatestTestUpdateV2();
+            if (update == null)
+            {
+                update = await this.GetAsync<MixItUpUpdateModel>("updates/test");
+            }
+            return update;
+        }
+
+        public async Task<MixItUpUpdateModel> GetLatestPublicUpdateV2() { return await this.GetUpdateV2("public"); }
+        public async Task<MixItUpUpdateModel> GetLatestPreviewUpdateV2() { return await this.GetUpdateV2("preview"); }
+        public async Task<MixItUpUpdateModel> GetLatestTestUpdateV2() { return await this.GetUpdateV2("test"); }
+
+        private async Task<MixItUpUpdateModel> GetUpdateV2(string type)
+        {
+            try
+            {
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                {
+                    MixItUpUpdateV2Model update = await client.GetAsync<MixItUpUpdateV2Model>($"https://raw.githubusercontent.com/mixitupapp/mixitupdesktop-data/main/Updates/{type}.json");
+                    if (update != null)
+                    {
+                        return new MixItUpUpdateModel(update);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return null;
+        }
 
         public async Task SendIssueReport(IssueReportModel report)
         {
