@@ -353,7 +353,7 @@ namespace MixItUp.Installer
             this.IsOperationIndeterminate = true;
             this.OperationProgress = 0;
 
-            MixItUpUpdateModel update = await this.GetUpdateData(preview, test);
+            MixItUpUpdateModel update = await this.GetUpdateDataV2(preview, test);
             if (update != null)
             {
                 return update;
