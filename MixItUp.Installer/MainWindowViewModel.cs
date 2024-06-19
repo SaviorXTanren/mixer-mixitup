@@ -353,6 +353,12 @@ namespace MixItUp.Installer
             this.IsOperationIndeterminate = true;
             this.OperationProgress = 0;
 
+            MixItUpUpdateModel update = await this.GetUpdateData(preview, test);
+            if (update != null)
+            {
+                return update;
+            }
+
             string url = "https://api.mixitupapp.com/api/updates";
             if (preview)
             {
@@ -375,6 +381,60 @@ namespace MixItUp.Installer
                     return jobj.ToObject<MixItUpUpdateModel>();
                 }
             }
+            return null;
+        }
+
+        private async Task<MixItUpUpdateModel> GetUpdateDataV2(bool preview = false, bool test = false)
+        {
+            this.DisplayText1 = "Finding latest version...";
+            this.IsOperationIndeterminate = true;
+            this.OperationProgress = 0;
+
+            string type = "public";
+            if (preview)
+            {
+                type = "preview";
+            }
+            else if (test)
+            {
+                type = "test";
+            }
+
+            string url = $"https://raw.githubusercontent.com/mixitupapp/mixitupdesktop-data/main/Updates/{type}.json";
+
+            Exception updateException = null;
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.Timeout = new TimeSpan(0, 0, 5 * (i + 1));
+
+                        HttpResponseMessage response = await client.GetAsync(url);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string responseString = await response.Content.ReadAsStringAsync();
+                            JObject jobj = JObject.Parse(responseString);
+                            MixItUpUpdateV2Model update = jobj.ToObject<MixItUpUpdateV2Model>();
+                            if (update != null)
+                            {
+                                return new MixItUpUpdateModel(update);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    updateException = ex;
+                }
+            }
+
+            if (updateException != null)
+            {
+                throw updateException;
+            }
+
             return null;
         }
 

@@ -19,6 +19,8 @@
     <StackPanel Margin="10">
 
         <Button x:Name="TriggerGenericDonation" Click="TriggerGenericDonation_Click">Trigger Generic Donation</Button>
-        
+
+        <Button x:Name="TriggerTwitchTier1Sub" Click="TriggerTwitchTier1Sub_Click">Trigger Twitch Tier 1 Sub</Button>
+
     </StackPanel>
 </local:MainControlBase>

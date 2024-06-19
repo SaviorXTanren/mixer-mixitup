@@ -49,6 +49,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetEnableInternal();
 
+            this.RemoveEventHandlers();
+
             if (this.FollowAmount > 0)
             {
                 EventService.OnFollowOccurred += EventService_OnFollowOccurred;
@@ -92,16 +94,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetDisableInternal();
 
-            EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
-            EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
-            EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
-            EventService.OnResubscribeOccurred -= EventService_OnSubscribeOccurred;
-            EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscribeOccurred;
-            EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
-            EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
-            EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
-            EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
-            EventService.OnYouTubeSuperChatOccurred -= EventService_OnYouTubeSuperChatOccurred;
+            this.RemoveEventHandlers();
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
@@ -194,6 +187,20 @@ namespace MixItUp.Base.Model.Overlay
             {
                 await this.ProcessEvent(spell.User, this.TrovoElixirSpellAmount * spell.ValueTotal);
             }
+        }
+
+        private void RemoveEventHandlers()
+        {
+            EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
+            EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
+            EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
+            EventService.OnResubscribeOccurred -= EventService_OnSubscribeOccurred;
+            EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscribeOccurred;
+            EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
+            EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
+            EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
+            EventService.OnYouTubeSuperChatOccurred -= EventService_OnYouTubeSuperChatOccurred;
+            EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
         }
     }
 }

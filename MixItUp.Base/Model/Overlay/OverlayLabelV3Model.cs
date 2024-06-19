@@ -124,6 +124,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetEnableInternal();
 
+            this.RemoveEventHandlers();
+
             if (this.Displays.Count == 0)
             {
                 return;
@@ -289,17 +291,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetDisableInternal();
 
-            EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
-            EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
-            EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
-            EventService.OnResubscribeOccurred -= EventService_OnResubscribeOccurred;
-            EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscriptionGiftedOccurred;
-            EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
-            EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
-            EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
-            EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
-            EventService.OnYouTubeSuperChatOccurred -= EventService_OnYouTubeSuperChatOccurred;
-            CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
+            this.RemoveEventHandlers();
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
@@ -481,6 +473,21 @@ namespace MixItUp.Base.Model.Overlay
         private bool IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum type)
         {
             return this.Displays.TryGetValue(type, out OverlayLabelDisplayV3Model display) && display.IsEnabled;
+        }
+
+        private void RemoveEventHandlers()
+        {
+            EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
+            EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
+            EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
+            EventService.OnResubscribeOccurred -= EventService_OnResubscribeOccurred;
+            EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscriptionGiftedOccurred;
+            EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
+            EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
+            EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
+            EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
+            EventService.OnYouTubeSuperChatOccurred -= EventService_OnYouTubeSuperChatOccurred;
+            CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
         }
     }
 }
