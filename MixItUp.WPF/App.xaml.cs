@@ -51,7 +51,7 @@ namespace MixItUp.WPF
                 ServiceManager.Add<IMusicPlayerService>(new WindowsMusicPlayerService());
                 ServiceManager.Add<IProcessService>(new WindowsProcessService());
                 ServiceManager.Add<IScriptRunnerService>(new WindowsScriptRunnerService());
-
+                ServiceManager.Add(new WindowsMicrosoftAzureSpeechService());
                 ServiceManager.Add(new StreamlabsService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new RainmakerService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new StreamElementsService(new WindowsSocketIOConnection()));

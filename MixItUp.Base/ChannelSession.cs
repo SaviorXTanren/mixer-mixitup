@@ -87,7 +87,6 @@ namespace MixItUp.Base
             ServiceManager.Add(new LumiaStreamService());
             ServiceManager.Add(new PulsoidService());
             ServiceManager.Add(new ResponsiveVoiceService());
-            ServiceManager.Add(new MicrosoftAzureSpeechService());
             ServiceManager.Add(new VTSPogService());
             ServiceManager.Add(new MtionStudioService());
 

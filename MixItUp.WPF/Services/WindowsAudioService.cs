@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Services
                     }
                     else
                     {
-                        await this.PlayWaveStream(new Mp3FileReader(stream), deviceName, volume, waitForFinish);
+                        await this.PlayWaveStream(new StreamMediaFoundationReader(stream), deviceName, volume, waitForFinish);
                     }
                 }
             }
