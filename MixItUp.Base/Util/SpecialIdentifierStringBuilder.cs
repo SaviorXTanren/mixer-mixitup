@@ -629,6 +629,10 @@ namespace MixItUp.Base.Util
                         }
 
                         this.ReplaceSpecialIdentifier(currentArgumentSpecialIdentifierHeader + "text", parameters.Arguments.ElementAt(i));
+                        if (double.TryParse(parameters.Arguments.ElementAt(i), out double result))
+                        {
+                            this.ReplaceSpecialIdentifier(currentArgumentSpecialIdentifierHeader + "numberdisplay", result.ToNumberDisplayString());
+                        }
                     }
                 }
 
