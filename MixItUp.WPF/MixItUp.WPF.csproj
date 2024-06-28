@@ -951,6 +951,12 @@
     <Compile Include="Controls\Overlay\OverlayYouTubeV3Control.xaml.cs">
       <DependentUpon>OverlayYouTubeV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\AmazonPollyServiceControl.xaml.cs">
+      <DependentUpon>AmazonPollyServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\MicrosoftAzureSpeechServiceControl.xaml.cs">
+      <DependentUpon>MicrosoftAzureSpeechServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\TTSMonsterServiceControl.xaml.cs">
       <DependentUpon>TTSMonsterServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1268,7 +1274,7 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="Services\AmazonPollyService.cs" />
+    <Compile Include="Services\WindowsAmazonPollyService.cs" />
     <Compile Include="Services\WindowsMicrosoftAzureSpeechService.cs" />
     <Compile Include="Services\WindowsScriptRunnerService.cs" />
     <Compile Include="Services\DeveloperAPI\V1\ChatV1Controller.cs" />
@@ -1938,6 +1944,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayYouTubeV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\AmazonPollyServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\MicrosoftAzureSpeechServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

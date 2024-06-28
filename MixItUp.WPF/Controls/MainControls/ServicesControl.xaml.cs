@@ -25,6 +25,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             List<ServiceContainerControl> services = new List<ServiceContainerControl>();
 
+            services.Add(new ServiceContainerControl(this.Window, new AmazonPollyServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new CrowdControlServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new DeveloperAPIServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new DiscordServiceControl()));
@@ -34,6 +35,7 @@ namespace MixItUp.WPF.Controls.MainControls
             services.Add(new ServiceContainerControl(this.Window, new JustGivingServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new LoupeDeckServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new LumiaStreamServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new MicrosoftAzureSpeechServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new MtionStudioServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new OBSStudioServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new OverlayServiceControl()));

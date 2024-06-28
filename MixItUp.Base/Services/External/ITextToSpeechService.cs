@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -46,5 +47,10 @@ namespace MixItUp.Base.Services.External
         IEnumerable<TextToSpeechVoice> GetVoices();
 
         Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish);
+    }
+
+    public interface ITextToSpeechConnectableService : ITextToSpeechService
+    {
+        Task<Result> TestAccess();
     }
 }
