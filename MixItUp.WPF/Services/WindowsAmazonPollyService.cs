@@ -20,8 +20,6 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsAmazonPollyService : ITextToSpeechConnectableService
     {
-        public const string AccessKey = "AKIAWQIVQ74JEQWGFQ3A";
-
         public static readonly IEnumerable<TextToSpeechVoice> AvailableVoices = new List<TextToSpeechVoice>()
         {
             new TextToSpeechVoice("Aditi:standard", "Aditi"),
@@ -189,21 +187,19 @@ namespace MixItUp.WPF.Services
 
         private AmazonPollyClient GetClient()
         {
-            BasicAWSCredentials credentials = new BasicAWSCredentials(WindowsAmazonPollyService.AccessKey, ServiceManager.Get<SecretsService>().GetSecret("AmazonAWSSecretKey"));
+            BasicAWSCredentials credentials = new BasicAWSCredentials(ServiceManager.Get<SecretsService>().GetSecret("AWSPollyAccessKey"), ServiceManager.Get<SecretsService>().GetSecret("AWSPollySecretKey"));
             RegionEndpoint region = RegionEndpoint.USWest2;
             if (this.IsUsingCustomAccessKey)
             {
                 credentials = new BasicAWSCredentials(ChannelSession.Settings.AmazonPollyCustomAccessKey, ChannelSession.Settings.AmazonPollyCustomSecretKey);
                 region = RegionEndpoint.GetBySystemName(ChannelSession.Settings.AmazonPollyCustomRegionSystemName);
             }
-
             return new AmazonPollyClient(credentials, region);
         }
 
         private async Task GenerateVoicesList()
         {
-            BasicAWSCredentials credentials = new BasicAWSCredentials(WindowsAmazonPollyService.AccessKey, ServiceManager.Get<SecretsService>().GetSecret("AmazonAWSSecretKey"));
-            using (AmazonPollyClient client = new AmazonPollyClient(credentials, RegionEndpoint.USWest2))
+            using (AmazonPollyClient client = this.GetClient())
             {
                 DescribeVoicesResponse voices = await client.DescribeVoicesAsync(new DescribeVoicesRequest());
 
