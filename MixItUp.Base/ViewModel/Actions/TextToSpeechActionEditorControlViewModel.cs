@@ -25,6 +25,9 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedProviderType = value;
                 this.NotifyPropertyChanged();
                 this.UpdateTextToSpeechProvider();
+
+                this.NotifyPropertyChanged(nameof(this.NoCustomAmazonPollyAccount));
+                this.NotifyPropertyChanged(nameof(this.NoCustomMicrosoftAzureSpeechAccount));
             }
         }
         private TextToSpeechProviderType selectedProviderType = TextToSpeechProviderType.WindowsTextToSpeech;
@@ -165,6 +168,16 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private bool waitForFinish;
+
+        public bool NoCustomAmazonPollyAccount
+        {
+            get { return this.SelectedProviderType == TextToSpeechProviderType.AmazonPolly && string.IsNullOrEmpty(ChannelSession.Settings.AmazonPollyCustomAccessKey); }
+        }
+
+        public bool NoCustomMicrosoftAzureSpeechAccount
+        {
+            get { return this.SelectedProviderType == TextToSpeechProviderType.MicrosoftAzureSpeech && string.IsNullOrEmpty(ChannelSession.Settings.MicrosoftAzureSpeechCustomSubscriptionKey); }
+        }
 
         public TextToSpeechActionEditorControlViewModel(TextToSpeechActionModel action)
             : base(action)

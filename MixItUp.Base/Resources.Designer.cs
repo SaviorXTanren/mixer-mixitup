@@ -14171,6 +14171,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Amazon Polly account has been connected, therefore usage will be limited to 1 action every 10 minutes. To remove this rate limit, please visit the Amazon Polly section on the Services page to connect your own Amazon Polly account..
+        /// </summary>
+        public static string NoCustomAmazonPollyAccount {
+            get {
+                return ResourceManager.GetString("NoCustomAmazonPollyAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Microsoft Azure Speech account has been connected, therefore usage will be limited to 1 action every 10 minutes. To remove this rate limit, please visit the Microsoft Azure Speech section on the Services page to connect your own Microsoft Azure Speech account..
+        /// </summary>
+        public static string NoCustomMicrosoftAzureSpeechAccount {
+            get {
+                return ResourceManager.GetString("NoCustomMicrosoftAzureSpeechAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Duplicates.
         /// </summary>
         public static string NoDuplicates {
