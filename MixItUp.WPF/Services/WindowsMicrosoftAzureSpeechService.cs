@@ -617,7 +617,7 @@ namespace MixItUp.WPF.Services
 
         private async Task<bool> IsWithinRateLimiting()
         {
-            if (this.IsUsingCustomSubscriptionKey || this.lastCommand.TotalMinutesFromNow() >= 10)
+            if (this.IsUsingCustomSubscriptionKey || ChannelSession.IsDebug() || this.lastCommand.TotalMinutesFromNow() >= 10)
             {
                 this.lastCommand = DateTimeOffset.Now;
                 return true;
