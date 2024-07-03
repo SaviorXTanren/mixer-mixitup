@@ -1087,7 +1087,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage of Amazon Polly for text to speech functionality is a paid service with AWS that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Amazon Polly text to speech to one request every 10 minutes. Users are able to connect their own AWS accounts to remove this limitation, but all expenses for Amazon Polly usage will then be billed to the user&apos;s own AWS account. For information on setting this  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Usage of Amazon Polly for text to speech functionality is a paid service with AWS that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Amazon Polly text to speech to one request every 5 minutes. Users are able to connect their own AWS accounts to remove this limitation, but all expenses for Amazon Polly usage will then be billed to the user&apos;s own AWS account. For information on setting this u [rest of string was truncated]&quot;;.
         /// </summary>
         public static string AmazonPollyInfo2 {
             get {
@@ -13082,7 +13082,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage of Microsoft Azure Speech for text to speech functionality is a paid service with Microsoft Azure that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Microsoft Azure Speech text to speech to one request every 10 minutes. Users are able to connect their own Microsoft Azure accounts to remove this limitation, but all expenses for Microsoft Azure Speech usage will then be billed to the us [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Usage of Microsoft Azure Speech for text to speech functionality is a paid service with Microsoft Azure that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Microsoft Azure Speech text to speech to one request every 5 minutes. Users are able to connect their own Microsoft Azure accounts to remove this limitation, but all expenses for Microsoft Azure Speech usage will then be billed to the use [rest of string was truncated]&quot;;.
         /// </summary>
         public static string MicrosoftAzureSpeechInfo2 {
             get {
@@ -14171,7 +14171,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Amazon Polly account has been connected, therefore usage will be limited to 1 action every 10 minutes. To remove this rate limit, please visit the Amazon Polly section on the Services page to connect your own Amazon Polly account..
+        ///   Looks up a localized string similar to No Amazon Polly account has been connected, therefore usage will be limited to 1 action every 5 minutes. To remove this rate limit, please visit the Amazon Polly section on the Services page to connect your own Amazon Polly account..
         /// </summary>
         public static string NoCustomAmazonPollyAccount {
             get {
@@ -14180,7 +14180,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Microsoft Azure Speech account has been connected, therefore usage will be limited to 1 action every 10 minutes. To remove this rate limit, please visit the Microsoft Azure Speech section on the Services page to connect your own Microsoft Azure Speech account..
+        ///   Looks up a localized string similar to No Microsoft Azure Speech account has been connected, therefore usage will be limited to 1 action every 5 minutes. To remove this rate limit, please visit the Microsoft Azure Speech section on the Services page to connect your own Microsoft Azure Speech account..
         /// </summary>
         public static string NoCustomMicrosoftAzureSpeechAccount {
             get {
@@ -22132,7 +22132,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Text To Speech action you were trying to perform was blocked due to too many requests with the {0} Text To Speech provider. Please ensure you are only performing 1 action every 10 minutes. You can circumvent this by connecting your own paid account under the Services page for the {0} Text To Speech provider..
+        ///   Looks up a localized string similar to The Text To Speech action you were trying to perform was blocked due to too many requests with the {0} Text To Speech provider. Please ensure you are only performing 1 action every 5 minutes. You can circumvent this by connecting your own paid account under the Services page for the {0} Text To Speech provider..
         /// </summary>
         public static string TextToSpeechActionBlockedDueToRateLimiting {
             get {
