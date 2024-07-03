@@ -12,6 +12,7 @@ namespace MixItUp.Base.Services.External
         TTSMonster,
         AmazonPolly,
         MicrosoftAzureSpeech,
+        TikTokTTS,
     }
 
     public class TextToSpeechVoice

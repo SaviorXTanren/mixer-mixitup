@@ -89,6 +89,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new ResponsiveVoiceService());
             ServiceManager.Add(new VTSPogService());
             ServiceManager.Add(new MtionStudioService());
+            ServiceManager.Add(new TikTokTTSService());
 
             try
             {
