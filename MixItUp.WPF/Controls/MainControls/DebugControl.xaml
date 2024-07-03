@@ -18,9 +18,11 @@
              d:DesignHeight="700" d:DesignWidth="600">
     <StackPanel Margin="10">
 
-        <Button x:Name="TriggerGenericDonation" Click="TriggerGenericDonation_Click">Trigger Generic Donation</Button>
+        <Button x:Name="GenericDonation" Click="TriggerGenericDonation_Click">Generic Donation</Button>
 
-        <Button x:Name="TriggerTwitchTier1Sub" Click="TriggerTwitchTier1Sub_Click">Trigger Twitch Tier 1 Sub</Button>
+        <Button x:Name="TwitchTier1Sub" Click="TriggerTwitchTier1Sub_Click">Twitch Tier 1 Sub</Button>
+
+        <Button x:Name="Twitch100BitsCheer" Click="Twitch100BitsCheer_Click">Twitch 100 Bits Cheer</Button>
 
     </StackPanel>
 </local:MainControlBase>

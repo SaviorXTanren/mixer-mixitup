@@ -80,5 +80,32 @@ namespace MixItUp.WPF.Controls.MainControls
                 sub_message = new JObject()
             });
         }
+
+        private void Twitch100BitsCheer_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUsers().FirstOrDefault(u => u.ID != ChannelSession.User.ID && u.HasPlatformData(Base.Model.StreamingPlatformTypeEnum.Twitch));
+            if (user == null)
+            {
+                user = ChannelSession.User;
+            }
+
+            TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
+
+            ServiceManager.Get<TwitchPubSubService>().PubSub_OnBitsV2Received(this, new PubSubBitsEventV2Model()
+            {
+                user_name = twitchUser.Username,
+                user_id = twitchUser.ID,
+
+                bits_used = 100,
+                total_bits_used = 1234,
+
+                channel_id = ServiceManager.Get<TwitchSessionService>().User.id,
+
+                message_id = Guid.NewGuid().ToString(),
+                chat_message = "This is a message",
+
+                time = DateTimeOffset.Now.ToString(),
+            });
+        }
     }
 }

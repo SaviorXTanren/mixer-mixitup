@@ -1340,7 +1340,7 @@ namespace MixItUp.Base.Services.Twitch
             Logger.Log("PUB SUB RESPONSE: " + packet.error);
         }
 
-        private async void PubSub_OnBitsV2Received(object sender, PubSubBitsEventV2Model packet)
+        public async void PubSub_OnBitsV2Received(object sender, PubSubBitsEventV2Model packet)
         {
             UserV2ViewModel user;
             if (packet.is_anonymous)
