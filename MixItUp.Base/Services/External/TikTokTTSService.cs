@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Services.Twitch;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -98,6 +100,9 @@ namespace MixItUp.Base.Services.External
         {
             using (AdvancedHttpClient client = new AdvancedHttpClient())
             {
+                client.Timeout = new TimeSpan(0, 0, 10);
+                client.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
+
                 JObject body = new JObject();
                 body["text"] = text;
                 body["voice"] = voice;
