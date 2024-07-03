@@ -16126,7 +16126,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pitch (0% - 200%).
+        ///   Looks up a localized string similar to Pitch.
         /// </summary>
         public static string Pitch {
             get {
@@ -17551,7 +17551,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate (0% - 150%).
+        ///   Looks up a localized string similar to Rate.
         /// </summary>
         public static string Rate {
             get {
@@ -22182,6 +22182,33 @@ namespace MixItUp.Base {
         public static string TextToSpeechActionMissingVoice {
             get {
                 return ResourceManager.GetString("TextToSpeechActionMissingVoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pitch (0% - 200%).
+        /// </summary>
+        public static string TextToSpeechActionResponsiveVoicePitch {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionResponsiveVoicePitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate (0% - 150%).
+        /// </summary>
+        public static string TextToSpeechActionResponsiveVoiceRate {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionResponsiveVoiceRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate (-10 to 10).
+        /// </summary>
+        public static string TextToSpeechActionWindowsTextToSpeechRate {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionWindowsTextToSpeechRate", resourceCulture);
             }
         }
         

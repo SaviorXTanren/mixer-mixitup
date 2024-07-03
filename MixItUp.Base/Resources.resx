@@ -1606,7 +1606,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Pitch" xml:space="preserve">
-    <value>Pitch (0% - 200%)</value>
+    <value>Pitch</value>
     <comment>Manual</comment>
   </data>
   <data name="Play" xml:space="preserve">
@@ -1706,7 +1706,7 @@
     <value>Rank Requirement</value>
   </data>
   <data name="Rate" xml:space="preserve">
-    <value>Rate (0% - 150%)</value>
+    <value>Rate</value>
     <comment>Manual</comment>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
@@ -10494,5 +10494,14 @@ namespace CustomNamespace
   </data>
   <data name="NoCustomMicrosoftAzureSpeechAccount" xml:space="preserve">
     <value>No Microsoft Azure Speech account has been connected, therefore usage will be limited to 1 action every 10 minutes. To remove this rate limit, please visit the Microsoft Azure Speech section on the Services page to connect your own Microsoft Azure Speech account.</value>
+  </data>
+  <data name="TextToSpeechActionResponsiveVoicePitch" xml:space="preserve">
+    <value>Pitch (0% - 200%)</value>
+  </data>
+  <data name="TextToSpeechActionResponsiveVoiceRate" xml:space="preserve">
+    <value>Rate (0% - 150%)</value>
+  </data>
+  <data name="TextToSpeechActionWindowsTextToSpeechRate" xml:space="preserve">
+    <value>Rate (-10 to 10)</value>
   </data>
 </root>

@@ -71,11 +71,11 @@
                 </ComboBox.ItemsPanel>
             </ComboBox>
 
-            <TextBox Grid.Column="2" Text="{Binding Volume}" IsEnabled="{Binding VolumeChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Volume}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" Text="{Binding Volume}" IsEnabled="{Binding VolumeChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Volume0to100}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="4" Text="{Binding Pitch}" IsEnabled="{Binding PitchChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Pitch}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" Text="{Binding Pitch}" IsEnabled="{Binding PitchChangable}" MaterialDesign:HintAssist.Hint="{Binding PitchHintText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="6" Text="{Binding Rate}" IsEnabled="{Binding RateChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="6" Text="{Binding Rate}" IsEnabled="{Binding RateChangable}" MaterialDesign:HintAssist.Hint="{Binding RateHintText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="4">
