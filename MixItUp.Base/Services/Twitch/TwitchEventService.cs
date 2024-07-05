@@ -700,8 +700,8 @@ namespace MixItUp.Base.Services.Twitch
             }
             catch (Exception ex)
             {
-                Logger.Log("Bad raid data: " + payload);
                 Logger.Log(ex);
+                Logger.ForceLog(LogLevel.Error, "Bad raid data: " + payload);
             }
         }
 
