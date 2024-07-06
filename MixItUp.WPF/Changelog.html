@@ -7,6 +7,17 @@
 
         <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
 
+        <h2 style="color: #2e6c80;">v1.1.0.1717:</h2>
+        <ul>
+            <li>Adding the following new Text to Speech Providers: Amazon Polly, Microsoft Azure Speech, TikTok TTS</li>
+            <ul>
+                <li>Amazon Polly &amp; Microsoft Azure Speech both leverage a payment model for usage of their service and as a result, we have implemented a cooldown usage to them currently of 1 each every 5 minutes. This cooldown amount may be decreased or increased over time depending on the usage and cost associated with supporting these services.</li>
+                <li>Users can set up their own Amazon Web Services (AWS) or Microsoft Azure account account and connect it on the Services page to remove the cooldown effect, however the linked account will then be billed for all usage of the service for Text to Speech</li>
+            </ul>
+            <li>Adding $usernotes Special Identifier</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.1.0.1716:</h2>
         <ul>
             <li>Fixing bug related to certain Overlay Widgets perform events multiple times on occassion</li>
