@@ -25,6 +25,12 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedProviderType = value;
                 this.NotifyPropertyChanged();
                 this.UpdateTextToSpeechProvider();
+
+                this.NotifyPropertyChanged(nameof(this.NoCustomAmazonPollyAccount));
+                this.NotifyPropertyChanged(nameof(this.NoCustomMicrosoftAzureSpeechAccount));
+
+                this.NotifyPropertyChanged(nameof(this.PitchHintText));
+                this.NotifyPropertyChanged(nameof(this.RateHintText));
             }
         }
         private TextToSpeechProviderType selectedProviderType = TextToSpeechProviderType.WindowsTextToSpeech;
@@ -36,7 +42,8 @@ namespace MixItUp.Base.ViewModel.Actions
                 return this.SelectedProviderType == TextToSpeechProviderType.WindowsTextToSpeech ||
                     this.SelectedProviderType == TextToSpeechProviderType.AmazonPolly ||
                     this.SelectedProviderType == TextToSpeechProviderType.MicrosoftAzureSpeech ||
-                    this.SelectedProviderType == TextToSpeechProviderType.TTSMonster;
+                    this.SelectedProviderType == TextToSpeechProviderType.TTSMonster ||
+                    this.SelectedProviderType == TextToSpeechProviderType.TikTokTTS;
             }
         }
         public bool AudioDeviceServiceConnected
@@ -130,6 +137,15 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private int pitch = 0;
 
+        public string PitchHintText
+        {
+            get
+            {
+                if (this.SelectedProviderType == TextToSpeechProviderType.ResponsiveVoice) { return Resources.TextToSpeechActionResponsiveVoicePitch; }
+                return Resources.Pitch;
+            }
+        }
+
         public int RateMinimum { get; private set; }
         public int RateMaximum { get; private set; }
         public bool RateChangable { get { return this.RateMinimum != this.RateMaximum; } }
@@ -143,6 +159,16 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private int rate = 0;
+
+        public string RateHintText
+        {
+            get
+            {
+                if (this.SelectedProviderType == TextToSpeechProviderType.WindowsTextToSpeech) { return Resources.TextToSpeechActionWindowsTextToSpeechRate; }
+                else if (this.SelectedProviderType == TextToSpeechProviderType.ResponsiveVoice) { return Resources.TextToSpeechActionResponsiveVoiceRate; }
+                return Resources.Rate;
+            }
+        }
 
         public string Text
         {
@@ -165,6 +191,16 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private bool waitForFinish;
+
+        public bool NoCustomAmazonPollyAccount
+        {
+            get { return this.SelectedProviderType == TextToSpeechProviderType.AmazonPolly && string.IsNullOrEmpty(ChannelSession.Settings.AmazonPollyCustomAccessKey); }
+        }
+
+        public bool NoCustomMicrosoftAzureSpeechAccount
+        {
+            get { return this.SelectedProviderType == TextToSpeechProviderType.MicrosoftAzureSpeech && string.IsNullOrEmpty(ChannelSession.Settings.MicrosoftAzureSpeechCustomSubscriptionKey); }
+        }
 
         public TextToSpeechActionEditorControlViewModel(TextToSpeechActionModel action)
             : base(action)

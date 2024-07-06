@@ -151,6 +151,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access Key.
+        /// </summary>
+        public static string AccessKey {
+            get {
+                return ResourceManager.GetString("AccessKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Access the folder where Mix It Up is installed.
         /// </summary>
         public static string AccessTheFolderWhereMixItUpIsInstalled {
@@ -1065,6 +1074,33 @@ namespace MixItUp.Base {
         public static string AmazonPolly {
             get {
                 return ResourceManager.GetString("AmazonPolly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Amazon Polly service connectivity allows you to connect your own AWS (Amazon Web Services) account to circumvent the rate limiting of the default usage of Amazon Polly with the Text To Speech Action..
+        /// </summary>
+        public static string AmazonPollyInfo1 {
+            get {
+                return ResourceManager.GetString("AmazonPollyInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of Amazon Polly for text to speech functionality is a paid service with AWS that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Amazon Polly text to speech to one request every 5 minutes. Users are able to connect their own AWS accounts to remove this limitation, but all expenses for Amazon Polly usage will then be billed to the user&apos;s own AWS account. For information on setting this u [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string AmazonPollyInfo2 {
+            get {
+                return ResourceManager.GetString("AmazonPollyInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No voices returned.
+        /// </summary>
+        public static string AmazonPollyNoVoicesReturned {
+            get {
+                return ResourceManager.GetString("AmazonPollyNoVoicesReturned", resourceCulture);
             }
         }
         
@@ -13037,6 +13073,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Microsoft Azure Speech service connectivity allows you to connect your own Microsoft Azure account to circumvent the rate limiting of the default usage of Microsoft Azure Speech with the Text To Speech Action..
+        /// </summary>
+        public static string MicrosoftAzureSpeechInfo1 {
+            get {
+                return ResourceManager.GetString("MicrosoftAzureSpeechInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of Microsoft Azure Speech for text to speech functionality is a paid service with Microsoft Azure that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Microsoft Azure Speech text to speech to one request every 5 minutes. Users are able to connect their own Microsoft Azure accounts to remove this limitation, but all expenses for Microsoft Azure Speech usage will then be billed to the use [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string MicrosoftAzureSpeechInfo2 {
+            get {
+                return ResourceManager.GetString("MicrosoftAzureSpeechInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Middle Button.
         /// </summary>
         public static string MiddleButton {
@@ -14113,6 +14167,24 @@ namespace MixItUp.Base {
         public static string NoCategoryFound {
             get {
                 return ResourceManager.GetString("NoCategoryFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Amazon Polly account has been connected, therefore usage will be limited to 1 action every 5 minutes. To remove this rate limit, please visit the Amazon Polly section on the Services page to connect your own Amazon Polly account..
+        /// </summary>
+        public static string NoCustomAmazonPollyAccount {
+            get {
+                return ResourceManager.GetString("NoCustomAmazonPollyAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Microsoft Azure Speech account has been connected, therefore usage will be limited to 1 action every 5 minutes. To remove this rate limit, please visit the Microsoft Azure Speech section on the Services page to connect your own Microsoft Azure Speech account..
+        /// </summary>
+        public static string NoCustomMicrosoftAzureSpeechAccount {
+            get {
+                return ResourceManager.GetString("NoCustomMicrosoftAzureSpeechAccount", resourceCulture);
             }
         }
         
@@ -16054,7 +16126,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pitch (0% - 200%).
+        ///   Looks up a localized string similar to Pitch.
         /// </summary>
         public static string Pitch {
             get {
@@ -17479,7 +17551,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate (0% - 150%).
+        ///   Looks up a localized string similar to Rate.
         /// </summary>
         public static string Rate {
             get {
@@ -17637,6 +17709,15 @@ namespace MixItUp.Base {
         public static string RegexMatch {
             get {
                 return ResourceManager.GetString("RegexMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Region Name.
+        /// </summary>
+        public static string RegionName {
+            get {
+                return ResourceManager.GetString("RegionName", resourceCulture);
             }
         }
         
@@ -19045,6 +19126,15 @@ namespace MixItUp.Base {
         public static string SecondValue {
             get {
                 return ResourceManager.GetString("SecondValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret Key.
+        /// </summary>
+        public static string SecretKey {
+            get {
+                return ResourceManager.GetString("SecretKey", resourceCulture);
             }
         }
         
@@ -21700,6 +21790,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subscription Key.
+        /// </summary>
+        public static string SubscriptionKey {
+            get {
+                return ResourceManager.GetString("SubscriptionKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subs Gifted.
         /// </summary>
         public static string SubsGifted {
@@ -22033,6 +22132,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Text To Speech action you were trying to perform was blocked due to too many requests with the {0} Text To Speech provider. Please ensure you are only performing 1 action every 5 minutes. You can circumvent this by connecting your own paid account under the Services page for the {0} Text To Speech provider..
+        /// </summary>
+        public static string TextToSpeechActionBlockedDueToRateLimiting {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionBlockedDueToRateLimiting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Text to Speech Action: Pitch must be between 0 - 200.
         /// </summary>
         public static string TextToSpeechActionInvalidPitch {
@@ -22074,6 +22182,33 @@ namespace MixItUp.Base {
         public static string TextToSpeechActionMissingVoice {
             get {
                 return ResourceManager.GetString("TextToSpeechActionMissingVoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pitch (0% - 200%).
+        /// </summary>
+        public static string TextToSpeechActionResponsiveVoicePitch {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionResponsiveVoicePitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate (0% - 150%).
+        /// </summary>
+        public static string TextToSpeechActionResponsiveVoiceRate {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionResponsiveVoiceRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate (-10 to 10).
+        /// </summary>
+        public static string TextToSpeechActionWindowsTextToSpeechRate {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionWindowsTextToSpeechRate", resourceCulture);
             }
         }
         

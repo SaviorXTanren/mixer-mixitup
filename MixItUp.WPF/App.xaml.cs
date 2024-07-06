@@ -60,7 +60,7 @@ namespace MixItUp.WPF
                 ServiceManager.Add<IOvrStreamService>(new WindowsOvrStreamService());
                 ServiceManager.Add<IOBSStudioService>(new WindowsOBSService());
                 ServiceManager.Add(new WindowsSpeechService());
-                ServiceManager.Add(new AmazonPollyService());
+                ServiceManager.Add(new WindowsAmazonPollyService());
 
                 ChannelSession.Initialize().Wait();
 

@@ -1,6 +1,9 @@
 ﻿using Microsoft.CognitiveServices.Speech;
+using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
@@ -10,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Services
 {
-    internal class WindowsMicrosoftAzureSpeechService : ITextToSpeechService
+    internal class WindowsMicrosoftAzureSpeechService : ITextToSpeechConnectableService
     {
         public static readonly IEnumerable<TextToSpeechVoice> AvailableVoices = new List<TextToSpeechVoice>()
         {
@@ -553,31 +556,90 @@ namespace MixItUp.WPF.Services
 
         public int RateDefault { get { return 0; } }
 
+        private DateTimeOffset lastCommand = DateTimeOffset.MinValue;
+
+        public bool IsUsingCustomSubscriptionKey
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(ChannelSession.Settings.MicrosoftAzureSpeechCustomRegionName) &&
+                    !string.IsNullOrEmpty(ChannelSession.Settings.MicrosoftAzureSpeechCustomSubscriptionKey);
+            }
+        }
+
+        public async Task<Result> TestAccess()
+        {
+            try
+            {
+                using (SpeechSynthesizer client = this.GetClient())
+                {
+                    SynthesisVoicesResult result = await client.GetVoicesAsync();
+                    if (result != null && result.Voices != null && result.Voices.Count > 0)
+                    {
+                        return new Result();
+                    }
+                    return new Result(result.ErrorDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
+        }
+
         public IEnumerable<TextToSpeechVoice> GetVoices() { return WindowsMicrosoftAzureSpeechService.AvailableVoices; }
 
         public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
         {
-            var speechConfig = SpeechConfig.FromSubscription(ServiceManager.Get<SecretsService>().GetSecret("AzureSpeechServiceSecret"), "eastus");
-            speechConfig.SpeechSynthesisVoiceName = voice;
-
-            using (SpeechSynthesizer speechSynthesizer = new SpeechSynthesizer(speechConfig, null))
+            if (await this.IsWithinRateLimiting())
             {
-                SpeechSynthesisResult speechSynthesisResult = await speechSynthesizer.SpeakTextAsync(text);
-                if (speechSynthesisResult.Reason == ResultReason.SynthesizingAudioCompleted)
+                using (SpeechSynthesizer speechSynthesizer = this.GetClient(voice))
                 {
-                    MemoryStream stream = new MemoryStream(speechSynthesisResult.AudioData);
-                    await ServiceManager.Get<IAudioService>().PlayMP3Stream(stream, volume, outputDevice, waitForFinish: waitForFinish);
-                }
-                else if (speechSynthesisResult.Reason == ResultReason.Canceled)
-                {
-                    SpeechSynthesisCancellationDetails cancellationDetails = SpeechSynthesisCancellationDetails.FromResult(speechSynthesisResult);
-                    Logger.Log(LogLevel.Error, $"Azure Speech Synthesis canceled: {cancellationDetails.ErrorCode} - {cancellationDetails.ErrorDetails}");
-                }
-                else
-                {
-                    Logger.Log(LogLevel.Error, $"Azure Speech Synthesis error: {speechSynthesisResult.Reason}");
+                    SpeechSynthesisResult speechSynthesisResult = await speechSynthesizer.SpeakTextAsync(text);
+                    if (speechSynthesisResult.Reason == ResultReason.SynthesizingAudioCompleted)
+                    {
+                        MemoryStream stream = new MemoryStream(speechSynthesisResult.AudioData);
+                        await ServiceManager.Get<IAudioService>().PlayMP3Stream(stream, volume, outputDevice, waitForFinish: waitForFinish);
+                    }
+                    else if (speechSynthesisResult.Reason == ResultReason.Canceled)
+                    {
+                        SpeechSynthesisCancellationDetails cancellationDetails = SpeechSynthesisCancellationDetails.FromResult(speechSynthesisResult);
+                        Logger.Log(LogLevel.Error, $"Azure Speech Synthesis canceled: {cancellationDetails.ErrorCode} - {cancellationDetails.ErrorDetails}");
+                    }
+                    else
+                    {
+                        Logger.Log(LogLevel.Error, $"Azure Speech Synthesis error: {speechSynthesisResult.Reason}");
+                    }
                 }
             }
+        }
+
+        private async Task<bool> IsWithinRateLimiting()
+        {
+            if (this.IsUsingCustomSubscriptionKey || ChannelSession.IsDebug() || this.lastCommand.TotalMinutesFromNow() >= 5)
+            {
+                this.lastCommand = DateTimeOffset.Now;
+                return true;
+            }
+            await ServiceManager.Get<ChatService>().SendMessage(string.Format(Resources.TextToSpeechActionBlockedDueToRateLimiting, Resources.MicrosoftAzureSpeech), StreamingPlatformTypeEnum.All);
+            return false;
+        }
+
+        private SpeechSynthesizer GetClient(string voice = null)
+        {
+            SpeechConfig speechConfig = SpeechConfig.FromSubscription(ServiceManager.Get<SecretsService>().GetSecret("AzureSpeechServiceSecret"), "eastus");
+            if (this.IsUsingCustomSubscriptionKey)
+            {
+                speechConfig = SpeechConfig.FromSubscription(ChannelSession.Settings.MicrosoftAzureSpeechCustomSubscriptionKey, ChannelSession.Settings.MicrosoftAzureSpeechCustomRegionName);
+            }
+
+            if (voice != null)
+            {
+                speechConfig.SpeechSynthesisVoiceName = voice;
+            }
+
+            return new SpeechSynthesizer(speechConfig, null);
         }
 
         private async Task GenerateVoicesList()

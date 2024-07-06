@@ -22,6 +22,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -70,11 +71,11 @@
                 </ComboBox.ItemsPanel>
             </ComboBox>
 
-            <TextBox Grid.Column="2" Text="{Binding Volume}" IsEnabled="{Binding VolumeChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Volume}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" Text="{Binding Volume}" IsEnabled="{Binding VolumeChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Volume0to100}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="4" Text="{Binding Pitch}" IsEnabled="{Binding PitchChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Pitch}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" Text="{Binding Pitch}" IsEnabled="{Binding PitchChangable}" MaterialDesign:HintAssist.Hint="{Binding PitchHintText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="6" Text="{Binding Rate}" IsEnabled="{Binding RateChangable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="6" Text="{Binding Rate}" IsEnabled="{Binding RateChangable}" MaterialDesign:HintAssist.Hint="{Binding RateHintText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="4">
@@ -90,6 +91,14 @@
 
             <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.WaitForFinish}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <ToggleButton Grid.Column="4" IsChecked="{Binding WaitForFinish}" VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="5" Margin="0,20,0,0" Visibility="{Binding NoCustomAmazonPollyAccount, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+            <TextBlock TextWrapping="Wrap" Foreground="Red" Text="{x:Static resx:Resources.NoCustomAmazonPollyAccount}"/>
+        </Grid>
+
+        <Grid Grid.Row="5" Margin="0,20,0,0" Visibility="{Binding NoCustomMicrosoftAzureSpeechAccount, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+            <TextBlock TextWrapping="Wrap" Foreground="Red" Text="{x:Static resx:Resources.NoCustomMicrosoftAzureSpeechAccount}"/>
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

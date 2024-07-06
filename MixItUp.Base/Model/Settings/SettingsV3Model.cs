@@ -566,6 +566,18 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool MtionStudioEnabled { get; set; }
 
+        [DataMember]
+        public string AmazonPollyCustomRegionSystemName { get; set; }
+        [DataMember]
+        public string AmazonPollyCustomAccessKey { get; set; }
+        [DataMember]
+        public string AmazonPollyCustomSecretKey { get; set; }
+
+        [DataMember]
+        public string MicrosoftAzureSpeechCustomRegionName { get; set; }
+        [DataMember]
+        public string MicrosoftAzureSpeechCustomSubscriptionKey { get; set; }
+
         #endregion Services
 
         #region Dashboard

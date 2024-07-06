@@ -413,9 +413,17 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedEndCredits = value;
                 this.NotifyPropertyChanged();
 
-                OverlayEndCreditsV3Model endCredits = (OverlayEndCreditsV3Model)this.SelectedEndCredits.Item;
-                this.EndCreditsSections.AddRange(endCredits.Sections.Where(s => s.Type == OverlayEndCreditsSectionV3Type.CustomSection));
-                this.SelectedEndCreditsSection = this.EndCreditsSections.FirstOrDefault(s => s.ID == this.endCreditsSectionID);
+                this.EndCreditsSections.Clear();
+                if (this.SelectedEndCredits != null)
+                {
+                    OverlayEndCreditsV3Model endCredits = (OverlayEndCreditsV3Model)this.SelectedEndCredits.Item;
+                    this.EndCreditsSections.AddRange(endCredits.Sections.Where(s => s.Type == OverlayEndCreditsSectionV3Type.CustomSection));
+                    this.SelectedEndCreditsSection = this.EndCreditsSections.FirstOrDefault(s => s.ID == this.endCreditsSectionID);
+                }
+                else
+                {
+                    this.SelectedEndCreditsSection = null;
+                }
             }
         }
         private OverlayWidgetV3Model selectedEndCredits;

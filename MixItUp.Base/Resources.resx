@@ -1606,7 +1606,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Pitch" xml:space="preserve">
-    <value>Pitch (0% - 200%)</value>
+    <value>Pitch</value>
     <comment>Manual</comment>
   </data>
   <data name="Play" xml:space="preserve">
@@ -1706,7 +1706,7 @@
     <value>Rank Requirement</value>
   </data>
   <data name="Rate" xml:space="preserve">
-    <value>Rate (0% - 150%)</value>
+    <value>Rate</value>
     <comment>Manual</comment>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
@@ -10457,5 +10457,51 @@ namespace CustomNamespace
   </data>
   <data name="ShowTwitchPredictionChannelPoints" xml:space="preserve">
     <value>Show Twitch Prediction Channel Points</value>
+  </data>
+  <data name="TextToSpeechActionBlockedDueToRateLimiting" xml:space="preserve">
+    <value>The Text To Speech action you were trying to perform was blocked due to too many requests with the {0} Text To Speech provider. Please ensure you are only performing 1 action every 5 minutes. You can circumvent this by connecting your own paid account under the Services page for the {0} Text To Speech provider.</value>
+    <comment>0 = The name of the Text To Speech provider</comment>
+  </data>
+  <data name="AmazonPollyNoVoicesReturned" xml:space="preserve">
+    <value>No voices returned</value>
+  </data>
+  <data name="AccessKey" xml:space="preserve">
+    <value>Access Key</value>
+  </data>
+  <data name="RegionName" xml:space="preserve">
+    <value>Region Name</value>
+  </data>
+  <data name="SecretKey" xml:space="preserve">
+    <value>Secret Key</value>
+  </data>
+  <data name="SubscriptionKey" xml:space="preserve">
+    <value>Subscription Key</value>
+  </data>
+  <data name="AmazonPollyInfo1" xml:space="preserve">
+    <value>The Amazon Polly service connectivity allows you to connect your own AWS (Amazon Web Services) account to circumvent the rate limiting of the default usage of Amazon Polly with the Text To Speech Action.</value>
+  </data>
+  <data name="AmazonPollyInfo2" xml:space="preserve">
+    <value>Usage of Amazon Polly for text to speech functionality is a paid service with AWS that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Amazon Polly text to speech to one request every 5 minutes. Users are able to connect their own AWS accounts to remove this limitation, but all expenses for Amazon Polly usage will then be billed to the user's own AWS account. For information on setting this up, please visit the link below:</value>
+  </data>
+  <data name="MicrosoftAzureSpeechInfo1" xml:space="preserve">
+    <value>The Microsoft Azure Speech service connectivity allows you to connect your own Microsoft Azure account to circumvent the rate limiting of the default usage of Microsoft Azure Speech with the Text To Speech Action.</value>
+  </data>
+  <data name="MicrosoftAzureSpeechInfo2" xml:space="preserve">
+    <value>Usage of Microsoft Azure Speech for text to speech functionality is a paid service with Microsoft Azure that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Microsoft Azure Speech text to speech to one request every 5 minutes. Users are able to connect their own Microsoft Azure accounts to remove this limitation, but all expenses for Microsoft Azure Speech usage will then be billed to the user's own Microsoft Azure account. For information on setting this up, please visit the link below:</value>
+  </data>
+  <data name="NoCustomAmazonPollyAccount" xml:space="preserve">
+    <value>No Amazon Polly account has been connected, therefore usage will be limited to 1 action every 5 minutes. To remove this rate limit, please visit the Amazon Polly section on the Services page to connect your own Amazon Polly account.</value>
+  </data>
+  <data name="NoCustomMicrosoftAzureSpeechAccount" xml:space="preserve">
+    <value>No Microsoft Azure Speech account has been connected, therefore usage will be limited to 1 action every 5 minutes. To remove this rate limit, please visit the Microsoft Azure Speech section on the Services page to connect your own Microsoft Azure Speech account.</value>
+  </data>
+  <data name="TextToSpeechActionResponsiveVoicePitch" xml:space="preserve">
+    <value>Pitch (0% - 200%)</value>
+  </data>
+  <data name="TextToSpeechActionResponsiveVoiceRate" xml:space="preserve">
+    <value>Rate (0% - 150%)</value>
+  </data>
+  <data name="TextToSpeechActionWindowsTextToSpeechRate" xml:space="preserve">
+    <value>Rate (-10 to 10)</value>
   </data>
 </root>

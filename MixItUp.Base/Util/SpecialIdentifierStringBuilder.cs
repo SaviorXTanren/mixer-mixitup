@@ -629,6 +629,10 @@ namespace MixItUp.Base.Util
                         }
 
                         this.ReplaceSpecialIdentifier(currentArgumentSpecialIdentifierHeader + "text", parameters.Arguments.ElementAt(i));
+                        if (double.TryParse(parameters.Arguments.ElementAt(i), out double result))
+                        {
+                            this.ReplaceSpecialIdentifier(currentArgumentSpecialIdentifierHeader + "numberdisplay", result.ToNumberDisplayString());
+                        }
                     }
                 }
 
@@ -1024,6 +1028,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isvip", user.HasRole(UserRoleEnum.TwitchVIP).ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "ismod", user.MeetsRole(UserRoleEnum.Moderator).ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isspecialtyexcluded", user.IsSpecialtyExcluded.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "notes", user.Notes);
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalstreamswatched", user.TotalStreamsWatched.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalamountdonated", CurrencyHelper.ToCurrencyString(user.TotalAmountDonated));

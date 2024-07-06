@@ -2,8 +2,12 @@
 using Amazon.Polly;
 using Amazon.Polly.Model;
 using Amazon.Runtime;
+using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,10 +18,8 @@ using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Services
 {
-    public class AmazonPollyService : ITextToSpeechService
+    public class WindowsAmazonPollyService : ITextToSpeechConnectableService
     {
-        public const string AccessKey = "AKIAWQIVQ74JEQWGFQ3A";
-
         public static readonly IEnumerable<TextToSpeechVoice> AvailableVoices = new List<TextToSpeechVoice>()
         {
             new TextToSpeechVoice("Aditi:standard", "Aditi"),
@@ -102,45 +104,102 @@ namespace MixItUp.WPF.Services
 
         public int RateDefault { get { return 0; } }
 
-        public IEnumerable<TextToSpeechVoice> GetVoices() { return AmazonPollyService.AvailableVoices; }
+        private DateTimeOffset lastCommand = DateTimeOffset.MinValue;
+
+        public bool IsUsingCustomAccessKey
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(ChannelSession.Settings.AmazonPollyCustomRegionSystemName) &&
+                    !string.IsNullOrEmpty(ChannelSession.Settings.AmazonPollyCustomAccessKey) &&
+                    !string.IsNullOrEmpty(ChannelSession.Settings.AmazonPollyCustomSecretKey);
+            }
+        }
+
+        public async Task<Result> TestAccess()
+        {
+            try
+            {
+                using (AmazonPollyClient client = this.GetClient())
+                {
+                    DescribeVoicesResponse response = await client.DescribeVoicesAsync(new DescribeVoicesRequest());
+                    if (response != null && response.Voices != null && response.Voices.Count > 0)
+                    {
+                        return new Result();
+                    }
+                    return new Result(Resources.AmazonPollyNoVoicesReturned);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
+        }
+
+        public IEnumerable<TextToSpeechVoice> GetVoices() { return WindowsAmazonPollyService.AvailableVoices; }
 
         public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
         {
-            BasicAWSCredentials credentials = new BasicAWSCredentials(AmazonPollyService.AccessKey, ServiceManager.Get<SecretsService>().GetSecret("AmazonAWSSecretKey"));
-            using (AmazonPollyClient client = new AmazonPollyClient(credentials, RegionEndpoint.USWest2))
+            if (await this.IsWithinRateLimiting())
             {
-                string[] splits = voice.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                if (splits.Length == 2)
+                using (AmazonPollyClient client = this.GetClient())
                 {
-                    string voiceID = splits[0];
-                    string voiceEngine = splits[1];
-
-                    SynthesizeSpeechResponse response = await client.SynthesizeSpeechAsync(new SynthesizeSpeechRequest()
+                    string[] splits = voice.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (splits.Length == 2)
                     {
-                        VoiceId = voiceID,
-                        Engine = new Engine(voiceEngine),
-                        OutputFormat = OutputFormat.Mp3,
-                        Text = text
-                    });
+                        string voiceID = splits[0];
+                        string voiceEngine = splits[1];
 
-                    if (response.HttpStatusCode == HttpStatusCode.OK && response.AudioStream != null)
-                    {
-                        MemoryStream stream = new MemoryStream();
-                        using (response.AudioStream)
+                        SynthesizeSpeechResponse response = await client.SynthesizeSpeechAsync(new SynthesizeSpeechRequest()
                         {
-                            response.AudioStream.CopyTo(stream);
-                            stream.Position = 0;
+                            VoiceId = voiceID,
+                            Engine = new Engine(voiceEngine),
+                            OutputFormat = OutputFormat.Mp3,
+                            Text = text
+                        });
+
+                        if (response.HttpStatusCode == HttpStatusCode.OK && response.AudioStream != null)
+                        {
+                            MemoryStream stream = new MemoryStream();
+                            using (response.AudioStream)
+                            {
+                                response.AudioStream.CopyTo(stream);
+                                stream.Position = 0;
+                            }
+                            await ServiceManager.Get<IAudioService>().PlayMP3Stream(stream, volume, outputDevice, waitForFinish: waitForFinish);
                         }
-                        await ServiceManager.Get<IAudioService>().PlayMP3Stream(stream, volume, outputDevice, waitForFinish: waitForFinish);
                     }
                 }
             }
         }
 
+        private async Task<bool> IsWithinRateLimiting()
+        {
+            if (this.IsUsingCustomAccessKey || ChannelSession.IsDebug() || this.lastCommand.TotalMinutesFromNow() >= 5)
+            {
+                this.lastCommand = DateTimeOffset.Now;
+                return true;
+            }
+            await ServiceManager.Get<ChatService>().SendMessage(string.Format(Resources.TextToSpeechActionBlockedDueToRateLimiting, Resources.AmazonPolly), StreamingPlatformTypeEnum.All);
+            return false;
+        }
+
+        private AmazonPollyClient GetClient()
+        {
+            BasicAWSCredentials credentials = new BasicAWSCredentials(ServiceManager.Get<SecretsService>().GetSecret("AWSPollyAccessKey"), ServiceManager.Get<SecretsService>().GetSecret("AWSPollySecretKey"));
+            RegionEndpoint region = RegionEndpoint.USWest2;
+            if (this.IsUsingCustomAccessKey)
+            {
+                credentials = new BasicAWSCredentials(ChannelSession.Settings.AmazonPollyCustomAccessKey, ChannelSession.Settings.AmazonPollyCustomSecretKey);
+                region = RegionEndpoint.GetBySystemName(ChannelSession.Settings.AmazonPollyCustomRegionSystemName);
+            }
+            return new AmazonPollyClient(credentials, region);
+        }
+
         private async Task GenerateVoicesList()
         {
-            BasicAWSCredentials credentials = new BasicAWSCredentials(AmazonPollyService.AccessKey, ServiceManager.Get<SecretsService>().GetSecret("AmazonAWSSecretKey"));
-            using (AmazonPollyClient client = new AmazonPollyClient(credentials, RegionEndpoint.USWest2))
+            using (AmazonPollyClient client = this.GetClient())
             {
                 DescribeVoicesResponse voices = await client.DescribeVoicesAsync(new DescribeVoicesRequest());
 
