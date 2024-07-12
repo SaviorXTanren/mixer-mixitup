@@ -16099,6 +16099,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Persist No Duplicates.
+        /// </summary>
+        public static string PersistNoDuplicates {
+            get {
+                return ResourceManager.GetString("PersistNoDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pet.
         /// </summary>
         public static string Pet {

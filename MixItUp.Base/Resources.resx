@@ -10504,4 +10504,7 @@ namespace CustomNamespace
   <data name="TextToSpeechActionWindowsTextToSpeechRate" xml:space="preserve">
     <value>Rate (-10 to 10)</value>
   </data>
+  <data name="PersistNoDuplicates" xml:space="preserve">
+    <value>Persist No Duplicates</value>
+  </data>
 </root>
