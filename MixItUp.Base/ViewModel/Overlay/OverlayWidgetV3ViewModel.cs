@@ -14,6 +14,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayWidgetV3ViewModel : UIViewModelBase
     {
+        public const string MixItUpOverlayWidgetFileExtension = ".miuoverlay";
+
         public static Dictionary<Guid, OverlayWidgetV3ViewModel> WidgetsInEditing = new Dictionary<Guid, OverlayWidgetV3ViewModel>();
 
         public Guid ID
@@ -482,6 +484,14 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
 
                 OverlayWidgetV3Model widget = await this.GetWidget();
+                if (widget != null)
+                {
+                    string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(widget.Name + MixItUpOverlayWidgetFileExtension, MixItUp.Base.Resources.MixItUpOverlayFileFormatFilter);
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        await FileSerializerHelper.SerializeToFile(fileName, widget);
+                    }
+                }
             });
 
             this.loaded = true;

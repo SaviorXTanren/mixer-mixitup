@@ -7190,6 +7190,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to import Overlay Widget.
+        /// </summary>
+        public static string FailedToImportOverlayWidget {
+            get {
+                return ResourceManager.GetString("FailedToImportOverlayWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to initialize Bot account.
         /// </summary>
         public static string FailedToInitializeBotAccount {
@@ -11028,6 +11037,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import Overlay Widget.
+        /// </summary>
+        public static string ImportOverlayWidget {
+            get {
+                return ResourceManager.GetString("ImportOverlayWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has..
         /// </summary>
         public static string ImportPointsPrompt1 {
@@ -13366,6 +13384,15 @@ namespace MixItUp.Base {
         public static string MixItUpOverlay {
             get {
                 return ResourceManager.GetString("MixItUpOverlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Overlay|*.miuoverlay|All files (*.*)|*.*.
+        /// </summary>
+        public static string MixItUpOverlayFileFormatFilter {
+            get {
+                return ResourceManager.GetString("MixItUpOverlayFileFormatFilter", resourceCulture);
             }
         }
         

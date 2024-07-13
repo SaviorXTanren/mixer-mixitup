@@ -1,7 +1,10 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base;
+using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
@@ -11,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -123,8 +127,33 @@ namespace MixItUp.WPF.Controls.MainControls
                     OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(EnumHelper.GetEnumValueFromString<OverlayItemV3Type>(result));
                     window.Closed += Window_Closed;
                     window.Show();
+                    window.Focus();
                 }
             });
+        }
+
+        private async void ImportOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(MixItUp.Base.Resources.MixItUpOverlayFileFormatFilter);
+                if (!string.IsNullOrWhiteSpace(filepath))
+                {
+                    OverlayWidgetV3Model widget = await FileSerializerHelper.DeserializeFromFile<OverlayWidgetV3Model>(filepath);
+                    if (widget != null)
+                    {
+                        OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget);
+                        window.Closed += Window_Closed;
+                        window.Show();
+                        window.Focus();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportOverlayWidget + ": " + ex.ToString());
+            }
         }
     }
 }

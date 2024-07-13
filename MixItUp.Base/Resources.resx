@@ -10507,4 +10507,13 @@ namespace CustomNamespace
   <data name="PersistNoDuplicates" xml:space="preserve">
     <value>Persist No Duplicates</value>
   </data>
+  <data name="MixItUpOverlayFileFormatFilter" xml:space="preserve">
+    <value>Mix It Up Overlay|*.miuoverlay|All files (*.*)|*.*</value>
+  </data>
+  <data name="ImportOverlayWidget" xml:space="preserve">
+    <value>Import Overlay Widget</value>
+  </data>
+  <data name="FailedToImportOverlayWidget" xml:space="preserve">
+    <value>Failed to import Overlay Widget</value>
+  </data>
 </root>
