@@ -19256,6 +19256,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Segment Reached.
+        /// </summary>
+        public static string SegmentReached {
+            get {
+                return ResourceManager.GetString("SegmentReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Segments.
         /// </summary>
         public static string Segments {

@@ -32,6 +32,9 @@ namespace MixItUp.Base.Model.Overlay
         public string Name { get; set; }
         [DataMember]
         public double Amount { get; set; }
+
+        [DataMember]
+        public Guid CommandID { get; set; }
     }
 
     [DataContract]
@@ -42,6 +45,11 @@ namespace MixItUp.Base.Model.Overlay
         public const string GoalAmountProperty = "GoalAmount";
         public const string GoalMaxAmountProperty = "GoalMaxAmount";
         public const string GoalBarCompletionPercentageProperty = "GoalBarCompletionPercentage";
+
+        public const string TotalAmountSpecialIdentifier = "goaltotalamount";
+        public const string ProgressAmountSpecialIdentifier = "goalprogressamount";
+        public const string SegmentNameSpecialIdentifier = "goalsegmentname";
+        public const string SegmentAmountSpecialIdentifier = "goalsegmentamount";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayGoalDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayGoalDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
@@ -144,6 +152,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.CurrentSegment != null && amount != 0)
             {
+                OverlayGoalSegmentV3Model previousSegment = this.CurrentSegment;
+                double previousAmount = this.TotalAmount;
                 if (amount > 0)
                 {
                     this.TotalAmount += amount;
@@ -153,19 +163,26 @@ namespace MixItUp.Base.Model.Overlay
                     this.TotalAmount = Math.Max(this.TotalAmount + amount, this.PreviousGoalAmount);
                 }
 
-                if (this.CurrentAmount < this.GoalAmount || this.CurrentSegment == this.Segments.Last())
-                {
-                    await this.Update();
+                CommandParametersModel parameters = new CommandParametersModel(user);
+                parameters.SpecialIdentifiers[TotalAmountSpecialIdentifier] = this.CurrentAmount.ToString();
+                parameters.SpecialIdentifiers[ProgressAmountSpecialIdentifier] = amount.ToString();
+                parameters.SpecialIdentifiers[SegmentNameSpecialIdentifier] = previousSegment.Name;
+                parameters.SpecialIdentifiers[SegmentAmountSpecialIdentifier] = previousSegment.Amount.ToString();
 
-                    await ServiceManager.Get<CommandService>().Queue(this.ProgressOccurredCommandID, new CommandParametersModel(user));
-                }
-                else
+                if (this.CurrentAmount >= this.GoalAmount && (this.CurrentSegment != this.Segments.Last() || previousAmount < this.GoalAmount))
                 {
                     this.ProgressSegments();
 
                     await this.Complete();
 
-                    await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, new CommandParametersModel(user));
+                    await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
+                    await ServiceManager.Get<CommandService>().Queue(previousSegment.CommandID, parameters);
+                }
+                else
+                {
+                    await this.Update();
+
+                    await ServiceManager.Get<CommandService>().Queue(this.ProgressOccurredCommandID, parameters);
                 }
             }
         }

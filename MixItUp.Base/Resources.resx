@@ -10516,4 +10516,7 @@ namespace CustomNamespace
   <data name="FailedToImportOverlayWidget" xml:space="preserve">
     <value>Failed to import Overlay Widget</value>
   </data>
+  <data name="SegmentReached" xml:space="preserve">
+    <value>Segment Reached</value>
+  </data>
 </root>

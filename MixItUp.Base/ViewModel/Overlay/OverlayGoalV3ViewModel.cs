@@ -36,6 +36,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private double amount = 1;
 
+        public CustomCommandModel Command
+        {
+            get { return this.command; }
+            set
+            {
+                this.command = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel command;
+
         public ICommand DeleteCommand { get; private set; }
 
         private OverlayGoalV3ViewModel viewModel;
@@ -43,6 +54,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayGoalSegmentV3ViewModel(OverlayGoalV3ViewModel viewModel)
         {
             this.viewModel = viewModel;
+
+            this.Command = this.viewModel.CreateEmbeddedCommand(Resources.SegmentReached);
+
             this.DeleteCommand = this.CreateCommand(() =>
             {
                 this.viewModel.DeleteSegment(this);
@@ -54,6 +68,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Name = segment.Name;
             this.Amount = segment.Amount;
+
+            this.Command = this.viewModel.GetEmbeddedCommand(segment.CommandID, Resources.SegmentReached);
         }
     }
 
@@ -269,7 +285,10 @@ namespace MixItUp.Base.ViewModel.Overlay
                 {
                     Name = segment.Name,
                     Amount = segment.Amount,
+                    CommandID = segment.Command.ID,
                 });
+
+                ChannelSession.Settings.SetCommand(segment.Command);
             }
 
             result.ProgressOccurredCommandID = this.ProgressOccurredCommand.ID;
