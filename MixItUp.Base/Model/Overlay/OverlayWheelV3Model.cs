@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -122,7 +123,7 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
             properties[nameof(this.Size)] = this.Size.ToString();
-            properties[OutcomeProbabilityPropertyName] = string.Join(", ", this.OutcomeProbabilities);
+            properties[OutcomeProbabilityPropertyName] = string.Join(", ", this.OutcomeProbabilities.Select(p => p.ToString(CultureInfo.InvariantCulture)));
             properties[nameof(this.OutcomeNames)] = this.OutcomeNames;
             properties[nameof(this.OutcomeColors)] = this.OutcomeColors;
             properties[nameof(this.WheelClickSoundURL)] = this.WheelClickSoundURL;
@@ -156,7 +157,7 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             Dictionary<string, object> properties = new Dictionary<string, object>();
-            properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability.ToString();
+            properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability;
             properties[OverlayWheelV3Model.ModifiedProbabilitiesPropertyName] = probabilities;
             properties[UserProperty] = JObject.FromObject(parametersModel.User);
             await this.CallFunction("startSpin", properties);
