@@ -226,13 +226,16 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("CurrentModelRequest"));
-                if (response != null && response.data != null)
+                if (this.IsConnected)
                 {
-                    VTubeStudioModel result = response.data.ToObject<VTubeStudioModel>();
-                    if (result != null && result.modelLoaded)
+                    VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("CurrentModelRequest"));
+                    if (response != null && response.data != null)
                     {
-                        return result;
+                        VTubeStudioModel result = response.data.ToObject<VTubeStudioModel>();
+                        if (result != null && result.modelLoaded)
+                        {
+                            return result;
+                        }
                     }
                 }
             }
@@ -247,21 +250,24 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                if (this.allModelsCacheExpiration <= DateTimeOffset.Now || this.allModelsCache == null)
+                if (this.IsConnected)
                 {
-                    VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("AvailableModelsRequest"));
-                    if (response != null && response.data != null && response.data.TryGetValue("availableModels", out JToken models) && models is JArray)
+                    if (this.allModelsCacheExpiration <= DateTimeOffset.Now || this.allModelsCache == null)
                     {
-                        List<VTubeStudioModel> results = new List<VTubeStudioModel>();
-                        foreach (VTubeStudioModel model in ((JArray)models).ToTypedArray<VTubeStudioModel>())
+                        VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("AvailableModelsRequest"));
+                        if (response != null && response.data != null && response.data.TryGetValue("availableModels", out JToken models) && models is JArray)
                         {
-                            if (model != null)
+                            List<VTubeStudioModel> results = new List<VTubeStudioModel>();
+                            foreach (VTubeStudioModel model in ((JArray)models).ToTypedArray<VTubeStudioModel>())
                             {
-                                results.Add(model);
+                                if (model != null)
+                                {
+                                    results.Add(model);
+                                }
                             }
+                            this.allModelsCache = results;
+                            this.allModelsCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
                         }
-                        this.allModelsCache = results;
-                        this.allModelsCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
                     }
                 }
 
@@ -328,28 +334,31 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                if (this.modelHotKeyCacheExpiration <= DateTimeOffset.Now || !this.modelHotKeyCache.ContainsKey(modelID))
+                if (this.IsConnected)
                 {
-                    VTubeStudioWebSocketRequestPacket packet = new VTubeStudioWebSocketRequestPacket("HotkeysInCurrentModelRequest");
-                    if (!string.IsNullOrEmpty(modelID))
+                    if (this.modelHotKeyCacheExpiration <= DateTimeOffset.Now || !this.modelHotKeyCache.ContainsKey(modelID))
                     {
-                        packet.data = new JObject();
-                        packet.data["modelID"] = modelID;
-                    }
-
-                    VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(packet);
-                    if (response != null && response.data != null && response.data.TryGetValue("availableHotkeys", out JToken hotKeys) && hotKeys is JArray)
-                    {
-                        List<VTubeStudioHotKey> results = new List<VTubeStudioHotKey>();
-                        foreach (VTubeStudioHotKey hotKey in ((JArray)hotKeys).ToTypedArray<VTubeStudioHotKey>())
+                        VTubeStudioWebSocketRequestPacket packet = new VTubeStudioWebSocketRequestPacket("HotkeysInCurrentModelRequest");
+                        if (!string.IsNullOrEmpty(modelID))
                         {
-                            if (hotKey != null)
-                            {
-                                results.Add(hotKey);
-                            }
+                            packet.data = new JObject();
+                            packet.data["modelID"] = modelID;
                         }
-                        this.modelHotKeyCache[modelID] = results;
-                        this.modelHotKeyCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
+
+                        VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(packet);
+                        if (response != null && response.data != null && response.data.TryGetValue("availableHotkeys", out JToken hotKeys) && hotKeys is JArray)
+                        {
+                            List<VTubeStudioHotKey> results = new List<VTubeStudioHotKey>();
+                            foreach (VTubeStudioHotKey hotKey in ((JArray)hotKeys).ToTypedArray<VTubeStudioHotKey>())
+                            {
+                                if (hotKey != null)
+                                {
+                                    results.Add(hotKey);
+                                }
+                            }
+                            this.modelHotKeyCache[modelID] = results;
+                            this.modelHotKeyCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
+                        }
                     }
                 }
 
