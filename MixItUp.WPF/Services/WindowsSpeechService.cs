@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,43 +42,59 @@ namespace MixItUp.WPF.Services
             return voices;
         }
 
-        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool ssml, bool waitForFinish)
         {
-            MemoryStream stream = new MemoryStream();
-            string filePath = null;
-            using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
+            try
             {
-                outputDevice = ServiceManager.Get<IAudioService>().GetOutputDeviceName(outputDevice);
+                MemoryStream stream = new MemoryStream();
+                string filePath = null;
+                using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
+                {
+                    outputDevice = ServiceManager.Get<IAudioService>().GetOutputDeviceName(outputDevice);
+                    if (string.Equals(outputDevice, ServiceManager.Get<IAudioService>().MixItUpOverlay))
+                    {
+                        filePath = Path.Combine(ServiceManager.Get<IFileService>().GetTempFolder(), $"{Guid.NewGuid()}.wav");
+                        synthesizer.SetOutputToWaveFile(filePath);
+                    }
+                    else
+                    {
+                        synthesizer.SetOutputToAudioStream(stream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 88200, 16, 1, 16000, 2, null));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(voice))
+                    {
+                        synthesizer.SelectVoice(voice);
+                    }
+                    synthesizer.Rate = rate;
+                    synthesizer.Volume = volume;
+
+
+                    if (ssml)
+                    {
+                        synthesizer.SpeakSsml(text);
+                    }
+                    else
+                    {
+                        synthesizer.Speak(text);
+                    }
+                }
+
+                // Buffer to ensure synthesizer audio gets fully written out
+                await Task.Delay(100);
+
                 if (string.Equals(outputDevice, ServiceManager.Get<IAudioService>().MixItUpOverlay))
                 {
-                    filePath = Path.Combine(ServiceManager.Get<IFileService>().GetTempFolder(), $"{Guid.NewGuid()}.wav");
-                    synthesizer.SetOutputToWaveFile(filePath);
+                    await ServiceManager.Get<IAudioService>().PlayOnOverlay(filePath, volume, waitForFinish: waitForFinish);
                 }
                 else
                 {
-                    synthesizer.SetOutputToAudioStream(stream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 88200, 16, 1, 16000, 2, null));
+                    stream.Position = 0;
+                    await ServiceManager.Get<IAudioService>().PlayPCMStream(stream, volume, outputDevice, waitForFinish: waitForFinish);
                 }
-
-                if (!string.IsNullOrWhiteSpace(voice))
-                {
-                    synthesizer.SelectVoice(voice);
-                }
-                synthesizer.Rate = rate;
-                synthesizer.Volume = volume;
-                synthesizer.Speak(text);
             }
-
-            // Buffer to ensure synthesizer audio gets fully written out
-            await Task.Delay(100);
-
-            if (string.Equals(outputDevice, ServiceManager.Get<IAudioService>().MixItUpOverlay))
+            catch (Exception ex)
             {
-                await ServiceManager.Get<IAudioService>().PlayOnOverlay(filePath, volume, waitForFinish: waitForFinish);
-            }
-            else
-            {
-                stream.Position = 0;
-                await ServiceManager.Get<IAudioService>().PlayPCMStream(stream, volume, outputDevice, waitForFinish: waitForFinish);
+                Logger.Log(ex);
             }
         }
     }

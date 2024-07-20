@@ -10522,4 +10522,7 @@ namespace CustomNamespace
   <data name="DisableOnCompletion" xml:space="preserve">
     <value>Disable On Completion</value>
   </data>
+  <data name="SSML" xml:space="preserve">
+    <value>SSML</value>
+  </data>
 </root>

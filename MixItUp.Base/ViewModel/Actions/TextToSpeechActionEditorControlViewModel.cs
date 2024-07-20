@@ -31,6 +31,8 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 this.NotifyPropertyChanged(nameof(this.PitchHintText));
                 this.NotifyPropertyChanged(nameof(this.RateHintText));
+
+                this.NotifyPropertyChanged(nameof(this.SupportsSSML));
             }
         }
         private TextToSpeechProviderType selectedProviderType = TextToSpeechProviderType.WindowsTextToSpeech;
@@ -170,6 +172,25 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
+        public bool SSML
+        {
+            get { return this.ssml; }
+            set
+            {
+                this.ssml = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool ssml;
+        public bool SupportsSSML
+        {
+            get
+            {
+                return this.SelectedProviderType == TextToSpeechProviderType.MicrosoftAzureSpeech || this.SelectedProviderType == TextToSpeechProviderType.AmazonPolly ||
+                    this.SelectedProviderType == TextToSpeechProviderType.WindowsTextToSpeech;
+            }
+        }
+
         public string Text
         {
             get { return this.text; }
@@ -222,6 +243,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.Volume = action.Volume;
             this.Pitch = action.Pitch;
             this.Rate = action.Rate;
+            this.SSML = action.SSML;
             this.WaitForFinish = action.WaitForFinish;
         }
 
@@ -277,7 +299,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
 
             return Task.FromResult<ActionModelBase>(new TextToSpeechActionModel(this.SelectedProviderType, audioDevice, this.SelectedOverlayEndpoint.ID,
-                this.Text, this.SelectedVoice.ID, this.Volume, this.Pitch, this.Rate, this.WaitForFinish));
+                this.Text, this.SelectedVoice.ID, this.Volume, this.Pitch, this.Rate, this.SSML, this.WaitForFinish));
         }
 
         private void UpdateTextToSpeechProvider()

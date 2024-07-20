@@ -139,7 +139,7 @@ namespace MixItUp.WPF.Services
 
         public IEnumerable<TextToSpeechVoice> GetVoices() { return WindowsAmazonPollyService.AvailableVoices; }
 
-        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool ssml, bool waitForFinish)
         {
             if (await this.IsWithinRateLimiting())
             {
@@ -154,6 +154,7 @@ namespace MixItUp.WPF.Services
                         SynthesizeSpeechResponse response = await client.SynthesizeSpeechAsync(new SynthesizeSpeechRequest()
                         {
                             VoiceId = voiceID,
+                            TextType = ssml ? TextType.Ssml : TextType.Text,
                             Engine = new Engine(voiceEngine),
                             OutputFormat = OutputFormat.Mp3,
                             Text = text

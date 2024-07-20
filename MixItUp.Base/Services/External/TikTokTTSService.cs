@@ -96,7 +96,7 @@ namespace MixItUp.Base.Services.External
 
         public IEnumerable<TextToSpeechVoice> GetVoices() { return TikTokTTSService.AvailableVoices; }
 
-        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool ssml, bool waitForFinish)
         {
             using (AdvancedHttpClient client = new AdvancedHttpClient())
             {

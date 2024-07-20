@@ -20683,6 +20683,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SSML.
+        /// </summary>
+        public static string SSML {
+            get {
+                return ResourceManager.GetString("SSML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Staff.
         /// </summary>
         public static string Staff {
