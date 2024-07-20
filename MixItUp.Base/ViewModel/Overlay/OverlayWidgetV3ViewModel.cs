@@ -401,11 +401,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         protected override async Task OnOpenInternal()
         {
-            if (this.existingWidget != null)
-            {
-                await this.existingWidget.Disable();
-            }
-
             this.Item.PropertyChanged += Item_PropertyChanged;
 
             await this.EnableTestWidget();
