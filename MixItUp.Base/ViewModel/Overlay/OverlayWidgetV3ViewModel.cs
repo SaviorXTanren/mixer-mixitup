@@ -415,7 +415,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             await this.DisableTestWidget();
 
-            if (this.newWidget == null && this.existingWidget != null)
+            if (this.newWidget == null && this.existingWidget != null && this.existingWidget.IsEnabled)
             {
                 await this.existingWidget.Enable();
             }
