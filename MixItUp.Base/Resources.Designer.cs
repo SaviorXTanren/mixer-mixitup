@@ -5433,6 +5433,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable On Completion.
+        /// </summary>
+        public static string DisableOnCompletion {
+            get {
+                return ResourceManager.GetString("DisableOnCompletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Queue.
         /// </summary>
         public static string DisableQueue {

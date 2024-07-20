@@ -27,7 +27,9 @@ namespace MixItUp.Base.Model.Overlay
         public string DisplayFormat { get; set; }
 
         [DataMember]
-        public bool ResetOnEnable { get; set; } = true;
+        public bool DisableOnCompletion { get; set; }
+        [DataMember]
+        public bool ResetOnEnable { get; set; }
 
         [DataMember]
         public OverlayAnimationV3Model TimerAdjustedAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -113,15 +115,22 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task BackgroundTimer(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested && this.CurrentAmount > 0)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(1000);
-                this.CurrentAmount--;
-            }
 
-            if (this.CurrentAmount == 0)
-            {
-                await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
+                if (this.CurrentAmount > 0)
+                {
+                    this.CurrentAmount--;
+                    if (this.CurrentAmount == 0)
+                    {
+                        await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
+                        if (this.DisableOnCompletion)
+                        {
+                            await ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID).Disable();
+                        }
+                    }
+                }
             }
         }
     }

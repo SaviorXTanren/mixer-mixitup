@@ -10519,4 +10519,7 @@ namespace CustomNamespace
   <data name="SegmentReached" xml:space="preserve">
     <value>Segment Reached</value>
   </data>
+  <data name="DisableOnCompletion" xml:space="preserve">
+    <value>Disable On Completion</value>
+  </data>
 </root>
