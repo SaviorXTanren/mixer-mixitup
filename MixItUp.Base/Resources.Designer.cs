@@ -11595,11 +11595,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Is In.
+        /// </summary>
+        public static string IsIn {
+            get {
+                return ResourceManager.GetString("IsIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Is Math Expression.
         /// </summary>
         public static string IsMathExpression {
             get {
                 return ResourceManager.GetString("IsMathExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is Not In.
+        /// </summary>
+        public static string IsNotIn {
+            get {
+                return ResourceManager.GetString("IsNotIn", resourceCulture);
             }
         }
         

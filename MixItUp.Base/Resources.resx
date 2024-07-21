@@ -10525,4 +10525,10 @@ namespace CustomNamespace
   <data name="SSML" xml:space="preserve">
     <value>SSML</value>
   </data>
+  <data name="IsIn" xml:space="preserve">
+    <value>Is In</value>
+  </data>
+  <data name="IsNotIn" xml:space="preserve">
+    <value>Is Not In</value>
+  </data>
 </root>
