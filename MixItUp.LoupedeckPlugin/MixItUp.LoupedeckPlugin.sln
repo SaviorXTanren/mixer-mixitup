@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MixItUp.API.NET8", "..\APIs\MixItUp.API.NET8\MixItUp.API.NET8.csproj", "{F47209C8-CC3D-45EF-BCBB-9B09A6C2AEDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MixItUp.LoupedeckPlugin", "MixItUp.LoupedeckPlugin.csproj", "{62E28C12-B332-486C-9B84-81AFFC5DB5A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F47209C8-CC3D-45EF-BCBB-9B09A6C2AEDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F47209C8-CC3D-45EF-BCBB-9B09A6C2AEDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F47209C8-CC3D-45EF-BCBB-9B09A6C2AEDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F47209C8-CC3D-45EF-BCBB-9B09A6C2AEDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62E28C12-B332-486C-9B84-81AFFC5DB5A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62E28C12-B332-486C-9B84-81AFFC5DB5A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62E28C12-B332-486C-9B84-81AFFC5DB5A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62E28C12-B332-486C-9B84-81AFFC5DB5A2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E528E852-01EC-46D9-B944-233C3A696CF9}
+	EndGlobalSection
+EndGlobal
