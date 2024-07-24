@@ -311,6 +311,7 @@ namespace MixItUp.Base.Services.External
             Hello = 8,
             Resumed = 9,
 
+            ClientConnect = 11,
             ClientDisconnect = 13
         }
 
@@ -354,6 +355,12 @@ namespace MixItUp.Base.Services.External
 
     public class DiscordVoiceWebSocket : ClientWebSocketBase
     {
+        public event EventHandler<string> OnUserJoinedVoice = delegate { };
+        public event EventHandler<string> OnUserLeftVoice = delegate { };
+
+        public event EventHandler<string> OnUserStartedSpeaking = delegate { };
+        public event EventHandler<string> OnUserStoppedSpeaking = delegate { };
+
         public bool IsReady { get; private set; }
 
         private DiscordVoiceConnection voiceConnection;
@@ -365,7 +372,7 @@ namespace MixItUp.Base.Services.External
         {
             this.voiceConnection = voiceConnection;
 
-            if (await base.Connect(this.voiceConnection.Endpoint + "?v=4"))
+            if (await base.Connect("wss://" + this.voiceConnection.Endpoint + "?v=4"))
             {
                 await this.Send(new DiscordVoiceWebSocketPacket() { OPCodeType = DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Identify, Data = new JObject()
                 {
@@ -407,7 +414,7 @@ namespace MixItUp.Base.Services.External
             await this.Send(JSONSerializerHelper.SerializeToString(packet));
         }
 
-        protected override async Task ProcessReceivedPacket(string packetJSON)
+        protected override Task ProcessReceivedPacket(string packetJSON)
         {
             try
             {
@@ -427,6 +434,41 @@ namespace MixItUp.Base.Services.External
                     case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.HeartbeatAck:
                         break;
 
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.ClientConnect:
+                        if (packet.Data.TryGetValue("user_ids", out JToken userIDs) && userIDs is JArray)
+                        {
+                            foreach (JToken user in (JArray)userIDs)
+                            {
+                                this.OnUserJoinedVoice(this, user.ToString());
+                            }
+                        }
+                        break;
+
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Speaking:
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.ClientDisconnect:
+                        if (packet.Data.TryGetValue("user_id", out JToken userID))
+                        {
+                            if (packet.OPCodeType == DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.ClientDisconnect)
+                            {
+                                this.OnUserLeftVoice(this, userID.ToString());
+                            }
+                            else if (packet.OPCodeType == DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Speaking)
+                            {
+                                if (packet.Data.TryGetValue("speaking", out JToken speakingToken) && int.TryParse(speakingToken?.ToString(), out int speaking))
+                                {
+                                    if (speaking > 0)
+                                    {
+                                        this.OnUserStartedSpeaking(this, userID.ToString());
+                                    }
+                                    else
+                                    {
+                                        this.OnUserStoppedSpeaking(this, userID.ToString());
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
                     default:
                         break;
                 }
@@ -435,6 +477,7 @@ namespace MixItUp.Base.Services.External
             {
                 Logger.Log(ex);
             }
+            return Task.CompletedTask;
         }
 
         private async Task HeartbeatPing()
@@ -478,8 +521,6 @@ namespace MixItUp.Base.Services.External
         private int shardCount;
         private string botToken;
 
-        private DiscordVoiceConnection voiceConnection;
-
         private int? lastSequenceNumber = null;
         private int heartbeatTime = 0;
 
@@ -496,21 +537,6 @@ namespace MixItUp.Base.Services.External
             if (await base.Connect(endpoint))
             {
                 this.HeartbeatPing().Wait(1);
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> Connect(DiscordVoiceConnection voiceConnection)
-        {
-            this.voiceConnection = voiceConnection;
-
-            if (await base.Connect(this.voiceConnection.Endpoint + "?v=4"))
-            {
-                this.HeartbeatPing().Wait(1);
-
-                await this.Send(new DiscordWebSocketPacket() { OPCode = DiscordWebSocketPacket.DiscordWebSocketPacketTypeEnum.Other })
-
                 return true;
             }
             return false;
@@ -550,7 +576,7 @@ namespace MixItUp.Base.Services.External
                         { "self_deaf", false },
                     }});
 
-                    for (int i = 0; i < 5 || (this.voiceStateUpdatePacket != null && this.voiceServerUpdatePacket != null); i++)
+                    for (int i = 0; i < 5 && (this.voiceStateUpdatePacket == null || this.voiceServerUpdatePacket == null); i++)
                     {
                         await Task.Delay(1000);
                     }
@@ -857,6 +883,12 @@ namespace MixItUp.Base.Services.External
         /// </summary>
         public const string ClientBotPermissions = "14081024";
 
+        public event EventHandler<string> OnUserJoinedVoice = delegate { };
+        public event EventHandler<string> OnUserLeftVoice = delegate { };
+
+        public event EventHandler<string> OnUserStartedSpeaking = delegate { };
+        public event EventHandler<string> OnUserStoppedSpeaking = delegate { };
+
         private const string BaseAddress = "https://discord.com/api/v10";
 
         private const string DefaultClientID = "422657136510631936";
@@ -869,7 +901,7 @@ namespace MixItUp.Base.Services.External
 
         private DiscordWebSocket webSocket;
 
-        private DiscordWebSocket voiceWebSocket;
+        private DiscordVoiceWebSocket voiceWebSocket;
 
         public DiscordUser User { get; private set; }
         public DiscordServer Server { get; private set; }
@@ -944,6 +976,11 @@ namespace MixItUp.Base.Services.External
 
             if (this.voiceWebSocket != null)
             {
+                this.voiceWebSocket.OnUserJoinedVoice -= VoiceWebSocket_OnUserJoinedVoice;
+                this.voiceWebSocket.OnUserLeftVoice -= VoiceWebSocket_OnUserLeftVoice;
+                this.voiceWebSocket.OnUserStartedSpeaking -= VoiceWebSocket_OnUserStartedSpeaking;
+                this.voiceWebSocket.OnUserStoppedSpeaking -= VoiceWebSocket_OnUserStoppedSpeaking;
+
                 await this.voiceWebSocket.Disconnect();
                 this.voiceWebSocket = null;
             }
@@ -1081,10 +1118,13 @@ namespace MixItUp.Base.Services.External
                                     DiscordVoiceConnection voiceConnection = await this.webSocket.ConnectToVoice(ServiceManager.Get<DiscordService>().Server, channel);
                                     if (voiceConnection != null)
                                     {
-                                        this.voiceWebSocket = new DiscordWebSocket();
+                                        this.voiceWebSocket = new DiscordVoiceWebSocket();
                                         if (await this.voiceWebSocket.Connect(voiceConnection))
                                         {
-
+                                            this.voiceWebSocket.OnUserJoinedVoice += VoiceWebSocket_OnUserJoinedVoice;
+                                            this.voiceWebSocket.OnUserLeftVoice += VoiceWebSocket_OnUserLeftVoice;
+                                            this.voiceWebSocket.OnUserStartedSpeaking += VoiceWebSocket_OnUserStartedSpeaking;
+                                            this.voiceWebSocket.OnUserStoppedSpeaking += VoiceWebSocket_OnUserStoppedSpeaking;
                                         }
                                     }
                                     else
@@ -1120,5 +1160,13 @@ namespace MixItUp.Base.Services.External
             await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.DiscordActionBlockedDueToRateLimiting, StreamingPlatformTypeEnum.All);
             return false;
         }
+
+        private void VoiceWebSocket_OnUserJoinedVoice(object sender, string e) { this.OnUserJoinedVoice(sender, e); }
+
+        private void VoiceWebSocket_OnUserLeftVoice(object sender, string e) { this.OnUserLeftVoice(sender, e); }
+
+        private void VoiceWebSocket_OnUserStartedSpeaking(object sender, string e) { this.OnUserStartedSpeaking(sender, e); }
+
+        private void VoiceWebSocket_OnUserStoppedSpeaking(object sender, string e) { this.OnUserStoppedSpeaking(sender, e); }
     }
 }

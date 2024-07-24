@@ -10531,4 +10531,7 @@ namespace CustomNamespace
   <data name="IsNotIn" xml:space="preserve">
     <value>Is Not In</value>
   </data>
+  <data name="DiscordServerFailedToConnectToVoice" xml:space="preserve">
+    <value>Failed To Connect To Voice</value>
+  </data>
 </root>

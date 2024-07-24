@@ -5622,6 +5622,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed To Connect To Voice.
+        /// </summary>
+        public static string DiscordServerFailedToConnectToVoice {
+            get {
+                return ResourceManager.GetString("DiscordServerFailedToConnectToVoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not get User data.
         /// </summary>
         public static string DiscordUserDataFailed {
