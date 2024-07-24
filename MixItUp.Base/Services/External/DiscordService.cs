@@ -1068,6 +1068,25 @@ namespace MixItUp.Base.Services.External
 
         public async Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true) { await this.botService.DeafenServerMember(server, user, deaf); }
 
+        public async Task<bool> ConnectToVoice(DiscordServer server, DiscordChannel channel)
+        {
+            DiscordVoiceConnection voiceConnection = await this.webSocket.ConnectToVoice(ServiceManager.Get<DiscordService>().Server, channel);
+            if (voiceConnection != null)
+            {
+                this.voiceWebSocket = new DiscordVoiceWebSocket();
+                if (await this.voiceWebSocket.Connect(voiceConnection))
+                {
+                    this.voiceWebSocket.OnUserJoinedVoice += VoiceWebSocket_OnUserJoinedVoice;
+                    this.voiceWebSocket.OnUserLeftVoice += VoiceWebSocket_OnUserLeftVoice;
+                    this.voiceWebSocket.OnUserStartedSpeaking += VoiceWebSocket_OnUserStartedSpeaking;
+                    this.voiceWebSocket.OnUserStoppedSpeaking += VoiceWebSocket_OnUserStoppedSpeaking;
+                    return true;
+                }
+            }
+            return false;
+            // new Result(Resources.DiscordServerFailedToConnectToVoice);
+        }
+
         protected override async Task RefreshOAuthToken()
         {
             if (this.token != null)
@@ -1110,29 +1129,6 @@ namespace MixItUp.Base.Services.External
                             if (await this.webSocket.Connect(gateway.WebSocketURL + "?v=6&encoding=json", gateway.Shards, this.BotToken))
                             {
                                 this.TrackServiceTelemetry("Discord");
-
-                                var channels = await this.GetServerChannels(ServiceManager.Get<DiscordService>().Server);
-                                var channel = channels.FirstOrDefault(c => c.Type == DiscordChannel.DiscordChannelTypeEnum.Voice && c.Name.Equals("General"));
-                                if (channel != null)
-                                {
-                                    DiscordVoiceConnection voiceConnection = await this.webSocket.ConnectToVoice(ServiceManager.Get<DiscordService>().Server, channel);
-                                    if (voiceConnection != null)
-                                    {
-                                        this.voiceWebSocket = new DiscordVoiceWebSocket();
-                                        if (await this.voiceWebSocket.Connect(voiceConnection))
-                                        {
-                                            this.voiceWebSocket.OnUserJoinedVoice += VoiceWebSocket_OnUserJoinedVoice;
-                                            this.voiceWebSocket.OnUserLeftVoice += VoiceWebSocket_OnUserLeftVoice;
-                                            this.voiceWebSocket.OnUserStartedSpeaking += VoiceWebSocket_OnUserStartedSpeaking;
-                                            this.voiceWebSocket.OnUserStoppedSpeaking += VoiceWebSocket_OnUserStoppedSpeaking;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        return new Result(Resources.DiscordServerFailedToConnectToVoice);
-                                    }
-                                }
-
                                 return new Result();
                             }
                             return new Result(Resources.DiscordBotWebSocketFailed);
