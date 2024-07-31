@@ -460,7 +460,7 @@ namespace MixItUp.Base.Services.External
                             namedPipeClient.Connect();
                             await namedPipeClient.WriteAsync(requestBytes, 0, requestBytes.Length);
 
-                            byte[] responseBytes = new byte[1000000];
+                            byte[] responseBytes = new byte[5000000];
                             int count = await namedPipeClient.ReadAsync(responseBytes, 0, responseBytes.Length);
 
                             string responseString = Encoding.ASCII.GetString(responseBytes, 0, count);
