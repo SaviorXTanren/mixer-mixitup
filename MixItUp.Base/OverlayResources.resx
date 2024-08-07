@@ -792,8 +792,6 @@ function startCredits(data)
         list.appendChild(section);
         list.appendChild(spacerTemplate.content.cloneNode(true));
     });
-
-    let rect = list.getBoundingClientRect();
     
     main.style.display = "none";
     main.style.backgroundColor = "{BackgroundColor}";
@@ -802,6 +800,8 @@ function startCredits(data)
     $(main).fadeIn(fadeTime);
     
     setTimeout(() =&gt; {
+        let rect = list.getBoundingClientRect();
+
         let animation = list.animate(animationKeyframes,
         {
             duration: (rect.bottom + document.documentElement.clientHeight) * scrollRate,
@@ -812,6 +812,11 @@ function startCredits(data)
         animation.finished.then(() =&gt;
         {
             $(main).fadeOut(fadeTime);
+            
+            while (list.firstChild) {
+                list.removeChild(list.lastChild);
+            }
+            
             sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
             running = false;
         });
