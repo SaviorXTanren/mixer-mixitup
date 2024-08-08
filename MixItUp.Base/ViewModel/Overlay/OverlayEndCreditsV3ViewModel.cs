@@ -407,6 +407,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             await endCredits.PlayCredits();
 
+            foreach (OverlayEndCreditsSectionV3Model section in endCredits.Sections)
+            {
+                section.ClearTracking();
+            }
+
             await base.TestWidget(widget);
         }
 
