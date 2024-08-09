@@ -16054,6 +16054,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pause/Unpause Persistent Timer.
+        /// </summary>
+        public static string PauseUnpausePersistentTimer {
+            get {
+                return ResourceManager.GetString("PauseUnpausePersistentTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Payout.
         /// </summary>
         public static string Payout {

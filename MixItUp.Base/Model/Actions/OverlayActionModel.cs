@@ -57,6 +57,8 @@ namespace MixItUp.Base.Model.Actions
         public Guid PersistentTimerID { get; set; }
         [DataMember]
         public string TimeAmount { get; set; }
+        [DataMember]
+        public bool? PauseUnpausePersistentTimer { get; set; }
 
         [DataMember]
         public Guid EndCreditsID { get; set; }
@@ -109,6 +111,13 @@ namespace MixItUp.Base.Model.Actions
         {
             this.PersistentTimerID = timer.ID;
             this.TimeAmount = timeAmount;
+        }
+
+        public OverlayActionModel(OverlayPersistentTimerV3Model timer, bool pauseUnpausePersistentTimer)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.PersistentTimerID = timer.ID;
+            this.PauseUnpausePersistentTimer = pauseUnpausePersistentTimer;
         }
 
         public OverlayActionModel(OverlayEndCreditsV3Model endCredits)
@@ -185,7 +194,18 @@ namespace MixItUp.Base.Model.Actions
                 OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.PersistentTimerID));
                 if (widget != null && widget.Type == OverlayItemV3Type.PersistentTimer)
                 {
-                    if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TimeAmount, parameters), out double amount))
+                    if (this.PauseUnpausePersistentTimer != null)
+                    {
+                        if (this.PauseUnpausePersistentTimer.GetValueOrDefault())
+                        {
+                            await ((OverlayPersistentTimerV3Model)widget.Item).Pause();
+                        }
+                        else
+                        {
+                            await ((OverlayPersistentTimerV3Model)widget.Item).Unpause();
+                        }
+                    }
+                    else if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TimeAmount, parameters), out double amount))
                     {
                         await ((OverlayPersistentTimerV3Model)widget.Item).ProcessEvent(parameters.User, amount);
                     }

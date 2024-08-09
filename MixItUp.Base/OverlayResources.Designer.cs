@@ -1047,6 +1047,7 @@ namespace MixItUp.Base {
         ///
         ///var totalSeconds = {CurrentAmount};
         ///var additionalTime = 0;
+        ///var paused = false;
         ///
         ///const main = document.getElementById(&quot;maindiv&quot;);
         ///
@@ -1061,10 +1062,7 @@ namespace MixItUp.Base {
         ///        performAnimation(&quot;{TimerAdjustedAnimationFramework}&quot;, &quot;{TimerAdjustedAnimationName}&quot;, main).then((result) =&gt;
         ///        {
         ///            
-        ///        });
-        ///    }
-        ///
-        ///   [rest of string was truncated]&quot;;.
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayPersistentTimerDefaultJavascript {
             get {

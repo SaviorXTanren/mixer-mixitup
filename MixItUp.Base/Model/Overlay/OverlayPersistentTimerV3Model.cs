@@ -46,6 +46,8 @@ namespace MixItUp.Base.Model.Overlay
 
         [JsonIgnore]
         private CancellationTokenSource cancellationTokenSource;
+        [JsonIgnore]
+        private bool paused;
 
         public OverlayPersistentTimerV3Model() : base(OverlayItemV3Type.PersistentTimer) { }
 
@@ -62,6 +64,30 @@ namespace MixItUp.Base.Model.Overlay
                 await this.CallFunction("adjustTime", properties);
 
                 await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user));
+            }
+        }
+
+        public async Task Pause()
+        {
+            if (!this.paused)
+            {
+                this.paused = true;
+                if (this.cancellationTokenSource != null)
+                {
+                    this.cancellationTokenSource.Cancel();
+                    this.cancellationTokenSource = null;
+                }
+                await this.CallFunction("pause", new Dictionary<string, object>());
+            }
+        }
+
+        public async Task Unpause()
+        {
+            if (this.paused)
+            {
+                this.paused = false;
+                this.StartBackgroundTimer();
+                await this.CallFunction("unpause", new Dictionary<string, object>());
             }
         }
 
@@ -82,10 +108,9 @@ namespace MixItUp.Base.Model.Overlay
 
         protected override async Task WidgetEnableInternal()
         {
-            this.cancellationTokenSource = new CancellationTokenSource();
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            AsyncRunner.RunAsyncBackground(this.BackgroundTimer, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            this.StartBackgroundTimer();
+
+            this.paused = false;
 
             await base.WidgetEnableInternal();
         }
@@ -111,6 +136,14 @@ namespace MixItUp.Base.Model.Overlay
             this.CurrentAmount = this.InitialAmount;
 
             return Task.CompletedTask;
+        }
+
+        private void StartBackgroundTimer()
+        {
+            this.cancellationTokenSource = new CancellationTokenSource();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(this.BackgroundTimer, this.cancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         private async Task BackgroundTimer(CancellationToken cancellationToken)

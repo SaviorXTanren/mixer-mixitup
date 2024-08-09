@@ -1909,6 +1909,7 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 
 var totalSeconds = {CurrentAmount};
 var additionalTime = 0;
+var paused = false;
 
 const main = document.getElementById("maindiv");
 
@@ -1949,11 +1950,14 @@ function timerLoop()
     text = text.replace("DD", hours);
 
     document.getElementById("text").innerHTML = text;
-
+    
     if (totalSeconds &gt; 0)
     {
         setTimeout(function () {
-            totalSeconds--;
+            if (!paused)
+            {
+                totalSeconds--;
+            }
             timerLoop();
         }, 1000);
     }
@@ -1970,6 +1974,16 @@ function timerLoop()
 function adjustTime(data)
 {
     additionalTime += data.Seconds;
+}
+
+function pause(data)
+{
+    paused = true;
+}
+
+function unpause(data)
+{
+    paused = false;
 }
 
 function checkForAdditionalTime()

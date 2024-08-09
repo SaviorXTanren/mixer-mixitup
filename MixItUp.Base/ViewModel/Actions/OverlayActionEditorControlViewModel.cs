@@ -29,6 +29,7 @@ namespace MixItUp.Base.ViewModel.Actions
         DamageStreamBoss,
         AddToGoal,
         AddToPersistentTimer,
+        PauseUnpausePersistentTimer,
         AddToEndCredits,
         PlayEndCredits,
         AddToEventList,
@@ -57,6 +58,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.ShowDamageStreamBoss));
                     this.NotifyPropertyChanged(nameof(this.ShowAddGoal));
                     this.NotifyPropertyChanged(nameof(this.ShowAddPersistTimer));
+                    this.NotifyPropertyChanged(nameof(this.ShowPauseUnpausePersistentTimer));
                     this.NotifyPropertyChanged(nameof(this.ShowAddToEndCredits));
                     this.NotifyPropertyChanged(nameof(this.ShowPlayEndCredits));
                     this.NotifyPropertyChanged(nameof(this.ShowAddToEventList));
@@ -375,6 +377,8 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowAddPersistTimer { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToPersistentTimer; } }
 
+        public bool ShowPauseUnpausePersistentTimer { get { return this.SelectedActionType == OverlayActionTypeEnum.PauseUnpausePersistentTimer; } }
+
         public ObservableCollection<OverlayWidgetV3Model> PersistentTimers { get; set; } = new ObservableCollection<OverlayWidgetV3Model>();
 
         public OverlayWidgetV3Model SelectedPersistentTimer
@@ -398,6 +402,17 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string timeAmount;
+
+        public bool PauseUnpausePersistentTimer
+        {
+            get { return this.pauseUnpausePersistentTimer; }
+            set
+            {
+                this.pauseUnpausePersistentTimer = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool pauseUnpausePersistentTimer;
 
         public bool ShowAddToEndCredits { get { return this.SelectedActionType == OverlayActionTypeEnum.AddToEndCredits; } }
 
@@ -587,6 +602,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.SelectedActionType = OverlayActionTypeEnum.AddToPersistentTimer;
                 this.widgetID = action.PersistentTimerID;
                 this.TimeAmount = action.TimeAmount;
+                this.PauseUnpausePersistentTimer = action.PauseUnpausePersistentTimer.GetValueOrDefault();
             }
             else if (action.EndCreditsID != Guid.Empty)
             {
@@ -703,6 +719,13 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
+            else if (this.ShowPauseUnpausePersistentTimer)
+            {
+                if (this.SelectedPersistentTimer == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+            }
             else if (this.ShowAddToEndCredits)
             {
                 if (this.SelectedEndCredits == null)
@@ -795,7 +818,7 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.SelectedGoal = this.Goals.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
-            else if (this.ShowAddPersistTimer)
+            else if (this.ShowAddPersistTimer || this.ShowPauseUnpausePersistentTimer)
             {
                 this.SelectedPersistentTimer = this.PersistentTimers.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
@@ -853,6 +876,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowAddPersistTimer)
             {
                 return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayPersistentTimerV3Model)this.SelectedPersistentTimer.Item, this.TimeAmount));
+            }
+            else if (this.ShowPauseUnpausePersistentTimer)
+            {
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayPersistentTimerV3Model)this.SelectedPersistentTimer.Item, this.PauseUnpausePersistentTimer));
             }
             else if (this.ShowAddToEndCredits)
             {

@@ -10543,4 +10543,7 @@ namespace CustomNamespace
   <data name="HideExclamationMessages" xml:space="preserve">
     <value>Hide Messages Starting With "!"</value>
   </data>
+  <data name="PauseUnpausePersistentTimer" xml:space="preserve">
+    <value>Pause/Unpause Persistent Timer</value>
+  </data>
 </root>
