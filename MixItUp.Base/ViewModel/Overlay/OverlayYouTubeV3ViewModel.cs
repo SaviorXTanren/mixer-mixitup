@@ -20,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string videoID;
 
-        public int StartTime
+        public string StartTime
         {
             get { return this.startTime; }
             set
@@ -29,7 +29,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private int startTime;
+        private string startTime = "0";
 
         public string Width
         {
