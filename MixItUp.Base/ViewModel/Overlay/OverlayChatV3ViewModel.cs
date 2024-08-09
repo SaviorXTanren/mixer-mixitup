@@ -121,6 +121,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool hideExclamationMessages;
 
+        public bool DisplayAlejoPronouns
+        {
+            get { return this.displayAlejoPronouns; }
+            set
+            {
+                this.displayAlejoPronouns = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool displayAlejoPronouns;
+
         public bool IgnoreSpecialtyExcludedUsers
         {
             get { return this.ignoreSpecialtyExcludedUsers; }
@@ -233,6 +244,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.AddMessagesToTop = item.AddMessagesToTop;
 
             this.HideExclamationMessages = item.HideExclamationMessages;
+            this.DisplayAlejoPronouns = item.DisplayAlejoPronouns;
 
             this.IgnoreSpecialtyExcludedUsers = item.IgnoreSpecialtyExcludedUsers;
             this.UsernamesToIgnore = string.Join(" ", item.UsernamesToIgnore);
@@ -307,6 +319,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 AddMessagesToTop = this.AddMessagesToTop,
 
                 HideExclamationMessages = this.HideExclamationMessages,
+                DisplayAlejoPronouns = this.DisplayAlejoPronouns,
 
                 IgnoreSpecialtyExcludedUsers = this.IgnoreSpecialtyExcludedUsers,
 

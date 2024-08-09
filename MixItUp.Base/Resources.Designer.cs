@@ -5640,6 +5640,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display Alejo Pronouns.
+        /// </summary>
+        public static string DisplayAlejoPronouns {
+            get {
+                return ResourceManager.GetString("DisplayAlejoPronouns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Format.
         /// </summary>
         public static string DisplayFormat {

@@ -209,6 +209,10 @@ performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main
     margin-inline-end: 0px;
 }
 
+.badge {
+    margin-top: 3px;
+}
+
 .image {
     vertical-align: text-top;
     width: max-content;
@@ -225,11 +229,15 @@ performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main
 &lt;/template&gt;
 
 &lt;template id="avatar"&gt;
-    &lt;img class="image" /&gt;
+    &lt;img class="image badge" /&gt;
 &lt;/template&gt;
 
 &lt;template id="badge"&gt;
-    &lt;img class="image" /&gt;
+    &lt;img class="image badge" /&gt;
+&lt;/template&gt;
+
+&lt;template id="pronouns"&gt;
+    &lt;span&gt;&lt;/span&gt;
 &lt;/template&gt;
 
 &lt;template id="username"&gt;
@@ -248,6 +256,7 @@ performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main
     <value>const messageTemplate = document.querySelector("#message");
 const avatarTemplate = document.querySelector("#avatar");
 const badgeTemplate = document.querySelector("#badge");
+const pronounsTemplate = document.querySelector("#pronouns");
 const usernameTemplate = document.querySelector("#username");
 const textTemplate = document.querySelector("#text");
 const emoteTemplate = document.querySelector("#emote");
@@ -260,6 +269,7 @@ var pendingMessage = [];
 const messageDelayTime = {MessageDelayTime};
 const messageRemovalTime = {MessageRemovalTime};
 const addMessagesToTop = {AddMessagesToTop};
+const displayAlejoPronouns = {DisplayAlejoPronouns};
 
 function add(data)
 {
@@ -274,6 +284,14 @@ function add(data)
     addBadge(messageSpan, data.User.PlatformRoleBadgeLink, {ShowRoleBadge});
     addBadge(messageSpan, data.User.PlatformSubscriberBadgeLink, {ShowSubscriberBadge});
     addBadge(messageSpan, data.User.PlatformSpecialtyBadgeLink, {ShowSpecialtyBadge});
+    
+    if (displayAlejoPronouns &amp;&amp; data.User.AlejoPronoun.length &gt; 0)
+    {
+        let pronouns = pronounsTemplate.content.cloneNode(true);
+        pronouns.firstElementChild.style.color = data.User.Color;
+        pronouns.firstElementChild.innerHTML = `[${data.User.AlejoPronoun}]`;
+        messageSpan.appendChild(pronouns);
+    }
     
     let username = usernameTemplate.content.cloneNode(true);
     username.firstElementChild.style.color = data.User.Color;

@@ -184,11 +184,15 @@ namespace MixItUp.Base {
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;avatar&quot;&gt;
-        ///    &lt;img class=&quot;image&quot; /&gt;
+        ///    &lt;img class=&quot;image badge&quot; /&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;badge&quot;&gt;
-        ///    &lt;img class=&quot;image&quot; /&gt;
+        ///    &lt;img class=&quot;image badge&quot; /&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;pronouns&quot;&gt;
+        ///    &lt;span&gt;&lt;/span&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;username&quot;&gt;
@@ -200,8 +204,7 @@ namespace MixItUp.Base {
         ///&lt;/template&gt;
         ///
         ///&lt;template id=&quot;emote&quot;&gt;
-        ///    &lt;img class=&quot;image&quot; /&gt;
-        ///&lt;/template&gt;.
+        ///    &lt;img class=&quot;i [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultHTML {
             get {
@@ -213,6 +216,7 @@ namespace MixItUp.Base {
         ///   Looks up a localized string similar to const messageTemplate = document.querySelector(&quot;#message&quot;);
         ///const avatarTemplate = document.querySelector(&quot;#avatar&quot;);
         ///const badgeTemplate = document.querySelector(&quot;#badge&quot;);
+        ///const pronounsTemplate = document.querySelector(&quot;#pronouns&quot;);
         ///const usernameTemplate = document.querySelector(&quot;#username&quot;);
         ///const textTemplate = document.querySelector(&quot;#text&quot;);
         ///const emoteTemplate = document.querySelector(&quot;#emote&quot;);
@@ -220,10 +224,7 @@ namespace MixItUp.Base {
         ///const list = document.getElementById(&quot;list&quot;);
         ///
         ///const maxMessages = 100;
-        ///var pendingMessage = [];
-        ///
-        ///const messageDelayTime = {MessageDelayTime};
-        ///const mes [rest of string was truncated]&quot;;.
+        ///var pendingMessage = [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultJavascript {
             get {

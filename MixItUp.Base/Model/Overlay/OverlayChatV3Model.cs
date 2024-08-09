@@ -45,6 +45,8 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public bool HideExclamationMessages { get; set; }
+        [DataMember]
+        public bool DisplayAlejoPronouns { get; set; }
 
         [DataMember]
         public bool IgnoreSpecialtyExcludedUsers { get; set; }
@@ -83,6 +85,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.MessageDelayTime)] = this.MessageDelayTime.ToString();
             properties[nameof(this.MessageRemovalTime)] = this.MessageRemovalTime.ToString();
             properties[nameof(this.AddMessagesToTop)] = this.AddMessagesToTop.ToString().ToLower();
+            properties[nameof(this.DisplayAlejoPronouns)] = this.DisplayAlejoPronouns.ToString().ToLower();
             properties[nameof(this.FlexAlignment)] = this.FlexAlignment;
 
             properties[nameof(this.ShowPlatformBadge)] = this.ShowPlatformBadge.ToString().ToLower();
