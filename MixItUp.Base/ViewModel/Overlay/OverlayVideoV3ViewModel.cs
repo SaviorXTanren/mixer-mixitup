@@ -56,6 +56,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int volume = 100;
 
+        public string StartTime
+        {
+            get { return this.startTime; }
+            set
+            {
+                this.startTime = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string startTime = "0";
+
         public bool Loop
         {
             get { return this.loop; }
@@ -82,6 +93,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.width = item.Width;
             this.height = item.Height;
             this.Volume = (int)(item.Volume * 100);
+            this.StartTime = item.StartTime;
             this.Loop = item.Loop;
 
             this.SetCommands();
@@ -105,6 +117,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 Width = this.width,
                 Height = this.height,
                 Volume = ((double)this.Volume) / 100.0,
+                StartTime = this.StartTime,
                 Loop = this.Loop
             };
 

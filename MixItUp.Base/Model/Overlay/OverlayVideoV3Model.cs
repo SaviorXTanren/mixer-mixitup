@@ -25,6 +25,9 @@ namespace MixItUp.Base.Model.Overlay
         public double Volume { get; set; }
 
         [DataMember]
+        public string StartTime { get; set; }
+
+        [DataMember]
         public bool Loop { get; set; }
 
         public OverlayVideoV3Model() : base(OverlayItemV3Type.Video) { }
@@ -34,6 +37,7 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.FilePath)] = RandomHelper.PickRandomFileFromDelimitedString(this.FilePath);
             properties[nameof(this.Volume)] = this.Volume.ToInvariantNumberString();
+            properties[nameof(this.StartTime)] = this.StartTime;
             properties[nameof(this.Loop)] = this.Loop ? "loop" : string.Empty;
             return properties;
         }
@@ -45,6 +49,16 @@ namespace MixItUp.Base.Model.Overlay
                 properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)].ToString(), parameters);
                 properties[FilePathIDPropertyName] = properties[nameof(this.FilePath)].ToString().GetHashCode().ToString();
                 properties[URLPathPropertyName] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)].ToString(), "video");
+            }
+
+            properties[nameof(this.StartTime)] = "0";
+            if (!string.IsNullOrEmpty(this.StartTime))
+            {
+                string startTime = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.StartTime, parameters);
+                if (int.TryParse(startTime, out int time) && time >= 0)
+                {
+                    properties[URLPathPropertyName] = properties[URLPathPropertyName].ToString() + "#t=" + time;
+                }
             }
         }
     }
