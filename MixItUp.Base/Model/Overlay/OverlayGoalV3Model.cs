@@ -17,14 +17,6 @@ namespace MixItUp.Base.Model.Overlay
         Cumulative
     }
 
-    public enum OverlayGoalResetV3Type
-    {
-        None,
-        Daily,
-        Weekly,
-        Monthly,
-    }
-
     [DataContract]
     public class OverlayGoalSegmentV3Model
     {
@@ -61,12 +53,7 @@ namespace MixItUp.Base.Model.Overlay
         public List<OverlayGoalSegmentV3Model> Segments { get; set; } = new List<OverlayGoalSegmentV3Model>();
 
         [DataMember]
-        public DateTimeOffset EndDate { get; set; }
-
-        [DataMember]
-        public OverlayGoalResetV3Type ResetType { get; set; }
-        [DataMember]
-        public DateTimeOffset ResetCadence { get; set; }
+        public ResetTracker ResetTracker { get; set; }
 
         [DataMember]
         public int StartingAmountCustom { get; set; }
@@ -90,6 +77,9 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public double TotalAmount { get; set; }
+
+        [JsonIgnore]
+        public DateTimeOffset ResetDateTime { get; set; }
 
         [JsonIgnore]
         public OverlayGoalSegmentV3Model CurrentSegment { get; private set; }
@@ -133,11 +123,11 @@ namespace MixItUp.Base.Model.Overlay
         {
             get
             {
-                if (this.ResetType == OverlayGoalResetV3Type.None)
+                if (this.ResetDateTime == DateTimeOffset.MinValue)
                 {
                     return string.Empty;
                 }
-                return this.EndDate.GetAge();
+                return this.ResetDateTime.GetAge();
             }
         }
 
@@ -227,29 +217,13 @@ namespace MixItUp.Base.Model.Overlay
             this.CurrentSegment = this.Segments.First();
             this.ProgressSegments();
 
-            DateTimeOffset newResetDate = DateTimeOffset.MinValue;
-            if (this.ResetType == OverlayGoalResetV3Type.Daily)
+            if (this.ResetTracker?.Amount > 0)
             {
-                newResetDate = this.EndDate.AddDays(1);
-            }
-            else if (this.ResetType == OverlayGoalResetV3Type.Weekly)
-            {
-                newResetDate = new DateTime(this.EndDate.Year, this.EndDate.Month, this.EndDate.Day);
-                do
+                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
+                if (this.ResetDateTime <= DateTimeOffset.Now)
                 {
-                    newResetDate = newResetDate.AddDays(1);
-                } while (newResetDate.DayOfWeek != this.ResetCadence.DayOfWeek);
-            }
-            else if (this.ResetType == OverlayGoalResetV3Type.Monthly)
-            {
-                int day = Math.Min(this.ResetCadence.Day, DateTime.DaysInMonth(this.EndDate.Year, this.EndDate.Month));
-                newResetDate = new DateTime(this.EndDate.Year, this.EndDate.Month, day);
-                newResetDate = newResetDate.AddMonths(1);
-            }
-
-            if (newResetDate != DateTimeOffset.MinValue && newResetDate <= DateTimeOffset.Now.Date)
-            {
-                this.Reset();
+                    this.Reset();
+                }
             }
         }
 
@@ -296,6 +270,12 @@ namespace MixItUp.Base.Model.Overlay
             if (this.StartingAmountCustom > 0)
             {
                 this.TotalAmount += this.StartingAmountCustom;
+            }
+
+            if (this.ResetTracker?.Amount > 0)
+            {
+                this.ResetTracker.UpdateStartDateTimeToLatest();
+                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
             }
         }
     }

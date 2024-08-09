@@ -5622,7 +5622,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed To Connect To Voice.
+        ///   Looks up a localized string similar to Failed to connect to voice.
         /// </summary>
         public static string DiscordServerFailedToConnectToVoice {
             get {
@@ -6464,6 +6464,15 @@ namespace MixItUp.Base {
         public static string ErrorCouldNotFindGame {
             get {
                 return ResourceManager.GetString("ErrorCouldNotFindGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Date can not be in the past.
+        /// </summary>
+        public static string ErrorDateCanNotBeInThePast {
+            get {
+                return ResourceManager.GetString("ErrorDateCanNotBeInThePast", resourceCulture);
             }
         }
         

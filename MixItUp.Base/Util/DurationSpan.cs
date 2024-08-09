@@ -32,29 +32,14 @@ namespace MixItUp.Base.Util
 
         public DateTimeOffset GetDateTimeOffsetFromNow()
         {
-            if (this.Type == DurationSpanTypeEnum.Years)
+            switch (this.Type)
             {
-                return DateTimeOffset.Now.AddMonths(this.Amount * 12);
-            }
-            else if (this.Type == DurationSpanTypeEnum.Months)
-            {
-                return DateTimeOffset.Now.AddMonths(this.Amount);
-            }
-            else if (this.Type == DurationSpanTypeEnum.Days)
-            {
-                return DateTimeOffset.Now.AddDays(this.Amount);
-            }
-            else if (this.Type == DurationSpanTypeEnum.Hours)
-            {
-                return DateTimeOffset.Now.AddHours(this.Amount);
-            }
-            else if (this.Type == DurationSpanTypeEnum.Minutes)
-            {
-                return DateTimeOffset.Now.AddMinutes(this.Amount);
-            }
-            else if (this.Type == DurationSpanTypeEnum.Seconds)
-            {
-                return DateTimeOffset.Now.AddSeconds(this.Amount);
+                case DurationSpanTypeEnum.Years: return DateTimeOffset.Now.AddMonths(this.Amount * 12);
+                case DurationSpanTypeEnum.Months: return DateTimeOffset.Now.AddMonths(this.Amount);
+                case DurationSpanTypeEnum.Days: return DateTimeOffset.Now.AddDays(this.Amount);
+                case DurationSpanTypeEnum.Hours: return DateTimeOffset.Now.AddHours(this.Amount);
+                case DurationSpanTypeEnum.Minutes: return DateTimeOffset.Now.AddMinutes(this.Amount);
+                case DurationSpanTypeEnum.Seconds: return DateTimeOffset.Now.AddSeconds(this.Amount);
             }
             return DateTimeOffset.Now;
         }

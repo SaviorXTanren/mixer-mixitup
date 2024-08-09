@@ -125,6 +125,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string progressColor;
 
+        public ResetTrackerViewModel ResetTracker
+        {
+            get { return this.resetTracker; }
+            set
+            {
+                this.resetTracker = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private ResetTrackerViewModel resetTracker;
+
         public int StartingAmountCustom
         {
             get { return this.startingAmountCustom; }
@@ -192,6 +203,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.GoalColor = "Red";
             this.ProgressColor = "Green";
 
+            this.ResetTracker = new ResetTrackerViewModel();
+
             this.Segments.Add(new OverlayGoalSegmentV3ViewModel(this)
             {
                 Name = "My Cool Goal",
@@ -221,6 +234,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.StartingAmountCustom = item.StartingAmountCustom;
             this.SelectedSegmentType = item.SegmentType;
+
+            this.ResetTracker = new ResetTrackerViewModel(item.ResetTracker);
 
             foreach (OverlayGoalSegmentV3Model segment in item.Segments)
             {
@@ -275,6 +290,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.GoalColor = this.GoalColor;
             result.ProgressColor = this.ProgressColor;
 
+            result.ResetTracker = this.ResetTracker.Model;
             result.StartingAmountCustom = this.StartingAmountCustom;
             result.SegmentType = this.SelectedSegmentType;
 

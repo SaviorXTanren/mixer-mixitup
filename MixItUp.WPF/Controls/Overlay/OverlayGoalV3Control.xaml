@@ -30,6 +30,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -114,7 +116,11 @@
             <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
         </Grid>
 
-        <GroupBox Grid.Row="8" Header="{x:Static resx:Resources.Segments}">
+        <GroupBox Grid.Row="8" Header="{x:Static resx:Resources.AutomaticReset}" HorizontalAlignment="Center">
+            <Controls:ResetTrackerControl DataContext="{Binding ResetTracker}" Width="500" />
+        </GroupBox>
+
+        <GroupBox Grid.Row="10" Header="{x:Static resx:Resources.Segments}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -168,7 +174,7 @@
             </Grid>
         </GroupBox>
 
-        <Grid Grid.Row="10">
+        <Grid Grid.Row="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />

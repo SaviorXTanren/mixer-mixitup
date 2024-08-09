@@ -951,6 +951,9 @@
     <Compile Include="Controls\Overlay\OverlayYouTubeV3Control.xaml.cs">
       <DependentUpon>OverlayYouTubeV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ResetTrackerControl.xaml.cs">
+      <DependentUpon>ResetTrackerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\AmazonPollyServiceControl.xaml.cs">
       <DependentUpon>AmazonPollyServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1944,6 +1947,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayYouTubeV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ResetTrackerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

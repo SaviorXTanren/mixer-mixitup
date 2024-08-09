@@ -10532,6 +10532,9 @@ namespace CustomNamespace
     <value>Is Not In</value>
   </data>
   <data name="DiscordServerFailedToConnectToVoice" xml:space="preserve">
-    <value>Failed To Connect To Voice</value>
+    <value>Failed to connect to voice</value>
+  </data>
+  <data name="ErrorDateCanNotBeInThePast" xml:space="preserve">
+    <value>ERROR: Date can not be in the past</value>
   </data>
 </root>
