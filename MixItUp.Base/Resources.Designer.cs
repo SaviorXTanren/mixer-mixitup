@@ -988,6 +988,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allow Adjustment While Paused.
+        /// </summary>
+        public static string AllowAdjustmentWhilePaused {
+            get {
+                return ResourceManager.GetString("AllowAdjustmentWhilePaused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow Commands to be Whispered.
         /// </summary>
         public static string AllowCommandsToBeWhispered {

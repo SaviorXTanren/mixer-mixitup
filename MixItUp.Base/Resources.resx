@@ -10546,4 +10546,7 @@ namespace CustomNamespace
   <data name="PauseUnpausePersistentTimer" xml:space="preserve">
     <value>Pause/Unpause Persistent Timer</value>
   </data>
+  <data name="AllowAdjustmentWhilePaused" xml:space="preserve">
+    <value>Allow Adjustment While Paused</value>
+  </data>
 </root>

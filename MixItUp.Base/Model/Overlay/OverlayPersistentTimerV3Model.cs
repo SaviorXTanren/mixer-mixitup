@@ -27,9 +27,14 @@ namespace MixItUp.Base.Model.Overlay
         public string DisplayFormat { get; set; }
 
         [DataMember]
+        public int MaxAmount { get; set; }
+
+        [DataMember]
         public bool DisableOnCompletion { get; set; }
         [DataMember]
         public bool ResetOnEnable { get; set; }
+        [DataMember]
+        public bool AllowAdjustmentWhilePaused { get; set; }
 
         [DataMember]
         public OverlayAnimationV3Model TimerAdjustedAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -53,17 +58,29 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
-            amount = Math.Round(amount);
-            this.CurrentAmount += (int)amount;
-            this.CurrentAmount = Math.Max(this.CurrentAmount, 0);
-
-            if (amount != 0)
+            if (!this.paused || this.AllowAdjustmentWhilePaused)
             {
-                Dictionary<string, object> properties = new Dictionary<string, object>();
-                properties[SecondsProperty] = amount;
-                await this.CallFunction("adjustTime", properties);
+                amount = Math.Round(amount);
+                if (this.MaxAmount > 0 && amount > 0)
+                {
+                    int previousAmount = this.CurrentAmount;
+                    this.CurrentAmount = Math.Min(this.CurrentAmount + (int)amount, this.MaxAmount);
+                    amount = this.CurrentAmount - previousAmount;
+                }
+                else
+                {
+                    this.CurrentAmount += (int)amount;
+                    this.CurrentAmount = Math.Max(this.CurrentAmount, 0);
+                }
 
-                await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user));
+                if (amount != 0)
+                {
+                    Dictionary<string, object> properties = new Dictionary<string, object>();
+                    properties[SecondsProperty] = amount;
+                    await this.CallFunction("adjustTime", properties);
+
+                    await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user));
+                }
             }
         }
 
