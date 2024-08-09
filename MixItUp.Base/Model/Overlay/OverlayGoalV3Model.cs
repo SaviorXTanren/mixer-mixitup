@@ -42,6 +42,8 @@ namespace MixItUp.Base.Model.Overlay
         public const string ProgressAmountSpecialIdentifier = "goalprogressamount";
         public const string SegmentNameSpecialIdentifier = "goalsegmentname";
         public const string SegmentAmountSpecialIdentifier = "goalsegmentamount";
+        public const string NextSegmentNameSpecialIdentifier = "goalnextsegmentname";
+        public const string NextSegmentAmountSpecialIdentifier = "goalnextsegmentamount";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayGoalDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayGoalDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
@@ -164,6 +166,9 @@ namespace MixItUp.Base.Model.Overlay
                     this.ProgressSegments();
 
                     await this.Complete();
+
+                    parameters.SpecialIdentifiers[NextSegmentNameSpecialIdentifier] = this.CurrentSegment.Name;
+                    parameters.SpecialIdentifiers[NextSegmentAmountSpecialIdentifier] = this.CurrentSegment.Amount.ToString();
 
                     await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
                     await ServiceManager.Get<CommandService>().Queue(previousSegment.CommandID, parameters);
