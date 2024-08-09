@@ -143,6 +143,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetEnableInternal();
 
+            this.RemoveEventHandlers();
+
             ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
             ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
             ChatService.OnChatUserTimedOut += ChatService_OnChatUserTimedOut;
@@ -154,11 +156,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetDisableInternal();
 
-            ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
-            ChatService.OnChatMessageDeleted -= ChatService_OnChatMessageDeleted;
-            ChatService.OnChatUserTimedOut -= ChatService_OnChatUserTimedOut;
-            ChatService.OnChatUserBanned -= ChatService_OnChatUserBanned;
-            ChatService.OnChatCleared -= ChatService_OnChatCleared;
+            this.RemoveEventHandlers();
         }
 
         private async void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
@@ -215,6 +213,15 @@ namespace MixItUp.Base.Model.Overlay
         private async void ChatService_OnChatCleared(object sender, EventArgs e)
         {
             await this.CallFunction("clear", new Dictionary<string, object>());
+        }
+
+        private void RemoveEventHandlers()
+        {
+            ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
+            ChatService.OnChatMessageDeleted -= ChatService_OnChatMessageDeleted;
+            ChatService.OnChatUserTimedOut -= ChatService_OnChatUserTimedOut;
+            ChatService.OnChatUserBanned -= ChatService_OnChatUserBanned;
+            ChatService.OnChatCleared -= ChatService_OnChatCleared;
         }
     }
 }
