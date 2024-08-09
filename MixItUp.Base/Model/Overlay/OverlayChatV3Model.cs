@@ -44,6 +44,9 @@ namespace MixItUp.Base.Model.Overlay
         public bool AddMessagesToTop { get; set; }
 
         [DataMember]
+        public bool HideExclamationMessages { get; set; }
+
+        [DataMember]
         public bool IgnoreSpecialtyExcludedUsers { get; set; }
         [DataMember]
         public List<string> UsernamesToIgnore { get; set; } = new List<string>();
@@ -157,7 +160,12 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (message.IsWhisper || message.IsDeleted)
+            if (message.IsWhisper || message.IsDeleted || string.IsNullOrWhiteSpace(message.PlainTextMessage))
+            {
+                return;
+            }
+
+            if (this.HideExclamationMessages && message.PlainTextMessage.StartsWith("!"))
             {
                 return;
             }

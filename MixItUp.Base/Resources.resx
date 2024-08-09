@@ -10537,4 +10537,7 @@ namespace CustomNamespace
   <data name="ErrorDateCanNotBeInThePast" xml:space="preserve">
     <value>ERROR: Date can not be in the past</value>
   </data>
+  <data name="HideExclamationMessages" xml:space="preserve">
+    <value>Hide Messages Starting With "!"</value>
+  </data>
 </root>

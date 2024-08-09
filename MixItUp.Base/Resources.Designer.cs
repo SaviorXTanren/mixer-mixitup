@@ -10614,6 +10614,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide Messages Starting With &quot;!&quot;.
+        /// </summary>
+        public static string HideExclamationMessages {
+            get {
+                return ResourceManager.GetString("HideExclamationMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Specific User Messages (Space Separated).
         /// </summary>
         public static string HideSpecificUserMessagesSpaceSeparated {
