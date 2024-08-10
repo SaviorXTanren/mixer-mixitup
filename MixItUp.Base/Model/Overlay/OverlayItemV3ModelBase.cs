@@ -53,6 +53,8 @@ namespace MixItUp.Base.Model.Overlay
         PersistentEmoteEffect,
         [OverlayWidget]
         Poll,
+        [OverlayWidget]
+        DiscordReactiveVoice,
     }
 
     public enum OverlayItemV3DisplayOptionsType
@@ -121,6 +123,12 @@ namespace MixItUp.Base.Model.Overlay
             }
             int index = Math.Abs(text.GetHashCode() % ColorSchemes.HTMLColors.Count);
             return ColorSchemes.HTMLColors.ElementAt(index);
+        }
+
+        public static void AddAnimationProperties(Dictionary<string, object> properties, string name, OverlayAnimationV3Model animation)
+        {
+            properties[$"{name}Framework"] = animation.AnimationFramework;
+            properties[$"{name}Name"] = animation.AnimationName;
         }
 
         [DataMember]

@@ -128,12 +128,9 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.OutcomeColors)] = this.OutcomeColors;
             properties[nameof(this.WheelClickSoundURL)] = this.WheelClickSoundURL;
 
-            properties["EntranceAnimationFramework"] = this.EntranceAnimation.AnimationFramework;
-            properties["EntranceAnimationName"] = this.EntranceAnimation.AnimationName;
-            properties["OutcomeSelectedAnimationFramework"] = this.OutcomeSelectedAnimation.AnimationFramework;
-            properties["OutcomeSelectedAnimationName"] = this.OutcomeSelectedAnimation.AnimationName;
-            properties["ExitAnimationFramework"] = this.ExitAnimation.AnimationFramework;
-            properties["ExitAnimationName"] = this.ExitAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.EntranceAnimation), this.EntranceAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.OutcomeSelectedAnimation), this.OutcomeSelectedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ExitAnimation), this.ExitAnimation);
 
             return properties;
         }

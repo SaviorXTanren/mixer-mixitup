@@ -207,10 +207,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.GoalColor)] = this.GoalColor;
             properties[nameof(this.ProgressColor)] = this.ProgressColor;
 
-            properties["ProgressOccurredAnimationFramework"] = this.ProgressOccurredAnimation.AnimationFramework;
-            properties["ProgressOccurredAnimationName"] = this.ProgressOccurredAnimation.AnimationName;
-            properties["SegmentCompletedAnimationFramework"] = this.SegmentCompletedAnimation.AnimationFramework;
-            properties["SegmentCompletedAnimationName"] = this.SegmentCompletedAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ProgressOccurredAnimation), this.ProgressOccurredAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.SegmentCompletedAnimation), this.SegmentCompletedAnimation);
 
             return properties;
         }

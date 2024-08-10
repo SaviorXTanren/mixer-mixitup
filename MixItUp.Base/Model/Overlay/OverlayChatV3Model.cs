@@ -93,10 +93,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.ShowSubscriberBadge)] = this.ShowSubscriberBadge.ToString().ToLower();
             properties[nameof(this.ShowSpecialtyBadge)] = this.ShowSpecialtyBadge.ToString().ToLower();
 
-            properties["MessageAddedAnimationFramework"] = this.MessageAddedAnimation.AnimationFramework;
-            properties["MessageAddedAnimationName"] = this.MessageAddedAnimation.AnimationName;
-            properties["MessageRemovedAnimationFramework"] = this.MessageRemovedAnimation.AnimationFramework;
-            properties["MessageRemovedAnimationName"] = this.MessageRemovedAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MessageAddedAnimation), this.MessageAddedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MessageRemovedAnimation), this.MessageRemovedAnimation);
 
             return properties;
         }

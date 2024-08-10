@@ -14,11 +14,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class OverlayActionModel : ActionModelBase
     {
-        public const string EntranceAnimationFrameworkPropertyName = "EntranceAnimationFramework";
-        public const string EntranceAnimationNamePropertyName = "EntranceAnimationName";
-        public const string ExitAnimationFrameworkPropertyName = "ExitAnimationFramework";
-        public const string ExitAnimationNamePropertyName = "ExitAnimationName";
-
         [DataMember]
         [Obsolete]
         public string OverlayName { get; set; }
@@ -284,10 +279,15 @@ namespace MixItUp.Base.Model.Actions
                         iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
                     }
 
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, EntranceAnimationFrameworkPropertyName, this.EntranceAnimation.AnimationFramework);
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, EntranceAnimationNamePropertyName, this.EntranceAnimation.AnimationName);
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, ExitAnimationFrameworkPropertyName, this.ExitAnimation.AnimationFramework);
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, ExitAnimationNamePropertyName, this.ExitAnimation.AnimationName);
+                    Dictionary<string, object> animationProperties = new Dictionary<string, object>();
+                    OverlayItemV3ModelBase.AddAnimationProperties(animationProperties, nameof(this.EntranceAnimation), this.EntranceAnimation);
+                    OverlayItemV3ModelBase.AddAnimationProperties(animationProperties, nameof(this.ExitAnimation), this.ExitAnimation);
+
+                    foreach (var kvp in animationProperties)
+                    {
+                        iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, kvp.Key, kvp.Value);
+                    }
+
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration);
 
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
