@@ -10549,4 +10549,40 @@ namespace CustomNamespace
   <data name="AllowAdjustmentWhilePaused" xml:space="preserve">
     <value>Allow Adjustment While Paused</value>
   </data>
+  <data name="DiscordReactiveVoice" xml:space="preserve">
+    <value>Discord Reactive Voice</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Deafened" xml:space="preserve">
+    <value>Deafened</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Joined" xml:space="preserve">
+    <value>Joined</value>
+  </data>
+  <data name="Muted" xml:space="preserve">
+    <value>Muted</value>
+  </data>
+  <data name="Undeafened" xml:space="preserve">
+    <value>Undeafened</value>
+  </data>
+  <data name="Unmuted" xml:space="preserve">
+    <value>Unmuted</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceActiveImageMustBeSet" xml:space="preserve">
+    <value>An active image must be set for custom user visuals</value>
+  </data>
+  <data name="ServerDisplayName" xml:space="preserve">
+    <value>Server Display Name</value>
+  </data>
 </root>

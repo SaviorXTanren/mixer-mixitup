@@ -233,6 +233,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayDiscordReactiveVoiceDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayDiscordReactiveVoiceDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayDiscordReactiveVoiceDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayDiscordReactiveVoiceDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayDiscordReactiveVoiceDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayDiscordReactiveVoiceDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
         ///
         ///const emojiPrefix = &quot;emoji://&quot;;

@@ -27,6 +27,8 @@ namespace MixItUp.Base.Services.External
         public string Discriminator { get; set; }
         [JsonProperty("avatar")]
         public string AvatarID { get; set; }
+        [JsonProperty("global_name")]
+        public string GlobalName { get; set; }
 
         public DiscordUser() { }
 
@@ -36,6 +38,7 @@ namespace MixItUp.Base.Services.External
             this.UserName = data["username"].ToString();
             this.Discriminator = data["discriminator"].ToString();
             this.AvatarID = data["avatar"].ToString();
+            this.GlobalName = data["global_name"].ToString();
         }
 
         public override bool Equals(object other)
@@ -745,11 +748,11 @@ namespace MixItUp.Base.Services.External
             return new List<DiscordServerUser>();
         }
 
-        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user)
+        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, string userID)
         {
             try
             {
-                return await this.GetAsync<DiscordServerUser>("guilds/" + server.ID + "/members/" + user.ID);
+                return await this.GetAsync<DiscordServerUser>("guilds/" + server.ID + "/members/" + userID);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -1023,7 +1026,7 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1) { return await this.botService.GetServerMembers(server, maxNumbers); }
 
-        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user) { return await this.botService.GetServerMember(server, user); }
+        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user) { return await this.botService.GetServerMember(server, user.ID); }
 
         public async Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server) { return await this.botService.GetServerChannels(server); }
 

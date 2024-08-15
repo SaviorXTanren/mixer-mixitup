@@ -340,6 +340,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        public static string Active {
+            get {
+                return ResourceManager.GetString("Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string Add {
@@ -4766,6 +4775,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deafened.
+        /// </summary>
+        public static string Deafened {
+            get {
+                return ResourceManager.GetString("Deafened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deafen/Undeafen Self.
         /// </summary>
         public static string DeafenSelf {
@@ -5622,6 +5640,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discord Reactive Voice.
+        /// </summary>
+        public static string DiscordReactiveVoice {
+            get {
+                return ResourceManager.GetString("DiscordReactiveVoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not get Server data.
         /// </summary>
         public static string DiscordServerDataFailed {
@@ -5663,6 +5690,15 @@ namespace MixItUp.Base {
         public static string DisplayFormat {
             get {
                 return ResourceManager.GetString("DisplayFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Name.
+        /// </summary>
+        public static string DisplayName {
+            get {
+                return ResourceManager.GetString("DisplayName", resourceCulture);
             }
         }
         
@@ -10596,6 +10632,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide.
+        /// </summary>
+        public static string Hide {
+            get {
+                return ResourceManager.GetString("Hide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Actions from Command Editor.
         /// </summary>
         public static string HideActionsFromCommandEditor {
@@ -11141,6 +11186,15 @@ namespace MixItUp.Base {
         public static string ImportWithFailures {
             get {
                 return ResourceManager.GetString("ImportWithFailures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactive.
+        /// </summary>
+        public static string Inactive {
+            get {
+                return ResourceManager.GetString("Inactive", resourceCulture);
             }
         }
         
@@ -11915,6 +11969,15 @@ namespace MixItUp.Base {
         public static string Jello {
             get {
                 return ResourceManager.GetString("Jello", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Joined.
+        /// </summary>
+        public static string Joined {
+            get {
+                return ResourceManager.GetString("Joined", resourceCulture);
             }
         }
         
@@ -14027,6 +14090,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Muted.
+        /// </summary>
+        public static string Muted {
+            get {
+                return ResourceManager.GetString("Muted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mute On/Off.
         /// </summary>
         public static string MuteOnOff {
@@ -15195,6 +15267,15 @@ namespace MixItUp.Base {
         public static string OverlayConnectionSuccess {
             get {
                 return ResourceManager.GetString("OverlayConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An active image must be set for custom user visuals.
+        /// </summary>
+        public static string OverlayDiscordReactiveVoiceActiveImageMustBeSet {
+            get {
+                return ResourceManager.GetString("OverlayDiscordReactiveVoiceActiveImageMustBeSet", resourceCulture);
             }
         }
         
@@ -19576,6 +19657,15 @@ namespace MixItUp.Base {
         public static string SerialDevicesAlreadyExistDeviceWithPortName {
             get {
                 return ResourceManager.GetString("SerialDevicesAlreadyExistDeviceWithPortName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Display Name.
+        /// </summary>
+        public static string ServerDisplayName {
+            get {
+                return ResourceManager.GetString("ServerDisplayName", resourceCulture);
             }
         }
         
@@ -24698,6 +24788,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Undeafened.
+        /// </summary>
+        public static string Undeafened {
+            get {
+                return ResourceManager.GetString("Undeafened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unfollow.
         /// </summary>
         public static string Unfollow {
@@ -24788,6 +24887,15 @@ namespace MixItUp.Base {
         public static string UnmodUser {
             get {
                 return ResourceManager.GetString("UnmodUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unmuted.
+        /// </summary>
+        public static string Unmuted {
+            get {
+                return ResourceManager.GetString("Unmuted", resourceCulture);
             }
         }
         

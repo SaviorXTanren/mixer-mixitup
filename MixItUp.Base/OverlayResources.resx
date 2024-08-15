@@ -431,6 +431,15 @@ function removeInternal(message)
     });
 }</value>
   </data>
+  <data name="OverlayDiscordReactiveVoiceDefaultCSS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayDiscordReactiveVoiceDefaultHTML" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayDiscordReactiveVoiceDefaultJavascript" xml:space="preserve">
+    <value />
+  </data>
   <data name="OverlayEmoteEffectBaseDefaultJavascript" xml:space="preserve">
     <value>const main = document.getElementById("maindiv");
 
