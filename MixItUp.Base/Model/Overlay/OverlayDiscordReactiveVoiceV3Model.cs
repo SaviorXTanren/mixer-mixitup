@@ -67,7 +67,12 @@ namespace MixItUp.Base.Model.Overlay
         public int UserSpacing { get; set; }
 
         [DataMember]
+        public bool IncludeSelf { get; set; }
+        [DataMember]
+        public bool OnlyShowAddedUsers { get; set; }
+        [DataMember]
         public bool DimInactiveUsers { get; set; }
+
         [DataMember]
         public OverlayDiscordReactiveVoiceNameDisplayTypeEnum NameDisplay { get; set; }
 
@@ -104,10 +109,11 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.UserHeight)] = this.UserHeight;
             properties[nameof(this.UserSpacing)] = this.UserSpacing;
 
+            properties[nameof(this.IncludeSelf)] = this.IncludeSelf.ToString().ToLower();
+            properties[nameof(this.OnlyShowAddedUsers)] = this.OnlyShowAddedUsers.ToString().ToLower();
             properties[nameof(this.DimInactiveUsers)] = this.DimInactiveUsers.ToString().ToLower();
-            properties[nameof(this.NameDisplay)] = this.NameDisplay.ToString();
 
-            properties[nameof(this.Users)] = JSONSerializerHelper.SerializeToString(this.Users);
+            properties[nameof(this.NameDisplay)] = this.NameDisplay.ToString();
 
             OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ActiveAnimation), this.ActiveAnimation);
             OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.InactiveAnimation), this.InactiveAnimation);

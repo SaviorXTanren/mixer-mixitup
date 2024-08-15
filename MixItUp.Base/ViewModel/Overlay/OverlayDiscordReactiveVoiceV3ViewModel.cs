@@ -1,11 +1,13 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -55,7 +57,11 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string serverDisplayName;
 
+        public string FullDisplayName { get { return $"{this.DisplayName} ({this.Username})"; } }
+
         public ObservableCollection<OverlayDiscordReactiveVoiceUserCustomVisualV3ViewModel> CustomVisuals { get; set; } = new ObservableCollection<OverlayDiscordReactiveVoiceUserCustomVisualV3ViewModel>();
+
+        public ICommand DeleteCommand { get; private set; }
 
         private OverlayDiscordReactiveVoiceV3ViewModel viewModel;
 
@@ -67,6 +73,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Username = user.User.UserName;
             this.DisplayName = user.User.GlobalName;
             this.ServerDisplayName = user.Nickname;
+
+            this.Initialize();
         }
 
         public OverlayDiscordReactiveVoiceUserV3ViewModel(OverlayDiscordReactiveVoiceV3ViewModel viewModel, OverlayDiscordReactiveVoiceUserV3Model user)
@@ -77,6 +85,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Username = user.Username;
             this.DisplayName = user.DisplayName;
             this.ServerDisplayName = user.ServerDisplayName;
+
+            this.Initialize();
         }
 
         public Result Validate()
@@ -110,6 +120,14 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             return result;
         }
+
+        private void Initialize()
+        {
+            this.DeleteCommand = this.CreateCommand(() =>
+            {
+                this.viewModel.DeleteUser(this);
+            });
+        }
     }
 
     public class OverlayDiscordReactiveVoiceUserCustomVisualV3ViewModel : UIViewModelBase
@@ -135,6 +153,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private string customActiveImageFilePath;
+        public ICommand BrowseCustomActiveImageFilePathCommand { get; set; }
+
         public string CustomInactiveImageFilePath
         {
             get { return this.customInactiveImageFilePath; }
@@ -145,6 +165,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private string customInactiveImageFilePath;
+        public ICommand BrowseCustomInactiveImageFilePathCommand { get; set; }
+
         public string CustomMutedImageFilePath
         {
             get { return this.customMutedImageFilePath; }
@@ -155,6 +177,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private string customMutedImageFilePath;
+        public ICommand BrowseCustomMutedImageFilePathCommand { get; set; }
+
         public string CustomDeafenImageFilePath
         {
             get { return this.customDeafenImageFilePath; }
@@ -165,6 +189,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private string customDeafenImageFilePath;
+        public ICommand BrowseCustomDeafenImageFilePathCommand { get; set; }
 
         public int CustomWidth
         {
@@ -187,9 +212,47 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int customHeight;
 
-        public OverlayDiscordReactiveVoiceUserCustomVisualV3ViewModel() { }
+        public OverlayDiscordReactiveVoiceUserCustomVisualV3ViewModel()
+        {
+            this.BrowseCustomActiveImageFilePathCommand = this.CreateCommand(() =>
+            {
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
+                if (!string.IsNullOrWhiteSpace(filepath))
+                {
+                    this.CustomActiveImageFilePath = filepath;
+                }
+            });
+
+            this.BrowseCustomInactiveImageFilePathCommand = this.CreateCommand(() =>
+            {
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
+                if (!string.IsNullOrWhiteSpace(filepath))
+                {
+                    this.CustomInactiveImageFilePath = filepath;
+                }
+            });
+
+            this.BrowseCustomMutedImageFilePathCommand = this.CreateCommand(() =>
+            {
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
+                if (!string.IsNullOrWhiteSpace(filepath))
+                {
+                    this.CustomMutedImageFilePath = filepath;
+                }
+            });
+
+            this.BrowseCustomDeafenImageFilePathCommand = this.CreateCommand(() =>
+            {
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
+                if (!string.IsNullOrWhiteSpace(filepath))
+                {
+                    this.CustomDeafenImageFilePath = filepath;
+                }
+            });
+        }
 
         public OverlayDiscordReactiveVoiceUserCustomVisualV3ViewModel(OverlayDiscordReactiveVoiceUserCustomVisualV3Model visual)
+            : this()
         {
             this.CustomActiveImageFilePath = visual.CustomActiveImageFilePath;
             this.CustomInactiveImageFilePath = visual.CustomInactiveImageFilePath;
@@ -270,6 +333,26 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int userSpacing;
 
+        public bool IncludeSelf
+        {
+            get { return this.includeSelf; }
+            set
+            {
+                this.includeSelf = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool includeSelf;
+        public bool OnlyShowAddedUsers
+        {
+            get { return this.onlyShowAddedUsers; }
+            set
+            {
+                this.onlyShowAddedUsers = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool onlyShowAddedUsers;
         public bool DimInactiveUsers
         {
             get { return this.dimInactiveUsers; }
@@ -293,6 +376,18 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayDiscordReactiveVoiceNameDisplayTypeEnum selectedNameDisplay = OverlayDiscordReactiveVoiceNameDisplayTypeEnum.DisplayName;
 
+        public string AddDiscordUsername
+        {
+            get { return this.addDiscordUsername; }
+            set
+            {
+                this.addDiscordUsername = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string addDiscordUsername;
+        public ICommand AddUserCommand { get; set; }
+
         public ObservableCollection<OverlayDiscordReactiveVoiceUserV3ViewModel> Users { get; set; } = new ObservableCollection<OverlayDiscordReactiveVoiceUserV3ViewModel>();
 
         public OverlayAnimationV3ViewModel ActiveAnimation;
@@ -303,10 +398,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel UndeafenAnimation;
         public OverlayAnimationV3ViewModel JoinedAnimation;
         public OverlayAnimationV3ViewModel LeftAnimation;
-
-        public ICommand BrowseFilePathCommand { get; set; }
-
-        public ICommand AddOutcomeCommand { get; set; }
 
         public OverlayDiscordReactiveVoiceV3ViewModel()
             : base(OverlayItemV3Type.DiscordReactiveVoice)
@@ -329,6 +420,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.UndeafenAnimation = new OverlayAnimationV3ViewModel(Resources.Undeafened, new OverlayAnimationV3Model());
             this.JoinedAnimation = new OverlayAnimationV3ViewModel(Resources.Joined, new OverlayAnimationV3Model());
             this.LeftAnimation = new OverlayAnimationV3ViewModel(Resources.Left, new OverlayAnimationV3Model());
+
+            this.Initialize();
         }
 
         public OverlayDiscordReactiveVoiceV3ViewModel(OverlayDiscordReactiveVoiceV3Model item)
@@ -337,6 +430,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.UserWidth = item.UserWidth;
             this.UserHeight = item.UserHeight;
             this.UserSpacing = item.UserSpacing;
+
+            this.IncludeSelf = item.IncludeSelf;
+            this.OnlyShowAddedUsers = item.OnlyShowAddedUsers;
 
             this.DimInactiveUsers = item.DimInactiveUsers;
             this.SelectedNameDisplay = item.NameDisplay;
@@ -360,6 +456,23 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override Result Validate()
         {
+            if (this.OnlyShowAddedUsers)
+            {
+                if (this.Users.Count == 0)
+                {
+                    return new Result(Resources.OverlayDiscordReactiveVoiceAtLeastOneUserMustBeAddedForOnlyShowAddedUsers);
+                }
+            }
+
+            foreach (OverlayDiscordReactiveVoiceUserV3ViewModel user in this.Users)
+            {
+                Result result = user.Validate();
+                if (!result.Success)
+                {
+                    return result;
+                }
+            }
+
             return new Result();
         }
 
@@ -387,7 +500,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.UserHeight = this.UserHeight;
             result.UserSpacing = this.UserSpacing;
 
+            result.IncludeSelf = this.IncludeSelf;
+            result.OnlyShowAddedUsers = this.OnlyShowAddedUsers;
             result.DimInactiveUsers = this.DimInactiveUsers;
+
             result.NameDisplay = this.SelectedNameDisplay;
 
             result.ActiveAnimation = this.ActiveAnimation.GetAnimation();
@@ -398,6 +514,12 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.UndeafenAnimation = this.UndeafenAnimation.GetAnimation();
             result.JoinedAnimation = this.JoinedAnimation.GetAnimation();
             result.LeftAnimation = this.LeftAnimation.GetAnimation();
+
+            foreach (OverlayDiscordReactiveVoiceUserV3ViewModel user in this.Users)
+            {
+                OverlayDiscordReactiveVoiceUserV3Model model = user.GetModel();
+                result.Users[model.UserID] = model;
+            }
 
             return result;
         }
@@ -412,6 +534,27 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Animations.Add(this.UndeafenAnimation);
             this.Animations.Add(this.JoinedAnimation);
             this.Animations.Add(this.LeftAnimation);
+
+            this.AddUserCommand = this.CreateCommand(async () =>
+            {
+                if (ServiceManager.Get<DiscordService>().IsConnected && ServiceManager.Get<DiscordService>().IsUsingCustomApplication)
+                {
+                    IEnumerable<DiscordServerUser> users = await ServiceManager.Get<DiscordService>().SearchServerMembers(ServiceManager.Get<DiscordService>().Server, this.AddDiscordUsername);
+                    if (users == null || users.Count() == 0)
+                    {
+                        await DialogHelper.ShowMessage(Resources.OverlayDiscordReactiveVoiceUnableToFindUser);
+                        return;
+                    }
+
+                    if (this.Users.Any(u => string.Equals(u.UserID, users.First().User.ID)))
+                    {
+                        await DialogHelper.ShowMessage(Resources.OverlayDiscordReactiveVoiceUserAlreadyAdded);
+                        return;
+                    }
+
+                    this.AddUser(new OverlayDiscordReactiveVoiceUserV3ViewModel(this, users.First()));
+                }
+            });
         }
 
         private void AddUser(OverlayDiscordReactiveVoiceUserV3ViewModel viewModel)

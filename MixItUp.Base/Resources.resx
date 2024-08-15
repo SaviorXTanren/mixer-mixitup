@@ -10585,4 +10585,52 @@ namespace CustomNamespace
   <data name="ServerDisplayName" xml:space="preserve">
     <value>Server Display Name</value>
   </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>Name Display</value>
+  </data>
+  <data name="ActiveImage" xml:space="preserve">
+    <value>Active Image</value>
+  </data>
+  <data name="CustomUserDisplays" xml:space="preserve">
+    <value>Custom User Displays</value>
+  </data>
+  <data name="DeafenedImage" xml:space="preserve">
+    <value>Deafened Image</value>
+  </data>
+  <data name="DimInactiveUsers" xml:space="preserve">
+    <value>Dim Inactive Users</value>
+  </data>
+  <data name="DiscordUsername" xml:space="preserve">
+    <value>Discord Username</value>
+  </data>
+  <data name="InactiveImage" xml:space="preserve">
+    <value>Inactive Image</value>
+  </data>
+  <data name="IncludeSelf" xml:space="preserve">
+    <value>Include Self</value>
+  </data>
+  <data name="MutedImage" xml:space="preserve">
+    <value>Muted Image</value>
+  </data>
+  <data name="OnlyShowAddedUsers" xml:space="preserve">
+    <value>Only Show Added Users</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceAtLeastOneUserMustBeAddedForOnlyShowAddedUsers" xml:space="preserve">
+    <value>At least one user must be added if Only Show Added Users is selected</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceUnableToFindUser" xml:space="preserve">
+    <value>Unable to find user with the specified name in the connected Discord server</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceUserAlreadyAdded" xml:space="preserve">
+    <value>The specified user has already been added</value>
+  </data>
+  <data name="UserHeight" xml:space="preserve">
+    <value>User Height</value>
+  </data>
+  <data name="UserSpacing" xml:space="preserve">
+    <value>User Spacing</value>
+  </data>
+  <data name="UserWidth" xml:space="preserve">
+    <value>User Width</value>
+  </data>
 </root>

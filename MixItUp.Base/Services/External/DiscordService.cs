@@ -738,6 +738,16 @@ namespace MixItUp.Base.Services.External
             return new List<DiscordChannel>();
         }
 
+        public async Task<IEnumerable<DiscordServerUser>> SearchServerMembers(DiscordServer server, string search, int maxNumbers = 1)
+        {
+            try
+            {
+                return await this.GetAsync<IEnumerable<DiscordServerUser>>("guilds/" + server.ID + "/members/search?query=" + search + "&limit=" + maxNumbers);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return new List<DiscordServerUser>();
+        }
+
         public async Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1)
         {
             try
@@ -1023,6 +1033,8 @@ namespace MixItUp.Base.Services.External
         }
 
         public async Task<DiscordServer> GetServer(string serverID) { return await this.botService.GetServer(serverID); }
+
+        public async Task<IEnumerable<DiscordServerUser>> SearchServerMembers(DiscordServer server, string search, int maxNumbers = 1) { return await this.botService.SearchServerMembers(server, search, maxNumbers); }
 
         public async Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1) { return await this.botService.GetServerMembers(server, maxNumbers); }
 
