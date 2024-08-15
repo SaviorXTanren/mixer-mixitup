@@ -235,6 +235,33 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        public static string OverlayCustomDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayCustomDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayCustomDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayCustomDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayCustomDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayCustomDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         public static string OverlayDiscordReactiveVoiceDefaultCSS {
             get {
                 return ResourceManager.GetString("OverlayDiscordReactiveVoiceDefaultCSS", resourceCulture);

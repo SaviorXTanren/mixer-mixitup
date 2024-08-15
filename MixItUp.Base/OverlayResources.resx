@@ -431,6 +431,15 @@ function removeInternal(message)
     });
 }</value>
   </data>
+  <data name="OverlayCustomDefaultCSS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayCustomDefaultHTML" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayCustomDefaultJavascript" xml:space="preserve">
+    <value />
+  </data>
   <data name="OverlayDiscordReactiveVoiceDefaultCSS" xml:space="preserve">
     <value />
   </data>
