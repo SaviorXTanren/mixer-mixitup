@@ -10633,4 +10633,7 @@ namespace CustomNamespace
   <data name="UserWidth" xml:space="preserve">
     <value>User Width</value>
   </data>
+  <data name="VoiceChannel" xml:space="preserve">
+    <value>Voice Channel</value>
+  </data>
 </root>

@@ -30,6 +30,8 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
@@ -37,9 +39,17 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Text="{Binding UserWidth}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserWidth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
-            <TextBox Grid.Column="2" Text="{Binding UserHeight}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserHeight}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
-            <TextBox Grid.Column="4" Text="{Binding UserSpacing}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserSpacing}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="0" SelectedItem="{Binding SelectedVoiceChannel}" ItemsSource="{Binding VoiceChannels}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VoiceChannel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Recycling">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+
+            <TextBox Grid.Column="2" Text="{Binding UserWidth}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserWidth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+            <TextBox Grid.Column="4" Text="{Binding UserHeight}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserHeight}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+            <TextBox Grid.Column="6" Text="{Binding UserSpacing}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserSpacing}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -172,8 +182,8 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="10" />
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
+                                    <!--<RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />-->
                                 </Grid.RowDefinitions>
 
                                 <Grid Grid.Row="0">
@@ -211,7 +221,7 @@
                                     <Button Grid.Column="4" Command="{Binding BrowseCustomInactiveImageFilePathCommand}" Content="{x:Static resx:Resources.Browse}" VerticalAlignment="Center"/>
                                 </Grid>
 
-                                <Grid Grid.Row="4">
+                                <!--<Grid Grid.Row="4">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
@@ -225,7 +235,7 @@
 
                                     <TextBox Text="{Binding CustomDeafenImageFilePath}" Grid.Column="3" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DeafenedImage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                                     <Button Grid.Column="4" Command="{Binding BrowseCustomDeafenImageFilePathCommand}" Content="{x:Static resx:Resources.Browse}" VerticalAlignment="Center"/>
-                                </Grid>
+                                </Grid>-->
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

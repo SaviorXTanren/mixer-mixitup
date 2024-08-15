@@ -376,6 +376,18 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayDiscordReactiveVoiceNameDisplayTypeEnum selectedNameDisplay = OverlayDiscordReactiveVoiceNameDisplayTypeEnum.DisplayName;
 
+        public ObservableCollection<DiscordChannel> VoiceChannels { get; set; } = new ObservableCollection<DiscordChannel>();
+        public DiscordChannel SelectedVoiceChannel
+        {
+            get { return this.selectedVoiceChannel; }
+            set
+            {
+                this.selectedVoiceChannel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private DiscordChannel selectedVoiceChannel;
+
         public string AddDiscordUsername
         {
             get { return this.addDiscordUsername; }
@@ -398,6 +410,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel UndeafenAnimation;
         public OverlayAnimationV3ViewModel JoinedAnimation;
         public OverlayAnimationV3ViewModel LeftAnimation;
+
+        private string voiceChannelID;
 
         public OverlayDiscordReactiveVoiceV3ViewModel()
             : base(OverlayItemV3Type.DiscordReactiveVoice)
@@ -451,6 +465,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.AddUser(new OverlayDiscordReactiveVoiceUserV3ViewModel(this, kvp.Value));
             }
 
+            this.voiceChannelID = item.DiscordVoiceChannelID;
+
             this.Initialize();
         }
 
@@ -488,6 +504,27 @@ namespace MixItUp.Base.ViewModel.Overlay
         public void DeleteUser(OverlayDiscordReactiveVoiceUserV3ViewModel user)
         {
             this.Users.Remove(user);
+        }
+
+        protected override async Task OnOpenInternal()
+        {
+            if (ServiceManager.Get<DiscordService>().IsConnected && ServiceManager.Get<DiscordService>().IsUsingCustomApplication)
+            {
+                IEnumerable<DiscordChannel> channels = await ServiceManager.Get<DiscordService>().GetServerChannels(ServiceManager.Get<DiscordService>().Server);
+                if (channels != null)
+                {
+                    this.VoiceChannels.Clear();
+                    foreach (DiscordChannel channel in channels.Where(c => c.Type == DiscordChannel.DiscordChannelTypeEnum.Voice))
+                    {
+                        this.VoiceChannels.Add(channel);
+                    }
+
+                    if (!string.IsNullOrEmpty(this.voiceChannelID))
+                    {
+                        this.SelectedVoiceChannel = this.VoiceChannels.FirstOrDefault(c => string.Equals(c.ID, this.voiceChannelID));
+                    }
+                }
+            }
         }
 
         protected override OverlayItemV3ModelBase GetItemInternal()
@@ -530,10 +567,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Animations.Add(this.InactiveAnimation);
             this.Animations.Add(this.MutedAnimation);
             this.Animations.Add(this.UnmutedAnimation);
-            this.Animations.Add(this.DeafenAnimation);
-            this.Animations.Add(this.UndeafenAnimation);
-            this.Animations.Add(this.JoinedAnimation);
-            this.Animations.Add(this.LeftAnimation);
+            //this.Animations.Add(this.DeafenAnimation);
+            //this.Animations.Add(this.UndeafenAnimation);
+            //this.Animations.Add(this.JoinedAnimation);
+            //this.Animations.Add(this.LeftAnimation);
 
             this.AddUserCommand = this.CreateCommand(async () =>
             {

@@ -26094,6 +26094,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Voice Channel.
+        /// </summary>
+        public static string VoiceChannel {
+            get {
+                return ResourceManager.GetString("VoiceChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Voice Keycode.
         /// </summary>
         public static string VoiceKeycode {

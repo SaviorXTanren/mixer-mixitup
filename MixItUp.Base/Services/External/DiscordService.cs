@@ -562,7 +562,7 @@ namespace MixItUp.Base.Services.External
             await this.Send(JSONSerializerHelper.SerializeToString(packet));
         }
 
-        public async Task<DiscordVoiceConnection> ConnectToVoice(DiscordServer server, DiscordChannel channel)
+        public async Task<DiscordVoiceConnection> ConnectToVoice(DiscordServer server, string channelID)
         {
             try
             {
@@ -574,7 +574,7 @@ namespace MixItUp.Base.Services.External
                     await this.Send(new DiscordWebSocketPacket() { OPCodeType = DiscordWebSocketPacketTypeEnum.VoiceStateUpdate, Sequence = this.lastSequenceNumber, Data = new JObject()
                     {
                         { "guild_id", server.ID },
-                        { "channel_id", channel.ID },
+                        { "channel_id", channelID },
                         { "self_mute", true },
                         { "self_deaf", false },
                     }});
@@ -919,6 +919,8 @@ namespace MixItUp.Base.Services.External
         public DiscordUser User { get; private set; }
         public DiscordServer Server { get; private set; }
 
+        public string ConnectedVoiceChannelID { get; private set; }
+
         public IEnumerable<DiscordEmoji> Emojis { get; private set; }
 
         public string BotPermissions { get; private set; }
@@ -1038,7 +1040,7 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1) { return await this.botService.GetServerMembers(server, maxNumbers); }
 
-        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user) { return await this.botService.GetServerMember(server, user.ID); }
+        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, string userID) { return await this.botService.GetServerMember(server, userID); }
 
         public async Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server) { return await this.botService.GetServerChannels(server); }
 
@@ -1083,9 +1085,14 @@ namespace MixItUp.Base.Services.External
 
         public async Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true) { await this.botService.DeafenServerMember(server, user, deaf); }
 
-        public async Task<bool> ConnectToVoice(DiscordServer server, DiscordChannel channel)
+        public async Task<bool> ConnectToVoice(DiscordServer server, string channelID)
         {
-            DiscordVoiceConnection voiceConnection = await this.webSocket.ConnectToVoice(ServiceManager.Get<DiscordService>().Server, channel);
+            this.voiceWebSocket.OnUserJoinedVoice -= VoiceWebSocket_OnUserJoinedVoice;
+            this.voiceWebSocket.OnUserLeftVoice -= VoiceWebSocket_OnUserLeftVoice;
+            this.voiceWebSocket.OnUserStartedSpeaking -= VoiceWebSocket_OnUserStartedSpeaking;
+            this.voiceWebSocket.OnUserStoppedSpeaking -= VoiceWebSocket_OnUserStoppedSpeaking;
+
+            DiscordVoiceConnection voiceConnection = await this.webSocket.ConnectToVoice(ServiceManager.Get<DiscordService>().Server, channelID);
             if (voiceConnection != null)
             {
                 this.voiceWebSocket = new DiscordVoiceWebSocket();
@@ -1095,11 +1102,29 @@ namespace MixItUp.Base.Services.External
                     this.voiceWebSocket.OnUserLeftVoice += VoiceWebSocket_OnUserLeftVoice;
                     this.voiceWebSocket.OnUserStartedSpeaking += VoiceWebSocket_OnUserStartedSpeaking;
                     this.voiceWebSocket.OnUserStoppedSpeaking += VoiceWebSocket_OnUserStoppedSpeaking;
+
+                    this.ConnectedVoiceChannelID = channelID;
+
                     return true;
                 }
             }
             return false;
-            // new Result(Resources.DiscordServerFailedToConnectToVoice);
+        }
+
+        public async Task DisconnectFromVoice()
+        {
+            this.ConnectedVoiceChannelID = null;
+
+            this.voiceWebSocket.OnUserJoinedVoice -= VoiceWebSocket_OnUserJoinedVoice;
+            this.voiceWebSocket.OnUserLeftVoice -= VoiceWebSocket_OnUserLeftVoice;
+            this.voiceWebSocket.OnUserStartedSpeaking -= VoiceWebSocket_OnUserStartedSpeaking;
+            this.voiceWebSocket.OnUserStoppedSpeaking -= VoiceWebSocket_OnUserStoppedSpeaking;
+
+            if (this.voiceWebSocket != null)
+            {
+                await this.voiceWebSocket.Disconnect();
+                this.voiceWebSocket = null;
+            }
         }
 
         protected override async Task RefreshOAuthToken()
