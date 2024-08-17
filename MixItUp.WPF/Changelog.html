@@ -7,6 +7,42 @@
 
         <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
 
+        <h2 style="color: #2e6c80;">v1.1.0.1718:</h2>
+        <ul>
+            <li>Adding support for exporting and importing of Overlay Widgets</li>
+            <li>Goal Overlay Widget Improvements:</li>
+            <ul>
+                <li>Adding automatic reset options</li>
+                <li>Adding support for segment-specific commands that will trigger when the segment is completed</li>
+                <li>Adding support for the following Special Identifiers for all commands in Overlay Widget: $goaltotalamount, $goalprogressamount, $goalsegmentname, $goalsegmentamount</li>
+                <li>Adding support for the following Special Identifiers for segment completion commands in Overlay Widget: $goalnextsegmentname, $goalnextsegmentamount</li>
+                <li>Fixing bug with last segment of Goal Overlay Widget not triggering segment completion command</li>
+            </ul>
+            <li>Chat Overlay Widget Improvements <b>(REQUIRES RE-CREATING WIDGET)</b>:</li>
+            <ul>
+                <li>Adding option to hide all chat messages that start with "!"</li>
+                <li>Adding Alejo pronoun display support next to user information</li>
+            </ul>
+            <li>Timer Overlay Widget Improvements:</li>
+            <ul>
+                <li>Adding maximum amount option to allow capping of timer</li>
+                <li>Adding pause/unpause option for Timer Overlay Widgets to Overlay Action</li>
+                <li>Adding option to allow/disallow adjustment of timer while it is paused</li>
+            </ul>
+            <li>Label Overlay Widgets now support reading from a specified file and will automatically update the display when the contents of the file are changed</li>
+            <li>Fixing bug with End Credits Overlay Widget sometimes scrolling credits faster than intended <b>(REQUIRES RE-CREATING WIDGET)</b></li>
+            <li>YouTube option for Overlay Action now support processing Special Identifiers for start time</li>
+            <li>Video option for Overlay Action now support specifying a start time</li>
+            <li>Leaderboard Overlay Widget will now ignore user amounts of 0</li>
+            <li>Adding SSML text processing support for Amazon Polly, Microsoft Azure Speech, and Windows Text to Speech providers for Text to Speech Action</li>
+            <li>Adding "Is In" an "Is Not In" operators to Conditional Action for checking if a piece of text exists somewhere within a larger piece of text</li>
+            <li>Adding "Persist No Duplicates" option to Random Action to keep track of what actions have already been triggered to ensure no action is run more than once. Once all actions have been triggered once, tracking is reset again to once per action.</li>
+            <li>Removing check for duplicate user accounts in settings and now allowing for multiple profiles to be created with the same user account. Profiles can now be specifically named by visiting Settings -> General.</li>
+            <li>Fixing bug with Wheel Overlay Widget not properly loading for specific language locales</li>
+            <li>URL parameters set on an Overlay Endpoint web page URL will now be passed down into and available for use in Overlay Actions and Overlay Widgets for that Overlay Endpoint</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.1.0.1717:</h2>
         <ul>
             <li>Adding the following new Text to Speech Providers: Amazon Polly, Microsoft Azure Speech, TikTok TTS</li>
