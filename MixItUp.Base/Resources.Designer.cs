@@ -15559,6 +15559,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A file path must be specified.
+        /// </summary>
+        public static string OverlayLabelFilePathMustBeSpecified {
+            get {
+                return ResourceManager.GetString("OverlayLabelFilePathMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Leader.
         /// </summary>
         public static string OverlayLeaderboardNewLeader {

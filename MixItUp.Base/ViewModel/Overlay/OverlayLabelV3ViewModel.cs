@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -17,6 +19,12 @@ namespace MixItUp.Base.ViewModel.Overlay
         public string TypeString { get { return Resources.ResourceManager.GetSafeString(this.Type.ToString()); } }
 
         public bool IsCounterType { get { return this.Type == OverlayLabelDisplayV3TypeEnum.Counter; } }
+
+        public bool IsFileType { get { return this.Type == OverlayLabelDisplayV3TypeEnum.File; } }
+
+        public bool ShowFormat { get { return !this.IsFileType; } }
+
+        public int GridWidth { get { return this.IsFileType ? 620 : 300; } }
 
         public bool IsEnabled
         {
@@ -53,6 +61,18 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private CounterModel selectedCounter;
 
+        public string FilePath
+        {
+            get { return this.filePath; }
+            set
+            {
+                this.filePath = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string filePath;
+        public ICommand BrowseFilePathCommand { get; private set; }
+
         public OverlayLabelDisplayV3Model Model { get; private set; }
 
         public OverlayLabelDisplayV3ViewModel(OverlayLabelDisplayV3TypeEnum type)
@@ -82,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                     break;
             }
 
-            this.LoadCounters();
+            this.Initialize();
         }
 
         public OverlayLabelDisplayV3ViewModel(OverlayLabelDisplayV3Model model)
@@ -92,8 +112,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Type = model.Type;
             this.IsEnabled = model.IsEnabled;
             this.Format = model.Format;
+            this.FilePath = model.FilePath;
 
-            this.LoadCounters();
+            this.Initialize();
             if (this.Type == OverlayLabelDisplayV3TypeEnum.Counter && !string.IsNullOrEmpty(this.Model.CounterName))
             {
                 this.SelectedCounter = this.Counters.FirstOrDefault(c => string.Equals(c.Name, this.Model.CounterName, StringComparison.OrdinalIgnoreCase));
@@ -107,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return new Result();
             }
 
-            if (string.IsNullOrEmpty(this.Format))
+            if (this.ShowFormat && string.IsNullOrEmpty(this.Format))
             {
                 return new Result(Resources.OverlayLabelDisplayFormatMustHaveValidValue);
             }
@@ -117,10 +138,15 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return new Result(Resources.OverlayLabelCounterNotSelected);
             }
 
+            if (this.Type == OverlayLabelDisplayV3TypeEnum.File && string.IsNullOrEmpty(this.FilePath))
+            {
+                return new Result(Resources.OverlayLabelFilePathMustBeSpecified);
+            }
+
             return new Result();
         }
 
-        private void LoadCounters()
+        private void Initialize()
         {
             if (this.Type == OverlayLabelDisplayV3TypeEnum.Counter)
             {
@@ -129,6 +155,19 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.Counters.Add(counter.Value);
                 }
             }
+
+            this.BrowseFilePathCommand = this.CreateCommand(async () =>
+            {
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().TextFileFilter());
+                if (!string.IsNullOrWhiteSpace(filepath))
+                {
+                    this.FilePath = filepath;
+                    if (ServiceManager.Get<IFileService>().FileExists(filePath))
+                    {
+                        this.Format = await ServiceManager.Get<IFileService>().ReadFile(filepath);
+                    }
+                }
+            });
         }
     }
 
@@ -237,7 +276,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                     UserID = display.Model?.UserID ?? Guid.Empty,
                     Amount = display.Model?.Amount ?? 0,
 
-                    CounterName = display.SelectedCounter?.Name ?? null
+                    CounterName = display.SelectedCounter?.Name ?? null,
+
+                    FilePath = display.FilePath,
                 };
             }
 

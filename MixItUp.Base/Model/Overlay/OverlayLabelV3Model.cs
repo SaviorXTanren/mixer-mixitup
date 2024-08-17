@@ -8,8 +8,10 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -32,6 +34,8 @@ namespace MixItUp.Base.Model.Overlay
         LatestYouTubeSuperChat,
 
         Counter = 100,
+
+        File = 200,
     }
 
     public enum OverlayLabelDisplayV3SettingTypeEnum
@@ -64,6 +68,9 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public string CounterName { get; set; }
+
+        [DataMember]
+        public string FilePath { get; set; }
     }
 
     [DataContract]
@@ -88,6 +95,8 @@ namespace MixItUp.Base.Model.Overlay
         public Dictionary<OverlayLabelDisplayV3TypeEnum, OverlayLabelDisplayV3Model> Displays { get; set; } = new Dictionary<OverlayLabelDisplayV3TypeEnum, OverlayLabelDisplayV3Model>();
 
         private CancellationTokenSource refreshCancellationTokenSource;
+
+        private FileSystemWatcher fileSystemWatcher = null;
 
         public OverlayLabelV3Model() : base(OverlayItemV3Type.Label) { }
 
@@ -285,6 +294,27 @@ namespace MixItUp.Base.Model.Overlay
                     this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].Amount = counter.Amount;
                 }
             }
+
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.File))
+            {
+                if (this.fileSystemWatcher != null)
+                {
+                    this.fileSystemWatcher.Changed -= FileSystemWatcher_Changed;
+                    this.fileSystemWatcher.Dispose();
+                    this.fileSystemWatcher = null;
+                }
+
+                string filePath = this.Displays[OverlayLabelDisplayV3TypeEnum.File].FilePath;
+                if (ServiceManager.Get<IFileService>().FileExists(filePath))
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.File].Format = await ServiceManager.Get<IFileService>().ReadFile(filePath);
+
+                    this.fileSystemWatcher = new FileSystemWatcher(Path.GetDirectoryName(filePath));
+                    this.fileSystemWatcher.Filter = Path.GetFileName(filePath);
+                    this.fileSystemWatcher.Changed += FileSystemWatcher_Changed;
+                    this.fileSystemWatcher.EnableRaisingEvents = true;
+                }
+            }
         }
 
         protected override async Task WidgetDisableInternal()
@@ -292,6 +322,13 @@ namespace MixItUp.Base.Model.Overlay
             await base.WidgetDisableInternal();
 
             this.RemoveEventHandlers();
+
+            if (this.fileSystemWatcher != null)
+            {
+                this.fileSystemWatcher.Changed -= FileSystemWatcher_Changed;
+                this.fileSystemWatcher.Dispose();
+                this.fileSystemWatcher = null;
+            }
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
@@ -415,6 +452,22 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.Counter].Amount = counter.Amount;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.Counter);
+            }
+        }
+
+        private async void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            try
+            {
+                if (e.ChangeType == WatcherChangeTypes.Changed && this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.File))
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.File].Format = await ServiceManager.Get<IFileService>().ReadFile(e.FullPath);
+                    await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.File);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 

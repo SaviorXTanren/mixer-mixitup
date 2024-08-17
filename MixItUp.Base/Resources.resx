@@ -10636,4 +10636,7 @@ namespace CustomNamespace
   <data name="VoiceChannel" xml:space="preserve">
     <value>Voice Channel</value>
   </data>
+  <data name="OverlayLabelFilePathMustBeSpecified" xml:space="preserve">
+    <value>A file path must be specified</value>
+  </data>
 </root>
