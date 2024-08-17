@@ -10639,4 +10639,7 @@ namespace CustomNamespace
   <data name="OverlayLabelFilePathMustBeSpecified" xml:space="preserve">
     <value>A file path must be specified</value>
   </data>
+  <data name="ProfileName" xml:space="preserve">
+    <value>Profile Name</value>
+  </data>
 </root>
