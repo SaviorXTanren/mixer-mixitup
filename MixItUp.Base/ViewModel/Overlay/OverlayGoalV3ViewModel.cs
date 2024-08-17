@@ -36,6 +36,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private double amount = 1;
 
+        public CustomCommandModel Command
+        {
+            get { return this.command; }
+            set
+            {
+                this.command = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel command;
+
         public ICommand DeleteCommand { get; private set; }
 
         private OverlayGoalV3ViewModel viewModel;
@@ -43,6 +54,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayGoalSegmentV3ViewModel(OverlayGoalV3ViewModel viewModel)
         {
             this.viewModel = viewModel;
+
+            this.Command = this.viewModel.CreateEmbeddedCommand(Resources.SegmentReached);
+
             this.DeleteCommand = this.CreateCommand(() =>
             {
                 this.viewModel.DeleteSegment(this);
@@ -54,6 +68,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Name = segment.Name;
             this.Amount = segment.Amount;
+
+            this.Command = this.viewModel.GetEmbeddedCommand(segment.CommandID, Resources.SegmentReached);
         }
     }
 
@@ -108,6 +124,17 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private string progressColor;
+
+        public ResetTrackerViewModel ResetTracker
+        {
+            get { return this.resetTracker; }
+            set
+            {
+                this.resetTracker = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private ResetTrackerViewModel resetTracker;
 
         public int StartingAmountCustom
         {
@@ -176,6 +203,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.GoalColor = "Red";
             this.ProgressColor = "Green";
 
+            this.ResetTracker = new ResetTrackerViewModel();
+
             this.Segments.Add(new OverlayGoalSegmentV3ViewModel(this)
             {
                 Name = "My Cool Goal",
@@ -205,6 +234,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.StartingAmountCustom = item.StartingAmountCustom;
             this.SelectedSegmentType = item.SegmentType;
+
+            this.ResetTracker = new ResetTrackerViewModel(item.ResetTracker);
 
             foreach (OverlayGoalSegmentV3Model segment in item.Segments)
             {
@@ -259,6 +290,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.GoalColor = this.GoalColor;
             result.ProgressColor = this.ProgressColor;
 
+            result.ResetTracker = this.ResetTracker.Model;
             result.StartingAmountCustom = this.StartingAmountCustom;
             result.SegmentType = this.SelectedSegmentType;
 
@@ -269,7 +301,10 @@ namespace MixItUp.Base.ViewModel.Overlay
                 {
                     Name = segment.Name,
                     Amount = segment.Amount,
+                    CommandID = segment.Command.ID,
                 });
+
+                ChannelSession.Settings.SetCommand(segment.Command);
             }
 
             result.ProgressOccurredCommandID = this.ProgressOccurredCommand.ID;

@@ -92,6 +92,11 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (var kvp in users.Take(this.TotalToShow))
             {
+                if (kvp.Item2 == 0)
+                {
+                    continue;
+                }
+
                 JObject jobj = new JObject();
                 jobj[UserProperty] = JObject.FromObject(kvp.Item1);
                 jobj["Details"] = kvp.Item2;
@@ -115,10 +120,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.BorderColor)] = this.BorderColor;
 
-            properties["ItemAddedAnimationFramework"] = this.ItemAddedAnimation.AnimationFramework;
-            properties["ItemAddedAnimationName"] = this.ItemAddedAnimation.AnimationName;
-            properties["ItemRemovedAnimationFramework"] = this.ItemRemovedAnimation.AnimationFramework;
-            properties["ItemRemovedAnimationName"] = this.ItemRemovedAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemRemovedAnimation), this.ItemRemovedAnimation);
 
             return properties;
         }

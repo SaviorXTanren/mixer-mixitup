@@ -14,11 +14,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class OverlayActionModel : ActionModelBase
     {
-        public const string EntranceAnimationFrameworkPropertyName = "EntranceAnimationFramework";
-        public const string EntranceAnimationNamePropertyName = "EntranceAnimationName";
-        public const string ExitAnimationFrameworkPropertyName = "ExitAnimationFramework";
-        public const string ExitAnimationNamePropertyName = "ExitAnimationName";
-
         [DataMember]
         [Obsolete]
         public string OverlayName { get; set; }
@@ -57,6 +52,8 @@ namespace MixItUp.Base.Model.Actions
         public Guid PersistentTimerID { get; set; }
         [DataMember]
         public string TimeAmount { get; set; }
+        [DataMember]
+        public bool? PauseUnpausePersistentTimer { get; set; }
 
         [DataMember]
         public Guid EndCreditsID { get; set; }
@@ -109,6 +106,13 @@ namespace MixItUp.Base.Model.Actions
         {
             this.PersistentTimerID = timer.ID;
             this.TimeAmount = timeAmount;
+        }
+
+        public OverlayActionModel(OverlayPersistentTimerV3Model timer, bool pauseUnpausePersistentTimer)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.PersistentTimerID = timer.ID;
+            this.PauseUnpausePersistentTimer = pauseUnpausePersistentTimer;
         }
 
         public OverlayActionModel(OverlayEndCreditsV3Model endCredits)
@@ -185,7 +189,18 @@ namespace MixItUp.Base.Model.Actions
                 OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.PersistentTimerID));
                 if (widget != null && widget.Type == OverlayItemV3Type.PersistentTimer)
                 {
-                    if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TimeAmount, parameters), out double amount))
+                    if (this.PauseUnpausePersistentTimer != null)
+                    {
+                        if (this.PauseUnpausePersistentTimer.GetValueOrDefault())
+                        {
+                            await ((OverlayPersistentTimerV3Model)widget.Item).Pause();
+                        }
+                        else
+                        {
+                            await ((OverlayPersistentTimerV3Model)widget.Item).Unpause();
+                        }
+                    }
+                    else if (double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TimeAmount, parameters), out double amount))
                     {
                         await ((OverlayPersistentTimerV3Model)widget.Item).ProcessEvent(parameters.User, amount);
                     }
@@ -264,10 +279,15 @@ namespace MixItUp.Base.Model.Actions
                         iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
                     }
 
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, EntranceAnimationFrameworkPropertyName, this.EntranceAnimation.AnimationFramework);
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, EntranceAnimationNamePropertyName, this.EntranceAnimation.AnimationName);
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, ExitAnimationFrameworkPropertyName, this.ExitAnimation.AnimationFramework);
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, ExitAnimationNamePropertyName, this.ExitAnimation.AnimationName);
+                    Dictionary<string, object> animationProperties = new Dictionary<string, object>();
+                    OverlayItemV3ModelBase.AddAnimationProperties(animationProperties, nameof(this.EntranceAnimation), this.EntranceAnimation);
+                    OverlayItemV3ModelBase.AddAnimationProperties(animationProperties, nameof(this.ExitAnimation), this.ExitAnimation);
+
+                    foreach (var kvp in animationProperties)
+                    {
+                        iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, kvp.Key, kvp.Value);
+                    }
+
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration);
 
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);

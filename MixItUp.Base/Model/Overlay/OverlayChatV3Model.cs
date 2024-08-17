@@ -44,6 +44,11 @@ namespace MixItUp.Base.Model.Overlay
         public bool AddMessagesToTop { get; set; }
 
         [DataMember]
+        public bool HideExclamationMessages { get; set; }
+        [DataMember]
+        public bool DisplayAlejoPronouns { get; set; }
+
+        [DataMember]
         public bool IgnoreSpecialtyExcludedUsers { get; set; }
         [DataMember]
         public List<string> UsernamesToIgnore { get; set; } = new List<string>();
@@ -80,6 +85,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.MessageDelayTime)] = this.MessageDelayTime.ToString();
             properties[nameof(this.MessageRemovalTime)] = this.MessageRemovalTime.ToString();
             properties[nameof(this.AddMessagesToTop)] = this.AddMessagesToTop.ToString().ToLower();
+            properties[nameof(this.DisplayAlejoPronouns)] = this.DisplayAlejoPronouns.ToString().ToLower();
             properties[nameof(this.FlexAlignment)] = this.FlexAlignment;
 
             properties[nameof(this.ShowPlatformBadge)] = this.ShowPlatformBadge.ToString().ToLower();
@@ -87,10 +93,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.ShowSubscriberBadge)] = this.ShowSubscriberBadge.ToString().ToLower();
             properties[nameof(this.ShowSpecialtyBadge)] = this.ShowSpecialtyBadge.ToString().ToLower();
 
-            properties["MessageAddedAnimationFramework"] = this.MessageAddedAnimation.AnimationFramework;
-            properties["MessageAddedAnimationName"] = this.MessageAddedAnimation.AnimationName;
-            properties["MessageRemovedAnimationFramework"] = this.MessageRemovedAnimation.AnimationFramework;
-            properties["MessageRemovedAnimationName"] = this.MessageRemovedAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MessageAddedAnimation), this.MessageAddedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MessageRemovedAnimation), this.MessageRemovedAnimation);
 
             return properties;
         }
@@ -137,6 +141,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetEnableInternal();
 
+            this.RemoveEventHandlers();
+
             ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
             ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
             ChatService.OnChatUserTimedOut += ChatService_OnChatUserTimedOut;
@@ -148,16 +154,17 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetDisableInternal();
 
-            ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
-            ChatService.OnChatMessageDeleted -= ChatService_OnChatMessageDeleted;
-            ChatService.OnChatUserTimedOut -= ChatService_OnChatUserTimedOut;
-            ChatService.OnChatUserBanned -= ChatService_OnChatUserBanned;
-            ChatService.OnChatCleared -= ChatService_OnChatCleared;
+            this.RemoveEventHandlers();
         }
 
         private async void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (message.IsWhisper || message.IsDeleted)
+            if (message.IsWhisper || message.IsDeleted || string.IsNullOrWhiteSpace(message.PlainTextMessage))
+            {
+                return;
+            }
+
+            if (this.HideExclamationMessages && message.PlainTextMessage.StartsWith("!"))
             {
                 return;
             }
@@ -204,6 +211,15 @@ namespace MixItUp.Base.Model.Overlay
         private async void ChatService_OnChatCleared(object sender, EventArgs e)
         {
             await this.CallFunction("clear", new Dictionary<string, object>());
+        }
+
+        private void RemoveEventHandlers()
+        {
+            ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
+            ChatService.OnChatMessageDeleted -= ChatService_OnChatMessageDeleted;
+            ChatService.OnChatUserTimedOut -= ChatService_OnChatUserTimedOut;
+            ChatService.OnChatUserBanned -= ChatService_OnChatUserBanned;
+            ChatService.OnChatCleared -= ChatService_OnChatCleared;
         }
     }
 }

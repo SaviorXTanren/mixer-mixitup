@@ -20,7 +20,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -78,26 +80,31 @@
             <TextBox Grid.Column="6" Text="{Binding Rate}" IsEnabled="{Binding RateChangable}" MaterialDesign:HintAssist.Hint="{Binding RateHintText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid Grid.Row="4">
+        <TextBox Grid.Row="4" Text="{Binding Text}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpeechMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Row="0" Text="{Binding Text}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpeechMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.SSML}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <ToggleButton Grid.Column="2" IsChecked="{Binding SSML}" IsEnabled="{Binding SupportsSSML}" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.WaitForFinish}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
-            <ToggleButton Grid.Column="4" IsChecked="{Binding WaitForFinish}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.WaitForFinish}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <ToggleButton Grid.Column="6" IsChecked="{Binding WaitForFinish}" VerticalAlignment="Center" />
         </Grid>
 
-        <Grid Grid.Row="5" Margin="0,20,0,0" Visibility="{Binding NoCustomAmazonPollyAccount, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+        <Grid Grid.Row="7" Margin="0,20,0,0" Visibility="{Binding NoCustomAmazonPollyAccount, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
             <TextBlock TextWrapping="Wrap" Foreground="Red" Text="{x:Static resx:Resources.NoCustomAmazonPollyAccount}"/>
         </Grid>
 
-        <Grid Grid.Row="5" Margin="0,20,0,0" Visibility="{Binding NoCustomMicrosoftAzureSpeechAccount, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+        <Grid Grid.Row="7" Margin="0,20,0,0" Visibility="{Binding NoCustomMicrosoftAzureSpeechAccount, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
             <TextBlock TextWrapping="Wrap" Foreground="Red" Text="{x:Static resx:Resources.NoCustomMicrosoftAzureSpeechAccount}"/>
         </Grid>
     </Grid>

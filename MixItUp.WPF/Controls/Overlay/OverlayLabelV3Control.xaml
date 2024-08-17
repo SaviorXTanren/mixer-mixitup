@@ -122,7 +122,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <GroupBox Width="300" Margin="10">
+                        <GroupBox Width="{Binding GridWidth}" Margin="10">
                             <GroupBox.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -151,7 +151,18 @@
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
 
-                                    <TextBox Text="{Binding Format}" Grid.Column="1" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Format}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <TextBox Text="{Binding Format}" Grid.Column="1" Visibility="{Binding ShowFormat, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Format}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                    <Grid Visibility="{Binding IsFileType, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.ColumnSpan="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox Text="{Binding FilePath}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                        <Button Grid.Column="2" Content="{x:Static resx:Resources.Browse}" Command="{Binding BrowseFilePathCommand}" />
+                                    </Grid>
                                 </Grid>
                             </GroupBox.Content>
                         </GroupBox>

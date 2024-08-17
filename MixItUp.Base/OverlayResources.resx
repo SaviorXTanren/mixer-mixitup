@@ -209,6 +209,10 @@ performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main
     margin-inline-end: 0px;
 }
 
+.badge {
+    margin-top: 3px;
+}
+
 .image {
     vertical-align: text-top;
     width: max-content;
@@ -225,11 +229,15 @@ performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main
 &lt;/template&gt;
 
 &lt;template id="avatar"&gt;
-    &lt;img class="image" /&gt;
+    &lt;img class="image badge" /&gt;
 &lt;/template&gt;
 
 &lt;template id="badge"&gt;
-    &lt;img class="image" /&gt;
+    &lt;img class="image badge" /&gt;
+&lt;/template&gt;
+
+&lt;template id="pronouns"&gt;
+    &lt;span&gt;&lt;/span&gt;
 &lt;/template&gt;
 
 &lt;template id="username"&gt;
@@ -248,6 +256,7 @@ performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main
     <value>const messageTemplate = document.querySelector("#message");
 const avatarTemplate = document.querySelector("#avatar");
 const badgeTemplate = document.querySelector("#badge");
+const pronounsTemplate = document.querySelector("#pronouns");
 const usernameTemplate = document.querySelector("#username");
 const textTemplate = document.querySelector("#text");
 const emoteTemplate = document.querySelector("#emote");
@@ -260,6 +269,7 @@ var pendingMessage = [];
 const messageDelayTime = {MessageDelayTime};
 const messageRemovalTime = {MessageRemovalTime};
 const addMessagesToTop = {AddMessagesToTop};
+const displayAlejoPronouns = {DisplayAlejoPronouns};
 
 function add(data)
 {
@@ -274,6 +284,14 @@ function add(data)
     addBadge(messageSpan, data.User.PlatformRoleBadgeLink, {ShowRoleBadge});
     addBadge(messageSpan, data.User.PlatformSubscriberBadgeLink, {ShowSubscriberBadge});
     addBadge(messageSpan, data.User.PlatformSpecialtyBadgeLink, {ShowSpecialtyBadge});
+    
+    if (displayAlejoPronouns &amp;&amp; data.User.AlejoPronoun.length &gt; 0)
+    {
+        let pronouns = pronounsTemplate.content.cloneNode(true);
+        pronouns.firstElementChild.style.color = data.User.Color;
+        pronouns.firstElementChild.innerHTML = `[${data.User.AlejoPronoun}]`;
+        messageSpan.appendChild(pronouns);
+    }
     
     let username = usernameTemplate.content.cloneNode(true);
     username.firstElementChild.style.color = data.User.Color;
@@ -412,6 +430,24 @@ function removeInternal(message)
         list.removeChild(message);
     });
 }</value>
+  </data>
+  <data name="OverlayCustomDefaultCSS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayCustomDefaultHTML" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayCustomDefaultJavascript" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayDiscordReactiveVoiceDefaultCSS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayDiscordReactiveVoiceDefaultHTML" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OverlayDiscordReactiveVoiceDefaultJavascript" xml:space="preserve">
+    <value />
   </data>
   <data name="OverlayEmoteEffectBaseDefaultJavascript" xml:space="preserve">
     <value>const main = document.getElementById("maindiv");
@@ -792,8 +828,6 @@ function startCredits(data)
         list.appendChild(section);
         list.appendChild(spacerTemplate.content.cloneNode(true));
     });
-
-    let rect = list.getBoundingClientRect();
     
     main.style.display = "none";
     main.style.backgroundColor = "{BackgroundColor}";
@@ -802,6 +836,8 @@ function startCredits(data)
     $(main).fadeIn(fadeTime);
     
     setTimeout(() =&gt; {
+        let rect = list.getBoundingClientRect();
+
         let animation = list.animate(animationKeyframes,
         {
             duration: (rect.bottom + document.documentElement.clientHeight) * scrollRate,
@@ -812,6 +848,11 @@ function startCredits(data)
         animation.finished.then(() =&gt;
         {
             $(main).fadeOut(fadeTime);
+            
+            while (list.firstChild) {
+                list.removeChild(list.lastChild);
+            }
+            
             sendParentMessage({ Type: "EndCreditsCompleted", ID: "{ID}" });
             running = false;
         });
@@ -1802,7 +1843,7 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
             iframe.style = "position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0; border: none;";
             iframe.sandbox = "allow-scripts allow-same-origin";
             iframe.allow = "autoplay; fullscreen";
-            iframe.src = url;
+            iframe.src = url + window.location.search;
             
             iframe.addEventListener("load", ev =&gt; {
                 var passedDownStyles = document.createElement("style");
@@ -1886,6 +1927,7 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 
 var totalSeconds = {CurrentAmount};
 var additionalTime = 0;
+var paused = false;
 
 const main = document.getElementById("maindiv");
 
@@ -1926,11 +1968,14 @@ function timerLoop()
     text = text.replace("DD", hours);
 
     document.getElementById("text").innerHTML = text;
-
+    
     if (totalSeconds &gt; 0)
     {
         setTimeout(function () {
-            totalSeconds--;
+            if (!paused)
+            {
+                totalSeconds--;
+            }
             timerLoop();
         }, 1000);
     }
@@ -1947,6 +1992,16 @@ function timerLoop()
 function adjustTime(data)
 {
     additionalTime += data.Seconds;
+}
+
+function pause(data)
+{
+    paused = true;
+}
+
+function unpause(data)
+{
+    paused = false;
 }
 
 function checkForAdditionalTime()

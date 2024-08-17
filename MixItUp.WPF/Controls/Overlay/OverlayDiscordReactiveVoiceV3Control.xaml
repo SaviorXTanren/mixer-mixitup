@@ -1,0 +1,246 @@
+﻿<Controls:LoadingControlBase x:Class="MixItUp.WPF.Controls.Overlay.OverlayDiscordReactiveVoiceV3Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Controls:LoadingControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Controls:LoadingControlBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" SelectedItem="{Binding SelectedVoiceChannel}" ItemsSource="{Binding VoiceChannels}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VoiceChannel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Recycling">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+
+            <TextBox Grid.Column="2" Text="{Binding UserWidth}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserWidth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+            <TextBox Grid.Column="4" Text="{Binding UserHeight}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserHeight}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+            <TextBox Grid.Column="6" Text="{Binding UserSpacing}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserSpacing}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IncludeSelf}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="1" IsChecked="{Binding IncludeSelf}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.OnlyShowAddedUsers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="4" IsChecked="{Binding OnlyShowAddedUsers}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+            <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DimInactiveUsers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="7" IsChecked="{Binding DimInactiveUsers}" VerticalAlignment="Center" Margin="5,0,0,0" />
+        </Grid>
+
+        <GroupBox Header="{x:Static resx:Resources.NameDisplay}" Grid.Row="4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding NameDisplays}" SelectedItem="{Binding SelectedNameDisplay}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DisplayFormat}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBox Text="{Binding FontSize}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <ComboBox Text="{Binding FontName}" Grid.Column="4" ItemsSource="{Binding Fonts}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Recycling">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+
+                    <TextBox Text="{Binding FontColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding ShadowColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <ListBox Grid.Column="2" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding Bold}">
+                            <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Italics}">
+                            <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Underline}">
+                            <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+
+                    <ListBox Grid.Column="4" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding LeftAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding CenterAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding RightAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding JustifyAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+                </Grid>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="{x:Static resx:Resources.CustomUserDisplays}" Grid.Row="6">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" HorizontalAlignment="Center" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding AddDiscordUsername}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DiscordUsername}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <Button Grid.Column="2" Command="{Binding AddUserCommand}" Content="{x:Static resx:Resources.Add}" Width="100" />
+                </Grid>
+
+                <ItemsControl Grid.Row="2" ItemsSource="{Binding Users}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                    <!--<RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />-->
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding FullDisplayName}" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,0,0" />
+
+                                    <TextBox Text="{Binding CustomWidth}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserWidth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <TextBox Text="{Binding CustomHeight}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserHeight}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                    <Controls:IconButton Grid.Column="6" Command="{Binding DeleteCommand}" VerticalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
+                                </Grid>
+
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox Text="{Binding CustomActiveImageFilePath}" Grid.Column="0" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ActiveImage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <Button Grid.Column="1" Command="{Binding BrowseCustomActiveImageFilePathCommand}" Content="{x:Static resx:Resources.Browse}" VerticalAlignment="Center"/>
+
+                                    <TextBox Text="{Binding CustomInactiveImageFilePath}" Grid.Column="3" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.InactiveImage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <Button Grid.Column="4" Command="{Binding BrowseCustomInactiveImageFilePathCommand}" Content="{x:Static resx:Resources.Browse}" VerticalAlignment="Center"/>
+                                </Grid>
+
+                                <!--<Grid Grid.Row="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox Text="{Binding CustomMutedImageFilePath}" Grid.Column="0" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MutedImage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <Button Grid.Column="1" Command="{Binding BrowseCustomMutedImageFilePathCommand}" Content="{x:Static resx:Resources.Browse}" VerticalAlignment="Center"/>
+
+                                    <TextBox Text="{Binding CustomDeafenImageFilePath}" Grid.Column="3" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DeafenedImage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <Button Grid.Column="4" Command="{Binding BrowseCustomDeafenImageFilePathCommand}" Content="{x:Static resx:Resources.Browse}" VerticalAlignment="Center"/>
+                                </Grid>-->
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Controls:LoadingControlBase>

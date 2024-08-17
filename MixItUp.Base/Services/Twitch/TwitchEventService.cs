@@ -1448,7 +1448,14 @@ namespace MixItUp.Base.Services.Twitch
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
-                    user.TotalMonthsSubbed++;
+                    if (months >= user.TotalMonthsSubbed)
+                    {
+                        user.TotalMonthsSubbed = months;
+                    }
+                    else
+                    {
+                        user.TotalMonthsSubbed++;
+                    }
 
                     foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                     {

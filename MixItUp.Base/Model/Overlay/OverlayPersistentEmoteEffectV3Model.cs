@@ -85,6 +85,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.WidgetEnableInternal();
 
+            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
             ChatService.OnChatMessageReceived += OnChatMessageReceived;
 
             this.comboLastSeen.Clear();

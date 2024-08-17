@@ -30,12 +30,19 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.NoDuplicates}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <ToggleButton Grid.Column="4" IsChecked="{Binding NoDuplicates}" VerticalAlignment="Center" />
+
+            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.PersistNoDuplicates}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <ToggleButton Grid.Column="8" IsChecked="{Binding PersistNoDuplicates}" VerticalAlignment="Center" />
         </Grid>
 
         <ActionControls:SubActionContainerControl Grid.Row="2" Margin="0,20,0,0" />

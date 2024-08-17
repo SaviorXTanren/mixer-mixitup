@@ -16,7 +16,7 @@ namespace MixItUp.Base.Util
 
         public static string GetAge(this DateTimeOffset start, bool includeTime = false)
         {
-            return start.GetAge(DateTimeOffset.UtcNow);
+            return start.GetAge(DateTimeOffset.UtcNow, includeTime);
         }
 
         public static string GetAge(this DateTimeOffset start, DateTimeOffset end, bool includeTime = false)

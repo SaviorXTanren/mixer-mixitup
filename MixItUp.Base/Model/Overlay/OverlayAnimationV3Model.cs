@@ -132,6 +132,9 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayAnimationV3Model
     {
         [DataMember]
+        public string CustomName { get; set; }
+
+        [DataMember]
         public OverlayAnimateCSSAnimationType AnimateCSSAnimation { get; set; }
         [JsonIgnore]
         public string AnimateCSSAnimationName

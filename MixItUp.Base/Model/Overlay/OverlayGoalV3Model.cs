@@ -17,14 +17,6 @@ namespace MixItUp.Base.Model.Overlay
         Cumulative
     }
 
-    public enum OverlayGoalResetV3Type
-    {
-        None,
-        Daily,
-        Weekly,
-        Monthly,
-    }
-
     [DataContract]
     public class OverlayGoalSegmentV3Model
     {
@@ -32,6 +24,9 @@ namespace MixItUp.Base.Model.Overlay
         public string Name { get; set; }
         [DataMember]
         public double Amount { get; set; }
+
+        [DataMember]
+        public Guid CommandID { get; set; }
     }
 
     [DataContract]
@@ -43,6 +38,13 @@ namespace MixItUp.Base.Model.Overlay
         public const string GoalMaxAmountProperty = "GoalMaxAmount";
         public const string GoalBarCompletionPercentageProperty = "GoalBarCompletionPercentage";
 
+        public const string TotalAmountSpecialIdentifier = "goaltotalamount";
+        public const string ProgressAmountSpecialIdentifier = "goalprogressamount";
+        public const string SegmentNameSpecialIdentifier = "goalsegmentname";
+        public const string SegmentAmountSpecialIdentifier = "goalsegmentamount";
+        public const string NextSegmentNameSpecialIdentifier = "goalnextsegmentname";
+        public const string NextSegmentAmountSpecialIdentifier = "goalnextsegmentamount";
+
         public static readonly string DefaultHTML = OverlayResources.OverlayGoalDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayGoalDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayGoalDefaultJavascript;
@@ -53,12 +55,7 @@ namespace MixItUp.Base.Model.Overlay
         public List<OverlayGoalSegmentV3Model> Segments { get; set; } = new List<OverlayGoalSegmentV3Model>();
 
         [DataMember]
-        public DateTimeOffset EndDate { get; set; }
-
-        [DataMember]
-        public OverlayGoalResetV3Type ResetType { get; set; }
-        [DataMember]
-        public DateTimeOffset ResetCadence { get; set; }
+        public ResetTracker ResetTracker { get; set; }
 
         [DataMember]
         public int StartingAmountCustom { get; set; }
@@ -82,6 +79,9 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public double TotalAmount { get; set; }
+
+        [JsonIgnore]
+        public DateTimeOffset ResetDateTime { get; set; }
 
         [JsonIgnore]
         public OverlayGoalSegmentV3Model CurrentSegment { get; private set; }
@@ -125,11 +125,11 @@ namespace MixItUp.Base.Model.Overlay
         {
             get
             {
-                if (this.ResetType == OverlayGoalResetV3Type.None)
+                if (this.ResetDateTime == DateTimeOffset.MinValue)
                 {
                     return string.Empty;
                 }
-                return this.EndDate.GetAge();
+                return this.ResetDateTime.GetAge();
             }
         }
 
@@ -144,6 +144,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.CurrentSegment != null && amount != 0)
             {
+                OverlayGoalSegmentV3Model previousSegment = this.CurrentSegment;
+                double previousAmount = this.TotalAmount;
                 if (amount > 0)
                 {
                     this.TotalAmount += amount;
@@ -153,19 +155,29 @@ namespace MixItUp.Base.Model.Overlay
                     this.TotalAmount = Math.Max(this.TotalAmount + amount, this.PreviousGoalAmount);
                 }
 
-                if (this.CurrentAmount < this.GoalAmount || this.CurrentSegment == this.Segments.Last())
-                {
-                    await this.Update();
+                CommandParametersModel parameters = new CommandParametersModel(user);
+                parameters.SpecialIdentifiers[TotalAmountSpecialIdentifier] = this.CurrentAmount.ToString();
+                parameters.SpecialIdentifiers[ProgressAmountSpecialIdentifier] = amount.ToString();
+                parameters.SpecialIdentifiers[SegmentNameSpecialIdentifier] = previousSegment.Name;
+                parameters.SpecialIdentifiers[SegmentAmountSpecialIdentifier] = previousSegment.Amount.ToString();
 
-                    await ServiceManager.Get<CommandService>().Queue(this.ProgressOccurredCommandID, new CommandParametersModel(user));
-                }
-                else
+                if (this.CurrentAmount >= this.GoalAmount && (this.CurrentSegment != this.Segments.Last() || previousAmount < this.GoalAmount))
                 {
                     this.ProgressSegments();
 
                     await this.Complete();
 
-                    await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, new CommandParametersModel(user));
+                    parameters.SpecialIdentifiers[NextSegmentNameSpecialIdentifier] = this.CurrentSegment.Name;
+                    parameters.SpecialIdentifiers[NextSegmentAmountSpecialIdentifier] = this.CurrentSegment.Amount.ToString();
+
+                    await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
+                    await ServiceManager.Get<CommandService>().Queue(previousSegment.CommandID, parameters);
+                }
+                else
+                {
+                    await this.Update();
+
+                    await ServiceManager.Get<CommandService>().Queue(this.ProgressOccurredCommandID, parameters);
                 }
             }
         }
@@ -195,10 +207,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.GoalColor)] = this.GoalColor;
             properties[nameof(this.ProgressColor)] = this.ProgressColor;
 
-            properties["ProgressOccurredAnimationFramework"] = this.ProgressOccurredAnimation.AnimationFramework;
-            properties["ProgressOccurredAnimationName"] = this.ProgressOccurredAnimation.AnimationName;
-            properties["SegmentCompletedAnimationFramework"] = this.SegmentCompletedAnimation.AnimationFramework;
-            properties["SegmentCompletedAnimationName"] = this.SegmentCompletedAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ProgressOccurredAnimation), this.ProgressOccurredAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.SegmentCompletedAnimation), this.SegmentCompletedAnimation);
 
             return properties;
         }
@@ -210,29 +220,13 @@ namespace MixItUp.Base.Model.Overlay
             this.CurrentSegment = this.Segments.First();
             this.ProgressSegments();
 
-            DateTimeOffset newResetDate = DateTimeOffset.MinValue;
-            if (this.ResetType == OverlayGoalResetV3Type.Daily)
+            if (this.ResetTracker?.Amount > 0)
             {
-                newResetDate = this.EndDate.AddDays(1);
-            }
-            else if (this.ResetType == OverlayGoalResetV3Type.Weekly)
-            {
-                newResetDate = new DateTime(this.EndDate.Year, this.EndDate.Month, this.EndDate.Day);
-                do
+                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
+                if (this.ResetDateTime <= DateTimeOffset.Now)
                 {
-                    newResetDate = newResetDate.AddDays(1);
-                } while (newResetDate.DayOfWeek != this.ResetCadence.DayOfWeek);
-            }
-            else if (this.ResetType == OverlayGoalResetV3Type.Monthly)
-            {
-                int day = Math.Min(this.ResetCadence.Day, DateTime.DaysInMonth(this.EndDate.Year, this.EndDate.Month));
-                newResetDate = new DateTime(this.EndDate.Year, this.EndDate.Month, day);
-                newResetDate = newResetDate.AddMonths(1);
-            }
-
-            if (newResetDate != DateTimeOffset.MinValue && newResetDate <= DateTimeOffset.Now.Date)
-            {
-                this.Reset();
+                    this.Reset();
+                }
             }
         }
 
@@ -279,6 +273,12 @@ namespace MixItUp.Base.Model.Overlay
             if (this.StartingAmountCustom > 0)
             {
                 this.TotalAmount += this.StartingAmountCustom;
+            }
+
+            if (this.ResetTracker?.Amount > 0)
+            {
+                this.ResetTracker.UpdateStartDateTimeToLatest();
+                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
             }
         }
     }

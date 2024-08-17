@@ -63,6 +63,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
@@ -152,6 +154,22 @@
                 </Grid>
 
                 <Grid Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.HideExclamationMessages}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="1" IsChecked="{Binding HideExclamationMessages}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                    <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DisplayAlejoPronouns}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="4" IsChecked="{Binding DisplayAlejoPronouns}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                </Grid>
+
+                <Grid Grid.Row="8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />

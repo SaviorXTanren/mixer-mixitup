@@ -27,6 +27,8 @@ namespace MixItUp.Base.Services.External
         public string Discriminator { get; set; }
         [JsonProperty("avatar")]
         public string AvatarID { get; set; }
+        [JsonProperty("global_name")]
+        public string GlobalName { get; set; }
 
         public DiscordUser() { }
 
@@ -36,6 +38,7 @@ namespace MixItUp.Base.Services.External
             this.UserName = data["username"].ToString();
             this.Discriminator = data["discriminator"].ToString();
             this.AvatarID = data["avatar"].ToString();
+            this.GlobalName = data["global_name"].ToString();
         }
 
         public override bool Equals(object other)
@@ -238,9 +241,20 @@ namespace MixItUp.Base.Services.External
         public DiscordGateway() { }
     }
 
+    public class DiscordVoiceConnection
+    {
+        public string ServerID { get; set; }
+        public string UserID { get; set; }
+        public string SessionID { get; set; }
+        public string Endpoint { get; set; }
+        public string Token { get; set; }
+    }
+
     public class DiscordWebSocketPacket
     {
         private const string ReadyPacketName = "READY";
+        private const string VoiceStateUpdatePacketName = "VOICE_STATE_UPDATE";
+        private const string VoiceServerUpdatePacketName = "VOICE_SERVER_UPDATE";
 
         public enum DiscordWebSocketPacketTypeEnum
         {
@@ -249,6 +263,8 @@ namespace MixItUp.Base.Services.External
             Other = 0,
             Heartbeat = 1,
             Identify = 2,
+
+            VoiceStateUpdate = 4,
 
             Hello = 10,
             HeartbeatAck = 11,
@@ -268,6 +284,51 @@ namespace MixItUp.Base.Services.External
 
         [JsonIgnore]
         public bool IsReadyPacket { get { return ReadyPacketName.Equals(this.Name); } }
+
+        [JsonIgnore]
+        public bool IsVoiceStateUpdatePacket { get { return VoiceStateUpdatePacketName.Equals(this.Name); } }
+
+        [JsonIgnore]
+        public bool IsVoiceServerUpdatePacket { get { return VoiceServerUpdatePacketName.Equals(this.Name); } }
+    }
+
+    public class DiscordVoiceWebSocketPacket
+    {
+        public enum DiscordVoiceWebSocketPacketTypeEnum
+        {
+            Unknown = -1,
+
+            Identify = 0,
+            SelectProtocol = 1,
+            Ready = 2,
+
+            Heartbeat = 3,
+
+            SessionDescription = 4,
+
+            Speaking = 5,
+
+            HeartbeatAck = 6,
+
+            Resume = 7,
+            Hello = 8,
+            Resumed = 9,
+
+            ClientConnect = 11,
+            ClientDisconnect = 13
+        }
+
+        [JsonProperty("op")]
+        public int OPCode;
+        [JsonProperty("s")]
+        public int? Sequence;
+        [JsonProperty("t")]
+        public string Name;
+        [JsonProperty("d")]
+        public JObject Data;
+
+        [JsonIgnore]
+        public DiscordVoiceWebSocketPacketTypeEnum OPCodeType { get { return (DiscordVoiceWebSocketPacketTypeEnum)this.OPCode; } set { this.OPCode = (int)value; } }
     }
 
     public class DiscordOAuthServer : LocalOAuthHttpListenerServer
@@ -295,6 +356,165 @@ namespace MixItUp.Base.Services.External
         }
     }
 
+    public class DiscordVoiceWebSocket : ClientWebSocketBase
+    {
+        public event EventHandler<string> OnUserJoinedVoice = delegate { };
+        public event EventHandler<string> OnUserLeftVoice = delegate { };
+
+        public event EventHandler<string> OnUserStartedSpeaking = delegate { };
+        public event EventHandler<string> OnUserStoppedSpeaking = delegate { };
+
+        public bool IsReady { get; private set; }
+
+        private DiscordVoiceConnection voiceConnection;
+
+        private int? lastSequenceNumber = null;
+        private int heartbeatTime = 0;
+
+        public async Task<bool> Connect(DiscordVoiceConnection voiceConnection)
+        {
+            this.voiceConnection = voiceConnection;
+
+            if (await base.Connect("wss://" + this.voiceConnection.Endpoint + "?v=4"))
+            {
+                await this.Send(new DiscordVoiceWebSocketPacket() { OPCodeType = DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Identify, Data = new JObject()
+                {
+                    { "server_id", this.voiceConnection.ServerID },
+                    { "user_id", this.voiceConnection.UserID },
+                    { "session_id", this.voiceConnection.SessionID },
+                    { "token", this.voiceConnection.Token },
+                }});
+
+                for (int i = 0; i < 5 && !this.IsReady; i++)
+                {
+                    await Task.Delay(1000);
+                }
+
+                if (this.IsReady)
+                {
+                    this.HeartbeatPing().Wait(1);
+
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override Task<bool> Connect(string endpoint)
+        {
+            throw new InvalidOperationException("Please use other constructor");
+        }
+
+        public override async Task Disconnect(WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure)
+        {
+            this.IsReady = false;
+            await base.Disconnect(closeStatus);
+        }
+
+        public async Task Send(DiscordVoiceWebSocketPacket packet)
+        {
+            packet.Sequence = this.lastSequenceNumber;
+            await this.Send(JSONSerializerHelper.SerializeToString(packet));
+        }
+
+        protected override Task ProcessReceivedPacket(string packetJSON)
+        {
+            try
+            {
+                DiscordVoiceWebSocketPacket packet = JSONSerializerHelper.DeserializeFromString<DiscordVoiceWebSocketPacket>(packetJSON);
+                this.lastSequenceNumber = packet.Sequence;
+
+                switch (packet.OPCodeType)
+                {
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Ready:
+                        this.IsReady = true;
+                        break;
+
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Hello:
+                        this.heartbeatTime = (int)packet.Data["heartbeat_interval"];
+                        break;
+
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.HeartbeatAck:
+                        break;
+
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.ClientConnect:
+                        if (packet.Data.TryGetValue("user_ids", out JToken userIDs) && userIDs is JArray)
+                        {
+                            foreach (JToken user in (JArray)userIDs)
+                            {
+                                this.OnUserJoinedVoice(this, user.ToString());
+                            }
+                        }
+                        break;
+
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Speaking:
+                    case DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.ClientDisconnect:
+                        if (packet.Data.TryGetValue("user_id", out JToken userID))
+                        {
+                            if (packet.OPCodeType == DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.ClientDisconnect)
+                            {
+                                this.OnUserLeftVoice(this, userID.ToString());
+                            }
+                            else if (packet.OPCodeType == DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Speaking)
+                            {
+                                if (packet.Data.TryGetValue("speaking", out JToken speakingToken) && int.TryParse(speakingToken?.ToString(), out int speaking))
+                                {
+                                    if (speaking > 0)
+                                    {
+                                        this.OnUserStartedSpeaking(this, userID.ToString());
+                                    }
+                                    else
+                                    {
+                                        this.OnUserStoppedSpeaking(this, userID.ToString());
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task HeartbeatPing()
+        {
+            try
+            {
+                while (this.IsOpen())
+                {
+                    try
+                    {
+                        if (this.IsReady && this.heartbeatTime > 0)
+                        {
+                            await Task.Delay(this.heartbeatTime / 2);
+
+                            JObject jobj = new JObject()
+                            {
+                                { "op", (int)DiscordVoiceWebSocketPacket.DiscordVoiceWebSocketPacketTypeEnum.Heartbeat },
+                                { "d", this.lastSequenceNumber }
+                            };
+
+                            await this.Send(JSONSerializerHelper.SerializeToString(jobj));
+                        }
+                        else
+                        {
+                            await Task.Delay(1000);
+                        }
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+    }
+
     public class DiscordWebSocket : ClientWebSocketBase
     {
         public DiscordUser BotUser { get; private set; }
@@ -309,12 +529,14 @@ namespace MixItUp.Base.Services.External
 
         private string sessionID;
 
+        private DiscordWebSocketPacket voiceStateUpdatePacket;
+        private DiscordWebSocketPacket voiceServerUpdatePacket;
+
         public async Task<bool> Connect(string endpoint, int shardCount, string botToken)
         {
             this.shardCount = shardCount;
             this.botToken = botToken;
 
-            endpoint += "?v=6&encoding=json";
             if (await base.Connect(endpoint))
             {
                 this.HeartbeatPing().Wait(1);
@@ -340,6 +562,53 @@ namespace MixItUp.Base.Services.External
             await this.Send(JSONSerializerHelper.SerializeToString(packet));
         }
 
+        public async Task<DiscordVoiceConnection> ConnectToVoice(DiscordServer server, string channelID)
+        {
+            try
+            {
+                if (this.IsOpen())
+                {
+                    this.voiceStateUpdatePacket = null;
+                    this.voiceServerUpdatePacket = null;
+
+                    await this.Send(new DiscordWebSocketPacket() { OPCodeType = DiscordWebSocketPacketTypeEnum.VoiceStateUpdate, Sequence = this.lastSequenceNumber, Data = new JObject()
+                    {
+                        { "guild_id", server.ID },
+                        { "channel_id", channelID },
+                        { "self_mute", true },
+                        { "self_deaf", false },
+                    }});
+
+                    for (int i = 0; i < 5 && (this.voiceStateUpdatePacket == null || this.voiceServerUpdatePacket == null); i++)
+                    {
+                        await Task.Delay(1000);
+                    }
+
+                    if (this.voiceStateUpdatePacket != null && this.voiceServerUpdatePacket != null)
+                    {
+                        if (this.voiceStateUpdatePacket.Data.TryGetValue("guild_id", out JToken guildID) &&
+                            this.voiceStateUpdatePacket.Data.TryGetValue("user_id", out JToken userID) &&
+                            this.voiceStateUpdatePacket.Data.TryGetValue("session_id", out JToken sessionID) &&
+                            this.voiceServerUpdatePacket.Data.TryGetValue("endpoint", out JToken endpoint) &&
+                            this.voiceServerUpdatePacket.Data.TryGetValue("token", out JToken token))
+                        {
+                            return new DiscordVoiceConnection()
+                            {
+                                ServerID = guildID.ToString(),
+                                UserID = userID.ToString(),
+                                SessionID = sessionID.ToString(),
+                                Endpoint = endpoint.ToString(),
+                                Token = token.ToString()
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+
+            return null;
+        }
+
         protected override async Task ProcessReceivedPacket(string packetJSON)
         {
             try
@@ -355,6 +624,14 @@ namespace MixItUp.Base.Services.External
                             this.BotUser = new DiscordUser((JObject)packet.Data["user"]);
                             this.sessionID = packet.Data["session_id"].ToString();
                             this.IsReady = true;
+                        }
+                        else if (packet.IsVoiceStateUpdatePacket)
+                        {
+                            this.voiceStateUpdatePacket = packet;
+                        }
+                        else if (packet.IsVoiceServerUpdatePacket)
+                        {
+                            this.voiceServerUpdatePacket = packet;
                         }
                         break;
 
@@ -461,6 +738,16 @@ namespace MixItUp.Base.Services.External
             return new List<DiscordChannel>();
         }
 
+        public async Task<IEnumerable<DiscordServerUser>> SearchServerMembers(DiscordServer server, string search, int maxNumbers = 1)
+        {
+            try
+            {
+                return await this.GetAsync<IEnumerable<DiscordServerUser>>("guilds/" + server.ID + "/members/search?query=" + search + "&limit=" + maxNumbers);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return new List<DiscordServerUser>();
+        }
+
         public async Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1)
         {
             try
@@ -471,11 +758,11 @@ namespace MixItUp.Base.Services.External
             return new List<DiscordServerUser>();
         }
 
-        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user)
+        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, string userID)
         {
             try
             {
-                return await this.GetAsync<DiscordServerUser>("guilds/" + server.ID + "/members/" + user.ID);
+                return await this.GetAsync<DiscordServerUser>("guilds/" + server.ID + "/members/" + userID);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -609,6 +896,12 @@ namespace MixItUp.Base.Services.External
         /// </summary>
         public const string ClientBotPermissions = "14081024";
 
+        public event EventHandler<string> OnUserJoinedVoice = delegate { };
+        public event EventHandler<string> OnUserLeftVoice = delegate { };
+
+        public event EventHandler<string> OnUserStartedSpeaking = delegate { };
+        public event EventHandler<string> OnUserStoppedSpeaking = delegate { };
+
         private const string BaseAddress = "https://discord.com/api/v10";
 
         private const string DefaultClientID = "422657136510631936";
@@ -619,8 +912,14 @@ namespace MixItUp.Base.Services.External
 
         private DiscordBotService botService;
 
+        private DiscordWebSocket webSocket;
+
+        private DiscordVoiceWebSocket voiceWebSocket;
+
         public DiscordUser User { get; private set; }
         public DiscordServer Server { get; private set; }
+
+        public string ConnectedVoiceChannelID { get; private set; }
 
         public IEnumerable<DiscordEmoji> Emojis { get; private set; }
 
@@ -679,11 +978,27 @@ namespace MixItUp.Base.Services.External
             return new Result(false);
         }
 
-        public override Task Disconnect()
+        public override async Task Disconnect()
         {
             this.token = null;
             this.cancellationTokenSource.Cancel();
-            return Task.CompletedTask;
+
+            if (this.webSocket != null)
+            {
+                await this.webSocket.Disconnect();
+                this.webSocket = null;
+            }
+
+            if (this.voiceWebSocket != null)
+            {
+                this.voiceWebSocket.OnUserJoinedVoice -= VoiceWebSocket_OnUserJoinedVoice;
+                this.voiceWebSocket.OnUserLeftVoice -= VoiceWebSocket_OnUserLeftVoice;
+                this.voiceWebSocket.OnUserStartedSpeaking -= VoiceWebSocket_OnUserStartedSpeaking;
+                this.voiceWebSocket.OnUserStoppedSpeaking -= VoiceWebSocket_OnUserStoppedSpeaking;
+
+                await this.voiceWebSocket.Disconnect();
+                this.voiceWebSocket = null;
+            }
         }
 
         public async Task<DiscordGateway> GetBotGateway() { return await this.botService.GetBotGateway(); }
@@ -721,9 +1036,11 @@ namespace MixItUp.Base.Services.External
 
         public async Task<DiscordServer> GetServer(string serverID) { return await this.botService.GetServer(serverID); }
 
+        public async Task<IEnumerable<DiscordServerUser>> SearchServerMembers(DiscordServer server, string search, int maxNumbers = 1) { return await this.botService.SearchServerMembers(server, search, maxNumbers); }
+
         public async Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1) { return await this.botService.GetServerMembers(server, maxNumbers); }
 
-        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user) { return await this.botService.GetServerMember(server, user); }
+        public async Task<DiscordServerUser> GetServerMember(DiscordServer server, string userID) { return await this.botService.GetServerMember(server, userID); }
 
         public async Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server) { return await this.botService.GetServerChannels(server); }
 
@@ -768,6 +1085,48 @@ namespace MixItUp.Base.Services.External
 
         public async Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true) { await this.botService.DeafenServerMember(server, user, deaf); }
 
+        public async Task<bool> ConnectToVoice(DiscordServer server, string channelID)
+        {
+            this.voiceWebSocket.OnUserJoinedVoice -= VoiceWebSocket_OnUserJoinedVoice;
+            this.voiceWebSocket.OnUserLeftVoice -= VoiceWebSocket_OnUserLeftVoice;
+            this.voiceWebSocket.OnUserStartedSpeaking -= VoiceWebSocket_OnUserStartedSpeaking;
+            this.voiceWebSocket.OnUserStoppedSpeaking -= VoiceWebSocket_OnUserStoppedSpeaking;
+
+            DiscordVoiceConnection voiceConnection = await this.webSocket.ConnectToVoice(ServiceManager.Get<DiscordService>().Server, channelID);
+            if (voiceConnection != null)
+            {
+                this.voiceWebSocket = new DiscordVoiceWebSocket();
+                if (await this.voiceWebSocket.Connect(voiceConnection))
+                {
+                    this.voiceWebSocket.OnUserJoinedVoice += VoiceWebSocket_OnUserJoinedVoice;
+                    this.voiceWebSocket.OnUserLeftVoice += VoiceWebSocket_OnUserLeftVoice;
+                    this.voiceWebSocket.OnUserStartedSpeaking += VoiceWebSocket_OnUserStartedSpeaking;
+                    this.voiceWebSocket.OnUserStoppedSpeaking += VoiceWebSocket_OnUserStoppedSpeaking;
+
+                    this.ConnectedVoiceChannelID = channelID;
+
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task DisconnectFromVoice()
+        {
+            this.ConnectedVoiceChannelID = null;
+
+            this.voiceWebSocket.OnUserJoinedVoice -= VoiceWebSocket_OnUserJoinedVoice;
+            this.voiceWebSocket.OnUserLeftVoice -= VoiceWebSocket_OnUserLeftVoice;
+            this.voiceWebSocket.OnUserStartedSpeaking -= VoiceWebSocket_OnUserStartedSpeaking;
+            this.voiceWebSocket.OnUserStoppedSpeaking -= VoiceWebSocket_OnUserStoppedSpeaking;
+
+            if (this.voiceWebSocket != null)
+            {
+                await this.voiceWebSocket.Disconnect();
+                this.voiceWebSocket = null;
+            }
+        }
+
         protected override async Task RefreshOAuthToken()
         {
             if (this.token != null)
@@ -806,8 +1165,8 @@ namespace MixItUp.Base.Services.External
                         DiscordGateway gateway = await this.GetBotGateway();
                         if (gateway != null)
                         {
-                            DiscordWebSocket webSocket = new DiscordWebSocket();
-                            if (await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken))
+                            this.webSocket = new DiscordWebSocket();
+                            if (await this.webSocket.Connect(gateway.WebSocketURL + "?v=6&encoding=json", gateway.Shards, this.BotToken))
                             {
                                 this.TrackServiceTelemetry("Discord");
                                 return new Result();
@@ -837,5 +1196,13 @@ namespace MixItUp.Base.Services.External
             await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.DiscordActionBlockedDueToRateLimiting, StreamingPlatformTypeEnum.All);
             return false;
         }
+
+        private void VoiceWebSocket_OnUserJoinedVoice(object sender, string e) { this.OnUserJoinedVoice(sender, e); }
+
+        private void VoiceWebSocket_OnUserLeftVoice(object sender, string e) { this.OnUserLeftVoice(sender, e); }
+
+        private void VoiceWebSocket_OnUserStartedSpeaking(object sender, string e) { this.OnUserStartedSpeaking(sender, e); }
+
+        private void VoiceWebSocket_OnUserStoppedSpeaking(object sender, string e) { this.OnUserStoppedSpeaking(sender, e); }
     }
 }

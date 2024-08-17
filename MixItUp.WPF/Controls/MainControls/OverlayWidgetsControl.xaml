@@ -56,7 +56,17 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Button x:Name="AddOverlayWidgetButton" Grid.Row="2" HorizontalAlignment="Center" MinWidth="180" Click="AddOverlayWidgetButton_Click" Content="{x:Static resx:Resources.AddOverlayWidget}"/>
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="AddOverlayWidgetButton" Grid.Column="0" HorizontalAlignment="Center" MinWidth="180" Click="AddOverlayWidgetButton_Click" Content="{x:Static resx:Resources.AddOverlayWidget}"/>
+
+                <Button x:Name="ImportOverlayWidgetButton" Grid.Column="2" HorizontalAlignment="Center" MinWidth="200" Click="ImportOverlayWidgetButton_Click" Content="{x:Static resx:Resources.ImportOverlayWidget}"/>
+            </Grid>
 
         </Grid>
     </Grid>

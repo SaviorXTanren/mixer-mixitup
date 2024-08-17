@@ -10504,4 +10504,139 @@ namespace CustomNamespace
   <data name="TextToSpeechActionWindowsTextToSpeechRate" xml:space="preserve">
     <value>Rate (-10 to 10)</value>
   </data>
+  <data name="PersistNoDuplicates" xml:space="preserve">
+    <value>Persist No Duplicates</value>
+  </data>
+  <data name="MixItUpOverlayFileFormatFilter" xml:space="preserve">
+    <value>Mix It Up Overlay|*.miuoverlay|All files (*.*)|*.*</value>
+  </data>
+  <data name="ImportOverlayWidget" xml:space="preserve">
+    <value>Import Overlay Widget</value>
+  </data>
+  <data name="FailedToImportOverlayWidget" xml:space="preserve">
+    <value>Failed to import Overlay Widget</value>
+  </data>
+  <data name="SegmentReached" xml:space="preserve">
+    <value>Segment Reached</value>
+  </data>
+  <data name="DisableOnCompletion" xml:space="preserve">
+    <value>Disable On Completion</value>
+  </data>
+  <data name="SSML" xml:space="preserve">
+    <value>SSML</value>
+  </data>
+  <data name="IsIn" xml:space="preserve">
+    <value>Is In</value>
+  </data>
+  <data name="IsNotIn" xml:space="preserve">
+    <value>Is Not In</value>
+  </data>
+  <data name="DiscordServerFailedToConnectToVoice" xml:space="preserve">
+    <value>Failed to connect to voice</value>
+  </data>
+  <data name="ErrorDateCanNotBeInThePast" xml:space="preserve">
+    <value>ERROR: Date can not be in the past</value>
+  </data>
+  <data name="DisplayAlejoPronouns" xml:space="preserve">
+    <value>Display Alejo Pronouns</value>
+  </data>
+  <data name="HideExclamationMessages" xml:space="preserve">
+    <value>Hide Messages Starting With "!"</value>
+  </data>
+  <data name="PauseUnpausePersistentTimer" xml:space="preserve">
+    <value>Pause/Unpause Persistent Timer</value>
+  </data>
+  <data name="AllowAdjustmentWhilePaused" xml:space="preserve">
+    <value>Allow Adjustment While Paused</value>
+  </data>
+  <data name="DiscordReactiveVoice" xml:space="preserve">
+    <value>Discord Reactive Voice</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Deafened" xml:space="preserve">
+    <value>Deafened</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Joined" xml:space="preserve">
+    <value>Joined</value>
+  </data>
+  <data name="Muted" xml:space="preserve">
+    <value>Muted</value>
+  </data>
+  <data name="Undeafened" xml:space="preserve">
+    <value>Undeafened</value>
+  </data>
+  <data name="Unmuted" xml:space="preserve">
+    <value>Unmuted</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceActiveImageMustBeSet" xml:space="preserve">
+    <value>An active image must be set for custom user visuals</value>
+  </data>
+  <data name="ServerDisplayName" xml:space="preserve">
+    <value>Server Display Name</value>
+  </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>Name Display</value>
+  </data>
+  <data name="ActiveImage" xml:space="preserve">
+    <value>Active Image</value>
+  </data>
+  <data name="CustomUserDisplays" xml:space="preserve">
+    <value>Custom User Displays</value>
+  </data>
+  <data name="DeafenedImage" xml:space="preserve">
+    <value>Deafened Image</value>
+  </data>
+  <data name="DimInactiveUsers" xml:space="preserve">
+    <value>Dim Inactive Users</value>
+  </data>
+  <data name="DiscordUsername" xml:space="preserve">
+    <value>Discord Username</value>
+  </data>
+  <data name="InactiveImage" xml:space="preserve">
+    <value>Inactive Image</value>
+  </data>
+  <data name="IncludeSelf" xml:space="preserve">
+    <value>Include Self</value>
+  </data>
+  <data name="MutedImage" xml:space="preserve">
+    <value>Muted Image</value>
+  </data>
+  <data name="OnlyShowAddedUsers" xml:space="preserve">
+    <value>Only Show Added Users</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceAtLeastOneUserMustBeAddedForOnlyShowAddedUsers" xml:space="preserve">
+    <value>At least one user must be added if Only Show Added Users is selected</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceUnableToFindUser" xml:space="preserve">
+    <value>Unable to find user with the specified name in the connected Discord server</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceUserAlreadyAdded" xml:space="preserve">
+    <value>The specified user has already been added</value>
+  </data>
+  <data name="UserHeight" xml:space="preserve">
+    <value>User Height</value>
+  </data>
+  <data name="UserSpacing" xml:space="preserve">
+    <value>User Spacing</value>
+  </data>
+  <data name="UserWidth" xml:space="preserve">
+    <value>User Width</value>
+  </data>
+  <data name="VoiceChannel" xml:space="preserve">
+    <value>Voice Channel</value>
+  </data>
+  <data name="OverlayLabelFilePathMustBeSpecified" xml:space="preserve">
+    <value>A file path must be specified</value>
+  </data>
 </root>

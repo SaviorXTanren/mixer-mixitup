@@ -19,7 +19,7 @@ namespace MixItUp.Base.Model.Overlay
         public string VideoID { get; set; }
 
         [DataMember]
-        public int StartTime { get; set; }
+        public string StartTime { get; set; }
 
         [DataMember]
         public int Volume { get; set; }
@@ -35,7 +35,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
             properties[nameof(this.VideoID)] = this.VideoID;
-            properties[nameof(this.StartTime)] = this.StartTime.ToString();
+            properties[nameof(this.StartTime)] = this.StartTime;
             properties[nameof(this.Volume)] = this.Volume.ToString();
             properties[nameof(this.HeightNumber)] = this.HeightNumber;
             properties[nameof(this.WidthNumber)] = this.WidthNumber;
@@ -46,23 +46,37 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (!string.IsNullOrEmpty(this.VideoID))
             {
-                properties[nameof(this.VideoID)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.VideoID)].ToString(), parameters);
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://www.youtube.com/watch?v=", "");
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtube.com/watch?v=", "");
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("www.youtube.com/watch?v=", "");
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("youtube.com/watch?v=", "");
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://www.youtube.com/shorts/", "");
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtube.com/shorts/", "");
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("www.youtube.com/shorts/", "");
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("youtube.com/shorts/", "");
-                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Replace("https://youtu.be/", "");
-                if (properties[nameof(this.VideoID)].ToString().Contains("?"))
+                string videoID = properties[nameof(this.VideoID)].ToString();
+
+                videoID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(videoID, parameters);
+                videoID = videoID.Replace("https://www.youtube.com/watch?v=", "");
+                videoID = videoID.Replace("https://youtube.com/watch?v=", "");
+                videoID = videoID.Replace("www.youtube.com/watch?v=", "");
+                videoID = videoID.Replace("youtube.com/watch?v=", "");
+                videoID = videoID.Replace("https://www.youtube.com/shorts/", "");
+                videoID = videoID.Replace("https://youtube.com/shorts/", "");
+                videoID = videoID.Replace("www.youtube.com/shorts/", "");
+                videoID = videoID.Replace("youtube.com/shorts/", "");
+                videoID = videoID.Replace("https://youtu.be/", "");
+                if (videoID.ToString().Contains("?"))
                 {
-                    properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Substring(0, properties[nameof(this.VideoID)].ToString().IndexOf("?"));
+                    videoID = videoID.ToString().Substring(0, videoID.ToString().IndexOf("?"));
                 }
-                if (properties[nameof(this.VideoID)].ToString().Contains("&"))
+                if (videoID.Contains("&"))
                 {
-                    properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].ToString().Substring(0, properties[nameof(this.VideoID)].ToString().IndexOf("&"));
+                    videoID = videoID.Substring(0, videoID.IndexOf("&"));
+                }
+
+                properties[nameof(this.VideoID)] = videoID;
+            }
+
+            properties[nameof(this.StartTime)] = "0";
+            if (!string.IsNullOrEmpty(this.StartTime))
+            {
+                string startTime = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.StartTime, parameters);
+                if (int.TryParse(startTime, out int time) && time >= 0)
+                {
+                    properties[nameof(this.StartTime)] = time.ToString();
                 }
             }
         }

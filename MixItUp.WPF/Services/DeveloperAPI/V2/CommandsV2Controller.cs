@@ -93,6 +93,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 return NotFound();
             }
 
+            if (parameters == null)
+            {
+                parameters = new RunCommandParameters();
+            }
+
             StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All;
             if (!string.IsNullOrEmpty(parameters.Platform) && !Enum.TryParse<StreamingPlatformTypeEnum>(parameters.Platform, ignoreCase: true, out platform))
             {

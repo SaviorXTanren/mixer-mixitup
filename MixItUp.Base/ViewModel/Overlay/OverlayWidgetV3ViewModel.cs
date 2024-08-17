@@ -14,6 +14,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayWidgetV3ViewModel : UIViewModelBase
     {
+        public const string MixItUpOverlayWidgetFileExtension = ".miuoverlay";
+
         public static Dictionary<Guid, OverlayWidgetV3ViewModel> WidgetsInEditing = new Dictionary<Guid, OverlayWidgetV3ViewModel>();
 
         public Guid ID
@@ -259,6 +261,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.EmoteEffect: this.Item = new OverlayEmoteEffectV3ViewModel(); break;
                 case OverlayItemV3Type.PersistentEmoteEffect: this.Item = new OverlayPersistentEmoteEffectV3ViewModel(); break;
                 case OverlayItemV3Type.Poll: this.Item = new OverlayPollV3ViewModel(); break;
+                case OverlayItemV3Type.DiscordReactiveVoice: this.Item = new OverlayDiscordReactiveVoiceV3ViewModel(); break;
             }
 
             this.HTML = this.GetDefaultHTML(this.Item);
@@ -322,6 +325,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.EmoteEffect: this.Item = new OverlayEmoteEffectV3ViewModel((OverlayEmoteEffectV3Model)widget.Item); break;
                 case OverlayItemV3Type.PersistentEmoteEffect: this.Item = new OverlayPersistentEmoteEffectV3ViewModel((OverlayPersistentEmoteEffectV3Model)widget.Item); break;
                 case OverlayItemV3Type.Poll: this.Item = new OverlayPollV3ViewModel((OverlayPollV3Model)widget.Item); break;
+                case OverlayItemV3Type.DiscordReactiveVoice: this.Item = new OverlayDiscordReactiveVoiceV3ViewModel((OverlayDiscordReactiveVoiceV3Model)widget.Item); break;
             }
 
             this.HTML = widget.Item.HTML;
@@ -399,11 +403,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         protected override async Task OnOpenInternal()
         {
-            if (this.existingWidget != null)
-            {
-                await this.existingWidget.Disable();
-            }
-
             this.Item.PropertyChanged += Item_PropertyChanged;
 
             await this.EnableTestWidget();
@@ -413,7 +412,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             await this.DisableTestWidget();
 
-            if (this.newWidget == null && this.existingWidget != null)
+            if (this.newWidget == null && this.existingWidget != null && this.existingWidget.IsEnabled)
             {
                 await this.existingWidget.Enable();
             }
@@ -482,6 +481,14 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
 
                 OverlayWidgetV3Model widget = await this.GetWidget();
+                if (widget != null)
+                {
+                    string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(widget.Name + MixItUpOverlayWidgetFileExtension, MixItUp.Base.Resources.MixItUpOverlayFileFormatFilter);
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        await FileSerializerHelper.SerializeToFile(fileName, widget);
+                    }
+                }
             });
 
             this.loaded = true;

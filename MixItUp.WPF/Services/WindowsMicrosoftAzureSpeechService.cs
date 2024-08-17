@@ -590,13 +590,13 @@ namespace MixItUp.WPF.Services
 
         public IEnumerable<TextToSpeechVoice> GetVoices() { return WindowsMicrosoftAzureSpeechService.AvailableVoices; }
 
-        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool ssml, bool waitForFinish)
         {
             if (await this.IsWithinRateLimiting())
             {
                 using (SpeechSynthesizer speechSynthesizer = this.GetClient(voice))
                 {
-                    SpeechSynthesisResult speechSynthesisResult = await speechSynthesizer.SpeakTextAsync(text);
+                    SpeechSynthesisResult speechSynthesisResult = ssml ? await speechSynthesizer.SpeakSsmlAsync(text) : await speechSynthesizer.SpeakTextAsync(text);
                     if (speechSynthesisResult.Reason == ResultReason.SynthesizingAudioCompleted)
                     {
                         MemoryStream stream = new MemoryStream(speechSynthesisResult.AudioData);

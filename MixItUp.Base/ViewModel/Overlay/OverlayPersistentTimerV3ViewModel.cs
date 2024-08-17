@@ -37,6 +37,27 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string displayFormat;
 
+        public int MaxAmount
+        {
+            get { return this.maxAmount; }
+            set
+            {
+                this.maxAmount = Math.Max(value, 0);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int maxAmount;
+
+        public bool DisableOnCompletion
+        {
+            get { return this.disableOnCompletion; }
+            set
+            {
+                this.disableOnCompletion = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool disableOnCompletion;
         public bool ResetOnEnable
         {
             get { return this.resetOnEnable; }
@@ -47,6 +68,17 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private bool resetOnEnable;
+
+        public bool AllowAdjustmentWhilePaused
+        {
+            get { return this.allowAdjustmentWhilePaused; }
+            set
+            {
+                this.allowAdjustmentWhilePaused = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool allowAdjustmentWhilePaused;
 
         public CustomCommandModel TimerAdjustedCommand
         {
@@ -79,6 +111,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             : base(OverlayItemV3Type.PersistentTimer)
         {
             this.DisplayFormat = OverlayTimerV3Model.DefaultDisplayFormat;
+            this.DisableOnCompletion = true;
             this.ResetOnEnable = true;
 
             this.TimerAdjustedCommand = this.CreateEmbeddedCommand(Resources.TimerAdjusted);
@@ -96,7 +129,10 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.InitialAmount = item.InitialAmount;
             this.DisplayFormat = item.DisplayFormat;
+            this.MaxAmount = item.MaxAmount;
+            this.DisableOnCompletion = item.DisableOnCompletion;
             this.ResetOnEnable = item.ResetOnEnable;
+            this.AllowAdjustmentWhilePaused = item.AllowAdjustmentWhilePaused;
 
             this.TimerAdjustedCommand = this.GetEmbeddedCommand(item.TimerAdjustedCommandID, Resources.TimerAdjusted);
             this.TimerCompletedCommand = this.GetEmbeddedCommand(item.TimerCompletedCommandID, Resources.TimerCompleted);
@@ -133,7 +169,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 InitialAmount = this.InitialAmount,
                 DisplayFormat = this.DisplayFormat,
+                MaxAmount = this.MaxAmount,
+                DisableOnCompletion = this.DisableOnCompletion,
                 ResetOnEnable = this.ResetOnEnable,
+                AllowAdjustmentWhilePaused = this.AllowAdjustmentWhilePaused,
             };
 
             this.AssignProperties(result);

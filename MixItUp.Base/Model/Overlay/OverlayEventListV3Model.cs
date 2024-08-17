@@ -267,10 +267,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.TotalToShow)] = this.TotalToShow;
             properties[nameof(this.AddToTop)] = this.AddToTop.ToString().ToLower();
 
-            properties["ItemAddedAnimationFramework"] = this.ItemAddedAnimation.AnimationFramework;
-            properties["ItemAddedAnimationName"] = this.ItemAddedAnimation.AnimationName;
-            properties["ItemRemovedAnimationFramework"] = this.ItemRemovedAnimation.AnimationFramework;
-            properties["ItemRemovedAnimationName"] = this.ItemRemovedAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemRemovedAnimation), this.ItemRemovedAnimation);
 
             return properties;
         }

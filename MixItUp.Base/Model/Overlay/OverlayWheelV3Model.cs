@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -122,17 +123,14 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
             properties[nameof(this.Size)] = this.Size.ToString();
-            properties[OutcomeProbabilityPropertyName] = string.Join(", ", this.OutcomeProbabilities);
+            properties[OutcomeProbabilityPropertyName] = string.Join(", ", this.OutcomeProbabilities.Select(p => p.ToString(CultureInfo.InvariantCulture)));
             properties[nameof(this.OutcomeNames)] = this.OutcomeNames;
             properties[nameof(this.OutcomeColors)] = this.OutcomeColors;
             properties[nameof(this.WheelClickSoundURL)] = this.WheelClickSoundURL;
 
-            properties["EntranceAnimationFramework"] = this.EntranceAnimation.AnimationFramework;
-            properties["EntranceAnimationName"] = this.EntranceAnimation.AnimationName;
-            properties["OutcomeSelectedAnimationFramework"] = this.OutcomeSelectedAnimation.AnimationFramework;
-            properties["OutcomeSelectedAnimationName"] = this.OutcomeSelectedAnimation.AnimationName;
-            properties["ExitAnimationFramework"] = this.ExitAnimation.AnimationFramework;
-            properties["ExitAnimationName"] = this.ExitAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.EntranceAnimation), this.EntranceAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.OutcomeSelectedAnimation), this.OutcomeSelectedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ExitAnimation), this.ExitAnimation);
 
             return properties;
         }
@@ -156,7 +154,7 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             Dictionary<string, object> properties = new Dictionary<string, object>();
-            properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability.ToString();
+            properties[OverlayWheelV3Model.WinningProbabilityPropertyName] = this.winningProbability;
             properties[OverlayWheelV3Model.ModifiedProbabilitiesPropertyName] = probabilities;
             properties[UserProperty] = JObject.FromObject(parametersModel.User);
             await this.CallFunction("startSpin", properties);

@@ -226,29 +226,6 @@ namespace MixItUp.Base
                     }
                 });
 
-                foreach (SettingsV3Model setting in await ServiceManager.Get<SettingsService>().GetAllSettings())
-                {
-                    if (ChannelSession.Settings.ID != setting.ID)
-                    {
-                        StreamingPlatforms.ForEachPlatform(p =>
-                        {
-                            if (setting.StreamingPlatformAuthentications.ContainsKey(p) && ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p))
-                            {
-                                if (setting.StreamingPlatformAuthentications[p].IsEnabled && setting.StreamingPlatformAuthentications[p].Equals(ChannelSession.Settings.StreamingPlatformAuthentications[p]))
-                                {
-                                    result = new Result(string.Format(MixItUp.Base.Resources.SettingsAlreadyExistForAccount, p));
-                                    return;
-                                }
-                            }
-                        });
-
-                        if (!result.Success)
-                        {
-                            return result;
-                        }
-                    }
-                }
-
                 if (!StreamingPlatforms.SupportedPlatforms.Contains(ChannelSession.Settings.DefaultStreamingPlatform))
                 {
                     ChannelSession.Settings.DefaultStreamingPlatform = StreamingPlatforms.GetConnectedPlatforms().FirstOrDefault();

@@ -27,7 +27,14 @@ namespace MixItUp.Base.Model.Overlay
         public string DisplayFormat { get; set; }
 
         [DataMember]
-        public bool ResetOnEnable { get; set; } = true;
+        public int MaxAmount { get; set; }
+
+        [DataMember]
+        public bool DisableOnCompletion { get; set; }
+        [DataMember]
+        public bool ResetOnEnable { get; set; }
+        [DataMember]
+        public bool AllowAdjustmentWhilePaused { get; set; }
 
         [DataMember]
         public OverlayAnimationV3Model TimerAdjustedAnimation { get; set; } = new OverlayAnimationV3Model();
@@ -44,22 +51,60 @@ namespace MixItUp.Base.Model.Overlay
 
         [JsonIgnore]
         private CancellationTokenSource cancellationTokenSource;
+        [JsonIgnore]
+        private bool paused;
 
         public OverlayPersistentTimerV3Model() : base(OverlayItemV3Type.PersistentTimer) { }
 
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
-            amount = Math.Round(amount);
-            this.CurrentAmount += (int)amount;
-            this.CurrentAmount = Math.Max(this.CurrentAmount, 0);
-
-            if (amount != 0)
+            if (!this.paused || this.AllowAdjustmentWhilePaused)
             {
-                Dictionary<string, object> properties = new Dictionary<string, object>();
-                properties[SecondsProperty] = amount;
-                await this.CallFunction("adjustTime", properties);
+                amount = Math.Round(amount);
+                if (this.MaxAmount > 0 && amount > 0)
+                {
+                    int previousAmount = this.CurrentAmount;
+                    this.CurrentAmount = Math.Min(this.CurrentAmount + (int)amount, this.MaxAmount);
+                    amount = this.CurrentAmount - previousAmount;
+                }
+                else
+                {
+                    this.CurrentAmount += (int)amount;
+                    this.CurrentAmount = Math.Max(this.CurrentAmount, 0);
+                }
 
-                await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user));
+                if (amount != 0)
+                {
+                    Dictionary<string, object> properties = new Dictionary<string, object>();
+                    properties[SecondsProperty] = amount;
+                    await this.CallFunction("adjustTime", properties);
+
+                    await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user));
+                }
+            }
+        }
+
+        public async Task Pause()
+        {
+            if (!this.paused)
+            {
+                this.paused = true;
+                if (this.cancellationTokenSource != null)
+                {
+                    this.cancellationTokenSource.Cancel();
+                    this.cancellationTokenSource = null;
+                }
+                await this.CallFunction("pause", new Dictionary<string, object>());
+            }
+        }
+
+        public async Task Unpause()
+        {
+            if (this.paused)
+            {
+                this.paused = false;
+                this.StartBackgroundTimer();
+                await this.CallFunction("unpause", new Dictionary<string, object>());
             }
         }
 
@@ -70,20 +115,17 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.CurrentAmount)] = this.CurrentAmount;
             properties[nameof(this.DisplayFormat)] = this.DisplayFormat;
 
-            properties["TimerAdjustedAnimationFramework"] = this.TimerAdjustedAnimation.AnimationFramework;
-            properties["TimerAdjustedAnimationName"] = this.TimerAdjustedAnimation.AnimationName;
-            properties["TimerCompletedAnimationFramework"] = this.TimerCompletedAnimation.AnimationFramework;
-            properties["TimerCompletedAnimationName"] = this.TimerCompletedAnimation.AnimationName;
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.TimerAdjustedAnimation), this.TimerAdjustedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.TimerCompletedAnimation), this.TimerCompletedAnimation);
 
             return properties;
         }
 
         protected override async Task WidgetEnableInternal()
         {
-            this.cancellationTokenSource = new CancellationTokenSource();
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            AsyncRunner.RunAsyncBackground(this.BackgroundTimer, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            this.StartBackgroundTimer();
+
+            this.paused = false;
 
             await base.WidgetEnableInternal();
         }
@@ -111,17 +153,32 @@ namespace MixItUp.Base.Model.Overlay
             return Task.CompletedTask;
         }
 
+        private void StartBackgroundTimer()
+        {
+            this.cancellationTokenSource = new CancellationTokenSource();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(this.BackgroundTimer, this.cancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
         private async Task BackgroundTimer(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested && this.CurrentAmount > 0)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(1000);
-                this.CurrentAmount--;
-            }
 
-            if (this.CurrentAmount == 0)
-            {
-                await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
+                if (this.CurrentAmount > 0)
+                {
+                    this.CurrentAmount--;
+                    if (this.CurrentAmount == 0)
+                    {
+                        await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
+                        if (this.DisableOnCompletion)
+                        {
+                            await ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID).Disable();
+                        }
+                    }
+                }
             }
         }
     }

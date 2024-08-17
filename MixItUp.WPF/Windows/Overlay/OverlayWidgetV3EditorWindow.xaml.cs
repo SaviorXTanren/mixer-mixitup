@@ -75,6 +75,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.EmoteEffect: overlayControl = new OverlayEmoteEffectV3Control(); break;
                 case OverlayItemV3Type.PersistentEmoteEffect: overlayControl = new OverlayPersistentEmoteEffectV3Control(); break;
                 case OverlayItemV3Type.Poll: overlayControl = new OverlayPollV3Control(); break;
+                case OverlayItemV3Type.DiscordReactiveVoice: overlayControl = new OverlayDiscordReactiveVoiceV3Control(); break;
             }
 
             if (overlayControl != null)

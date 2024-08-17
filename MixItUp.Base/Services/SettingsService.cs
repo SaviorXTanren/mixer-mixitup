@@ -424,7 +424,7 @@ namespace MixItUp.Base.Services
                         ActionGroupCommandModel command = (ActionGroupCommandModel)kvp.Value;
                         if (command.RunOneRandomly)
                         {
-                            RandomActionModel randomAction = new RandomActionModel(amount: "1", noDuplicates: false, command.Actions.ToList());
+                            RandomActionModel randomAction = new RandomActionModel(amount: "1", noDuplicates: false, persistNoDuplicates: false, command.Actions.ToList());
                             command.Actions.Clear();
                             command.Actions.Add(randomAction);
                             settings.Commands.ManualValueChanged(command.ID);
