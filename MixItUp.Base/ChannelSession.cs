@@ -231,25 +231,16 @@ namespace MixItUp.Base
                     ChannelSession.Settings.DefaultStreamingPlatform = StreamingPlatforms.GetConnectedPlatforms().FirstOrDefault();
                 }
 
-                if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
+                if (string.IsNullOrEmpty(ChannelSession.Settings.Name))
                 {
-                    ChannelSession.Settings.Name = StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).Username;
-                }
-                else if (ServiceManager.Get<TwitchSessionService>().IsConnected)
-                {
-                    ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>().Username;
-                }
-                else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
-                {
-                    ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>().Username;
-                }
-                else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
-                {
-                    ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>().Username;
-                }
-                else
-                {
-                    ChannelSession.Settings.Name = "Test";
+                    if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
+                    {
+                        ChannelSession.Settings.Name = StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).Username;
+                    }
+                    else
+                    {
+                        ChannelSession.Settings.Name = "Test";
+                    }
                 }
 
                 if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
