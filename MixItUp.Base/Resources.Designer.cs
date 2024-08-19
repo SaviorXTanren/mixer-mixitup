@@ -17902,6 +17902,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Read Each Line From File.
+        /// </summary>
+        public static string ReadEachLineFromFile {
+            get {
+                return ResourceManager.GetString("ReadEachLineFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read From File.
         /// </summary>
         public static string ReadFromFile {
