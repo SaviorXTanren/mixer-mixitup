@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
-    public class FileActionEditorControlViewModel : ActionEditorControlViewModelBase
+    public class FileActionEditorControlViewModel : GroupActionEditorControlViewModel
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.File; } }
 
@@ -24,6 +24,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged(nameof(this.ShowLineToWrite));
                 this.NotifyPropertyChanged(nameof(this.ShowLineToRead));
                 this.NotifyPropertyChanged(nameof(this.ShowTextToRemoveGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowSubActions));
             }
         }
         private FileActionTypeEnum selectedActionType;
@@ -43,7 +44,8 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return this.SelectedActionType == FileActionTypeEnum.ReadFromFile || this.SelectedActionType == FileActionTypeEnum.ReadSpecificLineFromFile ||
                     this.SelectedActionType == FileActionTypeEnum.ReadRandomLineFromFile || this.SelectedActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
-                    this.SelectedActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.SelectedActionType == FileActionTypeEnum.CountLinesInFile;
+                    this.SelectedActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.SelectedActionType == FileActionTypeEnum.CountLinesInFile ||
+                    this.SelectedActionType == FileActionTypeEnum.ReadEachLineFromFile;
             }
         }
 
@@ -52,6 +54,8 @@ namespace MixItUp.Base.ViewModel.Actions
         public bool ShowLineToWrite { get { return this.SelectedActionType == FileActionTypeEnum.InsertInFileAtSpecificLine; } }
 
         public bool ShowLineToRead { get { return this.SelectedActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.SelectedActionType == FileActionTypeEnum.RemoveSpecificLineFromFile; } }
+
+        public bool ShowSubActions { get { return this.SelectedActionType == FileActionTypeEnum.ReadEachLineFromFile; } }
 
         public string FilePath
         {
@@ -127,11 +131,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public FileActionEditorControlViewModel() : base() { }
 
-        public override Task<Result> Validate()
+        public override async Task<Result> Validate()
         {
             if (string.IsNullOrEmpty(this.FilePath))
             {
-                return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionMissingFilePath));
+                return new Result(MixItUp.Base.Resources.FileActionMissingFilePath);
             }
 
             if (this.ShowSaveToFileGrid)
@@ -140,7 +144,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     if (string.IsNullOrEmpty(this.LineIndex))
                     {
-                        return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionMissingLineToWrite));
+                        return new Result(MixItUp.Base.Resources.FileActionMissingLineToWrite);
                     }
                 }
             }
@@ -148,14 +152,14 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 if (string.IsNullOrEmpty(this.TransferText) || !SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.TransferText))
                 {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionInvalidSpecialIdentifier));
+                    return new Result(MixItUp.Base.Resources.FileActionInvalidSpecialIdentifier);
                 }
 
                 if (this.ShowLineToRead)
                 {
                     if (string.IsNullOrEmpty(this.LineIndex))
                     {
-                        return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionMissingLineToRead));
+                        return new Result(MixItUp.Base.Resources.FileActionMissingLineToRead);
                     }
                 }
             }
@@ -163,16 +167,28 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 if (string.IsNullOrEmpty(this.TransferText))
                 {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionInvalidSpecialIdentifier));
+                    return new Result(MixItUp.Base.Resources.FileActionInvalidSpecialIdentifier);
                 }
             }
 
-            return Task.FromResult(new Result());
+            if (this.ShowSubActions)
+            {
+                return await base.Validate();
+            }
+
+            return new Result();
         }
 
-        protected override Task<ActionModelBase> GetActionInternal()
+        protected override async Task<ActionModelBase> GetActionInternal()
         {
-            return Task.FromResult<ActionModelBase>(new FileActionModel(this.SelectedActionType, this.FilePath, this.TransferText, this.LineIndex, this.CaseSensitive));
+            if (this.ShowSubActions)
+            {
+                return new FileActionModel(this.SelectedActionType, this.FilePath, this.TransferText, await this.ActionEditorList.GetActions(), this.LineIndex, this.CaseSensitive);
+            }
+            else
+            {
+                return new FileActionModel(this.SelectedActionType, this.FilePath, this.TransferText, this.LineIndex, this.CaseSensitive);
+            }
         }
     }
 }

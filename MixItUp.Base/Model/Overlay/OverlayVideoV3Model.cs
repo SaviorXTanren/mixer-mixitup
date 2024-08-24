@@ -49,15 +49,15 @@ namespace MixItUp.Base.Model.Overlay
                 properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)].ToString(), parameters);
                 properties[FilePathIDPropertyName] = properties[nameof(this.FilePath)].ToString().GetHashCode().ToString();
                 properties[URLPathPropertyName] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)].ToString(), "video");
-            }
 
-            properties[nameof(this.StartTime)] = "0";
-            if (!string.IsNullOrEmpty(this.StartTime))
-            {
-                string startTime = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.StartTime, parameters);
-                if (int.TryParse(startTime, out int time) && time >= 0)
+                properties[nameof(this.StartTime)] = "0";
+                if (!string.IsNullOrEmpty(this.StartTime))
                 {
-                    properties[URLPathPropertyName] = properties[URLPathPropertyName].ToString() + "#t=" + time;
+                    string startTime = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.StartTime, parameters);
+                    if (int.TryParse(startTime, out int time) && time >= 0)
+                    {
+                        properties[URLPathPropertyName] = properties[URLPathPropertyName].ToString() + "#t=" + time;
+                    }
                 }
             }
         }

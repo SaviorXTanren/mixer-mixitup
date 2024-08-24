@@ -10642,4 +10642,7 @@ namespace CustomNamespace
   <data name="ProfileName" xml:space="preserve">
     <value>Profile Name</value>
   </data>
+  <data name="ReadEachLineFromFile" xml:space="preserve">
+    <value>Read Each Line From File</value>
+  </data>
 </root>

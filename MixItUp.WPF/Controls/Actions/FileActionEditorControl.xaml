@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:ActionControls="clr-namespace:MixItUp.WPF.Controls.Actions"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
@@ -17,6 +18,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
@@ -79,5 +82,7 @@
             <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CaseSensitive}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="4" IsChecked="{Binding CaseSensitive}" />
         </Grid>
+
+        <ActionControls:SubActionContainerControl Grid.Row="6" Visibility="{Binding ShowSubActions, Converter={StaticResource BooleanToVisibilityConverter}}" />
     </Grid>
 </local:ActionEditorControlBase>
