@@ -109,7 +109,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>();
-                foreach (OverlayItemV3Type value in Enum.GetValues(typeof(OverlayItemV3Type)))
+                foreach (OverlayItemV3Type value in EnumHelper.GetEnumList<OverlayItemV3Type>())
                 {
                     var attributes = (OverlayWidgetAttribute[])value.GetType().GetField(value.ToString()).GetCustomAttributes(typeof(OverlayWidgetAttribute), false);
                     if (attributes != null && attributes.Length > 0)
