@@ -10645,4 +10645,7 @@ namespace CustomNamespace
   <data name="ReadEachLineFromFile" xml:space="preserve">
     <value>Read Each Line From File</value>
   </data>
+  <data name="OverlayEndpointEditor" xml:space="preserve">
+    <value>Overlay Endpoint - Editor</value>
+  </data>
 </root>

@@ -15433,6 +15433,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overlay Endpoint - Editor.
+        /// </summary>
+        public static string OverlayEndpointEditor {
+            get {
+                return ResourceManager.GetString("OverlayEndpointEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overlay Endpoints.
         /// </summary>
         public static string OverlayEndpoints {

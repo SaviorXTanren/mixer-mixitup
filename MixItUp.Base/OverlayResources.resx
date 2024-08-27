@@ -877,6 +877,21 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     &lt;div class="text"&gt;&lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
+  <data name="OverlayEndpointDefaultCSS" xml:space="preserve">
+    <value>
+
+{CSS}</value>
+  </data>
+  <data name="OverlayEndpointDefaultHTML" xml:space="preserve">
+    <value>
+
+{HTML}</value>
+  </data>
+  <data name="OverlayEndpointDefaultJavascript" xml:space="preserve">
+    <value>
+
+{Javascript}</value>
+  </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">
     <value>.list {
 }

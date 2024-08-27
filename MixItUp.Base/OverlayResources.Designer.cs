@@ -501,6 +501,39 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 
+        ///
+        ///{CSS}.
+        /// </summary>
+        public static string OverlayEndpointDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayEndpointDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///
+        ///{HTML}.
+        /// </summary>
+        public static string OverlayEndpointDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayEndpointDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///
+        ///{Javascript}.
+        /// </summary>
+        public static string OverlayEndpointDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayEndpointDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .list {
         ///}
         ///

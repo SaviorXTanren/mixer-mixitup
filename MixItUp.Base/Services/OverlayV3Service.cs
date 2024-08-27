@@ -264,6 +264,21 @@ namespace MixItUp.Base.Services
 
         public void ConnectOverlayEndpointService(OverlayEndpointV3Model overlayEndpoint)
         {
+            if (string.IsNullOrEmpty(overlayEndpoint.HTML))
+            {
+                overlayEndpoint.HTML = OverlayResources.OverlayEndpointDefaultHTML;
+            }
+
+            if (string.IsNullOrEmpty(overlayEndpoint.CSS))
+            {
+                overlayEndpoint.CSS = OverlayResources.OverlayEndpointDefaultCSS;
+            }
+
+            if (string.IsNullOrEmpty(overlayEndpoint.Javascript))
+            {
+                overlayEndpoint.Javascript = OverlayResources.OverlayEndpointDefaultJavascript;
+            }
+
             OverlayEndpointV3Service endpointService = new OverlayEndpointV3Service(overlayEndpoint);
             endpointService.Connect();
             this.overlayEndpoints[overlayEndpoint.ID] = endpointService;
@@ -445,7 +460,7 @@ namespace MixItUp.Base.Services
             this.mainHTML = OverlayResources.OverlayMainHTML;
             this.mainHTML = OverlayV3Service.ReplaceProperty(this.mainHTML, nameof(WebSocketConnectionURL), WebSocketConnectionURL);
 
-            this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML; //OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayItemIFrameHTML);
+            this.RefreshItemIFrameHTMLCache();
         }
 
         public async Task Disconnect()
@@ -587,6 +602,14 @@ namespace MixItUp.Base.Services
         public string GetURLForFile(string filePath, string fileType) { return ServiceManager.Get<OverlayV3Service>().GetURLForFile(filePath, fileType); }
 
         public void SetLocalFile(string id, string filePath) { ServiceManager.Get<OverlayV3Service>().SetLocalFile(id, filePath); }
+
+        public void RefreshItemIFrameHTMLCache()
+        {
+            this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML;
+            this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.HTML), this.Model.HTML);
+            this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.CSS), this.Model.CSS);
+            this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.Javascript), this.Model.Javascript);
+        }
 
         protected virtual void PacketReceived(OverlayV3Packet packet)
         {

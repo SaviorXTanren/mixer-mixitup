@@ -50,8 +50,10 @@
                         <DataTemplate>
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="300" />
+                                    <ColumnDefinition MinWidth="250" />
                                     <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
@@ -65,7 +67,9 @@
 
                                 <Controls:IconButton Grid.Column="4" x:Name="CopyEndpointURLButton" Click="CopyEndpointURLButton_Click" Icon="ContentCopy" ToolTip="{x:Static resx:Resources.Copy}" />
 
-                                <Controls:IconButton Grid.Column="6" Command="{Binding DeleteCommand}" IsEnabled="{Binding CanDelete}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
+                                <Controls:IconButton Grid.Column="6" x:Name="EditEndpointButton" Click="EditEndpointButton_Click" Icon="TooltipEdit" ToolTip="{x:Static resx:Resources.Edit}" />
+
+                                <Controls:IconButton Grid.Column="8" Command="{Binding DeleteCommand}" IsEnabled="{Binding CanDelete}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
