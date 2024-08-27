@@ -10648,4 +10648,13 @@ namespace CustomNamespace
   <data name="OverlayEndpointEditor" xml:space="preserve">
     <value>Overlay Endpoint - Editor</value>
   </data>
+  <data name="RunWidgetFunction" xml:space="preserve">
+    <value>Run Widget Function</value>
+  </data>
+  <data name="FunctionName" xml:space="preserve">
+    <value>Function Name</value>
+  </data>
+  <data name="AddParameter" xml:space="preserve">
+    <value>Add Parameter</value>
+  </data>
 </root>

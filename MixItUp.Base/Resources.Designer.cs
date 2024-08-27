@@ -520,6 +520,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Parameter.
+        /// </summary>
+        public static string AddParameter {
+            get {
+                return ResourceManager.GetString("AddParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Quote.
         /// </summary>
         public static string AddQuote {
@@ -7888,6 +7897,15 @@ namespace MixItUp.Base {
         public static string FullTheme {
             get {
                 return ResourceManager.GetString("FullTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function Name.
+        /// </summary>
+        public static string FunctionName {
+            get {
+                return ResourceManager.GetString("FunctionName", resourceCulture);
             }
         }
         
@@ -19099,6 +19117,15 @@ namespace MixItUp.Base {
         public static string RunOneRandomly {
             get {
                 return ResourceManager.GetString("RunOneRandomly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run Widget Function.
+        /// </summary>
+        public static string RunWidgetFunction {
+            get {
+                return ResourceManager.GetString("RunWidgetFunction", resourceCulture);
             }
         }
         
