@@ -1,5 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services.External;
@@ -17,6 +16,7 @@ using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MixItUp.Base.Services
 {
@@ -425,7 +425,7 @@ namespace MixItUp.Base.Services
         }
         public virtual string WebSocketConnectionURL { get { return $"/ws/{this.ID}/"; } }
 
-        private List<OverlayV3Packet> batchPackets = new List<OverlayV3Packet>();
+        private List<string> batchPackets = new List<string>();
         private bool isBatching = false;
 
         private string mainHTML;
@@ -469,18 +469,28 @@ namespace MixItUp.Base.Services
 
         public string GetItemIFrameHTML() { return this.itemIFrameHTML; }
 
-        public async Task Add(string id, string html, int layer = 0)
+        public async Task Add(string id, string html, int layer = 0, bool allowBatching = false)
         {
             try
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
-                    Logger.Log(LogLevel.Debug, $"Overlay - Adding HTML - {id} - {html}");
-                    ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
-                    await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)
+                    if (allowBatching && this.isBatching)
                     {
-                        Layer = layer
-                    }));
+                        if (!string.IsNullOrEmpty(html))
+                        {
+                            Logger.Log(LogLevel.Debug, $"Overlay - Batching HTML - {html}");
+                            this.batchPackets.Add(html);
+                        }
+                    }
+                    else
+                    {
+                        ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
+                        await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)
+                        {
+                            Layer = layer
+                        }));
+                    }
                 }
             }
             catch (Exception ex)
@@ -555,7 +565,7 @@ namespace MixItUp.Base.Services
             {
                 ID = id
             };
-            await this.Add(id.ToString(), await OverlayV3Service.PerformBasicOverlayItemProcessing(this, overlayItem));
+            await this.Add(id.ToString(), await OverlayV3Service.PerformBasicOverlayItemProcessing(this, overlayItem), allowBatching: true);
             return id;
         }
 
@@ -570,16 +580,29 @@ namespace MixItUp.Base.Services
 
             await this.semaphore.WaitAsync();
 
-            IEnumerable<OverlayV3Packet> packets = this.batchPackets.ToList();
+            IEnumerable<string> packets = this.batchPackets.ToList();
             this.batchPackets.Clear();
 
             this.semaphore.Release();
 
             if (packets.Count() > 0)
             {
+                string html = OverlayResources.OverlayItemBatchedIFrameHTML;
+                foreach (string packet in packets)
+                {
+                    
+                }
+
+                string id = Guid.NewGuid().ToString();
+                ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
+                await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)
+                {
+                    Layer = 0
+                }));
+
                 foreach (var webSocketServer in this.webSocketServers)
                 {
-                    await webSocketServer.Send(packets);
+                    //await webSocketServer.Send(packets);
                 }
             }
         }
@@ -606,20 +629,9 @@ namespace MixItUp.Base.Services
 
         private async Task Send(OverlayV3Packet packet)
         {
-            if (this.isBatching)
+            foreach (var webSocketServer in this.webSocketServers)
             {
-                await this.semaphore.WaitAsync();
-
-                this.batchPackets.Add(packet);
-
-                this.semaphore.Release();
-            }
-            else
-            {
-                foreach (var webSocketServer in this.webSocketServers)
-                {
-                    await webSocketServer.Send(packet);
-                }
+                await webSocketServer.Send(packet);
             }
         }
 

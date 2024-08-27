@@ -834,6 +834,28 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+        ///
+        ///    &lt;script src=&quot;/scripts/jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+        ///
+        ///    &lt;script src=&quot;/scripts/video.min.js&quot;&gt;&lt;/script&gt;
+        ///
+        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/scripts/animate.min.css&quot;&gt;
+        ///&lt;/head&gt;
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100% [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayItemBatchedIFrameHTML {
+            get {
+                return ResourceManager.GetString("OverlayItemBatchedIFrameHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to maindiv.style.visibility=&apos;hidden&apos;;
         ///sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });.
         /// </summary>

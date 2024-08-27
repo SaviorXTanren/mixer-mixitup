@@ -292,7 +292,7 @@ namespace MixItUp.Base.Model.Actions
 
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
 
-                    await overlay.Add(properties[nameof(this.OverlayItemV3.ID)].ToString(), iframeHTML, this.OverlayItemV3.LayerProcessed);
+                    await overlay.Add(properties[nameof(this.OverlayItemV3.ID)].ToString(), iframeHTML, this.OverlayItemV3.LayerProcessed, allowBatching: true);
                 }
             }
         }

@@ -1345,6 +1345,72 @@ function update(data)
 
 sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
   </data>
+  <data name="OverlayItemBatchedIFrameHTML" xml:space="preserve">
+    <value>&lt;!DOCTYPE html&gt;
+
+&lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+
+    &lt;script src="/scripts/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+
+    &lt;script src="/scripts/video.min.js"&gt;&lt;/script&gt;
+
+    &lt;link rel="stylesheet" type="text/css" href="/scripts/animate.min.css"&gt;
+&lt;/head&gt;
+&lt;body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"&gt;
+
+    &lt;div id="mainOverlay" style="position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        var mainOverlayDiv = document.getElementById('mainOverlay');
+        
+        var divData = [{DivData}];
+        var divLayers = [{DivLayers}];
+
+        function createIFrameContainer(data, layer) {
+            var div = document.createElement("div");
+            div.style = "display: block; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0;";
+            div.style.zIndex = layer.toString();
+
+            var iframe = document.createElement("iframe");
+            iframe.style = "position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0; border: none;";
+            iframe.sandbox = "allow-scripts allow-same-origin";
+            iframe.allow = "autoplay; fullscreen";
+            iframe.srcdoc = data;
+            
+            iframe.addEventListener("load", ev =&gt; {
+                var passedDownStyles = document.createElement("style");
+                passedDownStyles.textContent = "";
+                for (var i = 0; i &lt; document.styleSheets.length; i++)
+                {
+                    var ruleList = document.styleSheets[i].cssRules;
+                    for (var j = 0; j &lt; ruleList.length; j++)
+                    {
+                        passedDownStyles.textContent += ruleList[j].cssText;
+                    }
+                }
+                ev.target.contentDocument.head.appendChild(passedDownStyles);
+            });
+
+            div.appendChild(iframe);
+
+            mainOverlayDiv.appendChild(iframeContainer);
+        }
+
+        function logException(err) {
+            console.error(err);
+            logToSessionStorage(err);
+        }
+        
+        for (let i = 0; i &lt; divData.length; i++) {
+            createIFrameContainer(divData[i], divLayers[i]);
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
   <data name="OverlayItemHideAndSendParentMessageRemoveJavascript" xml:space="preserve">
     <value>maindiv.style.visibility='hidden';
 sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
