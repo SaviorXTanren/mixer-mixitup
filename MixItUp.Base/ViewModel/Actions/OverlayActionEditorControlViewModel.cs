@@ -667,24 +667,30 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (action.PersistentTimerID != Guid.Empty)
             {
-                this.SelectedActionType = OverlayActionTypeEnum.AddToPersistentTimer;
                 this.widgetID = action.PersistentTimerID;
-                this.TimeAmount = action.TimeAmount;
-                this.PauseUnpausePersistentTimer = action.PauseUnpausePersistentTimer.GetValueOrDefault();
+                if (action.PauseUnpausePersistentTimer != null)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.PauseUnpausePersistentTimer;
+                    this.PauseUnpausePersistentTimer = action.PauseUnpausePersistentTimer.GetValueOrDefault();
+                }
+                else if (!string.IsNullOrEmpty(action.TimeAmount))
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.AddToPersistentTimer;
+                    this.TimeAmount = action.TimeAmount;
+                }
             }
             else if (action.EndCreditsID != Guid.Empty)
             {
+                this.widgetID = action.EndCreditsID;
                 if (action.EndCreditsSectionID != Guid.Empty)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.AddToEndCredits;
-                    this.widgetID = action.EndCreditsID;
                     this.endCreditsSectionID = action.EndCreditsSectionID;
                     this.EndCreditsItemText = action.EndCreditsItemText;
                 }
                 else
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.PlayEndCredits;
-                    this.widgetID = action.EndCreditsID;
                 }
             }
             else if (action.EventListID != Guid.Empty)
