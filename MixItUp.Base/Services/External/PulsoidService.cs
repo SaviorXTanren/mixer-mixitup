@@ -105,7 +105,7 @@ namespace MixItUp.Base.Services.External
 
         public string AuthorizationURL { get { return $"https://pulsoid.net/oauth2/authorize?client_id={PulsoidService.ClientID}&redirect_uri={OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL}&response_type=code&scope=data:heart_rate:read&state={Guid.NewGuid()}"; } }
 
-        private PulsoidWebSocket socket = new PulsoidWebSocket();
+        private PulsoidWebSocket socket;
 
         public PulsoidService() : base(PulsoidService.BaseAddress) { }
 
@@ -151,13 +151,7 @@ namespace MixItUp.Base.Services.External
 
         public override async Task Disconnect()
         {
-            if (ChannelSession.IsDebug())
-            {
-                this.socket.OnSentOccurred -= Socket_OnSentOccurred;
-                this.socket.OnTextReceivedOccurred -= Socket_OnTextReceivedOccurred;
-            }
-            this.socket.OnDisconnectOccurred -= Socket_OnDisconnectOccurred;
-            await this.socket.Disconnect();
+            await this.DisconnectWebSocket();
 
             this.token = null;
         }
@@ -204,6 +198,9 @@ namespace MixItUp.Base.Services.External
 
         private async Task<bool> ConnectWebSocket()
         {
+            await this.Disconnect();
+
+            this.socket = new PulsoidWebSocket();
             if (ChannelSession.IsDebug())
             {
                 this.socket.OnSentOccurred += Socket_OnSentOccurred;
@@ -219,13 +216,29 @@ namespace MixItUp.Base.Services.External
             return true;
         }
 
+        private async Task DisconnectWebSocket()
+        {
+            if (this.socket != null)
+            {
+                if (ChannelSession.IsDebug())
+                {
+                    this.socket.OnSentOccurred -= Socket_OnSentOccurred;
+                    this.socket.OnTextReceivedOccurred -= Socket_OnTextReceivedOccurred;
+                }
+                this.socket.OnDisconnectOccurred -= Socket_OnDisconnectOccurred;
+                await this.socket.Disconnect();
+
+                this.socket = null;
+            }
+        }
+
         private async void Socket_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.Pulsoid);
 
             do
             {
-                await this.Disconnect();
+                await this.DisconnectWebSocket();
 
                 await Task.Delay(5000);
             }
