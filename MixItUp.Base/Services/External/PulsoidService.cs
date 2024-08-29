@@ -134,6 +134,7 @@ namespace MixItUp.Base.Services.External
 
                         if (!await this.ConnectWebSocket())
                         {
+                            await this.Disconnect();
                             return new Result(false);
                         }
 
@@ -198,7 +199,7 @@ namespace MixItUp.Base.Services.External
 
         private async Task<bool> ConnectWebSocket()
         {
-            await this.Disconnect();
+            await this.DisconnectWebSocket();
 
             this.socket = new PulsoidWebSocket();
             if (ChannelSession.IsDebug())
@@ -210,7 +211,6 @@ namespace MixItUp.Base.Services.External
 
             if (!await this.socket.Connect($"{PulsoidService.WebsocketUrl}?access_token={this.token.accessToken}"))
             {
-                await this.Disconnect();
                 return false;
             }
             return true;
