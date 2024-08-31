@@ -11,7 +11,7 @@ namespace MixItUp.WPF.Util
         {
             try
             {
-                System.Windows.Clipboard.SetText(text);
+                System.Windows.Clipboard.SetDataObject(text);
                 return;
             }
             catch (Exception ex)
@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Util
 
             try
             {
-                System.Windows.Forms.Clipboard.SetText(text);
+                System.Windows.Forms.Clipboard.SetDataObject(text);
                 return;
             }
             catch (Exception ex)

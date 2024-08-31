@@ -70,6 +70,13 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public Guid WheelID { get; set; }
 
+        [DataMember]
+        public Guid RunWidgetFunctionID { get; set; }
+        [DataMember]
+        public string RunWidgetFunctionName { get; set; }
+        [DataMember]
+        public Dictionary<string, object> RunWidgetFunctionParameters { get; set; } = new Dictionary<string, object>();
+
         public OverlayActionModel(OverlayItemV3ModelBase overlayItem, string duration, OverlayAnimationV3Model entranceAnimation, OverlayAnimationV3Model exitAnimation)
             : base(ActionTypeEnum.Overlay)
         {
@@ -140,6 +147,14 @@ namespace MixItUp.Base.Model.Actions
             : base(ActionTypeEnum.Overlay)
         {
             this.WheelID = wheel.ID;
+        }
+
+        public OverlayActionModel(OverlayWidgetV3Model widget, string functionName, Dictionary<string, object> functionParameters)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.RunWidgetFunctionID = widget.ID;
+            this.RunWidgetFunctionName = functionName;
+            this.RunWidgetFunctionParameters = functionParameters;
         }
 
         [Obsolete]
@@ -240,6 +255,18 @@ namespace MixItUp.Base.Model.Actions
                 if (widget != null && widget.Type == OverlayItemV3Type.Wheel)
                 {
                     await ((OverlayWheelV3Model)widget.Item).Spin(parameters);
+                }
+            }
+            else if (this.RunWidgetFunctionID != Guid.Empty)
+            {
+                OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.RunWidgetFunctionID));
+                if (widget != null)
+                {
+                    OverlayEndpointV3Service overlay = widget.Item.GetOverlayEndpointService();
+                    if (overlay != null)
+                    {
+                        await overlay.Function(widget.ID.ToString(), this.RunWidgetFunctionName, this.RunWidgetFunctionParameters);
+                    }
                 }
             }
             else

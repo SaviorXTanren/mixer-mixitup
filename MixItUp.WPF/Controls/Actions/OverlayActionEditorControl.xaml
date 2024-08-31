@@ -6,6 +6,7 @@
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -259,6 +260,52 @@
             </Grid.RowDefinitions>
 
             <ComboBox Grid.Row="0" ItemsSource="{Binding Wheels}" SelectedItem="{Binding SelectedWheel}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowRunWidgetFunction, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox Grid.Column="0" ItemsSource="{Binding Widgets}" SelectedItem="{Binding SelectedWidget}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayWidgets}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                <TextBox Grid.Column="2" Text="{Binding RunWidgetFunctionName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FunctionName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
+
+            <Button Grid.Row="2" Content="{x:Static resx:Resources.AddParameter}" Command="{Binding AddRunWidgetFunctionParameterCommand}" />
+
+            <ItemsControl Grid.Row="4" ItemsSource="{Binding RunWidgetFunctionParameters}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Text="{Binding Name}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <TextBox Text="{Binding Value}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Value}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <Controls:IconButton Grid.Column="4" Icon="Delete" Command="{Binding DeleteCommand}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

@@ -4,12 +4,14 @@ using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
+using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
@@ -24,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Actions
         TwitchClip,
         EmoteEffect,
 
-        EnableDisableWidget,
+        EnableDisableWidget = 99,
 
         DamageStreamBoss,
         AddToGoal,
@@ -34,6 +36,54 @@ namespace MixItUp.Base.ViewModel.Actions
         PlayEndCredits,
         AddToEventList,
         SpinWheel,
+
+        RunWidgetFunction = 199,
+    }
+
+    public class OverlayActionRunWidgetFunctionParameterViewModel : UIViewModelBase
+    {
+        public string Name
+        {
+            get { return this.name; }
+            set
+            {
+                this.name = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string name;
+
+        public string Value
+        {
+            get { return this.value; }
+            set
+            {
+                this.value = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string value;
+
+        public ICommand DeleteCommand { get; set; }
+
+        private OverlayActionEditorControlViewModel viewModel;
+
+        public OverlayActionRunWidgetFunctionParameterViewModel(OverlayActionEditorControlViewModel viewModel)
+        {
+            this.viewModel = viewModel;
+
+            this.DeleteCommand = this.CreateCommand(() =>
+            {
+                this.viewModel.DeleteRunWidgetFunctionParameter(this);
+            });
+        }
+
+        public OverlayActionRunWidgetFunctionParameterViewModel(OverlayActionEditorControlViewModel viewModel, KeyValuePair<string, object> parameter)
+            : this(viewModel)
+        {
+            this.Name = parameter.Key;
+            this.Value = parameter.Value.ToString();
+        }
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -63,6 +113,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.NotifyPropertyChanged(nameof(this.ShowPlayEndCredits));
                     this.NotifyPropertyChanged(nameof(this.ShowAddToEventList));
                     this.NotifyPropertyChanged(nameof(this.ShowSpinWheel));
+                    this.NotifyPropertyChanged(nameof(this.ShowRunWidgetFunction));
 
                     if (this.ShowItem)
                     {
@@ -509,6 +560,23 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayWidgetV3Model selectedWheel;
 
+        public bool ShowRunWidgetFunction { get { return this.SelectedActionType == OverlayActionTypeEnum.RunWidgetFunction; } }
+
+        public string RunWidgetFunctionName
+        {
+            get { return this.runWidgetFunctionName; }
+            set
+            {
+                this.runWidgetFunctionName = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string runWidgetFunctionName;
+
+        public ICommand AddRunWidgetFunctionParameterCommand { get; set; }
+
+        public ObservableCollection<OverlayActionRunWidgetFunctionParameterViewModel> RunWidgetFunctionParameters { get; set; } = new ObservableCollection<OverlayActionRunWidgetFunctionParameterViewModel>();
+
         private Guid widgetID;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
@@ -599,24 +667,30 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (action.PersistentTimerID != Guid.Empty)
             {
-                this.SelectedActionType = OverlayActionTypeEnum.AddToPersistentTimer;
                 this.widgetID = action.PersistentTimerID;
-                this.TimeAmount = action.TimeAmount;
-                this.PauseUnpausePersistentTimer = action.PauseUnpausePersistentTimer.GetValueOrDefault();
+                if (action.PauseUnpausePersistentTimer != null)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.PauseUnpausePersistentTimer;
+                    this.PauseUnpausePersistentTimer = action.PauseUnpausePersistentTimer.GetValueOrDefault();
+                }
+                else if (!string.IsNullOrEmpty(action.TimeAmount))
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.AddToPersistentTimer;
+                    this.TimeAmount = action.TimeAmount;
+                }
             }
             else if (action.EndCreditsID != Guid.Empty)
             {
+                this.widgetID = action.EndCreditsID;
                 if (action.EndCreditsSectionID != Guid.Empty)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.AddToEndCredits;
-                    this.widgetID = action.EndCreditsID;
                     this.endCreditsSectionID = action.EndCreditsSectionID;
                     this.EndCreditsItemText = action.EndCreditsItemText;
                 }
                 else
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.PlayEndCredits;
-                    this.widgetID = action.EndCreditsID;
                 }
             }
             else if (action.EventListID != Guid.Empty)
@@ -629,6 +703,16 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.SelectedActionType = OverlayActionTypeEnum.SpinWheel;
                 this.widgetID = action.WheelID;
+            }
+            else if (action.RunWidgetFunctionID != Guid.Empty)
+            {
+                this.SelectedActionType = OverlayActionTypeEnum.RunWidgetFunction;
+                this.widgetID = action.RunWidgetFunctionID;
+                this.RunWidgetFunctionName = action.RunWidgetFunctionName;
+                foreach (var kvp in action.RunWidgetFunctionParameters)
+                {
+                    this.RunWidgetFunctionParameters.Add(new OverlayActionRunWidgetFunctionParameterViewModel(this, kvp));
+                }
             }
         }
 
@@ -769,8 +853,33 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
                 }
             }
+            else if (this.ShowRunWidgetFunction)
+            {
+                if (this.SelectedWidget == null)
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                if (string.IsNullOrWhiteSpace(this.RunWidgetFunctionName))
+                {
+                    return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                }
+
+                foreach (var parameter in this.RunWidgetFunctionParameters)
+                {
+                    if (string.IsNullOrWhiteSpace(parameter.Name) || string.IsNullOrWhiteSpace(parameter.Value))
+                    {
+                        return Task.FromResult<Result>(new Result(Resources.ValidValueMustBeSpecified));
+                    }
+                }
+            }
 
             return Task.FromResult(new Result());
+        }
+
+        public void DeleteRunWidgetFunctionParameter(OverlayActionRunWidgetFunctionParameterViewModel parameter)
+        {
+            this.RunWidgetFunctionParameters.Remove(parameter);
         }
 
         protected override async Task OnOpenInternal()
@@ -844,6 +953,15 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.SelectedWheel = this.Wheels.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
+            else if (this.ShowRunWidgetFunction)
+            {
+                this.SelectedWidget = this.Widgets.FirstOrDefault(w => w.ID.Equals(this.widgetID));
+            }
+
+            this.AddRunWidgetFunctionParameterCommand = this.CreateCommand(() =>
+            {
+                this.RunWidgetFunctionParameters.Add(new OverlayActionRunWidgetFunctionParameterViewModel(this));
+            });
         }
 
         protected override Task<ActionModelBase> GetActionInternal()
@@ -896,6 +1014,15 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowSpinWheel)
             {
                 return Task.FromResult<ActionModelBase>(new OverlayActionModel((OverlayWheelV3Model)this.SelectedWheel.Item));
+            }
+            else if (this.ShowRunWidgetFunction)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object>();
+                foreach (var parameter in this.RunWidgetFunctionParameters)
+                {
+                    parameters.Add(parameter.Name, parameter.Value);
+                }
+                return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedWidget, this.RunWidgetFunctionName, parameters));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

@@ -19,6 +19,8 @@ namespace MixItUp.WPF.Controls.Settings
 
         public CommandModelBase Command { get; set; }
 
+        public string CommandName { get { return this.Command?.Name ?? Resources.Unknown; } }
+
         public HotKeyUI(HotKeyConfiguration hotKey, CommandModelBase command)
         {
             this.HotKey = hotKey;
@@ -171,11 +173,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.hotKeys.Clear();
             foreach (HotKeyConfiguration hotKey in ChannelSession.Settings.HotKeys.Values.OrderBy(hotKey => EnumLocalizationHelper.GetLocalizedName(hotKey.VirtualKey)))
             {
-                CommandModelBase command = ChannelSession.Settings.GetCommand(hotKey.CommandID);
-                if (command != null)
-                {
-                    this.hotKeys.Add(new HotKeyUI(hotKey, command));
-                }
+                this.hotKeys.Add(new HotKeyUI(hotKey, ChannelSession.Settings.GetCommand(hotKey.CommandID)));
             }
         }
     }

@@ -15,11 +15,11 @@ namespace MixItUp.Base.Model.Overlay
         public string Name { get; set; }
 
         [DataMember]
-        public string HTML { get; set; } = string.Empty;
+        public string HTML { get; set; } = OverlayResources.OverlayEndpointDefaultHTML;
         [DataMember]
-        public string CSS { get; set; } = string.Empty;
+        public string CSS { get; set; } = OverlayResources.OverlayEndpointDefaultCSS;
         [DataMember]
-        public string Javascript { get; set; } = string.Empty;
+        public string Javascript { get; set; } = OverlayResources.OverlayEndpointDefaultJavascript;
 
         [Obsolete]
         public OverlayEndpointV3Model() { }

@@ -1363,6 +1363,9 @@
     <Compile Include="Deprecated\Windows\Overlay\OverlayWidgetEditorWindow.xaml.cs">
       <DependentUpon>OverlayWidgetEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Overlay\OverlayEndpointV3EditorWindow.xaml.cs">
+      <DependentUpon>OverlayEndpointV3EditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Overlay\OverlayWidgetV3EditorWindow.xaml.cs">
       <DependentUpon>OverlayWidgetV3EditorWindow.xaml</DependentUpon>
     </Compile>
@@ -2520,6 +2523,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Deprecated\Windows\Overlay\OverlayWidgetEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Overlay\OverlayEndpointV3EditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

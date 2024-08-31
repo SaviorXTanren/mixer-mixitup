@@ -31,7 +31,7 @@
 
             <TextBox Grid.Column="0" Text="{Binding SpecialIdentifierName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="2" Text="{Binding ReplacementText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ReplacementText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" Text="{Binding ReplacementText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Value}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2">

@@ -269,6 +269,19 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters) { return Task.CompletedTask; }
 
+        public OverlayEndpointV3Service GetOverlayEndpointService()
+        {
+            if (this.DisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint)
+            {
+                return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
+            }
+            else if (this.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
+            {
+                return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.ID);
+            }
+            return null;
+        }
+
         public async Task WidgetInitialize()
         {
             await this.WidgetInitializeInternal();
@@ -376,19 +389,6 @@ namespace MixItUp.Base.Model.Overlay
         protected virtual Task<Dictionary<string, object>> WidgetUpdateInternal()
         {
             return Task.FromResult(new Dictionary<string, object>());
-        }
-
-        protected OverlayEndpointV3Service GetOverlayEndpointService()
-        {
-            if (this.DisplayOption == OverlayItemV3DisplayOptionsType.OverlayEndpoint)
-            {
-                return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
-            }
-            else if (this.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
-            {
-                return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.ID);
-            }
-            return null;
         }
     }
 }

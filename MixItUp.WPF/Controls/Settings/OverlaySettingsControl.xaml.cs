@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Settings;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Overlay;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -43,6 +44,14 @@ namespace MixItUp.WPF.Controls.Settings
             Button button = (Button)sender;
             OverlayEndpointListingViewModel overlay = (OverlayEndpointListingViewModel)button.DataContext;
             await UIHelpers.CopyToClipboard(overlay.Address);
+        }
+
+        private void EditEndpointButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            OverlayEndpointListingViewModel overlay = (OverlayEndpointListingViewModel)button.DataContext;
+            OverlayEndpointV3EditorWindow editorWindow = new OverlayEndpointV3EditorWindow(overlay.Model);
+            editorWindow.Show();
         }
     }
 }

@@ -139,6 +139,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     OverlayWidgetV3Model widget = await FileSerializerHelper.DeserializeFromFile<OverlayWidgetV3Model>(filepath);
                     if (widget != null)
                     {
+                        widget.Item.ID = Guid.NewGuid();
                         OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget);
                         window.Closed += Window_Closed;
                         window.Show();

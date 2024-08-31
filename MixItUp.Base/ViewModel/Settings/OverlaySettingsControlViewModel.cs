@@ -12,41 +12,42 @@ namespace MixItUp.Base.ViewModel.Settings
 {
     public class OverlayEndpointListingViewModel : UIViewModelBase
     {
-        public Guid ID { get { return this.model.ID; } }
+        public Guid ID { get { return this.Model.ID; } }
         public string Name
         {
-            get { return this.model.Name; }
+            get { return this.Model.Name; }
             set
             {
                 if (!string.IsNullOrEmpty(value))
                 {
                     if (!this.viewModel.Endpoints.Any(e => e.Name.Equals(value, StringComparison.OrdinalIgnoreCase) && e.ID != this.ID))
                     {
-                        this.model.Name = value;
+                        this.Model.Name = value;
                         this.NotifyPropertyChanged();
                     }
                 }
             }
         }
 
-        public string Address { get { return this.model.Address; } }
+        public string Address { get { return this.Model.Address; } }
 
         public bool CanDelete { get { return this.ID != Guid.Empty; } }
 
         public ICommand DeleteCommand { get; set; }
 
+        public OverlayEndpointV3Model Model { get; private set; }
+
         private OverlaySettingsControlViewModel viewModel;
-        private OverlayEndpointV3Model model;
 
         public OverlayEndpointListingViewModel(OverlaySettingsControlViewModel viewModel, OverlayEndpointV3Model model)
         {
             this.viewModel = viewModel;
-            this.model = model;
+            this.Model = model;
 
             this.DeleteCommand = this.CreateCommand(async () =>
             {
-                await ServiceManager.Get<OverlayV3Service>().DisconnectOverlayEndpointService(this.model.ID);
-                ChannelSession.Settings.OverlayEndpointsV3.Remove(this.model);
+                await ServiceManager.Get<OverlayV3Service>().DisconnectOverlayEndpointService(this.Model.ID);
+                ChannelSession.Settings.OverlayEndpointsV3.Remove(this.Model);
                 this.viewModel.Endpoints.Remove(this);
             });
         }
