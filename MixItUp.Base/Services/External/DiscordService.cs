@@ -1115,14 +1115,15 @@ namespace MixItUp.Base.Services.External
         {
             this.ConnectedVoiceChannelID = null;
 
-            this.voiceWebSocket.OnUserJoinedVoice -= VoiceWebSocket_OnUserJoinedVoice;
-            this.voiceWebSocket.OnUserLeftVoice -= VoiceWebSocket_OnUserLeftVoice;
-            this.voiceWebSocket.OnUserStartedSpeaking -= VoiceWebSocket_OnUserStartedSpeaking;
-            this.voiceWebSocket.OnUserStoppedSpeaking -= VoiceWebSocket_OnUserStoppedSpeaking;
-
             if (this.voiceWebSocket != null)
             {
+                this.voiceWebSocket.OnUserJoinedVoice -= VoiceWebSocket_OnUserJoinedVoice;
+                this.voiceWebSocket.OnUserLeftVoice -= VoiceWebSocket_OnUserLeftVoice;
+                this.voiceWebSocket.OnUserStartedSpeaking -= VoiceWebSocket_OnUserStartedSpeaking;
+                this.voiceWebSocket.OnUserStoppedSpeaking -= VoiceWebSocket_OnUserStoppedSpeaking;
+
                 await this.voiceWebSocket.Disconnect();
+
                 this.voiceWebSocket = null;
             }
         }
