@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,6 +42,22 @@ namespace MixItUp.Base.Util
         public static async Task<string> ShowTextEntry(string message, string defaultValue = null, string description = null) { return await DialogHelper.dialogShower.ShowTextEntry(message, defaultValue, description); }
 
         public static async Task<string> ShowDropDown(IEnumerable<string> options, string description = null) { return await DialogHelper.dialogShower.ShowDropDown(options, description); }
+
+        public static async Task<object> ShowEnumDropDown<T>(IEnumerable<T> options, string description = null)
+        {
+            Dictionary<string, T> mapping = new Dictionary<string, T>();
+            foreach (T option in options)
+            {
+                mapping[EnumLocalizationHelper.GetLocalizedName(option)] = option;
+            }
+
+            string result = await DialogHelper.dialogShower.ShowDropDown(mapping.Keys.OrderBy(s => s), description);
+            if (!string.IsNullOrWhiteSpace(result) && mapping.ContainsKey(result))
+            {
+                return mapping[result];
+            }
+            return null;
+        }
 
         public static async Task<object> ShowCustom(object dialog) { return await DialogHelper.dialogShower.ShowCustom(dialog); }
 

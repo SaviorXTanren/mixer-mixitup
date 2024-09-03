@@ -10657,4 +10657,25 @@ namespace CustomNamespace
   <data name="AddParameter" xml:space="preserve">
     <value>Add Parameter</value>
   </data>
+  <data name="MassSubscriptionGifted" xml:space="preserve">
+    <value>Mass Subscription Gifted</value>
+  </data>
+  <data name="Resubscribe" xml:space="preserve">
+    <value>Resubscribe</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>Subscribe</value>
+  </data>
+  <data name="SubscriptionGifted" xml:space="preserve">
+    <value>Subscription Gifted</value>
+  </data>
+  <data name="UserBanned" xml:space="preserve">
+    <value>User Banned</value>
+  </data>
+  <data name="UserTimedOut" xml:space="preserve">
+    <value>User Timed Out</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
 </root>

@@ -58,7 +58,6 @@ namespace MixItUp.Base.Model.Overlay
         [OverlayWidget]
         DiscordReactiveVoice,
 
-        [Obsolete]
         [OverlayWidget]
         Custom = 999,
     }

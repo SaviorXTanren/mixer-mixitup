@@ -885,6 +885,9 @@
     <Compile Include="Controls\Overlay\OverlayChatV3Control.xaml.cs">
       <DependentUpon>OverlayChatV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayCustomV3Control.xaml.cs">
+      <DependentUpon>OverlayCustomV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayDiscordReactiveVoiceV3Control.xaml.cs">
       <DependentUpon>OverlayDiscordReactiveVoiceV3Control.xaml</DependentUpon>
     </Compile>
@@ -1865,6 +1868,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayChatV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayCustomV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

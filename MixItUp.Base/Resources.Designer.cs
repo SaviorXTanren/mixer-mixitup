@@ -13064,6 +13064,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mass Subscription Gifted.
+        /// </summary>
+        public static string MassSubscriptionGifted {
+            get {
+                return ResourceManager.GetString("MassSubscriptionGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max.
         /// </summary>
         public static string Max {
@@ -17332,6 +17341,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Properties.
+        /// </summary>
+        public static string Properties {
+            get {
+                return ResourceManager.GetString("Properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provider.
         /// </summary>
         public static string Provider {
@@ -18622,6 +18640,15 @@ namespace MixItUp.Base {
         public static string Resubs {
             get {
                 return ResourceManager.GetString("Resubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resubscribe.
+        /// </summary>
+        public static string Resubscribe {
+            get {
+                return ResourceManager.GetString("Resubscribe", resourceCulture);
             }
         }
         
@@ -22105,6 +22132,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subscribe.
+        /// </summary>
+        public static string Subscribe {
+            get {
+                return ResourceManager.GetString("Subscribe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subscribe Age.
         /// </summary>
         public static string SubscribeAge {
@@ -22191,6 +22227,15 @@ namespace MixItUp.Base {
         public static string Subscribes {
             get {
                 return ResourceManager.GetString("Subscribes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subscription Gifted.
+        /// </summary>
+        public static string SubscriptionGifted {
+            get {
+                return ResourceManager.GetString("SubscriptionGifted", resourceCulture);
             }
         }
         
@@ -25314,6 +25359,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Banned.
+        /// </summary>
+        public static string UserBanned {
+            get {
+                return ResourceManager.GetString("UserBanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Chance %.
         /// </summary>
         public static string UserChancePercentage {
@@ -25640,6 +25694,15 @@ namespace MixItUp.Base {
         public static string UserThreshold {
             get {
                 return ResourceManager.GetString("UserThreshold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Timed Out.
+        /// </summary>
+        public static string UserTimedOut {
+            get {
+                return ResourceManager.GetString("UserTimedOut", resourceCulture);
             }
         }
         

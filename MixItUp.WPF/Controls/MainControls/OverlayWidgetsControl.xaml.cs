@@ -118,10 +118,11 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                 }
 
-                string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames(widgetTypes).OrderBy(s => s), MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
-                if (!string.IsNullOrEmpty(result))
+                object result = await DialogHelper.ShowEnumDropDown(widgetTypes, MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
+                if (result != null)
                 {
-                    OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(EnumHelper.GetEnumValueFromString<OverlayItemV3Type>(result));
+                    OverlayItemV3Type type = (OverlayItemV3Type)result;
+                    OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(type);
                     window.Closed += Window_Closed;
                     window.Show();
                     window.Focus();

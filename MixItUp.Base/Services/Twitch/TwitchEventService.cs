@@ -1599,7 +1599,7 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(giftedSubEvent.Gifter, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, giftedSubEvent.Gifter.FullDisplayName, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
             }
 
-            EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Receiver, giftedSubEvent.Gifter, twitchSubscriptionTier: giftedSubEvent.PlanTierNumber));
+            EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Receiver, giftedSubEvent.Gifter, tier: giftedSubEvent.PlanTierNumber));
         }
 
         private async Task ProcessMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent)
@@ -1623,7 +1623,7 @@ namespace MixItUp.Base.Services.Twitch
             List<SubscriptionDetailsModel> subscriptions = new List<SubscriptionDetailsModel>();
             for (int i = 0; i < massGiftedSubEvent.Subs.Count; i++)
             {
-                subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, massGiftedSubEvent.Subs[i].Receiver, massGiftedSubEvent.Gifter, twitchSubscriptionTier: massGiftedSubEvent.PlanTierNumber));
+                subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, massGiftedSubEvent.Subs[i].Receiver, massGiftedSubEvent.Gifter, tier: massGiftedSubEvent.PlanTierNumber));
             }
             EventService.MassSubscriptionsGiftedOccurred(subscriptions);
         }

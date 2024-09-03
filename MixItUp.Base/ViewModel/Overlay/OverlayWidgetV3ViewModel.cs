@@ -262,6 +262,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.PersistentEmoteEffect: this.Item = new OverlayPersistentEmoteEffectV3ViewModel(); break;
                 case OverlayItemV3Type.Poll: this.Item = new OverlayPollV3ViewModel(); break;
                 case OverlayItemV3Type.DiscordReactiveVoice: this.Item = new OverlayDiscordReactiveVoiceV3ViewModel(); break;
+
+                case OverlayItemV3Type.Custom: this.Item = new OverlayCustomV3ViewModel(); break;
             }
 
             this.HTML = this.GetDefaultHTML(this.Item);
@@ -326,6 +328,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.PersistentEmoteEffect: this.Item = new OverlayPersistentEmoteEffectV3ViewModel((OverlayPersistentEmoteEffectV3Model)widget.Item); break;
                 case OverlayItemV3Type.Poll: this.Item = new OverlayPollV3ViewModel((OverlayPollV3Model)widget.Item); break;
                 case OverlayItemV3Type.DiscordReactiveVoice: this.Item = new OverlayDiscordReactiveVoiceV3ViewModel((OverlayDiscordReactiveVoiceV3Model)widget.Item); break;
+
+                case OverlayItemV3Type.Custom: this.Item = new OverlayCustomV3ViewModel((OverlayCustomV3Model)widget.Item); break;
             }
 
             this.HTML = widget.Item.HTML;

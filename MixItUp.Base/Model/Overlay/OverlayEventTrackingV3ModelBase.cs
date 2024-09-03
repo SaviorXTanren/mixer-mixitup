@@ -54,6 +54,7 @@ namespace MixItUp.Base.Model.Overlay
             this.RemoveEventHandlers();
 
             ChatService.OnChatUserBanned += OnChatUserBanned;
+            ChatService.OnChatUserTimedOut += OnChatUserTimedOut;
 
             if (this.Chatters || this.ChatMessages)
             {
@@ -113,6 +114,8 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         protected virtual void OnChatUserBanned(object sender, UserV2ViewModel user) { }
+
+        protected virtual void OnChatUserTimedOut(object sender, UserV2ViewModel user) { }
 
         protected virtual void OnChatMessageReceived(object sender, ChatMessageViewModel message) { }
 
