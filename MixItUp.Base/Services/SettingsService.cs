@@ -374,6 +374,8 @@ namespace MixItUp.Base.Services
 
     public static class SettingsV3Upgrader
     {
+        public static bool OverlayV3UpgradeOccurred;
+
         public static async Task<SettingsV3Model> UpgradeSettingsToLatest(string filePath)
         {
             int currentVersion = await GetSettingsVersion(filePath);
@@ -492,6 +494,8 @@ namespace MixItUp.Base.Services
                 ChannelSession.SetChannelSessionSettings(null);
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
+
+                SettingsV3Upgrader.OverlayV3UpgradeOccurred = true;
             }
         }
 

@@ -538,6 +538,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Address.
+        /// </summary>
+        public static string Address {
+            get {
+                return ResourceManager.GetString("Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds Amount To All Chat Users.
         /// </summary>
         public static string AddsAmountToAllChatUsers {
@@ -15771,6 +15780,17 @@ namespace MixItUp.Base {
         public static string OverlayTwitchClipValidIDMustBeSpecified {
             get {
                 return ResourceManager.GetString("OverlayTwitchClipValidIDMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to the new Overlay v3 update! As part of this update, a major change was done to how Overlay Endpoints are handled. Instead of each endpoint having a dedicate port number, they now all share the same port number and have a unique URL to them.
+        ///
+        ///We have detected that you have more than 1 Overlay Endpoint created, meaning the URLs for all Overlay Endpoints **EXCEPT** the Default one are now different. Please see the list below for all your custom Overlay Endpoints and click on the corresponding butto [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayV3EndpointsUpgradeDialog {
+            get {
+                return ResourceManager.GetString("OverlayV3EndpointsUpgradeDialog", resourceCulture);
             }
         }
         

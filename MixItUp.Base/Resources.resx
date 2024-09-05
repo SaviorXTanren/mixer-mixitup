@@ -10678,4 +10678,12 @@ namespace CustomNamespace
   <data name="Properties" xml:space="preserve">
     <value>Properties</value>
   </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="OverlayV3EndpointsUpgradeDialog" xml:space="preserve">
+    <value>Welcome to the new Overlay v3 update! As part of this update, a major change was done to how Overlay Endpoints are handled. Instead of each endpoint having a dedicate port number, they now all share the same port number and have a unique URL to them.
+
+We have detected that you have more than 1 Overlay Endpoint created, meaning the URLs for all Overlay Endpoints **EXCEPT** the Default one are now different. Please see the list below for all your custom Overlay Endpoints and click on the corresponding buttons to open or copy the URL so you can appropriately update your web browser sources in your streaming software:</value>
+  </data>
 </root>
