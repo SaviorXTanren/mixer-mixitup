@@ -198,8 +198,6 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         [JsonIgnore]
-        public virtual bool IsTestable { get { return false; } }
-        [JsonIgnore]
         public virtual bool IsResettable { get { return false; } }
 
         [JsonIgnore]

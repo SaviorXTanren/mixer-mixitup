@@ -72,9 +72,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public OverlayAnimationV3Model ItemRemovedAnimation { get; set; } = new OverlayAnimationV3Model();
 
-        [JsonIgnore]
-        public override bool IsTestable { get { return true; } }
-
         private CancellationTokenSource cancellationTokenSource;
 
         public OverlayLeaderboardV3Model() : base(OverlayItemV3Type.Leaderboard) { }

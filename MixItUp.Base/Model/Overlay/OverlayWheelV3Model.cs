@@ -73,9 +73,6 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
 
         [JsonIgnore]
-        public override bool IsTestable { get { return true; } }
-
-        [JsonIgnore]
         public IEnumerable<double> OutcomeProbabilities
         {
             get

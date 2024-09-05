@@ -73,9 +73,6 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public string FlexAlignment { get { return this.AddMessagesToTop ? FlexStart : FlexEnd; } }
 
-        [JsonIgnore]
-        public override bool IsTestable { get { return true; } }
-
         public OverlayChatV3Model() : base(OverlayItemV3Type.Chat) { }
 
         public override async Task Initialize()

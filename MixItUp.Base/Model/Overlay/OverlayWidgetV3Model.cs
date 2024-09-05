@@ -39,8 +39,6 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         public string SingleWidgetURL { get { return this.Item.SingleWidgetURL; } }
         [JsonIgnore]
         public bool IsResettable { get { return this.Item.IsResettable; } }
-        [JsonIgnore]
-        public bool IsTestable { get { return this.Item.IsTestable; } }
 
         [JsonIgnore]
         private SemaphoreSlim stateSemaphore = new SemaphoreSlim(1); 

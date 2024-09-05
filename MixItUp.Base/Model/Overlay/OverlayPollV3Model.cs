@@ -138,9 +138,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
 
-        [JsonIgnore]
-        public override bool IsTestable { get { return true; } }
-
         private Dictionary<string, OverlayPollOptionV3Model> currentOptions = new Dictionary<string, OverlayPollOptionV3Model>();
 
         public OverlayPollV3Model() : base(OverlayItemV3Type.Poll) { }

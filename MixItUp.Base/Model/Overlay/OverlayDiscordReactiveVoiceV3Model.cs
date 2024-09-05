@@ -107,9 +107,6 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private Dictionary<string, DiscordServerUser> userCache = new Dictionary<string, DiscordServerUser>();
 
-        [JsonIgnore]
-        public override bool IsTestable { get { return true; } }
-
         public OverlayDiscordReactiveVoiceV3Model() : base(OverlayItemV3Type.DiscordReactiveVoice) { }
 
         public override async Task Initialize()

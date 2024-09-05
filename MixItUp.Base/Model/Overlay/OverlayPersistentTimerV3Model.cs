@@ -50,9 +50,6 @@ namespace MixItUp.Base.Model.Overlay
         public int CurrentAmount { get; set; }
 
         [JsonIgnore]
-        public override bool IsTestable { get { return true; } }
-
-        [JsonIgnore]
         private CancellationTokenSource cancellationTokenSource;
         [JsonIgnore]
         private bool paused;

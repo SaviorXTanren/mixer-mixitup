@@ -26,9 +26,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
 
-        [JsonIgnore]
-        public override bool IsTestable { get { return true; } }
-
         public OverlayCustomV3Model() : base(OverlayItemV3Type.Custom) { }
 
         public override async Task Initialize()

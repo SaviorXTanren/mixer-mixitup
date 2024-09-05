@@ -49,9 +49,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public bool IgnoreDuplicates { get; set; }
 
-        [JsonIgnore]
-        public override bool IsTestable { get { return true; } }
-
         private Dictionary<string, OverlayPersistentEmoteEffectComboV3Model> comboLastSeen = new Dictionary<string, OverlayPersistentEmoteEffectComboV3Model>();
 
         public OverlayPersistentEmoteEffectV3Model() : base(OverlayItemV3Type.PersistentEmoteEffect) { }
