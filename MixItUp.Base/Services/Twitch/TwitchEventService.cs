@@ -841,12 +841,12 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task HandleHypeTrainBegin(JObject payload)
         {
-            this.lastHypeTrainLevel = 1;
-
             int totalPoints = payload["total"].Value<int>();
             int levelPoints = payload["progress"].Value<int>();
             int levelGoal = payload["goal"].Value<int>();
             int level = payload["level"].Value<int>();
+
+            this.lastHypeTrainLevel = level;
 
             Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
