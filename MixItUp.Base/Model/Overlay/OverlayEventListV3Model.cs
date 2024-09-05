@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -95,7 +96,31 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public OverlayAnimationV3Model ItemRemovedAnimation { get; set; } = new OverlayAnimationV3Model();
 
+        [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+
         public OverlayEventListV3Model() : base(OverlayItemV3Type.EventList) { }
+
+        public override Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+
+            foreach (var kvp in this.Header.GetGenerationProperties())
+            {
+                properties[kvp.Key] = kvp.Value;
+            }
+
+            properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
+            properties[nameof(this.BorderColor)] = this.BorderColor;
+
+            properties[nameof(this.TotalToShow)] = this.TotalToShow;
+            properties[nameof(this.AddToTop)] = this.AddToTop.ToString().ToLower();
+
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemRemovedAnimation), this.ItemRemovedAnimation);
+
+            return properties;
+        }
 
         public async Task ClearEvents()
         {
@@ -250,27 +275,6 @@ namespace MixItUp.Base.Model.Overlay
             }, CancellationToken.None);
 
             return Task.CompletedTask;
-        }
-
-        public override Dictionary<string, object> GetGenerationProperties()
-        {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-
-            foreach (var kvp in this.Header.GetGenerationProperties())
-            {
-                properties[kvp.Key] = kvp.Value;
-            }
-
-            properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
-            properties[nameof(this.BorderColor)] = this.BorderColor;
-
-            properties[nameof(this.TotalToShow)] = this.TotalToShow;
-            properties[nameof(this.AddToTop)] = this.AddToTop.ToString().ToLower();
-
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemRemovedAnimation), this.ItemRemovedAnimation);
-
-            return properties;
         }
 
         protected override async void OnFollow(object sender, UserV2ViewModel user)

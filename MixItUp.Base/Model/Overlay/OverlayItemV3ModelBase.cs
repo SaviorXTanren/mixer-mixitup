@@ -100,7 +100,7 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string PositionedHTML = OverlayResources.OverlayPositionedItemDefaultHTML;
         public static readonly string PositionedCSS = OverlayResources.OverlayPositionedItemDefaultCSS;
 
-        public event EventHandler LoadedInWidget = delegate { };
+        public event EventHandler WidgetLoaded = delegate { };
 
         public static string GetPositionWrappedHTML(string innerHTML)
         {
@@ -228,6 +228,12 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
+        public virtual Task Initialize() { return Task.CompletedTask; }
+
+        public virtual Task Uninitialize() { return Task.CompletedTask; }
+
+        public virtual Task Reset() { return Task.CompletedTask; }
+
         public virtual Dictionary<string, object> GetGenerationProperties()
         {
             if (this.Layer == 0)
@@ -259,9 +265,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.YTranslation)] = this.YTranslation;
             properties[nameof(this.Layer)] = this.LayerProcessed;
 
-#pragma warning disable CS0612 // Type or member is obsolete
             properties[nameof(this.IsLivePreview)] = this.IsLivePreview.ToString().ToLower();
-#pragma warning restore CS0612 // Type or member is obsolete
 
             return properties;
         }
@@ -281,84 +285,6 @@ namespace MixItUp.Base.Model.Overlay
             return null;
         }
 
-        public async Task WidgetInitialize()
-        {
-            await this.WidgetInitializeInternal();
-        }
-
-        public async Task WidgetEnable()
-        {
-            await this.WidgetEnableInternal();
-
-            await this.WidgetSendInitial();
-        }
-
-        public async Task WidgetDisable()
-        {
-            await this.WidgetDisableInternal();
-
-            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
-            if (overlay != null)
-            {
-                await overlay.Remove(this.ID.ToString());
-            }
-        }
-
-        public async Task WidgetReset()
-        {
-            await this.WidgetResetInternal();
-        }
-
-        public async Task WidgetFullReset()
-        {
-            await this.WidgetReset();
-
-            await this.WidgetDisable();
-
-            await this.WidgetEnable();
-        }
-
-        public async Task WidgetUpdate()
-        {
-            CommandParametersModel parameters = new CommandParametersModel();
-            Dictionary<string, object> data = this.GetGenerationProperties();
-            foreach (string key in data.Keys.ToList())
-            {
-                if (data[key] != null)
-                {
-                    data[key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(data[key].ToString(), parameters);
-                }
-            }
-            await this.ProcessGenerationProperties(data, new CommandParametersModel());
-            await this.CallFunction("update", data);
-        }
-
-        public async Task WidgetSendInitial()
-        {
-            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
-            if (overlay != null)
-            {
-                Dictionary<string, object> properties = this.GetGenerationProperties();
-
-                string iframeHTML = overlay.GetItemIFrameHTML();
-                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.HTML), this.HTML);
-                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.CSS), this.CSS);
-                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Javascript), this.Javascript);
-
-                CommandParametersModel parametersModel = new CommandParametersModel();
-
-                await this.ProcessGenerationProperties(properties, parametersModel);
-                foreach (var property in properties)
-                {
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
-                }
-
-                iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parametersModel);
-
-                await overlay.Add(this.ID.ToString(), iframeHTML, this.LayerProcessed);
-            }
-        }
-
         public async Task CallFunction(string functionName, Dictionary<string, object> data)
         {
             OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
@@ -368,26 +294,15 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public virtual Task ProcessPacket(OverlayV3Packet packet)
+        public virtual async Task ProcessPacket(OverlayV3Packet packet)
         {
             if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
             {
-                this.LoadedInWidget(this, new EventArgs());
+                await this.Loaded();
+                this.WidgetLoaded(this, new EventArgs());
             }
-            return Task.CompletedTask;
         }
 
-        protected virtual Task WidgetInitializeInternal() { return Task.CompletedTask; }
-
-        protected virtual Task WidgetEnableInternal() { return Task.CompletedTask; }
-
-        protected virtual Task WidgetDisableInternal() { return Task.CompletedTask; }
-
-        protected virtual Task WidgetResetInternal() { return Task.CompletedTask; }
-
-        protected virtual Task<Dictionary<string, object>> WidgetUpdateInternal()
-        {
-            return Task.FromResult(new Dictionary<string, object>());
-        }
+        protected virtual Task Loaded() { return Task.CompletedTask; }
     }
 }

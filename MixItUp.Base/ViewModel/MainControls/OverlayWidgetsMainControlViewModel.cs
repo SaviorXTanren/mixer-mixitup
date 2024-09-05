@@ -49,7 +49,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.Widget = widget;
         }
 
-        public async Task Reset() { await this.Widget.WidgetFullReset(); }
+        public async Task Reset() { await this.Widget.Reset(); }
     }
 
     public class OverlayWidgetsMainControlViewModel : WindowControlViewModelBase

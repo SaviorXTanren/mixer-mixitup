@@ -24,6 +24,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayEventListV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayEventListV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public OverlayEventListHeaderV3ViewModel Header
         {
             get { return this.header; }
@@ -389,8 +391,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayAnimationV3ViewModel ItemAddedAnimation;
         public OverlayAnimationV3ViewModel ItemRemovedAnimation;
-
-        public override bool IsTestable { get { return true; } }
 
         public OverlayEventListV3ViewModel()
             : base(OverlayItemV3Type.EventList)

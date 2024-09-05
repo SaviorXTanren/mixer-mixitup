@@ -262,7 +262,7 @@ namespace MixItUp.Base.Model.Actions
                 OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID.Equals(this.RunWidgetFunctionID));
                 if (widget != null)
                 {
-                    OverlayEndpointV3Service overlay = widget.Item.GetOverlayEndpointService();
+                    OverlayEndpointV3Service overlay = widget.GetOverlayEndpointService();
                     if (overlay != null)
                     {
                         await overlay.Function(widget.ID.ToString(), this.RunWidgetFunctionName, this.RunWidgetFunctionParameters);

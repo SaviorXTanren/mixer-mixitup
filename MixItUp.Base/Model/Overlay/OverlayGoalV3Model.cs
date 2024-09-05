@@ -140,6 +140,62 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayGoalV3Model() : base(OverlayItemV3Type.Goal) { }
 
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            this.CurrentSegment = this.Segments.First();
+            this.ProgressSegments();
+
+            if (this.ResetTracker?.Amount > 0)
+            {
+                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
+                if (this.ResetDateTime <= DateTimeOffset.Now)
+                {
+                    await this.Reset();
+                }
+            }
+        }
+
+        public override async Task Reset()
+        {
+            await base.Reset();
+
+            this.TotalAmount = 0;
+            this.PreviousGoalAmount = 0;
+            this.CurrentSegment = this.Segments.First();
+
+            if (this.StartingAmountCustom > 0)
+            {
+                this.TotalAmount += this.StartingAmountCustom;
+            }
+
+            if (this.ResetTracker?.Amount > 0)
+            {
+                this.ResetTracker.UpdateStartDateTimeToLatest();
+                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
+            }
+        }
+
+        public override Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+
+            foreach (var kvp in this.GetDataProperties())
+            {
+                properties[kvp.Key] = kvp.Value;
+            }
+
+            properties[nameof(this.BorderColor)] = this.BorderColor;
+            properties[nameof(this.GoalColor)] = this.GoalColor;
+            properties[nameof(this.ProgressColor)] = this.ProgressColor;
+
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ProgressOccurredAnimation), this.ProgressOccurredAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.SegmentCompletedAnimation), this.SegmentCompletedAnimation);
+
+            return properties;
+        }
+
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
             if (this.CurrentSegment != null && amount != 0)
@@ -194,49 +250,6 @@ namespace MixItUp.Base.Model.Overlay
             await this.CallFunction("complete", properties);
         }
 
-        public override Dictionary<string, object> GetGenerationProperties()
-        {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-
-            foreach (var kvp in this.GetDataProperties())
-            {
-                properties[kvp.Key] = kvp.Value;
-            }
-
-            properties[nameof(this.BorderColor)] = this.BorderColor;
-            properties[nameof(this.GoalColor)] = this.GoalColor;
-            properties[nameof(this.ProgressColor)] = this.ProgressColor;
-
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ProgressOccurredAnimation), this.ProgressOccurredAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.SegmentCompletedAnimation), this.SegmentCompletedAnimation);
-
-            return properties;
-        }
-
-        protected override async Task WidgetInitializeInternal()
-        {
-            await base.WidgetInitializeInternal();
-
-            this.CurrentSegment = this.Segments.First();
-            this.ProgressSegments();
-
-            if (this.ResetTracker?.Amount > 0)
-            {
-                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
-                if (this.ResetDateTime <= DateTimeOffset.Now)
-                {
-                    this.Reset();
-                }
-            }
-        }
-
-        protected override Task WidgetResetInternal()
-        {
-            this.Reset();
-
-            return Task.CompletedTask;
-        }
-
         private Dictionary<string, object> GetDataProperties()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
@@ -261,24 +274,6 @@ namespace MixItUp.Base.Model.Overlay
                     this.PreviousGoalAmount = this.CurrentSegment.Amount;
                 }
                 this.CurrentSegment = this.Segments[this.Segments.IndexOf(this.CurrentSegment) + 1];
-            }
-        }
-
-        private void Reset()
-        {
-            this.TotalAmount = 0;
-            this.PreviousGoalAmount = 0;
-            this.CurrentSegment = this.Segments.First();
-
-            if (this.StartingAmountCustom > 0)
-            {
-                this.TotalAmount += this.StartingAmountCustom;
-            }
-
-            if (this.ResetTracker?.Amount > 0)
-            {
-                this.ResetTracker.UpdateStartDateTimeToLatest();
-                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
             }
         }
     }

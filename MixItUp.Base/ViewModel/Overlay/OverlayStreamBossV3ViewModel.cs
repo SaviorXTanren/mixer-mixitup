@@ -21,6 +21,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayStreamBossV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayStreamBossV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public override string EquationUnits { get { return Resources.Damage; } }
 
         public string Height
@@ -169,8 +171,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel DamageOcurredAnimation;
         public OverlayAnimationV3ViewModel HealingOcurredAnimation;
         public OverlayAnimationV3ViewModel NewBossAnimation;
-
-        public override bool IsTestable { get { return true; } }
 
         public OverlayStreamBossV3ViewModel()
             : base(OverlayItemV3Type.StreamBoss)

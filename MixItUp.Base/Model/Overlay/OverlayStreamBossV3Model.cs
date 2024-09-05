@@ -88,6 +88,62 @@ namespace MixItUp.Base.Model.Overlay
             return boss;
         }
 
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            if (this.CurrentBoss == Guid.Empty)
+            {
+                this.CurrentBoss = ChannelSession.User.ID;
+                this.CurrentHealth = this.CurrentMaxHealth = this.BaseHealth;
+            }
+        }
+
+        public override async Task Reset()
+        {
+            await base.Reset();
+
+            this.CurrentBoss = Guid.Empty;
+            this.CurrentMaxHealth = this.BaseHealth;
+            this.CurrentHealth = this.CurrentMaxHealth;
+        }
+
+        public override Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+
+            foreach (var kvp in this.GetDataProperties())
+            {
+                properties[kvp.Key] = kvp.Value;
+            }
+
+            properties[nameof(this.BorderColor)] = this.BorderColor;
+            properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
+            properties[nameof(this.HealthColor)] = this.HealthColor;
+            properties[nameof(this.DamageColor)] = this.DamageColor;
+
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.DamageAnimation), this.DamageAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.HealingAnimation), this.HealingAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.NewBossAnimation), this.NewBossAnimation);
+
+            return properties;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
+        {
+            await base.ProcessGenerationProperties(properties, parameters);
+
+            UserV2ViewModel boss = await this.GetCurrentBoss();
+
+            properties[BossImageProperty] = boss.AvatarLink;
+            properties[BossNameProperty] = boss.DisplayName;
+        }
+
+        public override async Task ProcessEvent(UserV2ViewModel user, double amount)
+        {
+            await this.ProcessEvent(user, amount, forceDamage: false);
+        }
+
         public async Task ProcessEvent(UserV2ViewModel user, double amount, bool forceDamage = false)
         {
             if (amount > 0)
@@ -149,62 +205,6 @@ namespace MixItUp.Base.Model.Overlay
             properties[BossNameProperty] = user.DisplayName;
             properties[BossMaxHealthProperty] = this.CurrentMaxHealth.ToString();
             await this.CallFunction("killboss", properties);
-        }
-
-        public override async Task ProcessEvent(UserV2ViewModel user, double amount)
-        {
-            await this.ProcessEvent(user, amount, forceDamage: false);
-        }
-
-        public override Dictionary<string, object> GetGenerationProperties()
-        {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-
-            foreach (var kvp in this.GetDataProperties())
-            {
-                properties[kvp.Key] = kvp.Value;
-            }
-
-            properties[nameof(this.BorderColor)] = this.BorderColor;
-            properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
-            properties[nameof(this.HealthColor)] = this.HealthColor;
-            properties[nameof(this.DamageColor)] = this.DamageColor;
-
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.DamageAnimation), this.DamageAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.HealingAnimation), this.HealingAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.NewBossAnimation), this.NewBossAnimation);
-
-            return properties;
-        }
-
-        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
-        {
-            await base.ProcessGenerationProperties(properties, parameters);
-
-            UserV2ViewModel boss = await this.GetCurrentBoss();
-
-            properties[BossImageProperty] = boss.AvatarLink;
-            properties[BossNameProperty] = boss.DisplayName;
-        }
-
-        protected override async Task WidgetInitializeInternal()
-        {
-            await base.WidgetInitializeInternal();
-
-            if (this.CurrentBoss == Guid.Empty)
-            {
-                this.CurrentBoss = ChannelSession.User.ID;
-                this.CurrentHealth = this.CurrentMaxHealth = this.BaseHealth;
-            }
-        }
-
-        protected override Task WidgetResetInternal()
-        {
-            this.CurrentBoss = Guid.Empty;
-            this.CurrentMaxHealth = this.BaseHealth;
-            this.CurrentHealth = this.CurrentMaxHealth;
-
-            return Task.CompletedTask;
         }
 
         private Dictionary<string, object> GetDataProperties()

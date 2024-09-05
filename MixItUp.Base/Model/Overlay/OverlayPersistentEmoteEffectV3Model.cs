@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModel.Chat;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -48,9 +49,29 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public bool IgnoreDuplicates { get; set; }
 
+        [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+
         private Dictionary<string, OverlayPersistentEmoteEffectComboV3Model> comboLastSeen = new Dictionary<string, OverlayPersistentEmoteEffectComboV3Model>();
 
         public OverlayPersistentEmoteEffectV3Model() : base(OverlayItemV3Type.PersistentEmoteEffect) { }
+
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
+            ChatService.OnChatMessageReceived += OnChatMessageReceived;
+
+            this.comboLastSeen.Clear();
+        }
+
+        public override async Task Uninitialize()
+        {
+            await base.Uninitialize();
+
+            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
+        }
 
         public override Dictionary<string, object> GetGenerationProperties()
         {
@@ -79,23 +100,6 @@ namespace MixItUp.Base.Model.Overlay
             properties[OverlayEmoteEffectV3Model.IncludeDelayPropertyName] = OverlayEmoteEffectV3Model.DontDelayAnimations.Contains(animationType) ? false : true;
             properties[AmountPropertyName] = amount;
             await this.CallFunction("showEmote", properties);
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
-
-            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
-            ChatService.OnChatMessageReceived += OnChatMessageReceived;
-
-            this.comboLastSeen.Clear();
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
-
-            await base.WidgetDisableInternal();
         }
 
         private async void OnChatMessageReceived(object sender, ChatMessageViewModel message)

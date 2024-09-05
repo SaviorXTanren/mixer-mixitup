@@ -14,6 +14,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayGameQueueV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayGameQueueV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public string Height
         {
             get { return this.height > 0 ? this.height.ToString() : string.Empty; }
@@ -60,8 +62,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayAnimationV3ViewModel ItemAddedAnimation;
         public OverlayAnimationV3ViewModel ItemRemovedAnimation;
-
-        public override bool IsTestable { get { return true; } }
 
         public OverlayGameQueueV3ViewModel()
             : base(OverlayItemV3Type.GameQueue)

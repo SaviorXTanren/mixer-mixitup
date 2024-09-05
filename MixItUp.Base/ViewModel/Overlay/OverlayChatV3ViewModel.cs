@@ -44,6 +44,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayChatV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayChatV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public string Height
         {
             get { return this.height > 0 ? this.height.ToString() : string.Empty; }

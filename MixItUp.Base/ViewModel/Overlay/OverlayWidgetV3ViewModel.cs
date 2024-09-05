@@ -7,6 +7,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -46,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             set
             {
                 this.name = value;
-                NotifyPropertyChanged();
+                this.NotifyPropertyChanged();
             }
         }
         private string name;
@@ -70,8 +71,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             set
             {
                 this.selectedDisplayOption = value;
-                NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(this.IsDisplayOptionOverlayEndpoint));
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.IsDisplayOptionOverlayEndpoint));
             }
         }
         private OverlayItemV3DisplayOptionsType selectedDisplayOption;
@@ -86,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             set
             {
                 this.selectedOverlayEndpoint = value;
-                NotifyPropertyChanged();
+                this.NotifyPropertyChanged();
             }
         }
         private OverlayEndpointV3Model selectedOverlayEndpoint;
@@ -106,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             set
             {
                 this.refreshTime = value;
-                NotifyPropertyChanged();
+                this.NotifyPropertyChanged();
                 this.RefreshWidgetPreview();
             }
         }
@@ -118,7 +119,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             set
             {
                 this.item = value;
-                NotifyPropertyChanged();
+                this.NotifyPropertyChanged();
             }
         }
         private OverlayItemV3ViewModelBase item;
@@ -224,12 +225,14 @@ namespace MixItUp.Base.ViewModel.Overlay
         public event EventHandler OnCloseRequested = delegate { };
 
         private OverlayWidgetV3Model existingWidget;
+        private bool existingWidgetState;
 
         private OverlayWidgetV3Model testWidget;
 
         private OverlayWidgetV3Model newWidget;
 
         private bool loaded = false;
+        private SemaphoreSlim refreshPreviewSemaphoreSlim = new SemaphoreSlim(1);
 
         public OverlayWidgetV3ViewModel(OverlayItemV3Type type)
         {
@@ -283,6 +286,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayWidgetV3ViewModel(OverlayWidgetV3Model widget)
         {
             this.existingWidget = widget;
+            this.existingWidgetState = this.existingWidget.IsEnabled;
 
             this.ID = widget.ID;
             this.Type = widget.Item.Type;
@@ -338,8 +342,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.Position = new OverlayPositionV3ViewModel(widget.Item);
 
-            this.testWidget = widget;
-
             this.Initialize();
         }
 
@@ -381,7 +383,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             item.DisplayOption = this.SelectedDisplayOption;
             this.Position.SetPosition(item);
 
-            await item.WidgetReset();
+            await item.Reset();
 
             OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
             widget.Name = this.Name;
@@ -389,39 +391,46 @@ namespace MixItUp.Base.ViewModel.Overlay
             return widget;
         }
 
-        public async Task DisableTestWidget()
-        {
-            if (this.testWidget != null)
-            {
-                await this.testWidget.Disable();
-            }
-        }
-
         public async Task ProcessPacket(OverlayV3Packet packet)
         {
-            if (this.testWidget != null)
+            try
             {
-                await this.testWidget.Item.ProcessPacket(packet);
+                if (this.testWidget != null)
+                {
+                    await this.testWidget.Item.ProcessPacket(packet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
         protected override async Task OnOpenInternal()
         {
+            await base.OnOpenInternal();
+
             this.Item.PropertyChanged += Item_PropertyChanged;
 
-            await this.EnableTestWidget();
+            if (this.existingWidget != null)
+            {
+                await this.existingWidget.Disable();
+            }
+
+            this.loaded = true;
+            this.RefreshWidgetPreview();
         }
 
         protected override async Task OnClosedInternal()
         {
-            await this.DisableTestWidget();
+            await base.OnClosedInternal();
 
-            if (this.newWidget == null && this.existingWidget != null && this.existingWidget.IsEnabled)
+            await this.RemoveWidgetPreview();
+
+            if (this.newWidget == null && this.existingWidget != null && this.existingWidgetState)
             {
                 await this.existingWidget.Enable();
             }
-
-            await base.OnClosedInternal();
         }
 
         private void Initialize()
@@ -494,8 +503,6 @@ namespace MixItUp.Base.ViewModel.Overlay
                     }
                 }
             });
-
-            this.loaded = true;
         }
 
         private void Animation_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -506,23 +513,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             this.RefreshWidgetPreview();
-        }
-
-        private async Task EnableTestWidget()
-        {
-            OverlayWidgetV3Model widget = await this.GetWidget();
-            this.testWidget = widget;
-#pragma warning disable CS0612 // Type or member is obsolete
-            this.testWidget.Item.IsLivePreview = true;
-#pragma warning restore CS0612 // Type or member is obsolete
-            await this.testWidget.Enable();
-        }
-
-        private async Task RefreshTestWidget()
-        {
-            await this.DisableTestWidget();
-
-            await this.EnableTestWidget();
         }
 
         private string GetDefaultHTML(OverlayItemV3ViewModelBase item) { return OverlayItemV3ModelBase.GetPositionWrappedHTML(item.DefaultHTML); }
@@ -561,8 +551,28 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 Task.Run(async () =>
                 {
-                    await this.RefreshTestWidget();
+                    await this.refreshPreviewSemaphoreSlim.WaitAsync();
+
+                    await this.RemoveWidgetPreview();
+
+                    OverlayWidgetV3Model widget = await this.GetWidget();
+                    this.testWidget = widget;
+                    this.testWidget.Item.IsLivePreview = true;
+                    OverlayWidgetV3ViewModel.WidgetsInEditing[this.ID] = this;
+                    await this.testWidget.Enable();
+
+                    this.refreshPreviewSemaphoreSlim.Release();
                 });
+            }
+        }
+
+        private async Task RemoveWidgetPreview()
+        {
+            OverlayWidgetV3ViewModel.WidgetsInEditing.Remove(this.ID);
+            if (this.testWidget != null)
+            {
+                await this.testWidget.Disable();
+                this.testWidget = null;
             }
         }
     }

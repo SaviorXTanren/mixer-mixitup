@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -25,26 +26,14 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
 
+        [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+
         public OverlayCustomV3Model() : base(OverlayItemV3Type.Custom) { }
 
-        public override Dictionary<string, object> GetGenerationProperties()
+        public override async Task Initialize()
         {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-
-            return properties;
-        }
-
-        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
-        {
-            foreach (var property in this.Properties)
-            {
-                properties[property.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(property.Value, parameters);
-            }
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
+            await base.Initialize();
 
             this.RemoveEventHandlers();
 
@@ -64,11 +53,26 @@ namespace MixItUp.Base.Model.Overlay
             EventService.OnTrovoSpellCastOccurred += OnTrovoSpellCast;
         }
 
-        protected override async Task WidgetDisableInternal()
+        public override async Task Uninitialize()
         {
-            await base.WidgetDisableInternal();
+            await base.Uninitialize();
 
             this.RemoveEventHandlers();
+        }
+
+        public override Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+
+            return properties;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
+        {
+            foreach (var property in this.Properties)
+            {
+                properties[property.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(property.Value, parameters);
+            }
         }
 
         public async void OnChatUserBanned(object sender, UserV2ViewModel user)

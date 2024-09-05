@@ -107,7 +107,48 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private Dictionary<string, DiscordServerUser> userCache = new Dictionary<string, DiscordServerUser>();
 
+        [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+
         public OverlayDiscordReactiveVoiceV3Model() : base(OverlayItemV3Type.DiscordReactiveVoice) { }
+
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            this.RemoveEventHandlers();
+
+            if (ServiceManager.Get<DiscordService>().IsConnected && ServiceManager.Get<DiscordService>().IsUsingCustomApplication && !string.IsNullOrWhiteSpace(this.DiscordVoiceChannelID))
+            {
+                if (ServiceManager.Get<DiscordService>().ConnectedVoiceChannelID != null && string.Equals(this.DiscordVoiceChannelID, ServiceManager.Get<DiscordService>().ConnectedVoiceChannelID))
+                {
+                    // Already connected to the same voice channel, don't re-connect
+                }
+
+                if (await ServiceManager.Get<DiscordService>().ConnectToVoice(ServiceManager.Get<DiscordService>().Server, this.DiscordVoiceChannelID))
+                {
+                    ServiceManager.Get<DiscordService>().OnUserJoinedVoice += OverlayDiscordReactiveVoiceV3Model_OnUserJoinedVoice;
+                    ServiceManager.Get<DiscordService>().OnUserLeftVoice += OverlayDiscordReactiveVoiceV3Model_OnUserLeftVoice;
+                    ServiceManager.Get<DiscordService>().OnUserStartedSpeaking += OverlayDiscordReactiveVoiceV3Model_OnUserStartedSpeaking;
+                    ServiceManager.Get<DiscordService>().OnUserStoppedSpeaking += OverlayDiscordReactiveVoiceV3Model_OnUserStoppedSpeaking;
+
+                    await this.CallFunction("connected", new Dictionary<string, object>());
+                }
+                else
+                {
+                    await this.CallFunction("disconnected", new Dictionary<string, object>());
+                }
+            }
+        }
+
+        public override async Task Uninitialize()
+        {
+            await base.Uninitialize();
+
+            this.RemoveEventHandlers();
+
+            await ServiceManager.Get<DiscordService>().DisconnectFromVoice();
+        }
 
         public override Dictionary<string, object> GetGenerationProperties()
         {
@@ -175,44 +216,6 @@ namespace MixItUp.Base.Model.Overlay
         public async Task UserUndeafened(DiscordServerUser user)
         {
             await this.CallFunction("userUndeafened", this.GetDiscordUserProperties(user));
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
-
-            this.RemoveEventHandlers();
-
-            if (ServiceManager.Get<DiscordService>().IsConnected && ServiceManager.Get<DiscordService>().IsUsingCustomApplication && !string.IsNullOrWhiteSpace(this.DiscordVoiceChannelID))
-            {
-                if (ServiceManager.Get<DiscordService>().ConnectedVoiceChannelID != null && string.Equals(this.DiscordVoiceChannelID, ServiceManager.Get<DiscordService>().ConnectedVoiceChannelID))
-                {
-                    // Already connected to the same voice channel, don't re-connect
-                }
-
-                if (await ServiceManager.Get<DiscordService>().ConnectToVoice(ServiceManager.Get<DiscordService>().Server, this.DiscordVoiceChannelID))
-                {
-                    ServiceManager.Get<DiscordService>().OnUserJoinedVoice += OverlayDiscordReactiveVoiceV3Model_OnUserJoinedVoice;
-                    ServiceManager.Get<DiscordService>().OnUserLeftVoice += OverlayDiscordReactiveVoiceV3Model_OnUserLeftVoice;
-                    ServiceManager.Get<DiscordService>().OnUserStartedSpeaking += OverlayDiscordReactiveVoiceV3Model_OnUserStartedSpeaking;
-                    ServiceManager.Get<DiscordService>().OnUserStoppedSpeaking += OverlayDiscordReactiveVoiceV3Model_OnUserStoppedSpeaking;
-
-                    await this.CallFunction("connected", new Dictionary<string, object>());
-                }
-                else
-                {
-                    await this.CallFunction("disconnected", new Dictionary<string, object>());
-                }
-            }
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            await base.WidgetDisableInternal();
-
-            this.RemoveEventHandlers();
-
-            await ServiceManager.Get<DiscordService>().DisconnectFromVoice();
         }
 
         private Dictionary<string, object> GetDiscordUserProperties(DiscordServerUser user)

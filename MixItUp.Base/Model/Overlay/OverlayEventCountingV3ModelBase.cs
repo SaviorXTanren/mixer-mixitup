@@ -45,9 +45,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public abstract Task ProcessEvent(UserV2ViewModel user, double amount);
 
-        protected override async Task WidgetEnableInternal()
+        public override async Task Initialize()
         {
-            await base.WidgetEnableInternal();
+            await base.Initialize();
 
             this.RemoveEventHandlers();
 
@@ -90,9 +90,9 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        protected override async Task WidgetDisableInternal()
+        public override async Task Uninitialize()
         {
-            await base.WidgetDisableInternal();
+            await base.Uninitialize();
 
             this.RemoveEventHandlers();
         }

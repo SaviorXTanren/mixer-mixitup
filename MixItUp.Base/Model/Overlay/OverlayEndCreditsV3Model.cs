@@ -264,7 +264,30 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public string AnimationIterations { get { return this.RunEndlessly ? "Infinity" : "1"; } }
 
+        [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+
         public OverlayEndCreditsV3Model() : base(OverlayItemV3Type.EndCredits) { }
+
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            foreach (OverlayEndCreditsSectionV3Model section in Sections)
+            {
+                section.ClearTracking();
+            }
+        }
+
+        public override async Task Reset()
+        {
+            await base.Reset();
+
+            foreach (OverlayEndCreditsSectionV3Model section in Sections)
+            {
+                section.ClearTracking();
+            }
+        }
 
         public override Dictionary<string, object> GetGenerationProperties()
         {
@@ -307,14 +330,6 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.ProcessPacket(packet);
 
-            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
-            {
-                if (this.RunCreditsWhenVisible)
-                {
-                    await this.PlayCredits();
-                }
-            }
-
             if (string.Equals(packet.Type, OverlayEndCreditsV3Model.EndCreditsStartedPacketType))
             {
                 await ServiceManager.Get<CommandService>().Queue(this.StartedCommandID);
@@ -322,28 +337,6 @@ namespace MixItUp.Base.Model.Overlay
             else if (string.Equals(packet.Type, EndCreditsCompletedPacketType))
             {
                 await ServiceManager.Get<CommandService>().Queue(this.EndedCommandID);
-            }
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            this.Reset();
-
-            await base.WidgetDisableInternal();
-        }
-
-        protected override Task WidgetResetInternal()
-        {
-            this.Reset();
-
-            return Task.CompletedTask;
-        }
-
-        public void Reset()
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in Sections)
-            {
-                section.ClearTracking();
             }
         }
 
@@ -361,12 +354,10 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task PlayCredits()
         {
-#pragma warning disable CS0612 // Type or member is obsolete
             if (this.IsLivePreview)
             {
                 await OverlayEndCreditsV3ViewModel.LoadTestData(this);
             }
-#pragma warning restore CS0612 // Type or member is obsolete
 
             List<OverlayEndCreditsSectionV3Model> applicableSections = new List<OverlayEndCreditsSectionV3Model>();
 
@@ -388,6 +379,14 @@ namespace MixItUp.Base.Model.Overlay
             data["Items"] = sectionItems;
 
             await this.CallFunction("startCredits", data);
+        }
+
+        protected override async Task Loaded()
+        {
+            if (this.RunCreditsWhenVisible)
+            {
+                await this.PlayCredits();
+            }
         }
 
         protected override void OnChatUserBanned(object sender, UserV2ViewModel user)

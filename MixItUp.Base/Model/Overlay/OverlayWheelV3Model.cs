@@ -73,6 +73,9 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
 
         [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+
+        [JsonIgnore]
         public IEnumerable<double> OutcomeProbabilities
         {
             get
@@ -117,6 +120,16 @@ namespace MixItUp.Base.Model.Overlay
         private OverlayWheelOutcomeV3Model winningOutcome = null;
 
         public OverlayWheelV3Model() : base(OverlayItemV3Type.Wheel) { }
+
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
+            {
+                outcome.CurrentProbability = outcome.Probability;
+            }
+        }
 
         public override Dictionary<string, object> GetGenerationProperties()
         {
@@ -201,16 +214,6 @@ namespace MixItUp.Base.Model.Overlay
                     parameters.SpecialIdentifiers["outcomename"] = this.winningOutcome.Name;
                     await ServiceManager.Get<CommandService>().Queue(commandID, parameters);
                 }
-            }
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
-
-            foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
-            {
-                outcome.CurrentProbability = outcome.Probability;
             }
         }
     }

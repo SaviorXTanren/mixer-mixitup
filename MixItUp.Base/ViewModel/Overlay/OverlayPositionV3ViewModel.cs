@@ -143,15 +143,10 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.SelectedPositionType = OverlayPositionV3Type.Simple;
 
-            this.PropertyChanged += OverlayPositionV3ViewModel_PropertyChanged;
-
-            this.delayedCountSemaphore.Completed += DelayedCountSemaphore_Completed;
-
-            this.SetCommands();
+            this.Initialize();
         }
 
         public OverlayPositionV3ViewModel(OverlayItemV3ModelBase item)
-            : this()
         {
             this.SelectedPositionType = item.PositionType;
             if (this.SelectedPositionType == OverlayPositionV3Type.Random)
@@ -167,6 +162,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.YPosition = item.YPosition;
             }
             this.Layer = item.Layer;
+
+            this.Initialize();
         }
 
         public void SetPosition(OverlayItemV3ModelBase item)
@@ -201,8 +198,12 @@ namespace MixItUp.Base.ViewModel.Overlay
             return new Result();
         }
 
-        private void SetCommands()
+        private void Initialize()
         {
+            this.PropertyChanged += OverlayPositionV3ViewModel_PropertyChanged;
+
+            this.delayedCountSemaphore.Completed += DelayedCountSemaphore_Completed;
+
             this.TopLeftSimplePositionCommand = this.CreateCommand(() => { this.AssignSimplePosition(25, 25); });
             this.TopMiddleSimplePositionCommand = this.CreateCommand(() => { this.AssignSimplePosition(50, 25); });
             this.TopRightSimplePositionCommand = this.CreateCommand(() => { this.AssignSimplePosition(75, 25); });

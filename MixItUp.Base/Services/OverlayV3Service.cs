@@ -197,12 +197,9 @@ namespace MixItUp.Base.Services
 
                     foreach (OverlayWidgetV3Model widget in this.GetWidgets())
                     {
-                        await widget.Initialize();
                         if (widget.IsEnabled)
                         {
-#pragma warning disable CS0612 // Type or member is obsolete
-                            await widget.EnableInternal();
-#pragma warning restore CS0612 // Type or member is obsolete
+                            await widget.Enable();
                         }
 
                         if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)

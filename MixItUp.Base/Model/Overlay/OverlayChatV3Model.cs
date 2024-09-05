@@ -73,7 +73,35 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public string FlexAlignment { get { return this.AddMessagesToTop ? FlexStart : FlexEnd; } }
 
+        [JsonIgnore]
+        public override bool IsTestable { get { return true; } }
+
         public OverlayChatV3Model() : base(OverlayItemV3Type.Chat) { }
+
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            if (this.ApplicableStreamingPlatforms.Count == 0)
+            {
+                this.ApplicableStreamingPlatforms.AddRange(StreamingPlatforms.SupportedPlatforms);
+            }
+
+            this.RemoveEventHandlers();
+
+            ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
+            ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
+            ChatService.OnChatUserTimedOut += ChatService_OnChatUserTimedOut;
+            ChatService.OnChatUserBanned += ChatService_OnChatUserBanned;
+            ChatService.OnChatCleared += ChatService_OnChatCleared;
+        }
+
+        public override async Task Uninitialize()
+        {
+            await base.Uninitialize();
+
+            this.RemoveEventHandlers();
+        }
 
         public override Dictionary<string, object> GetGenerationProperties()
         {
@@ -125,36 +153,6 @@ namespace MixItUp.Base.Model.Overlay
             properties[MessageProperty] = messageParts;
 
             await this.CallFunction("add", properties);
-        }
-
-        protected override async Task WidgetInitializeInternal()
-        {
-            await base.WidgetInitializeInternal();
-
-            if (this.ApplicableStreamingPlatforms.Count == 0)
-            {
-                this.ApplicableStreamingPlatforms.AddRange(StreamingPlatforms.SupportedPlatforms);
-            }
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
-
-            this.RemoveEventHandlers();
-
-            ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
-            ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
-            ChatService.OnChatUserTimedOut += ChatService_OnChatUserTimedOut;
-            ChatService.OnChatUserBanned += ChatService_OnChatUserBanned;
-            ChatService.OnChatCleared += ChatService_OnChatCleared;
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            await base.WidgetDisableInternal();
-
-            this.RemoveEventHandlers();
         }
 
         private async void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)

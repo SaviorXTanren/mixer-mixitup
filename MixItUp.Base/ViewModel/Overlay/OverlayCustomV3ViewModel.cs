@@ -105,6 +105,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayCustomV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayCustomV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public ObservableCollection<OverlayCustomPropertyV3ViewModel> Properties { get; set; } = new ObservableCollection<OverlayCustomPropertyV3ViewModel>();
 
         public ICommand AddPropertyCommand { get; set; }

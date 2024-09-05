@@ -15,6 +15,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayPersistentEmoteEffectV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayPersistentEmoteEffectV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public IEnumerable<OverlayEmoteEffectV3AnimationType> AnimationTypes { get; set; } = EnumHelper.GetEnumList<OverlayEmoteEffectV3AnimationType>();
 
         public OverlayEmoteEffectV3AnimationType SelectedAnimationType
