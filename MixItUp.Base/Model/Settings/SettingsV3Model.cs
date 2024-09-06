@@ -245,6 +245,9 @@ namespace MixItUp.Base.Model.Settings
         public int TwitchUpcomingAdCommandTriggerAmount { get; set; } = 5;
 
         [DataMember]
+        public string PythonExecutablePath { get; set; }
+
+        [DataMember]
         public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();
 
         [DataMember]

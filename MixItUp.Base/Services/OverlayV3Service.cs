@@ -439,6 +439,8 @@ namespace MixItUp.Base.Services
         }
         public virtual string WebSocketConnectionURL { get { return $"/ws/{this.ID}/"; } }
 
+        public int ConnectedClients { get { return this.webSocketServers.Count; } }
+
         private List<OverlayV3Packet> batchPackets = new List<OverlayV3Packet>();
         private bool isBatching = false;
 

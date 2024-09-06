@@ -29,6 +29,8 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel TwitchSlashMeForAllChatMessages { get; set; }
         public GenericNumberSettingsOptionControlViewModel TwitchUpcomingAdCommandTriggerAmount { get; set; }
 
+        public GenericTextSettingsOptionControlViewModel PythonExecutablePath { get; set; }
+
         public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>();
 
         public CommandsSettingsControlViewModel()
@@ -61,6 +63,9 @@ namespace MixItUp.Base.ViewModel.Settings
                 (value) => { ChannelSession.Settings.TwitchSlashMeForAllChatMessages = value; });
             this.TwitchUpcomingAdCommandTriggerAmount = new GenericNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchUpcomingAdCommandTriggerAmount, ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount,
                 (value) => { ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount = value; });
+
+            this.PythonExecutablePath = new GenericTextSettingsOptionControlViewModel(MixItUp.Base.Resources.PythonExecutablePath, ChannelSession.Settings.PythonExecutablePath,
+                (value) => { ChannelSession.Settings.PythonExecutablePath = value; });
 
             List<ActionTypeEnum> actions = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
             actions.Remove(ActionTypeEnum.Custom);

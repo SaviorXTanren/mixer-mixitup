@@ -31,7 +31,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task<string> WaitForResult()
         {
-            for (int i = 0; i < 60 && !this.completed; i++)
+            while (!this.completed)
             {
                 await Task.Delay(1000);
             }

@@ -17505,6 +17505,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Python Executable Path.
+        /// </summary>
+        public static string PythonExecutablePath {
+            get {
+                return ResourceManager.GetString("PythonExecutablePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quantity.
         /// </summary>
         public static string Quantity {
@@ -19432,7 +19441,7 @@ namespace MixItUp.Base {
         ///            System.Console.WriteLine(&quot;Hello World!&quot;);
         ///
         ///            // Return any data here that you&apos;d like to use
-        ///            return 0;
+        ///            return 42;
         ///        }
         ///    }
         ///}.
@@ -19459,7 +19468,7 @@ namespace MixItUp.Base {
         ///    var text = &apos;Hello World!&apos;;
         ///
         ///    // Return any data here that you&apos;d like to use
-        ///    return 0;
+        ///    return 42;
         ///}
         ///
         ///var result = run();
@@ -19481,16 +19490,36 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: The Overlay service must be enabled and running in at least 1 browser to run Javascript scripts.
+        /// </summary>
+        public static string ScriptActionOverlayNotEnableOrConnected {
+            get {
+                return ResourceManager.GetString("ScriptActionOverlayNotEnableOrConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to def run():
         ///    # Your code goes here
-        ///    print &apos;Hello World!&apos;
+        ///    text = &quot;Hello World!&quot;
         ///
         ///    # Return any data here that you&apos;d like to use
-        ///    return 0.
+        ///    return 42
+        ///
+        ///print(run()).
         /// </summary>
         public static string ScriptActionPythonDefaultScriptTemplate {
             get {
                 return ResourceManager.GetString("ScriptActionPythonDefaultScriptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Python executable path must be set under Settings -&gt; Commands to run Python scripts.
+        /// </summary>
+        public static string ScriptActionPythonExecutablePathNotSet {
+            get {
+                return ResourceManager.GetString("ScriptActionPythonExecutablePathNotSet", resourceCulture);
             }
         }
         

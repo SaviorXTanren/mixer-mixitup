@@ -9183,7 +9183,7 @@ namespace CustomNamespace
             System.Console.WriteLine("Hello World!");
 
             // Return any data here that you'd like to use
-            return 0;
+            return 42;
         }
     }
 }</value>
@@ -9195,7 +9195,7 @@ namespace CustomNamespace
     var text = 'Hello World!';
 
     // Return any data here that you'd like to use
-    return 0;
+    return 42;
 }
 
 var result = run();
@@ -9204,10 +9204,12 @@ sendParentMessage({ Type: "ScriptComplete", ID: "{ID}", Result: result });</valu
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
     # Your code goes here
-    print 'Hello World!'
+    text = "Hello World!"
 
     # Return any data here that you'd like to use
-    return 0</value>
+    return 42
+
+print(run())</value>
   </data>
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
@@ -10688,5 +10690,14 @@ sendParentMessage({ Type: "ScriptComplete", ID: "{ID}", Result: result });</valu
     <value>Welcome to the new Overlay v3 update! As part of this update, a major change was done to how Overlay Endpoints are handled. Instead of each endpoint having a dedicate port number, they now all share the same port number and have a unique URL to them.
 
 We have detected that you have more than 1 Overlay Endpoint created, meaning the URLs for all Overlay Endpoints **EXCEPT** the Default one are now different. Please see the list below for all your custom Overlay Endpoints and click on the corresponding buttons to open or copy the URL so you can appropriately update your web browser sources in your streaming software:</value>
+  </data>
+  <data name="PythonExecutablePath" xml:space="preserve">
+    <value>Python Executable Path</value>
+  </data>
+  <data name="ScriptActionPythonExecutablePathNotSet" xml:space="preserve">
+    <value>ERROR: Python executable path must be set under Settings -&gt; Commands to run Python scripts</value>
+  </data>
+  <data name="ScriptActionOverlayNotEnableOrConnected" xml:space="preserve">
+    <value>ERROR: The Overlay service must be enabled and running in at least 1 browser to run Javascript scripts</value>
   </data>
 </root>
