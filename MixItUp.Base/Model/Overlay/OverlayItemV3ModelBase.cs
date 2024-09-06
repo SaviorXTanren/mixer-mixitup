@@ -53,10 +53,12 @@ namespace MixItUp.Base.Model.Overlay
         PersistentEmoteEffect,
         [OverlayWidget]
         Poll,
-
         [Obsolete]
         [OverlayWidget]
         DiscordReactiveVoice,
+
+        [Obsolete]
+        JavascriptScript = 998,
 
         [OverlayWidget]
         Custom = 999,

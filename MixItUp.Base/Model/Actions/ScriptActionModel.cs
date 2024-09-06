@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
 using System;
@@ -51,7 +52,30 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == ScriptActionType.Javascript)
                 {
-                    result = await ServiceManager.Get<IScriptRunnerService>().RunJavascriptCode(parameters, script);
+                    if (ServiceManager.Get<OverlayV3Service>().IsConnected)
+                    {
+                        OverlayEndpointV3Service overlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+                        if (overlayEndpoint != null)
+                        {
+                            OverlayJavascriptScriptV3Model overlayItem = new OverlayJavascriptScriptV3Model(script);
+
+                            overlayItem.ID = Guid.NewGuid();
+
+                            string iframeHTML = overlayEndpoint.GetItemIFrameHTML();
+                            iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(overlayItem.HTML), overlayItem.HTML);
+                            iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(overlayItem.CSS), overlayItem.CSS);
+                            iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(overlayItem.Javascript), overlayItem.Javascript);
+                            iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(overlayItem.ID), overlayItem.ID.ToString());
+
+                            overlayEndpoint.PacketListeningItems[overlayItem.ID] = overlayItem;
+
+                            await overlayEndpoint.Add(overlayItem.ID.ToString(), iframeHTML);
+
+                            result = await overlayItem.WaitForResult();
+
+                            await overlayEndpoint.Remove(overlayItem.ID.ToString());
+                        }
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(result))

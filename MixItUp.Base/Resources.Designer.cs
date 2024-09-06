@@ -19460,7 +19460,10 @@ namespace MixItUp.Base {
         ///
         ///    // Return any data here that you&apos;d like to use
         ///    return 0;
-        ///}.
+        ///}
+        ///
+        ///var result = run();
+        ///sendParentMessage({ Type: &quot;ScriptComplete&quot;, ID: &quot;{ID}&quot;, Result: result });.
         /// </summary>
         public static string ScriptActionJavascriptDefaultScriptTemplate {
             get {

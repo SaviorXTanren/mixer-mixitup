@@ -87,32 +87,6 @@ namespace MixItUp.WPF.Services
             }, cancellationTokenSource.Token);
         }
 
-        public async Task<string> RunJavascriptCode(CommandParametersModel parameters, string code)
-        {
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
-            return await AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-            {
-                try
-                {
-                    Jint.Native.JsValue result = new Jint.Engine()
-                        .Execute(code)
-                        .Invoke("run");
-
-                    if (result != null)
-                    {
-                        return result.ToString();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.ScriptActionFailedCompile, ex.ToString()), parameters.Platform);
-                }
-                return null;
-            }, cancellationTokenSource.Token);
-        }
-
         private async Task<CompilerResults> CompileDotNetCode(CodeDomProvider provider, CommandParametersModel parameters, string code)
         {
             try

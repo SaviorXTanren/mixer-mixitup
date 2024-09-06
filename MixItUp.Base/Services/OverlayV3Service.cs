@@ -421,6 +421,8 @@ namespace MixItUp.Base.Services
 
         public OverlayEndpointV3Model Model { get; private set; }
 
+        public Dictionary<Guid, OverlayItemV3ModelBase> PacketListeningItems { get; private set; } = new Dictionary<Guid, OverlayItemV3ModelBase>();
+
         public virtual Guid ID { get { return this.Model.ID; } }
         public virtual string Name { get { return this.Model.Name; } }
 
@@ -669,6 +671,10 @@ namespace MixItUp.Base.Services
                     if (OverlayWidgetV3ViewModel.WidgetsInEditing.TryGetValue(id, out OverlayWidgetV3ViewModel widgetViewModel))
                     {
                         await widgetViewModel.ProcessPacket(packet);
+                    }
+                    else if (PacketListeningItems.TryGetValue(id, out OverlayItemV3ModelBase item))
+                    {
+                        await item.ProcessPacket(packet);
                     }
                     else
                     {

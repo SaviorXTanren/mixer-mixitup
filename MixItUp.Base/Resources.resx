@@ -9196,7 +9196,10 @@ namespace CustomNamespace
 
     // Return any data here that you'd like to use
     return 0;
-}</value>
+}
+
+var result = run();
+sendParentMessage({ Type: "ScriptComplete", ID: "{ID}", Result: result });</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
