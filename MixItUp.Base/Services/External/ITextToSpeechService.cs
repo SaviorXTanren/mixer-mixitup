@@ -15,6 +15,7 @@ namespace MixItUp.Base.Services.External
         TikTokTTS,
         [Obsolete]
         Uberduck,
+        ElevenLabs,
     }
 
     public class TextToSpeechVoice

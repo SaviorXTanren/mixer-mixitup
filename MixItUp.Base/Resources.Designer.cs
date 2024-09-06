@@ -6126,6 +6126,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No voices returned.
+        /// </summary>
+        public static string ElevenLabsNoVoicesReturn {
+            get {
+                return ResourceManager.GetString("ElevenLabsNoVoicesReturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Elixir.
         /// </summary>
         public static string Elixir {
