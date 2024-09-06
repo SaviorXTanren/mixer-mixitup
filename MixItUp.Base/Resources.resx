@@ -10700,4 +10700,10 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="ScriptActionOverlayNotEnableOrConnected" xml:space="preserve">
     <value>ERROR: The Overlay service must be enabled and running in at least 1 browser to run Javascript scripts</value>
   </data>
+  <data name="Uberduck" xml:space="preserve">
+    <value>Uberduck</value>
+  </data>
+  <data name="UberduckNoVoicesReturned" xml:space="preserve">
+    <value>No voices returned</value>
+  </data>
 </root>

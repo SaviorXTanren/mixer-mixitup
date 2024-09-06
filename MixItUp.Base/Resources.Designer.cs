@@ -25020,6 +25020,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uberduck.
+        /// </summary>
+        public static string Uberduck {
+            get {
+                return ResourceManager.GetString("Uberduck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No voices returned.
+        /// </summary>
+        public static string UberduckNoVoicesReturned {
+            get {
+                return ResourceManager.GetString("UberduckNoVoicesReturned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ukrainian.
         /// </summary>
         public static string Ukrainian {

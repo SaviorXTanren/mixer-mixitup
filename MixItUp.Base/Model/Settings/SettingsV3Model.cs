@@ -581,6 +581,11 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string MicrosoftAzureSpeechCustomSubscriptionKey { get; set; }
 
+        [DataMember]
+        public string UberduckAPIKey { get; set; }
+        [DataMember]
+        public string UberduckAPISecret { get; set; }
+
         #endregion Services
 
         #region Dashboard
