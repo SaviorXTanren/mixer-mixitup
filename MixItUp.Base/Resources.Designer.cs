@@ -23813,6 +23813,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Elixir Spell.
+        /// </summary>
+        public static string TrovoElixirSpell {
+            get {
+                return ResourceManager.GetString("TrovoElixirSpell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Elixir Spells.
         /// </summary>
         public static string TrovoElixirSpells {

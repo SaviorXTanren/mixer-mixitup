@@ -113,31 +113,31 @@ namespace MixItUp.Base.Model.Overlay
             this.RemoveEventHandlers();
         }
 
-        protected virtual void OnChatUserBanned(object sender, UserV2ViewModel user) { }
+        public virtual void OnChatUserBanned(object sender, UserV2ViewModel user) { }
 
-        protected virtual void OnChatUserTimedOut(object sender, UserV2ViewModel user) { }
+        public virtual void OnChatUserTimedOut(object sender, UserV2ViewModel user) { }
 
-        protected virtual void OnChatMessageReceived(object sender, ChatMessageViewModel message) { }
+        public virtual void OnChatMessageReceived(object sender, ChatMessageViewModel message) { }
 
-        protected virtual void OnChatMessageDeleted(object sender, string messageID) { }
+        public virtual void OnChatMessageDeleted(object sender, string messageID) { }
 
-        protected virtual void OnChatCleared(object sender, EventArgs e) { }
+        public virtual void OnChatCleared(object sender, EventArgs e) { }
 
-        protected virtual void OnFollow(object sender, UserV2ViewModel user) { }
+        public virtual void OnFollow(object sender, UserV2ViewModel user) { }
 
-        protected virtual void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid) { }
+        public virtual void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid) { }
 
-        protected virtual void OnSubscribe(object sender, SubscriptionDetailsModel subscription) { }
+        public virtual void OnSubscribe(object sender, SubscriptionDetailsModel subscription) { }
 
-        protected virtual void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions) { }
+        public virtual void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions) { }
 
-        protected virtual void OnDonation(object sender, UserDonationModel donation) { }
+        public virtual void OnDonation(object sender, UserDonationModel donation) { }
 
-        protected virtual void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered) { }
+        public virtual void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered) { }
 
-        protected virtual void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat) { }
+        public virtual void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat) { }
 
-        protected virtual void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell) { }
+        public virtual void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell) { }
 
         private void EventService_OnTrovoSpellCastOccurred(object sender, TrovoChatSpellViewModel spell)
         {

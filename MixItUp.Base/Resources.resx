@@ -10709,4 +10709,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="ElevenLabsNoVoicesReturn" xml:space="preserve">
     <value>No voices returned</value>
   </data>
+  <data name="TrovoElixirSpell" xml:space="preserve">
+    <value>Trovo Elixir Spell</value>
+  </data>
 </root>

@@ -98,6 +98,131 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayEventListV3Model() : base(OverlayItemV3Type.EventList) { }
 
+        public override async void OnFollow(object sender, UserV2ViewModel user)
+        {
+            await this.AddEvent(user, nameof(this.Follows), this.FollowsDetailsTemplate, new Dictionary<string, string>());
+        }
+
+        public override async void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid)
+        {
+            await this.AddEvent(raid.Item1, nameof(this.Raids), this.RaidsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, raid.Item2.ToString() } });
+        }
+
+        public override async void OnSubscribe(object sender, SubscriptionDetailsModel subscription)
+        {
+            if (subscription.Gifter != null)
+            {
+                if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    await this.AddEvent(subscription.Gifter, nameof(this.TwitchSubscriptions), this.TwitchGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
+                }
+                else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
+                {
+                    await this.AddEvent(subscription.Gifter, nameof(this.YouTubeMemberships), this.YouTubeGiftedMembershipsDetailsTemplate, new Dictionary<string, string>() { { DetailsMembershipNamePropertyName, subscription.Tier.ToString() } });
+                }
+                else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
+                {
+                    await this.AddEvent(subscription.Gifter, nameof(this.TrovoSubscriptions), this.TrovoGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
+                }
+            }
+            else if (subscription.Months > 1)
+            {
+                if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    await this.AddEvent(subscription.User, nameof(this.TwitchSubscriptions), this.TwitchResubscriptionsDetailsTemplate, new Dictionary<string, string>()
+                    {
+                        { DetailsTierPropertyName, subscription.Tier.ToString() },
+                        { DetailsAmountPropertyName, subscription.Months.ToString() }
+                    });
+                }
+                else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
+                {
+                    await this.AddEvent(subscription.User, nameof(this.YouTubeMemberships), this.YouTubeRenewedMembershipsDetailsTemplate, new Dictionary<string, string>()
+                    {
+                        { DetailsMembershipNamePropertyName, subscription.YouTubeMembershipTier },
+                        { DetailsAmountPropertyName, subscription.Months.ToString() }
+                    });
+                }
+                else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
+                {
+                    await this.AddEvent(subscription.User, nameof(this.TrovoSubscriptions), this.TrovoResubscriptionsDetailsTemplate, new Dictionary<string, string>()
+                    {
+                        { DetailsTierPropertyName, subscription.Tier.ToString() },
+                        { DetailsAmountPropertyName, subscription.Months.ToString() }
+                    });
+                }
+            }
+            else
+            {
+                if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    await this.AddEvent(subscription.User, nameof(this.TwitchSubscriptions), this.TwitchSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
+                }
+                else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
+                {
+                    await this.AddEvent(subscription.User, nameof(this.YouTubeMemberships), this.YouTubeMembershipsDetailsTemplate, new Dictionary<string, string>() { { DetailsMembershipNamePropertyName, subscription.YouTubeMembershipTier } });
+                }
+                else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
+                {
+                    await this.AddEvent(subscription.User, nameof(this.TrovoSubscriptions), this.TrovoSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
+                }
+            }
+        }
+
+        public override async void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
+        {
+            StreamingPlatformTypeEnum platform = subscriptions.First().Platform;
+            UserV2ViewModel gifter = subscriptions.First().Gifter;
+            int tier = subscriptions.First().Tier;
+            string membershipName = subscriptions.First().YouTubeMembershipTier;
+            int amount = subscriptions.Count();
+
+            if (platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                await this.AddEvent(gifter, nameof(this.TwitchSubscriptions), this.TwitchMassGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>()
+                {
+                    { DetailsTierPropertyName, tier.ToString() },
+                    { DetailsAmountPropertyName, amount.ToString() }
+                });
+            }
+            else if (platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                await this.AddEvent(gifter, nameof(this.YouTubeMemberships), this.YouTubeMassGiftedMembershipsDetailsTemplate, new Dictionary<string, string>()
+                {
+                    { DetailsMembershipNamePropertyName, membershipName },
+                    { DetailsAmountPropertyName, amount.ToString() }
+                });
+            }
+            else if (platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await this.AddEvent(gifter, nameof(this.TrovoSubscriptions), this.TrovoMassGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>()
+                {
+                    { DetailsTierPropertyName, tier.ToString() },
+                    { DetailsAmountPropertyName, amount.ToString() }
+                });
+            }
+        }
+
+        public override async void OnDonation(object sender, UserDonationModel donation)
+        {
+            await this.AddEvent(donation.User, nameof(this.Donations), this.DonationsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, donation.AmountText } });
+        }
+
+        public override async void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        {
+            await this.AddEvent(bitsCheered.User, nameof(this.TwitchBits), this.TwitchBitsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, bitsCheered.Amount.ToString() } });
+        }
+
+        public override async void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat)
+        {
+            await this.AddEvent(superChat.User, nameof(this.YouTubeSuperChats), this.YouTubeSuperChatsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, superChat.AmountDisplay } });
+        }
+
+        public override async void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell)
+        {
+            await this.AddEvent(spell.User, nameof(this.TrovoElixirSpells), this.TrovoElixirSpellsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, spell.ValueTotal.ToString() } });
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
@@ -272,131 +397,6 @@ namespace MixItUp.Base.Model.Overlay
             }, CancellationToken.None);
 
             return Task.CompletedTask;
-        }
-
-        protected override async void OnFollow(object sender, UserV2ViewModel user)
-        {
-            await this.AddEvent(user, nameof(this.Follows), this.FollowsDetailsTemplate, new Dictionary<string, string>());
-        }
-
-        protected override async void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid)
-        {
-            await this.AddEvent(raid.Item1, nameof(this.Raids), this.RaidsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, raid.Item2.ToString() } });
-        }
-
-        protected override async void OnSubscribe(object sender, SubscriptionDetailsModel subscription)
-        {
-            if (subscription.Gifter != null)
-            {
-                if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
-                {
-                    await this.AddEvent(subscription.Gifter, nameof(this.TwitchSubscriptions), this.TwitchGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
-                }
-                else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
-                {
-                    await this.AddEvent(subscription.Gifter, nameof(this.YouTubeMemberships), this.YouTubeGiftedMembershipsDetailsTemplate, new Dictionary<string, string>() { { DetailsMembershipNamePropertyName, subscription.Tier.ToString() } });
-                }
-                else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
-                {
-                    await this.AddEvent(subscription.Gifter, nameof(this.TrovoSubscriptions), this.TrovoGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
-                }
-            }
-            else if (subscription.Months > 1)
-            {
-                if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
-                {
-                    await this.AddEvent(subscription.User, nameof(this.TwitchSubscriptions), this.TwitchResubscriptionsDetailsTemplate, new Dictionary<string, string>()
-                    {
-                        { DetailsTierPropertyName, subscription.Tier.ToString() },
-                        { DetailsAmountPropertyName, subscription.Months.ToString() }
-                    });
-                }
-                else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
-                {
-                    await this.AddEvent(subscription.User, nameof(this.YouTubeMemberships), this.YouTubeRenewedMembershipsDetailsTemplate, new Dictionary<string, string>()
-                    {
-                        { DetailsMembershipNamePropertyName, subscription.YouTubeMembershipTier },
-                        { DetailsAmountPropertyName, subscription.Months.ToString() }
-                    });
-                }
-                else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
-                {
-                    await this.AddEvent(subscription.User, nameof(this.TrovoSubscriptions), this.TrovoResubscriptionsDetailsTemplate, new Dictionary<string, string>()
-                    {
-                        { DetailsTierPropertyName, subscription.Tier.ToString() },
-                        { DetailsAmountPropertyName, subscription.Months.ToString() }
-                    });
-                }
-            }
-            else
-            {
-                if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
-                {
-                    await this.AddEvent(subscription.User, nameof(this.TwitchSubscriptions), this.TwitchSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
-                }
-                else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
-                {
-                    await this.AddEvent(subscription.User, nameof(this.YouTubeMemberships), this.YouTubeMembershipsDetailsTemplate, new Dictionary<string, string>() { { DetailsMembershipNamePropertyName, subscription.YouTubeMembershipTier } });
-                }
-                else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
-                {
-                    await this.AddEvent(subscription.User, nameof(this.TrovoSubscriptions), this.TrovoSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
-                }
-            }
-        }
-
-        protected override async void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
-        {
-            StreamingPlatformTypeEnum platform = subscriptions.First().Platform;
-            UserV2ViewModel gifter = subscriptions.First().Gifter;
-            int tier = subscriptions.First().Tier;
-            string membershipName = subscriptions.First().YouTubeMembershipTier;
-            int amount = subscriptions.Count();
-
-            if (platform == StreamingPlatformTypeEnum.Twitch)
-            {
-                await this.AddEvent(gifter, nameof(this.TwitchSubscriptions), this.TwitchMassGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>()
-                {
-                    { DetailsTierPropertyName, tier.ToString() },
-                    { DetailsAmountPropertyName, amount.ToString() }
-                });
-            }
-            else if (platform == StreamingPlatformTypeEnum.YouTube)
-            {
-                await this.AddEvent(gifter, nameof(this.YouTubeMemberships), this.YouTubeMassGiftedMembershipsDetailsTemplate, new Dictionary<string, string>()
-                {
-                    { DetailsMembershipNamePropertyName, membershipName },
-                    { DetailsAmountPropertyName, amount.ToString() }
-                });
-            }
-            else if (platform == StreamingPlatformTypeEnum.Trovo)
-            {
-                await this.AddEvent(gifter, nameof(this.TrovoSubscriptions), this.TrovoMassGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>()
-                {
-                    { DetailsTierPropertyName, tier.ToString() },
-                    { DetailsAmountPropertyName, amount.ToString() }
-                });
-            }
-        }
-
-        protected override async void OnDonation(object sender, UserDonationModel donation)
-        {
-            await this.AddEvent(donation.User, nameof(this.Donations), this.DonationsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, donation.AmountText } });
-        }
-
-        protected override async void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
-        {
-            await this.AddEvent(bitsCheered.User, nameof(this.TwitchBits), this.TwitchBitsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, bitsCheered.Amount.ToString() } });
-        }
-
-        protected override async void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat)
-        {
-            await this.AddEvent(superChat.User, nameof(this.YouTubeSuperChats), this.YouTubeSuperChatsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, superChat.AmountDisplay } });
-        }
-
-        protected override async void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell)
-        {
-            await this.AddEvent(spell.User, nameof(this.TrovoElixirSpells), this.TrovoElixirSpellsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, spell.ValueTotal.ToString() } });
         }
     }
 }
