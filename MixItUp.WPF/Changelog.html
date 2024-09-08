@@ -7,6 +7,23 @@
 
         <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
 
+        <h2 style="color: #2e6c80;">v1.1.0.1721:</h2>
+        <ul>
+            <li>Adding new Custom Overlay Widget type:</li>
+            <ul>
+                <li>Custom Overlay Widgets have no pre-baked functionality and instead expose dedicated Javascript functions for when various different events occur in your stream.</li>
+                <li>These are useful for when you want to build a more specific type of Overlay visual that does not conform to one of the standard Overlay Widget types.</li>
+            </ul>
+            <li>Adding "Run Widget Function" option to Overlay Action to allow trigger custom Javascript functions defined in any Overlay Widget</li>
+            <li>Updates to how scripts are run within the Script action:</li>
+            <ul>
+                <li>Javascript-based scripts will now run using the Mix It Up Overlay, allowing you to leverage external libraries by including them in the Overlay Endpoint via customization under Settings -> Overlay.</li>
+                <li>Python-based scripts now require a local installation of Python on your PC by running directly via the Python interpreter. The Executable location for Python must be set under Settings -> Commands.</li>
+            </ul>
+            <li>Adding $hypetrainlevel Special Identifier to Twitch Channel Hype Train Start event command</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.1.0.1720:</h2>
         <ul>
             <li>Adding global HTML, CSS, and Javascript customization options for Overlay Endpoints that will be present in all Overlay Actions &amp; Overlay Widgets that use that Overlay Endpoint</li>
