@@ -31,6 +31,34 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultCSS = OverlayResources.OverlayChatDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayChatDefaultJavascript;
 
+        public static Dictionary<string, object> GetMessageProperties(ChatMessageViewModel message)
+        {
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+
+            properties[MessageIDProperty] = message.ID.ToString();
+            properties[UserProperty] = JObject.FromObject(message.User);
+
+            List<JObject> messageParts = new List<JObject>();
+            foreach (var messagePart in message.MessageParts)
+            {
+                JObject part = new JObject();
+                if (messagePart is string)
+                {
+                    part[MessagePartTypeProperty] = MessagePartTypeTextValue;
+                    part[MessagePartContentProperty] = (string)messagePart;
+                }
+                else if (messagePart is ChatEmoteViewModelBase)
+                {
+                    part[MessagePartTypeProperty] = MessagePartTypeEmoteValue;
+                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).AnimatedOrStaticImageURL;
+                }
+                messageParts.Add(part);
+            }
+            properties[MessageProperty] = messageParts;
+
+            return properties;
+        }
+
         [DataMember]
         public string BackgroundColor { get; set; }
         [DataMember]
@@ -126,30 +154,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task AddMessage(ChatMessageViewModel message)
         {
-            Dictionary<string, object> properties = new Dictionary<string, object>();
-
-            properties[MessageIDProperty] = message.ID.ToString();
-            properties[UserProperty] = JObject.FromObject(message.User);
-
-            List<JObject> messageParts = new List<JObject>();
-            foreach (var messagePart in message.MessageParts)
-            {
-                JObject part = new JObject();
-                if (messagePart is string)
-                {
-                    part[MessagePartTypeProperty] = MessagePartTypeTextValue;
-                    part[MessagePartContentProperty] = (string)messagePart;
-                }
-                else if (messagePart is ChatEmoteViewModelBase)
-                {
-                    part[MessagePartTypeProperty] = MessagePartTypeEmoteValue;
-                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).AnimatedOrStaticImageURL;
-                }
-                messageParts.Add(part);
-            }
-            properties[MessageProperty] = messageParts;
-
-            await this.CallFunction("add", properties);
+            await this.CallFunction("add", OverlayChatV3Model.GetMessageProperties(message));
         }
 
         private async void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
@@ -193,6 +198,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[UsernameProperty] = user.Username;
+            properties[UserProperty] = user;
             await this.CallFunction("remove", properties);
         }
 
@@ -200,6 +206,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[UsernameProperty] = user.Username;
+            properties[UserProperty] = user;
             await this.CallFunction("remove", properties);
         }
 
