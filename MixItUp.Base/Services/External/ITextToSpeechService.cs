@@ -13,6 +13,9 @@ namespace MixItUp.Base.Services.External
         AmazonPolly,
         MicrosoftAzureSpeech,
         TikTokTTS,
+        [Obsolete]
+        Uberduck,
+        ElevenLabs,
     }
 
     public class TextToSpeechVoice

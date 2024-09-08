@@ -245,6 +245,9 @@ namespace MixItUp.Base.Model.Settings
         public int TwitchUpcomingAdCommandTriggerAmount { get; set; } = 5;
 
         [DataMember]
+        public string PythonExecutablePath { get; set; }
+
+        [DataMember]
         public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();
 
         [DataMember]
@@ -577,6 +580,14 @@ namespace MixItUp.Base.Model.Settings
         public string MicrosoftAzureSpeechCustomRegionName { get; set; }
         [DataMember]
         public string MicrosoftAzureSpeechCustomSubscriptionKey { get; set; }
+
+        [DataMember]
+        public string ElevenLabsAPIKey { get; set; }
+
+        [DataMember]
+        public string UberduckAPIKey { get; set; }
+        [DataMember]
+        public string UberduckAPISecret { get; set; }
 
         #endregion Services
 

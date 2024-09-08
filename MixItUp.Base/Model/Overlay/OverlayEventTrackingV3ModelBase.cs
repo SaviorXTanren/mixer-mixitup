@@ -47,13 +47,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayEventTrackingV3ModelBase(OverlayItemV3Type type) : base(type) { }
 
-        protected override async Task WidgetEnableInternal()
+        public override async Task Initialize()
         {
-            await base.WidgetEnableInternal();
+            await base.Initialize();
 
             this.RemoveEventHandlers();
 
             ChatService.OnChatUserBanned += OnChatUserBanned;
+            ChatService.OnChatUserTimedOut += OnChatUserTimedOut;
 
             if (this.Chatters || this.ChatMessages)
             {
@@ -105,36 +106,38 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        protected override async Task WidgetDisableInternal()
+        public override async Task Uninitialize()
         {
-            await base.WidgetDisableInternal();
+            await base.Uninitialize();
 
             this.RemoveEventHandlers();
         }
 
-        protected virtual void OnChatUserBanned(object sender, UserV2ViewModel user) { }
+        public virtual void OnChatUserBanned(object sender, UserV2ViewModel user) { }
 
-        protected virtual void OnChatMessageReceived(object sender, ChatMessageViewModel message) { }
+        public virtual void OnChatUserTimedOut(object sender, UserV2ViewModel user) { }
 
-        protected virtual void OnChatMessageDeleted(object sender, string messageID) { }
+        public virtual void OnChatMessageReceived(object sender, ChatMessageViewModel message) { }
 
-        protected virtual void OnChatCleared(object sender, EventArgs e) { }
+        public virtual void OnChatMessageDeleted(object sender, string messageID) { }
 
-        protected virtual void OnFollow(object sender, UserV2ViewModel user) { }
+        public virtual void OnChatCleared(object sender, EventArgs e) { }
 
-        protected virtual void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid) { }
+        public virtual void OnFollow(object sender, UserV2ViewModel user) { }
 
-        protected virtual void OnSubscribe(object sender, SubscriptionDetailsModel subscription) { }
+        public virtual void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid) { }
 
-        protected virtual void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions) { }
+        public virtual void OnSubscribe(object sender, SubscriptionDetailsModel subscription) { }
 
-        protected virtual void OnDonation(object sender, UserDonationModel donation) { }
+        public virtual void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions) { }
 
-        protected virtual void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered) { }
+        public virtual void OnDonation(object sender, UserDonationModel donation) { }
 
-        protected virtual void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat) { }
+        public virtual void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered) { }
 
-        protected virtual void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell) { }
+        public virtual void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat) { }
+
+        public virtual void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell) { }
 
         private void EventService_OnTrovoSpellCastOccurred(object sender, TrovoChatSpellViewModel spell)
         {

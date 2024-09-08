@@ -76,6 +76,8 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.PersistentEmoteEffect: overlayControl = new OverlayPersistentEmoteEffectV3Control(); break;
                 case OverlayItemV3Type.Poll: overlayControl = new OverlayPollV3Control(); break;
                 case OverlayItemV3Type.DiscordReactiveVoice: overlayControl = new OverlayDiscordReactiveVoiceV3Control(); break;
+
+                case OverlayItemV3Type.Custom: overlayControl = new OverlayCustomV3Control(); break;
             }
 
             if (overlayControl != null)
@@ -91,13 +93,10 @@ namespace MixItUp.WPF.Windows.Overlay
             this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
             this.viewModel.OnCloseRequested += ViewModel_OnCloseRequested;
-
-            OverlayWidgetV3ViewModel.WidgetsInEditing[this.viewModel.ID] = this.viewModel;
         }
 
         private void ViewModel_OnCloseRequested(object sender, System.EventArgs e)
         {
-            OverlayWidgetV3ViewModel.WidgetsInEditing.Remove(this.viewModel.ID);
             this.Close();
         }
 

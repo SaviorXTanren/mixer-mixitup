@@ -435,10 +435,129 @@ function removeInternal(message)
     <value />
   </data>
   <data name="OverlayCustomDefaultHTML" xml:space="preserve">
-    <value />
+    <value>&lt;div class="text"&gt;To get started, open this widget in a regular web browser and&lt;/div&gt;
+&lt;div class="text"&gt;and hit F12 to open the Developer Console. On the Console tab,&lt;/div&gt;
+&lt;div class="text"&gt;you'll be able to see data logged for every supported function&lt;/div&gt;
+&lt;div class="text"&gt;so you can see what data is available to use.&lt;/div&gt;
+
+&lt;br/&gt;
+
+&lt;div class="text"&gt;Events Logged:&lt;/p&gt;
+&lt;div id="test" class="text"&gt;{TestProperty}&lt;/p&gt;</value>
   </data>
   <data name="OverlayCustomDefaultJavascript" xml:space="preserve">
-    <value />
+    <value>var test = document.getElementById("test");
+
+function UserBanned(data)
+{
+    console.log("UserBanned");
+    console.log(data);
+    
+    addToDiv("UserBanned");
+}
+
+function UserTimeout(data)
+{
+    console.log("UserTimeout");
+    console.log(data);
+    
+    addToDiv("UserTimeout");
+}
+
+function ChatMessageReceived(data)
+{
+    console.log("ChatMessageReceived");
+    console.log(data);
+    
+    addToDiv("ChatMessageReceived");
+}
+
+function ChatMessageDeleted(data)
+{
+    console.log("ChatMessageDeleted");
+    console.log(data);
+    
+    addToDiv("ChatMessageDeleted");
+}
+
+function ChatCleared(data)
+{
+    console.log("ChatCleared");
+    console.log(data);
+    
+    addToDiv("ChatCleared");
+}
+
+function Follow(data)
+{
+    console.log("Follow");
+    console.log(data);
+    
+    addToDiv("Follow");
+}
+
+function Raid(data)
+{
+    console.log("Raid");
+    console.log(data);
+    
+    addToDiv("Raid");
+}
+
+function Subscription(data)
+{
+    console.log("Subscription");
+    console.log(data);
+    
+    addToDiv("Subscription");
+}
+
+function SubscriptionGifted(data)
+{
+    console.log("SubscriptionGifted");
+    console.log(data);
+    
+    addToDiv("SubscriptionGifted");
+}
+
+function Donation(data)
+{
+    console.log("Donation");
+    console.log(data);
+    
+    addToDiv("Donation");
+}
+
+function TwitchBits(data)
+{
+    console.log("TwitchBits");
+    console.log(data);
+    
+    addToDiv("TwitchBits");
+}
+
+function YouTubeSuperChat(data)
+{
+    console.log("YouTubeSuperChat");
+    console.log(data);
+    
+    addToDiv("YouTubeSuperChat");
+}
+
+function TrovoElixirSpell(data)
+{
+    console.log("TrovoElixirSpell");
+    console.log(data);
+    
+    addToDiv("TrovoElixirSpell");
+}
+
+function addToDiv(text)
+{
+    var div = document.createElement("div");
+    div.innerHTML = text;
+    test.appendChild(div);
+}</value>
   </data>
   <data name="OverlayDiscordReactiveVoiceDefaultCSS" xml:space="preserve">
     <value />

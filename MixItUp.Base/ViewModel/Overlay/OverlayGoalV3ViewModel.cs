@@ -79,6 +79,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayGoalV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayGoalV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public override string EquationUnits { get { return Resources.Progress; } }
 
         public string Height
@@ -188,8 +190,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayAnimationV3ViewModel ProgressOccurredAnimation;
         public OverlayAnimationV3ViewModel SegmentCompletedAnimation;
-
-        public override bool IsTestable { get { return true; } }
 
         public OverlayGoalV3ViewModel()
             : base(OverlayItemV3Type.Goal)

@@ -21,6 +21,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayStreamBossV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayStreamBossV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public override string EquationUnits { get { return Resources.Damage; } }
 
         public string Height
@@ -170,8 +172,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel HealingOcurredAnimation;
         public OverlayAnimationV3ViewModel NewBossAnimation;
 
-        public override bool IsTestable { get { return true; } }
-
         public OverlayStreamBossV3ViewModel()
             : base(OverlayItemV3Type.StreamBoss)
         {
@@ -262,10 +262,10 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             OverlayStreamBossV3Model streamBoss = (OverlayStreamBossV3Model)widget.Item;
 
-            string result = await DialogHelper.ShowDropDown(EnumHelper.GetEnumNames<OverlayStreamBossV3TestType>());
-            if (!string.IsNullOrEmpty(result))
+            object result = await DialogHelper.ShowEnumDropDown(EnumHelper.GetEnumList<OverlayStreamBossV3TestType>());
+            if (result != null)
             {
-                OverlayStreamBossV3TestType type = EnumHelper.GetEnumValueFromString<OverlayStreamBossV3TestType>(result);
+                OverlayStreamBossV3TestType type = (OverlayStreamBossV3TestType)result;
                 if (type == OverlayStreamBossV3TestType.Damage)
                 {
                     await streamBoss.ProcessEvent(ChannelSession.User, this.BaseHealth / 2, forceDamage: true);

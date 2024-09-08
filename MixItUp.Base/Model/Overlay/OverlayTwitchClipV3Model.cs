@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Clips;
 using MixItUp.Base.Model.Commands;
+using static System.Net.WebRequestMethods;
+using System.Text.RegularExpressions;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -28,7 +30,17 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultCSS = OverlayResources.OverlayTwitchClipVideoDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayVideoActionDefaultJavascript;
 
-        public const string TwitchClipURLPrefix = "https://clips.twitch.tv/";
+        public static readonly List<string> TwitchClipURLPrefixes = new List<string>()
+        {
+            "https://clips.twitch.tv/",
+            "clips.twitch.tv/"
+        };
+
+        public static readonly List<string> TwitchChannelClipURLRegexPatterns = new List<string>()
+        {
+            "https:\\/\\/www\\.twitch\\.tv\\/\\w+\\/clip\\/",
+            "www\\.twitch\\.tv\\/\\w+\\/clip\\/"
+        };
 
         [DataMember]
         public OverlayTwitchClipV3ClipType ClipType { get; set; }
@@ -121,10 +133,16 @@ namespace MixItUp.Base.Model.Overlay
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.SpecificClip && !string.IsNullOrEmpty(clipReferenceID))
                 {
-                    if (clipReferenceID.StartsWith(OverlayTwitchClipV3Model.TwitchClipURLPrefix))
+                    foreach (string prefix in TwitchClipURLPrefixes)
                     {
-                        clipReferenceID = clipReferenceID.Replace(OverlayTwitchClipV3Model.TwitchClipURLPrefix, "");
+                        clipReferenceID = clipReferenceID.Replace(prefix, "");
                     }
+
+                    foreach (string pattern in TwitchChannelClipURLRegexPatterns)
+                    {
+                        clipReferenceID = Regex.Replace(clipReferenceID, pattern, "");
+                    }
+
                     clip = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClip(clipReferenceID);
                 }
 

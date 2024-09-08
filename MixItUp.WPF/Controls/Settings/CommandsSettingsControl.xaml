@@ -33,6 +33,10 @@
 
             <Separator Margin="10" />
 
+            <GenericSettingsControls:GenericTextSettingsOptionControl DataContext="{Binding PythonExecutablePath}" />
+
+            <Separator Margin="10" />
+
             <TextBlock Margin="20,10" Text="{Binding Source={x:Static resx:Resources.HideActionsFromCommandEditor}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ItemsControl Margin="60,0,60,0" ItemsSource="{Binding HideActionsList}">
                 <ItemsControl.ItemTemplate>

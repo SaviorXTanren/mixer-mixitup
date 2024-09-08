@@ -1,324 +1,194 @@
-﻿using Google.Apis.YouTube.v3.Data;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
-using Trovo.Base.Models.Chat;
-using Twitch.Base.Models.Clients.PubSub.Messages;
 
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
     public class OverlayCustomV3Model : OverlayEventTrackingV3ModelBase
     {
-        public const string DetailsAmountPropertyName = "Amount";
-        public const string DetailsTierPropertyName = "Tier";
-        public const string DetailsMembershipNamePropertyName = "MembershipName";
-
         public static readonly string DefaultHTML = OverlayResources.OverlayCustomDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayCustomDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayCustomDefaultJavascript;
 
         [DataMember]
-        public List<OverlayAnimationV3Model> Animations { get; set; } = new List<OverlayAnimationV3Model>();
+        public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
 
         public OverlayCustomV3Model() : base(OverlayItemV3Type.Custom) { }
 
-        public async Task AddEvent(UserV2ViewModel user, string type, string template, Dictionary<string, string> properties)
+        public override async void OnChatUserBanned(object sender, UserV2ViewModel user)
         {
-            if (string.IsNullOrWhiteSpace(template))
+            await this.CallFunction("UserBanned", new Dictionary<string, object>()
             {
-                return;
-            }
-
-            if (user == null)
-            {
-                user = ChannelSession.User;
-            }
-
-            Dictionary<string, object> data = new Dictionary<string, object>();
-            data["User"] = JObject.FromObject(user);
-            data["Type"] = type;
-
-            string details = template;
-            foreach (var kvp in properties)
-            {
-                details = OverlayV3Service.ReplaceProperty(details, kvp.Key, kvp.Value);
-            }
-            details = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(details, new CommandParametersModel(user));
-            data["Details"] = details;
-
-            await this.CallFunction("add", data);
+                { "User", user }
+            });
         }
 
-        public Task TestAllEvents()
+        public override async void OnChatUserTimedOut(object sender, UserV2ViewModel user)
         {
-            AsyncRunner.RunAsyncBackground(async (token) =>
+            await this.CallFunction("UserTimeout", new Dictionary<string, object>()
             {
-                if (this.Follows)
+                { "User", user }
+            });
+        }
+
+        public override async void OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        {
+            await this.CallFunction("ChatMessageReceived", new Dictionary<string, object>()
+            {
+                { "User", message.User },
+                { "Message", message }
+            });
+        }
+
+        public override async void OnChatMessageDeleted(object sender, string messageID)
+        {
+            await this.CallFunction("ChatMessageDeleted", new Dictionary<string, object>()
+            {
+                { "MessageID", messageID }
+            });
+        }
+
+        public override async void OnChatCleared(object sender, EventArgs e)
+        {
+            await this.CallFunction("ChatCleared", new Dictionary<string, object>());
+        }
+
+        public override async void OnFollow(object sender, UserV2ViewModel user)
+        {
+            await this.CallFunction("Follow", new Dictionary<string, object>()
+            {
+                { "User", user }
+            });
+        }
+
+        public override async void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid)
+        {
+            await this.CallFunction("Raid", new Dictionary<string, object>()
+            {
+                { "User", raid.Item1 },
+                { "Amount", raid.Item2 }
+            });
+        }
+
+        public override async void OnSubscribe(object sender, SubscriptionDetailsModel subscription)
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>()
+            {
+                { "User", subscription.User },
+                { "Tier", subscription.Tier.ToString() },
+                { "Months", subscription.Months.ToString() },
+                { "Gifter", subscription.Gifter }
+            };
+
+            if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                data["Tier"] = subscription.YouTubeMembershipTier;
+            }
+
+            if (subscription.Gifter != null)
+            {
+                await this.CallFunction("SubscriptionGifted", data);
+            }
+            else
+            {
+                await this.CallFunction("Subscription", data);
+            }
+        }
+
+        public override async void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
+        {
+            StreamingPlatformTypeEnum platform = subscriptions.First().Platform;
+            UserV2ViewModel gifter = subscriptions.First().Gifter;
+            int tier = subscriptions.First().Tier;
+            string membershipName = subscriptions.First().YouTubeMembershipTier;
+            int amount = subscriptions.Count();
+
+            Dictionary<string, object> data = new Dictionary<string, object>()
+            {
+                { "Users", subscriptions.Select(s => s.User) },
+                { "Tier", tier.ToString() },
+                { "Amount", amount },
+                { "Gifter", gifter }
+            };
+
+            if (platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                data["Tier"] = membershipName;
+            }
+
+            await this.CallFunction("MassSubscriptionGifted", data);
+        }
+
+        public override async void OnDonation(object sender, UserDonationModel donation)
+        {
+            await this.CallFunction("Donation", new Dictionary<string, object>()
+            {
+                { "User", donation.User },
+                { "Donation", donation }
+            });
+        }
+
+        public override async void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        {
+            await this.CallFunction("TwitchBits", new Dictionary<string, object>()
+            {
+                { "User", bitsCheered.User },
+                { "Amount", bitsCheered.Amount },
+                { "Message", bitsCheered.Message }
+            });
+        }
+
+        public override async void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat)
+        {
+            await this.CallFunction("YouTubeSuperChat", new Dictionary<string, object>()
+            {
+                { "User", superChat.User },
+                { "Amount", superChat.Amount },
+                { "AmountDisplay", superChat.AmountDisplay },
+                { "Message", superChat.Message }
+            });
+        }
+
+        public override async void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell)
+        {
+            if (spell.IsElixir)
+            {
+                await this.CallFunction("TrovoElixirSpell", new Dictionary<string, object>()
                 {
-                    this.OnFollow(this, ChannelSession.User);
-                    await Task.Delay(3000);
-                }
-
-                if (this.Raids)
-                {
-                    this.OnRaid(this, new Tuple<UserV2ViewModel, int>(ChannelSession.User, 10));
-                    await Task.Delay(3000);
-                }
-
-                if (this.TwitchSubscriptions)
-                {
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, ChannelSession.User));
-                    await Task.Delay(3000);
-
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, ChannelSession.User, months: 10));
-                    await Task.Delay(3000);
-
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, ChannelSession.User, ChannelSession.User));
-                    await Task.Delay(3000);
-
-                    List<SubscriptionDetailsModel> subs = new List<SubscriptionDetailsModel>();
-                    for (int i = 0; i < 5; i++)
-                    {
-                        subs.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, ChannelSession.User, ChannelSession.User));
-                    }
-                    this.OnMassSubscription(this, subs);
-                    await Task.Delay(3000);
-                }
-
-                if (this.TwitchBits)
-                {
-                    this.OnTwitchBits(this, new TwitchUserBitsCheeredModel(ChannelSession.User, new PubSubBitsEventV2Model() { bits_used = 100 }));
-                    await Task.Delay(3000);
-                }
-
-                if (this.YouTubeMemberships)
-                {
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.YouTube, ChannelSession.User, youTubeMembershipTier: "Foobar"));
-                    await Task.Delay(3000);
-
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.YouTube, ChannelSession.User, months: 10, youTubeMembershipTier: "Foobar"));
-                    await Task.Delay(3000);
-
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.YouTube, ChannelSession.User, ChannelSession.User, youTubeMembershipTier: "Foobar"));
-                    await Task.Delay(3000);
-
-                    List<SubscriptionDetailsModel> subs = new List<SubscriptionDetailsModel>();
-                    for (int i = 0; i < 5; i++)
-                    {
-                        subs.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.YouTube, ChannelSession.User, ChannelSession.User, youTubeMembershipTier: "Foobar"));
-                    }
-                    this.OnMassSubscription(this, subs);
-                    await Task.Delay(3000);
-                }
-
-                if (this.YouTubeSuperChats)
-                {
-                    this.OnYouTubeSuperChat(this, new YouTubeSuperChatViewModel(new LiveChatSuperChatDetails() { AmountDisplayString = "$12.34" }, ChannelSession.User));
-                    await Task.Delay(3000);
-                }
-
-                if (this.TrovoSubscriptions)
-                {
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, ChannelSession.User));
-                    await Task.Delay(3000);
-
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, ChannelSession.User, months: 10));
-                    await Task.Delay(3000);
-
-                    this.OnSubscribe(this, new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, ChannelSession.User, ChannelSession.User));
-                    await Task.Delay(3000);
-
-                    List<SubscriptionDetailsModel> subs = new List<SubscriptionDetailsModel>();
-                    for (int i = 0; i < 5; i++)
-                    {
-                        subs.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Trovo, ChannelSession.User, ChannelSession.User));
-                    }
-                    this.OnMassSubscription(this, subs);
-                    await Task.Delay(3000);
-                }
-
-                if (this.TrovoElixirSpells)
-                {
-                    this.OnTrovoSpell(this, new TrovoChatSpellViewModel(ChannelSession.User, new ChatMessageModel() { content = "" })
-                    {
-                        Contents = new TrovoChatSpellContentModel()
-                        {
-                            num = 10,
-                            gift_value = 10
-                        }
-                    });
-                    await Task.Delay(3000);
-                }
-
-                if (this.Donations)
-                {
-                    this.OnDonation(this, new UserDonationModel()
-                    {
-                        Source = UserDonationSourceEnum.Streamlabs,
-
-                        User = ChannelSession.User,
-                        Username = ChannelSession.User.Username,
-
-                        Message = "Text",
-
-                        Amount = 12.34,
-
-                        DateTime = DateTimeOffset.Now,
-                    });
-                    await Task.Delay(3000);
-                };
-            }, CancellationToken.None);
-
-            return Task.CompletedTask;
+                    { "User", spell.User },
+                    { "Name", spell.Name },
+                    { "Quantity", spell.Quantity },
+                    { "Value", spell.Value },
+                    { "Total", spell.ValueTotal }
+                });
+            }
         }
 
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
 
-            foreach (OverlayAnimationV3Model animation in this.Animations)
-            {
-                OverlayItemV3ModelBase.AddAnimationProperties(properties, animation.CustomName, animation);
-            }
-
             return properties;
         }
 
-        protected override async void OnFollow(object sender, UserV2ViewModel user)
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
         {
-            //await this.AddEvent(user, nameof(this.Follows), this.FollowsDetailsTemplate, new Dictionary<string, string>());
-        }
-
-        protected override async void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid)
-        {
-            //await this.AddEvent(raid.Item1, nameof(this.Raids), this.RaidsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, raid.Item2.ToString() } });
-        }
-
-        protected override async void OnSubscribe(object sender, SubscriptionDetailsModel subscription)
-        {
-            //if (subscription.Gifter != null)
-            //{
-            //    if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
-            //    {
-            //        await this.AddEvent(subscription.Gifter, nameof(this.TwitchSubscriptions), this.TwitchGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
-            //    }
-            //    else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
-            //    {
-            //        await this.AddEvent(subscription.Gifter, nameof(this.YouTubeMemberships), this.YouTubeGiftedMembershipsDetailsTemplate, new Dictionary<string, string>() { { DetailsMembershipNamePropertyName, subscription.Tier.ToString() } });
-            //    }
-            //    else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
-            //    {
-            //        await this.AddEvent(subscription.Gifter, nameof(this.TrovoSubscriptions), this.TrovoGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
-            //    }
-            //}
-            //else if (subscription.Months > 1)
-            //{
-            //    if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
-            //    {
-            //        await this.AddEvent(subscription.User, nameof(this.TwitchSubscriptions), this.TwitchResubscriptionsDetailsTemplate, new Dictionary<string, string>()
-            //        {
-            //            { DetailsTierPropertyName, subscription.Tier.ToString() },
-            //            { DetailsAmountPropertyName, subscription.Months.ToString() }
-            //        });
-            //    }
-            //    else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
-            //    {
-            //        await this.AddEvent(subscription.User, nameof(this.YouTubeMemberships), this.YouTubeRenewedMembershipsDetailsTemplate, new Dictionary<string, string>()
-            //        {
-            //            { DetailsMembershipNamePropertyName, subscription.YouTubeMembershipTier },
-            //            { DetailsAmountPropertyName, subscription.Months.ToString() }
-            //        });
-            //    }
-            //    else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
-            //    {
-            //        await this.AddEvent(subscription.User, nameof(this.TrovoSubscriptions), this.TrovoResubscriptionsDetailsTemplate, new Dictionary<string, string>()
-            //        {
-            //            { DetailsTierPropertyName, subscription.Tier.ToString() },
-            //            { DetailsAmountPropertyName, subscription.Months.ToString() }
-            //        });
-            //    }
-            //}
-            //else
-            //{
-            //    if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
-            //    {
-            //        await this.AddEvent(subscription.User, nameof(this.TwitchSubscriptions), this.TwitchSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
-            //    }
-            //    else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
-            //    {
-            //        await this.AddEvent(subscription.User, nameof(this.YouTubeMemberships), this.YouTubeMembershipsDetailsTemplate, new Dictionary<string, string>() { { DetailsMembershipNamePropertyName, subscription.YouTubeMembershipTier } });
-            //    }
-            //    else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
-            //    {
-            //        await this.AddEvent(subscription.User, nameof(this.TrovoSubscriptions), this.TrovoSubscriptionsDetailsTemplate, new Dictionary<string, string>() { { DetailsTierPropertyName, subscription.Tier.ToString() } });
-            //    }
-            //}
-        }
-
-        protected override async void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
-        {
-            //StreamingPlatformTypeEnum platform = subscriptions.First().Platform;
-            //UserV2ViewModel gifter = subscriptions.First().Gifter;
-            //int tier = subscriptions.First().Tier;
-            //string membershipName = subscriptions.First().YouTubeMembershipTier;
-            //int amount = subscriptions.Count();
-
-            //if (platform == StreamingPlatformTypeEnum.Twitch)
-            //{
-            //    await this.AddEvent(gifter, nameof(this.TwitchSubscriptions), this.TwitchMassGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>()
-            //    {
-            //        { DetailsTierPropertyName, tier.ToString() },
-            //        { DetailsAmountPropertyName, amount.ToString() }
-            //    });
-            //}
-            //else if (platform == StreamingPlatformTypeEnum.YouTube)
-            //{
-            //    await this.AddEvent(gifter, nameof(this.YouTubeMemberships), this.YouTubeMassGiftedMembershipsDetailsTemplate, new Dictionary<string, string>()
-            //    {
-            //        { DetailsMembershipNamePropertyName, membershipName },
-            //        { DetailsAmountPropertyName, amount.ToString() }
-            //    });
-            //}
-            //else if (platform == StreamingPlatformTypeEnum.Trovo)
-            //{
-            //    await this.AddEvent(gifter, nameof(this.TrovoSubscriptions), this.TrovoMassGiftedSubscriptionsDetailsTemplate, new Dictionary<string, string>()
-            //    {
-            //        { DetailsTierPropertyName, tier.ToString() },
-            //        { DetailsAmountPropertyName, amount.ToString() }
-            //    });
-            //}
-        }
-
-        protected override async void OnDonation(object sender, UserDonationModel donation)
-        {
-            //await this.AddEvent(donation.User, nameof(this.Donations), this.DonationsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, donation.AmountText } });
-        }
-
-        protected override async void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
-        {
-            //await this.AddEvent(bitsCheered.User, nameof(this.TwitchBits), this.TwitchBitsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, bitsCheered.Amount.ToString() } });
-        }
-
-        protected override async void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat)
-        {
-            //await this.AddEvent(superChat.User, nameof(this.YouTubeSuperChats), this.YouTubeSuperChatsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, superChat.AmountDisplay } });
-        }
-
-        protected override async void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell)
-        {
-            //await this.AddEvent(spell.User, nameof(this.TrovoElixirSpells), this.TrovoElixirSpellsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, spell.ValueTotal.ToString() } });
+            foreach (var property in this.Properties)
+            {
+                properties[property.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(property.Value, parameters);
+            }
         }
     }
 }

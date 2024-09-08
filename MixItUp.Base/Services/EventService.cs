@@ -194,8 +194,8 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, UserV2ViewModel gifter, int months = 1, int? twitchSubscriptionTier = null, string youTubeMembershipTier = null)
-            : this(platform, user, months, twitchSubscriptionTier, youTubeMembershipTier)
+        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, UserV2ViewModel gifter, int months = 1, int? tier = null, string youTubeMembershipTier = null)
+            : this(platform, user, months, tier, youTubeMembershipTier)
         {
             this.Gifter = gifter;
         }

@@ -242,7 +242,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to &lt;div class=&quot;text&quot;&gt;To get started, open this widget in a regular web browser and&lt;/div&gt;
+        ///&lt;div class=&quot;text&quot;&gt;and hit F12 to open the Developer Console. On the Console tab,&lt;/div&gt;
+        ///&lt;div class=&quot;text&quot;&gt;you&apos;ll be able to see data logged for every supported function&lt;/div&gt;
+        ///&lt;div class=&quot;text&quot;&gt;so you can see what data is available to use.&lt;/div&gt;
+        ///
+        ///&lt;br/&gt;
+        ///
+        ///&lt;div class=&quot;text&quot;&gt;Events Logged:&lt;/p&gt;
+        ///&lt;div id=&quot;test&quot; class=&quot;text&quot;&gt;{TestProperty}&lt;/p&gt;.
         /// </summary>
         public static string OverlayCustomDefaultHTML {
             get {
@@ -251,7 +259,35 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to var test = document.getElementById(&quot;test&quot;);
+        ///
+        ///function UserBanned(data)
+        ///{
+        ///    console.log(&quot;UserBanned&quot;);
+        ///    console.log(data);
+        ///    
+        ///    addToDiv(&quot;UserBanned&quot;);
+        ///}
+        ///
+        ///function UserTimeout(data)
+        ///{
+        ///    console.log(&quot;UserTimeout&quot;);
+        ///    console.log(data);
+        ///    
+        ///    addToDiv(&quot;UserTimeout&quot;);
+        ///}
+        ///
+        ///function ChatMessageReceived(data)
+        ///{
+        ///    console.log(&quot;ChatMessageReceived&quot;);
+        ///    console.log(data);
+        ///    
+        ///    addToDiv(&quot;ChatMessageReceived&quot;);
+        ///}
+        ///
+        ///function ChatMessageDeleted(data)
+        ///{
+        ///    console.log(&quot;Ch [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayCustomDefaultJavascript {
             get {

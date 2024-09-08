@@ -1,9 +1,9 @@
-﻿using MixItUp.Base.Model.Overlay.Widgets;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -126,49 +126,46 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public override async Task ProcessPacket(OverlayV3Packet packet)
+        public override async Task Uninitialize()
         {
-            await base.ProcessPacket(packet);
-
-            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
-            {
-                if (this.cancellationTokenSource != null)
-                {
-                    this.cancellationTokenSource.Cancel();
-                    this.cancellationTokenSource = null;
-                }
-
-                this.cancellationTokenSource = new CancellationTokenSource();
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                if (this.LeaderboardType == OverlayLeaderboardTypeV3Enum.ViewingTime)
-                {
-                    AsyncRunner.RunAsyncBackground(this.ViewingTimeBackgroundTask, this.cancellationTokenSource.Token, 60000);
-                }
-                else if (this.LeaderboardType == OverlayLeaderboardTypeV3Enum.Consumable)
-                {
-                    if (ChannelSession.Settings.Currency.TryGetValue(this.ConsumableID, out var currency))
-                    {
-                        int interval = (currency.AcquireInterval > 0) ? currency.AcquireInterval : 1;
-                        AsyncRunner.RunAsyncBackground(this.ConsumableBackgroundTask, this.cancellationTokenSource.Token, interval * 60000);
-                    }
-                }
-                else if (this.LeaderboardType == OverlayLeaderboardTypeV3Enum.TwitchBits)
-                {
-                    AsyncRunner.RunAsyncBackground(this.TwitchBitsBackgroundTask, this.cancellationTokenSource.Token, 60000);
-                }
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            }
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            await base.WidgetDisableInternal();
+            await base.Uninitialize();
 
             if (this.cancellationTokenSource != null)
             {
                 this.cancellationTokenSource.Cancel();
                 this.cancellationTokenSource = null;
             }
+        }
+
+        protected override Task Loaded()
+        {
+            if (this.cancellationTokenSource != null)
+            {
+                this.cancellationTokenSource.Cancel();
+                this.cancellationTokenSource = null;
+            }
+
+            this.cancellationTokenSource = new CancellationTokenSource();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            if (this.LeaderboardType == OverlayLeaderboardTypeV3Enum.ViewingTime)
+            {
+                AsyncRunner.RunAsyncBackground(this.ViewingTimeBackgroundTask, this.cancellationTokenSource.Token, 60000);
+            }
+            else if (this.LeaderboardType == OverlayLeaderboardTypeV3Enum.Consumable)
+            {
+                if (ChannelSession.Settings.Currency.TryGetValue(this.ConsumableID, out var currency))
+                {
+                    int interval = (currency.AcquireInterval > 0) ? currency.AcquireInterval : 1;
+                    AsyncRunner.RunAsyncBackground(this.ConsumableBackgroundTask, this.cancellationTokenSource.Token, interval * 60000);
+                }
+            }
+            else if (this.LeaderboardType == OverlayLeaderboardTypeV3Enum.TwitchBits)
+            {
+                AsyncRunner.RunAsyncBackground(this.TwitchBitsBackgroundTask, this.cancellationTokenSource.Token, 60000);
+            }
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            return Task.CompletedTask;
         }
 
         private async Task ViewingTimeBackgroundTask(CancellationToken cancellationToken)

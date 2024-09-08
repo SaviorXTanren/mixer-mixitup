@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.EventSub;
@@ -840,16 +841,18 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task HandleHypeTrainBegin(JObject payload)
         {
-            this.lastHypeTrainLevel = 1;
-
             int totalPoints = payload["total"].Value<int>();
             int levelPoints = payload["progress"].Value<int>();
             int levelGoal = payload["goal"].Value<int>();
+            int level = payload["level"].Value<int>();
+
+            this.lastHypeTrainLevel = level;
 
             Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
+            eventCommandSpecialIdentifiers["hypetrainlevel"] = level.ToString();
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
 
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.HypeTrainStarted, ChannelSession.Settings.AlertTwitchHypeTrainColor));
@@ -1599,7 +1602,7 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(giftedSubEvent.Gifter, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, giftedSubEvent.Gifter.FullDisplayName, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
             }
 
-            EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Receiver, giftedSubEvent.Gifter, twitchSubscriptionTier: giftedSubEvent.PlanTierNumber));
+            EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Receiver, giftedSubEvent.Gifter, tier: giftedSubEvent.PlanTierNumber));
         }
 
         private async Task ProcessMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent)
@@ -1623,7 +1626,7 @@ namespace MixItUp.Base.Services.Twitch
             List<SubscriptionDetailsModel> subscriptions = new List<SubscriptionDetailsModel>();
             for (int i = 0; i < massGiftedSubEvent.Subs.Count; i++)
             {
-                subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, massGiftedSubEvent.Subs[i].Receiver, massGiftedSubEvent.Gifter, twitchSubscriptionTier: massGiftedSubEvent.PlanTierNumber));
+                subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, massGiftedSubEvent.Subs[i].Receiver, massGiftedSubEvent.Gifter, tier: massGiftedSubEvent.PlanTierNumber));
             }
             EventService.MassSubscriptionsGiftedOccurred(subscriptions);
         }

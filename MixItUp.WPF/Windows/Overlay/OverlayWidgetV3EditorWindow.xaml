@@ -165,7 +165,7 @@
                 
                 <Controls:IconButton Grid.Column="0" ToolTip="{x:Static resx:Resources.Save}" Icon="ContentSave" Command="{Binding SaveCommand}" />
 
-                <Controls:IconButton Grid.Column="2" ToolTip="{x:Static resx:Resources.TestCommand}" Icon="Play" Command="{Binding TestCommand}" IsEnabled="{Binding IsTestable, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Controls:IconButton Grid.Column="2" ToolTip="{x:Static resx:Resources.TestCommand}" Icon="Play" Command="{Binding TestCommand}" IsEnabled="{Binding IsTestable}" />
 
                 <Controls:IconButton Grid.Column="4" ToolTip="{x:Static resx:Resources.ExportData}" Icon="Export" Command="{Binding ExportCommand}" />
             </Grid>

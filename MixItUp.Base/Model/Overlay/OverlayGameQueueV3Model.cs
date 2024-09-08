@@ -1,6 +1,6 @@
-﻿using MixItUp.Base.Model.Overlay.Widgets;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -32,6 +32,34 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayGameQueueV3Model() : base(OverlayItemV3Type.GameQueue) { }
 
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            GameQueueService.OnGameQueueUpdated -= GameQueueService_OnGameQueueUpdated;
+            GameQueueService.OnGameQueueUpdated += GameQueueService_OnGameQueueUpdated;
+        }
+
+        public override async Task Uninitialize()
+        {
+            await base.Uninitialize();
+
+            GameQueueService.OnGameQueueUpdated -= GameQueueService_OnGameQueueUpdated;
+        }
+
+        public override Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+
+            properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
+            properties[nameof(this.BorderColor)] = this.BorderColor;
+
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
+
+            return properties;
+        }
+
         public async Task ClearGameQueue()
         {
             await this.CallFunction("clear", new Dictionary<string, object>());
@@ -58,42 +86,9 @@ namespace MixItUp.Base.Model.Overlay
             await this.CallFunction("update", data);
         }
 
-        public override Dictionary<string, object> GetGenerationProperties()
+        protected override async Task Loaded()
         {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-
-            properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
-            properties[nameof(this.BorderColor)] = this.BorderColor;
-
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
-
-            return properties;
-        }
-
-        public override async Task ProcessPacket(OverlayV3Packet packet)
-        {
-            await base.ProcessPacket(packet);
-
-            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
-            {
-                await this.UpdateGameQueue(ServiceManager.Get<GameQueueService>().Queue.ToList().Select(p => p.User));
-            }
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
-
-            GameQueueService.OnGameQueueUpdated -= GameQueueService_OnGameQueueUpdated;
-            GameQueueService.OnGameQueueUpdated += GameQueueService_OnGameQueueUpdated;
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            await base.WidgetDisableInternal();
-
-            GameQueueService.OnGameQueueUpdated -= GameQueueService_OnGameQueueUpdated;
+            await this.UpdateGameQueue(ServiceManager.Get<GameQueueService>().Queue.ToList().Select(p => p.User));
         }
 
         private async void GameQueueService_OnGameQueueUpdated(object sender, EventArgs e)

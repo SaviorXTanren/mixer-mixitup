@@ -1,9 +1,41 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using Google.Apis.YouTube.v3.Data;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.Chat.YouTube;
+using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Trovo.Base.Models.Chat;
+using Twitch.Base.Models.Clients.PubSub.Messages;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
+    public enum OverlayEventListV3TestTypeEnum
+    {
+        Follow,
+        Raid,
+
+        Subscribe,
+        Resubscribe,
+        SubscriptionGifted,
+        MassSubscriptionGifted,
+
+        Donation,
+
+        TwitchBits,
+
+        YouTubeSuperChat,
+
+        TrovoElixirSpell,
+    }
+
     public class OverlayEventListHeaderV3ViewModel : OverlayHeaderV3ViewModelBase
     {
         public OverlayEventListHeaderV3ViewModel() { }
@@ -23,6 +55,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultHTML { get { return OverlayEventListV3Model.DefaultHTML; } }
         public override string DefaultCSS { get { return OverlayEventListV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayEventListV3Model.DefaultJavascript; } }
+
+        public override bool IsTestable { get { return true; } }
 
         public OverlayEventListHeaderV3ViewModel Header
         {
@@ -390,8 +424,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayAnimationV3ViewModel ItemAddedAnimation;
         public OverlayAnimationV3ViewModel ItemRemovedAnimation;
 
-        public override bool IsTestable { get { return true; } }
-
         public OverlayEventListV3ViewModel()
             : base(OverlayItemV3Type.EventList)
         {
@@ -497,11 +529,87 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override async Task TestWidget(OverlayWidgetV3Model widget)
         {
-            OverlayEventListV3Model eventList = (OverlayEventListV3Model)widget.Item;
+            object result = await DialogHelper.ShowEnumDropDown(EnumHelper.GetEnumList<OverlayEventListV3TestTypeEnum>());
+            if (result != null)
+            {
+                OverlayEventListV3Model eventList = (OverlayEventListV3Model)widget.Item;
 
-            await eventList.ClearEvents();
+                OverlayEventListV3TestTypeEnum type = (OverlayEventListV3TestTypeEnum)result;
+                if (type == OverlayEventListV3TestTypeEnum.Follow)
+                {
+                    eventList.OnFollow(this, ChannelSession.User);
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.Raid)
+                {
+                    eventList.OnRaid(this, new Tuple<UserV2ViewModel, int>(ChannelSession.User, 10));
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.Subscribe)
+                {
+                    eventList.OnSubscribe(this, new SubscriptionDetailsModel(ChannelSession.User.Platform, ChannelSession.User, tier: 2, youTubeMembershipTier: "Foobar"));
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.Resubscribe)
+                {
+                    eventList.OnSubscribe(this, new SubscriptionDetailsModel(ChannelSession.User.Platform, ChannelSession.User, months: 5, tier: 2, youTubeMembershipTier: "Foobar"));
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.SubscriptionGifted)
+                {
+                    eventList.OnSubscribe(this, new SubscriptionDetailsModel(ChannelSession.User.Platform, ChannelSession.User, ChannelSession.User, months: 5, tier: 2, youTubeMembershipTier: "Foobar"));
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.MassSubscriptionGifted)
+                {
+                    List<SubscriptionDetailsModel> subscriptions = new List<SubscriptionDetailsModel>();
+                    for (int i = 0; i < 5; i++)
+                    {
+                        subscriptions.Add(new SubscriptionDetailsModel(ChannelSession.User.Platform, ChannelSession.User, ChannelSession.User, months: 5, tier: 2, youTubeMembershipTier: "Foobar"));
+                    }
+                    eventList.OnMassSubscription(this, subscriptions);
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.Donation)
+                {
+                    eventList.OnDonation(this, new UserDonationModel()
+                    {
+                        Source = UserDonationSourceEnum.Streamlabs,
 
-            await eventList.TestAllEvents();
+                        User = ChannelSession.User,
+                        Username = ChannelSession.User.Username,
+
+                        Message = "Text",
+
+                        Amount = 12.34,
+
+                        DateTime = DateTimeOffset.Now,
+                    });
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.TwitchBits)
+                {
+                    eventList.OnTwitchBits(this, new TwitchUserBitsCheeredModel(ChannelSession.User, new PubSubBitsEventV2Model()
+                    {
+                        bits_used = 100,
+                        chat_message = "Hello World"
+                    }));
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.YouTubeSuperChat)
+                {
+                    eventList.OnYouTubeSuperChat(this, new YouTubeSuperChatViewModel(new LiveChatSuperChatDetails()
+                    {
+                        AmountDisplayString = "$12.34",
+                        UserComment = "Hello World"
+                    }, ChannelSession.User));
+                }
+                else if (type == OverlayEventListV3TestTypeEnum.TrovoElixirSpell)
+                {
+                    eventList.OnTrovoSpell(this, new TrovoChatSpellViewModel(ChannelSession.User, new ChatMessageModel() { content = "" })
+                    {
+                        Contents = new TrovoChatSpellContentModel()
+                        {
+                            gift = "Foobar",
+                            value_type = TrovoChatSpellViewModel.ElixirValueType,
+                            num = 10,
+                            gift_value = 10,
+                        }
+                    });
+                }
+            }
 
             await base.TestWidget(widget);
         }

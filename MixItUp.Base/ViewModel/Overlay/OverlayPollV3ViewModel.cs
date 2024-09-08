@@ -25,6 +25,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayPollV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayPollV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public OverlayPollHeaderV3ViewModel Header
         {
             get { return this.header; }
@@ -156,8 +158,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayAnimationV3ViewModel EntranceAnimation;
         public OverlayAnimationV3ViewModel ExitAnimation;
-
-        public override bool IsTestable { get { return true; } }
 
         public OverlayPollV3ViewModel()
             : base(OverlayItemV3Type.Poll)

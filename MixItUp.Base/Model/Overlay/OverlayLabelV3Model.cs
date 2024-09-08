@@ -100,38 +100,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLabelV3Model() : base(OverlayItemV3Type.Label) { }
 
-        public override Dictionary<string, object> GetGenerationProperties()
+        public override async Task Initialize()
         {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-            properties[nameof(this.DisplaySetting)] = this.DisplaySetting.ToString();
-            properties[nameof(this.DisplayRotationSeconds)] = this.DisplayRotationSeconds;
-            return properties;
-        }
-
-        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
-        {
-            await base.ProcessGenerationProperties(properties, parameters);
-
-            List<string> labelAdds = new List<string>();
-            foreach (var display in this.Displays)
-            {
-                if (display.Value.IsEnabled)
-                {
-                    string labelAdd = OverlayResources.OverlayLabelAddJavascript;
-                    foreach (var kvp in await this.GetLabelDisplayProperties(display.Value))
-                    {
-                        labelAdd = OverlayV3Service.ReplaceProperty(labelAdd, kvp.Key, kvp.Value);
-                    }
-                    labelAdds.Add(labelAdd);
-                }
-            }
-
-            properties[LabelAdds] = string.Join("\n", labelAdds);
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
+            await base.Initialize();
 
             this.RemoveEventHandlers();
 
@@ -172,7 +143,7 @@ namespace MixItUp.Base.Model.Overlay
                 }, this.refreshCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
-            
+
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalFollowers))
             {
                 EventService.OnFollowOccurred += EventService_OnFollowOccurred;
@@ -217,12 +188,12 @@ namespace MixItUp.Base.Model.Overlay
                     this.Displays[OverlayLabelDisplayV3TypeEnum.TotalFollowers].Amount = amount;
                 }
             }
-            
+
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestRaid))
             {
                 EventService.OnRaidOccurred += EventService_OnRaidOccurred;
             }
-            
+
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
             {
                 EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
@@ -264,17 +235,17 @@ namespace MixItUp.Base.Model.Overlay
                     this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount = amount;
                 }
             }
-            
+
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestDonation))
             {
                 EventService.OnDonationOccurred += EventService_OnDonationOccurred;
             }
-            
+
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestTwitchBits))
             {
                 EventService.OnTwitchBitsCheeredOccurred += EventService_OnTwitchBitsCheeredOccurred;
             }
-            
+
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestTrovoElixir))
             {
                 EventService.OnTrovoSpellCastOccurred += EventService_OnTrovoSpellCastOccurred;
@@ -284,7 +255,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 EventService.OnYouTubeSuperChatOccurred += EventService_OnYouTubeSuperChatOccurred;
             }
-            
+
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.Counter))
             {
                 CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
@@ -317,9 +288,9 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        protected override async Task WidgetDisableInternal()
+        public override async Task Uninitialize()
         {
-            await base.WidgetDisableInternal();
+            await base.Uninitialize();
 
             this.RemoveEventHandlers();
 
@@ -329,6 +300,35 @@ namespace MixItUp.Base.Model.Overlay
                 this.fileSystemWatcher.Dispose();
                 this.fileSystemWatcher = null;
             }
+        }
+
+        public override Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+            properties[nameof(this.DisplaySetting)] = this.DisplaySetting.ToString();
+            properties[nameof(this.DisplayRotationSeconds)] = this.DisplayRotationSeconds;
+            return properties;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
+        {
+            await base.ProcessGenerationProperties(properties, parameters);
+
+            List<string> labelAdds = new List<string>();
+            foreach (var display in this.Displays)
+            {
+                if (display.Value.IsEnabled)
+                {
+                    string labelAdd = OverlayResources.OverlayLabelAddJavascript;
+                    foreach (var kvp in await this.GetLabelDisplayProperties(display.Value))
+                    {
+                        labelAdd = OverlayV3Service.ReplaceProperty(labelAdd, kvp.Key, kvp.Value);
+                    }
+                    labelAdds.Add(labelAdd);
+                }
+            }
+
+            properties[LabelAdds] = string.Join("\n", labelAdds);
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)

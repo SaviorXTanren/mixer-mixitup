@@ -8,9 +8,5 @@ namespace MixItUp.Base.Services
         Task<string> RunCSharpCode(CommandParametersModel parameters, string code);
 
         Task<string> RunVisualBasicCode(CommandParametersModel parameters, string code);
-
-        Task<string> RunPythonCode(CommandParametersModel parameters, string code);
-
-        Task<string> RunJavascriptCode(CommandParametersModel parameters, string code);
     }
 }

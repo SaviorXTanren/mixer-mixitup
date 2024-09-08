@@ -75,6 +75,31 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayChatV3Model() : base(OverlayItemV3Type.Chat) { }
 
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            if (this.ApplicableStreamingPlatforms.Count == 0)
+            {
+                this.ApplicableStreamingPlatforms.AddRange(StreamingPlatforms.SupportedPlatforms);
+            }
+
+            this.RemoveEventHandlers();
+
+            ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
+            ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
+            ChatService.OnChatUserTimedOut += ChatService_OnChatUserTimedOut;
+            ChatService.OnChatUserBanned += ChatService_OnChatUserBanned;
+            ChatService.OnChatCleared += ChatService_OnChatCleared;
+        }
+
+        public override async Task Uninitialize()
+        {
+            await base.Uninitialize();
+
+            this.RemoveEventHandlers();
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
@@ -118,43 +143,13 @@ namespace MixItUp.Base.Model.Overlay
                 else if (messagePart is ChatEmoteViewModelBase)
                 {
                     part[MessagePartTypeProperty] = MessagePartTypeEmoteValue;
-                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).ImageURL;
+                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).AnimatedOrStaticImageURL;
                 }
                 messageParts.Add(part);
             }
             properties[MessageProperty] = messageParts;
 
             await this.CallFunction("add", properties);
-        }
-
-        protected override async Task WidgetInitializeInternal()
-        {
-            await base.WidgetInitializeInternal();
-
-            if (this.ApplicableStreamingPlatforms.Count == 0)
-            {
-                this.ApplicableStreamingPlatforms.AddRange(StreamingPlatforms.SupportedPlatforms);
-            }
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            await base.WidgetEnableInternal();
-
-            this.RemoveEventHandlers();
-
-            ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
-            ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
-            ChatService.OnChatUserTimedOut += ChatService_OnChatUserTimedOut;
-            ChatService.OnChatUserBanned += ChatService_OnChatUserBanned;
-            ChatService.OnChatCleared += ChatService_OnChatCleared;
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            await base.WidgetDisableInternal();
-
-            this.RemoveEventHandlers();
         }
 
         private async void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)

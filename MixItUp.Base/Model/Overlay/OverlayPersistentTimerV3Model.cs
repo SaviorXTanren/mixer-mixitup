@@ -56,6 +56,51 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayPersistentTimerV3Model() : base(OverlayItemV3Type.PersistentTimer) { }
 
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            this.StartBackgroundTimer();
+
+            this.paused = false;
+        }
+
+        public override async Task Uninitialize()
+        {
+            await base.Uninitialize();
+
+            if (this.cancellationTokenSource != null)
+            {
+                this.cancellationTokenSource.Cancel();
+                this.cancellationTokenSource = null;
+            }
+
+            if (this.ResetOnEnable)
+            {
+                this.CurrentAmount = this.InitialAmount;
+            }
+        }
+
+        public override async Task Reset()
+        {
+            await base.Reset();
+
+            this.CurrentAmount = this.InitialAmount;
+        }
+
+        public override Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+
+            properties[nameof(this.CurrentAmount)] = this.CurrentAmount;
+            properties[nameof(this.DisplayFormat)] = this.DisplayFormat;
+
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.TimerAdjustedAnimation), this.TimerAdjustedAnimation);
+            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.TimerCompletedAnimation), this.TimerCompletedAnimation);
+
+            return properties;
+        }
+
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
             if (!this.paused || this.AllowAdjustmentWhilePaused)
@@ -106,51 +151,6 @@ namespace MixItUp.Base.Model.Overlay
                 this.StartBackgroundTimer();
                 await this.CallFunction("unpause", new Dictionary<string, object>());
             }
-        }
-
-        public override Dictionary<string, object> GetGenerationProperties()
-        {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-
-            properties[nameof(this.CurrentAmount)] = this.CurrentAmount;
-            properties[nameof(this.DisplayFormat)] = this.DisplayFormat;
-
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.TimerAdjustedAnimation), this.TimerAdjustedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.TimerCompletedAnimation), this.TimerCompletedAnimation);
-
-            return properties;
-        }
-
-        protected override async Task WidgetEnableInternal()
-        {
-            this.StartBackgroundTimer();
-
-            this.paused = false;
-
-            await base.WidgetEnableInternal();
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            if (this.cancellationTokenSource != null)
-            {
-                this.cancellationTokenSource.Cancel();
-                this.cancellationTokenSource = null;
-            }
-
-            if (this.ResetOnEnable)
-            {
-                this.CurrentAmount = this.InitialAmount;
-            }
-
-            await base.WidgetDisableInternal();
-        }
-
-        protected override Task WidgetResetInternal()
-        {
-            this.CurrentAmount = this.InitialAmount;
-
-            return Task.CompletedTask;
         }
 
         private void StartBackgroundTimer()

@@ -538,6 +538,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Address.
+        /// </summary>
+        public static string Address {
+            get {
+                return ResourceManager.GetString("Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds Amount To All Chat Users.
         /// </summary>
         public static string AddsAmountToAllChatUsers {
@@ -6113,6 +6122,15 @@ namespace MixItUp.Base {
         public static string Elevenlabs {
             get {
                 return ResourceManager.GetString("Elevenlabs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No voices returned.
+        /// </summary>
+        public static string ElevenLabsNoVoicesReturn {
+            get {
+                return ResourceManager.GetString("ElevenLabsNoVoicesReturn", resourceCulture);
             }
         }
         
@@ -13064,6 +13082,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mass Subscription Gifted.
+        /// </summary>
+        public static string MassSubscriptionGifted {
+            get {
+                return ResourceManager.GetString("MassSubscriptionGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max.
         /// </summary>
         public static string Max {
@@ -15766,6 +15793,17 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Welcome to the new Overlay v3 update! As part of this update, a major change was done to how Overlay Endpoints are handled. Instead of each endpoint having a dedicate port number, they now all share the same port number and have a unique URL to them.
+        ///
+        ///We have detected that you have more than 1 Overlay Endpoint created, meaning the URLs for all Overlay Endpoints **EXCEPT** the Default one are now different. Please see the list below for all your custom Overlay Endpoints and click on the corresponding butto [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayV3EndpointsUpgradeDialog {
+            get {
+                return ResourceManager.GetString("OverlayV3EndpointsUpgradeDialog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WARNING: Animations may not work correctly..
         /// </summary>
         public static string OverlayWarning1 {
@@ -17332,6 +17370,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Properties.
+        /// </summary>
+        public static string Properties {
+            get {
+                return ResourceManager.GetString("Properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provider.
         /// </summary>
         public static string Provider {
@@ -17463,6 +17510,15 @@ namespace MixItUp.Base {
         public static string Python {
             get {
                 return ResourceManager.GetString("Python", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Python Executable Path.
+        /// </summary>
+        public static string PythonExecutablePath {
+            get {
+                return ResourceManager.GetString("PythonExecutablePath", resourceCulture);
             }
         }
         
@@ -18626,6 +18682,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resubscribe.
+        /// </summary>
+        public static string Resubscribe {
+            get {
+                return ResourceManager.GetString("Resubscribe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resubscribed.
         /// </summary>
         public static string Resubscribed {
@@ -19385,7 +19450,7 @@ namespace MixItUp.Base {
         ///            System.Console.WriteLine(&quot;Hello World!&quot;);
         ///
         ///            // Return any data here that you&apos;d like to use
-        ///            return 0;
+        ///            return 42;
         ///        }
         ///    }
         ///}.
@@ -19412,8 +19477,11 @@ namespace MixItUp.Base {
         ///    var text = &apos;Hello World!&apos;;
         ///
         ///    // Return any data here that you&apos;d like to use
-        ///    return 0;
-        ///}.
+        ///    return 42;
+        ///}
+        ///
+        ///var result = run();
+        ///sendParentMessage({ Type: &quot;ScriptComplete&quot;, ID: &quot;{ID}&quot;, Result: result });.
         /// </summary>
         public static string ScriptActionJavascriptDefaultScriptTemplate {
             get {
@@ -19431,16 +19499,36 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: The Overlay service must be enabled and running in at least 1 browser to run Javascript scripts.
+        /// </summary>
+        public static string ScriptActionOverlayNotEnableOrConnected {
+            get {
+                return ResourceManager.GetString("ScriptActionOverlayNotEnableOrConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to def run():
         ///    # Your code goes here
-        ///    print &apos;Hello World!&apos;
+        ///    text = &quot;Hello World!&quot;
         ///
         ///    # Return any data here that you&apos;d like to use
-        ///    return 0.
+        ///    return 42
+        ///
+        ///print(run()).
         /// </summary>
         public static string ScriptActionPythonDefaultScriptTemplate {
             get {
                 return ResourceManager.GetString("ScriptActionPythonDefaultScriptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Python executable path must be set under Settings -&gt; Commands to run Python scripts.
+        /// </summary>
+        public static string ScriptActionPythonExecutablePathNotSet {
+            get {
+                return ResourceManager.GetString("ScriptActionPythonExecutablePathNotSet", resourceCulture);
             }
         }
         
@@ -22105,6 +22193,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subscribe.
+        /// </summary>
+        public static string Subscribe {
+            get {
+                return ResourceManager.GetString("Subscribe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subscribe Age.
         /// </summary>
         public static string SubscribeAge {
@@ -22191,6 +22288,15 @@ namespace MixItUp.Base {
         public static string Subscribes {
             get {
                 return ResourceManager.GetString("Subscribes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subscription Gifted.
+        /// </summary>
+        public static string SubscriptionGifted {
+            get {
+                return ResourceManager.GetString("SubscriptionGifted", resourceCulture);
             }
         }
         
@@ -23707,6 +23813,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Elixir Spell.
+        /// </summary>
+        public static string TrovoElixirSpell {
+            get {
+                return ResourceManager.GetString("TrovoElixirSpell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Elixir Spells.
         /// </summary>
         public static string TrovoElixirSpells {
@@ -24923,6 +25038,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uberduck.
+        /// </summary>
+        public static string Uberduck {
+            get {
+                return ResourceManager.GetString("Uberduck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No voices returned.
+        /// </summary>
+        public static string UberduckNoVoicesReturned {
+            get {
+                return ResourceManager.GetString("UberduckNoVoicesReturned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ukrainian.
         /// </summary>
         public static string Ukrainian {
@@ -25314,6 +25447,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Banned.
+        /// </summary>
+        public static string UserBanned {
+            get {
+                return ResourceManager.GetString("UserBanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Chance %.
         /// </summary>
         public static string UserChancePercentage {
@@ -25640,6 +25782,15 @@ namespace MixItUp.Base {
         public static string UserThreshold {
             get {
                 return ResourceManager.GetString("UserThreshold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Timed Out.
+        /// </summary>
+        public static string UserTimedOut {
+            get {
+                return ResourceManager.GetString("UserTimedOut", resourceCulture);
             }
         }
         

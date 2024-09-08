@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
@@ -266,6 +265,205 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayEndCreditsV3Model() : base(OverlayItemV3Type.EndCredits) { }
 
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            foreach (OverlayEndCreditsSectionV3Model section in Sections)
+            {
+                section.ClearTracking();
+            }
+        }
+
+        public override async Task Reset()
+        {
+            await base.Reset();
+
+            foreach (OverlayEndCreditsSectionV3Model section in Sections)
+            {
+                section.ClearTracking();
+            }
+        }
+
+        public override void OnChatUserBanned(object sender, UserV2ViewModel user)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                section.Untrack(user);
+            }
+        }
+
+        public override void OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.Chatters:
+                        section.Track(message.User);
+                        break;
+                    case OverlayEndCreditsSectionV3Type.Followers:
+                        if (message.User.IsFollower)
+                        {
+                            section.Track(message.User);
+                        }
+                        break;
+                    case OverlayEndCreditsSectionV3Type.Subscribers:
+                        if (message.User.IsSubscriber)
+                        {
+                            section.Track(message.User);
+                        }
+                        break;
+                    case OverlayEndCreditsSectionV3Type.Moderators:
+                        if (message.User.HasRole(UserRoleEnum.Moderator))
+                        {
+                            section.Track(message.User);
+                        }
+                        break;
+                }
+            }
+        }
+
+        public override void OnFollow(object sender, UserV2ViewModel user)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.NewFollowers:
+                        section.Track(user);
+                        break;
+                }
+            }
+        }
+
+        public override void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.Raids:
+                        section.Track(raid.Item1, raid.Item2);
+                        break;
+                }
+            }
+        }
+
+        public override void OnSubscribe(object sender, SubscriptionDetailsModel subscription)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.NewSubscribers:
+                        if (subscription.Months == 1)
+                        {
+                            section.Track(subscription.User);
+                        }
+                        break;
+                    case OverlayEndCreditsSectionV3Type.Resubscribers:
+                        if (subscription.Months > 1)
+                        {
+                            section.Track(subscription.User, subscription.Months);
+                        }
+                        break;
+                    case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
+                        if (subscription.Gifter != null)
+                        {
+                            section.Track(subscription.Gifter, 1);
+                        }
+                        break;
+                    case OverlayEndCreditsSectionV3Type.AllSubscriptions:
+                        section.Track(subscription.User);
+                        break;
+                }
+            }
+        }
+
+        public override void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.NewSubscribers:
+                        foreach (var subscription in subscriptions)
+                        {
+                            section.Track(subscription.User);
+                        }
+                        break;
+                    case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
+                        foreach (var subscription in subscriptions)
+                        {
+                            if (subscription.Gifter != null)
+                            {
+                                section.Track(subscription.Gifter, 1);
+                            }
+                        }
+                        break;
+                    case OverlayEndCreditsSectionV3Type.AllSubscriptions:
+                        foreach (var subscription in subscriptions)
+                        {
+                            section.Track(subscription.User);
+                        }
+                        break;
+                }
+            }
+        }
+
+        public override void OnDonation(object sender, UserDonationModel donation)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.Donations:
+                        section.Track(donation.User, donation.Amount);
+                        break;
+                }
+            }
+        }
+
+        public override void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.TwitchBits:
+                        section.Track(bitsCheered.User, bitsCheered.Amount);
+                        break;
+                }
+            }
+        }
+
+        public override void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.YouTubeSuperChats:
+                        section.Track(superChat.User, superChat.Amount);
+                        break;
+                }
+            }
+        }
+
+        public override void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell)
+        {
+            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            {
+                switch (section.Type)
+                {
+                    case OverlayEndCreditsSectionV3Type.TrovoSpells:
+                        section.Track(spell.User, spell.ValueTotal);
+                        break;
+                }
+            }
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
@@ -307,14 +505,6 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.ProcessPacket(packet);
 
-            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
-            {
-                if (this.RunCreditsWhenVisible)
-                {
-                    await this.PlayCredits();
-                }
-            }
-
             if (string.Equals(packet.Type, OverlayEndCreditsV3Model.EndCreditsStartedPacketType))
             {
                 await ServiceManager.Get<CommandService>().Queue(this.StartedCommandID);
@@ -322,28 +512,6 @@ namespace MixItUp.Base.Model.Overlay
             else if (string.Equals(packet.Type, EndCreditsCompletedPacketType))
             {
                 await ServiceManager.Get<CommandService>().Queue(this.EndedCommandID);
-            }
-        }
-
-        protected override async Task WidgetDisableInternal()
-        {
-            this.Reset();
-
-            await base.WidgetDisableInternal();
-        }
-
-        protected override Task WidgetResetInternal()
-        {
-            this.Reset();
-
-            return Task.CompletedTask;
-        }
-
-        public void Reset()
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in Sections)
-            {
-                section.ClearTracking();
             }
         }
 
@@ -361,12 +529,10 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task PlayCredits()
         {
-#pragma warning disable CS0612 // Type or member is obsolete
             if (this.IsLivePreview)
             {
                 await OverlayEndCreditsV3ViewModel.LoadTestData(this);
             }
-#pragma warning restore CS0612 // Type or member is obsolete
 
             List<OverlayEndCreditsSectionV3Model> applicableSections = new List<OverlayEndCreditsSectionV3Model>();
 
@@ -390,182 +556,11 @@ namespace MixItUp.Base.Model.Overlay
             await this.CallFunction("startCredits", data);
         }
 
-        protected override void OnChatUserBanned(object sender, UserV2ViewModel user)
+        protected override async Task Loaded()
         {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
+            if (this.RunCreditsWhenVisible)
             {
-                section.Untrack(user);
-            }
-        }
-
-        protected override void OnChatMessageReceived(object sender, ChatMessageViewModel message)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.Chatters:
-                        section.Track(message.User);
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Followers:
-                        if (message.User.IsFollower)
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Subscribers:
-                        if (message.User.IsSubscriber)
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Moderators:
-                        if (message.User.HasRole(UserRoleEnum.Moderator))
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
-                }
-            }
-        }
-
-        protected override void OnFollow(object sender, UserV2ViewModel user)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.NewFollowers:
-                        section.Track(user);
-                        break;
-                }
-            }
-        }
-
-        protected override void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.Raids:
-                        section.Track(raid.Item1, raid.Item2);
-                        break;
-                }
-            }
-        }
-
-        protected override void OnSubscribe(object sender, SubscriptionDetailsModel subscription)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.NewSubscribers:
-                        if (subscription.Months == 1)
-                        {
-                            section.Track(subscription.User);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Resubscribers:
-                        if (subscription.Months > 1)
-                        {
-                            section.Track(subscription.User, subscription.Months);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
-                        if (subscription.Gifter != null)
-                        {
-                            section.Track(subscription.Gifter, 1);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.AllSubscriptions:
-                        section.Track(subscription.User);
-                        break;
-                }
-            }
-        }
-
-        protected override void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.NewSubscribers:
-                        foreach (var subscription in subscriptions)
-                        {
-                            section.Track(subscription.User);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.GiftedSubscriptions:
-                        foreach (var subscription in subscriptions)
-                        {
-                            if (subscription.Gifter != null)
-                            {
-                                section.Track(subscription.Gifter, 1);
-                            }
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.AllSubscriptions:
-                        foreach (var subscription in subscriptions)
-                        {
-                            section.Track(subscription.User);
-                        }
-                        break;
-                }
-            }
-        }
-
-        protected override void OnDonation(object sender, UserDonationModel donation)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.Donations:
-                        section.Track(donation.User, donation.Amount);
-                        break;
-                }
-            }
-        }
-
-        protected override void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.TwitchBits:
-                        section.Track(bitsCheered.User, bitsCheered.Amount);
-                        break;
-                }
-            }
-        }
-
-        protected override void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.YouTubeSuperChats:
-                        section.Track(superChat.User, superChat.Amount);
-                        break;
-                }
-            }
-        }
-
-        protected override void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell)
-        {
-            foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
-            {
-                switch (section.Type)
-                {
-                    case OverlayEndCreditsSectionV3Type.TrovoSpells:
-                        section.Track(spell.User, spell.ValueTotal);
-                        break;
-                }
+                await this.PlayCredits();
             }
         }
     }

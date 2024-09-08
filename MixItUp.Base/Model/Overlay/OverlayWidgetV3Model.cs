@@ -1,5 +1,9 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -19,12 +23,10 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         public OverlayItemV3ModelBase Item { get; set; }
 
         [DataMember]
-        public int RefreshTime { get; set; }
-        [DataMember]
         public bool IsEnabled { get; set; }
 
-        [JsonIgnore]
-        public bool IsInitialized { get; set; }
+        [DataMember]
+        public int RefreshTime { get; set; }
 
         [JsonIgnore]
         public Guid ID { get { return this.Item.ID; } }
@@ -37,8 +39,9 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         public string SingleWidgetURL { get { return this.Item.SingleWidgetURL; } }
         [JsonIgnore]
         public bool IsResettable { get { return this.Item.IsResettable; } }
+
         [JsonIgnore]
-        public bool IsTestable { get { return this.Item.IsTestable; } }
+        private SemaphoreSlim stateSemaphore = new SemaphoreSlim(1); 
 
         private CancellationTokenSource refreshCancellationTokenSource;
 
@@ -50,68 +53,92 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         [Obsolete]
         public OverlayWidgetV3Model() { }
 
-        public async Task Initialize()
-        {
-            if (!this.IsInitialized)
-            {
-                this.IsInitialized = true;
-                await this.Item.WidgetInitialize();
-            }
-        }
-
         public async Task Enable()
         {
-            await this.Initialize();
+            await this.stateSemaphore.WaitAsync();
 
             if (!this.IsEnabled)
             {
                 this.IsEnabled = true;
-#pragma warning disable CS0612 // Type or member is obsolete
-                await this.EnableInternal();
-#pragma warning restore CS0612 // Type or member is obsolete
+
+                if (this.RefreshTime > 0)
+                {
+                    this.Item.WidgetLoaded += Item_WidgetLoaded;
+                }
+
+                await this.Item.Initialize();
+                await this.SendInitial();
             }
+
+            this.stateSemaphore.Release();
         }
 
         public async Task Disable()
         {
+            await this.stateSemaphore.WaitAsync();
+
             if (this.IsEnabled)
             {
                 this.IsEnabled = false;
 
-                await this.Item.WidgetDisable();
+                OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
+                if (overlay != null)
+                {
+                    await overlay.Remove(this.ID.ToString());
+                }
 
-                this.Item.LoadedInWidget -= Item_LoadedInWidget;
+                this.Item.WidgetLoaded -= Item_WidgetLoaded;
 
                 if (this.refreshCancellationTokenSource != null)
                 {
                     this.refreshCancellationTokenSource.Cancel();
+                    this.refreshCancellationTokenSource = null;
                 }
-                this.refreshCancellationTokenSource = null;
+
+                await this.Item.Uninitialize();
             }
+
+            this.stateSemaphore.Release();
         }
 
-        public async Task WidgetFullReset()
+        public async Task Reset()
         {
-            await this.Item.WidgetFullReset();
+            await this.Disable();
+
+            await this.Item.Reset();
+
+            await this.Enable();
         }
 
         public async Task SendInitial()
         {
-            await this.Item.WidgetSendInitial();
-        }
-
-        [Obsolete]
-        internal async Task EnableInternal()
-        {
-            await this.Item.WidgetEnable();
-
-            if (this.RefreshTime > 0)
+            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
+            if (overlay != null)
             {
-                this.Item.LoadedInWidget += Item_LoadedInWidget;
+                Dictionary<string, object> properties = this.Item.GetGenerationProperties();
+
+                string iframeHTML = overlay.GetItemIFrameHTML();
+                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Item.HTML), this.Item.HTML);
+                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Item.CSS), this.Item.CSS);
+                iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Item.Javascript), this.Item.Javascript);
+
+                CommandParametersModel parametersModel = new CommandParametersModel();
+
+                await this.Item.ProcessGenerationProperties(properties, parametersModel);
+                foreach (var property in properties)
+                {
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
+                }
+
+                iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parametersModel);
+
+                await overlay.Add(this.ID.ToString(), iframeHTML, this.Item.LayerProcessed);
             }
         }
 
-        private void Item_LoadedInWidget(object sender, EventArgs e)
+        public OverlayEndpointV3Service GetOverlayEndpointService() { return this.Item.GetOverlayEndpointService(); }
+
+        private void Item_WidgetLoaded(object sender, EventArgs e)
         {
             if (this.refreshCancellationTokenSource != null)
             {
@@ -128,7 +155,17 @@ namespace MixItUp.Base.Model.Overlay.Widgets
 
                     if (!cancellationToken.IsCancellationRequested)
                     {
-                        await this.Item.WidgetUpdate();
+                        CommandParametersModel parameters = new CommandParametersModel();
+                        Dictionary<string, object> data = this.Item.GetGenerationProperties();
+                        foreach (string key in data.Keys.ToList())
+                        {
+                            if (data[key] != null)
+                            {
+                                data[key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(data[key].ToString(), parameters);
+                            }
+                        }
+                        await this.Item.ProcessGenerationProperties(data, new CommandParametersModel());
+                        await this.Item.CallFunction("update", data);
                     }
 
                 } while (!cancellationToken.IsCancellationRequested);

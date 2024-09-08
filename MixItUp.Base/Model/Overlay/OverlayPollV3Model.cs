@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -141,29 +142,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayPollV3Model() : base(OverlayItemV3Type.Poll) { }
 
-        public override async Task ProcessPacket(OverlayV3Packet packet)
-        {
-            await base.ProcessPacket(packet);
-
-            if (string.Equals(packet.Type, OverlayWidgetV3Model.WidgetLoadedPacketType))
-            {
-                if (this.IsLivePreview)
-                {
-                    await this.NewPoll("This is a test poll", 60, new List<OverlayPollOptionV3Model>()
-                    {
-                        new OverlayPollOptionV3Model() { ID = "1", Name = "Option 1", Amount = 100 },
-                        new OverlayPollOptionV3Model() { ID = "2", Name = "Option 2", Amount = 200 },
-                        new OverlayPollOptionV3Model() { ID = "3", Name = "Option 3", Amount = 300 },
-                    },
-                    hasChannelPoints: true);
-
-                    await Task.Delay(1000);
-
-                    await this.Update();
-                }
-            }
-        }
-
         public async Task NewTwitchPoll(TwitchPollEventModel poll)
         {
             int totalTime = (int)Math.Round((poll.EndsAt - poll.StartedAt).TotalSeconds);
@@ -254,6 +232,24 @@ namespace MixItUp.Base.Model.Overlay
             OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ExitAnimation), this.ExitAnimation);
 
             return properties;
+        }
+
+        protected override async Task Loaded()
+        {
+            if (this.IsLivePreview)
+            {
+                await this.NewPoll("This is a test poll", 60, new List<OverlayPollOptionV3Model>()
+                {
+                    new OverlayPollOptionV3Model() { ID = "1", Name = "Option 1", Amount = 100 },
+                    new OverlayPollOptionV3Model() { ID = "2", Name = "Option 2", Amount = 200 },
+                    new OverlayPollOptionV3Model() { ID = "3", Name = "Option 3", Amount = 300 },
+                },
+                hasChannelPoints: true);
+
+                await Task.Delay(1000);
+
+                await this.Update();
+            }
         }
 
         protected internal async Task TestPoll()

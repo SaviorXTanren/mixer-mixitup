@@ -197,12 +197,9 @@ namespace MixItUp.Base.Services
 
                     foreach (OverlayWidgetV3Model widget in this.GetWidgets())
                     {
-                        await widget.Initialize();
                         if (widget.IsEnabled)
                         {
-#pragma warning disable CS0612 // Type or member is obsolete
-                            await widget.EnableInternal();
-#pragma warning restore CS0612 // Type or member is obsolete
+                            await widget.Enable();
                         }
 
                         if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
@@ -424,6 +421,8 @@ namespace MixItUp.Base.Services
 
         public OverlayEndpointV3Model Model { get; private set; }
 
+        public Dictionary<Guid, OverlayItemV3ModelBase> PacketListeningItems { get; private set; } = new Dictionary<Guid, OverlayItemV3ModelBase>();
+
         public virtual Guid ID { get { return this.Model.ID; } }
         public virtual string Name { get { return this.Model.Name; } }
 
@@ -439,6 +438,8 @@ namespace MixItUp.Base.Services
             }
         }
         public virtual string WebSocketConnectionURL { get { return $"/ws/{this.ID}/"; } }
+
+        public int ConnectedClients { get { return this.webSocketServers.Count; } }
 
         private List<OverlayV3Packet> batchPackets = new List<OverlayV3Packet>();
         private bool isBatching = false;
@@ -672,6 +673,10 @@ namespace MixItUp.Base.Services
                     if (OverlayWidgetV3ViewModel.WidgetsInEditing.TryGetValue(id, out OverlayWidgetV3ViewModel widgetViewModel))
                     {
                         await widgetViewModel.ProcessPacket(packet);
+                    }
+                    else if (PacketListeningItems.TryGetValue(id, out OverlayItemV3ModelBase item))
+                    {
+                        await item.ProcessPacket(packet);
                     }
                     else
                     {

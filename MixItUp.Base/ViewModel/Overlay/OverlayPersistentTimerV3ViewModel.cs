@@ -13,6 +13,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string DefaultCSS { get { return OverlayTimerV3Model.DefaultCSS; } }
         public override string DefaultJavascript { get { return OverlayPersistentTimerV3Model.DefaultJavascript; } }
 
+        public override bool IsTestable { get { return true; } }
+
         public override string EquationUnits { get { return Resources.Seconds; } }
 
         public int InitialAmount
@@ -104,8 +106,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayAnimationV3ViewModel TimerAdjustedAnimation;
         public OverlayAnimationV3ViewModel TimerCompletedAnimation;
-
-        public override bool IsTestable { get { return true; } }
 
         public OverlayPersistentTimerV3ViewModel()
             : base(OverlayItemV3Type.PersistentTimer)

@@ -23,8 +23,6 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string SingleWidgetURL { get { return this.Widget.SingleWidgetURL; } }
 
-        public bool IsTestable { get { return this.Widget.IsTestable; } }
-
         public bool IsResettable { get { return this.Widget.IsResettable; } }
 
         public bool IsEnabled
@@ -49,7 +47,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.Widget = widget;
         }
 
-        public async Task Reset() { await this.Widget.WidgetFullReset(); }
+        public async Task Reset() { await this.Widget.Reset(); }
     }
 
     public class OverlayWidgetsMainControlViewModel : WindowControlViewModelBase

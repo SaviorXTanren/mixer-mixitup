@@ -166,6 +166,11 @@ namespace MixItUp.WPF
 
             ActivationProtocolHandler.OnCommunityCommandActivation += ActivationProtocolHandler_OnCommunityCommandActivation;
             ActivationProtocolHandler.OnCommandFileActivation += ActivationProtocolHandler_OnCommandFileActivation;
+
+            if (SettingsV3Upgrader.OverlayV3UpgradeOccurred && ChannelSession.Settings.OverlayEndpointsV3.Count > 1)
+            {
+                await DialogHelper.ShowCustom(new OverlayEndpointsUpdateDialogControl());
+            }
         }
 
         private async Task StartShutdownProcess()
