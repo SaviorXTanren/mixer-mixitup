@@ -107,6 +107,116 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override bool IsTestable { get { return true; } }
 
+        public bool ChatMessages
+        {
+            get { return this.chatMessages; }
+            set
+            {
+                this.chatMessages = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool chatMessages;
+
+        public bool Follows
+        {
+            get { return this.follows; }
+            set
+            {
+                this.follows = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool follows;
+
+        public bool Raids
+        {
+            get { return this.raids; }
+            set
+            {
+                this.raids = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool raids;
+
+        public bool TwitchSubscriptions
+        {
+            get { return this.twitchSubscriptions; }
+            set
+            {
+                this.twitchSubscriptions = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool twitchSubscriptions;
+
+        public bool TwitchBits
+        {
+            get { return this.twitchBits; }
+            set
+            {
+                this.twitchBits = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool twitchBits;
+
+        public bool YouTubeMemberships
+        {
+            get { return this.youTubeMemberships; }
+            set
+            {
+                this.youTubeMemberships = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool youTubeMemberships;
+
+        public bool YouTubeSuperChats
+        {
+            get { return this.youTubeSuperChats; }
+            set
+            {
+                this.youTubeSuperChats = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool youTubeSuperChats;
+
+        public bool TrovoSubscriptions
+        {
+            get { return this.trovoSubscriptions; }
+            set
+            {
+                this.trovoSubscriptions = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool trovoSubscriptions;
+
+        public bool TrovoElixirSpells
+        {
+            get { return this.trovoElixirSpells; }
+            set
+            {
+                this.trovoElixirSpells = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool trovoElixirSpells;
+
+        public bool Donations
+        {
+            get { return this.donations; }
+            set
+            {
+                this.donations = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool donations;
+
         public ObservableCollection<OverlayCustomPropertyV3ViewModel> Properties { get; set; } = new ObservableCollection<OverlayCustomPropertyV3ViewModel>();
 
         public ICommand AddPropertyCommand { get; set; }
@@ -122,6 +232,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayCustomV3ViewModel(OverlayCustomV3Model item)
             : base(item)
         {
+            this.ChatMessages = item.ChatMessages;
+            this.Follows = item.Follows;
+            this.Raids = item.Raids;
+            this.TwitchSubscriptions = item.TwitchSubscriptions;
+            this.TwitchBits = item.TwitchBits;
+            this.YouTubeMemberships = item.YouTubeMemberships;
+            this.YouTubeSuperChats = item.YouTubeSuperChats;
+            this.TrovoSubscriptions = item.TrovoSubscriptions;
+            this.TrovoElixirSpells = item.TrovoElixirSpells;
+            this.Donations = item.Donations;
+
             foreach (var property in item.Properties)
             {
                 this.Properties.Add(new OverlayCustomPropertyV3ViewModel(this, property));
@@ -239,7 +360,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
                 else if (type == OverlayCustomV3TestTypeEnum.TrovoElixirSpell)
                 {
-                    custom.OnTrovoSpellCast(this, new TrovoChatSpellViewModel(ChannelSession.User, new ChatMessageModel() { content = "" })
+                    custom.OnTrovoSpell(this, new TrovoChatSpellViewModel(ChannelSession.User, new ChatMessageModel() { content = "" })
                     {
                         Contents = new TrovoChatSpellContentModel()
                         {
@@ -264,6 +385,16 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             OverlayCustomV3Model result = new OverlayCustomV3Model()
             {
+                ChatMessages = this.ChatMessages,
+                Follows = this.Follows,
+                Raids = this.Raids,
+                TwitchSubscriptions = this.TwitchSubscriptions,
+                TwitchBits = this.TwitchBits,
+                YouTubeMemberships = this.YouTubeMemberships,
+                YouTubeSuperChats = this.YouTubeSuperChats,
+                TrovoSubscriptions = this.TrovoSubscriptions,
+                TrovoElixirSpells = this.TrovoElixirSpells,
+                Donations = this.Donations,
             };
 
             foreach (var property in this.Properties)

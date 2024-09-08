@@ -266,7 +266,7 @@ namespace MixItUp.Base {
         ///    console.log(&quot;UserBanned&quot;);
         ///    console.log(data);
         ///    
-        ///    test.appendChild(document.createTextNode(&quot;UserBanned&quot;));
+        ///    addToDiv(&quot;UserBanned&quot;);
         ///}
         ///
         ///function UserTimeout(data)
@@ -274,7 +274,7 @@ namespace MixItUp.Base {
         ///    console.log(&quot;UserTimeout&quot;);
         ///    console.log(data);
         ///    
-        ///    test.appendChild(document.createTextNode(&quot;UserTimeout&quot;));
+        ///    addToDiv(&quot;UserTimeout&quot;);
         ///}
         ///
         ///function ChatMessageReceived(data)
@@ -282,7 +282,12 @@ namespace MixItUp.Base {
         ///    console.log(&quot;ChatMessageReceived&quot;);
         ///    console.log(data);
         ///    
-        ///    test.appendChild(document.crea [rest of string was truncated]&quot;;.
+        ///    addToDiv(&quot;ChatMessageReceived&quot;);
+        ///}
+        ///
+        ///function ChatMessageDeleted(data)
+        ///{
+        ///    console.log(&quot;Ch [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayCustomDefaultJavascript {
             get {

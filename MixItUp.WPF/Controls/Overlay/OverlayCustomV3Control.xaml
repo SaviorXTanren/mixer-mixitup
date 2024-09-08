@@ -3,12 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Commands"
-             xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -19,6 +16,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
@@ -64,7 +63,70 @@
             </ListBox>
         </Grid>
 
-        <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.Properties}">
+        <GroupBox Header="{x:Static resx:Resources.Events}" Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ChatMessages}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding ChatMessages}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Follows}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding Follows}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                <TextBlock Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Raids}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="2" Grid.Column="4" IsChecked="{Binding Raids}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                
+                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.TwitchSubscriptions}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding TwitchSubscriptions}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                <TextBlock Grid.Row="4" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.TwitchBits}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="4" Grid.Column="4" IsChecked="{Binding TwitchBits}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                
+                <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.YouTubeMemberships}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="6" Grid.Column="1" IsChecked="{Binding YouTubeMemberships}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                <TextBlock Grid.Row="6" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.YouTubeSuperChats}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="6" Grid.Column="4" IsChecked="{Binding YouTubeSuperChats}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                
+                <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.TrovoSubscriptions}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="8" Grid.Column="1" IsChecked="{Binding TrovoSubscriptions}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                <TextBlock Grid.Row="8" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.TrovoElixirSpells}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="8" Grid.Column="4" IsChecked="{Binding TrovoElixirSpells}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                
+                <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Donations}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <CheckBox Grid.Row="10" Grid.Column="1" IsChecked="{Binding Donations}" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="4" Header="{x:Static resx:Resources.Properties}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

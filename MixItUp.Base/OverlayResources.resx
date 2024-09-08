@@ -453,7 +453,7 @@ function UserBanned(data)
     console.log("UserBanned");
     console.log(data);
     
-    test.appendChild(document.createTextNode("UserBanned"));
+    addToDiv("UserBanned");
 }
 
 function UserTimeout(data)
@@ -461,7 +461,7 @@ function UserTimeout(data)
     console.log("UserTimeout");
     console.log(data);
     
-    test.appendChild(document.createTextNode("UserTimeout"));
+    addToDiv("UserTimeout");
 }
 
 function ChatMessageReceived(data)
@@ -469,7 +469,7 @@ function ChatMessageReceived(data)
     console.log("ChatMessageReceived");
     console.log(data);
     
-    test.appendChild(document.createTextNode("ChatMessageReceived"));
+    addToDiv("ChatMessageReceived");
 }
 
 function ChatMessageDeleted(data)
@@ -477,7 +477,7 @@ function ChatMessageDeleted(data)
     console.log("ChatMessageDeleted");
     console.log(data);
     
-    test.appendChild(document.createTextNode("ChatMessageDeleted"));
+    addToDiv("ChatMessageDeleted");
 }
 
 function ChatCleared(data)
@@ -485,7 +485,7 @@ function ChatCleared(data)
     console.log("ChatCleared");
     console.log(data);
     
-    test.appendChild(document.createTextNode("ChatCleared"));
+    addToDiv("ChatCleared");
 }
 
 function Follow(data)
@@ -493,7 +493,7 @@ function Follow(data)
     console.log("Follow");
     console.log(data);
     
-    test.appendChild(document.createTextNode("Follow"));
+    addToDiv("Follow");
 }
 
 function Raid(data)
@@ -501,7 +501,7 @@ function Raid(data)
     console.log("Raid");
     console.log(data);
     
-    test.appendChild(document.createTextNode("Raid"));
+    addToDiv("Raid");
 }
 
 function Subscription(data)
@@ -509,7 +509,7 @@ function Subscription(data)
     console.log("Subscription");
     console.log(data);
     
-    test.appendChild(document.createTextNode("Subscription"));
+    addToDiv("Subscription");
 }
 
 function SubscriptionGifted(data)
@@ -517,7 +517,7 @@ function SubscriptionGifted(data)
     console.log("SubscriptionGifted");
     console.log(data);
     
-    test.appendChild(document.createTextNode("SubscriptionGifted"));
+    addToDiv("SubscriptionGifted");
 }
 
 function Donation(data)
@@ -525,7 +525,7 @@ function Donation(data)
     console.log("Donation");
     console.log(data);
     
-    test.appendChild(document.createTextNode("Donation"));
+    addToDiv("Donation");
 }
 
 function TwitchBits(data)
@@ -533,7 +533,7 @@ function TwitchBits(data)
     console.log("TwitchBits");
     console.log(data);
     
-    test.appendChild(document.createTextNode("TwitchBits"));
+    addToDiv("TwitchBits");
 }
 
 function YouTubeSuperChat(data)
@@ -541,7 +541,7 @@ function YouTubeSuperChat(data)
     console.log("YouTubeSuperChat");
     console.log(data);
     
-    test.appendChild(document.createTextNode("YouTubeSuperChat"));
+    addToDiv("YouTubeSuperChat");
 }
 
 function TrovoElixirSpell(data)
@@ -549,7 +549,14 @@ function TrovoElixirSpell(data)
     console.log("TrovoElixirSpell");
     console.log(data);
     
-    test.appendChild(document.createTextNode("TrovoElixirSpell"));
+    addToDiv("TrovoElixirSpell");
+}
+
+function addToDiv(text)
+{
+    var div = document.createElement("div");
+    div.innerHTML = text;
+    test.appendChild(div);
 }</value>
   </data>
   <data name="OverlayDiscordReactiveVoiceDefaultCSS" xml:space="preserve">

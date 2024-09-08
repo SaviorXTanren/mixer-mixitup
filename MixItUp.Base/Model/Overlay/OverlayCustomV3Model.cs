@@ -11,13 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayCustomV3Model : OverlayVisualTextV3ModelBase
+    public class OverlayCustomV3Model : OverlayEventTrackingV3ModelBase
     {
         public static readonly string DefaultHTML = OverlayResources.OverlayCustomDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayCustomDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
@@ -28,51 +27,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayCustomV3Model() : base(OverlayItemV3Type.Custom) { }
 
-        public override async Task Initialize()
-        {
-            await base.Initialize();
-
-            this.RemoveEventHandlers();
-
-            ChatService.OnChatUserBanned += OnChatUserBanned;
-            ChatService.OnChatMessageReceived += OnChatMessageReceived;
-            ChatService.OnChatMessageDeleted += OnChatMessageDeleted;
-            ChatService.OnChatCleared += OnChatCleared;
-            EventService.OnFollowOccurred += OnFollow;
-            EventService.OnRaidOccurred += OnRaid;
-            EventService.OnSubscribeOccurred += OnSubscribe;
-            EventService.OnResubscribeOccurred += OnSubscribe;
-            EventService.OnSubscriptionGiftedOccurred += OnSubscribe;
-            EventService.OnMassSubscriptionsGiftedOccurred += OnMassSubscription;
-            EventService.OnDonationOccurred += OnDonation;
-            EventService.OnTwitchBitsCheeredOccurred += OnTwitchBits;
-            EventService.OnYouTubeSuperChatOccurred += OnYouTubeSuperChat;
-            EventService.OnTrovoSpellCastOccurred += OnTrovoSpellCast;
-        }
-
-        public override async Task Uninitialize()
-        {
-            await base.Uninitialize();
-
-            this.RemoveEventHandlers();
-        }
-
-        public override Dictionary<string, object> GetGenerationProperties()
-        {
-            Dictionary<string, object> properties = base.GetGenerationProperties();
-
-            return properties;
-        }
-
-        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
-        {
-            foreach (var property in this.Properties)
-            {
-                properties[property.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(property.Value, parameters);
-            }
-        }
-
-        public async void OnChatUserBanned(object sender, UserV2ViewModel user)
+        public override async void OnChatUserBanned(object sender, UserV2ViewModel user)
         {
             await this.CallFunction("UserBanned", new Dictionary<string, object>()
             {
@@ -80,7 +35,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnChatUserTimedOut(object sender, UserV2ViewModel user)
+        public override async void OnChatUserTimedOut(object sender, UserV2ViewModel user)
         {
             await this.CallFunction("UserTimeout", new Dictionary<string, object>()
             {
@@ -88,7 +43,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        public override async void OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
             await this.CallFunction("ChatMessageReceived", new Dictionary<string, object>()
             {
@@ -97,7 +52,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnChatMessageDeleted(object sender, string messageID)
+        public override async void OnChatMessageDeleted(object sender, string messageID)
         {
             await this.CallFunction("ChatMessageDeleted", new Dictionary<string, object>()
             {
@@ -105,12 +60,12 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnChatCleared(object sender, EventArgs e)
+        public override async void OnChatCleared(object sender, EventArgs e)
         {
             await this.CallFunction("ChatCleared", new Dictionary<string, object>());
         }
 
-        public async void OnFollow(object sender, UserV2ViewModel user)
+        public override async void OnFollow(object sender, UserV2ViewModel user)
         {
             await this.CallFunction("Follow", new Dictionary<string, object>()
             {
@@ -118,7 +73,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid)
+        public override async void OnRaid(object sender, Tuple<UserV2ViewModel, int> raid)
         {
             await this.CallFunction("Raid", new Dictionary<string, object>()
             {
@@ -127,7 +82,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnSubscribe(object sender, SubscriptionDetailsModel subscription)
+        public override async void OnSubscribe(object sender, SubscriptionDetailsModel subscription)
         {
             Dictionary<string, object> data = new Dictionary<string, object>()
             {
@@ -152,7 +107,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public async void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
+        public override async void OnMassSubscription(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
         {
             StreamingPlatformTypeEnum platform = subscriptions.First().Platform;
             UserV2ViewModel gifter = subscriptions.First().Gifter;
@@ -176,7 +131,7 @@ namespace MixItUp.Base.Model.Overlay
             await this.CallFunction("MassSubscriptionGifted", data);
         }
 
-        public async void OnDonation(object sender, UserDonationModel donation)
+        public override async void OnDonation(object sender, UserDonationModel donation)
         {
             await this.CallFunction("Donation", new Dictionary<string, object>()
             {
@@ -185,7 +140,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        public override async void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
         {
             await this.CallFunction("TwitchBits", new Dictionary<string, object>()
             {
@@ -195,7 +150,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat)
+        public override async void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat)
         {
             await this.CallFunction("YouTubeSuperChat", new Dictionary<string, object>()
             {
@@ -206,7 +161,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public async void OnTrovoSpellCast(object sender, TrovoChatSpellViewModel spell)
+        public override async void OnTrovoSpell(object sender, TrovoChatSpellViewModel spell)
         {
             if (spell.IsElixir)
             {
@@ -221,22 +176,19 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void RemoveEventHandlers()
+        public override Dictionary<string, object> GetGenerationProperties()
         {
-            ChatService.OnChatUserBanned -= OnChatUserBanned;
-            ChatService.OnChatMessageReceived -= OnChatMessageReceived;
-            ChatService.OnChatMessageDeleted -= OnChatMessageDeleted;
-            ChatService.OnChatCleared -= OnChatCleared;
-            EventService.OnFollowOccurred -= OnFollow;
-            EventService.OnRaidOccurred -= OnRaid;
-            EventService.OnSubscribeOccurred -= OnSubscribe;
-            EventService.OnResubscribeOccurred -= OnSubscribe;
-            EventService.OnSubscriptionGiftedOccurred -= OnSubscribe;
-            EventService.OnMassSubscriptionsGiftedOccurred -= OnMassSubscription;
-            EventService.OnDonationOccurred -= OnDonation;
-            EventService.OnTwitchBitsCheeredOccurred -= OnTwitchBits;
-            EventService.OnYouTubeSuperChatOccurred -= OnYouTubeSuperChat;
-            EventService.OnTrovoSpellCastOccurred -= OnTrovoSpellCast;
+            Dictionary<string, object> properties = base.GetGenerationProperties();
+
+            return properties;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
+        {
+            foreach (var property in this.Properties)
+            {
+                properties[property.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(property.Value, parameters);
+            }
         }
     }
 }
