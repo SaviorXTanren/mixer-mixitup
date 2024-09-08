@@ -143,7 +143,7 @@ namespace MixItUp.Base.Model.Overlay
                 else if (messagePart is ChatEmoteViewModelBase)
                 {
                     part[MessagePartTypeProperty] = MessagePartTypeEmoteValue;
-                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).ImageURL;
+                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).AnimatedOrStaticImageURL;
                 }
                 messageParts.Add(part);
             }
