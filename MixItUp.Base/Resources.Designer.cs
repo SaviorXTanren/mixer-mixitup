@@ -26686,6 +26686,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Watching Now.
+        /// </summary>
+        public static string WatchingNow {
+            get {
+                return ResourceManager.GetString("WatchingNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Watch Time.
         /// </summary>
         public static string WatchTime {
