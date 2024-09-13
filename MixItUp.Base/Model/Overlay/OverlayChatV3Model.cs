@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -174,7 +175,7 @@ namespace MixItUp.Base.Model.Overlay
                 return;
             }
 
-            if (this.UsernamesToIgnore.Contains(message.User.Username.ToLower()))
+            if (this.UsernamesToIgnore.Any(u => string.Equals(u, message.User.Username, StringComparison.OrdinalIgnoreCase)))
             {
                 return;
             }
