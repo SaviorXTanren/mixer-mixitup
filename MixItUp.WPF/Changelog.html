@@ -7,6 +7,20 @@
 
         <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
 
+        <h2 style="color: #2e6c80;">v1.1.0.1722:</h2>
+        <ul>
+            <li>Adding support for adding dynamic animations to Overlay Action visuals <b>(REQUIRES RE-CREATING OVERLAY ACTION)</b></li>
+            <li>Adding support for reference local files within an Overlay Action or Widget's code:</li>
+            <ul>
+                <li>By putting  {LocalFile:\\FILE_PATH}  in your HTML, CSS, or Javascript, the Overlay service will handle automatically translating this to a local URL reference</li>
+                <li>EX:  {LocalFile:\\C:\Foo\Bar.png}</li>
+                <li>EX:  &lt;img src="{LocalFile:\\C:\Foo\Bar.png}" /&gt;</li>
+            </ul>
+            <li>Fixing bug with Overlay Widgets not properly initializing on application launch</li>
+            <li>Adding $timersecondsadded Special Identifier to Time Adjusted sub-command for Persistent Timer Overlay Widget</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.1.0.1721:</h2>
         <ul>
             <li>Adding new Custom Overlay Widget type:</li>
