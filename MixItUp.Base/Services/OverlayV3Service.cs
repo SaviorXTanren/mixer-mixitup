@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -112,6 +113,9 @@ namespace MixItUp.Base.Services
 
         public const string AdministratorOverlayHttpListenerServerAddressFormat = "http://*:{0}/";
         public const string AdministratorOverlayWebSocketServerAddressFormat = "http://*:{0}/ws/";
+
+        public const string LocalFilePropertyName = "LocalFile:\\\\";
+        public const string LocalFilePropertyRegexPattern = "{LocalFile:\\\\[^}]*}";
 
         public event EventHandler<OverlayV3Packet> OnPacketReceived = delegate { };
 
@@ -385,6 +389,8 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
+                    html = this.LocalFilePropertyReplacement(html);
+
                     Logger.Log(LogLevel.Debug, $"Overlay - Setting HTML - {id} - {html}");
                     this.httpListenerServer.SetHTMLData(id, html);
                 }
@@ -395,9 +401,20 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public string GetURLForFile(string filePath, string fileType) { return this.httpListenerServer.GetURLForFile(filePath, fileType); }
+        public string LocalFilePropertyReplacement(string text)
+        {
+            string result = text;
+            foreach (Match match in Regex.Matches(text, LocalFilePropertyRegexPattern))
+            {
+                string m = match.Value;
+                string filePath = match.Value.Substring(1, m.Length - 2).Replace(LocalFilePropertyName, string.Empty);
+                string url = this.GetURLForFile(filePath, "local");
+                result = result.Replace(match.Value, url);
+            }
+            return result;
+        }
 
-        public void SetLocalFile(string id, string filePath) { this.httpListenerServer.SetLocalFile(id, filePath); }
+        public string GetURLForFile(string filePath, string fileType) { return this.httpListenerServer.GetURLForFile(filePath, fileType); }
 
         private void WebSocketListenerServer_OnConnectedOccurred(object sender, WebSocketServerBase webSocketServer)
         {
@@ -491,7 +508,6 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
-                    Logger.Log(LogLevel.Debug, $"Overlay - Adding HTML - {id} - {html}");
                     ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
                     await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)
                     {
@@ -601,8 +617,6 @@ namespace MixItUp.Base.Services
         }
 
         public string GetURLForFile(string filePath, string fileType) { return ServiceManager.Get<OverlayV3Service>().GetURLForFile(filePath, fileType); }
-
-        public void SetLocalFile(string id, string filePath) { ServiceManager.Get<OverlayV3Service>().SetLocalFile(id, filePath); }
 
         public void RefreshItemIFrameHTMLCache()
         {
@@ -768,14 +782,6 @@ namespace MixItUp.Base.Services
             }
 
             return $"/{OverlayFilesPrefix}/{fileType}/{id}?nonce={Guid.NewGuid()}";
-        }
-
-        public void SetLocalFile(string id, string filePath)
-        {
-            if (!ServiceManager.Get<IFileService>().IsURLPath(filePath))
-            {
-                this.localFiles[id] = filePath;
-            }
         }
 
         public void SetHTMLData(string id, string data)
