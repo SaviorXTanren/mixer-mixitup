@@ -203,7 +203,9 @@ namespace MixItUp.Base.Services
                     {
                         if (widget.IsEnabled)
                         {
-                            await widget.Enable();
+#pragma warning disable CS0612 // Type or member is obsolete
+                            await widget.Initialize();
+#pragma warning restore CS0612 // Type or member is obsolete
                         }
 
                         if (widget.Item.DisplayOption == OverlayItemV3DisplayOptionsType.SingleWidgetURL)
@@ -230,6 +232,16 @@ namespace MixItUp.Base.Services
             foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
             {
                 await this.DisconnectOverlayEndpointService(overlayEndpoint.ID);
+            }
+
+            foreach (OverlayWidgetV3Model widget in this.GetWidgets())
+            {
+                if (widget.IsEnabled)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    await widget.Uninitialize();
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
             }
 
             if (this.webSocketListenerServer != null)
