@@ -120,8 +120,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.BackgroundColor)] = this.BackgroundColor;
             properties[nameof(this.BorderColor)] = this.BorderColor;
 
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation), this.ItemAddedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ItemRemovedAnimation), this.ItemRemovedAnimation);
+            this.ItemAddedAnimation.AddAnimationProperties(properties, nameof(this.ItemAddedAnimation));
+            this.ItemRemovedAnimation.AddAnimationProperties(properties, nameof(this.ItemRemovedAnimation));
 
             return properties;
         }

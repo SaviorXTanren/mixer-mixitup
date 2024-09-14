@@ -161,6 +161,8 @@ function removeSelf()
 
 performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main).then((result) =&gt;
 {
+    {CustomAnimations}
+
     if (duration &gt; 0.0)
     {
         setTimeout(() =&gt;
@@ -430,6 +432,14 @@ function removeInternal(message)
         list.removeChild(message);
     });
 }</value>
+  </data>
+  <data name="OverlayCustomAnimationDefaultJavascript" xml:space="preserve">
+    <value>        setTimeout(() =&gt;
+        {
+            performAnimation("{AnimationFramework}", "{AnimationName}", main).then((result) =&gt;
+            {
+            });
+        }, {AnimationStartTime} * 1000);</value>
   </data>
   <data name="OverlayCustomDefaultCSS" xml:space="preserve">
     <value />

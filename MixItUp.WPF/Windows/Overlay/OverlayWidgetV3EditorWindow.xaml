@@ -90,20 +90,35 @@
                         </TabItem>
 
                         <TabItem Header="{x:Static resx:Resources.Animation}">
-                            <ItemsControl Margin="10" ItemsSource="{Binding Animations}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <GroupBox Margin="10" Header="{Binding Name}">
-                                            <OverlayControls:OverlayAnimationV3Control Margin="10" />
-                                        </GroupBox>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <StackPanel x:Name="AnimationsMayNotWork" Grid.Row="0" Orientation="Vertical">
+                                    <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning1}"/>
+                                    <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning2}"/>
+                                    <TextBlock HorizontalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/overlay#windows-settings-overlay-animation-issue" RequestNavigate="Hyperlink_RequestNavigate">
+                                        <TextBlock Text="{x:Static resx:Resources.OverlayWarning3}"/>
+                                    </Hyperlink>
+                                </TextBlock>
+                                </StackPanel>
+
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Animations}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <OverlayControls:OverlayAnimationV3Control />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
                         </TabItem>
 
                         <TabItem Header="{Binding HTMLHeader}">

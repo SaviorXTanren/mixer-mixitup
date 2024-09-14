@@ -1,11 +1,14 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Overlay;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Windows.Overlay
 {
@@ -39,6 +42,8 @@ namespace MixItUp.WPF.Windows.Overlay
             this.DataContext = this.viewModel;
 
             this.AssignOverlayTypeControl(this.viewModel.Item.Type);
+
+            this.AnimationsMayNotWork.Visibility = SystemParameters.ClientAreaAnimation ? Visibility.Collapsed : Visibility.Visible;
 
             await this.viewModel.OnOpen();
             await base.OnLoaded();
@@ -104,6 +109,12 @@ namespace MixItUp.WPF.Windows.Overlay
         {
             await UIHelpers.CopyToClipboard(this.viewModel.OldCustomHTML);
             await DialogHelper.ShowMessage(MixItUp.Base.Resources.OldHTMLCopiedToClipboard);
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            ServiceManager.Get<IProcessService>().LaunchLink(e.Uri.AbsoluteUri);
+            e.Handled = true;
         }
     }
 }

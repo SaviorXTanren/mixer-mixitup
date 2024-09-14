@@ -67,34 +67,33 @@
                     </TabItem>
 
                     <TabItem Header="{x:Static resx:Resources.Animation}" IsEnabled="{Binding SupportsStandardActionAnimations}">
-                        <Grid HorizontalAlignment="Center" Margin="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="40" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <Grid Grid.Column="0" DataContext="{Binding EntranceAnimation}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                            <StackPanel x:Name="AnimationsMayNotWork" Grid.Row="0" Orientation="Vertical">
+                                <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning1}"/>
+                                <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning2}"/>
+                                <TextBlock HorizontalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/overlay#windows-settings-overlay-animation-issue" RequestNavigate="Hyperlink_RequestNavigate">
+                                        <TextBlock Text="{x:Static resx:Resources.OverlayWarning3}"/>
+                                    </Hyperlink>
+                                </TextBlock>
+                            </StackPanel>
 
-                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EntranceAnimation}" TextDecorations="Underline" />
-                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
-                            </Grid>
+                            <Button Grid.Row="1" Content="{x:Static resx:Resources.AddAnimation}" Command="{Binding AddCustomAnimationCommand}" HorizontalAlignment="Center" />
 
-                            <Grid Grid.Column="2" DataContext="{Binding ExitAnimation}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.ExitAnimation}" TextDecorations="Underline" />
-                                <OverlayControls:OverlayAnimationV3Control Grid.Row="2" />
-                            </Grid>
+                            <ItemsControl Grid.Row="3" ItemsSource="{Binding Animations}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <OverlayControls:OverlayAnimationV3Control />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </Grid>
                     </TabItem>
 

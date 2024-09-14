@@ -147,8 +147,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.ShowSubscriberBadge)] = this.ShowSubscriberBadge.ToString().ToLower();
             properties[nameof(this.ShowSpecialtyBadge)] = this.ShowSpecialtyBadge.ToString().ToLower();
 
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MessageAddedAnimation), this.MessageAddedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MessageRemovedAnimation), this.MessageRemovedAnimation);
+            this.MessageAddedAnimation.AddAnimationProperties(properties, nameof(this.MessageAddedAnimation));
+            this.MessageAddedAnimation.AddAnimationProperties(properties, nameof(this.MessageRemovedAnimation));
 
             return properties;
         }

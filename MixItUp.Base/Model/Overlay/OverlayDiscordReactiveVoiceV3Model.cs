@@ -163,14 +163,14 @@ namespace MixItUp.Base.Model.Overlay
 
             properties[nameof(this.Users)] = JSONSerializerHelper.SerializeToString(this.Users);
 
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ActiveAnimation), this.ActiveAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.InactiveAnimation), this.InactiveAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MutedAnimation), this.MutedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.UnmutedAnimation), this.UnmutedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.DeafenAnimation), this.DeafenAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.UndeafenAnimation), this.UndeafenAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.JoinedAnimation), this.JoinedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.LeftAnimation), this.LeftAnimation);
+            this.ActiveAnimation.AddAnimationProperties(properties, nameof(this.ActiveAnimation));
+            this.InactiveAnimation.AddAnimationProperties(properties, nameof(this.InactiveAnimation));
+            this.MutedAnimation.AddAnimationProperties(properties, nameof(this.MutedAnimation));
+            this.UnmutedAnimation.AddAnimationProperties(properties, nameof(this.UnmutedAnimation));
+            this.DeafenAnimation.AddAnimationProperties(properties, nameof(this.DeafenAnimation));
+            this.UndeafenAnimation.AddAnimationProperties(properties, nameof(this.UndeafenAnimation));
+            this.JoinedAnimation.AddAnimationProperties(properties, nameof(this.JoinedAnimation));
+            this.LeftAnimation.AddAnimationProperties(properties, nameof(this.LeftAnimation));
 
             return properties;
         }

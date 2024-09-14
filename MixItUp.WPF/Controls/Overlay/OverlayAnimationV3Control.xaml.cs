@@ -1,8 +1,4 @@
-﻿using MixItUp.Base.Services;
-using System.Windows;
-using System.Windows.Navigation;
-
-namespace MixItUp.WPF.Controls.Overlay
+﻿namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
     /// Interaction logic for OverlayAnimationV3Control.xaml
@@ -12,19 +8,6 @@ namespace MixItUp.WPF.Controls.Overlay
         public OverlayAnimationV3Control()
         {
             InitializeComponent();
-
-            this.Loaded += OverlayItemAnimationV3Control_Loaded;
-        }
-
-        private void OverlayItemAnimationV3Control_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.AnimationsMayNotWork.Visibility = SystemParameters.ClientAreaAnimation ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        protected void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            ServiceManager.Get<IProcessService>().LaunchLink(e.Uri.AbsoluteUri);
-            e.Handled = true;
         }
     }
 }

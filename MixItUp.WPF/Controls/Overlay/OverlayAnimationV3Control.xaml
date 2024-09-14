@@ -14,38 +14,39 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Controls:LoadingControlBase.Resources>
 
-    <Grid VerticalAlignment="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="15" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <Border Style="{StaticResource DefaultBorder}">
+        <Grid Margin="10" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="45" />
+            </Grid.ColumnDefinitions>
 
-        <StackPanel x:Name="AnimationsMayNotWork" Grid.Row="0" Orientation="Vertical">
-            <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning1}"/>
-            <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning2}"/>
-            <TextBlock HorizontalAlignment="Center">
-                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/overlay#windows-settings-overlay-animation-issue" RequestNavigate="Hyperlink_RequestNavigate">
-                    <TextBlock Text="{x:Static resx:Resources.OverlayWarning3}"/>
-                </Hyperlink>
-            </TextBlock>
-        </StackPanel>
+            <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" Margin="0,5,0,0" Visibility="{Binding IsNotCustomizable, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-        <ComboBox Grid.Row="1" ItemsSource="{Binding AnimationLibraries}" SelectedItem="{Binding SelectedAnimationLibrary}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AnimationLibrary}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+            <TextBox Grid.Column="0" Text="{Binding StartTime}" Visibility="{Binding IsCustomizable, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartTime}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <ComboBox Grid.Row="3" ItemsSource="{Binding AnimateCSSAnimations}" SelectedItem="{Binding SelectedAnimatedCSSAnimation}" Visibility="{Binding IsAnimateCSSVisible, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Animation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-    </Grid>
+            <ComboBox Grid.Column="2" ItemsSource="{Binding AnimationLibraries}" SelectedItem="{Binding SelectedAnimationLibrary}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AnimationLibrary}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox Grid.Column="4" ItemsSource="{Binding AnimateCSSAnimations}" SelectedItem="{Binding SelectedAnimatedCSSAnimation}" Visibility="{Binding IsAnimateCSSVisible, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Animation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Controls:IconButton Grid.Column="6" Icon="Delete" Visibility="{Binding IsCustomizable, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding DeleteCommand}" />
+        </Grid>
+    </Border>
 </Controls:LoadingControlBase>

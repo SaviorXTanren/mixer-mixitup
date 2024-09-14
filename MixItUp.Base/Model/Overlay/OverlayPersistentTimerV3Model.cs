@@ -98,8 +98,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.CurrentAmount)] = this.CurrentAmount;
             properties[nameof(this.DisplayFormat)] = this.DisplayFormat;
 
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.TimerAdjustedAnimation), this.TimerAdjustedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.TimerCompletedAnimation), this.TimerCompletedAnimation);
+            this.TimerAdjustedAnimation.AddAnimationProperties(properties, nameof(this.TimerAdjustedAnimation));
+            this.TimerCompletedAnimation.AddAnimationProperties(properties, nameof(this.TimerCompletedAnimation));
 
             return properties;
         }

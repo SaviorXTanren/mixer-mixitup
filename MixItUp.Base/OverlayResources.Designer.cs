@@ -126,13 +126,13 @@ namespace MixItUp.Base {
         ///
         ///performAnimation(&quot;{EntranceAnimationFramework}&quot;, &quot;{EntranceAnimationName}&quot;, main).then((result) =&gt;
         ///{
+        ///    {CustomAnimations}
+        ///
         ///    if (duration &gt; 0.0)
         ///    {
         ///        setTimeout(() =&gt;
         ///        {
-        ///            performAnimation(&quot;{ExitAnimationFramework}&quot;, &quot;{ExitAnimationName}&quot;, main).then((result) =&gt;
-        ///            {
-        ///       [rest of string was truncated]&quot;;.
+        ///            performAnimation(&quot;{ExitAnimationFramework}&quot;, &quot;{ExitAnimationName}&quot;, main).then((result) [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayActionDefaultJavascript {
             get {
@@ -229,6 +229,20 @@ namespace MixItUp.Base {
         public static string OverlayChatDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayChatDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to         setTimeout(() =&gt;
+        ///        {
+        ///            performAnimation(&quot;{AnimationFramework}&quot;, &quot;{AnimationName}&quot;, main).then((result) =&gt;
+        ///            {
+        ///            });
+        ///        }, {AnimationStartTime} * 1000);.
+        /// </summary>
+        public static string OverlayCustomAnimationDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayCustomAnimationDefaultJavascript", resourceCulture);
             }
         }
         

@@ -30,6 +30,8 @@ namespace MixItUp.Base.Model.Actions
         public OverlayAnimationV3Model EntranceAnimation { get; set; }
         [DataMember]
         public OverlayAnimationV3Model ExitAnimation { get; set; }
+        [DataMember]
+        public List<OverlayAnimationV3Model> CustomAnimations { get; set; } = new List<OverlayAnimationV3Model>();
 
         [DataMember]
         public Guid WidgetID { get; set; }
@@ -77,13 +79,14 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public Dictionary<string, object> RunWidgetFunctionParameters { get; set; } = new Dictionary<string, object>();
 
-        public OverlayActionModel(OverlayItemV3ModelBase overlayItem, string duration, OverlayAnimationV3Model entranceAnimation, OverlayAnimationV3Model exitAnimation)
+        public OverlayActionModel(OverlayItemV3ModelBase overlayItem, string duration, OverlayAnimationV3Model entranceAnimation, OverlayAnimationV3Model exitAnimation, IEnumerable<OverlayAnimationV3Model> customAnimations)
             : base(ActionTypeEnum.Overlay)
         {
             this.OverlayItemV3 = overlayItem;
             this.Duration = duration;
             this.EntranceAnimation = entranceAnimation;
             this.ExitAnimation = exitAnimation;
+            this.CustomAnimations = new List<OverlayAnimationV3Model>(customAnimations);
         }
 
         public OverlayActionModel(OverlayWidgetV3Model widget, bool showWidget)
@@ -307,13 +310,29 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     Dictionary<string, object> animationProperties = new Dictionary<string, object>();
-                    OverlayItemV3ModelBase.AddAnimationProperties(animationProperties, nameof(this.EntranceAnimation), this.EntranceAnimation);
-                    OverlayItemV3ModelBase.AddAnimationProperties(animationProperties, nameof(this.ExitAnimation), this.ExitAnimation);
+                    this.EntranceAnimation.AddAnimationProperties(animationProperties, nameof(this.EntranceAnimation));
+                    this.ExitAnimation.AddAnimationProperties(animationProperties, nameof(this.ExitAnimation));
 
                     foreach (var kvp in animationProperties)
                     {
                         iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, kvp.Key, kvp.Value);
                     }
+
+                    List<string> customAnimations = new List<string>();
+                    foreach (OverlayAnimationV3Model animation in this.CustomAnimations)
+                    {
+                        animationProperties = new Dictionary<string, object>();
+                        animation.AddAnimationProperties(animationProperties, "Animation");
+
+                        string animationJavascript = OverlayResources.OverlayCustomAnimationDefaultJavascript;
+                        foreach (var kvp in animationProperties)
+                        {
+                            animationJavascript = OverlayV3Service.ReplaceProperty(animationJavascript, kvp.Key, kvp.Value);
+                        }
+
+                        customAnimations.Add(animationJavascript);
+                    }
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.CustomAnimations), string.Join(Environment.NewLine + Environment.NewLine, customAnimations));
 
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration);
 

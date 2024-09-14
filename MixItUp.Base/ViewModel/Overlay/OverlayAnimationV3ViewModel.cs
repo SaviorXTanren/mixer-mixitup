@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -12,6 +14,19 @@ namespace MixItUp.Base.ViewModel.Overlay
 
     public class OverlayAnimationV3ViewModel : UIViewModelBase
     {
+        public bool IsCustomizable
+        {
+            get { return this.isCustomizable; }
+            set
+            {
+                this.isCustomizable = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool isCustomizable;
+
+        public bool IsNotCustomizable { get { return !this.IsCustomizable; } }
+
         public string Name
         {
             get { return this.name; }
@@ -22,6 +37,17 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private string name;
+
+        public double StartTime
+        {
+            get { return this.startTime; }
+            set
+            {
+                this.startTime = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double startTime;
 
         public string DisplayName { get { return Resources.ResourceManager.GetString(this.Name, Resources.Culture); } }
 
@@ -71,13 +97,24 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayAnimateCSSAnimationType selectedAnimatedCSSAnimation;
 
+        public ICommand DeleteCommand { get; set; }
+        public event EventHandler OnDeleteRequested = delegate { };
+
         public OverlayAnimationV3ViewModel(string name) : this(name, new OverlayAnimationV3Model()) { }
+
+        public OverlayAnimationV3ViewModel(OverlayAnimationV3Model animation)
+            : this(null, animation)
+        {
+            this.IsCustomizable = true;
+        }
 
         public OverlayAnimationV3ViewModel(string name, OverlayAnimationV3Model animation)
         {
             this.Name = name;
             if (animation != null)
             {
+                this.StartTime = animation.StartTime;
+
                 if (animation.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
                 {
                     this.SelectedAnimationLibrary = OverlayItemAnimationLibraryType.AnimateCSS;
@@ -89,15 +126,21 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.SelectedAnimationLibrary = OverlayItemAnimationLibraryType.AnimateCSS;
                 this.SelectedAnimatedCSSAnimation = OverlayAnimateCSSAnimationType.None;
             }
+
+            this.DeleteCommand = this.CreateCommand(() => this.OnDeleteRequested(this, new EventArgs()));
         }
 
         public OverlayAnimationV3Model GetAnimation()
         {
             OverlayAnimationV3Model animation = new OverlayAnimationV3Model();
+
+            animation.StartTime = this.StartTime;
+
             if (this.IsAnimateCSSVisible && this.SelectedAnimatedCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
                 animation.AnimateCSSAnimation = this.SelectedAnimatedCSSAnimation;
             }
+
             return animation;
         }
     }
