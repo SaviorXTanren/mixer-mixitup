@@ -132,12 +132,6 @@ namespace MixItUp.Base.Model.Overlay
             return ColorSchemes.HTMLColors.ElementAt(index);
         }
 
-        public static void AddAnimationProperties(Dictionary<string, object> properties, string name, OverlayAnimationV3Model animation)
-        {
-            properties[$"{name}Framework"] = animation.AnimationFramework;
-            properties[$"{name}Name"] = animation.AnimationName;
-        }
-
         [DataMember]
         public int Version { get; set; }
 

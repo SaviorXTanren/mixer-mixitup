@@ -132,7 +132,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayAnimationV3Model
     {
         [DataMember]
-        public string CustomName { get; set; }
+        public double StartTime { get; set; }
 
         [DataMember]
         public OverlayAnimateCSSAnimationType AnimateCSSAnimation { get; set; }
@@ -184,6 +184,13 @@ namespace MixItUp.Base.Model.Overlay
                 }
                 return null;
             }
+        }
+
+        public void AddAnimationProperties(Dictionary<string, object> properties, string name)
+        {
+            properties[$"{name}Framework"] = this.AnimationFramework;
+            properties[$"{name}Name"] = this.AnimationName;
+            properties[$"{name}StartTime"] = this.StartTime;
         }
     }
 }

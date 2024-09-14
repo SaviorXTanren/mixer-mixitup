@@ -161,6 +161,8 @@ function removeSelf()
 
 performAnimation("{EntranceAnimationFramework}", "{EntranceAnimationName}", main).then((result) =&gt;
 {
+    {CustomAnimations}
+
     if (duration &gt; 0.0)
     {
         setTimeout(() =&gt;
@@ -430,6 +432,14 @@ function removeInternal(message)
         list.removeChild(message);
     });
 }</value>
+  </data>
+  <data name="OverlayCustomAnimationDefaultJavascript" xml:space="preserve">
+    <value>        setTimeout(() =&gt;
+        {
+            performAnimation("{AnimationFramework}", "{AnimationName}", main).then((result) =&gt;
+            {
+            });
+        }, {AnimationStartTime} * 1000);</value>
   </data>
   <data name="OverlayCustomDefaultCSS" xml:space="preserve">
     <value />
@@ -1858,8 +1868,6 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
                 //        sessionStorage.logs = "";
                 //    }
                 //    sessionStorage.logs += "\n\n" + log.toString();
-
-                //    console.log(log.toString());
                 //}
             }
             catch (err) { }
@@ -2015,17 +2023,20 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 
         window.onmessage = function (message) {
             if (message != null &amp;&amp; message.data != null &amp;&amp; message.data.length &gt; 0) {
-                var obj = JSON.parse(message.data);
-                if (typeof obj.Type !== 'undefined' &amp;&amp; typeof obj.ID !== 'undefined') {
-                    if (obj.Type == 'Remove') {
-                        if (iframes.has(obj.ID)) {
-                            mainOverlayDiv.removeChild(iframes.get(obj.ID));
+                try {
+                    var obj = JSON.parse(message.data);
+                    if (typeof obj.Type !== 'undefined' &amp;&amp; typeof obj.ID !== 'undefined') {
+                        if (obj.Type == 'Remove') {
+                            if (iframes.has(obj.ID)) {
+                                mainOverlayDiv.removeChild(iframes.get(obj.ID));
+                            }
+                        }
+                        else {
+                            sendPacket(obj.Type, obj);
                         }
                     }
-                    else {
-                        sendPacket(obj.Type, obj);
-                    }
                 }
+                catch (err) { logException(err); }
             }
         };
     &lt;/script&gt;

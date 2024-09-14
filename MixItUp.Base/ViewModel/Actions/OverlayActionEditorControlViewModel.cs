@@ -243,6 +243,8 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool SupportsStandardActionAnimations { get { return this.Item != null && this.Item.SupportsStandardActionAnimations; } }
 
+        public ObservableCollection<OverlayAnimationV3ViewModel> Animations { get; set; } = new ObservableCollection<OverlayAnimationV3ViewModel>();
+
         public OverlayAnimationV3ViewModel EntranceAnimation
         {
             get { return this.entranceAnimation; }
@@ -264,6 +266,10 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private OverlayAnimationV3ViewModel exitAnimation;
+
+        public ObservableCollection<OverlayAnimationV3ViewModel> CustomAnimations { get; set; } = new ObservableCollection<OverlayAnimationV3ViewModel>();
+
+        public ICommand AddCustomAnimationCommand { get; set; }
 
         public string HTML
         {
@@ -635,8 +641,22 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 this.Position = new OverlayPositionV3ViewModel(action.OverlayItemV3);
                 this.Duration = action.Duration;
+
                 this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, action.EntranceAnimation);
+                this.Animations.Add(this.EntranceAnimation);
                 this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, action.ExitAnimation);
+                this.Animations.Add(this.ExitAnimation);
+
+                foreach (OverlayAnimationV3Model animation in action.CustomAnimations)
+                {
+                    this.CustomAnimations.Add(new OverlayAnimationV3ViewModel(animation));
+                }
+
+                foreach (OverlayAnimationV3ViewModel animation in this.CustomAnimations)
+                {
+                    this.Animations.Add(animation);
+                    animation.OnDeleteRequested += Animation_OnDeleteRequested;
+                }
 
                 this.HTML = action.OverlayItemV3.HTML;
                 this.CSS = action.OverlayItemV3.CSS;
@@ -728,7 +748,9 @@ namespace MixItUp.Base.ViewModel.Actions
             this.Javascript = this.GetDefaultJavascript(this.Item);
 
             this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance);
+            this.Animations.Add(this.EntranceAnimation);
             this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit);
+            this.Animations.Add(this.ExitAnimation);
 
             this.defaultHTML = this.GetDefaultHTML(this.Item);
             this.defaultCSS = this.GetDefaultCSS(this.Item);
@@ -958,6 +980,14 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.SelectedWidget = this.Widgets.FirstOrDefault(w => w.ID.Equals(this.widgetID));
             }
 
+            this.AddCustomAnimationCommand = this.CreateCommand(() =>
+            {
+                OverlayAnimationV3ViewModel animation = new OverlayAnimationV3ViewModel(new OverlayAnimationV3Model());
+                this.CustomAnimations.Add(animation);
+                this.Animations.Add(animation);
+                animation.OnDeleteRequested += Animation_OnDeleteRequested;
+            });
+
             this.AddRunWidgetFunctionParameterCommand = this.CreateCommand(() =>
             {
                 this.RunWidgetFunctionParameters.Add(new OverlayActionRunWidgetFunctionParameterViewModel(this));
@@ -976,7 +1006,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     item.CSS = this.CSS;
                     item.Javascript = this.Javascript;
                     this.Position.SetPosition(item);
-                    return Task.FromResult<ActionModelBase>(new OverlayActionModel(item, this.Duration, this.EntranceAnimation.GetAnimation(), this.ExitAnimation.GetAnimation()));
+                    return Task.FromResult<ActionModelBase>(new OverlayActionModel(item, this.Duration, this.EntranceAnimation.GetAnimation(), this.ExitAnimation.GetAnimation(), this.CustomAnimations.Select(a => a.GetAnimation())));
                 }
             }
             else if (this.ShowWidget)
@@ -1032,5 +1062,11 @@ namespace MixItUp.Base.ViewModel.Actions
         private string GetDefaultCSS(OverlayItemV3ViewModelBase item) { return item.AddPositionedWrappedHTMLCSS ? OverlayItemV3ModelBase.GetPositionWrappedCSS(item.DefaultCSS) : item.DefaultCSS; }
 
         private string GetDefaultJavascript(OverlayItemV3ViewModelBase item) { return item.DefaultJavascript; }
+
+        private void Animation_OnDeleteRequested(object sender, EventArgs e)
+        {
+            this.Animations.Remove((OverlayAnimationV3ViewModel)sender);
+            this.CustomAnimations.Remove((OverlayAnimationV3ViewModel)sender);
+        }
     }
 }

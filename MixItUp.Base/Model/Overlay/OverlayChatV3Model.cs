@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -30,6 +31,34 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultHTML = OverlayResources.OverlayChatDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayChatDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayChatDefaultJavascript;
+
+        public static Dictionary<string, object> GetMessageProperties(ChatMessageViewModel message)
+        {
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+
+            properties[MessageIDProperty] = message.ID.ToString();
+            properties[UserProperty] = JObject.FromObject(message.User);
+
+            List<JObject> messageParts = new List<JObject>();
+            foreach (var messagePart in message.MessageParts)
+            {
+                JObject part = new JObject();
+                if (messagePart is string)
+                {
+                    part[MessagePartTypeProperty] = MessagePartTypeTextValue;
+                    part[MessagePartContentProperty] = (string)messagePart;
+                }
+                else if (messagePart is ChatEmoteViewModelBase)
+                {
+                    part[MessagePartTypeProperty] = MessagePartTypeEmoteValue;
+                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).AnimatedOrStaticImageURL;
+                }
+                messageParts.Add(part);
+            }
+            properties[MessageProperty] = messageParts;
+
+            return properties;
+        }
 
         [DataMember]
         public string BackgroundColor { get; set; }
@@ -118,38 +147,15 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.ShowSubscriberBadge)] = this.ShowSubscriberBadge.ToString().ToLower();
             properties[nameof(this.ShowSpecialtyBadge)] = this.ShowSpecialtyBadge.ToString().ToLower();
 
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MessageAddedAnimation), this.MessageAddedAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.MessageRemovedAnimation), this.MessageRemovedAnimation);
+            this.MessageAddedAnimation.AddAnimationProperties(properties, nameof(this.MessageAddedAnimation));
+            this.MessageAddedAnimation.AddAnimationProperties(properties, nameof(this.MessageRemovedAnimation));
 
             return properties;
         }
 
         public async Task AddMessage(ChatMessageViewModel message)
         {
-            Dictionary<string, object> properties = new Dictionary<string, object>();
-
-            properties[MessageIDProperty] = message.ID.ToString();
-            properties[UserProperty] = JObject.FromObject(message.User);
-
-            List<JObject> messageParts = new List<JObject>();
-            foreach (var messagePart in message.MessageParts)
-            {
-                JObject part = new JObject();
-                if (messagePart is string)
-                {
-                    part[MessagePartTypeProperty] = MessagePartTypeTextValue;
-                    part[MessagePartContentProperty] = (string)messagePart;
-                }
-                else if (messagePart is ChatEmoteViewModelBase)
-                {
-                    part[MessagePartTypeProperty] = MessagePartTypeEmoteValue;
-                    part[MessagePartContentProperty] = ((ChatEmoteViewModelBase)messagePart).AnimatedOrStaticImageURL;
-                }
-                messageParts.Add(part);
-            }
-            properties[MessageProperty] = messageParts;
-
-            await this.CallFunction("add", properties);
+            await this.CallFunction("add", OverlayChatV3Model.GetMessageProperties(message));
         }
 
         private async void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
@@ -169,7 +175,7 @@ namespace MixItUp.Base.Model.Overlay
                 return;
             }
 
-            if (this.UsernamesToIgnore.Contains(message.User.Username.ToLower()))
+            if (this.UsernamesToIgnore.Any(u => string.Equals(u, message.User.Username, StringComparison.OrdinalIgnoreCase)))
             {
                 return;
             }
@@ -193,6 +199,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[UsernameProperty] = user.Username;
+            properties[UserProperty] = user;
             await this.CallFunction("remove", properties);
         }
 
@@ -200,6 +207,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[UsernameProperty] = user.Username;
+            properties[UserProperty] = user;
             await this.CallFunction("remove", properties);
         }
 

@@ -496,7 +496,7 @@ paths:
             $ref: '#/definitions/Error'
           
   '/status/version':
-    post:
+    get:
       tags:
         - Status
       summary: Gets the Mix It Up version number

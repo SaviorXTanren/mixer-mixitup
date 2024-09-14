@@ -228,8 +228,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.BarColor)] = this.BarColor;
             properties[nameof(this.BarHeight)] = this.BarHeight;
 
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.EntranceAnimation), this.EntranceAnimation);
-            OverlayItemV3ModelBase.AddAnimationProperties(properties, nameof(this.ExitAnimation), this.ExitAnimation);
+            this.EntranceAnimation.AddAnimationProperties(properties, nameof(this.EntranceAnimation));
+            this.ExitAnimation.AddAnimationProperties(properties, nameof(this.ExitAnimation));
 
             return properties;
         }

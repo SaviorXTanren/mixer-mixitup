@@ -1,6 +1,9 @@
-﻿using MixItUp.Base.ViewModel.Actions;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.ViewModel.Actions;
 using MixItUp.WPF.Controls.Overlay;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -15,7 +18,13 @@ namespace MixItUp.WPF.Controls.Actions
         {
             InitializeComponent();
 
+            this.Loaded += OverlayActionEditorControl_Loaded;
             this.DataContextChanged += OverlayActionEditorControl_DataContextChanged;
+        }
+
+        private void OverlayActionEditorControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.AnimationsMayNotWork.Visibility = SystemParameters.ClientAreaAnimation ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void OverlayActionEditorControl_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)

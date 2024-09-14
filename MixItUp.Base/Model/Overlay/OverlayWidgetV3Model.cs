@@ -61,13 +61,9 @@ namespace MixItUp.Base.Model.Overlay.Widgets
             {
                 this.IsEnabled = true;
 
-                if (this.RefreshTime > 0)
-                {
-                    this.Item.WidgetLoaded += Item_WidgetLoaded;
-                }
-
-                await this.Item.Initialize();
-                await this.SendInitial();
+#pragma warning disable CS0612 // Type or member is obsolete
+                await this.Initialize();
+#pragma warning restore CS0612 // Type or member is obsolete
             }
 
             this.stateSemaphore.Release();
@@ -81,21 +77,9 @@ namespace MixItUp.Base.Model.Overlay.Widgets
             {
                 this.IsEnabled = false;
 
-                OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
-                if (overlay != null)
-                {
-                    await overlay.Remove(this.ID.ToString());
-                }
-
-                this.Item.WidgetLoaded -= Item_WidgetLoaded;
-
-                if (this.refreshCancellationTokenSource != null)
-                {
-                    this.refreshCancellationTokenSource.Cancel();
-                    this.refreshCancellationTokenSource = null;
-                }
-
-                await this.Item.Uninitialize();
+#pragma warning disable CS0612 // Type or member is obsolete
+                await this.Uninitialize();
+#pragma warning restore CS0612 // Type or member is obsolete
             }
 
             this.stateSemaphore.Release();
@@ -137,6 +121,38 @@ namespace MixItUp.Base.Model.Overlay.Widgets
         }
 
         public OverlayEndpointV3Service GetOverlayEndpointService() { return this.Item.GetOverlayEndpointService(); }
+
+        [Obsolete]
+        internal async Task Initialize()
+        {
+            if (this.RefreshTime > 0)
+            {
+                this.Item.WidgetLoaded += Item_WidgetLoaded;
+            }
+
+            await this.Item.Initialize();
+            await this.SendInitial();
+        }
+
+        [Obsolete]
+        internal async Task Uninitialize()
+        {
+            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService();
+            if (overlay != null)
+            {
+                await overlay.Remove(this.ID.ToString());
+            }
+
+            this.Item.WidgetLoaded -= Item_WidgetLoaded;
+
+            if (this.refreshCancellationTokenSource != null)
+            {
+                this.refreshCancellationTokenSource.Cancel();
+                this.refreshCancellationTokenSource = null;
+            }
+
+            await this.Item.Uninitialize();
+        }
 
         private void Item_WidgetLoaded(object sender, EventArgs e)
         {

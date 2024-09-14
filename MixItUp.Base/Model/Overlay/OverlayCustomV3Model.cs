@@ -45,11 +45,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async void OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            await this.CallFunction("ChatMessageReceived", new Dictionary<string, object>()
-            {
-                { "User", message.User },
-                { "Message", message }
-            });
+            await this.CallFunction("ChatMessageReceived", OverlayChatV3Model.GetMessageProperties(message));
         }
 
         public override async void OnChatMessageDeleted(object sender, string messageID)

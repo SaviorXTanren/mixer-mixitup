@@ -527,6 +527,15 @@ namespace MixItUp.Base.Services
                             };
                         }
 
+                        if (action.OverlayItem.Effects.VisibleAnimation != OverlayItemEffectVisibleAnimationTypeEnum.None)
+                        {
+                            action.CustomAnimations.Add(new OverlayAnimationV3Model()
+                            {
+                                AnimateCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(action.OverlayItem.Effects.VisibleAnimation.ToString()),
+                                StartTime = action.OverlayItem.Effects.Duration / 2
+                            });
+                        }
+
                         if (action.OverlayItem.Effects.ExitAnimation != OverlayItemEffectExitAnimationTypeEnum.None)
                         {
                             action.ExitAnimation = new OverlayAnimationV3Model()

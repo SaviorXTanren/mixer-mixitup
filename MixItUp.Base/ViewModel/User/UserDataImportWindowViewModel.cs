@@ -331,8 +331,9 @@ namespace MixItUp.Base.ViewModel.User
             iValue = 0;
             if (this.columnDictionary[columnName].ArrayNumber >= 0 && line.Count >= (this.columnDictionary[columnName].ArrayNumber + 1))
             {
-                if (int.TryParse(line[this.columnDictionary[columnName].ArrayNumber], out iValue))
+                if (double.TryParse(line[this.columnDictionary[columnName].ArrayNumber], out double dValue))
                 {
+                    iValue = (int)dValue;
                     return true;
                 }
             }
