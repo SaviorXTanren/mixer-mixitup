@@ -160,6 +160,9 @@
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.HideExclamationMessages}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
@@ -167,21 +170,12 @@
 
                     <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DisplayAlejoPronouns}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                     <CheckBox Grid.Column="4" IsChecked="{Binding DisplayAlejoPronouns}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IgnoreSpecialtyExcludedUsers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                    <CheckBox Grid.Column="7" IsChecked="{Binding IgnoreSpecialtyExcludedUsers}" VerticalAlignment="Center" Margin="5,0,0,0" />
                 </Grid>
 
-                <Grid Grid.Row="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IgnoreSpecialtyExcludedUsers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-                    <CheckBox Grid.Column="1" IsChecked="{Binding IgnoreSpecialtyExcludedUsers}" VerticalAlignment="Center" Margin="5,0,0,0" />
-
-                    <TextBox Text="{Binding UsernamesToIgnore}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UsernamesToIgnore}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                </Grid>
+                <TextBox Text="{Binding UsernamesToIgnore}" Grid.Row="8" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UsernamesToIgnore}" Style="{StaticResource MultiLineTextBox}" MinHeight="100" MaxHeight="100" />
             </Grid>
         </GroupBox>
 

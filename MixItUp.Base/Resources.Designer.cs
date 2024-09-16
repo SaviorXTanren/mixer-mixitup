@@ -25624,7 +25624,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usernames To Ignore (Space Separated).
+        ///   Looks up a localized string similar to Usernames To Ignore (One Per Line).
         /// </summary>
         public static string UsernamesToIgnore {
             get {

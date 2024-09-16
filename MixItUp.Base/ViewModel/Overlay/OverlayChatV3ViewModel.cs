@@ -249,7 +249,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.DisplayAlejoPronouns = item.DisplayAlejoPronouns;
 
             this.IgnoreSpecialtyExcludedUsers = item.IgnoreSpecialtyExcludedUsers;
-            this.UsernamesToIgnore = string.Join(" ", item.UsernamesToIgnore);
+            this.UsernamesToIgnore = string.Join(Environment.NewLine, item.UsernamesToIgnore);
 
             this.ShowPlatformBadge = item.ShowPlatformBadge;
             this.ShowRoleBadge = item.ShowRoleBadge;
@@ -333,7 +333,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             if (!string.IsNullOrWhiteSpace(this.UsernamesToIgnore))
             {
-                string[] splits = this.UsernamesToIgnore.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] splits = this.UsernamesToIgnore.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splits != null && splits.Length > 0)
                 {
                     result.UsernamesToIgnore = new List<string>(splits);

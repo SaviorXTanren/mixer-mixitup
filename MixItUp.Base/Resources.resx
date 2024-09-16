@@ -10065,7 +10065,7 @@ print(run())</value>
     <value>Ignore Specialty Excluded Users</value>
   </data>
   <data name="UsernamesToIgnore" xml:space="preserve">
-    <value>Usernames To Ignore (Space Separated)</value>
+    <value>Usernames To Ignore (One Per Line)</value>
   </data>
   <data name="TwitchChannelWatchStreak" xml:space="preserve">
     <value>Twitch Channel Watch Streak</value>
