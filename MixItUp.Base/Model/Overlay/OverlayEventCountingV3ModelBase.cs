@@ -111,23 +111,23 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out double damage))
+                if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out double amount))
                 {
-                    await this.ProcessEvent(subscription.User, damage);
+                    await this.ProcessEvent(subscription.User, amount);
                 }
             }
             else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
             {
-                if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out double damage))
+                if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out double amount))
                 {
-                    await this.ProcessEvent(subscription.User, damage);
+                    await this.ProcessEvent(subscription.User, amount);
                 }
             }
             else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
             {
-                if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out double damage))
+                if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out double amount))
                 {
-                    await this.ProcessEvent(subscription.User, damage);
+                    await this.ProcessEvent(subscription.User, amount);
                 }
             }
         }
@@ -136,33 +136,33 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (subscriptions.Count() > 0)
             {
-                double totalDamage = 0;
+                double total = 0;
                 foreach (SubscriptionDetailsModel subscription in subscriptions)
                 {
                     if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out double damage))
+                        if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out double amount))
                         {
-                            totalDamage += damage;
+                            total += amount;
                         }
                     }
                     else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
-                        if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out double damage))
+                        if (this.YouTubeMembershipsAmount.TryGetValue(subscription.YouTubeMembershipTier, out double amount))
                         {
-                            totalDamage += damage;
+                            total += amount;
                         }
                     }
                     else if (subscription.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
-                        if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out double damage))
+                        if (this.TrovoSubscriptionsAmount.TryGetValue(subscription.Tier, out double amount))
                         {
-                            totalDamage += damage;
+                            total += amount;
                         }
                     }
                 }
 
-                await this.ProcessEvent(subscriptions.First().User, totalDamage);
+                await this.ProcessEvent(subscriptions.First().User, total);
             }
         }
 
