@@ -11,6 +11,7 @@ using Twitch.Base.Models.NewAPI.Clips;
 using MixItUp.Base.Model.Commands;
 using static System.Net.WebRequestMethods;
 using System.Text.RegularExpressions;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -143,6 +144,11 @@ namespace MixItUp.Base.Model.Overlay
                         clipReferenceID = Regex.Replace(clipReferenceID, pattern, "");
                     }
 
+                    if (clipReferenceID.Contains("?"))
+                    {
+                        clipReferenceID = clipReferenceID.Substring(0, clipReferenceID.IndexOf("?"));
+                    }
+
                     clip = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClip(clipReferenceID);
                 }
 
@@ -160,9 +166,13 @@ namespace MixItUp.Base.Model.Overlay
                 if (index >= 0)
                 {
                     this.ClipDirectLink = clip.thumbnail_url.Substring(0, index) + ".mp4";
+                    return true;
                 }
-
-                return true;
+                else
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage(Resources.TwitchClipNewerClipFormatUnsupported, StreamingPlatformTypeEnum.Twitch);
+                    Logger.Log(LogLevel.Error, "Failed to process clip due to new formatting: " + JSONSerializerHelper.SerializeToString(clip));
+                }
             }
 
             return false;
