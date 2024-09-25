@@ -199,6 +199,8 @@ namespace MixItUp.Base.Services
         {
             this.Gifter = gifter;
         }
+
+        public override string ToString() { return $"{this.User?.Username} - {this.Gifter?.Username} - {this.Platform} - {this.Months} - {this.Tier} - {this.YouTubeMembershipTier}"; }
     }
 
     public class EventService

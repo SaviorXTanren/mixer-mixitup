@@ -4,6 +4,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,16 +100,19 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
+            Logger.Log(LogLevel.Debug, $"Processing follow for {this.ID} Overlay Widget");
             await this.ProcessEvent(user, this.FollowAmount);
         }
 
         private async void EventService_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
         {
+            Logger.Log(LogLevel.Debug, $"Processing raid of {raid.Item2} for {this.ID} Overlay Widget");
             await this.ProcessEvent(raid.Item1, this.RaidAmount + (this.RaidPerViewAmount * raid.Item2));
         }
 
         private async void EventService_OnSubscribeOccurred(object sender, SubscriptionDetailsModel subscription)
         {
+            Logger.Log(LogLevel.Debug, $"Processing sub of {subscription} for {this.ID} Overlay Widget");
             if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out double amount))
@@ -134,6 +138,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
         {
+            Logger.Log(LogLevel.Debug, $"Processing mass sub of {subscriptions.Count()} for {this.ID} Overlay Widget");
             if (subscriptions.Count() > 0)
             {
                 double total = 0;
@@ -168,16 +173,19 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnDonationOccurred(object sender, UserDonationModel donation)
         {
+            Logger.Log(LogLevel.Debug, $"Processing donation of {donation.Amount} for {this.ID} Overlay Widget");
             await this.ProcessEvent(donation.User, this.DonationAmount * donation.Amount);
         }
 
         private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchUserBitsCheeredModel bitsCheered)
         {
+            Logger.Log(LogLevel.Debug, $"Processing Twitch bits of {bitsCheered.Amount} for {this.ID} Overlay Widget");
             await this.ProcessEvent(bitsCheered.User, this.TwitchBitsAmount * bitsCheered.Amount);
         }
 
         private async void EventService_OnYouTubeSuperChatOccurred(object sender, YouTubeSuperChatViewModel superChat)
         {
+            Logger.Log(LogLevel.Debug, $"Processing YouTube Super Chat of {superChat.Amount} for {this.ID} Overlay Widget");
             await this.ProcessEvent(superChat.User, this.YouTubeSuperChatAmount * superChat.Amount);
         }
 
@@ -185,6 +193,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (spell.IsElixir)
             {
+                Logger.Log(LogLevel.Debug, $"Processing Trovo Elixir of {spell.ValueTotal} for {this.ID} Overlay Widget");
                 await this.ProcessEvent(spell.User, this.TrovoElixirSpellAmount * spell.ValueTotal);
             }
         }
