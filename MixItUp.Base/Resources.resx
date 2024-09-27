@@ -10716,6 +10716,6 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
     <value>Watching Now</value>
   </data>
   <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
-    <value>Unable to display clip due to newer format by Twitch. Please up-vote the following User Voice to encourage Twitch to allow this functionality for: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors</value>
+    <value>Unable to display clip due to newer format by Twitch. Please up-vote the following User Voice to encourage Twitch to allow for this functionality: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors</value>
   </data>
 </root>
