@@ -116,7 +116,7 @@ namespace MixItUp.Base.Model.Overlay.Widgets
 
                 iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parametersModel);
 
-                await overlay.Add(this.ID.ToString(), iframeHTML, this.Item.LayerProcessed);
+                await overlay.Add(this.ID.ToString(), iframeHTML, this.Item.Layer);
             }
         }
 

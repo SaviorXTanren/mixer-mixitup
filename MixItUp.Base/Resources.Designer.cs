@@ -24624,6 +24624,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to display clip due to newer format by Twitch. Please up-vote the following User Voice to encourage Twitch to allow this functionality for: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors.
+        /// </summary>
+        public static string TwitchClipNewerClipFormatUnsupported {
+            get {
+                return ResourceManager.GetString("TwitchClipNewerClipFormatUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Connection.
         /// </summary>
         public static string TwitchConnection {

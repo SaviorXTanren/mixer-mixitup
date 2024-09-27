@@ -562,6 +562,30 @@ namespace MixItUp.Base.Services
                             }
                         }
                     }
+                    else if (action.WidgetID != Guid.Empty)
+                    {
+                        OverlayWidgetModel widget = settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID == action.WidgetID);
+                        if (widget != null)
+                        {
+                            if (widget.Item.ItemType == OverlayItemModelTypeEnum.EndCredits)
+                            {
+                                action.EndCreditsID = action.WidgetID;
+                                action.WidgetID = Guid.Empty;
+                            }
+                        }
+                        else
+                        {
+                            OverlayWidgetV3Model widgetv3 = settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID == action.WidgetID);
+                            if (widget != null)
+                            {
+                                if (widgetv3.Type == OverlayItemV3Type.EndCredits)
+                                {
+                                    action.EndCreditsID = action.WidgetID;
+                                    action.WidgetID = Guid.Empty;
+                                }
+                            }
+                        }
+                    }
 #pragma warning restore CS0612 // Type or member is obsolete
                     updated = true;
                 }

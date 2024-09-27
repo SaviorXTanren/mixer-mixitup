@@ -81,6 +81,45 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
+        private void Twitch5GiftedTier1Sub_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUsers().FirstOrDefault(u => u.ID != ChannelSession.User.ID && u.HasPlatformData(Base.Model.StreamingPlatformTypeEnum.Twitch));
+            if (user == null)
+            {
+                user = ChannelSession.User;
+            }
+
+            TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
+
+            for (int i = 0; i < 5; i++)
+            {
+                ServiceManager.Get<TwitchPubSubService>().PubSub_OnSubscriptionsGiftedReceived(this, new PubSubSubscriptionsGiftEventModel()
+                {
+                    user_name = twitchUser.Username,
+                    user_id = twitchUser.ID,
+                    display_name = twitchUser.DisplayName,
+
+                    recipient_user_name = twitchUser.Username,
+                    recipient_id = twitchUser.ID,
+                    recipient_display_name = twitchUser.DisplayName,
+
+                    channel_name = ServiceManager.Get<TwitchSessionService>().User.login,
+                    channel_id = ServiceManager.Get<TwitchSessionService>().User.id,
+
+                    time = DateTimeOffset.Now.ToString(),
+
+                    sub_plan = "1000",
+
+                    cumulative_months = 1,
+                    streak_months = 1,
+
+                    context = "subgift",
+
+                    sub_message = new JObject()
+                });
+            }
+        }
+
         private void Twitch100BitsCheer_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUsers().FirstOrDefault(u => u.ID != ChannelSession.User.ID && u.HasPlatformData(Base.Model.StreamingPlatformTypeEnum.Twitch));

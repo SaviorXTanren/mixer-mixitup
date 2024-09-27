@@ -91,7 +91,7 @@ namespace MixItUp.Base.Services
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
-                user = await this.GetUserByPlatform(ChannelSession.Settings.DefaultStreamingPlatform, platformID, platformUsername);
+                user = await this.GetUserByPlatform(ChannelSession.Settings.DefaultStreamingPlatform, platformID, platformUsername, performPlatformSearch);
                 if (user != null)
                 {
                     return user;
@@ -99,7 +99,7 @@ namespace MixItUp.Base.Services
 
                 foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.GetConnectedPlatforms().Where(p => p != ChannelSession.Settings.DefaultStreamingPlatform))
                 {
-                    user = await this.GetUserByPlatform(p, platformID, platformUsername);
+                    user = await this.GetUserByPlatform(p, platformID, platformUsername, performPlatformSearch);
                     if (user != null)
                     {
                         return user;

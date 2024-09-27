@@ -798,7 +798,7 @@ namespace MixItUp.Base.Services.Twitch
                         int streak = userNotice.RawPacket.GetTagInt("msg-param-value");
                         if (streak > 0)
                         {
-                            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
+                            CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
                             parameters.SpecialIdentifiers["userwatchstreak"] = streak.ToString();
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelWatchStreak, parameters);
                         }

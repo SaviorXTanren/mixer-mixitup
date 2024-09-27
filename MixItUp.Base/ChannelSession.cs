@@ -250,7 +250,7 @@ namespace MixItUp.Base
                 if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: ServiceManager.Get<TwitchSessionService>().UserID);
-                    if (ChannelSession.User == null)
+                    if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().User != null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().User));
                     }
@@ -258,7 +258,7 @@ namespace MixItUp.Base
                 if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: ServiceManager.Get<YouTubeSessionService>().UserID);
-                    if (ChannelSession.User == null)
+                    if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().User != null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
                     }
@@ -266,7 +266,7 @@ namespace MixItUp.Base
                 if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: ServiceManager.Get<TrovoSessionService>().UserID);
-                    if (ChannelSession.User == null)
+                    if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().User != null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(ServiceManager.Get<TrovoSessionService>().User));
                     }
