@@ -97,8 +97,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public const string UserProperty = "User";
 
-        public static int zIndexCounter = 0;
-
         public static readonly string PositionedHTML = OverlayResources.OverlayPositionedItemDefaultHTML;
         public static readonly string PositionedCSS = OverlayResources.OverlayPositionedItemDefaultCSS;
 
@@ -202,19 +200,6 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public virtual int LatestVersion { get { return 0; } }
 
-        [JsonIgnore]
-        public int LayerProcessed
-        {
-            get
-            {
-                if (this.Layer == 0)
-                {
-                    return OverlayItemV3ModelBase.zIndexCounter;
-                }
-                return this.Layer;
-            }
-        }
-
         protected OverlayItemV3ModelBase()
         {
             this.Version = this.LatestVersion;
@@ -230,11 +215,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Dictionary<string, object> GetGenerationProperties()
         {
-            if (this.Layer == 0)
-            {
-                OverlayItemV3ModelBase.zIndexCounter++;
-            }
-
             Dictionary<string, object> properties = new Dictionary<string, object>();
             properties[nameof(this.ID)] = (this.ID == Guid.Empty) ? Guid.NewGuid().ToString() : this.ID.ToString();
             properties[nameof(this.Width)] = (this.Width > 0) ? $"{this.Width}px" : "max-content";
@@ -257,7 +237,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.PositionTypeUnit)] = this.PositionTypeUnit;
             properties[nameof(this.XTranslation)] = this.XTranslation;
             properties[nameof(this.YTranslation)] = this.YTranslation;
-            properties[nameof(this.Layer)] = this.LayerProcessed;
+            properties[nameof(this.Layer)] = this.Layer;
 
             properties[nameof(this.IsLivePreview)] = this.IsLivePreview.ToString().ToLower();
 
