@@ -1,17 +1,16 @@
-﻿using MixItUp.Base.Services.Twitch;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Clips;
-using MixItUp.Base.Model.Commands;
-using static System.Net.WebRequestMethods;
-using System.Text.RegularExpressions;
-using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -27,6 +26,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayTwitchClipV3Model : OverlayItemV3ModelBase
     {
+        private const string ClipThumbnailURLPreviewSegment = "-preview-";
+
         public static readonly string DefaultHTML = OverlayResources.OverlayTwitchClipVideoDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTwitchClipVideoDefaultCSS;
         public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayVideoActionDefaultJavascript;
@@ -108,18 +109,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(30 + RandomHelper.GenerateRandomNumber(365)));
                     bool featured = this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip;
-                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: 100);
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, featured: featured, maxResults: 500);
                     if (clips != null && clips.Count() > 0)
                     {
-                        clip = clips.Random();
-                    }
-                    else
-                    {
-                        clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, maxResults: 100);
-                        if (clips != null && clips.Count() > 0)
-                        {
-                            clip = clips.Random();
-                        }
+                        clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).Random();
                     }
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.LatestClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
@@ -129,7 +122,7 @@ namespace MixItUp.Base.Model.Overlay
                     IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: int.MaxValue);
                     if (clips != null && clips.Count() > 0)
                     {
-                        clip = clips.OrderByDescending(c => c.created_at).First();
+                        clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).OrderByDescending(c => c.created_at).FirstOrDefault();
                     }
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.SpecificClip && !string.IsNullOrEmpty(clipReferenceID))
@@ -162,7 +155,7 @@ namespace MixItUp.Base.Model.Overlay
                 this.ClipID = clip.id;
                 this.ClipDuration = clip.duration;
 
-                int index = clip.thumbnail_url.IndexOf("-preview-");
+                int index = clip.thumbnail_url.IndexOf(ClipThumbnailURLPreviewSegment);
                 if (index >= 0)
                 {
                     this.ClipDirectLink = clip.thumbnail_url.Substring(0, index) + ".mp4";
