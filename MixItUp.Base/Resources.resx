@@ -10733,4 +10733,31 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="AddSegment" xml:space="preserve">
     <value>Add Segment</value>
   </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>Day of the Month</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>Day of the Week</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
 </root>
