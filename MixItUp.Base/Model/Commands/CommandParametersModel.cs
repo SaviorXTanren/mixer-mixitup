@@ -72,6 +72,7 @@ namespace MixItUp.Base.Model.Commands
         public CommandParametersModel(ChatMessageViewModel message, IEnumerable<string> arguments = null)
             : this(message.User, message.Platform, (arguments != null) ? arguments : message.ToArguments())
         {
+            this.SpecialIdentifiers["messageemotecount"] = message.EmotesOnlyContents.Count().ToString();
             this.SpecialIdentifiers["message"] = message.PlainTextMessage;
 
             this.TriggeringChatMessageID = message.ID;
