@@ -181,9 +181,10 @@ namespace MixItUp.Base.Services.External
                     return new Result();
                 }
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception ex)
             {
-                if (!ChannelSession.IsElevated)
+                Logger.Log(ex);
+                if (ex is UnauthorizedAccessException && !ChannelSession.IsElevated)
                 {
                     return new Result(Resources.StreamlabsDesktopAdminMaybe);
                 }
