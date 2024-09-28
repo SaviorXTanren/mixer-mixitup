@@ -143,7 +143,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <Button Grid.Column="2" Command="{Binding AddSegmentCommand}" Content="{x:Static resx:Resources.Add}" />
+                    <Button Grid.Column="2" Command="{Binding AddSegmentCommand}" Content="{x:Static resx:Resources.AddSegment}" />
                 </Grid>
 
                 <ItemsControl Grid.Row="2" ItemsSource="{Binding Segments}">

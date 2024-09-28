@@ -10730,4 +10730,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="PortuguesePortugal" xml:space="preserve">
     <value>Portuguese (Portugal)</value>
   </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>Add Segment</value>
+  </data>
 </root>

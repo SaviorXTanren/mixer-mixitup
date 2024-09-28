@@ -144,6 +144,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.Initialize();
 
+            this.PreviousGoalAmount = 0;
             this.CurrentSegment = this.Segments.First();
             this.ProgressSegments();
 

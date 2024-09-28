@@ -574,6 +574,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Segment.
+        /// </summary>
+        public static string AddSegment {
+            get {
+                return ResourceManager.GetString("AddSegment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Separators Between Messages.
         /// </summary>
         public static string AddSeparatorsBetweenMessages {
