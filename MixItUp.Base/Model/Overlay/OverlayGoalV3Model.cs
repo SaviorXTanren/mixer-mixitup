@@ -211,28 +211,35 @@ namespace MixItUp.Base.Model.Overlay
                     this.TotalAmount = Math.Max(this.TotalAmount + amount, this.PreviousGoalAmount);
                 }
 
-                CommandParametersModel parameters = new CommandParametersModel(user);
-                parameters.SpecialIdentifiers[TotalAmountSpecialIdentifier] = this.CurrentAmount.ToString();
-                parameters.SpecialIdentifiers[ProgressAmountSpecialIdentifier] = amount.ToString();
-                parameters.SpecialIdentifiers[SegmentNameSpecialIdentifier] = previousSegment.Name;
-                parameters.SpecialIdentifiers[SegmentAmountSpecialIdentifier] = previousSegment.Amount.ToString();
-
                 if (this.CurrentAmount >= this.GoalAmount && (this.CurrentSegment != this.Segments.Last() || previousAmount < this.GoalAmount))
                 {
-                    this.ProgressSegments();
+                    IEnumerable<OverlayGoalSegmentV3Model> segmentsCompleted = this.ProgressSegments();
 
                     await this.Complete();
 
-                    parameters.SpecialIdentifiers[NextSegmentNameSpecialIdentifier] = this.CurrentSegment.Name;
-                    parameters.SpecialIdentifiers[NextSegmentAmountSpecialIdentifier] = this.CurrentSegment.Amount.ToString();
+                    foreach (OverlayGoalSegmentV3Model segment in segmentsCompleted)
+                    {
+                        CommandParametersModel parameters = new CommandParametersModel(user);
+                        parameters.SpecialIdentifiers[TotalAmountSpecialIdentifier] = this.CurrentAmount.ToString();
+                        parameters.SpecialIdentifiers[ProgressAmountSpecialIdentifier] = amount.ToString();
+                        parameters.SpecialIdentifiers[SegmentNameSpecialIdentifier] = segment.Name;
+                        parameters.SpecialIdentifiers[SegmentAmountSpecialIdentifier] = segment.Amount.ToString();
+                        parameters.SpecialIdentifiers[NextSegmentNameSpecialIdentifier] = this.CurrentSegment.Name;
+                        parameters.SpecialIdentifiers[NextSegmentAmountSpecialIdentifier] = this.CurrentSegment.Amount.ToString();
 
-                    await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
-                    await ServiceManager.Get<CommandService>().Queue(previousSegment.CommandID, parameters);
+                        await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
+                        await ServiceManager.Get<CommandService>().Queue(segment.CommandID, parameters);
+                    }
                 }
                 else
                 {
                     await this.Update();
 
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    parameters.SpecialIdentifiers[TotalAmountSpecialIdentifier] = this.CurrentAmount.ToString();
+                    parameters.SpecialIdentifiers[ProgressAmountSpecialIdentifier] = amount.ToString();
+                    parameters.SpecialIdentifiers[SegmentNameSpecialIdentifier] = previousSegment.Name;
+                    parameters.SpecialIdentifiers[SegmentAmountSpecialIdentifier] = previousSegment.Amount.ToString();
                     await ServiceManager.Get<CommandService>().Queue(this.ProgressOccurredCommandID, parameters);
                 }
             }
@@ -275,8 +282,9 @@ namespace MixItUp.Base.Model.Overlay
             return data;
         }
 
-        private void ProgressSegments()
+        private IEnumerable<OverlayGoalSegmentV3Model> ProgressSegments()
         {
+            List<OverlayGoalSegmentV3Model> segmentsCompleted = new List<OverlayGoalSegmentV3Model>();
             while (this.CurrentSegment != this.Segments.Last() && this.CurrentAmount >= this.GoalAmount)
             {
                 if (this.SegmentType == OverlayGoalSegmentV3Type.Individual)
@@ -287,8 +295,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.PreviousGoalAmount = this.CurrentSegment.Amount;
                 }
+                segmentsCompleted.Add(this.CurrentSegment);
                 this.CurrentSegment = this.Segments[this.Segments.IndexOf(this.CurrentSegment) + 1];
             }
+            return segmentsCompleted;
         }
     }
 }
