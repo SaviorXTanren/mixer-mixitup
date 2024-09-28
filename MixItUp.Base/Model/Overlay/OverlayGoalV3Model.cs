@@ -37,6 +37,8 @@ namespace MixItUp.Base.Model.Overlay
         public const string GoalAmountProperty = "GoalAmount";
         public const string GoalMaxAmountProperty = "GoalMaxAmount";
         public const string GoalBarCompletionPercentageProperty = "GoalBarCompletionPercentage";
+        public const string GoalNextNameProperty = "GoalNextName";
+        public const string GoalNextAmountProperty = "GoalNextAmount";
 
         public const string TotalAmountSpecialIdentifier = "goaltotalamount";
         public const string ProgressAmountSpecialIdentifier = "goalprogressamount";
@@ -256,6 +258,20 @@ namespace MixItUp.Base.Model.Overlay
             data[GoalAmountProperty] = this.CurrentAmount;
             data[GoalMaxAmountProperty] = this.GoalAmount;
             data[GoalBarCompletionPercentageProperty] = this.GoalBarCompletionPercentage;
+
+            data[GoalNextNameProperty] = null;
+            data[GoalNextAmountProperty] = 0;
+            if (this.CurrentSegment != null)
+            {
+                int currentIndex = this.Segments.IndexOf(this.CurrentSegment);
+                if (currentIndex + 1 < this.Segments.Count)
+                {
+                    OverlayGoalSegmentV3Model nextSegment = this.Segments[currentIndex + 1];
+                    data[GoalNextNameProperty] = nextSegment.Name;
+                    data[GoalNextAmountProperty] = nextSegment.Amount;
+                }
+            }
+
             return data;
         }
 
