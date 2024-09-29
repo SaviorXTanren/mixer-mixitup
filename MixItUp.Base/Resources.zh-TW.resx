@@ -10730,4 +10730,37 @@ sendParentMessage({ 型別: "ScriptComplete", ID: "{ID}", 結果: 結果 });</va
   <data name="PortuguesePortugal" xml:space="preserve">
     <value>Portuguese (Portugal)</value>
   </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>添加段</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>每月的某一天</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>一週中的某一天</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>星期五</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>週一</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>週六</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>星期日</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>週四</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>週二</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>週三</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>必須選擇有效的計數器</value>
+  </data>
 </root>

@@ -10718,4 +10718,49 @@ sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: р
   <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
     <value>Невозможно отобразить клип из-за нового формата Twitch. Проголосуйте за следующий голос пользователя, чтобы побудить Twitch включить эту функцию: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4 -url-so-редакторы</value>
   </data>
+  <data name="Italian" xml:space="preserve">
+    <value>итальянский</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Польский</value>
+  </data>
+  <data name="PortugueseBrazil" xml:space="preserve">
+    <value>Португальский (Бразилия)</value>
+  </data>
+  <data name="PortuguesePortugal" xml:space="preserve">
+    <value>Португальский (Португалия)</value>
+  </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>Добавить сегмент</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>День месяца</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>День недели</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Пятница</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Понедельник</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Суббота</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Воскресенье</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Четверг</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Вторник</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Среда</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>Необходимо выбрать действительный счетчик.</value>
+  </data>
 </root>

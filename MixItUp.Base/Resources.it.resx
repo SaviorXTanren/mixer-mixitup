@@ -10718,4 +10718,49 @@ Abbiamo rilevato che hai creato più di un endpoint overlay, il che significa ch
   <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
     <value>Impossibile visualizzare la clip a causa del formato più recente di Twitch. Si prega di votare la seguente voce utente per incoraggiare Twitch a consentire questa funzionalità: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4 -url-so-editori</value>
   </data>
+  <data name="Italian" xml:space="preserve">
+    <value>Italiano</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Polacco</value>
+  </data>
+  <data name="PortugueseBrazil" xml:space="preserve">
+    <value>Portoghese (Brasile)</value>
+  </data>
+  <data name="PortuguesePortugal" xml:space="preserve">
+    <value>Portoghese (Portogallo)</value>
+  </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>Aggiungi segmento</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>Giorno del mese</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>Giorno della settimana</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Venerdì</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Lunedi</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Sabato</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Domenica</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Giovedì</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Martedì</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Mercoledì</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>È necessario selezionare un contatore valido</value>
+  </data>
 </root>

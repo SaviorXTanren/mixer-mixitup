@@ -10718,4 +10718,49 @@ We hebben gedetecteerd dat u meer dan één overlay-eindpunt heeft gemaakt, wat 
   <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
     <value>Kan clip niet weergeven vanwege nieuwer formaat van Twitch. Stem alstublieft op de volgende gebruikersstem om Twitch aan te moedigen deze functionaliteit mogelijk te maken: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4 -url-zo-editors</value>
   </data>
+  <data name="Italian" xml:space="preserve">
+    <value>Italiaans</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Pools</value>
+  </data>
+  <data name="PortugueseBrazil" xml:space="preserve">
+    <value>Portugees (Brazilië)</value>
+  </data>
+  <data name="PortuguesePortugal" xml:space="preserve">
+    <value>Portugees (Portugal)</value>
+  </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>Segment toevoegen</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>Dag van de maand</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>Dag van de week</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Vrijdag</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Maandag</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Zaterdag</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Zondag</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Donderdag</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Dinsdag</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Woensdag</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>Er moet een geldige teller worden geselecteerd</value>
+  </data>
 </root>

@@ -10718,4 +10718,49 @@ Nous avons détecté que vous avez créé plus d'un point de terminaison de supe
   <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
     <value>Impossible d'afficher le clip en raison du format plus récent de Twitch. Veuillez voter pour la voix utilisateur suivante pour encourager Twitch à autoriser cette fonctionnalité : https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4 -url-so-éditeurs</value>
   </data>
+  <data name="Italian" xml:space="preserve">
+    <value>italien</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>polonais</value>
+  </data>
+  <data name="PortugueseBrazil" xml:space="preserve">
+    <value>Portugais (Brésil)</value>
+  </data>
+  <data name="PortuguesePortugal" xml:space="preserve">
+    <value>Portugais (Portugal)</value>
+  </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>Ajouter un segment</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>Jour du mois</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>Jour de la semaine</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Vendredi</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Lundi</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Samedi</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Dimanche</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Jeudi</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Mardi</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Mercredi</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>Un compteur valide doit être sélectionné</value>
+  </data>
 </root>

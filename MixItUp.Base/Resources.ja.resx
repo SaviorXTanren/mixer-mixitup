@@ -10718,4 +10718,49 @@ sendParentMessage({ タイプ: "ScriptComplete"、ID: "{ID}"、結果: 結果 })
   <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
     <value>Twitch の新しいフォーマットのため、クリップを表示できません。 Twitch にこの機能を許可するよう促すために、次のユーザーの声に賛成票を投じてください: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4 -url-so-editors</value>
   </data>
+  <data name="Italian" xml:space="preserve">
+    <value>イタリア語</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>研磨</value>
+  </data>
+  <data name="PortugueseBrazil" xml:space="preserve">
+    <value>ポルトガル語 (ブラジル)</value>
+  </data>
+  <data name="PortuguesePortugal" xml:space="preserve">
+    <value>ポルトガル語 (ポルトガル)</value>
+  </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>セグメントの追加</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>毎月の日</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>曜日</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>金曜日</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>月曜日</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>土曜日</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>日曜日</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>木曜日</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>火曜日</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>水曜日</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>有効なカウンターを選択する必要があります</value>
+  </data>
 </root>

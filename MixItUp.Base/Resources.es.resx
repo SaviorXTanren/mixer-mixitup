@@ -10718,4 +10718,49 @@ Hemos detectado que tiene más de 1 punto final superpuesto creado, lo que signi
   <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
     <value>No se puede mostrar el clip debido al formato más nuevo de Twitch. Vote a favor de la siguiente voz de usuario para alentar a Twitch a permitir esta funcionalidad: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4 -url-so-editores</value>
   </data>
+  <data name="Italian" xml:space="preserve">
+    <value>italiano</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Polaco</value>
+  </data>
+  <data name="PortugueseBrazil" xml:space="preserve">
+    <value>Portugués (Brasil)</value>
+  </data>
+  <data name="PortuguesePortugal" xml:space="preserve">
+    <value>Portugués (Portugal)</value>
+  </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>Agregar segmento</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>Día del mes</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>Día de la semana</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Viernes</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Lunes</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Sábado</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Domingo</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Jueves</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Martes</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Miércoles</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>Se debe seleccionar un contador válido</value>
+  </data>
 </root>
