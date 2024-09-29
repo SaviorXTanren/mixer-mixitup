@@ -290,9 +290,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.AddOutcome(new OverlayWheelOutcomeV3ViewModel(this, outcome));
             }
 
-            this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, item.EntranceAnimation);
-            this.OutcomeSelectedAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, item.OutcomeSelectedAnimation);
-            this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.ItemAdded, item.ExitAnimation);
+            this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, item.EntranceAnimation);
+            this.OutcomeSelectedAnimation = new OverlayAnimationV3ViewModel(Resources.OutcomeSelected, item.OutcomeSelectedAnimation);
+            this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, item.ExitAnimation);
 
             this.Initialize();
         }
