@@ -15568,6 +15568,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A valid counter must be selected.
+        /// </summary>
+        public static string OverlayGoalValidCounterMustBeSelected {
+            get {
+                return ResourceManager.GetString("OverlayGoalValidCounterMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height must be a valid value.
         /// </summary>
         public static string OverlayHeightMustBeValidValue {

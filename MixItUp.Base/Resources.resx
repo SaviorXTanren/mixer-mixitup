@@ -10760,4 +10760,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="Wednesday" xml:space="preserve">
     <value>Wednesday</value>
   </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>A valid counter must be selected</value>
+  </data>
 </root>

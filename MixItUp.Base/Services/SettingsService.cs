@@ -454,7 +454,7 @@ namespace MixItUp.Base.Services
                         newWidget.RefreshTime = widget.RefreshTime;
                     }
 
-                    OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(widget.Item);
+                    OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(widget.Item, settings);
                     if (item != null)
                     {
                         item.ID = widget.Item.ID;
@@ -556,7 +556,7 @@ namespace MixItUp.Base.Services
                             };
                         }
 
-                        OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem);
+                        OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem, settings);
                         if (item != null)
                         {
                             action.OverlayItemV3 = item;
@@ -667,7 +667,7 @@ namespace MixItUp.Base.Services
         }
 
 #pragma warning disable CS0612 // Type or member is obsolete
-        private static OverlayItemV3ModelBase ConvertOldOverlayItem(OverlayItemModelBase item)
+        private static OverlayItemV3ModelBase ConvertOldOverlayItem(OverlayItemModelBase item, SettingsV3Model settings)
         {
             OverlayItemV3ViewModelBase vmResult = null;
             OverlayItemV3ModelBase result = null;
@@ -734,7 +734,8 @@ namespace MixItUp.Base.Services
                         case OverlayEndCreditsSectionTypeEnum.FreeFormHTML2:
                         case OverlayEndCreditsSectionTypeEnum.FreeFormHTML3:
                             newSection.SelectedType = OverlayEndCreditsSectionV3Type.HTML;
-                            newSection.HTML = oldSection.Value.UserHTML;
+                            newSection.Name = oldSection.Value.SectionHTML;
+                            newSection.ItemTemplate = oldSection.Value.UserHTML;
                             break;
                         case OverlayEndCreditsSectionTypeEnum.Bits:
                             newSection.SelectedType = OverlayEndCreditsSectionV3Type.TwitchBits;
@@ -923,6 +924,15 @@ namespace MixItUp.Base.Services
                 {
                     newItem.TwitchBitsAmount = 1;
                 }
+                else if (oldItem.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom)
+                {
+                    string counterName = oldItem.CurrentAmountCustom.Replace("$", string.Empty);
+                    if (settings.Counters.TryGetValue(counterName, out CounterModel counter))
+                    {
+                        newItem.SelectedGoalType = OverlayGoalV3Type.Counter;
+                        newItem.SelectedCounter = counter;
+                    }
+                }
 
                 newItem.Segments.Clear();
                 newItem.Segments.Add(new OverlayGoalSegmentV3ViewModel(newItem)
@@ -970,7 +980,11 @@ namespace MixItUp.Base.Services
                 newItem.TrovoElixirSpellAmount = 0;
                 result = newItem.GetItem();
                 result.OldCustomHTML = oldItem.HTML;
-                ((OverlayStreamBossV3Model)result).CurrentHealth = oldItem.CurrentHealth;
+
+                if (oldItem.CurrentHealth > 0)
+                {
+                    ((OverlayStreamBossV3Model)result).CurrentHealth = oldItem.CurrentHealth;
+                }
                 ((OverlayStreamBossV3Model)result).CurrentBoss = oldItem.CurrentBossID;
                 ((OverlayStreamBossV3Model)result).NewBossCommandID = oldItem.StreamBossChangedCommandID;
             }

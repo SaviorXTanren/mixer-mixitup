@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void Refresh()
         {
-            this.OverlayWidgets.ClearAndAddRange(ServiceManager.Get<OverlayV3Service>().GetWidgets().Select(w => new OverlayWidgetViewModel(w)));
+            this.OverlayWidgets.ClearAndAddRange(ServiceManager.Get<OverlayV3Service>().GetWidgets().Select(w => new OverlayWidgetViewModel(w)).OrderBy(w => w.Name));
             this.NotifyPropertyChanges();
         }
 

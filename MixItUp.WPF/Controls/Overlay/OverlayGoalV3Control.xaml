@@ -107,13 +107,25 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Text="{Binding StartingAmountCustom}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding GoalTypes}" SelectedItem="{Binding SelectedGoalType}" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <CommandControls:CustomCommandListingControl Grid.Column="2" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
+            <TextBox Grid.Column="2" Visibility="{Binding ShowCustomSelections, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding StartingAmountCustom}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
+            <ComboBox Grid.Column="2" Visibility="{Binding ShowCounterSelections, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Counters}" SelectedItem="{Binding SelectedCounter}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Counters}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+
+            <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
+
+            <CommandControls:CustomCommandListingControl Grid.Column="6" DataContext="{Binding SegmentCompletedCommand}" Header="{x:Static resx:Resources.SegmentCompleted}" />
         </Grid>
 
         <GroupBox Grid.Row="8" Header="{x:Static resx:Resources.AutomaticReset}">
@@ -174,7 +186,7 @@
             </Grid>
         </GroupBox>
 
-        <Grid Grid.Row="12">
+        <Grid Grid.Row="12" Visibility="{Binding ShowCustomSelections, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />

@@ -1,16 +1,24 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    public enum OverlayGoalV3Type
+    {
+        Custom,
+        Counter,
+    }
+
     public enum OverlayGoalSegmentV3Type
     {
         Individual,
@@ -52,12 +60,18 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string DefaultJavascript = OverlayResources.OverlayGoalDefaultJavascript;
 
         [DataMember]
+        public OverlayGoalV3Type GoalType { get; set; } = OverlayGoalV3Type.Custom;
+
+        [DataMember]
         public OverlayGoalSegmentV3Type SegmentType { get; set; }
         [DataMember]
         public List<OverlayGoalSegmentV3Model> Segments { get; set; } = new List<OverlayGoalSegmentV3Model>();
 
         [DataMember]
         public ResetTracker ResetTracker { get; set; }
+
+        [DataMember]
+        public string CounterName { get; set; }
 
         [DataMember]
         public int StartingAmountCustom { get; set; }
@@ -80,10 +94,35 @@ namespace MixItUp.Base.Model.Overlay
         public Guid SegmentCompletedCommandID { get; set; }
 
         [DataMember]
-        public double TotalAmount { get; set; }
+        public double CustomTotalAmount { get; set; }
 
-        [JsonIgnore]
-        public DateTimeOffset ResetDateTime { get; set; }
+        [DataMember]
+        public double TotalAmount
+        {
+            get
+            {
+                if (this.GoalType == OverlayGoalV3Type.Custom)
+                {
+                    return this.CustomTotalAmount;
+                }
+                else if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
+                {
+                    return this.Counter.Amount;
+                }
+                return 0;
+            }
+            set
+            {
+                if (this.GoalType == OverlayGoalV3Type.Custom)
+                {
+                    this.CustomTotalAmount = value;
+                }
+                else if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
+                {
+                    this.Counter.Amount = value;
+                }
+            }
+        }
 
         [JsonIgnore]
         public OverlayGoalSegmentV3Model CurrentSegment { get; private set; }
@@ -92,6 +131,11 @@ namespace MixItUp.Base.Model.Overlay
         public double GoalAmount { get { return this.CurrentSegment.Amount; } }
         [JsonIgnore]
         public double PreviousGoalAmount { get; set; }
+
+        [JsonIgnore]
+        public CounterModel Counter { get; set; }
+        [JsonIgnore]
+        private double CounterPreviousCurrentAmount { get; set; }
 
         [JsonIgnore]
         public double CurrentAmount
@@ -127,11 +171,11 @@ namespace MixItUp.Base.Model.Overlay
         {
             get
             {
-                if (this.ResetDateTime == DateTimeOffset.MinValue)
+                if (this.ResetTracker?.Amount > 0)
                 {
-                    return string.Empty;
+                    return this.ResetTracker.GetEndDateTimeOffset().GetAge();
                 }
-                return this.ResetDateTime.GetAge();
+                return string.Empty;
             }
         }
 
@@ -144,18 +188,30 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.Initialize();
 
+            CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
+            if (this.GoalType == OverlayGoalV3Type.Counter && ChannelSession.Settings.Counters.TryGetValue(this.CounterName, out CounterModel counter))
+            {
+                this.Counter = counter;
+                this.CounterPreviousCurrentAmount = this.CurrentAmount;
+                CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
+            }
+
             this.PreviousGoalAmount = 0;
             this.CurrentSegment = this.Segments.First();
             this.ProgressSegments();
 
-            if (this.ResetTracker?.Amount > 0)
+            if (this.ResetTracker?.Amount > 0 && this.ResetTracker.MustBeReset())
             {
-                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
-                if (this.ResetDateTime <= DateTimeOffset.Now)
-                {
-                    await this.Reset();
-                }
+                this.ResetTracker.PerformReset();
+                await this.Reset();
             }
+        }
+
+        public override async Task Uninitialize()
+        {
+            await base.Uninitialize();
+
+            CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
         }
 
         public override async Task Reset()
@@ -163,6 +219,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Reset();
 
             this.TotalAmount = 0;
+            this.CounterPreviousCurrentAmount = 0;
             this.PreviousGoalAmount = 0;
             this.CurrentSegment = this.Segments.First();
 
@@ -173,8 +230,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ResetTracker?.Amount > 0)
             {
-                this.ResetTracker.UpdateStartDateTimeToLatest();
-                this.ResetDateTime = this.ResetTracker.GetEndDateTimeOffset();
+                this.ResetTracker.PerformReset();
             }
         }
 
@@ -199,17 +255,24 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task ProcessEvent(UserV2ViewModel user, double amount)
         {
-            if (this.CurrentSegment != null && amount != 0)
+            if (this.CurrentSegment != null)
             {
                 OverlayGoalSegmentV3Model previousSegment = this.CurrentSegment;
                 double previousAmount = this.TotalAmount;
-                if (amount > 0)
+                if (amount != 0)
                 {
-                    this.TotalAmount += amount;
+                    if (amount > 0)
+                    {
+                        this.TotalAmount += amount;
+                    }
+                    else if (amount < 0)
+                    {
+                        this.TotalAmount = Math.Max(this.TotalAmount + amount, this.PreviousGoalAmount);
+                    }
                 }
-                else if (amount < 0)
+                else if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
                 {
-                    this.TotalAmount = Math.Max(this.TotalAmount + amount, this.PreviousGoalAmount);
+                    previousAmount = this.CounterPreviousCurrentAmount;
                 }
 
                 if (this.CurrentAmount >= this.GoalAmount && (this.CurrentSegment != this.Segments.Last() || previousAmount < this.GoalAmount))
@@ -242,6 +305,11 @@ namespace MixItUp.Base.Model.Overlay
                     parameters.SpecialIdentifiers[SegmentNameSpecialIdentifier] = previousSegment.Name;
                     parameters.SpecialIdentifiers[SegmentAmountSpecialIdentifier] = previousSegment.Amount.ToString();
                     await ServiceManager.Get<CommandService>().Queue(this.ProgressOccurredCommandID, parameters);
+                }
+
+                if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
+                {
+                    this.CounterPreviousCurrentAmount = this.CurrentAmount;
                 }
             }
         }
@@ -299,7 +367,21 @@ namespace MixItUp.Base.Model.Overlay
                 segmentsCompleted.Add(this.CurrentSegment);
                 this.CurrentSegment = this.Segments[this.Segments.IndexOf(this.CurrentSegment) + 1];
             }
+
+            if (this.CurrentSegment == this.Segments.Last() && this.CurrentAmount >= this.GoalAmount)
+            {
+                segmentsCompleted.Add(this.CurrentSegment);
+            }
+
             return segmentsCompleted;
+        }
+
+        private async void CounterModel_OnCounterUpdated(object sender, CounterModel counter)
+        {
+            if (counter == this.Counter)
+            {
+                await this.ProcessEvent(ChannelSession.User, 0);
+            }
         }
     }
 }

@@ -67,12 +67,13 @@ namespace MixItUp.Base.Util
             return DateTimeOffset.Now.Date;
         }
 
-        public void UpdateStartDateTimeToLatest()
+        public bool MustBeReset() { return this.GetEndDateTimeOffset() <= DateTimeOffset.Now.Date; }
+
+        public void PerformReset()
         {
             this.UpgradeToNewerFormat();
 
-            DateTimeOffset endDateTime = this.GetEndDateTimeOffset();
-            if (endDateTime <= DateTimeOffset.Now.Date)
+            if (this.MustBeReset())
             {
                 if (this.Type == ResetTypeEnum.Days && this.Amount == 1)
                 {
@@ -80,10 +81,9 @@ namespace MixItUp.Base.Util
                 }
                 else
                 {
-                    while (endDateTime <= DateTimeOffset.Now.Date)
+                    while (this.MustBeReset())
                     {
-                        this.LastReset = endDateTime;
-                        endDateTime = this.GetEndDateTimeOffset();
+                        this.LastReset = this.GetEndDateTimeOffset();
                     }
                 }
             }

@@ -1,12 +1,14 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -83,6 +85,25 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override string EquationUnits { get { return Resources.Progress; } }
 
+        public IEnumerable<OverlayGoalV3Type> GoalTypes { get; set; } = EnumHelper.GetEnumList<OverlayGoalV3Type>();
+
+        public OverlayGoalV3Type SelectedGoalType
+        {
+            get { return this.selectedGoalType; }
+            set
+            {
+                this.selectedGoalType = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.ShowCustomSelections));
+                this.NotifyPropertyChanged(nameof(this.ShowCounterSelections));
+            }
+        }
+        private OverlayGoalV3Type selectedGoalType = OverlayGoalV3Type.Custom;
+
+        public bool ShowCustomSelections { get { return this.SelectedGoalType == OverlayGoalV3Type.Custom; } }
+
+        public bool ShowCounterSelections { get { return this.SelectedGoalType == OverlayGoalV3Type.Counter; } }
+
         public string Height
         {
             get { return this.height > 0 ? this.height.ToString() : string.Empty; }
@@ -137,6 +158,18 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private ResetTrackerViewModel resetTracker;
+
+        public ObservableCollection<CounterModel> Counters { get; set; } = new ObservableCollection<CounterModel>();
+        public CounterModel SelectedCounter
+        {
+            get { return this.selectedCounter; }
+            set
+            {
+                this.selectedCounter = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CounterModel selectedCounter;
 
         public int StartingAmountCustom
         {
@@ -194,6 +227,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayGoalV3ViewModel()
             : base(OverlayItemV3Type.Goal)
         {
+            this.SelectedGoalType = OverlayGoalV3Type.Custom;
+
             this.FontSize = 16;
 
             this.Width = "400";
@@ -226,6 +261,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayGoalV3ViewModel(OverlayGoalV3Model item)
             : base(item)
         {
+            this.SelectedGoalType = item.GoalType;
+
             this.height = item.Height;
 
             this.BorderColor = item.BorderColor;
@@ -251,6 +288,12 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Animations.Add(this.ProgressOccurredAnimation);
             this.Animations.Add(this.SegmentCompletedAnimation);
 
+            this.Counters.AddRange(ChannelSession.Settings.Counters.Values);
+            if (this.SelectedGoalType == OverlayGoalV3Type.Counter)
+            {
+                this.SelectedCounter = this.Counters.FirstOrDefault(c => string.Equals(c.Name, item.CounterName, StringComparison.OrdinalIgnoreCase));
+            }
+
             this.InitializeInternal();
         }
 
@@ -264,6 +307,11 @@ namespace MixItUp.Base.ViewModel.Overlay
             if (this.Segments.Count == 0)
             {
                 return new Result(Resources.OverlayGoalAtLeastOneSegmentMustBeAdded);
+            }
+
+            if (this.SelectedGoalType == OverlayGoalV3Type.Counter && this.SelectedCounter == null)
+            {
+                return new Result(Resources.OverlayGoalValidCounterMustBeSelected);
             }
 
             return new Result();
@@ -283,6 +331,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             OverlayGoalV3Model result = new OverlayGoalV3Model();
 
             this.AssignProperties(result);
+
+            result.GoalType = this.SelectedGoalType;
 
             result.Height = this.height;
 
@@ -315,6 +365,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             result.ProgressOccurredAnimation = this.ProgressOccurredAnimation.GetAnimation();
             result.SegmentCompletedAnimation = this.SegmentCompletedAnimation.GetAnimation();
+
+            if (this.SelectedGoalType == OverlayGoalV3Type.Counter)
+            {
+                result.CounterName = this.SelectedCounter.Name;
+            }
 
             return result;
         }
