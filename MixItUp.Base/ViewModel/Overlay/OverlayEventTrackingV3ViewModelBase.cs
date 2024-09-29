@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.RaidAmount + (this.RaidPerViewAmount * SampleIntegerAmount));
+                double total = this.RaidAmount + (this.RaidPerViewAmount * SampleIntegerAmount);
                 return $"{this.RaidAmount} + ({this.RaidPerViewAmount} * {SampleIntegerAmount} {Resources.Viewers}) = {total} {this.EquationUnits}";
             }
         }
@@ -175,7 +175,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.TwitchBitsAmount * SampleIntegerAmount);
+                double total = this.TwitchBitsAmount * SampleIntegerAmount;
                 return $"{this.TwitchBitsAmount} * {SampleIntegerAmount} {Resources.Bits} = {total} {this.EquationUnits}";
             }
         }
@@ -196,7 +196,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.YouTubeSuperChatAmount * SampleDecimalAmount);
+                double total = this.YouTubeSuperChatAmount * SampleDecimalAmount;
                 return $"{this.YouTubeSuperChatAmount} * {CurrencyHelper.ToCurrencyString(SampleDecimalAmount)} = {total} {this.EquationUnits}";
             }
         }
@@ -217,7 +217,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.TrovoElixirSpellAmount * SampleIntegerAmount);
+                double total = this.TrovoElixirSpellAmount * SampleIntegerAmount;
                 return $"{this.TrovoElixirSpellAmount} * {SampleIntegerAmount} {Resources.Elixir} = {total} {this.EquationUnits}";
             }
         }
@@ -238,7 +238,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.DonationAmount * SampleDecimalAmount);
+                double total = this.DonationAmount * SampleDecimalAmount;
                 return $"{this.DonationAmount} * {CurrencyHelper.ToCurrencyString(SampleDecimalAmount)} = {total} {this.EquationUnits}";
             }
         }
