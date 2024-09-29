@@ -171,7 +171,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private CounterModel selectedCounter;
 
-        public int StartingAmountCustom
+        public double StartingAmountCustom
         {
             get { return this.startingAmountCustom; }
             set
@@ -180,7 +180,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private int startingAmountCustom;
+        private double startingAmountCustom;
 
         public IEnumerable<OverlayGoalSegmentV3Type> SegmentTypes { get; set; } = EnumHelper.GetEnumList<OverlayGoalSegmentV3Type>();
 

@@ -74,7 +74,7 @@ namespace MixItUp.Base.Model.Overlay
         public string CounterName { get; set; }
 
         [DataMember]
-        public int StartingAmountCustom { get; set; }
+        public double StartingAmountCustom { get; set; }
 
         [DataMember]
         public string BorderColor { get; set; }
