@@ -5,6 +5,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -286,7 +287,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
 
-                    double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), out double duration);
+                    double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), NumberStyles.Any, CultureInfo.CurrentCulture, out double duration);
                     if (duration <= 0.0)
                     {
                         if (this.OverlayItemV3.Type != OverlayItemV3Type.Video && this.OverlayItemV3.Type != OverlayItemV3Type.YouTube &&
@@ -334,7 +335,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.CustomAnimations), string.Join(Environment.NewLine + Environment.NewLine, customAnimations));
 
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration.ToString(CultureInfo.InvariantCulture));
 
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
 
