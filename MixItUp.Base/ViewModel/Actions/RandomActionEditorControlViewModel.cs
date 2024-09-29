@@ -26,9 +26,18 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.noDuplicates = value;
                 this.NotifyPropertyChanged();
+
+                if (!this.NoDuplicates)
+                {
+                    this.PersistNoDuplicates = false;
+                }
+
+                this.NotifyPropertyChanged(nameof(this.IsPersistNoDuplicatesEnabled));
             }
         }
         private bool noDuplicates;
+
+        public bool IsPersistNoDuplicatesEnabled { get { return this.NoDuplicates; } }
 
         public bool PersistNoDuplicates
         {

@@ -42,7 +42,7 @@
             <ToggleButton Grid.Column="4" IsChecked="{Binding NoDuplicates}" VerticalAlignment="Center" />
 
             <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.PersistNoDuplicates}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
-            <ToggleButton Grid.Column="8" IsChecked="{Binding PersistNoDuplicates}" VerticalAlignment="Center" />
+            <ToggleButton Grid.Column="8" IsEnabled="{Binding IsPersistNoDuplicatesEnabled}" IsChecked="{Binding PersistNoDuplicates}" VerticalAlignment="Center" />
         </Grid>
 
         <ActionControls:SubActionContainerControl Grid.Row="2" Margin="0,20,0,0" />
