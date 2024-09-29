@@ -106,12 +106,7 @@
                                 </TextBlock>
                                 </StackPanel>
 
-                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Animations}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
+                                <ItemsControl Grid.Row="3" ItemsSource="{Binding Animations}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <OverlayControls:OverlayAnimationV3Control />
