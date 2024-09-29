@@ -659,7 +659,7 @@ namespace MixItUp.Base.Services
 
         private static string UpgradeOldOverlayColor(string oldFontColor)
         {
-            if (HTMLColorSchemeDictionary.ContainsKey(oldFontColor))
+            if (!string.IsNullOrEmpty(oldFontColor) && HTMLColorSchemeDictionary.ContainsKey(oldFontColor))
             {
                 return HTMLColorSchemeDictionary[oldFontColor];
             }
