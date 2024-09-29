@@ -637,7 +637,6 @@ namespace MixItUp.Base.Services
             { "#ffb300", "Amber" },
             { "#000000", "Black" },
             { "#2196f3", "Blue" },
-            { "#607d8b", "BlueGrey" },
             { "#795548", "Brown" },
             { "#00bcd4", "Cyan" },
             { "#ff5722", "DeepOrange" },
