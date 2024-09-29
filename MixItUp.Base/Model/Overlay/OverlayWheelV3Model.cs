@@ -178,7 +178,7 @@ namespace MixItUp.Base.Model.Overlay
                         outcome.CurrentProbability = outcome.Probability;
                     }
                 }
-                else
+                else if (this.winningOutcome.Modifier < 0)
                 {
                     foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
                     {
