@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -589,6 +590,13 @@ namespace MixItUp.Base.ViewModel.Actions
             : base(action)
         {
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (action.OverlayItem != null)
+            {
+                SettingsV3Upgrader.UpdateActionsV7(ChannelSession.Settings, new List<ActionModelBase>() { action });
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
 
             if (action.OverlayItemV3 != null)
             {

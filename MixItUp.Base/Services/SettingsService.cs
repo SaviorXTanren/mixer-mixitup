@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using Newtonsoft.Json.Linq;
@@ -17,7 +17,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services
@@ -431,6 +430,15 @@ namespace MixItUp.Base.Services
                             command.Actions.Add(randomAction);
                             settings.Commands.ManualValueChanged(command.ID);
                         }
+                    }
+                    else if (kvp.Value is GameCommandModelBase)
+                    {
+                        GameCommandModelBase command = (GameCommandModelBase)kvp.Value;
+                        foreach (CommandModelBase subCommand in command.GetInnerCommands())
+                        {
+                            UpdateActionsV7(settings, subCommand.Actions);
+                        }
+                        settings.Commands.ManualValueChanged(kvp.Key);
                     }
 
                     if (UpdateActionsV7(settings, kvp.Value.Actions))

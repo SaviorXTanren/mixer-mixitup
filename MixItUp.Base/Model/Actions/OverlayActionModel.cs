@@ -166,6 +166,13 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.OverlayItem != null)
+            {
+                SettingsV3Upgrader.UpdateActionsV7(ChannelSession.Settings, new List<ActionModelBase>() { this });
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
             if (this.WidgetID != Guid.Empty)
             {
                 OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
