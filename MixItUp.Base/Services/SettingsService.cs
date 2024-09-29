@@ -926,7 +926,7 @@ namespace MixItUp.Base.Services
                 }
                 else if (oldItem.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom)
                 {
-                    string counterName = oldItem.CurrentAmountCustom.Replace("$", string.Empty);
+                    string counterName = oldItem.CurrentAmountCustom.Replace("$", string.Empty).ToLowerInvariant();
                     if (settings.Counters.TryGetValue(counterName, out CounterModel counter))
                     {
                         newItem.SelectedGoalType = OverlayGoalV3Type.Counter;
