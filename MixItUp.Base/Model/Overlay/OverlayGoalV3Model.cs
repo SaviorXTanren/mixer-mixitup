@@ -188,6 +188,11 @@ namespace MixItUp.Base.Model.Overlay
         {
             await base.Initialize();
 
+            if (this.ResetTracker == null)
+            {
+                this.ResetTracker = new ResetTracker();
+            }
+
             CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
             if (this.GoalType == OverlayGoalV3Type.Counter && ChannelSession.Settings.Counters.TryGetValue(this.CounterName, out CounterModel counter))
             {

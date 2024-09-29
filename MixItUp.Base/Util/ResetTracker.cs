@@ -115,7 +115,7 @@ namespace MixItUp.Base.Util
 
         public ResetTrackerViewModel(ResetTracker model)
         {
-            this.Model = model;
+            this.Model = model ?? new ResetTracker();
             this.Model.UpgradeToNewerFormat();
         }
 
