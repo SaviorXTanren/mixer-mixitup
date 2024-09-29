@@ -494,6 +494,8 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(MusicPlayerSpecialIdentifierHeader))
             {
+                this.ReplaceSpecialIdentifier(MusicPlayerSpecialIdentifierHeader + "state", ServiceManager.Get<IMusicPlayerService>().State.ToString());
+
                 MusicPlayerSong song = ServiceManager.Get<IMusicPlayerService>().CurrentSong;
                 if (song != null)
                 {
