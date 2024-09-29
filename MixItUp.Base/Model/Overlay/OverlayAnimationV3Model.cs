@@ -2,6 +2,7 @@
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
@@ -190,7 +191,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             properties[$"{name}Framework"] = this.AnimationFramework;
             properties[$"{name}Name"] = this.AnimationName;
-            properties[$"{name}StartTime"] = this.StartTime;
+            properties[$"{name}StartTime"] = this.StartTime.ToString(CultureInfo.InvariantCulture);
         }
     }
 }
