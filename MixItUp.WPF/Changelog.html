@@ -5,6 +5,163 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h3 style="color: red;"><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application and includes some breaking changes. As such, we recommend NOT updating immediately before a stream and waiting until you have time to walkthrough all of the changes and ensure your Overlay setup and interactions are configured to your liking.</h3>
+
+        <h2 style="color: #2e6c80;">v1.2.0.0:</h2>
+        <ul>
+            <li>Overlay v3 functionality updates:</li>
+            <ul>
+                <li><span style="color: red;"><b><u>BREAKING CHANGES:</u></b></span></li>
+                <ul>
+                    <li>All Overlay Endpoints now share the same port number and instead have unique URLs associated with them. If you use more than 1 Overlay Endpoint, you will need to update the web browser sources in your streaming software to use the new URLs, which can be found under Settings -> Overlay.</li>
+                    <li>Overlay Widgets are now vastly more robust in the amount that can be customized for them. However, the differences in specific HTML formatting between old and new versions are incompatible and thus can not be directly migrated over. The vast majority of standard, drop-down or input values are converted over, but customized HTML can not be and is instead changed to the new format. All old customized HTML can be accessed from the Overlay Widgets page by editing the widget and clicking on the History button in the top-right corner of the window.</li>
+                    <li>Certain features and functionality have been removed due to their low usage and may be replaced in the future.</li>
+                    <li>The Web Page option has been removed due to low compatability with more websites, but web page can be added manually via the HTML option. Existing Web Page actions have been updated to this new setup via the HTML option.</li>
+                    <li>The Ticker Tape Overlay Widget has been removed and instead replaced with the comparable Label Overlay Widget. Due to their large differences, the Ticker Tape Overlay Widget was not migrated and must be manually re-created as a Label Overlay Widget.</li>
+                </ul>
+                <li>Overlay actions and widgets now have fully customizable HTML, CSS, and Javascript for users who are more adapt at web development</li>
+                <li>Global HTML, CSS, and Javascript customization options can be set for Overlay Endpoints that will be present in all Overlay Actions &amp; Overlay Widgets that use that Overlay Endpoint</li>
+                <li>Adding "Run Widget Function" option to Overlay Action to allow for dynamic function triggering in Overlay Widgets</li>
+                <li>Adding support for reference local files within an Overlay Action or Widget's code:</li>
+                <ul>
+                    <li>By putting  {LocalFile:\\FILE_PATH}  in your HTML, CSS, or Javascript, the Overlay service will handle automatically translating this to a local URL reference</li>
+                    <li>EX:  {LocalFile:\\C:\Foo\Bar.png}</li>
+                    <li>EX:  &lt;img src="{LocalFile:\\C:\Foo\Bar.png}" /&gt;</li>
+                </ul>
+                <li>New Overlay Action Options:</li>
+                <ul>
+                    <li>The Timer option allows for dynamic, non-interactable timers to be displayed on the Overlay</li>
+                    <li>The Twitch Clip option allows for the displaying of clips from a user stream. A known issue exists for some clips that been created witin the last month for users due to a major change Twitch performed in how clips are created and stored. Please up-vote the following User Voice to encourage Twitch to allow for this functionality: <a href="https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors">https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors</a></li>
+                    <li>The Emote Effect option allow for dynamic displaying of emotes, emoticons, and images in a visual animation such as explosions and rain</li>
+                    <li>Several new options have been added for dynamically interacting with various Overlay Widget types</li>
+                </ul>
+                <li>Overlay Actions Upgrades:</li>
+                <ul>
+                    <li>The Duration field for Overlay Actions now support Special Identifiers.</li>
+                    <li>Video and YouTube options now support not specifying a duration amount, which will play the entire length of the video</li>
+                    <li>New position option are available including the ability to have something display in a randomized location</li>
+                    <li>The same Overlay action will now no longer replace an old instance if it is still visible and instead will stack over it (EX: Triggering the same Overlay action 5 times in succession will now show 5 instances together rather than only 1).</li>
+                    <li>Image actions now can optionally use the native size of the image file instead of manually supplied a width and height if the fields are left blank.</li>
+                    <li>Overlay actions that use width and height now support size scaling if only a width or height is specified.</li>
+                    <li>Adding support for adding dynamic animations to Overlay Action visuals</li>
+                </ul>
+                <li>New Overlay Widgets:</li>
+                <ul>
+                    <li>Label Overlay Widget</li>
+                    <ul>
+                        <li>The Label Overlay Widget allows you to display persistent information for your stream that will automatically update as changes occur.</li>
+                        <li>Common examples are for showing the latest follower, subscriber, donation, etc.</li>
+                        <li>Labels can be set up to automatically rotate through a selection of different options or show the latest one that has been updated/</li>
+                    </ul>
+                    <li>Persistent Timer Overlay Widget:</li>
+                    <ul>
+                        <li>The Persistent Timer Overlay Widget is a combination of the previous Timer and Timer Train Overlay Widgets.</li>
+                        <li>A displayable timer can be shown on the Overlay that will gradually count down.</li>
+                        <li>Various options on the widget can be set to add seconds to the timer or seconds can be added dynamically via the Overlay Action -> Add To Persistent Timer.</li>
+                    </ul>
+                    <li>Wheel Overlay Widget:</li>
+                    <ul>
+                        <li>The Wheel Overlay Widget allows you to present a visual prize wheel to your stream with various outcomes that can be randomly selected</li>
+                        <li>In addition to setting the probability on each outcome, you can also set a positive or negative modifier on each outcome to adjust the probability of the outcome</li>
+                        <ul>
+                            <li>If any outcome with a negative modifier is selected, the probabilities for all outcomes are adjusted by their modifier amount</li>
+                            <li>If any outcome with a positive modifier is selected, all outcomes are reset to their initial probabilities</li>
+                        </ul>
+                        <li>Each outcome can have a customized command for it that will be triggered when the outcome is selected or the default outcome command will be triggered instead if the outcome-specific command has no actions in it</li>
+                        <li>The Wheel Overlay Widget can be triggered dynamically via the Overlay Action -> Spin Wheel</li>
+                    </ul>
+                    <li>Persistent Emote Effect Overlay Widget:</li>
+                    <ul>
+                        <li>The Emote Effect allows you to apply a visual animation to emotes that occur in chat and your commands</li>
+                        <li>This overlay widget will automatically trigger the emote effect for all emotes or emojis detected in chat messages in your stream</li>
+                        <li>You can specify how many are shown on screen for each emote that is detected to increase the effect</li>
+                        <li>Combos can be enabled to ensure the emote effect will only trigger if a specific emote is detected a certain amount of times in chat messages over a certain period of seconds</li>
+                        <li>Duplicate emotes can also be ignored within the same chat message</li>
+                    </ul>
+                    <li>Poll Overlay Widget:</li>
+                    <ul>
+                        <li>The Poll Overlay Widget allows you to display visual progress of various multi-answer question systems used in Mix It Up. The following are supported:</li>
+                        <ul>
+                            <li>Twitch Polls</li>
+                            <li>Twitch Predictions</li>
+                            <li>Mix It Up Bet Game</li>
+                            <li>Mix It Up Trivia Game</li>
+                        </ul>
+                    </ul>
+                    <li>Custom Overlay Widget type:</li>
+                    <ul>
+                        <li>Custom Overlay Widgets have no pre-baked functionality and instead expose dedicated Javascript functions for when various different events occur in your stream.</li>
+                        <li>These are useful for when you want to build a more specific type of Overlay visual that does not conform to one of the standard Overlay Widget types.</li>
+                    </ul>
+                </ul>
+                <li>Overlay Widgets Upgrades:</li>
+                <ul>
+                    <li>More detailed customization options are available for various widgets.</li>
+                    <li>A new Persistent Timer type is available which combines both of the features of the old Timer and Timer Train widgets.</li>
+                    <li>Overlay Widgets can now be directly assigned to a dedicated URL for that widget only.</li>
+                </ul>
+                <li>The Overlay as as service is now enabled by default for all new profiles.</li>
+                <li>All Overlay Endpoints now share the exact same port number and instead have a unique URL associated with them.</li>
+                <li>The Overlay port number can now be fully customized.</li>
+            </ul>
+            <li>Text to Speech Action updates:</li>
+            <ul>
+                <li>Windows Text To Speech added as a provider, leveraging your natively installed text to speech languages on your Windows computer</li>
+                <li>TTS.Monster added as a provider, which can be enabled via the Services page after connecting your streaming account on their website: https://tts.monster/</li>
+                <li>Amazon Polly and Microsoft Azure Speech added as providers:</li>
+                <ul>
+                    <li>Amazon Polly &amp; Microsoft Azure Speech both leverage a payment model for usage of their service and as a result, we have implemented a cooldown usage to them currently of 1 each every 5 minutes. This cooldown amount may be decreased or increased over time depending on the usage and cost associated with supporting these services.</li>
+                    <li>Users can set up their own Amazon Web Services (AWS) or Microsoft Azure account account and connect it on the Services page to remove the cooldown effect, however the linked account will then be billed for all usage of the service for Text to Speech</li>
+                </ul>
+                <li>TikTok TTS added as a provider. This service is hosted by Weilbyte at <a href="https://tiktok-tts.weilbyte.dev">https://tiktok-tts.weilbyte.dev</a> and may experience outages due to use.</li>
+                <li>A new toggle option has been added that will block the Text to Speech action until the audio of the speech has completed for providers that support it.</li>
+                <li>Adding SSML text processing support for Amazon Polly, Microsoft Azure Speech, and Windows Text to Speech providers for Text to Speech Action</li>
+            </ul>
+            <li>The Script action has been added:</li>
+            <ul>
+                <li>The Script action allows you to add code scripts to your commands that will be run when the action is triggered.</li>
+                <li>Scripts can be written in either C#, Python, or Javascript.</li>
+                <li>Special Identifier replacement is supported in the text of the script.</li>
+                <li>Any value returned from the script is stored in the Special Identifier "$scriptresult" which can be leveraged in subsequent action.</li>
+                <li>There is no unique functionality provided in the Script action to directly interact with Mix It Up, the Script action simply is a means to perform more complex logic in a simpler form for experience users. However, you are able to leverage the Mix It Up Developer API from inside your Script action to perform some operations within Mix It Up.</li>
+                <li>Javascript-based scripts will run using the Mix It Up Overlay, allowing you to leverage external libraries by including them in the Overlay Endpoint via customization under Settings -> Overlay.</li>
+                <li>Python-based scripts now require a local installation of Python on your PC by running directly via the Python interpreter. The Executable location for Python must be set under Settings -> Commands.</li>
+            </ul>
+            <li>The VTS P.O.G. action has been added:</li>
+            <ul>
+                <li>The VTS P.O.G. action allows you to interact with your instance of VTS P.O.G. to trigger functionality within the application</li>
+                <li>The "Text To Speech" option allows you to trigger text to speech sound from a variety of providers supported within the application</li>
+                <li>The "AI Text To Speech" option allows you to generate AI responses based on a specified prompt, which is then spoken through text to speech within the application</li>
+                <li>The "Play Audio File" option allows you to specify a local audio file to be played via the TTS pet, AI pet, or soundboard within the application</li>
+            </ul>
+            <li>The Repeat action has been added:</li>
+            <ul>
+                <li>The Repeat action allows you to easily build a set of actions that will be repeatedly run in sequence based on the number of times you specify</li>
+                <li>The amount of times the Repeat action runs can either take a raw number or a Special Identifier that translated to a number</li>
+            </ul>
+            <li>Adding the following YouTube-specific Special Identifiers</li>
+            <ul>
+                <li>$streamyoutubeid and $streamyoutubeurl Special Identifiers for the active YouTube Live stream</li>
+                <li>$youtubelatestvideoid, $youtubelatestvideotitle, and $youtubelatestvideourl Special Identifiers for the latest non-stream video on the connected YouTube channel</li>
+            </ul>
+            <li>Adding support for automatic removal to VIP User option on the Twitch Action. This will remove VIP status from the user after the specified duration. This will only occur while Mix It Up is running and lapsed durations while Mix It Up is not running will be automatically handled when Mix It Up is next launched.</li>
+            <li>Removing check for duplicate user accounts in settings and now allowing for multiple profiles to be created with the same user account. Profiles can now be specifically named by visiting Settings -> General.</li>
+            <li>Viewers who have linked their accounts in Mix It Up across different streaming platforms will now properly show both accounts on the Users page when they are watching from both and the correct account information will be returned for commands triggered from each platform</li>
+            <li>Adding "Persist No Duplicates" option to Random Action to keep track of what actions have already been triggered to ensure no action is run more than once. Once all actions have been triggered once, tracking is reset again to once per action.</li>
+            <li>Adding "Is In" an "Is Not In" operators to Conditional Action for checking if a piece of text exists somewhere within a larger piece of text</li>
+            <li>Adding "Read Each Line From File" option to File Action to support repeated running of a set of actions against each line in a file</li>
+            <li>The Throw Item option on the Twitch Integrated Throwing System action now supports Special Identifiers for the amount to throw</li>
+            <li>Adding Change Folder option to the Music Player Action</li>
+            <li>Adding settings option to hide specific users messages from Chat view in Mix It Up</li>
+            <li>Adding $usersubpoints Special Identifier to the Twitch Channel Subscribed, Twitch Channel Resubscribed, and Twitch Channel Gifted Subscription event commands to indicate the amount of Twitch Sub Points gained for the channel from the subscription</li>
+            <li>Adding $substotalpoints Special Identifier to Twitch Channel Mass Gifted Subscriptions event command to indicate the total amount of Twitch Sub Points gained for the channel from all of the subscriptions gifted</li>
+            <li>Adding $hypetrainlevel Special Identifier to Twitch Channel Hype Train Start event command</li>
+            <li>Adding $gamequeueusersX Special Identifier to retrieve the top X many users in the Game Queue</li>
+            <li>Adding $usernotes Special Identifier</li>
+            <li>Adjusting Mix It Up update host &amp; detection method to improve reliability</li>
+            <li>Fixing bug with Tiltify service not properly handling team-based campaigns</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.1.0.17:</h2>
         <ul>
             <li>Adding mtion studio service connectivity:</li>
