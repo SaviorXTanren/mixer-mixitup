@@ -1,6 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using NAudio.Wave;
@@ -23,73 +21,123 @@ namespace MixItUp.WPF.Services
 
         private Dictionary<CancellationToken, CancellationTokenSource> audioTasks = new Dictionary<CancellationToken, CancellationTokenSource>();
 
-        public async Task Play(string filePath, int volume, bool track = true)
-        {
-            await ServiceManager.Get<IAudioService>().Play(filePath, volume, null, track);
-        }
+        private HashSet<Guid> activeOverlaySounds = new HashSet<Guid>();
 
-        public async Task Play(string filePath, int volume, string deviceName, bool track = true)
+        public async Task Play(string filePath, int volume, string deviceName, bool waitForFinish = false)
         {
-            if (!string.IsNullOrEmpty(filePath))
+            try
             {
-                if (string.IsNullOrEmpty(deviceName))
+                if (!string.IsNullOrEmpty(filePath))
                 {
-                    deviceName = ChannelSession.Settings.DefaultAudioOutput;
-                }
-
-                if (this.MixItUpOverlay.Equals(deviceName))
-                {
-                    OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(ServiceManager.Get<OverlayService>().DefaultOverlayName);
-                    if (overlay != null)
+                    deviceName = this.GetOutputDeviceName(deviceName);
+                    if (this.MixItUpOverlay.Equals(deviceName))
                     {
-                        var overlayItem = new OverlaySoundItemModel(filePath, volume);
-                        await overlay.ShowItem(overlayItem, new CommandParametersModel());
+                        await this.PlayOnOverlay(filePath, volume, waitForFinish);
+                    }
+                    else
+                    {
+                        await this.PlayAndCleanUp(this.PlayWithOutput(filePath, volume, deviceName), waitForFinish);
                     }
                 }
-                else
-                {
-                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                    audioTasks[cancellationTokenSource.Token] = cancellationTokenSource;
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () =>
-                    {
-                        Tuple<WaveOutEvent, WaveStream> output = this.PlayWithOutput(filePath, volume, deviceName);
-                        WaveOutEvent waveOut = output.Item1;
-                        using (waveOut)
-                        {
-                            if (waveOut != null)
-                            {
-                                while (waveOut.PlaybackState == PlaybackState.Playing && !cancellationTokenSource.Token.IsCancellationRequested)
-                                {
-                                    await Task.Delay(500);
-                                }
-                                waveOut.Dispose();
-                                cancellationTokenSource.Cancel();
-                            }
-                        }
-                    }, cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
-        public async Task PlayNotification(string filePath, int volume, bool track = true)
+        public async Task PlayMP3Stream(Stream stream, int volume, string deviceName, bool waitForFinish = false)
         {
-            if (!string.IsNullOrEmpty(filePath))
+            try
             {
-                if (ChannelSession.Settings.NotificationCooldownAmount > 0)
+                if (stream != null && stream.Length > 0)
                 {
-                    if (ChannelSession.Settings.NotificationLastTrigger.TotalSecondsFromNow() < ChannelSession.Settings.NotificationCooldownAmount)
+                    deviceName = this.GetOutputDeviceName(deviceName);
+                    if (this.MixItUpOverlay.Equals(deviceName))
                     {
+                        string tempFilePath = Path.Combine(ServiceManager.Get<IFileService>().GetTempFolder(), $"{Guid.NewGuid()}.mp3");
+                        await ServiceManager.Get<IFileService>().SaveFile(tempFilePath, stream);
+                        await this.PlayOnOverlay(tempFilePath, volume, waitForFinish);
+                    }
+                    else
+                    {
+                        await this.PlayWaveStream(new StreamMediaFoundationReader(stream), deviceName, volume, waitForFinish);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task PlayPCMStream(Stream stream, int volume, string deviceName, bool waitForFinish = false)
+        {
+            try
+            {
+                if (stream != null && stream.Length > 0)
+                {
+                    deviceName = this.GetOutputDeviceName(deviceName);
+                    if (this.MixItUpOverlay.Equals(deviceName))
+                    {
+                        Logger.ForceLog(LogLevel.Error, "Mix It Up Overlay not supported for playing PCM streams");
+                        if (ChannelSession.IsDebug())
+                        {
+                            throw new Exception("Mix It Up Overlay not supported for playing PCM streams");
+                        }
                         return;
                     }
-                    ChannelSession.Settings.NotificationLastTrigger = DateTimeOffset.Now;
+                    await this.PlayWaveStream(new RawSourceWaveStream(stream, new WaveFormat(88200, 16, 1)), deviceName, volume, waitForFinish);
                 }
-                await this.Play(filePath, volume, ChannelSession.Settings.NotificationsAudioOutput, track);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
-        public Task StopAllSounds()
+        public async Task PlayOnOverlay(string filePath, double volume, bool waitForFinish = false)
+        {
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+            if (overlay != null)
+            {
+                Guid id = await overlay.PlayAudio(filePath, volume);
+                this.activeOverlaySounds.Add(id);
+
+                if (waitForFinish)
+                {
+                    do
+                    {
+                        await Task.Delay(100);
+                    } while (this.activeOverlaySounds.Contains(id));
+                }
+            }
+        }
+
+        public async Task PlayNotification(string filePath, int volume)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    if (ChannelSession.Settings.NotificationCooldownAmount > 0)
+                    {
+                        if (ChannelSession.Settings.NotificationLastTrigger.TotalSecondsFromNow() < ChannelSession.Settings.NotificationCooldownAmount)
+                        {
+                            return;
+                        }
+                        ChannelSession.Settings.NotificationLastTrigger = DateTimeOffset.Now;
+                    }
+                    await this.Play(filePath, volume, ChannelSession.Settings.NotificationsAudioOutput);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task StopAllSounds()
         {
             foreach (var key in this.audioTasks.Keys.ToList())
             {
@@ -99,7 +147,21 @@ namespace MixItUp.WPF.Services
                 }
                 this.audioTasks.Remove(key);
             }
-            return Task.CompletedTask;
+
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+            if (overlay != null)
+            {
+                foreach (var id in this.activeOverlaySounds.ToList())
+                {
+                    await overlay.Function(id.ToString(), "remove", new Dictionary<string, object>());
+                }
+                this.activeOverlaySounds.Clear();
+            }
+        }
+
+        public void OverlaySoundFinished(Guid id)
+        {
+            this.activeOverlaySounds.Remove(id);
         }
 
         public IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false)
@@ -128,38 +190,106 @@ namespace MixItUp.WPF.Services
 
         public Tuple<WaveOutEvent, WaveStream> PlayWithOutput(string filePath, int volume, string deviceName)
         {
-            int deviceNumber = -1;
-            if (!string.IsNullOrEmpty(deviceName))
+            try
             {
-                deviceNumber = this.GetOutputDeviceID(deviceName);
-            }
+                float floatVolume = this.ConvertVolumeAmount(volume);
+                WaveOutEvent outputEvent = this.CreateWaveOutEvent(deviceName);
+                WaveStream waveStream = null;
+                if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    waveStream = new MediaFoundationReader(filePath);
+                    outputEvent.Volume = floatVolume;
+                }
+                else if (File.Exists(filePath))
+                {
+                    AudioFileReader audioFile = new AudioFileReader(filePath);
+                    audioFile.Volume = floatVolume;
+                    waveStream = audioFile;
+                }
 
-            float floatVolume = this.ConvertVolumeAmount(volume);
-
-            WaveOutEvent outputEvent = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber };
-            WaveStream waveStream = null;
-            if (File.Exists(filePath))
-            {
-                AudioFileReader audioFile = new AudioFileReader(filePath);
-                audioFile.Volume = floatVolume;
-                waveStream = audioFile;
+                if (waveStream != null)
+                {
+                    outputEvent.Init(waveStream);
+                    outputEvent.Play();
+                    return new Tuple<WaveOutEvent, WaveStream>(outputEvent, waveStream);
+                }
             }
-            else if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+            catch (Exception ex)
             {
-                waveStream = new MediaFoundationReader(filePath);
-                outputEvent.Volume = floatVolume;
-            }
-
-            if (waveStream != null)
-            {
-                outputEvent.Init(waveStream);
-                outputEvent.Play();
-                return new Tuple<WaveOutEvent, WaveStream>(outputEvent, waveStream);
+                Logger.Log(ex);
             }
             return null;
         }
 
         public float ConvertVolumeAmount(int amount) { return MathHelper.Clamp(amount, 0, 100) / 100.0f; }
+
+        public string GetOutputDeviceName(string deviceName)
+        {
+            if (string.IsNullOrEmpty(deviceName))
+            {
+                return ChannelSession.Settings.DefaultAudioOutput;
+            }
+            return deviceName;
+        }
+
+        private WaveOutEvent CreateWaveOutEvent(string deviceName)
+        {
+            int deviceNumber = -1;
+            if (!string.IsNullOrEmpty(deviceName))
+            {
+                deviceNumber = this.GetOutputDeviceID(deviceName);
+            }
+            return (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber };
+        }
+
+        private async Task PlayAndCleanUp(Tuple<WaveOutEvent, WaveStream> output, bool waitForFinish = false)
+        {
+            if (output != null)
+            {
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                audioTasks[cancellationTokenSource.Token] = cancellationTokenSource;
+                Task t = Task.Run(async () =>
+                {
+                    try
+                    {
+                        WaveOutEvent waveOut = output.Item1;
+                        using (waveOut)
+                        {
+                            if (waveOut != null)
+                            {
+                                while (waveOut.PlaybackState == PlaybackState.Playing && !cancellationTokenSource.Token.IsCancellationRequested)
+                                {
+                                    await Task.Delay(500);
+                                }
+                                waveOut.Dispose();
+                                cancellationTokenSource.Cancel();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                }, cancellationTokenSource.Token);
+
+                if (waitForFinish)
+                {
+                    await t;
+                }
+            }
+        }
+
+        private async Task PlayWaveStream(WaveStream stream, string deviceName, int volume, bool waitForFinish = false)
+        {
+            float floatVolume = this.ConvertVolumeAmount(volume);
+            WaveOutEvent outputEvent = this.CreateWaveOutEvent(deviceName);
+            outputEvent.Volume = floatVolume;
+
+            outputEvent.Init(stream);
+            outputEvent.Play();
+
+            await this.PlayAndCleanUp(new Tuple<WaveOutEvent, WaveStream>(outputEvent, stream), waitForFinish);
+        }
 
         private int GetOutputDeviceID(string deviceName)
         {

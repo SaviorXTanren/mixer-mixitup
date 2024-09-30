@@ -30,6 +30,9 @@ namespace MixItUp.Base.Services.Twitch
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
 
+        public static event EventHandler<ClipModel> OnTwitchClipCreated = delegate { };
+        public static void TwitchClipCreated(ClipModel clip) { OnTwitchClipCreated(null, clip); }
+
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
             OAuthClientScopeEnum.bits__read,
@@ -206,6 +209,11 @@ namespace MixItUp.Base.Services.Twitch
             return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.CheckIfFollowing(channel, userToCheck));
         }
 
+        public async Task<IEnumerable<SubscriptionModel>> GetSubscribers(UserModel channel, int maxResult = 1)
+        {
+            return await this.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscriptions(channel, maxResult));
+        }
+
         public async Task<GameModel> GetNewAPIGameByID(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
 
         public async Task<IEnumerable<GameModel>> GetNewAPIGamesByName(string name) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByName(name)); }
@@ -265,6 +273,10 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<ClipCreationModel> CreateClip(UserModel channel, bool delay) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.CreateClip(channel, delay)); }
 
         public async Task<ClipModel> GetClip(ClipCreationModel clip) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetClip(clip)); }
+
+        public async Task<ClipModel> GetClip(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetClipByID(id)); }
+
+        public async Task<IEnumerable<ClipModel>> GetClips(UserModel broadcaster, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, bool featured = false, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetBroadcasterClips(broadcaster, startedAt: startDate, endedAt: endDate, featured: featured, maxResults: maxResults)); }
 
         public async Task<BitsLeaderboardModel> GetBitsLeaderboard(BitsLeaderboardPeriodEnum period, int count) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Bits.GetBitsLeaderboard(startedAt: DateTimeOffset.Now, period: period, count: count)); }
 

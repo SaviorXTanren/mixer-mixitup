@@ -1,0 +1,177 @@
+﻿<Controls:LoadingControlBase x:Class="MixItUp.WPF.Controls.Overlay.OverlayPositionV3Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Controls:LoadingControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <Util:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Controls:LoadingControlBase.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" VerticalAlignment="Center" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <ComboBox Grid.Row="0" Width="150" ItemsSource="{Binding PositionTypes}" SelectedItem="{Binding SelectedPositionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ScreenPosition}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <TextBox Grid.Row="2" Text="{Binding Layer}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LayerPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+        </Grid>
+
+        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsSimplePosition, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Controls:IconButton Grid.Column="0" Grid.Row="0" Icon="ImageFilterCenterFocus" Command="{Binding TopLeftSimplePositionCommand}" IsEnabled="{Binding IsTopLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="1" Grid.Row="0" Icon="ImageFilterCenterFocus" Command="{Binding TopMiddleSimplePositionCommand}" IsEnabled="{Binding IsTopMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="0" Icon="ImageFilterCenterFocus" Command="{Binding TopRightSimplePositionCommand}" IsEnabled="{Binding IsTopRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="0" Grid.Row="1" Icon="ImageFilterCenterFocus" Command="{Binding MiddleLeftSimplePositionCommand}" IsEnabled="{Binding IsMiddleLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="1" Grid.Row="1" Icon="ImageFilterCenterFocus" Command="{Binding MiddleMiddleSimplePositionCommand}" IsEnabled="{Binding IsMiddleMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="1" Icon="ImageFilterCenterFocus" Command="{Binding MiddleRightSimplePositionCommand}" IsEnabled="{Binding IsMiddleRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="0" Grid.Row="2" Icon="ImageFilterCenterFocus" Command="{Binding BottomLeftSimplePositionCommand}" IsEnabled="{Binding IsBottomLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="1" Grid.Row="2" Icon="ImageFilterCenterFocus" Command="{Binding BottomMiddleSimplePositionCommand}" IsEnabled="{Binding IsBottomMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="2" Icon="ImageFilterCenterFocus" Command="{Binding BottomRightSimplePositionCommand}" IsEnabled="{Binding IsBottomRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsPercentagePosition, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.PositionPercentageFromLeft}" TextDecorations="Underline" />
+
+            <Grid Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Slider Value="{Binding XPosition}" Grid.Column="0" Minimum="0" Maximum="100" Width="100" Style="{StaticResource MaterialDesignDiscreteSlider}" VerticalAlignment="Center" />
+                <TextBox Text="{Binding XPosition}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.XPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="75" />
+            </Grid>
+
+            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.PositionPercentageFromTop}" TextDecorations="Underline" />
+
+            <Grid Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Slider Value="{Binding YPosition}" Grid.Column="0" Minimum="0" Maximum="100" Width="100" Style="{StaticResource MaterialDesignDiscreteSlider}" VerticalAlignment="Center" />
+                <TextBox Text="{Binding YPosition}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="75" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsPixelPosition, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.LeftPixelPosition}" TextDecorations="Underline" />
+            <TextBox Text="{Binding XPosition}" Grid.Column="0" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.XPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+
+            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.TopPixelPosition}" TextDecorations="Underline" />
+            <TextBox Text="{Binding YPosition}" Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+        </Grid>
+
+        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsRandomPosition, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.LeftPixelPosition}" TextDecorations="Underline" />
+
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding XPosition}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Min}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                    <TextBox Text="{Binding XMaximumPosition}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Max}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.TopPixelPosition}" TextDecorations="Underline" />
+
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding YPosition}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Min}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                    <TextBox Text="{Binding YMaximumPosition}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Max}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Controls:LoadingControlBase>

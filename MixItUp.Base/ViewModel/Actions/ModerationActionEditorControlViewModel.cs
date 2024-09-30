@@ -61,7 +61,14 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string timeoutAmount;
 
-        public bool ShowModerationReasonGrid { get { return this.selectedActionType == ModerationActionTypeEnum.AddModerationStrike; } }
+        public bool ShowModerationReasonGrid
+        {
+            get
+            {
+                return this.SelectedActionType == ModerationActionTypeEnum.TimeoutUser || this.SelectedActionType == ModerationActionTypeEnum.BanUser || 
+                    this.selectedActionType == ModerationActionTypeEnum.AddModerationStrike;
+            }
+        }
 
         public string ModerationReason
         {

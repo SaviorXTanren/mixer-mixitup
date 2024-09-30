@@ -64,7 +64,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 return NotFound();
             }
 
-            currency.AddAmount(user, updateAmount.Amount);
+            if (updateAmount.Amount > 0)
+            {
+                currency.AddAmount(user, updateAmount.Amount);
+            }
+            else if (updateAmount.Amount < 0)
+            {
+                currency.SubtractAmount(user, -1 * updateAmount.Amount);
+            }
 
             return Ok(currency.GetAmount(user));
         }

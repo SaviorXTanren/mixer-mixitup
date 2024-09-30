@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using StreamingClient.Base.Util;
@@ -26,7 +27,6 @@ namespace MixItUp.Base.Model.Commands
             {
                 // Generic
                 case EventTypeEnum.ChannelRaided:
-                    specialIdentifiers["hostviewercount"] = "123";
                     specialIdentifiers["raidviewercount"] = "123";
                     break;
                 case EventTypeEnum.ChannelSubscribed:
@@ -64,25 +64,34 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["message"] = "Test Message";
                     specialIdentifiers["usersubplanname"] = "Plan Name";
                     specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["usersubpoints"] = "1";
+                    specialIdentifiers["isprimeupgrade"] = "False";
+                    specialIdentifiers["isgiftupgrade"] = "False";
                     break;
                 case EventTypeEnum.TwitchChannelResubscribed:
                     specialIdentifiers["message"] = "Test Message";
                     specialIdentifiers["usersubplanname"] = "Plan Name";
                     specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["usersubpoints"] = "1";
                     specialIdentifiers["usersubmonths"] = "5";
                     specialIdentifiers["usersubstreak"] = "3";
                     break;
                 case EventTypeEnum.TwitchChannelSubscriptionGifted:
                     specialIdentifiers["usersubplanname"] = "Plan Name";
                     specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["usersubpoints"] = "1";
                     specialIdentifiers["usersubmonthsgifted"] = "3";
                     specialIdentifiers["isanonymous"] = "false";
                     break;
                 case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
                     specialIdentifiers["subsgiftedamount"] = "5";
+                    specialIdentifiers["substotalpoints"] = "5";
                     specialIdentifiers["subsgiftedlifetimeamount"] = "100";
                     specialIdentifiers["usersubplan"] = "Tier 1";
                     specialIdentifiers["isanonymous"] = "false";
+                    break;
+                case EventTypeEnum.TwitchChannelWatchStreak:
+                    specialIdentifiers["userwatchstreak"] = "5";
                     break;
                 case EventTypeEnum.TwitchChannelBitsCheered:
                     specialIdentifiers["bitsamount"] = "10";
@@ -106,13 +115,6 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.TwitchChannelAdEnded:
                     specialIdentifiers["adduration"] = "60";
                     specialIdentifiers["adisautomatic"] = "true";
-                    break;
-                case EventTypeEnum.TwitchChannelHypeChat:
-                    specialIdentifiers["hypechatamountnumberdigits"] = "123";
-                    specialIdentifiers["hypechatamountnumber"] = "1.23";
-                    specialIdentifiers["hypechatamount"] = "$1.23";
-                    specialIdentifiers["hypechatlevel"] = "THREE";
-                    specialIdentifiers["message"] = "Test Message";
                     break;
                 case EventTypeEnum.TwitchChannelHypeTrainBegin:
                     specialIdentifiers["hypetraintotalpoints"] = "1";

@@ -1,8 +1,12 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -67,6 +71,8 @@ namespace MixItUp.Base.Services
         TwitchChannelSubscriptionGifted = 222,
         TwitchChannelMassSubscriptionsGifted = 223,
 
+        TwitchChannelWatchStreak = 230,
+
         TwitchChannelAdUpcoming = 250,
         TwitchChannelAdStarted = 251,
         TwitchChannelAdEnded = 252,
@@ -74,6 +80,7 @@ namespace MixItUp.Base.Services
         TwitchChannelBitsCheered = 270,
         TwitchChannelPointsRedeemed = 271,
         TwitchChannelCharityDonation = 272,
+        [Obsolete]
         TwitchChannelHypeChat = 273,
 
         TwitchChannelHypeTrainBegin = 280,
@@ -160,8 +167,74 @@ namespace MixItUp.Base.Services
         PulsoidHeartRateChanged = 1120,
     }
 
+    public class SubscriptionDetailsModel
+    {
+        public UserV2ViewModel User { get; set; }
+        public StreamingPlatformTypeEnum Platform { get; set; }
+        public int Months { get; set; }
+
+        public int Tier { get; set; } = 1;
+        public string YouTubeMembershipTier { get; set; }
+
+        public UserV2ViewModel Gifter { get; set; }
+
+        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, int months = 1, int? tier = 1, string youTubeMembershipTier = null)
+        {
+            this.Platform = platform;
+            this.User = user;
+            this.Months = months;
+
+            if (tier != null)
+            {
+                this.Tier = tier.GetValueOrDefault();
+            }
+            if (!string.IsNullOrEmpty(youTubeMembershipTier))
+            {
+                this.YouTubeMembershipTier = youTubeMembershipTier;
+            }
+        }
+
+        public SubscriptionDetailsModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, UserV2ViewModel gifter, int months = 1, int? tier = null, string youTubeMembershipTier = null)
+            : this(platform, user, months, tier, youTubeMembershipTier)
+        {
+            this.Gifter = gifter;
+        }
+
+        public override string ToString() { return $"{this.User?.Username} - {this.Gifter?.Username} - {this.Platform} - {this.Months} - {this.Tier} - {this.YouTubeMembershipTier}"; }
+    }
+
     public class EventService
     {
+        public static event EventHandler<UserV2ViewModel> OnFollowOccurred = delegate { };
+        public static void FollowOccurred(UserV2ViewModel user) { OnFollowOccurred(null, user); }
+
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnRaidOccurred = delegate { };
+        public static void RaidOccurred(UserV2ViewModel user, int viewers) { OnRaidOccurred(null, new Tuple<UserV2ViewModel, int>(user, viewers)); }
+
+        public static event EventHandler<SubscriptionDetailsModel> OnSubscribeOccurred = delegate { };
+        public static void SubscribeOccurred(SubscriptionDetailsModel subscription) { OnSubscribeOccurred(null, subscription); }
+
+        public static event EventHandler<SubscriptionDetailsModel> OnResubscribeOccurred = delegate { };
+        public static void ResubscribeOccurred(SubscriptionDetailsModel subscription) { OnResubscribeOccurred(null, subscription); }
+
+        public static event EventHandler<SubscriptionDetailsModel> OnSubscriptionGiftedOccurred = delegate { };
+        public static void SubscriptionGiftedOccurred(SubscriptionDetailsModel subscription) { OnSubscriptionGiftedOccurred(null, subscription); }
+
+        public static event EventHandler<IEnumerable<SubscriptionDetailsModel>> OnMassSubscriptionsGiftedOccurred = delegate { };
+        public static void MassSubscriptionsGiftedOccurred(IEnumerable<SubscriptionDetailsModel> subscriptions) { OnMassSubscriptionsGiftedOccurred(null, subscriptions); }
+
+        public static event EventHandler<UserDonationModel> OnDonationOccurred = delegate { };
+        public static void DonationOccurred(UserDonationModel donation) { OnDonationOccurred(null, donation); }
+
+        public static event EventHandler<TwitchUserBitsCheeredModel> OnTwitchBitsCheeredOccurred = delegate { };
+        public static void TwitchBitsCheeredOccurred(TwitchUserBitsCheeredModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
+
+        public static event EventHandler<TrovoChatSpellViewModel> OnTrovoSpellCastOccurred = delegate { };
+        public static void TrovoSpellCastOccurred(TrovoChatSpellViewModel spell) { OnTrovoSpellCastOccurred(null, spell); }
+
+        public static event EventHandler<YouTubeSuperChatViewModel> OnYouTubeSuperChatOccurred = delegate { };
+        public static void YouTubeSuperChatOccurred(YouTubeSuperChatViewModel superchat) { OnYouTubeSuperChatOccurred(null, superchat); }
+
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {
             EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
@@ -187,7 +260,7 @@ namespace MixItUp.Base.Services
 
         public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, List<string> arguments = null, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
-            await donation.AssignUser();
+            donation.AssignUser();
 
             CommandParametersModel parameters = new CommandParametersModel(donation.User, donation.Platform, arguments, donation.GetSpecialIdentifiers());
 
@@ -218,7 +291,7 @@ namespace MixItUp.Base.Services
 
             try
             {
-                GlobalEvents.DonationOccurred(donation);
+                EventService.DonationOccurred(donation);
             }
             catch (Exception ex)
             {

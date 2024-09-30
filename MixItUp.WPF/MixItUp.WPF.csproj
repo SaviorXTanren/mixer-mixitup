@@ -65,6 +65,12 @@
     <StartupObject>MixItUp.WPF.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.7.107.4\lib\net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.Polly, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Polly.3.7.107.6\lib\net45\AWSSDK.Polly.dll</HintPath>
+    </Reference>
     <Reference Include="CacheManager.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=5b450b4fb65c4cdb, processorArchitecture=MSIL">
       <HintPath>..\packages\CacheManager.Core.1.2.0\lib\net45\CacheManager.Core.dll</HintPath>
     </Reference>
@@ -158,8 +164,11 @@
     <Reference Include="MaterialDesignColors, Version=2.0.1.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.1\lib\net452\MaterialDesignColors.dll</HintPath>
     </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=4.1.0.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.4.1.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
+    <Reference Include="MaterialDesignColors, Version=2.0.6.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.2.0.6\lib\net452\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.5.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.4.5.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.20.0.103, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.20.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
@@ -190,6 +199,9 @@
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CognitiveServices.Speech.csharp, Version=1.38.0.28, Culture=neutral, PublicKeyToken=d2e6dcccb609e663, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CognitiveServices.Speech.1.38.0\lib\net462\Microsoft.CognitiveServices.Speech.csharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.Sqlite, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Sqlite.Core.6.0.3\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
@@ -279,7 +291,7 @@
       <HintPath>..\packages\SQLitePCLRaw.provider.dynamic_cdecl.2.0.7\lib\netstandard2.0\SQLitePCLRaw.provider.dynamic_cdecl.dll</HintPath>
     </Reference>
     <Reference Include="StreamingClient.Base, Version=1.0.0.13, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.77\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.78\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -295,7 +307,6 @@
     </Reference>
     <Reference Include="System.Collections.Specialized, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
-      <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -344,17 +355,14 @@
     <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
       <Private>True</Private>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Primitives, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Net.Security, Version=4.0.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Security.4.3.2\lib\net46\System.Net.Security.dll</HintPath>
       <Private>True</Private>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
-      <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.WebSockets.Client.Managed, Version=1.0.22.0, Culture=neutral, processorArchitecture=MSIL">
@@ -397,7 +405,6 @@
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
@@ -412,9 +419,10 @@
     <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Speech" />
+    <Reference Include="System.Speech, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Speech.7.0.0\lib\netstandard2.0\System.Speech.dll</HintPath>
+    </Reference>
     <Reference Include="System.Text.Encoding, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
@@ -456,8 +464,8 @@
     <Reference Include="Trovo.Base, Version=1.0.0.24, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StreamingClientLibrary.Trovo.1.0.0.24\lib\netstandard2.0\Trovo.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Twitch.Base, Version=1.0.0.77, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.77\lib\netstandard2.0\Twitch.Base.dll</HintPath>
+    <Reference Include="Twitch.Base, Version=1.0.0.78, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.78\lib\netstandard2.0\Twitch.Base.dll</HintPath>
     </Reference>
     <Reference Include="websocket-sharp, Version=1.0.1.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocketSharp-netstandard.1.0.1\lib\net45\websocket-sharp.dll</HintPath>
@@ -520,6 +528,9 @@
     <Compile Include="Controls\Actions\GameQueueActionEditorControl.xaml.cs">
       <DependentUpon>GameQueueActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\GroupActionEditorControl.xaml.cs">
+      <DependentUpon>GroupActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\IFTTTActionEditorControl.xaml.cs">
       <DependentUpon>IFTTTActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -547,11 +558,17 @@
     <Compile Include="Controls\Actions\PixelChatActionEditorControl.xaml.cs">
       <DependentUpon>PixelChatActionEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\RandomActionControl.xaml.cs">
-      <DependentUpon>RandomActionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Actions\RandomActionEditorControl.xaml.cs">
+      <DependentUpon>RandomActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\RepeatActionEditorControl.xaml.cs">
+      <DependentUpon>RepeatActionEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\SAMMIActionEditorControl.xaml.cs">
       <DependentUpon>SAMMIActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ScriptActionEditorControl.xaml.cs">
+      <DependentUpon>ScriptActionEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\SerialActionEditorControl.xaml.cs">
       <DependentUpon>SerialActionEditorControl.xaml</DependentUpon>
@@ -591,6 +608,9 @@
     </Compile>
     <Compile Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml.cs">
       <DependentUpon>InfiniteAlbumActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\VTSPogActionEditorControl.xaml.cs">
+      <DependentUpon>VTSPogActionEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\VTubeStudioActionEditorControl.xaml.cs">
       <DependentUpon>VTubeStudioActionEditorControl.xaml</DependentUpon>
@@ -752,6 +772,9 @@
     <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReviewCommandDialogControl.xaml.cs">
       <DependentUpon>CommunityCommandsReviewCommandDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\DropDownSelectorDialogControl.xaml.cs">
+      <DependentUpon>DropDownSelectorDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\EditTestCommandParametersDialogControl.xaml.cs">
       <DependentUpon>EditTestCommandParametersDialogControl.xaml</DependentUpon>
     </Compile>
@@ -763,6 +786,9 @@
     </Compile>
     <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
       <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\OverlayEndpointsUpdateDialogControl.xaml.cs">
+      <DependentUpon>OverlayEndpointsUpdateDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
@@ -794,6 +820,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\DebugControl.xaml.cs">
+      <DependentUpon>DebugControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\GroupedCommandsMainControlBase.cs" />
     <Compile Include="Controls\MainControls\MixItUpOnlineControl.xaml.cs">
@@ -829,56 +858,149 @@
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
+    <Compile Include="Controls\Overlay\OverlayChatV3Control.xaml.cs">
+      <DependentUpon>OverlayChatV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayCustomV3Control.xaml.cs">
+      <DependentUpon>OverlayCustomV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayDiscordReactiveVoiceV3Control.xaml.cs">
+      <DependentUpon>OverlayDiscordReactiveVoiceV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayEmoteEffectV3Control.xaml.cs">
+      <DependentUpon>OverlayEmoteEffectV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayEndCreditsV3Control.xaml.cs">
+      <DependentUpon>OverlayEndCreditsV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayEventListV3Control.xaml.cs">
+      <DependentUpon>OverlayEventListV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayGameQueueV3Control.xaml.cs">
+      <DependentUpon>OverlayGameQueueV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayHTMLV3Control.xaml.cs">
+      <DependentUpon>OverlayHTMLV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayImageV3Control.xaml.cs">
+      <DependentUpon>OverlayImageV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayAnimationV3Control.xaml.cs">
+      <DependentUpon>OverlayAnimationV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayLabelV3Control.xaml.cs">
+      <DependentUpon>OverlayLabelV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayLeaderboardV3Control.xaml.cs">
+      <DependentUpon>OverlayLeaderboardV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayPersistentEmoteEffectV3Control.xaml.cs">
+      <DependentUpon>OverlayPersistentEmoteEffectV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayPersistentTimerV3Control.xaml.cs">
+      <DependentUpon>OverlayPersistentTimerV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayPollV3Control.xaml.cs">
+      <DependentUpon>OverlayPollV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayPositionV3Control.xaml.cs">
+      <DependentUpon>OverlayPositionV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayGoalV3Control.xaml.cs">
+      <DependentUpon>OverlayGoalV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayStreamBossV3Control.xaml.cs">
+      <DependentUpon>OverlayStreamBossV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayTextV3Control.xaml.cs">
+      <DependentUpon>OverlayTextV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayTimerV3Control.xaml.cs">
+      <DependentUpon>OverlayTimerV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayTwitchClipV3Control.xaml.cs">
+      <DependentUpon>OverlayTwitchClipV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\CustomCommandListingControl.xaml.cs">
+      <DependentUpon>CustomCommandListingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayVideoV3Control.xaml.cs">
+      <DependentUpon>OverlayVideoV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayWheelV3Control.xaml.cs">
+      <DependentUpon>OverlayWheelV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayYouTubeV3Control.xaml.cs">
+      <DependentUpon>OverlayYouTubeV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ResetTrackerControl.xaml.cs">
+      <DependentUpon>ResetTrackerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\AmazonPollyServiceControl.xaml.cs">
+      <DependentUpon>AmazonPollyServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\MicrosoftAzureSpeechServiceControl.xaml.cs">
+      <DependentUpon>MicrosoftAzureSpeechServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\TTSMonsterServiceControl.xaml.cs">
+      <DependentUpon>TTSMonsterServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\VTSPogServiceControl.xaml.cs">
+      <DependentUpon>VTSPogServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericMultilineTextSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericMultilineTextSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Deprecated\Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
       <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayEndCreditsItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayEndCreditsItemControl.xaml.cs">
       <DependentUpon>OverlayEndCreditsItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayGameQueueListItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayGameQueueListItemControl.xaml.cs">
       <DependentUpon>OverlayGameQueueListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
       <DependentUpon>OverlayHTMLItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayImageItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayImageItemControl.xaml.cs">
       <DependentUpon>OverlayImageItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayItemControl.cs" />
-    <Compile Include="Controls\Overlay\OverlayItemPositionControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayItemControl.cs" />
+    <Compile Include="Deprecated\Controls\Overlay\OverlayItemPositionControl.xaml.cs">
       <DependentUpon>OverlayItemPositionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayEventListItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayEventListItemControl.xaml.cs">
       <DependentUpon>OverlayEventListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
       <DependentUpon>OverlayLeaderboardListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
       <DependentUpon>OverlayProgressBarItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayStreamBossItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayStreamBossItemControl.xaml.cs">
       <DependentUpon>OverlayStreamBossItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTextItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayTextItemControl.xaml.cs">
       <DependentUpon>OverlayTextItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTickerTapeListItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayTickerTapeListItemControl.xaml.cs">
       <DependentUpon>OverlayTickerTapeListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTimerItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayTimerItemControl.xaml.cs">
       <DependentUpon>OverlayTimerItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTimerTrainItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayTimerTrainItemControl.xaml.cs">
       <DependentUpon>OverlayTimerTrainItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayVideoItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayVideoItemControl.xaml.cs">
       <DependentUpon>OverlayVideoItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayWebPageItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayWebPageItemControl.xaml.cs">
       <DependentUpon>OverlayWebPageItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayYouTubeItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayYouTubeItemControl.xaml.cs">
       <DependentUpon>OverlayYouTubeItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingControlBase.cs" />
@@ -1137,6 +1259,9 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="Services\WindowsAmazonPollyService.cs" />
+    <Compile Include="Services\WindowsMicrosoftAzureSpeechService.cs" />
+    <Compile Include="Services\WindowsScriptRunnerService.cs" />
     <Compile Include="Services\DeveloperAPI\V1\ChatV1Controller.cs" />
     <Compile Include="Services\DeveloperAPI\V1\QuotesV1Controller.cs" />
     <Compile Include="Services\DeveloperAPI\V1\CommandV1Controller.cs" />
@@ -1153,6 +1278,7 @@
     <Compile Include="Services\DeveloperAPI\V2\UsersV2Controller.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsMusicPlayerService.cs" />
+    <Compile Include="Services\WindowsSpeechService.cs" />
     <Compile Include="Services\WindowsOvrStreamService.cs" />
     <Compile Include="Services\WindowsProcessService.cs" />
     <Compile Include="Services\WindowsSocketIOConnection.cs" />
@@ -1213,8 +1339,14 @@
     <Compile Include="Windows\OAuth\OAuthWebBrowserWindow.xaml.cs">
       <DependentUpon>OAuthWebBrowserWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Overlay\OverlayWidgetEditorWindow.xaml.cs">
+    <Compile Include="Deprecated\Windows\Overlay\OverlayWidgetEditorWindow.xaml.cs">
       <DependentUpon>OverlayWidgetEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Overlay\OverlayEndpointV3EditorWindow.xaml.cs">
+      <DependentUpon>OverlayEndpointV3EditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Overlay\OverlayWidgetV3EditorWindow.xaml.cs">
+      <DependentUpon>OverlayWidgetV3EditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\PopOut\PopOutWindow.xaml.cs">
       <DependentUpon>PopOutWindow.xaml</DependentUpon>
@@ -1283,6 +1415,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\GroupActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\IFTTTActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1319,11 +1455,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\RandomActionControl.xaml">
+    <Page Include="Controls\Actions\RandomActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\RepeatActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\SAMMIActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ScriptActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1378,6 +1522,10 @@
     <Page Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Actions\VTSPogActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\VTubeStudioActionEditorControl.xaml">
       <SubType>Designer</SubType>
@@ -1587,6 +1735,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Dialogs\DropDownSelectorDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Dialogs\EditTestCommandParametersDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1600,6 +1752,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\OverlayEndpointsUpdateDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1642,6 +1798,10 @@
     <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainControls\DebugControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\MixItUpOnlineControl.xaml">
       <SubType>Designer</SubType>
@@ -1687,71 +1847,195 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayChatV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayEndCreditsItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayCustomV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayGameQueueListItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayDiscordReactiveVoiceV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayHTMLItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayEmoteEffectV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayImageItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayEndCreditsV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayItemPositionControl.xaml">
+    <Page Include="Controls\Overlay\OverlayEventListV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayEventListItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayGameQueueV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayHTMLV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayProgressBarItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayImageV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayStreamBossItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayAnimationV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTextItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayLabelV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTickerTapeListItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayLeaderboardV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTimerItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayPersistentEmoteEffectV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTimerTrainItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayPersistentTimerV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayVideoItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayPollV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayWebPageItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayPositionV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayYouTubeItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayGoalV3Control.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayStreamBossV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTextV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTimerV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTwitchClipV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\CustomCommandListingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayVideoV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayWheelV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayYouTubeV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ResetTrackerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\AmazonPollyServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\MicrosoftAzureSpeechServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\TTSMonsterServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\VTSPogServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericMultilineTextSettingsOptionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayChatMessagesListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayEndCreditsItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayGameQueueListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayHTMLItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayImageItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayItemPositionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayEventListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayProgressBarItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayStreamBossItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayTextItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayTickerTapeListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayTimerItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayTimerTrainItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayVideoItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayWebPageItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayYouTubeItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2137,6 +2421,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\MixItUpTheme.Elmza.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.KaciesGalaxy.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.WildWestDan.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.KarebearXp.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\MixItUpTheme.Mixer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2209,7 +2509,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Overlay\OverlayWidgetEditorWindow.xaml">
+    <Page Include="Deprecated\Windows\Overlay\OverlayWidgetEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Overlay\OverlayEndpointV3EditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Overlay\OverlayWidgetV3EditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2305,6 +2613,10 @@
     <Resource Include="Assets\Images\Twitter.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\MixItUpTheme.DrewsTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Resource Include="Assets\Images\YoutubeMonochrome.png" />
     <Resource Include="Assets\Images\TwitchMonochrome.png" />
     <Resource Include="Assets\Images\TrovoMonochrome.png" />
@@ -2312,6 +2624,10 @@
     <Resource Include="Assets\Images\Youtube-XS.png" />
     <Resource Include="Assets\Images\Twitch-XS.png" />
     <Resource Include="Assets\Images\Trovo-XS.png" />
+    <Resource Include="Assets\Images\Patreon.png" />
+    <Content Include="Assets\Sounds\WheelClick.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -2436,21 +2752,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\AWSSDK.Polly.3.7.107.6\analyzers\dotnet\cs\AWSSDK.Polly.CodeAnalysis.dll" />
+  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.json
-
 rmdir /Q /S $(TargetDir)Settings\
-
 rmdir /Q /S $(TargetDir)Logs\
-
 rmdir /Q /S $(TargetDir)ChatEventLogs\
-
 rmdir /Q /S $(TargetDir)Counters\
-
-del $(TargetDir)MixItUp.zip
-</PostBuildEvent>
+del $(TargetDir)MixItUp.zip</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
@@ -2470,6 +2783,7 @@ del $(TargetDir)MixItUp.zip
     <Error Condition="!Exists('..\packages\HarfBuzzSharp.NativeAssets.Win32.2.8.2.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\HarfBuzzSharp.NativeAssets.Win32.2.8.2.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets'))" />
     <Error Condition="!Exists('..\packages\SkiaSharp.NativeAssets.macOS.2.88.3\build\net462\SkiaSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.NativeAssets.macOS.2.88.3\build\net462\SkiaSharp.NativeAssets.macOS.targets'))" />
     <Error Condition="!Exists('..\packages\SkiaSharp.NativeAssets.Win32.2.88.3\build\net462\SkiaSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.NativeAssets.Win32.2.88.3\build\net462\SkiaSharp.NativeAssets.Win32.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CognitiveServices.Speech.1.38.0\build\net462\Microsoft.CognitiveServices.Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CognitiveServices.Speech.1.38.0\build\net462\Microsoft.CognitiveServices.Speech.targets'))" />
   </Target>
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.7\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.7\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" />
@@ -2479,6 +2793,8 @@ del $(TargetDir)MixItUp.zip
   <Import Project="..\packages\HarfBuzzSharp.NativeAssets.Win32.2.8.2.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets" Condition="Exists('..\packages\HarfBuzzSharp.NativeAssets.Win32.2.8.2.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets')" />
   <Import Project="..\packages\SkiaSharp.NativeAssets.macOS.2.88.3\build\net462\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('..\packages\SkiaSharp.NativeAssets.macOS.2.88.3\build\net462\SkiaSharp.NativeAssets.macOS.targets')" />
   <Import Project="..\packages\SkiaSharp.NativeAssets.Win32.2.88.3\build\net462\SkiaSharp.NativeAssets.Win32.targets" Condition="Exists('..\packages\SkiaSharp.NativeAssets.Win32.2.88.3\build\net462\SkiaSharp.NativeAssets.Win32.targets')" />
+  <Import Project="..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" />
+  <Import Project="..\packages\Microsoft.CognitiveServices.Speech.1.38.0\build\net462\Microsoft.CognitiveServices.Speech.targets" Condition="Exists('..\packages\Microsoft.CognitiveServices.Speech.1.38.0\build\net462\Microsoft.CognitiveServices.Speech.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

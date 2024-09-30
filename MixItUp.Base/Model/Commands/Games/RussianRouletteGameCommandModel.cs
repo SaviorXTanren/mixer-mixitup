@@ -102,12 +102,17 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     List<CommandParametersModel> participants = new List<CommandParametersModel>(this.runUsers.Values);
                     int payout = this.runBetAmount * participants.Count;
-                    int individualPayout = payout / this.MaxWinners;
 
                     List<CommandParametersModel> winners = new List<CommandParametersModel>();
                     for (int i = 0; i < this.MaxWinners; i++)
                     {
                         CommandParametersModel winner = participants.Random();
+                        if (winner == null)
+                        {
+                            // No more players to pick
+                            break;
+                        }
+
                         winners.Add(winner);
                         participants.Remove(winner);
                     }
@@ -116,6 +121,8 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         await this.RunSubCommand(this.UserFailureCommand, loser);
                     }
+
+                    int individualPayout = payout / winners.Count;
 
                     foreach (CommandParametersModel winner in winners)
                     {

@@ -1,0 +1,80 @@
+# ==================================================================================================
+# GENERAL SETTINGS
+# ==================================================================================================
+
+# Package type. Must be plugin4 for plugins.
+type: plugin4
+
+# Name that identifies the plugin.
+name: MixItUp
+
+# Plugin name that is shown to the user.
+displayName: Mix It Up
+
+# Short description of the plugin.
+description: Mix It Up is a feature-packed stream bot that offers versatile tools to enhance your stream. Our community-driven approach makes us a comprehensive stream bot. We support Twitch, Trovo, and YouTube with a user-friendly interface for creating appealing and interactive streams.
+
+# Name of the plugin library file.
+pluginFileName: MixItUpPlugin.dll
+
+# Plugin version.
+version: 1.0
+
+# Author of the plugin. The author can be a company or an individual developer.
+author: Blazing Cacti LLC
+
+# Copyright information.
+copyright: Copyright © 2024 Blazing Cacti LLC. All rights reserved.
+
+
+# ==================================================================================================
+# PLUGIN PROPERTIES
+# ==================================================================================================
+
+# Location of plugin files on Windows (relative to the plugin base directory).
+# This parameter is required to support Windows.
+pluginFolderWin: .
+
+# Location of plugin files on macOS (relative to the plugin base directory).
+# This parameter is required to support Mac.
+#pluginFolderMac: .
+
+# List of devices the plugin is optimized for.
+supportedDevices:
+    # LoupedeckCtFamily covers the following devices: Loupedeck CT, Live and Live S,
+    # Razer Stream Controller, and Razer Stream Controller X.
+    - LoupedeckCtFamily
+
+    # LoupedeckPlusFamily covers Loupedeck+ device. Uncomment the following line to support Loupedeck+.
+    - LoupedeckPlusFamily
+
+# List of plugin capabilities.
+pluginCapabilities:
+    # Uncomment the following line if this plugin is an application plugin.
+    - HasApplication
+
+    # Uncomment the following line if the plugin sends keyboard shortcuts to the target application.
+    #- ActivatesApplication
+
+# Minimum Loupedeck version supported by the plugin.
+minimumLoupedeckVersion: 6.0
+
+
+# ==================================================================================================
+# LOUPEDECK MARKETPLACE SETTINGS
+# ==================================================================================================
+
+# Name of the license that the plugin is licensed under. Select the one that you prefer.
+# NOTE: GPL license is not compatible with Loupedeck Marketplace.
+license: MIT
+
+# URL of the plugin license.
+licenseUrl: https://opensource.org/licenses/MIT
+
+# URL of the support page where the users can send improvement suggestions and report bugs.
+# The URL is shown in Loupedeck Marketplace. The page can be for example a GitHub issues page.
+# NOTE: This setting is recommended when publishing the plugin in Loupedeck Marketplace.
+supportPageUrl: https://mixitupapp.com/discord
+
+# URL of the plugin homepage. The URL is shown in Loupedeck Marketplace.
+homePageUrl: https://mixitupapp.com

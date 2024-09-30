@@ -52,6 +52,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool shouldProcessMath;
 
+        public bool ReplaceSpecialIdentifiersInFunctions
+        {
+            get { return this.replaceSpecialIdentifiersInFunctions; }
+            set
+            {
+                this.replaceSpecialIdentifiersInFunctions = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool replaceSpecialIdentifiersInFunctions;
+
         public SpecialIdentifierActionEditorControlViewModel(SpecialIdentifierActionModel action)
             : base(action)
         {
@@ -59,6 +70,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.ReplacementText = action.ReplacementText;
             this.MakeGloballyUsable = action.MakeGloballyUsable;
             this.ShouldProcessMath = action.ShouldProcessMath;
+            this.ReplaceSpecialIdentifiersInFunctions = action.ReplaceSpecialIdentifiersInFunctions;
         }
 
         public SpecialIdentifierActionEditorControlViewModel() : base() { }
@@ -84,6 +96,6 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult(new Result());
         }
 
-        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new SpecialIdentifierActionModel(this.SpecialIdentifierName, this.ReplacementText, this.MakeGloballyUsable, this.ShouldProcessMath)); }
+        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new SpecialIdentifierActionModel(this.SpecialIdentifierName, this.ReplacementText, this.MakeGloballyUsable, this.ShouldProcessMath, this.ReplaceSpecialIdentifiersInFunctions)); }
     }
 }

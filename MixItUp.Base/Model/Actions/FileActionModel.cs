@@ -23,10 +23,11 @@ namespace MixItUp.Base.Model.Actions
         InsertInFileAtRandomLine,
         RemoveLineWithSpecificTextFromFile,
         CountLinesInFile,
+        ReadEachLineFromFile,
     }
 
     [DataContract]
-    public class FileActionModel : ActionModelBase
+    public class FileActionModel : GroupActionModel
     {
         [DataMember]
         public FileActionTypeEnum ActionType { get; set; }
@@ -53,6 +54,16 @@ namespace MixItUp.Base.Model.Actions
             this.CaseSensitive = caseSensitive;
         }
 
+        public FileActionModel(FileActionTypeEnum actionType, string filePath, string transferText, IEnumerable<ActionModelBase> actions, string lineIndex = null, bool caseSensitive = false)
+            : base(ActionTypeEnum.File, actions)
+        {
+            this.ActionType = actionType;
+            this.FilePath = filePath;
+            this.TransferText = transferText;
+            this.LineIndex = lineIndex;
+            this.CaseSensitive = caseSensitive;
+        }
+
         [Obsolete]
         public FileActionModel() { }
 
@@ -65,7 +76,8 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile ||
-                this.ActionType == FileActionTypeEnum.CountLinesInFile)
+                this.ActionType == FileActionTypeEnum.CountLinesInFile ||
+                this.ActionType == FileActionTypeEnum.ReadEachLineFromFile)
             {
                 if (!ServiceManager.Get<IFileService>().IsURLPath(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
                 {
@@ -80,7 +92,8 @@ namespace MixItUp.Base.Model.Actions
             if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.CountLinesInFile)
+                this.ActionType == FileActionTypeEnum.CountLinesInFile ||
+                this.ActionType == FileActionTypeEnum.ReadEachLineFromFile)
             {
                 parameters.SpecialIdentifiers.Remove(this.TransferText);
             }
@@ -97,7 +110,8 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine ||
-                this.ActionType == FileActionTypeEnum.CountLinesInFile)
+                this.ActionType == FileActionTypeEnum.CountLinesInFile ||
+                this.ActionType == FileActionTypeEnum.ReadEachLineFromFile)
             {
                 textToRead = await ServiceManager.Get<IFileService>().ReadFile(filePath);
             }
@@ -106,7 +120,8 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine ||
-                this.ActionType == FileActionTypeEnum.CountLinesInFile)
+                this.ActionType == FileActionTypeEnum.CountLinesInFile ||
+                this.ActionType == FileActionTypeEnum.ReadEachLineFromFile)
             {
                 if (!string.IsNullOrEmpty(textToRead))
                 {
@@ -120,6 +135,14 @@ namespace MixItUp.Base.Model.Actions
                 if (this.ActionType == FileActionTypeEnum.CountLinesInFile)
                 {
                     textToRead = lines.Count().ToString();
+                }
+                else if (this.ActionType == FileActionTypeEnum.ReadEachLineFromFile)
+                {
+                    foreach (string line in lines)
+                    {
+                        parameters.SpecialIdentifiers[this.TransferText] = line;
+                        await this.RunSubActions(parameters);
+                    }
                 }
                 else
                 {

@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
             if (!string.Equals(this.UserTextBox.Text, ChannelSession.User.Username, System.StringComparison.OrdinalIgnoreCase))
             {
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.parameters.Platform, this.UserTextBox.Text, performPlatformSearch: true);
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(this.parameters.Platform, platformUsername: this.UserTextBox.Text, performPlatformSearch: true);
                 if (user != null)
                 {
                     this.parameters.User = user;

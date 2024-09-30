@@ -22,6 +22,11 @@ namespace MixItUp.Base.Util
             return number >= min && number <= max;
         }
 
+        public static double Truncate(double number, int places)
+        {
+            return Math.Floor(number * Math.Pow(10, places)) / Math.Pow(10, places);
+        }
+
         public static double ProcessMathEquation(string equation)
         {
             double result = 0;

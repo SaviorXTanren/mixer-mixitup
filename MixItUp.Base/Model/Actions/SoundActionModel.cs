@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
@@ -47,7 +48,8 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.ActionType == SoundActionTypeEnum.PlaySound)
             {
-                string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+                string audioFilePath = RandomHelper.PickRandomFileFromDelimitedString(this.FilePath);
+                audioFilePath = await ReplaceStringWithSpecialModifiers(audioFilePath, parameters);
 
                 if (!ServiceManager.Get<IFileService>().IsURLPath(audioFilePath) && !ServiceManager.Get<IFileService>().FileExists(audioFilePath))
                 {

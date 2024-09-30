@@ -320,11 +320,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataEditorWindowViewModel(UserV2Model user)
         {
-            this.User = ServiceManager.Get<UserService>().GetActiveUserByID(user.ID);
-            if (this.User == null)
-            {
-                this.User = new UserV2ViewModel(user);
-            }
+            this.User = new UserV2ViewModel(user);
         }
 
         public async Task Load()

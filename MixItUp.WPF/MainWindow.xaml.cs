@@ -39,7 +39,7 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
-            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
+            ChannelSession.OnRestartRequested += ChannelSession_OnRestartRequested;
 
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
@@ -109,7 +109,11 @@ namespace MixItUp.WPF
             ServiceManager.Get<IInputService>().Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {
-                ServiceManager.Get<IInputService>().RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.VirtualKey);
+                CommandModelBase command = ChannelSession.Settings.GetCommand(hotKeyConfiguration.CommandID);
+                if (command != null)
+                {
+                    ServiceManager.Get<IInputService>().RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.VirtualKey);
+                }
             }
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.Name))
@@ -153,10 +157,20 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Changelog, new ChangelogControl(), "https://wiki.mixitupapp.com/");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.About, new AboutControl(), "https://wiki.mixitupapp.com/");
 
+            if (ChannelSession.IsDebug())
+            {
+                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Debug, new DebugControl(), "https://wiki.mixitupapp.com/");
+            }
+
             this.MainMenu.MenuItemSelected(MixItUp.Base.Resources.Chat);
 
             ActivationProtocolHandler.OnCommunityCommandActivation += ActivationProtocolHandler_OnCommunityCommandActivation;
             ActivationProtocolHandler.OnCommandFileActivation += ActivationProtocolHandler_OnCommandFileActivation;
+
+            if (SettingsV3Upgrader.OverlayV3UpgradeOccurred && ChannelSession.Settings.OverlayEndpointsV3.Count > 1)
+            {
+                await DialogHelper.ShowCustom(new OverlayEndpointsUpdateDialogControl());
+            }
         }
 
         private async Task StartShutdownProcess()
@@ -230,7 +244,7 @@ namespace MixItUp.WPF
             }
         }
 
-        private void GlobalEvents_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
+        private void ChannelSession_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
 
         private async void ActivationProtocolHandler_OnCommunityCommandActivation(object sender, Guid commandID)
         {

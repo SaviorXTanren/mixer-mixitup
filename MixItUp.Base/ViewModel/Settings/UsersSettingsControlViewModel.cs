@@ -129,7 +129,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 {
                     await ServiceManager.Get<UserService>().ClearUserDataRange(days);
                     await ChannelSession.SaveSettings();
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
             }));
 
@@ -139,7 +139,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 {
                     await ServiceManager.Get<UserService>().ClearAllUserData();
                     await ChannelSession.SaveSettings();
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
             }));
 

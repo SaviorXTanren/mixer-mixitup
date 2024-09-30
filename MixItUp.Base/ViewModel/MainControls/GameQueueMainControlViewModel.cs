@@ -74,7 +74,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public GameQueueMainControlViewModel(UIViewModelBase windowViewModel)
             : base(windowViewModel)
         {
-            GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;
+            GameQueueService.OnGameQueueUpdated += GameQueueService_OnGameQueueUpdated;
 
             this.GameQueueUserJoinedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserJoinedCommandID);
             this.GameQueueUserSelectedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID);
@@ -120,7 +120,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        private void GlobalEvents_OnGameQueueUpdated(object sender, System.EventArgs e)
+        private void GameQueueService_OnGameQueueUpdated(object sender, System.EventArgs e)
         {
             List<QueueUser> queue = new List<QueueUser>();
             int position = 1;

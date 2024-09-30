@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
@@ -26,7 +27,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV3Model
     {
-        public const int LatestVersion = 6;
+        public const int LatestVersion = 7;
 
         public const string SettingsDirectoryName = "Settings";
         public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
@@ -51,7 +52,7 @@ namespace MixItUp.Base.Model.Settings
                     {
                         ChannelSession.AppSettings.SettingsRestoreFilePath = filePath;
                         ChannelSession.AppSettings.SettingsToReplaceDuringRestore = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
-                        GlobalEvents.RestartRequested();
+                        ChannelSession.RestartRequested();
                     }
                     else
                     {
@@ -122,6 +123,10 @@ namespace MixItUp.Base.Model.Settings
         public bool EnableCrowdControl { get; set; }
         [DataMember]
         public bool EnableSAMMI { get; set; }
+        [DataMember]
+        public int SAMMIPortNumber { get; set; } = 9450;
+        [DataMember]
+        public OAuthTokenModel TTSMonsterOAuthToken { get; set; }
 
         #endregion Authentication
 
@@ -176,6 +181,8 @@ namespace MixItUp.Base.Model.Settings
         public bool HideDeletedMessages { get; set; }
         [DataMember]
         public bool HideBotMessages { get; set; }
+        [DataMember]
+        public HashSet<string> HideSpecificUserMessages { get; set; } = new HashSet<string>();
 
         [DataMember]
         public bool ShowAlejoPronouns { get; set; }
@@ -233,7 +240,12 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool TwitchReplyToCommandChatMessages { get; set; }
         [DataMember]
+        public bool TwitchSlashMeForAllChatMessages { get; set; }
+        [DataMember]
         public int TwitchUpcomingAdCommandTriggerAmount { get; set; } = 5;
+
+        [DataMember]
+        public string PythonExecutablePath { get; set; }
 
         [DataMember]
         public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();
@@ -466,14 +478,20 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool EnableOverlay { get; set; }
         [DataMember]
-        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; } = new Dictionary<string, int>();
+        public int OverlayPortNumber { get; set; } = OverlayV3Service.DefaultOverlayPort;
         [DataMember]
         public string OverlaySourceName { get; set; }
+        [DataMember]
+        public List<OverlayEndpointV3Model> OverlayEndpointsV3 { get; set; } = new List<OverlayEndpointV3Model>();
+        [DataMember]
+        public List<OverlayWidgetV3Model> OverlayWidgetsV3 { get; set; } = new List<OverlayWidgetV3Model>();
 
         [DataMember]
-        public List<OverlayWidgetModel> OverlayWidgets { get; set; } = new List<OverlayWidgetModel>();
+        [Obsolete]
+        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; } = new Dictionary<string, int>();
         [DataMember]
-        public int OverlayWidgetRefreshTime { get; set; } = 5;
+        [Obsolete]
+        public List<OverlayWidgetModel> OverlayWidgets { get; set; } = new List<OverlayWidgetModel>();
 
         #endregion Overlay
 
@@ -546,7 +564,30 @@ namespace MixItUp.Base.Model.Settings
         public List<Tuple<int, int>> PulsoidCommandHeartRateRangeTriggers { get; set; } = new List<Tuple<int, int>>();
 
         [DataMember]
+        public bool VTSPogEnabled { get; set; }
+
+        [DataMember]
         public bool MtionStudioEnabled { get; set; }
+
+        [DataMember]
+        public string AmazonPollyCustomRegionSystemName { get; set; }
+        [DataMember]
+        public string AmazonPollyCustomAccessKey { get; set; }
+        [DataMember]
+        public string AmazonPollyCustomSecretKey { get; set; }
+
+        [DataMember]
+        public string MicrosoftAzureSpeechCustomRegionName { get; set; }
+        [DataMember]
+        public string MicrosoftAzureSpeechCustomSubscriptionKey { get; set; }
+
+        [DataMember]
+        public string ElevenLabsAPIKey { get; set; }
+
+        [DataMember]
+        public string UberduckAPIKey { get; set; }
+        [DataMember]
+        public string UberduckAPISecret { get; set; }
 
         #endregion Services
 
@@ -608,6 +649,13 @@ namespace MixItUp.Base.Model.Settings
         public List<RedemptionStorePurchaseModel> RedemptionStorePurchases { get; set; } = new List<RedemptionStorePurchaseModel>();
 
         #endregion Currency
+
+        #region Twitch
+
+        [DataMember]
+        public Dictionary<string, DateTimeOffset> TwitchVIPAutomaticRemovals { get; set; } = new Dictionary<string, DateTimeOffset>();
+
+        #endregion Twitch
 
         [DataMember]
         public List<string> RecentStreamTitles { get; set; } = new List<string>();
@@ -905,6 +953,10 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.PulsoidOAuthToken = ServiceManager.Get<PulsoidService>().GetOAuthTokenCopy();
             }
+            if (ServiceManager.Get<ITTSMonsterService>().IsConnected)
+            {
+                this.TTSMonsterOAuthToken = ServiceManager.Get<ITTSMonsterService>().GetOAuthTokenCopy();
+            }
         }
 
         public async Task SaveDatabaseData()
@@ -1144,6 +1196,16 @@ namespace MixItUp.Base.Model.Settings
                     this.StreamingPlatformAuthentications[p] = new StreamingPlatformAuthenticationSettingsModel(p);
                 }
             });
+
+            if (this.OverlayEndpointsV3.Count == 0)
+            {
+                this.OverlayEndpointsV3.Add(new OverlayEndpointV3Model(OverlayEndpointV3Model.DefaultOverlayName)
+                {
+                    ID = Guid.Empty
+                });
+
+                await ServiceManager.Get<OverlayV3Service>().Enable();
+            }
 
             if (this.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
             {

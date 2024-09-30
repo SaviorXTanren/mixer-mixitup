@@ -76,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 if (await DialogHelper.ShowConfirmation(Resources.RunNewUserWizardWarning))
                 {
                     ChannelSession.Settings.ReRunWizard = true;
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
             }));
 
@@ -85,7 +85,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 if (await DialogHelper.ShowConfirmation(Resources.DeleteSettingsWarning))
                 {
                     ChannelSession.AppSettings.SettingsToDelete = ChannelSession.Settings.ID;
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
             }));
         }

@@ -90,6 +90,10 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
     </Style>
 
+    <Style x:Key="OverlayEditorMultiLineTextBox" TargetType="TextBox" BasedOn="{StaticResource MultiLineTextBox}">
+        <Setter Property="FontFamily" Value="Courier New" />
+    </Style>
+
     <Style x:Key="DefaultBorder" TargetType="Border">
         <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -265,6 +269,16 @@
                             <Setter TargetName="PART_ContentCoverGrid" Property="IsHitTestVisible" Value="True" />
                         </Trigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MaterialDesignPrimaryOutlineListBoxItem" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <CheckBox Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}" FontWeight="{TemplateBinding FontWeight}" ContentStringFormat="{TemplateBinding ContentTemplateSelector}" IsChecked="{Binding IsSelected}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -21,6 +21,9 @@ namespace MixItUp.Base.Services
 
     public class GiveawayService
     {
+        public static event EventHandler<bool> OnGiveawaysChangedOccurred = delegate { };
+        public static void GiveawaysChangedOccurred(bool usersUpdated = false) { OnGiveawaysChangedOccurred(null, usersUpdated); }
+
         public bool IsRunning { get; private set; }
 
         public string Item { get; private set; }
@@ -88,7 +91,7 @@ namespace MixItUp.Base.Services
             this.TimeLeft = ChannelSession.Settings.GiveawayTimer * 60;
             this.enteredUsers.Clear();
 
-            GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
+            GiveawayService.GiveawaysChangedOccurred(usersUpdated: true);
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -116,9 +119,9 @@ namespace MixItUp.Base.Services
 
             this.IsRunning = false;
 
-            GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
+            GiveawayService.GiveawaysChangedOccurred(usersUpdated: true);
 
-            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatCommandMessageReceived;
+            ChatService.OnChatMessageReceived -= ChatService_OnChatCommandMessageReceived;
 
             return Task.CompletedTask;
         }
@@ -136,7 +139,7 @@ namespace MixItUp.Base.Services
 
         private async Task GiveawayTimerBackground()
         {
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
+            ChatService.OnChatMessageReceived += ChatService_OnChatCommandMessageReceived;
 
             int totalTime = ChannelSession.Settings.GiveawayTimer * 60;
             int reminderTime = ChannelSession.Settings.GiveawayReminderInterval * 60;
@@ -159,7 +162,7 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    GlobalEvents.GiveawaysChangedOccurred();
+                    GiveawayService.GiveawaysChangedOccurred();
                 }
 
                 while (true)
@@ -185,7 +188,7 @@ namespace MixItUp.Base.Services
 
                     if (this.Winner != null)
                     {
-                        GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
+                        GiveawayService.GiveawaysChangedOccurred(usersUpdated: true);
 
                         if (!ChannelSession.Settings.GiveawayRequireClaim)
                         {
@@ -209,7 +212,7 @@ namespace MixItUp.Base.Services
                                     return;
                                 }
 
-                                GlobalEvents.GiveawaysChangedOccurred();
+                                GiveawayService.GiveawaysChangedOccurred();
                             }
                         }
                     }
@@ -227,7 +230,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
+        private async void ChatService_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
         {
             try
             {
@@ -318,7 +321,7 @@ namespace MixItUp.Base.Services
 
                             await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayUserJoinedCommandID, new CommandParametersModel(message.User, this.GetTriggeringPlatform(), arguments, specialIdentifiers));
 
-                            GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
+                            GiveawayService.GiveawaysChangedOccurred(usersUpdated: true);
                         }
                     }
                 }

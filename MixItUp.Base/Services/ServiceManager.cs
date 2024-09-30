@@ -6,6 +6,12 @@ namespace MixItUp.Base.Services
 {
     public static class ServiceManager
     {
+        public static event EventHandler<string> OnServiceDisconnect = delegate { };
+        public static void ServiceDisconnect(string serviceName) { OnServiceDisconnect(null, serviceName); }
+
+        public static event EventHandler<string> OnServiceReconnect = delegate { };
+        public static void ServiceReconnect(string serviceName) { OnServiceReconnect(null, serviceName); }
+
         private static Dictionary<Type, object> services = new Dictionary<Type, object>();
 
         public static void Add<T>(T service) { ServiceManager.services[typeof(T)] = service; }

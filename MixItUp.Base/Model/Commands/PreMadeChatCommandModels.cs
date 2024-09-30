@@ -1,11 +1,9 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -320,7 +318,11 @@ namespace MixItUp.Base.Model.Commands
                         if (quote == null)
                         {
                             string searchText = string.Join(" ", parameters.Arguments).ToLower();
-                            quote = ChannelSession.Settings.Quotes.FirstOrDefault(q => q.Quote.ToLower().Contains(searchText));
+                            var applicableQuotes = ChannelSession.Settings.Quotes.Where(q => q.Quote.ToLower().Contains(searchText));
+                            if (applicableQuotes.Count() > 0)
+                            {
+                                quote = applicableQuotes.Random();
+                            }
                         }
 
                         if (quote == null)
@@ -419,7 +421,7 @@ namespace MixItUp.Base.Model.Commands
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
-                    GlobalEvents.QuoteAdded(quote);
+                    UserQuoteModel.QuoteAdded(quote);
 
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QuoteAddedHeader + quote.ToString(), parameters);
                 }
@@ -725,10 +727,11 @@ namespace MixItUp.Base.Model.Commands
 
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
+                    IStreamingPlatformSessionService session = StreamingPlatforms.GetPlatformSessionService(p);
+                    if (session.IsConnected)
                     {
-                        results[p] = await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
-                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
+                        results[p] = await session.SetGame(name);
+                        await session.RefreshChannel();
                     }
                 });
 
@@ -758,7 +761,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string username = parameters.Arguments.ElementAt(0);
 
-                UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, username);
+                UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatform(parameters.Platform, platformUsername: username);
                 if (targetUser != null)
                 {
                     targetUser.CustomTitle = string.Join(" ", parameters.Arguments.Skip(1));
@@ -965,7 +968,7 @@ namespace MixItUp.Base.Model.Commands
                 }
 
                 string username = UserService.SanitizeUsername(string.Join(" ", parameters.Arguments.Skip(1)));
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, username, performPlatformSearch: true);
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformUsername: username, performPlatformSearch: true);
                 if (user == null)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUserNotFound, username), parameters);
@@ -975,7 +978,7 @@ namespace MixItUp.Base.Model.Commands
                 if (LinkedAccounts.ContainsKey(user.ID) && LinkedAccounts[user.ID] == parameters.User.ID)
                 {
                     LinkedAccounts.Remove(user.ID);
-                    await parameters.User.MergeUserData(user);
+                    UserV2ViewModel.MergeUserData(user, parameters.User);
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.LinkAccountCommandAccountsLinkedSuccessfully, parameters);
                 }
                 else

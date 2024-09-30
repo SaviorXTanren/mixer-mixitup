@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -404,6 +406,22 @@ namespace MixItUp.Base.Services.Twitch
                                 eventCommandSpecialIdentifiers["adnexttime"] = nextAd.ToFriendlyTimeString();
                                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdUpcoming, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
                             }
+                        }
+                    }
+                }
+
+                foreach (var key in ChannelSession.Settings.TwitchVIPAutomaticRemovals.Keys.ToList())
+                {
+                    if (ChannelSession.Settings.TwitchVIPAutomaticRemovals.TryGetValue(key, out DateTimeOffset removalTime) && removalTime < DateTimeOffset.Now)
+                    {
+                        ChannelSession.Settings.TwitchVIPAutomaticRemovals.Remove(key);
+
+                        await ServiceManager.Get<TwitchSessionService>().UserConnection.UnVIPUser(ServiceManager.Get<TwitchSessionService>().User, new UserModel() { id = key });
+
+                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: key);
+                        if (user != null)
+                        {
+                            user.Roles.Remove(UserRoleEnum.TwitchVIP);
                         }
                     }
                 }

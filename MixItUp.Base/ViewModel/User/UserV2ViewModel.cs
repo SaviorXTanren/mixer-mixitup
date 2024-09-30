@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
@@ -22,7 +23,18 @@ namespace MixItUp.Base.ViewModel.User
 
         public static UserV2ViewModel CreateUnassociated(string username = null) { return new UserV2ViewModel(StreamingPlatformTypeEnum.None, UserV2Model.CreateUnassociated(username)); }
 
-        private StreamingPlatformTypeEnum platform;
+        public static void MergeUserData(UserV2ViewModel primary, UserV2ViewModel secondary)
+        {
+            primary.model.AddPlatformData(secondary.platformModel);
+            primary.model.MergeUserData(secondary.Model);
+
+            UserV2Model oldData = secondary.model;
+            secondary.UpdateModel(primary.model);
+
+            ServiceManager.Get<UserService>().DeleteUserData(oldData.ID);
+            ServiceManager.Get<UserService>().SetUserData(primary.model);
+        }
+
         private UserV2Model model;
         private UserPlatformV2ModelBase platformModel;
 
@@ -32,9 +44,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.model = model;
 
-            if (this.platform != StreamingPlatformTypeEnum.None)
+            if (platform != StreamingPlatformTypeEnum.None)
             {
-                this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
+                this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(platform);
             }
 
             if (this.platformModel == null && this.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
@@ -47,11 +59,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.Model.GetPlatforms().First());
             }
 
-            if (this.platformModel != null)
-            {
-                this.platform = this.platformModel.Platform;
-            }
-            else
+            if (this.platformModel == null)
             {
                 throw new InvalidOperationException($"User data does not contain any platform data - {model.ID} - {platform}");
             }
@@ -65,7 +73,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public Guid ID { get { return this.Model.ID; } }
 
-        public StreamingPlatformTypeEnum Platform { get { return this.platform; } }
+        public StreamingPlatformTypeEnum Platform { get { return this.PlatformModel.Platform; } }
 
         public HashSet<StreamingPlatformTypeEnum> AllPlatforms { get { return this.Model.GetPlatforms(); } }
 
@@ -108,6 +116,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
         private string color;
+
+        public string ColorInApp { get { return string.IsNullOrEmpty(this.Color) ? UserV2ViewModel.UserDefaultColor : this.Color; } }
 
         public string RolesString
         {
@@ -194,18 +204,22 @@ namespace MixItUp.Base.ViewModel.User
                 return null;
             }
         }
+        public string PlatformBadgeFullLink { get { return $"https://github.com/SaviorXTanren/mixer-mixitup/raw/master/MixItUp.WPF{this.PlatformBadgeLink}"; } }
         public bool ShowPlatformBadge { get { return true; } }
 
         public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
+        public string AccountDateString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.Unknown; } }
         public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.Unknown; } }
         public int AccountDays { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
 
         public DateTimeOffset? FollowDate { get { return this.PlatformModel.FollowDate; } set { this.PlatformModel.FollowDate = value; } }
+        public string FollowDateString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.NotFollowing; } }
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotFollowing; } }
         public int FollowDays { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
         public int FollowMonths { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
         public DateTimeOffset? SubscribeDate { get { return this.PlatformModel.SubscribeDate; } set { this.PlatformModel.SubscribeDate = value; } }
+        public string SubscribeDateString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.NotSubscribed; } }
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
         public int SubscribeDays { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
         public int SubscribeMonths { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
@@ -638,20 +652,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public async Task MergeUserData(UserV2ViewModel other)
-        {
-            this.model.AddPlatformData(other.platformModel);
-            this.model.MergeUserData(other.Model);
-
-            await ServiceManager.Get<UserService>().RemoveActiveUser(other.ID);
-            await ServiceManager.Get<UserService>().RemoveActiveUser(this.ID);
-
-            ServiceManager.Get<UserService>().DeleteUserData(other.ID);
-            ServiceManager.Get<UserService>().SetUserData(this.model);
-
-            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(this);
-        }
-
         public void MergeUserData(UserImportModel import)
         {
             this.OnlineViewingMinutes += import.OnlineViewingMinutes;
@@ -722,9 +722,9 @@ namespace MixItUp.Base.ViewModel.User
                     if (ChannelSession.Settings.CustomUsernameRoleColors.ContainsKey(role))
                     {
                         string name = ChannelSession.Settings.CustomUsernameRoleColors[role];
-                        if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
+                        if (ColorSchemes.MaterialDesignColors.ContainsKey(name))
                         {
-                            this.Color = ColorSchemes.HTMLColorSchemeDictionary[name];
+                            this.Color = ColorSchemes.MaterialDesignColors[name];
                             break;
                         }
                     }
@@ -737,11 +737,6 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.Color = ((TwitchUserPlatformV2Model)this.PlatformModel).Color;
                 }
-            }
-
-            if (string.IsNullOrEmpty(this.Color))
-            {
-                this.Color = UserV2ViewModel.UserDefaultColor;
             }
 
             var sortRole = this.PrimaryRole;
@@ -774,5 +769,10 @@ namespace MixItUp.Base.ViewModel.User
         public int CompareTo(UserV2ViewModel other) { return this.SortableID.CompareTo(other.SortableID); }
 
         public override string ToString() { return this.Username; }
+
+        private void UpdateModel(UserV2Model model)
+        {
+            this.model = model;
+        }
     }
 }

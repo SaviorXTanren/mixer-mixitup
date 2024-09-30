@@ -108,12 +108,15 @@ namespace MixItUp.Base.Services.External
 
     public class StreamlootsService : OAuthExternalServiceBase
     {
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnStreamlootsPurchaseOccurred = delegate { };
+        public static void StreamlootsPurchaseOccurred(UserV2ViewModel user, int amount) { OnStreamlootsPurchaseOccurred(null, new Tuple<UserV2ViewModel, int>(user, amount)); }
+
+        public event EventHandler OnStreamlootsConnectionChanged = delegate { };
+
         private WebRequest webRequest;
         private Stream responseStream;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
-        public event EventHandler OnStreamlootsConnectionChanged = delegate { };
 
         public StreamlootsService() : base("") { }
 
@@ -277,7 +280,7 @@ namespace MixItUp.Base.Services.External
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.StreamlootsPackPurchased, parameters);
                 }
 
-                GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserV2ViewModel, int>(user, purchase.data.Quantity));
+                StreamlootsService.StreamlootsPurchaseOccurred(user, purchase.data.Quantity);
 
                 if (giftee != null)
                 {
@@ -335,7 +338,7 @@ namespace MixItUp.Base.Services.External
 
         private UserV2ViewModel GetUser(string username)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.All, platformUsername: username);
             if (user == null)
             {
                 user = UserV2ViewModel.CreateUnassociated(username);

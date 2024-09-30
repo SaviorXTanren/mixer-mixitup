@@ -1606,7 +1606,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Pitch" xml:space="preserve">
-    <value>Pitch (0% - 200%)</value>
+    <value>Pitch</value>
     <comment>Manual</comment>
   </data>
   <data name="Play" xml:space="preserve">
@@ -1617,7 +1617,7 @@
     <value>Port Name</value>
   </data>
   <data name="Position" xml:space="preserve">
-    <value>Pos</value>
+    <value>Position</value>
     <comment>Manual</comment>
   </data>
   <data name="PreMade" xml:space="preserve">
@@ -1706,7 +1706,7 @@
     <value>Rank Requirement</value>
   </data>
   <data name="Rate" xml:space="preserve">
-    <value>Rate (0% - 150%)</value>
+    <value>Rate</value>
     <comment>Manual</comment>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
@@ -5335,7 +5335,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Clip</value>
   </data>
   <data name="SpinWheel" xml:space="preserve">
-    <value>Spin the Wheel</value>
+    <value>Spin Wheel</value>
   </data>
   <data name="EmptyJar" xml:space="preserve">
     <value>Empty the Jar</value>
@@ -9118,170 +9118,8 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="EnableSubscriberMode" xml:space="preserve">
     <value>Enable Subscriber Mode</value>
   </data>
-  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
-    <value>var additionalTime = 0;
-
-function timerLoop(totalSeconds, endingSeconds, displayFormat)
-{
-    totalSeconds += additionalTime;
-    additionalTime = 0;
-
-    var text = displayFormat;
-
-    var seconds = totalSeconds % 60;
-    if (seconds &lt; 10) { seconds = "0" + seconds }
-    text = text.replace("SS", totalSeconds);
-    text = text.replace("ss", seconds);
-
-    var totalMinutes = Math.floor(totalSeconds / 60);
-    var minutes = totalMinutes % 60;
-    if (minutes &lt; 10) { minutes = "0" + minutes }
-    text = text.replace("MM", totalMinutes);
-    text = text.replace("mm", minutes);
-
-    var totalHours = Math.floor(totalMinutes / 60);
-    var hours = totalHours % 24;
-    if (hours &lt; 10) { hours = "0" + hours }
-    text = text.replace("HH", totalHours);
-    text = text.replace("hh", hours);
-
-    var days = Math.floor(totalHours / 24);
-    text = text.replace("DD", hours);
-
-    document.getElementById("text").innerHTML = text;
-
-    setTimeout(function () {
-        if (endingSeconds &gt; 0) {
-            totalSeconds++;
-            if (totalSeconds &lt; endingSeconds) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
-            }        
-        }
-        else {
-            totalSeconds--;
-            if (totalSeconds &gt;= 0) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
-            }
-        }
-    }, 1000);
-}
-
-function adjustTime(time)
-{
-    additionalTime += time;
-}
-
-if ({CountUp}) {
-    timerLoop(0, {Duration}, "{DisplayFormat}");  
-}
-else {
-    timerLoop({Duration}, 0, "{DisplayFormat}");
-}</value>
-  </data>
-  <data name="OverlayImageDefaultCSS" xml:space="preserve">
-    <value>.image {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id="image" class="image" src="{FilePath}" /&gt;</value>
-  </data>
-  <data name="OverlayTextDefaultCSS" xml:space="preserve">
-    <value>.text {
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: '{FontFamily}';
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-}</value>
-  </data>
-  <data name="OverlayTextDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="text" class="text"&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
-    <value>.video-{ID} {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
-    <value>&lt;video id="video" class="video" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
-    &lt;source src="{FilePath}" type="video/{VideoExtension}" /&gt;
-&lt;/video&gt;</value>
-  </data>
-  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
-  </data>
-  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="youtube-{ID}" /&gt;
-
-&lt;script&gt;
-    var youtubeVideoPlayer = new YT.Player("youtube-{ID}", {
-        height: {HeightNumber},
-        width: {WidthNumber},
-        videoId: '{VideoID}',
-        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': {StartTime} },
-        events: {
-            'onReady': function () {
-                youtubeVideoPlayer.setVolume({Volume});
-                youtubeVideoPlayer.setLoop(false);
-                youtubeVideoPlayer.frameBorder = 0;
-                youtubeVideoPlayer.playVideo();
-            },
-            'onStateChange': function (event) {
-                if (event.data == YT.PlayerState.ENDED) {
-                    event.target.destroy();
-                }
-            }
-        }
-    });
-&lt;/script&gt;</value>
-  </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
-  </data>
-  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="text" class="text"&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>.maindiv {
-    position: absolute;
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    min-height: 100%;
-    margin: 0px;
-    z-index: {Layer};
-}
-
-.contentdiv {
-    position: absolute;
-    margin: 0px;
-    left: {XPosition}{PositionType};
-    top: {YPosition}{PositionType};
-    transform: translate({XTranslation}%, {YTranslation}%);
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="maindiv" class="maindiv"&gt;
-&lt;div id="contentdiv" class="contentdiv"&gt;
-
-{InnerHTML}
-
-&lt;/div&gt;
-&lt;/div&gt;</value>
   </data>
   <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
     <value>Overlay Action: </value>
@@ -9345,7 +9183,7 @@ namespace CustomNamespace
             System.Console.WriteLine("Hello World!");
 
             // Return any data here that you'd like to use
-            return 0;
+            return 42;
         }
     }
 }</value>
@@ -9357,54 +9195,24 @@ namespace CustomNamespace
     var text = 'Hello World!';
 
     // Return any data here that you'd like to use
-    return 0;
-}</value>
+    return 42;
+}
+
+var result = run();
+sendParentMessage({ Type: "ScriptComplete", ID: "{ID}", Result: result });</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
     # Your code goes here
-    print 'Hello World!'
+    text = "Hello World!"
 
     # Return any data here that you'd like to use
-    return 0</value>
+    return 42
+
+print(run())</value>
   </data>
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
-  </data>
-  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-amount" class="text"&gt;
-        {Amount}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class="text-{ID}"&gt;
-    &lt;span id="label-username-{ID}" class="text-{ID}"&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id="label-amount-{ID}" class="text-{ID}"&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-username-{ID}" class="text-{ID}"&gt;
-    {Username}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function update(name, amount)
-{
-    var nameElement = document.getElementById("label-name");
-    if (nameElement != null) {
-        nameElement.innerHTML = name;
-    }
-    
-    var amountElement = document.getElementById("label-amount");
-    if (amountElement != null) {
-        amountElement.innerHTML = amount; 
-    }
-}</value>
   </data>
   <data name="OnUpdate" xml:space="preserve">
     <value>On Update</value>
@@ -9421,177 +9229,11 @@ namespace CustomNamespace
   <data name="Donation" xml:space="preserve">
     <value>Donation</value>
   </data>
-  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: '{FontFamily}';
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: '{FontFamily}';
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {FontSize}px;
-}</value>
-  </data>
-  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list" class="list"&gt;
-
-&lt;/div&gt;
-
-&lt;template id="item"&gt;
-    &lt;div class="item"&gt;
-        &lt;p class="eventtype"&gt;{EventType}&lt;/p&gt;
-        &lt;p class="details"&gt;{Details}&lt;/p&gt;
-        &lt;p class="subdetails"&gt;{SubDetails}&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
-    <value>function add(eventType, details, subdetails)
-{
-    var list = document.getElementById("list");
-
-    if (list.childElementCount &gt; {MaxToShow}) {
-        removeOldest();
-    }
-
-    var itemTemplate = document.querySelector("#item");
-    const item = itemTemplate.content.cloneNode(true);
-    
-    var eventTypeElement = item.querySelector(".eventtype");
-    eventTypeElement.innerHTML = eventType;
-
-    var detailsElement = item.querySelector(".details");
-    detailsElement.innerHTML = details;
-    
-    var subdetailsElement = item.querySelector(".subdetails");
-    subdetailsElement.innerHTML = subdetails;
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById("list");
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
   <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
     <value>Twitch Channel Hype Train Level Up</value>
   </data>
   <data name="AlertTwitchCharityDonation" xml:space="preserve">
     <value>{0} Donated {1} To The Twitch Charity</value>
-  </data>
-  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
-    <value>.background
-{
-    position: absolute;
-    background-color: {BackgroundColor};
-    width: {Width}px;
-    height: {Height}px;
-}
-
-.progress
-{
-    position: absolute;
-    background-color: {ProgressColor};
-    height: {Height}px;
-}
-
-.text {
-    position: absolute;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: '{FontFamily}';
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-    left: 50%;
-    top: 50%;
-    margin: auto;
-    transform: translate(-50%, -50%);
-}</value>
-  </data>
-  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
-    <value>&lt;div class="background"&gt;
-  &lt;div id="progress" class="progress" /&gt;
-&lt;/div&gt;
-&lt;p id="text" class="text" /&gt;</value>
-  </data>
-  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
-    <value>function update(amount, goal, width)
-{
-    var percentage = (amount / goal)
-
-    var textElement = document.getElementById("text");
-    if (textElement != null) {
-        textElement.innerHTML = amount + " (" + Math.round(percentage * 100) + "%)"; 
-    }
-    
-    var progressElement = document.getElementById("progress");
-    if (progressElement != null) {
-        progressElement.style.width = Math.min(Math.round(percentage * width), width) + "px";
-    }
-}
-
-update({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
@@ -9648,22 +9290,6 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     <value>This command is currently on cooldown, please wait another {0} second(s).</value>
     <comment>Manual</comment>
   </data>
-  <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class="text"&gt;
-    &lt;span id="label-name" class="text"&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id="label-amount" class="text"&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-name" class="text"&gt;
-    {Username}
-&lt;/p&gt;</value>
-  </data>
   <data name="Added" xml:space="preserve">
     <value>Added</value>
   </data>
@@ -9679,8 +9305,8 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>A valid counter must be selected</value>
   </data>
-  <data name="LastestFollower" xml:space="preserve">
-    <value>Lastest Follower</value>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Latest Follower</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Latest Donation</value>
@@ -9721,253 +9347,8 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="OverlayWidthMustBeValidValue" xml:space="preserve">
     <value>Width must be a valid value</value>
   </data>
-  <data name="OverlayChatDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list" class="list"&gt;
-
-&lt;/div&gt;
-
-&lt;template id="item"&gt;
-    &lt;div class="item"&gt;
-        &lt;p class="message"&gt;&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;template id="messagebadge"&gt;
-    &lt;img class="messagebadge" /&gt;
-&lt;/template&gt;
-
-&lt;template id="messageavatar"&gt;
-    &lt;img class="messageavatar" /&gt;
-&lt;/template&gt;
-
-&lt;template id="messageusername"&gt;
-    &lt;span class="messageusername"&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id="messagetext"&gt;
-    &lt;span class="messagetext"&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id="messageemote"&gt;
-    &lt;img class="messageemote" /&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayChatDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: '{FontFamily}';
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: '{FontFamily}';
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {TEXT_SIZE}px;
-}</value>
-  </data>
-  <data name="OverlayChatDefaultJavascript" xml:space="preserve">
-    <value>function add(user, messageParts)
-{
-    var list = document.getElementById("list");
-
-    if ({ShowMaxMessagesOnly})
-    {
-        if (list.childElementCount &gt; {MaxToShow})
-        {
-            removeOldest();
-        }
-    }
-
-    var itemTemplate = document.querySelector("#item");
-    var messageBadgeTemplate = document.querySelector("#messagebadge");
-    var messageAvatarTemplate = document.querySelector("#messageavatar");
-    var messageUsernameTemplate = document.querySelector("#messageusername");
-    var messageTextTemplate = document.querySelector("#messagetext");
-    var messageEmoteTemplate = document.querySelector("#messageemote");
-    
-    const item = itemTemplate.content.cloneNode(true);
-    var messageElement = item.querySelector(".message");
-    
-    const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageRoleBadge.src = user.PlatformRoleBadgeLink;
-    messageElement.appendChild(messageRoleBadge);
-    
-    const messageSubBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageSubBadge.src = user.PlatformSubscriberBadgeLink;
-    messageElement.appendChild(messageSubBadge);
-    
-    const messageAvatar = messageAvatarTemplate.content.cloneNode(true);
-    messageAvatar.src = user.AvatarLink;
-    messageElement.appendChild(messageAvatar);
-    
-    const messageUsername = messageUsernameTemplate.content.cloneNode(true);
-    messageUsername.style.color = user.Color;
-    messageUsername.innerHTML = user.DisplayName;
-    messageElement.appendChild(messageUsername);
-    
-    messageParts.forEach(messagePart =&gt;
-    {
-        if (messagePart.Type === 'text')
-        {
-            const messageText = messageTextTemplate.content.cloneNode(true);
-            messageUsername.innerHTML = messagePart.Text;
-            messageElement.appendChild(messageText);
-        }
-        else if (messagePart.Type === 'image')
-        {
-            const messageEmote = messageEmoteTemplate.content.cloneNode(true);
-            messageEmote.src = messagePart.URL;
-            messageElement.appendChild(messageEmote);      
-        }
-    });
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById("list");
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
-  <data name="OverlayBasicIFrameTemplate" xml:space="preserve">
-    <value>&lt;!DOCTYPE html&gt;
-
-&lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
-&lt;head&gt;
-    &lt;meta charset="utf-8" /&gt;
-    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-
-    &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
-
-    &lt;script src="video.min.js"&gt;&lt;/script&gt;
-
-    &lt;link rel="stylesheet" type="text/css" href="animate.min.css"&gt;
-
-    &lt;style type="text/css"&gt;
-        {CSS}
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"&gt;
-
-    {HTML}
-
-    &lt;script&gt;
-        var maindiv = document.getElementById("maindiv");
-        
-        function sendParentMessage(obj) {
-            window.top.postMessage(JSON.stringify(obj), '*');
-        }
-
-        window.onmessage = function (message) {
-            if (message != null) {
-                var obj = JSON.parse(message);
-            }
-        };
-        
-        const animateCSS = (element, animation, prefix = 'animate__') =&gt;
-            // We create a Promise and return it
-            new Promise((resolve, reject) =&gt; {
-                if (animation != null &amp;&amp; animation) {
-                    const animationName = `${prefix}${animation}`;
-
-                    element.classList.add(`${prefix}animated`, animationName);
-
-                    // When the animation ends, we clean the classes and resolve the Promise
-                    function handleAnimationEnd(event) {
-                        event.stopPropagation();
-                        element.classList.remove(`${prefix}animated`, animationName);
-                        resolve('Animation ended');
-                    }
-
-                    element.addEventListener('animationend', handleAnimationEnd, { once: true });
-                }
-                else {
-                    resolve('Animation ended');
-                }
-            });
-        
-        {Animations}
-        
-        {Javascript}
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</value>
-    <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Animations} is the Javascript animation calls, {Javascript} is the Javascript replacement</comment>
-  </data>
-  <data name="OverlayAnimateCSSJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, '{AnimateCSSAnimationName}');</value>
-  </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
-  </data>
-  <data name="OverlayAnimationTimedWrapperJavascript" xml:space="preserve">
-    <value>setTimeout(function () {
-    {Animation}
-}, {MillisecondTiming});</value>
-  </data>
-  <data name="OverlayAnimateCSSThenJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, '{AnimateCSSAnimationName}').then((message) =&gt; {
-    {PostAnimation}
-});</value>
-  </data>
-  <data name="OverlayIFrameSendParentMessageRemove" xml:space="preserve">
-    <value>maindiv.style.visibility='hidden'
-sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Existing Profile</value>
@@ -10282,6 +9663,66 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Select a new folder to load in music from a folder or hit the Play button to load in music from the last used folder.</value>
   </data>
+  <data name="ResponsiveVoice" xml:space="preserve">
+    <value>ResponsiveVoice</value>
+  </data>
+  <data name="WindowsTextToSpeech" xml:space="preserve">
+    <value>Windows Text To Speech</value>
+  </data>
+  <data name="AmazonPolly" xml:space="preserve">
+    <value>Amazon Polly</value>
+  </data>
+  <data name="TTSMonster" xml:space="preserve">
+    <value>TTS.Monster</value>
+  </data>
+  <data name="TTSMonsterFailedToGetVoices" xml:space="preserve">
+    <value>Failed to get available voices. Please ensure you correctly copied over your TTS.Monster Overlay URL</value>
+  </data>
+  <data name="TTSMonsterInvalidURL" xml:space="preserve">
+    <value>Please enter a valid TTS.Monster URL ({0}).</value>
+  </data>
+  <data name="TTSMonsterInfo1" xml:space="preserve">
+    <value>TTS.Monster service connectivity allows you to trigger Text to Speech audio in commands using voices provided by TTS.Monster's service. To connect to TTS.Monster, head to your TTS.Monster dashboard page, copy your Overlay URL in the top-left corner of the page into the text box, and click Log In.</value>
+  </data>
+  <data name="TTSMonsterInfo2" xml:space="preserve">
+    <value>TTS.Monster usage restrictions and limits are set by their service. For more information, please see the Mix It Up Wiki page on the TTS.Monster service.</value>
+  </data>
+  <data name="TTSMonsterOverlayURL" xml:space="preserve">
+    <value>TTS.Monster Overlay URL</value>
+  </data>
+  <data name="EnableTTSMonster" xml:space="preserve">
+    <value>Please enable TTS.Monster on the Services page!</value>
+  </data>
+  <data name="ChatterCount" xml:space="preserve">
+    <value>Chatter Count</value>
+  </data>
+  <data name="ViewerCount" xml:space="preserve">
+    <value>Viewer Count</value>
+  </data>
+  <data name="TwitchClip" xml:space="preserve">
+    <value>Twitch Clip</value>
+  </data>
+  <data name="LatestClip" xml:space="preserve">
+    <value>Latest Clip</value>
+  </data>
+  <data name="RandomClip" xml:space="preserve">
+    <value>Random Clip</value>
+  </data>
+  <data name="TopClip" xml:space="preserve">
+    <value>Top Clip</value>
+  </data>
+  <data name="ClipIDURL" xml:space="preserve">
+    <value>Clip ID / URL</value>
+  </data>
+  <data name="OverlayTwitchClipErrorUnableToFindValidClip" xml:space="preserve">
+    <value>ERROR: Unable to find a valid clip</value>
+  </data>
+  <data name="OverlayTwitchClipValidIDMustBeSpecified" xml:space="preserve">
+    <value>A valid Clip ID must be specified</value>
+  </data>
+  <data name="SpecificClip" xml:space="preserve">
+    <value>Specific Clip</value>
+  </data>
   <data name="NoDuplicates" xml:space="preserve">
     <value>No Duplicates</value>
   </data>
@@ -10377,6 +9818,453 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
+  <data name="MaxWidthPixels" xml:space="preserve">
+    <value>Max Width (Pixels)</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="OverlayPositionPercentageBetween0And100" xml:space="preserve">
+    <value>Percentage positions must be between 0 and 100</value>
+  </data>
+  <data name="OverlayPositionRandomMinimumsCantBeGreaterThanMaximums" xml:space="preserve">
+    <value>Random position minimums can't be greater than position maximums</value>
+  </data>
+  <data name="Pos" xml:space="preserve">
+    <value>Pos</value>
+  </data>
+  <data name="PoundSign" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="LatestYouTubeSuperChat" xml:space="preserve">
+    <value>Latest YouTube Super Chat</value>
+  </data>
+  <data name="OverlayLabelErrorAtLeastOneDisplayTypeMustBeEnabled" xml:space="preserve">
+    <value>At least one display type must be enabled</value>
+  </data>
+  <data name="OverlayLabelErrorDisplayRotationMustBePositiveNumber" xml:space="preserve">
+    <value>Display rotation must be a positive number</value>
+  </data>
+  <data name="ANameMustBeSpecified" xml:space="preserve">
+    <value>A name must be specified</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="DisplayRotationSeconds" xml:space="preserve">
+    <value>Display Rotation (Secs)</value>
+  </data>
+  <data name="OverlayLabelDisplayFormatMustHaveValidValue" xml:space="preserve">
+    <value>Label format must have a valid value</value>
+  </data>
+  <data name="NewestOnly" xml:space="preserve">
+    <value>Newest Only</value>
+  </data>
+  <data name="RotatingDisplays" xml:space="preserve">
+    <value>Rotating Displays</value>
+  </data>
+  <data name="SetChatSettings" xml:space="preserve">
+    <value>Set Chat Settings</value>
+  </data>
+  <data name="EmoteMode" xml:space="preserve">
+    <value>Emote Mode</value>
+  </data>
+  <data name="FollowerMode" xml:space="preserve">
+    <value>Follower Mode</value>
+  </data>
+  <data name="NonModeratorChatDelay" xml:space="preserve">
+    <value>Non-Moderator Chat Delay</value>
+  </data>
+  <data name="SlowMode" xml:space="preserve">
+    <value>Slow Mode</value>
+  </data>
+  <data name="SubscriberMode" xml:space="preserve">
+    <value>Subscriber Mode</value>
+  </data>
+  <data name="UniqueChatMode" xml:space="preserve">
+    <value>Unique Chat Mode</value>
+  </data>
+  <data name="DamageColor" xml:space="preserve">
+    <value>Damage Color</value>
+  </data>
+  <data name="HealthColor" xml:space="preserve">
+    <value>Health Color</value>
+  </data>
+  <data name="BaseHealth" xml:space="preserve">
+    <value>Base Health</value>
+  </data>
+  <data name="Damage" xml:space="preserve">
+    <value>Damage</value>
+  </data>
+  <data name="DamageAmount" xml:space="preserve">
+    <value>Damage Amount</value>
+  </data>
+  <data name="DamageMultiplier" xml:space="preserve">
+    <value>Damage Multipler</value>
+  </data>
+  <data name="DamageOccurred" xml:space="preserve">
+    <value>Damage Occurred</value>
+  </data>
+  <data name="HealingOccurred" xml:space="preserve">
+    <value>Healing Occurred</value>
+  </data>
+  <data name="KillBonusHealth" xml:space="preserve">
+    <value>Kill Bonus Health</value>
+  </data>
+  <data name="NewBoss" xml:space="preserve">
+    <value>New Boss</value>
+  </data>
+  <data name="OverkillBonusHealthMultiplier" xml:space="preserve">
+    <value>Overkill Bonus Health Multiplier</value>
+  </data>
+  <data name="SelfHealingMultiplier" xml:space="preserve">
+    <value>Self Healing Multiplier</value>
+  </data>
+  <data name="TrovoElixirSpells" xml:space="preserve">
+    <value>Trovo Elixir Spells</value>
+  </data>
+  <data name="TrovoSubscriptions" xml:space="preserve">
+    <value>Trovo Subscriptions</value>
+  </data>
+  <data name="TwitchSubscriptions" xml:space="preserve">
+    <value>Twitch Subscriptions</value>
+  </data>
+  <data name="YouTubeMemberships" xml:space="preserve">
+    <value>YouTube Memberships</value>
+  </data>
+  <data name="YouTubeSuperChat" xml:space="preserve">
+    <value>YouTube Super Chat</value>
+  </data>
+  <data name="DamageStreamBoss" xml:space="preserve">
+    <value>Damage Stream Boss</value>
+  </data>
+  <data name="ValidValueMustBeSpecified" xml:space="preserve">
+    <value>A valid value must be specified</value>
+  </data>
+  <data name="ForceDamage" xml:space="preserve">
+    <value>Force Damage</value>
+  </data>
+  <data name="AddToGoal" xml:space="preserve">
+    <value>Add To Goal</value>
+  </data>
+  <data name="Goal" xml:space="preserve">
+    <value>Goal</value>
+  </data>
+  <data name="ProgressOccurred" xml:space="preserve">
+    <value>Progress Occurred</value>
+  </data>
+  <data name="SegmentCompleted" xml:space="preserve">
+    <value>Segment Completed</value>
+  </data>
+  <data name="GoalColor" xml:space="preserve">
+    <value>Goal Color</value>
+  </data>
+  <data name="ProgressAmount" xml:space="preserve">
+    <value>Progress Amount</value>
+  </data>
+  <data name="ProgressMultiplier" xml:space="preserve">
+    <value>Progress Multiplier</value>
+  </data>
+  <data name="Segments" xml:space="preserve">
+    <value>Segments</value>
+  </data>
+  <data name="OverlayGoalAtLeastOneSegmentMustBeAdded" xml:space="preserve">
+    <value>At least one segment must be added</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="ResetCadence" xml:space="preserve">
+    <value>Reset Cadence</value>
+  </data>
+  <data name="DisplayOption" xml:space="preserve">
+    <value>Display Option</value>
+  </data>
+  <data name="OverlayWidgetResetConfirmation" xml:space="preserve">
+    <value>This option will reset all progress and data for this widget. Are you sure you want to do this?</value>
+  </data>
+  <data name="OverlayEndpoint" xml:space="preserve">
+    <value>Overlay Endpoint</value>
+  </data>
+  <data name="SingleWidgetURL" xml:space="preserve">
+    <value>Single Widget URL</value>
+  </data>
+  <data name="OverlayWidgetSelectorDescription" xml:space="preserve">
+    <value>Select the type of Overlay Widget you wish to create</value>
+  </data>
+  <data name="TwitchSlashMeForAllChatMessages" xml:space="preserve">
+    <value>Twitch /me For All Chat Messages</value>
+  </data>
+  <data name="MicrosoftAzureSpeech" xml:space="preserve">
+    <value>Microsoft Azure Speech</value>
+  </data>
+  <data name="ReplaceSpecialIdentifiersInFunctions" xml:space="preserve">
+    <value>Replace Special Identifiers In Functions</value>
+  </data>
+  <data name="PersistentTimer" xml:space="preserve">
+    <value>Persistent Timer</value>
+  </data>
+  <data name="AddToPersistentTimer" xml:space="preserve">
+    <value>Add To Persistent Timer</value>
+  </data>
+  <data name="TimerAdjusted" xml:space="preserve">
+    <value>Timer Adjusted</value>
+  </data>
+  <data name="TimerCompleted" xml:space="preserve">
+    <value>Timer Completed</value>
+  </data>
+  <data name="InitialAmount" xml:space="preserve">
+    <value>Initial Amount</value>
+  </data>
+  <data name="TimeAmount" xml:space="preserve">
+    <value>Time Amount</value>
+  </data>
+  <data name="TimeMultiplier" xml:space="preserve">
+    <value>Time Multiplier</value>
+  </data>
+  <data name="MaxHeightPixels" xml:space="preserve">
+    <value>Max Height (Pixels)</value>
+  </data>
+  <data name="AddMessagesToTop" xml:space="preserve">
+    <value>Add Messages To Top</value>
+  </data>
+  <data name="ChatBoxSettings" xml:space="preserve">
+    <value>Chat Box Settings</value>
+  </data>
+  <data name="ChatMessageSettings" xml:space="preserve">
+    <value>Chat Message Settings</value>
+  </data>
+  <data name="DelayTimeSeconds" xml:space="preserve">
+    <value>Delay Time (Secs)</value>
+  </data>
+  <data name="MaxMessages" xml:space="preserve">
+    <value>Max Messages</value>
+  </data>
+  <data name="RemovalTimeSeconds" xml:space="preserve">
+    <value>Removal Time (Secs)</value>
+  </data>
+  <data name="MessageAdded" xml:space="preserve">
+    <value>Message Added</value>
+  </data>
+  <data name="MessageRemoved" xml:space="preserve">
+    <value>Message Removed</value>
+  </data>
+  <data name="ShowPlatformBadge" xml:space="preserve">
+    <value>Show Platform Badge</value>
+  </data>
+  <data name="ShowRoleBadge" xml:space="preserve">
+    <value>Show Role Badge</value>
+  </data>
+  <data name="ShowSpecialtyBadge" xml:space="preserve">
+    <value>Show Specialty Badge</value>
+  </data>
+  <data name="ShowSubscriberBadge" xml:space="preserve">
+    <value>Show Subscriber Badge</value>
+  </data>
+  <data name="IgnoreSpecialtyExcludedUsers" xml:space="preserve">
+    <value>Ignore Specialty Excluded Users</value>
+  </data>
+  <data name="UsernamesToIgnore" xml:space="preserve">
+    <value>Usernames To Ignore (One Per Line)</value>
+  </data>
+  <data name="TwitchChannelWatchStreak" xml:space="preserve">
+    <value>Twitch Channel Watch Streak</value>
+  </data>
+  <data name="AllSubscriptions" xml:space="preserve">
+    <value>All Subscriptions</value>
+  </data>
+  <data name="GiftedSubscriptions" xml:space="preserve">
+    <value>Gifted Subscriptions</value>
+  </data>
+  <data name="Header" xml:space="preserve">
+    <value>Header</value>
+  </data>
+  <data name="YouTubeSuperChats" xml:space="preserve">
+    <value>YouTube Super Chats</value>
+  </data>
+  <data name="AddToEndCredits" xml:space="preserve">
+    <value>Add To End Credits</value>
+  </data>
+  <data name="Sections" xml:space="preserve">
+    <value>Sections</value>
+  </data>
+  <data name="PlayEndCredits" xml:space="preserve">
+    <value>Play End Credits</value>
+  </data>
+  <data name="Ended" xml:space="preserve">
+    <value>Ended</value>
+  </data>
+  <data name="RunCreditsWhenVisible" xml:space="preserve">
+    <value>Run Credits When Visible</value>
+  </data>
+  <data name="SectionHeaderSettings" xml:space="preserve">
+    <value>Section Header Settings</value>
+  </data>
+  <data name="SectionItemSettings" xml:space="preserve">
+    <value>Section Item Settings</value>
+  </data>
+  <data name="Started" xml:space="preserve">
+    <value>Started</value>
+  </data>
+  <data name="AlertContinuedPrimeSubscriptionTier" xml:space="preserve">
+    <value>{0} Continued Their Prime Sub at {1}</value>
+  </data>
+  <data name="ItemTemplate" xml:space="preserve">
+    <value>Item Template</value>
+  </data>
+  <data name="Columns" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="AddSection" xml:space="preserve">
+    <value>Add Section</value>
+  </data>
+  <data name="RunEndlessly" xml:space="preserve">
+    <value>Run Endlessly</value>
+  </data>
+  <data name="ItemAdded" xml:space="preserve">
+    <value>Item Added</value>
+  </data>
+  <data name="ItemRemoved" xml:space="preserve">
+    <value>Item Removed</value>
+  </data>
+  <data name="Membership" xml:space="preserve">
+    <value>Membership</value>
+  </data>
+  <data name="SuperChat" xml:space="preserve">
+    <value>Super Chat</value>
+  </data>
+  <data name="GiftedMembership" xml:space="preserve">
+    <value>Gifted Membership</value>
+  </data>
+  <data name="GiftedSubscription" xml:space="preserve">
+    <value>Gifted Subscription</value>
+  </data>
+  <data name="RenewedMembership" xml:space="preserve">
+    <value>Renewed Membership</value>
+  </data>
+  <data name="Resubscribed" xml:space="preserve">
+    <value>Resubscribed</value>
+  </data>
+  <data name="AddToEventList" xml:space="preserve">
+    <value>Add To Event List</value>
+  </data>
+  <data name="AddToTop" xml:space="preserve">
+    <value>Add To Top</value>
+  </data>
+  <data name="Consumable" xml:space="preserve">
+    <value>Consumable</value>
+  </data>
+  <data name="ViewingTime" xml:space="preserve">
+    <value>Viewing Time</value>
+  </data>
+  <data name="AllTime" xml:space="preserve">
+    <value>All Time</value>
+  </data>
+  <data name="OverlayLeaderboardValidConsumableMustBeSelected" xml:space="preserve">
+    <value>A valid consumable must be selected</value>
+  </data>
+  <data name="OverlayWidgetAValidRefreshTimeMustBeSpecified" xml:space="preserve">
+    <value>A valid refresh time must be specified</value>
+  </data>
+  <data name="OldHTML" xml:space="preserve">
+    <value>Old HTML</value>
+  </data>
+  <data name="OldHTMLCopiedToClipboard" xml:space="preserve">
+    <value>Old HTML Copied To Clipboard</value>
+  </data>
+  <data name="VTSPog" xml:space="preserve">
+    <value>VTS P.O.G.</value>
+  </data>
+  <data name="VTSPogFailedToConnect" xml:space="preserve">
+    <value>Failed to connect to VTS P.O.G. app. Please ensure the app is running and the API has been enabled under Technical -&gt; Api. If you do not see this section in the app, you may need to update to a newer version.</value>
+  </data>
+  <data name="VTSPogInfo" xml:space="preserve">
+    <value>VTS P.O.G. connectivity allows you to control functionality in the VTS P.O.G. software, such as triggering text to speech voices, playing sounds, and controling the text to speech queue. To connect to VTS P.O.G., please ensure the software is running and the Api is enabled under Technical -&gt; API. If you do not see this section in the app, you may need to update to a newer version.</value>
+  </data>
+  <data name="ResetOnLaunch" xml:space="preserve">
+    <value>Reset On Launch</value>
+  </data>
+  <data name="ResetOnEnable" xml:space="preserve">
+    <value>Reset On Enable</value>
+  </data>
+  <data name="AITextToSpeech" xml:space="preserve">
+    <value>AI Text To Speech</value>
+  </data>
+  <data name="PlayAudioFile" xml:space="preserve">
+    <value>Play Audio File</value>
+  </data>
+  <data name="SetTextToSpeechQueue" xml:space="preserve">
+    <value>Set Text To Speech Queue</value>
+  </data>
+  <data name="SkipCurrentAudio" xml:space="preserve">
+    <value>Skip Current Audio</value>
+  </data>
+  <data name="EnableDisableTextToSpeechQueue" xml:space="preserve">
+    <value>Enable/Disable Text To Speech Queue</value>
+  </data>
+  <data name="ToggleTextToSpeechQueue" xml:space="preserve">
+    <value>Toggle Text To Speech Queue</value>
+  </data>
+  <data name="Animalese" xml:space="preserve">
+    <value>Animalese</value>
+  </data>
+  <data name="Elevenlabs" xml:space="preserve">
+    <value>Elevenlabs</value>
+  </data>
+  <data name="SAMSoftwareAutomaticMouth" xml:space="preserve">
+    <value>SAM Software Automatic Mouth</value>
+  </data>
+  <data name="TikTokTTS" xml:space="preserve">
+    <value>TikTok TTS</value>
+  </data>
+  <data name="VTSPogActionMissingText" xml:space="preserve">
+    <value>VTS P.O.G. Action: Missing text</value>
+  </data>
+  <data name="VTSPogActionMissingAudioFile" xml:space="preserve">
+    <value>VTS P.O.G. Action: Missing Audio File</value>
+  </data>
+  <data name="VTSPogNotConnected" xml:space="preserve">
+    <value>VTS P.O.G. not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="VTSPogVoiceReferenceList" xml:space="preserve">
+    <value>VTS P.O.G. Voice Reference List</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Provider</value>
+  </data>
+  <data name="CharacterLimit" xml:space="preserve">
+    <value>Character Limit</value>
+  </data>
+  <data name="PromptType" xml:space="preserve">
+    <value>Prompt Type</value>
+  </data>
+  <data name="IncludePrompt" xml:space="preserve">
+    <value>Include Prompt</value>
+  </data>
+  <data name="IncludePromptAndMessage" xml:space="preserve">
+    <value>Include Prompt And Message</value>
+  </data>
+  <data name="StoreInMemory" xml:space="preserve">
+    <value>Store In Memory</value>
+  </data>
+  <data name="Pet" xml:space="preserve">
+    <value>Pet</value>
+  </data>
+  <data name="Soundboard" xml:space="preserve">
+    <value>Soundboard</value>
+  </data>
+  <data name="AIPet" xml:space="preserve">
+    <value>AI Pet</value>
+  </data>
+  <data name="TTSPet" xml:space="preserve">
+    <value>TTS Pet</value>
+  </data>
+  <data name="CustomSection" xml:space="preserve">
+    <value>Custom Section</value>
+  </data>
+  <data name="VoiceKeycode" xml:space="preserve">
+    <value>Voice Keycode</value>
+  </data>
   <data name="EnableMtionStudio" xml:space="preserve">
     <value>Please enable mtion studio on the Services page!</value>
   </data>
@@ -10397,5 +10285,482 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
   <data name="Clubhouse" xml:space="preserve">
     <value>Clubhouse</value>
+  </data>
+  <data name="OverlayPortNumberFailedToUpdate" xml:space="preserve">
+    <value>Failed to updated port number for the Overlay. Please see the error below for more information:</value>
+  </data>
+  <data name="OverlayPortNumberValidRange" xml:space="preserve">
+    <value>Port numbers for the Overlay must be between 0 and 65353</value>
+  </data>
+  <data name="HideSpecificUserMessagesSpaceSeparated" xml:space="preserve">
+    <value>Hide Specific User Messages (Space Separated)</value>
+  </data>
+  <data name="OutcomeSelected" xml:space="preserve">
+    <value>Outcome Selected</value>
+  </data>
+  <data name="Modifier" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="OverlayWheelOutcomeInvalidProbability" xml:space="preserve">
+    <value>An outcome can not have a probability lower than 0% or higher than 100%</value>
+  </data>
+  <data name="OverlayWheelOutcomeMissingName" xml:space="preserve">
+    <value>An outcome is missing a name</value>
+  </data>
+  <data name="OverlayWheelOutcomeTotalPercentageMustEqual100" xml:space="preserve">
+    <value>The total percentage of all outcomes must equal 100%</value>
+  </data>
+  <data name="OverlayWheelSizeMustBeGreaterThan0" xml:space="preserve">
+    <value>The size must be greater than 0</value>
+  </data>
+  <data name="Probability" xml:space="preserve">
+    <value>Probability</value>
+  </data>
+  <data name="OverlayWheelClickSoundFilePath" xml:space="preserve">
+    <value>Wheel Click Sound File Path</value>
+  </data>
+  <data name="DefaultOutcome" xml:space="preserve">
+    <value>Default Outcome</value>
+  </data>
+  <data name="OverlayWheelOutcomeTotalModifierMustEqual0" xml:space="preserve">
+    <value>The total modifier of all outcomes must equal 0</value>
+  </data>
+  <data name="LatestFeaturedClip" xml:space="preserve">
+    <value>Latest Featured Clip</value>
+  </data>
+  <data name="RandomFeaturedClip" xml:space="preserve">
+    <value>Random Featured Clip</value>
+  </data>
+  <data name="SegmentType" xml:space="preserve">
+    <value>Segment Type</value>
+  </data>
+  <data name="EqualProbabilityForOutcomes" xml:space="preserve">
+    <value>Equal Probability For Outcomes</value>
+  </data>
+  <data name="Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Chaos" xml:space="preserve">
+    <value>Chaos</value>
+  </data>
+  <data name="Explosion" xml:space="preserve">
+    <value>Explosion</value>
+  </data>
+  <data name="Fade" xml:space="preserve">
+    <value>Fade</value>
+  </data>
+  <data name="FallingLeaves" xml:space="preserve">
+    <value>Falling Leaves</value>
+  </data>
+  <data name="Float" xml:space="preserve">
+    <value>Float</value>
+  </data>
+  <data name="Rain" xml:space="preserve">
+    <value>Rain</value>
+  </data>
+  <data name="ShootingStars" xml:space="preserve">
+    <value>Shooting Stars</value>
+  </data>
+  <data name="Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="OverlayEmoteEffectEmoteTextInvalid" xml:space="preserve">
+    <value>A valid value must be specified for Emote Text</value>
+  </data>
+  <data name="OverlayEmoteEffectEmoteTextSpaceSeparated" xml:space="preserve">
+    <value>Emote Text (Space Separated)</value>
+  </data>
+  <data name="AllowEmoji" xml:space="preserve">
+    <value>Allow Emoji</value>
+  </data>
+  <data name="AllowURLs" xml:space="preserve">
+    <value>Allow URLs</value>
+  </data>
+  <data name="MaxAmountShown" xml:space="preserve">
+    <value>Max Amount Shown</value>
+  </data>
+  <data name="OverlayEmoteEffectPerEmoteShown" xml:space="preserve">
+    <value>Per Emote Shown</value>
+  </data>
+  <data name="EmoteEffect" xml:space="preserve">
+    <value>Emote Effect</value>
+  </data>
+  <data name="CompoundPreviousBossHealth" xml:space="preserve">
+    <value>Compound Previous Boss Health</value>
+  </data>
+  <data name="ChangeFolder" xml:space="preserve">
+    <value>Change Folder</value>
+  </data>
+  <data name="FolderPath" xml:space="preserve">
+    <value>Folder Path</value>
+  </data>
+  <data name="TwinklingStars" xml:space="preserve">
+    <value>Twinkling Stars</value>
+  </data>
+  <data name="PersistentEmoteEffect" xml:space="preserve">
+    <value>Persistent Emote Effect</value>
+  </data>
+  <data name="IgnoreDuplicates" xml:space="preserve">
+    <value>Ignore Duplicates</value>
+  </data>
+  <data name="OverlayPersistentEmoteEffectComboCount" xml:space="preserve">
+    <value>Combo Count</value>
+  </data>
+  <data name="OverlayPersistentEmoteEffectComboTimeframe" xml:space="preserve">
+    <value>Combo Timeframe (Secs)</value>
+  </data>
+  <data name="EnableDisableWidget" xml:space="preserve">
+    <value>Enable/Disable Widget</value>
+  </data>
+  <data name="OptionSettings" xml:space="preserve">
+    <value>Option Settings</value>
+  </data>
+  <data name="TitleSettings" xml:space="preserve">
+    <value>Title Settings</value>
+  </data>
+  <data name="BarColor" xml:space="preserve">
+    <value>Bar Color</value>
+  </data>
+  <data name="BarHeight" xml:space="preserve">
+    <value>Bar Height</value>
+  </data>
+  <data name="UseRandomColors" xml:space="preserve">
+    <value>Use Random Colors</value>
+  </data>
+  <data name="UseTwitchPredictionColors" xml:space="preserve">
+    <value>Use Twitch Prediction Colors</value>
+  </data>
+  <data name="ApplicableUses" xml:space="preserve">
+    <value>Applicable Uses</value>
+  </data>
+  <data name="UseWithBetGameCommand" xml:space="preserve">
+    <value>Use With Bet Game Command</value>
+  </data>
+  <data name="UseWithTriviaGameCommand" xml:space="preserve">
+    <value>Use With Trivia Game Command</value>
+  </data>
+  <data name="UseWithTwitchPolls" xml:space="preserve">
+    <value>Use With Twitch Polls</value>
+  </data>
+  <data name="UseWithTwitchPredictions" xml:space="preserve">
+    <value>Use With Twitch Predictions</value>
+  </data>
+  <data name="OverlayPollAtLeastOneApplicableUse" xml:space="preserve">
+    <value>At least one applicable use must be selected</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="Years" xml:space="preserve">
+    <value>Years</value>
+  </data>
+  <data name="AutomaticRemoval" xml:space="preserve">
+    <value>Automatic Removal</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="ShowTwitchPredictionChannelPoints" xml:space="preserve">
+    <value>Show Twitch Prediction Channel Points</value>
+  </data>
+  <data name="TextToSpeechActionBlockedDueToRateLimiting" xml:space="preserve">
+    <value>The Text To Speech action you were trying to perform was blocked due to too many requests with the {0} Text To Speech provider. Please ensure you are only performing 1 action every 5 minutes. You can circumvent this by connecting your own paid account under the Services page for the {0} Text To Speech provider.</value>
+    <comment>0 = The name of the Text To Speech provider</comment>
+  </data>
+  <data name="AmazonPollyNoVoicesReturned" xml:space="preserve">
+    <value>No voices returned</value>
+  </data>
+  <data name="AccessKey" xml:space="preserve">
+    <value>Access Key</value>
+  </data>
+  <data name="RegionName" xml:space="preserve">
+    <value>Region Name</value>
+  </data>
+  <data name="SecretKey" xml:space="preserve">
+    <value>Secret Key</value>
+  </data>
+  <data name="SubscriptionKey" xml:space="preserve">
+    <value>Subscription Key</value>
+  </data>
+  <data name="AmazonPollyInfo1" xml:space="preserve">
+    <value>The Amazon Polly service connectivity allows you to connect your own AWS (Amazon Web Services) account to circumvent the rate limiting of the default usage of Amazon Polly with the Text To Speech Action.</value>
+  </data>
+  <data name="AmazonPollyInfo2" xml:space="preserve">
+    <value>Usage of Amazon Polly for text to speech functionality is a paid service with AWS that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Amazon Polly text to speech to one request every 5 minutes. Users are able to connect their own AWS accounts to remove this limitation, but all expenses for Amazon Polly usage will then be billed to the user's own AWS account. For information on setting this up, please visit the link below:</value>
+  </data>
+  <data name="MicrosoftAzureSpeechInfo1" xml:space="preserve">
+    <value>The Microsoft Azure Speech service connectivity allows you to connect your own Microsoft Azure account to circumvent the rate limiting of the default usage of Microsoft Azure Speech with the Text To Speech Action.</value>
+  </data>
+  <data name="MicrosoftAzureSpeechInfo2" xml:space="preserve">
+    <value>Usage of Microsoft Azure Speech for text to speech functionality is a paid service with Microsoft Azure that Mix It Up directly covers, but there are limits to how much we can financially cover for usage of the service across all users. To balance that, we limit the use of Microsoft Azure Speech text to speech to one request every 5 minutes. Users are able to connect their own Microsoft Azure accounts to remove this limitation, but all expenses for Microsoft Azure Speech usage will then be billed to the user's own Microsoft Azure account. For information on setting this up, please visit the link below:</value>
+  </data>
+  <data name="NoCustomAmazonPollyAccount" xml:space="preserve">
+    <value>No Amazon Polly account has been connected, therefore usage will be limited to 1 action every 5 minutes. To remove this rate limit, please visit the Amazon Polly section on the Services page to connect your own Amazon Polly account.</value>
+  </data>
+  <data name="NoCustomMicrosoftAzureSpeechAccount" xml:space="preserve">
+    <value>No Microsoft Azure Speech account has been connected, therefore usage will be limited to 1 action every 5 minutes. To remove this rate limit, please visit the Microsoft Azure Speech section on the Services page to connect your own Microsoft Azure Speech account.</value>
+  </data>
+  <data name="TextToSpeechActionResponsiveVoicePitch" xml:space="preserve">
+    <value>Pitch (0% - 200%)</value>
+  </data>
+  <data name="TextToSpeechActionResponsiveVoiceRate" xml:space="preserve">
+    <value>Rate (0% - 150%)</value>
+  </data>
+  <data name="TextToSpeechActionWindowsTextToSpeechRate" xml:space="preserve">
+    <value>Rate (-10 to 10)</value>
+  </data>
+  <data name="PersistNoDuplicates" xml:space="preserve">
+    <value>Persist No Duplicates</value>
+  </data>
+  <data name="MixItUpOverlayFileFormatFilter" xml:space="preserve">
+    <value>Mix It Up Overlay|*.miuoverlay|All files (*.*)|*.*</value>
+  </data>
+  <data name="ImportOverlayWidget" xml:space="preserve">
+    <value>Import Overlay Widget</value>
+  </data>
+  <data name="FailedToImportOverlayWidget" xml:space="preserve">
+    <value>Failed to import Overlay Widget</value>
+  </data>
+  <data name="SegmentReached" xml:space="preserve">
+    <value>Segment Reached</value>
+  </data>
+  <data name="DisableOnCompletion" xml:space="preserve">
+    <value>Disable On Completion</value>
+  </data>
+  <data name="SSML" xml:space="preserve">
+    <value>SSML</value>
+  </data>
+  <data name="IsIn" xml:space="preserve">
+    <value>Is In</value>
+  </data>
+  <data name="IsNotIn" xml:space="preserve">
+    <value>Is Not In</value>
+  </data>
+  <data name="DiscordServerFailedToConnectToVoice" xml:space="preserve">
+    <value>Failed to connect to voice</value>
+  </data>
+  <data name="ErrorDateCanNotBeInThePast" xml:space="preserve">
+    <value>ERROR: Date can not be in the past</value>
+  </data>
+  <data name="DisplayAlejoPronouns" xml:space="preserve">
+    <value>Display Alejo Pronouns</value>
+  </data>
+  <data name="HideExclamationMessages" xml:space="preserve">
+    <value>Hide Messages Starting With "!"</value>
+  </data>
+  <data name="PauseUnpausePersistentTimer" xml:space="preserve">
+    <value>Pause/Unpause Persistent Timer</value>
+  </data>
+  <data name="AllowAdjustmentWhilePaused" xml:space="preserve">
+    <value>Allow Adjustment While Paused</value>
+  </data>
+  <data name="DiscordReactiveVoice" xml:space="preserve">
+    <value>Discord Reactive Voice</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Deafened" xml:space="preserve">
+    <value>Deafened</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Joined" xml:space="preserve">
+    <value>Joined</value>
+  </data>
+  <data name="Muted" xml:space="preserve">
+    <value>Muted</value>
+  </data>
+  <data name="Undeafened" xml:space="preserve">
+    <value>Undeafened</value>
+  </data>
+  <data name="Unmuted" xml:space="preserve">
+    <value>Unmuted</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceActiveImageMustBeSet" xml:space="preserve">
+    <value>An active image must be set for custom user visuals</value>
+  </data>
+  <data name="ServerDisplayName" xml:space="preserve">
+    <value>Server Display Name</value>
+  </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>Name Display</value>
+  </data>
+  <data name="ActiveImage" xml:space="preserve">
+    <value>Active Image</value>
+  </data>
+  <data name="CustomUserDisplays" xml:space="preserve">
+    <value>Custom User Displays</value>
+  </data>
+  <data name="DeafenedImage" xml:space="preserve">
+    <value>Deafened Image</value>
+  </data>
+  <data name="DimInactiveUsers" xml:space="preserve">
+    <value>Dim Inactive Users</value>
+  </data>
+  <data name="DiscordUsername" xml:space="preserve">
+    <value>Discord Username</value>
+  </data>
+  <data name="InactiveImage" xml:space="preserve">
+    <value>Inactive Image</value>
+  </data>
+  <data name="IncludeSelf" xml:space="preserve">
+    <value>Include Self</value>
+  </data>
+  <data name="MutedImage" xml:space="preserve">
+    <value>Muted Image</value>
+  </data>
+  <data name="OnlyShowAddedUsers" xml:space="preserve">
+    <value>Only Show Added Users</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceAtLeastOneUserMustBeAddedForOnlyShowAddedUsers" xml:space="preserve">
+    <value>At least one user must be added if Only Show Added Users is selected</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceUnableToFindUser" xml:space="preserve">
+    <value>Unable to find user with the specified name in the connected Discord server</value>
+  </data>
+  <data name="OverlayDiscordReactiveVoiceUserAlreadyAdded" xml:space="preserve">
+    <value>The specified user has already been added</value>
+  </data>
+  <data name="UserHeight" xml:space="preserve">
+    <value>User Height</value>
+  </data>
+  <data name="UserSpacing" xml:space="preserve">
+    <value>User Spacing</value>
+  </data>
+  <data name="UserWidth" xml:space="preserve">
+    <value>User Width</value>
+  </data>
+  <data name="VoiceChannel" xml:space="preserve">
+    <value>Voice Channel</value>
+  </data>
+  <data name="OverlayLabelFilePathMustBeSpecified" xml:space="preserve">
+    <value>A file path must be specified</value>
+  </data>
+  <data name="ProfileName" xml:space="preserve">
+    <value>Profile Name</value>
+  </data>
+  <data name="ReadEachLineFromFile" xml:space="preserve">
+    <value>Read Each Line From File</value>
+  </data>
+  <data name="OverlayEndpointEditor" xml:space="preserve">
+    <value>Overlay Endpoint - Editor</value>
+  </data>
+  <data name="RunWidgetFunction" xml:space="preserve">
+    <value>Run Widget Function</value>
+  </data>
+  <data name="FunctionName" xml:space="preserve">
+    <value>Function Name</value>
+  </data>
+  <data name="AddParameter" xml:space="preserve">
+    <value>Add Parameter</value>
+  </data>
+  <data name="MassSubscriptionGifted" xml:space="preserve">
+    <value>Mass Subscription Gifted</value>
+  </data>
+  <data name="Resubscribe" xml:space="preserve">
+    <value>Resubscribe</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>Subscribe</value>
+  </data>
+  <data name="SubscriptionGifted" xml:space="preserve">
+    <value>Subscription Gifted</value>
+  </data>
+  <data name="UserBanned" xml:space="preserve">
+    <value>User Banned</value>
+  </data>
+  <data name="UserTimedOut" xml:space="preserve">
+    <value>User Timed Out</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="OverlayV3EndpointsUpgradeDialog" xml:space="preserve">
+    <value>Welcome to the new Overlay v3 update! As part of this update, a major change was done to how Overlay Endpoints are handled. Instead of each endpoint having a dedicate port number, they now all share the same port number and have a unique URL to them.
+
+We have detected that you have more than 1 Overlay Endpoint created, meaning the URLs for all Overlay Endpoints **EXCEPT** the Default one are now different. Please see the list below for all your custom Overlay Endpoints and click on the corresponding buttons to open or copy the URL so you can appropriately update your web browser sources in your streaming software:</value>
+  </data>
+  <data name="PythonExecutablePath" xml:space="preserve">
+    <value>Python Executable Path</value>
+  </data>
+  <data name="ScriptActionPythonExecutablePathNotSet" xml:space="preserve">
+    <value>ERROR: Python executable path must be set under Settings -&gt; Commands to run Python scripts</value>
+  </data>
+  <data name="ScriptActionOverlayNotEnableOrConnected" xml:space="preserve">
+    <value>ERROR: The Overlay service must be enabled and running in at least 1 browser to run Javascript scripts</value>
+  </data>
+  <data name="Uberduck" xml:space="preserve">
+    <value>Uberduck</value>
+  </data>
+  <data name="UberduckNoVoicesReturned" xml:space="preserve">
+    <value>No voices returned</value>
+  </data>
+  <data name="ElevenLabsNoVoicesReturn" xml:space="preserve">
+    <value>No voices returned</value>
+  </data>
+  <data name="TrovoElixirSpell" xml:space="preserve">
+    <value>Trovo Elixir Spell</value>
+  </data>
+  <data name="WatchingNow" xml:space="preserve">
+    <value>Watching Now</value>
+  </data>
+  <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
+    <value>Unable to display clip due to newer format by Twitch. Please up-vote the following User Voice to encourage Twitch to allow for this functionality: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors</value>
+  </data>
+  <data name="Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Polish</value>
+  </data>
+  <data name="PortugueseBrazil" xml:space="preserve">
+    <value>Portuguese (Brazil)</value>
+  </data>
+  <data name="PortuguesePortugal" xml:space="preserve">
+    <value>Portuguese (Portugal)</value>
+  </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>Add Segment</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>Day of the Month</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>Day of the Week</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>A valid counter must be selected</value>
   </data>
 </root>

@@ -33,8 +33,7 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            GlobalEvents.OnShowMessageBox += GlobalEvents_OnShowMessageBox;
-            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
+            ChannelSession.OnRestartRequested += ChannelSession_OnRestartRequested;
 
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
@@ -119,8 +118,7 @@ namespace MixItUp.WPF
                                 newWindow = new MainWindow();
                             }
 
-                            GlobalEvents.OnShowMessageBox -= GlobalEvents_OnShowMessageBox;
-                            GlobalEvents.OnRestartRequested -= GlobalEvents_OnRestartRequested;
+                            ChannelSession.OnRestartRequested -= ChannelSession_OnRestartRequested;
 
                             ShowMainWindow(newWindow);
                             this.Hide();
@@ -167,8 +165,7 @@ namespace MixItUp.WPF
         {
             if (await this.ShowLicenseAgreement())
             {
-                GlobalEvents.OnShowMessageBox -= GlobalEvents_OnShowMessageBox;
-                GlobalEvents.OnRestartRequested -= GlobalEvents_OnRestartRequested;
+                ChannelSession.OnRestartRequested -= ChannelSession_OnRestartRequested;
 
                 ShowMainWindow(new NewUserWizardWindow());
                 this.Hide();
@@ -181,15 +178,7 @@ namespace MixItUp.WPF
             await SettingsV3Model.RestoreSettingsBackup();
         }
 
-        private async void GlobalEvents_OnShowMessageBox(object sender, string message)
-        {
-            await this.RunAsyncOperation(async () =>
-            {
-                await DialogHelper.ShowMessage(message);
-            });
-        }
-
-        private async void GlobalEvents_OnRestartRequested(object sender, EventArgs e)
+        private async void ChannelSession_OnRestartRequested(object sender, EventArgs e)
         {
             await ChannelSession.AppSettings.Save();
 

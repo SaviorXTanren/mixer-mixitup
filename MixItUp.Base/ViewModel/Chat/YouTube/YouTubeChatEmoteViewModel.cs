@@ -7,12 +7,6 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
     {
         public YouTubeChatEmoteModel Emote { get; set; }
 
-        public override string ID { get; protected set; }
-
-        public override string Name { get; protected set; }
-
-        public override string ImageURL { get; protected set; }
-
         public YouTubeChatEmoteViewModel(YouTubeChatEmoteModel emote)
         {
             this.Emote = emote;

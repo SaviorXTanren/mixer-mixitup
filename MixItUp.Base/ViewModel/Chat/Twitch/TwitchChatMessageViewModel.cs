@@ -9,94 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
-using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
-    public class TwitchChatEmoteViewModel : ChatEmoteViewModelBase
-    {
-        public override string ID { get; protected set; }
-        public override string Name { get; protected set; }
-        public override string ImageURL
-        {
-            get
-            {
-                if (ChannelSession.Settings.ChatFontSize <= 30)
-                {
-                    return this.DarkSmallImageUrl;
-                }
-                else if (ChannelSession.Settings.ChatFontSize <= 70)
-                {
-                    return this.DarkMediumImageUrl;
-                }
-                else
-                {
-                    return this.DarkLargeImageUrl;
-                }
-            }
-            protected set { }
-        }
-
-        public override bool IsGIFImage { get { return this.IsAnimated; } }
-
-        public string DarkSmallImageUrl { get; private set; }
-        public string DarkMediumImageUrl { get; private set; }
-        public string DarkLargeImageUrl { get; private set; }
-        public bool IsAnimated { get; private set; }
-
-        public TwitchChatEmoteViewModel(ChatEmoteModel emote)
-        {
-            this.ID = emote.id;
-            this.Name = emote.name;
-            // TODO: Remove this once animated emotes are figured out
-            //if (emote.HasAnimated)
-            //{
-            //    this.IsAnimated = true;
-            //    this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
-            //    this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
-            //    this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
-            //}
-            //else
-            //{
-            this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
-                this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
-                this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
-            //}
-        }
-
-        public TwitchChatEmoteViewModel(string emoteID, string emoteCode)
-        {
-            this.ID = emoteID;
-            this.Name = emoteCode;
-            this.DarkSmallImageUrl = this.BuildV2EmoteURL(ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
-            this.DarkMediumImageUrl = this.BuildV2EmoteURL(ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
-            this.DarkLargeImageUrl = this.BuildV2EmoteURL(ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
-        }
-
-        private string BuildV2EmoteURL(string theme, string size) { return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.ID}/default/{theme}/{size}"; }
-    }
-
-    public class TwitchBitsCheerViewModel : ChatEmoteViewModelBase
-    {
-        public override string ID { get; protected set; }
-        public override string Name { get; protected set; }
-        public override string ImageURL { get; protected set; }
-
-        public int Amount { get; set; }
-        public TwitchBitsCheermoteTierViewModel Tier { get; set; }
-
-        public TwitchBitsCheerViewModel(string text, int amount, TwitchBitsCheermoteTierViewModel tier)
-        {
-            this.Amount = amount;
-            this.Tier = tier;
-
-            this.ID = this.Name = text;
-            // TODO: Remove this once animated emotes are figured out
-            //this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkAnimatedImage : this.Tier.LightAnimatedImage;
-            this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkStaticImage : this.Tier.LightStaticImage;
-        }
-    }
-
     public class TwitchChatMessageViewModel : UserChatMessageViewModel
     {
         private const char SOHCharacter = (char)1;
@@ -210,7 +125,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     this.AddStringMessagePart(part);
                     if (this.HasBits)
                     {
-                        TwitchBitsCheerViewModel bitCheermote = this.GetBitCheermote(part);
+                        TwitchBitsCheerViewModel bitCheermote = TwitchBitsCheerViewModel.GetBitCheermote(part);
                         if (bitCheermote != null)
                         {
                             this.MessageParts[this.MessageParts.Count - 1] = bitCheermote;
@@ -234,9 +149,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     {
                         this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<BetterTTVService>().BetterTTVEmotes[part];
                     }
-                    else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes.ContainsKey(part))
+                    else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes.ContainsKey(part))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes[part];
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes[part];
                     }
                 }
             }
@@ -249,22 +164,6 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             {
                 this.PlainTextMessageNoCheermotes = this.PlainTextMessage;
             }
-        }
-
-        private TwitchBitsCheerViewModel GetBitCheermote(string part)
-        {
-            foreach (TwitchBitsCheermoteViewModel cheermote in ServiceManager.Get<TwitchChatService>().BitsCheermotes)
-            {
-                if (part.StartsWith(cheermote.ID, StringComparison.InvariantCultureIgnoreCase) && int.TryParse(part.ToLower().Replace(cheermote.ID.ToLower(), ""), out int amount) && amount > 0)
-                {
-                    TwitchBitsCheermoteTierViewModel tier = cheermote.GetAppropriateTier(amount);
-                    if (tier != null)
-                    {
-                        return new TwitchBitsCheerViewModel(part, amount, tier);
-                    }
-                }
-            }
-            return null;
         }
     }
 }

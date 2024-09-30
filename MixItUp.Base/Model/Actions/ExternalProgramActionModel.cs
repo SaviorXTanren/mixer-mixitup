@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -48,6 +49,7 @@ namespace MixItUp.Base.Model.Actions
             Process process = new Process();
             process.StartInfo.FileName = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
             process.StartInfo.Arguments = await ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
+            process.StartInfo.WorkingDirectory = Path.GetDirectoryName(process.StartInfo.FileName);
             process.StartInfo.CreateNoWindow = !this.ShowWindow;
             process.StartInfo.WindowStyle = (!this.ShowWindow) ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
             process.StartInfo.UseShellExecute = this.ShellExecute;

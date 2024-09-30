@@ -4,6 +4,8 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -28,6 +30,9 @@ namespace MixItUp.WPF.Services
 
         public async Task CopyFile(string sourcePath, string destinationPath)
         {
+            sourcePath = this.ExpandEnvironmentVariablesInFilePath(sourcePath);
+            destinationPath = this.ExpandEnvironmentVariablesInFilePath(destinationPath);
+
             if (!string.IsNullOrEmpty(sourcePath) && !string.IsNullOrEmpty(destinationPath) && File.Exists(sourcePath))
             {
                 string destinationDirectory = Path.GetDirectoryName(destinationPath);
@@ -38,6 +43,7 @@ namespace MixItUp.WPF.Services
 
         public Task DeleteFile(string filePath)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 File.Delete(filePath);
@@ -47,6 +53,7 @@ namespace MixItUp.WPF.Services
 
         public Task CreateDirectory(string path)
         {
+            path = this.ExpandEnvironmentVariablesInFilePath(path);
             if (!string.IsNullOrEmpty(path) && !Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -56,6 +63,9 @@ namespace MixItUp.WPF.Services
 
         public async Task CopyDirectory(string sourceDirectoryPath, string destinationDirectoryPath)
         {
+            sourceDirectoryPath = this.ExpandEnvironmentVariablesInFilePath(sourceDirectoryPath);
+            destinationDirectoryPath = this.ExpandEnvironmentVariablesInFilePath(destinationDirectoryPath);
+
             if (!string.IsNullOrEmpty(sourceDirectoryPath) && !string.IsNullOrEmpty(destinationDirectoryPath) && Directory.Exists(sourceDirectoryPath))
             {
                 await this.CreateDirectory(destinationDirectoryPath);
@@ -68,6 +78,7 @@ namespace MixItUp.WPF.Services
 
         public Task<IEnumerable<string>> GetFilesInDirectory(string directoryPath)
         {
+            directoryPath = this.ExpandEnvironmentVariablesInFilePath(directoryPath);
             if (!string.IsNullOrEmpty(directoryPath) && Directory.Exists(directoryPath))
             {
                 return Task.FromResult<IEnumerable<string>>(Directory.GetFiles(directoryPath));
@@ -77,6 +88,7 @@ namespace MixItUp.WPF.Services
 
         public Task<IEnumerable<string>> GetFoldersInDirectory(string directoryPath)
         {
+            directoryPath = this.ExpandEnvironmentVariablesInFilePath(directoryPath);
             if (!string.IsNullOrEmpty(directoryPath) && Directory.Exists(directoryPath))
             {
                 return Task.FromResult<IEnumerable<string>>(Directory.GetDirectories(directoryPath));
@@ -86,6 +98,7 @@ namespace MixItUp.WPF.Services
 
         public bool FileExists(string filePath)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             return !string.IsNullOrEmpty(filePath) && File.Exists(filePath);
         }
 
@@ -112,6 +125,7 @@ namespace MixItUp.WPF.Services
 
         public async Task<string> ReadFile(string filePath)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -146,6 +160,7 @@ namespace MixItUp.WPF.Services
 
         public async Task<byte[]> ReadFileAsBytes(string filePath)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -184,6 +199,7 @@ namespace MixItUp.WPF.Services
 
         public async Task SaveFile(string filePath, string data)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -210,8 +226,9 @@ namespace MixItUp.WPF.Services
             }
         }
 
-        public async Task SaveFileAsBytes(string filePath, byte[] data)
+        public async Task SaveFile(string filePath, byte[] data)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -225,8 +242,35 @@ namespace MixItUp.WPF.Services
             }
         }
 
+        public async Task SaveFile(string filePath, Stream data)
+        {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                try
+                {
+                    await WindowsFileService.fileLock.WaitAsync();
+
+                    data.Seek(0, SeekOrigin.Begin);
+                    using (FileStream reader = File.OpenWrite(filePath))
+                    {
+                        data.CopyTo(reader);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    WindowsFileService.fileLock.Release();
+                }
+            }
+        }
+
         public async Task AppendFile(string filePath, string data)
         {
+            filePath = this.ExpandEnvironmentVariablesInFilePath(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
                 try
@@ -273,9 +317,25 @@ namespace MixItUp.WPF.Services
             fileDialog.Filter = filter;
             fileDialog.CheckFileExists = true;
             fileDialog.CheckPathExists = true;
+
             if (fileDialog.ShowDialog() == true)
             {
                 return fileDialog.FileName;
+            }
+            return null;
+        }
+
+        public IEnumerable<string> ShowMultiselectOpenFileDialog(string filter)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = filter;
+            fileDialog.CheckFileExists = true;
+            fileDialog.CheckPathExists = true;
+            fileDialog.Multiselect = true;
+
+            if (fileDialog.ShowDialog() == true && fileDialog.FileNames != null && fileDialog.FileNames.Length > 0 && !string.IsNullOrWhiteSpace(fileDialog.FileNames[0]))
+            {
+                return fileDialog.FileNames;
             }
             return null;
         }
@@ -357,5 +417,31 @@ namespace MixItUp.WPF.Services
         public string GetApplicationDirectory() { return Path.GetDirectoryName(typeof(IFileService).Assembly.Location); }
 
         public string GetApplicationVersion() { return Assembly.GetEntryAssembly().GetName().Version.ToString().Trim(); }
+
+        public IEnumerable<string> GetInstalledFonts()
+        {
+            using (InstalledFontCollection fontsCollection = new InstalledFontCollection())
+            {
+                FontFamily[] fontFamilies = fontsCollection.Families;
+                List<string> fonts = new List<string>();
+                foreach (FontFamily font in fontFamilies)
+                {
+                    if (!string.IsNullOrEmpty(font.Name))
+                    {
+                        fonts.Add(font.Name);
+                    }
+                }
+                return fonts;
+            }
+        }
+
+        public string ExpandEnvironmentVariablesInFilePath(string path)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                return Environment.ExpandEnvironmentVariables(path);
+            }
+            return path;
+        }
     }
 }

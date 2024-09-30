@@ -121,7 +121,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 return NotFound();
             }
 
-            inventory.AddAmount(user, item, updateAmount.Amount);
+            if (updateAmount.Amount > 0)
+            {
+                inventory.AddAmount(user, item, updateAmount.Amount);
+            }
+            else if (updateAmount.Amount < 0)
+            {
+                inventory.SubtractAmount(user, item, -1 * updateAmount.Amount);
+            }
 
             return Ok(inventory.GetAmount(user, item));
         }

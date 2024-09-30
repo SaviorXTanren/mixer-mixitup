@@ -33,7 +33,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string ID { get; set; }
         [DataMember]
-        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
+        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
         [DataMember]
         public bool IsAnonymous { get; set; }
 
@@ -56,7 +56,7 @@ namespace MixItUp.Base.Model.User
             {
                 if (this.IsAnonymous)
                 {
-                    return MixItUp.Base.Resources.Anonymous;
+                    return Resources.Anonymous;
                 }
 
                 if (this.User != null)
@@ -69,7 +69,7 @@ namespace MixItUp.Base.Model.User
                     return this.username;
                 }
 
-                return MixItUp.Base.Resources.Anonymous;
+                return Resources.Anonymous;
             }
             set { this.username = value; }
         }
@@ -82,18 +82,18 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public string AmountText { get { return CurrencyHelper.ToCurrencyString(this.Amount); } }
 
-        public async Task AssignUser()
+        public void AssignUser()
         {
             if (this.User == null)
             {
                 if (this.IsAnonymous)
                 {
-                    this.User = UserV2ViewModel.CreateUnassociated(MixItUp.Base.Resources.Anonymous);
+                    this.User = UserV2ViewModel.CreateUnassociated(Resources.Anonymous);
                 }
 
                 if (!string.IsNullOrEmpty(this.username))
                 {
-                    this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
+                    this.User = ServiceManager.Get<UserService>().GetActiveUserByPlatform(this.Platform, platformUsername: this.username);
                     if (this.User == null)
                     {
                         this.User = UserV2ViewModel.CreateUnassociated(this.username);

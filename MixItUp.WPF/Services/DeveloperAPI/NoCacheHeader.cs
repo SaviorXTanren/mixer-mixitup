@@ -30,7 +30,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             response.Headers.Add("Cache-Control", "no-cache");
             response.Headers.Add("Access-Control-Allow-Origin", "*");
             response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Access-Control-Allow-Origin");
-            response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+            response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE");
             return response;
         }
     }

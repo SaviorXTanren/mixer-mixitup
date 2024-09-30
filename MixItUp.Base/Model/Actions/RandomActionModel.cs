@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
 {
-    public class RandomActionModel : ActionModelBase
+    public class RandomActionModel : GroupActionModel
     {
         [DataMember]
         public string Amount { get; set; }
@@ -18,14 +19,17 @@ namespace MixItUp.Base.Model.Actions
         public bool NoDuplicates { get; set; }
 
         [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
+        public bool PersistNoDuplicates { get; set; }
 
-        public RandomActionModel(string amount, bool noDuplicates, IEnumerable<ActionModelBase> actions)
-            : base(ActionTypeEnum.Random)
+        [JsonIgnore]
+        public HashSet<Guid> triggered = new HashSet<Guid>();
+
+        public RandomActionModel(string amount, bool noDuplicates, bool persistNoDuplicates, IEnumerable<ActionModelBase> actions)
+            : base(ActionTypeEnum.Random, actions)
         {
             this.Amount = amount;
             this.NoDuplicates = noDuplicates;
-            this.Actions = new List<ActionModelBase>(actions);
+            this.PersistNoDuplicates = persistNoDuplicates;
         }
 
         [Obsolete]
@@ -63,13 +67,28 @@ namespace MixItUp.Base.Model.Actions
                     actionsToConsider.Remove(action);
                 }
 
-                List<ActionModelBase> actionsToPerform = new List<ActionModelBase>();
-                for (int i = 0; i < amount && actionsToConsider.Count > 0; i++)
+                List<ActionModelBase> actionsToUse = new List<ActionModelBase>(actionsToConsider);
+                if (this.PersistNoDuplicates)
                 {
-                    ActionModelBase action = actionsToConsider.Random();
+                    actionsToUse.RemoveAll(a => this.triggered.Contains(a.ID));
+                    if (actionsToUse.Count == 0)
+                    {
+                        this.triggered.Clear();
+                        actionsToUse = new List<ActionModelBase>(actionsToConsider);
+                    }
+                }
+
+                List<ActionModelBase> actionsToPerform = new List<ActionModelBase>();
+                for (int i = 0; i < amount && actionsToUse.Count > 0; i++)
+                {
+                    ActionModelBase action = actionsToUse.Random();
                     if (this.NoDuplicates)
                     {
-                        actionsToConsider.Remove(action);
+                        actionsToUse.Remove(action);
+                        if (this.PersistNoDuplicates)
+                        {
+                            this.triggered.Add(action.ID);
+                        }
                     }
                     actionsToPerform.Add(action);
                 }

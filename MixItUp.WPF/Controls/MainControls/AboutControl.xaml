@@ -96,8 +96,8 @@
                         <Image Source="/Assets/Images/YouTube.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
 
-                    <Button Grid.Column="2" Grid.Row="2" x:Name="MixerButton" Height="50" Click="TwitchButton_Click" Background="Transparent">
-                        <Image Source="/Assets/Images/Twitch-Small.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Grid.Row="2" x:Name="Patreon" Height="50" Click="Patreon_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/Patreon.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
 
                     <Button Grid.Column="0" Grid.Row="4" x:Name="WikiButton" Height="50" Click="WikiButton_Click" Background="Transparent">

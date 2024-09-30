@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Actions;
+using System.Collections.Generic;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -15,10 +16,13 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void SoundFileBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().SoundFileFilter());
+            IEnumerable<string> filePaths = ServiceManager.Get<IFileService>().ShowMultiselectOpenFileDialog(ServiceManager.Get<IFileService>().SoundFileFilter());
             if (this.DataContext is SoundActionEditorControlViewModel)
             {
-                ((SoundActionEditorControlViewModel)this.DataContext).FilePath = filePath;
+                if (filePaths != null)
+                {
+                    ((SoundActionEditorControlViewModel)this.DataContext).FilePath = string.Join("|", filePaths);
+                }
             }
         }
     }

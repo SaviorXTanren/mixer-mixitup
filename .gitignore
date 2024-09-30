@@ -196,3 +196,9 @@ FakesAssemblies/
 *.sqlite3-journal
 /Wiki/Videos
 /MixItUp.WPF/Installer.nsi.bak
+
+# Loupedeck build outputs
+*.lplug4
+
+# AVerMedia build outputs
+*.creatorCentral

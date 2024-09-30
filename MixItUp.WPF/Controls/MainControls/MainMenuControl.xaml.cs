@@ -46,6 +46,8 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class MainMenuControl : MainControlBase
     {
+        public static event EventHandler<bool> OnMainMenuStateChanged = delegate { };
+
         private readonly string SwitchToLightThemeText = MixItUp.Base.Resources.SwitchToLightTheme;
         private readonly string SwitchToDarkThemeText = MixItUp.Base.Resources.SwitchToDarkTheme;
 
@@ -60,8 +62,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             InitializeComponent();
 
-            GlobalEvents.OnServiceDisconnect += GlobalEvents_OnServiceDisconnect;
-            GlobalEvents.OnServiceReconnect += GlobalEvents_OnServiceReconnect;
+            ServiceManager.OnServiceDisconnect += ServiceManager_OnServiceDisconnect;
+            ServiceManager.OnServiceReconnect += ServiceManager_OnServiceReconnect;
         }
 
         public async Task<MainMenuItem> AddMenuItem(string name, MainControlBase control, string helpLink = null)
@@ -158,7 +160,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void GlobalEvents_OnServiceDisconnect(object sender, string serviceName)
+        private async void ServiceManager_OnServiceDisconnect(object sender, string serviceName)
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath))
             {
@@ -172,7 +174,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RefreshServiceDisconnectionsAlertTooltip();
         }
 
-        private async void GlobalEvents_OnServiceReconnect(object sender, string serviceName)
+        private async void ServiceManager_OnServiceReconnect(object sender, string serviceName)
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationServiceConnectSoundFilePath))
             {
@@ -228,8 +230,8 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private void MenuToggleButton_Checked(object sender, RoutedEventArgs e) { GlobalEvents.MainMenuStateChained(true); }
+        private void MenuToggleButton_Checked(object sender, RoutedEventArgs e) { OnMainMenuStateChanged(null, true); }
 
-        private void MenuToggleButton_Unchecked(object sender, RoutedEventArgs e) { GlobalEvents.MainMenuStateChained(false); }
+        private void MenuToggleButton_Unchecked(object sender, RoutedEventArgs e) { OnMainMenuStateChanged(null, false); }
     }
 }

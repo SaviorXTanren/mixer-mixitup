@@ -13,27 +13,28 @@ namespace MixItUp.Base.ViewModel.Settings
 {
     public class GeneralSettingsControlViewModel : UIViewModelBase
     {
-        public GenericToggleSettingsOptionControlViewModel OptOutOfDataTracking { get; set; }
+        public GenericTextSettingsOptionControlViewModel ProfileName { get; set; }
         public GenericToggleSettingsOptionControlViewModel AutoLogIn { get; set; }
-        public GenericToggleSettingsOptionControlViewModel DontSaveLastWindowPosition { get; set; }
 
         public GenericComboBoxSettingsOptionControlViewModel<LanguageOptions> Language { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<StreamingPlatformTypeEnum> DefaultStreamingPlatform { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum> DefaultStreamingSoftware { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<string> DefaultAudioOutput { get; set; }
 
+        public GenericToggleSettingsOptionControlViewModel DontSaveLastWindowPosition { get; set; }
+        public GenericToggleSettingsOptionControlViewModel OptOutOfDataTracking { get; set; }
+
         public GeneralSettingsControlViewModel()
         {
-            this.OptOutOfDataTracking = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.OptOutofDataTracking,
-                ChannelSession.Settings.OptOutTracking, (value) => { ChannelSession.Settings.OptOutTracking = value; }, MixItUp.Base.Resources.OptOutofDataTrackingTooltip);
-
-            this.DontSaveLastWindowPosition = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DontSaveLastWindowPosition,
-                ChannelSession.AppSettings.DontSaveLastWindowPosition, (value) => { ChannelSession.AppSettings.DontSaveLastWindowPosition = value; });
+            this.ProfileName = new GenericTextSettingsOptionControlViewModel(MixItUp.Base.Resources.ProfileName,
+                ChannelSession.Settings.Name,
+                (value) => { ChannelSession.Settings.Name = value; });
 
             this.AutoLogIn = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.AutoLogInCurrentAccount,
                 (ChannelSession.AppSettings.AutoLogInID == ChannelSession.Settings.ID),
                 (value) => { ChannelSession.AppSettings.AutoLogInID = (value) ? ChannelSession.Settings.ID : Guid.Empty; },
                 MixItUp.Base.Resources.AutoLogInCurrentAccountTooltip);
+
 
             var languageOptions = EnumHelper.GetEnumList<LanguageOptions>().ToList();
             if (!ChannelSession.IsDebug())
@@ -73,6 +74,12 @@ namespace MixItUp.Base.ViewModel.Settings
                     }
                 });
             this.DefaultAudioOutput.Width = 250;
+
+
+            this.DontSaveLastWindowPosition = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DontSaveLastWindowPosition,
+                ChannelSession.AppSettings.DontSaveLastWindowPosition, (value) => { ChannelSession.AppSettings.DontSaveLastWindowPosition = value; });
+            this.OptOutOfDataTracking = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.OptOutofDataTracking,
+                ChannelSession.Settings.OptOutTracking, (value) => { ChannelSession.Settings.OptOutTracking = value; }, MixItUp.Base.Resources.OptOutofDataTrackingTooltip);
         }
     }
 }

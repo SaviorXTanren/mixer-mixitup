@@ -66,6 +66,8 @@ namespace MixItUp.Base.Services
 
         Task ChangeVolume(int amount);
 
+        Task ChangeFolder(string folderPath);
+
         Task LoadSongs();
 
         Task<MusicPlayerSong> SearchAndPlaySong(string searchText);

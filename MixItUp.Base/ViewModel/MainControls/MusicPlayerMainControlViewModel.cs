@@ -79,6 +79,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.OnSongChangedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.MusicPlayerOnSongChangedCommandID);
 
             this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetSelectableAudioDevices());
+            this.AudioDevices.Remove(ServiceManager.Get<IAudioService>().MixItUpOverlay);
             this.SelectedAudioDevice = (ChannelSession.Settings.MusicPlayerAudioOutput != null) ? ChannelSession.Settings.MusicPlayerAudioOutput : ServiceManager.Get<IAudioService>().DefaultAudioDevice;
 
             this.PreviousCommand = this.CreateCommand(async () =>
@@ -112,9 +113,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 string folderPath = ServiceManager.Get<IFileService>().ShowOpenFolderDialog();
 
-                ChannelSession.Settings.MusicPlayerFolders.Clear();
-                ChannelSession.Settings.MusicPlayerFolders.Add(folderPath);
-                await ServiceManager.Get<IMusicPlayerService>().LoadSongs();
+                await ServiceManager.Get<IMusicPlayerService>().ChangeFolder(folderPath);
 
                 this.NotifyPropertyChanged(nameof(this.MusicLoaded));
                 this.NotifyPropertyChanged(nameof(this.MusicNotLoaded));

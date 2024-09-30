@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -107,6 +109,15 @@ namespace MixItUp.Base.Model.Commands.Games
                             this.runParameters.SpecialIdentifiers[BetGameCommandModel.GameBetWinningOptionSpecialIdentifier] = winningOutcome.Name;
                             await this.RunSubCommand(this.GameCompleteCommand, this.runParameters);
 
+                            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forBet: true);
+                            if (widgets.Count() > 0)
+                            {
+                                foreach (OverlayPollV3Model widget in widgets)
+                                {
+                                    await widget.End(answer.ToString());
+                                }
+                            }
+
                             foreach (CommandParametersModel winner in winners)
                             {
                                 winner.SpecialIdentifiers[BetGameCommandModel.GameBetWinningOptionSpecialIdentifier] = winningOutcome.Name;
@@ -173,6 +184,16 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     await this.RunSubCommand(this.StartedCommand, parameters);
+
+                    IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forBet: true);
+                    if (widgets.Count() > 0)
+                    {
+                        foreach (OverlayPollV3Model widget in widgets)
+                        {
+                            await widget.NewBetCommand(this.Name, this.TimeLimit, this.BetOptions);
+                        }
+                    }
+
                     return new Result(success: false);
                 }
                 return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterUserRole));
@@ -192,6 +213,15 @@ namespace MixItUp.Base.Model.Commands.Games
 
             await this.RunSubCommand(this.UserJoinCommand, parameters);
             await this.PerformCooldown(parameters);
+
+            IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forBet: true);
+            if (widgets.Count() > 0)
+            {
+                foreach (OverlayPollV3Model widget in widgets)
+                {
+                    await widget.UpdateBetCommand(choice);
+                }
+            }
         }
 
         private void ClearData()

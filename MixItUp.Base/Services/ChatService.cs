@@ -27,6 +27,24 @@ namespace MixItUp.Base.Services
         private const string ChatEventLogDirectoryName = "ChatEventLogs";
         private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
 
+        public static event EventHandler OnChatVisualSettingsChanged = delegate { };
+        public static void ChatVisualSettingsChanged() { OnChatVisualSettingsChanged(null, new EventArgs()); }
+
+        public static event EventHandler<ChatMessageViewModel> OnChatMessageReceived = delegate { };
+        public static void ChatMessageReceived(ChatMessageViewModel message) { OnChatMessageReceived(null, message); }
+
+        public static event EventHandler<string> OnChatMessageDeleted = delegate { };
+        public static void ChatMessageDeleted(string messageID) { OnChatMessageDeleted(null, messageID); }
+
+        public static event EventHandler<UserV2ViewModel> OnChatUserTimedOut = delegate { };
+        public static void ChatUserTimedOut(UserV2ViewModel user) { OnChatUserTimedOut(null, user); }
+
+        public static event EventHandler<UserV2ViewModel> OnChatUserBanned = delegate { };
+        public static void ChatUserBanned(UserV2ViewModel user) { OnChatUserBanned(null, user); }
+
+        public static event EventHandler OnChatCleared = delegate { };
+        public static void ChatCleared() { OnChatCleared(null, new EventArgs()); }
+
         public static string SplitLargeMessage(string message, int maxLength, out string subMessage)
         {
             subMessage = null;
@@ -84,6 +102,24 @@ namespace MixItUp.Base.Services
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             AsyncRunner.RunAsyncBackground(this.MinuteBackgroundThread, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        public int GetViewerCount()
+        {
+            int viewerCount = 0;
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
+            {
+                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count;
+            }
+            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
+            {
+                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
+            }
+            if (ServiceManager.Get<YouTubeSessionService>().IsConnected && ServiceManager.Get<YouTubeSessionService>().IsLive)
+            {
+                viewerCount += ServiceManager.Get<YouTubeSessionService>().ViewerCount;
+            }
+            return viewerCount;
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
@@ -155,7 +191,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(string username, StreamingPlatformTypeEnum platform, string message, bool sendAsStreamer = false)
         {
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, username, performPlatformSearch: true);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformUsername: username, performPlatformSearch: true);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -217,7 +253,7 @@ namespace MixItUp.Base.Services
                 await this.RemoveMessage(message);
             }
 
-            GlobalEvents.ChatMessageDeleted(message.ID);
+            ChatService.ChatMessageDeleted(message.ID);
         }
 
         public async Task ClearMessages(StreamingPlatformTypeEnum platform)
@@ -249,6 +285,8 @@ namespace MixItUp.Base.Services
                 this.messagesLookup.Clear();
                 this.Messages.Clear();
             }
+
+            ChatService.ChatCleared();
         }
 
         public async Task PurgeUser(UserV2ViewModel user)
@@ -257,13 +295,15 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, 1);
             }
+
+            ChatService.ChatUserTimedOut(user);
         }
 
-        public async Task TimeoutUser(UserV2ViewModel user, uint durationInSeconds)
+        public async Task TimeoutUser(UserV2ViewModel user, uint durationInSeconds, string reason = null)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
             {
-                await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, (int)durationInSeconds);
+                await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, (int)durationInSeconds, reason);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
@@ -275,6 +315,8 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user.Username, (int)durationInSeconds);
             }
+
+            ChatService.ChatUserTimedOut(user);
         }
 
         public async Task ModUser(UserV2ViewModel user)
@@ -313,7 +355,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task BanUser(UserV2ViewModel user)
+        public async Task BanUser(UserV2ViewModel user, string reason = null)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
             {
@@ -329,6 +371,8 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<TrovoChatEventService>().BanUser(user.Username);
             }
+
+            ChatService.ChatUserBanned(user);
         }
 
         public async Task UnbanUser(UserV2ViewModel user)
@@ -437,9 +481,13 @@ namespace MixItUp.Base.Services
 
                 // Add message to chat list
                 bool showMessage = true;
-                if (ChannelSession.Settings.HideBotMessages && message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
+                if (message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                    if (ChannelSession.Settings.HideBotMessages && StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                    {
+                        showMessage = false;
+                    }
+                    else if (ChannelSession.Settings.HideSpecificUserMessages.Contains(message.User?.Username.ToLower()))
                     {
                         showMessage = false;
                     }
@@ -569,7 +617,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserV2ViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(message.Platform, primaryTaggedUsername);
+                            UserV2ViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByPlatform(message.Platform, platformUsername: primaryTaggedUsername);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.TotalTimesTagged++;
@@ -582,7 +630,7 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    GlobalEvents.ChatMessageReceived(message);
+                    ChatService.ChatMessageReceived(message);
 
                     await this.WriteToChatEventLog(message);
 

@@ -64,7 +64,7 @@ namespace MixItUp.Base.Model.Requirements
             {
                 if (!string.IsNullOrEmpty(argument))
                 {
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, argument);
+                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(parameters.Platform, platformUsername: argument);
                     if (user != null)
                     {
                         return Task.FromResult<Result>(new Result());

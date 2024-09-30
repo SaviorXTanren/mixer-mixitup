@@ -1,13 +1,16 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
+using StreamingClient.Base.Util;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -44,21 +47,34 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        private void LinkButton_Click(object sender, RoutedEventArgs e)
+        {
+            OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
+            string url = widget.SingleWidgetURL;
+            if (url != null)
+            {
+                ServiceManager.Get<IProcessService>().LaunchLink(url);
+            }
+        }
+
+        private async void ResetButton_Click(object sender, RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                OverlayWidgetModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender);
-                await this.viewModel.PlayWidget(widget);
+                if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.OverlayWidgetResetConfirmation))
+                {
+                    OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
+                    await widget.Reset();
+                }
             });
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            OverlayWidgetModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender);
+            OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
             if (widget != null)
             {
-                OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow(widget);
+                OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget.Widget);
                 window.Closed += Window_Closed;
                 window.Show();
             }
@@ -70,7 +86,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.DeleteWidgetPrompt))
                 {
-                    OverlayWidgetModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender);
+                    OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
                     await this.viewModel.DeleteWidget(widget);
                     await this.viewModel.OnVisible();
                 }
@@ -79,19 +95,65 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
         {
-            await this.viewModel.EnableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender));
+            await this.viewModel.EnableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender));
         }
 
         private async void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
         {
-            await this.viewModel.DisableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender));
+            await this.viewModel.DisableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender));
         }
 
-        private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
+        private async void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
         {
-            OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow();
-            window.Closed += Window_Closed;
-            window.Show();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                List<OverlayItemV3Type> widgetTypes = new List<OverlayItemV3Type>();
+                foreach (OverlayItemV3Type value in EnumHelper.GetEnumList<OverlayItemV3Type>())
+                {
+                    var attributes = (OverlayWidgetAttribute[])value.GetType().GetField(value.ToString()).GetCustomAttributes(typeof(OverlayWidgetAttribute), false);
+                    if (attributes != null && attributes.Length > 0)
+                    {
+                        widgetTypes.Add(value);
+                    }
+                }
+
+                object result = await DialogHelper.ShowEnumDropDown(widgetTypes, MixItUp.Base.Resources.OverlayWidgetSelectorDescription);
+                if (result != null)
+                {
+                    OverlayItemV3Type type = (OverlayItemV3Type)result;
+                    OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(type);
+                    window.Closed += Window_Closed;
+                    window.Show();
+
+                    await Task.Delay(500);
+                    window.Focus();
+                }
+            });
+        }
+
+        private async void ImportOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(MixItUp.Base.Resources.MixItUpOverlayFileFormatFilter);
+                if (!string.IsNullOrWhiteSpace(filepath))
+                {
+                    OverlayWidgetV3Model widget = await FileSerializerHelper.DeserializeFromFile<OverlayWidgetV3Model>(filepath);
+                    if (widget != null)
+                    {
+                        widget.Item.ID = Guid.NewGuid();
+                        OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget);
+                        window.Closed += Window_Closed;
+                        window.Show();
+                        window.Focus();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportOverlayWidget + ": " + ex.ToString());
+            }
         }
     }
 }

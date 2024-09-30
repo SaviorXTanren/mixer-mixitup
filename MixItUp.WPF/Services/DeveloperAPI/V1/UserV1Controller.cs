@@ -28,15 +28,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             {
                 if (Guid.TryParse(usernameOrID, out Guid userId))
                 {
-                    user = await ServiceManager.Get<UserService>().GetUserByID(userId);
+                    user = await ServiceManager.Get<UserService>().GetUserByID(platform, userId);
                 }
                 else
                 {
-                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(platform, usernameOrID);
-                    if (user == null)
-                    {
-                        user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, usernameOrID);
-                    }
+                    user = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformID: usernameOrID, platformUsername: usernameOrID);
                 }
             }
             return user;

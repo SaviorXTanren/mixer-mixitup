@@ -26,7 +26,10 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericTextSettingsOptionControlViewModel DelimitedArgumentSeparator { get; set; }
 
         public GenericToggleSettingsOptionControlViewModel TwitchReplyToCommandChatMessages { get; set; }
+        public GenericToggleSettingsOptionControlViewModel TwitchSlashMeForAllChatMessages { get; set; }
         public GenericNumberSettingsOptionControlViewModel TwitchUpcomingAdCommandTriggerAmount { get; set; }
+
+        public GenericTextSettingsOptionControlViewModel PythonExecutablePath { get; set; }
 
         public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>();
 
@@ -56,8 +59,13 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.TwitchReplyToCommandChatMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchReplyToCommandChatMessages, ChannelSession.Settings.TwitchReplyToCommandChatMessages,
                 (value) => { ChannelSession.Settings.TwitchReplyToCommandChatMessages = value; });
+            this.TwitchSlashMeForAllChatMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchSlashMeForAllChatMessages, ChannelSession.Settings.TwitchSlashMeForAllChatMessages,
+                (value) => { ChannelSession.Settings.TwitchSlashMeForAllChatMessages = value; });
             this.TwitchUpcomingAdCommandTriggerAmount = new GenericNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchUpcomingAdCommandTriggerAmount, ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount,
                 (value) => { ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount = value; });
+
+            this.PythonExecutablePath = new GenericTextSettingsOptionControlViewModel(MixItUp.Base.Resources.PythonExecutablePath, ChannelSession.Settings.PythonExecutablePath,
+                (value) => { ChannelSession.Settings.PythonExecutablePath = value; });
 
             List<ActionTypeEnum> actions = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
             actions.Remove(ActionTypeEnum.Custom);

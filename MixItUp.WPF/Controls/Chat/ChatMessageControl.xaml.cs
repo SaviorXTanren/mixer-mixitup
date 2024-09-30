@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Controls.Chat
                         string color = alert.Color;
                         try
                         {
-                            if (ColorSchemes.HTMLColorSchemeDictionary.TryGetValue(color.Replace(" ", string.Empty), out var colorOverride))
+                            if (ColorSchemes.MaterialDesignColors.TryGetValue(color.Replace(" ", string.Empty), out var colorOverride))
                             {
                                 color = colorOverride;
                             }

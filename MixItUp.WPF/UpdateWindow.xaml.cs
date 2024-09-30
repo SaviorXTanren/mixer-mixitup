@@ -17,7 +17,7 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class UpdateWindow : LoadingWindowBase
     {
-        private const string DefaultInstallerLink = "https://github.com/SaviorXTanren/mixer-mixitup/releases/download/Installer-0.3.0/MixItUp-Setup.exe";
+        private const string DefaultInstallerLink = "https://github.com/SaviorXTanren/mixer-mixitup/releases/download/Installer-0.4.0/MixItUp-Setup.exe";
 
         private MixItUpUpdateModel update;
 

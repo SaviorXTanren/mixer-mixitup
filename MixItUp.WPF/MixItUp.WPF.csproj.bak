@@ -1,0 +1,2876 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{90395135-528E-4F2D-93D1-D822B32B5F80}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MixItUp.WPF</RootNamespace>
+    <AssemblyName>MixItUp</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <XamlDebuggingInformation>true</XamlDebuggingInformation>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>MixItUp.WPF.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EngineIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EngineIoClientDotNet.1.0.6\lib\net45\EngineIoClientDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimesh.Base, Version=1.0.0.15, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Glimesh.1.0.0.15\lib\netstandard2.0\Glimesh.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.3.2\lib\net46\GongSolutions.WPF.DragDrop.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.57.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.57.0\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.57.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.57.0\lib\net461\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.57.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.57.0\lib\net461\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.57.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.57.0\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.57.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.57.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.YouTube.v3, Version=1.56.0.2630, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.YouTube.v3.1.56.0.2630\lib\net45\Google.Apis.YouTube.v3.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Client, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GraphQL.Client.4.0.2\lib\net461\GraphQL.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Client.Abstractions, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GraphQL.Client.Abstractions.4.0.2\lib\netstandard2.0\GraphQL.Client.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Client.Abstractions.Websocket, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GraphQL.Client.Abstractions.Websocket.4.0.2\lib\netstandard2.0\GraphQL.Client.Abstractions.Websocket.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Client.Serializer.Newtonsoft, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GraphQL.Client.Serializer.Newtonsoft.4.0.2\lib\netstandard2.0\GraphQL.Client.Serializer.Newtonsoft.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Primitives, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GraphQL.Primitives.4.0.2\lib\netstandard2.0\GraphQL.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="H.Engine.IO, Version=1.1.7.1, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
+      <HintPath>..\packages\H.Engine.IO.1.1.7.1\lib\net45\H.Engine.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="H.Socket.IO, Version=1.1.7.1, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
+      <HintPath>..\packages\H.Socket.IO.1.1.7.1\lib\net45\H.Socket.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="H.WebSockets, Version=1.1.7.1, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
+      <HintPath>..\packages\H.WebSockets.1.1.7.1\lib\net45\H.WebSockets.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.YouTubePartner.v1, Version=1.35.1.1334, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.YouTubePartner.v1.1.35.1.1334\lib\net45\Google.Apis.YouTubePartner.v1.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython, Version=2.7.12.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.12\lib\net45\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules, Version=2.7.12.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.12\lib\net45\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.SQLite, Version=2.7.12.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.12\lib\net45\IronPython.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Wpf, Version=2.7.12.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.12\lib\net45\IronPython.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jace.1.0.0\lib\netstandard1.6\Jace.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqToTwitter.AspNet, Version=5.0.0.14073, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\linqtotwitter.5.0.0\lib\net461\LinqToTwitter.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqToTwitter.netstandard, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\linqtotwitter.5.0.0\lib\net461\LinqToTwitter.netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=2.0.1.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.2.0.1\lib\net452\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.1.0.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.4.1.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.20.0.103, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.20.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Connections.Abstractions, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Connections.Abstractions.6.0.3\lib\net461\Microsoft.AspNetCore.Connections.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Connections.Client, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Http.Connections.Client.6.0.3\lib\net461\Microsoft.AspNetCore.Http.Connections.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Connections.Common, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Http.Connections.Common.6.0.3\lib\net461\Microsoft.AspNetCore.Http.Connections.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Features, Version=5.0.15.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Http.Features.5.0.15\lib\net461\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.SignalR.Client, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.SignalR.Client.6.0.3\lib\net461\Microsoft.AspNetCore.SignalR.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.SignalR.Client.Core, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.SignalR.Client.Core.6.0.3\lib\net461\Microsoft.AspNetCore.SignalR.Client.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.SignalR.Common, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.SignalR.Common.6.0.3\lib\net461\Microsoft.AspNetCore.SignalR.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.SignalR.Protocols.Json, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.SignalR.Protocols.Json.6.0.3\lib\net461\Microsoft.AspNetCore.SignalR.Protocols.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Sqlite, Version=5.0.15.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Sqlite.Core.5.0.15\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.3.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.1\lib\net45\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration, Version=6.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.6.0.1\lib\net461\Microsoft.Extensions.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Abstractions.6.0.0\lib\net461\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Binder, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Binder.6.0.0\lib\net461\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.6.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.6.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Features, Version=6.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Features.6.0.3\lib\net461\Microsoft.Extensions.Features.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.6.0.0\lib\net461\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=6.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.1\lib\net461\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.6.0.0\lib\net461\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.6.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.4.2.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.4.2.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.3.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.1\lib\net45\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.3.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.1\lib\net45\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="obs-websocket-dotnet, Version=4.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\obs-websocket-dotnet.4.9.1\lib\netstandard2.0\obs-websocket-dotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="ovrstream-client-csharp, Version=0.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ovrstream-client-csharp.0.0.2\lib\netstandard2.0\ovrstream-client-csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpVectors.Converters.Wpf, Version=1.7.7.0, Culture=neutral, PublicKeyToken=b532964b8548be77, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Converters.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpVectors.Core, Version=1.7.7.0, Culture=neutral, PublicKeyToken=7407205e337c98ef, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpVectors.Css, Version=1.7.7.0, Culture=neutral, PublicKeyToken=7a46e3f532fdb787, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Css.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpVectors.Dom, Version=1.7.7.0, Culture=neutral, PublicKeyToken=517340b6277b1a7a, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Dom.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpVectors.Model, Version=1.7.7.0, Culture=neutral, PublicKeyToken=2236cfc76b505845, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpVectors.Rendering.Gdi, Version=1.7.7.0, Culture=neutral, PublicKeyToken=03902092284347e3, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Rendering.Gdi.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpVectors.Rendering.Wpf, Version=1.7.7.0, Culture=neutral, PublicKeyToken=d0902381100df30e, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Rendering.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpVectors.Runtime.Wpf, Version=1.7.7.0, Culture=neutral, PublicKeyToken=d16e717f0a981fb9, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Runtime.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.ImageSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.ImageSharp.2.1.0\lib\netstandard2.0\SixLabors.ImageSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SocketIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.batteries_v2, Version=2.0.7.1395, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.bundle_e_sqlite3.2.0.7\lib\net461\SQLitePCLRaw.batteries_v2.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.core, Version=2.0.7.1395, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.core.2.0.7\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.nativelibrary, Version=2.0.7.1395, Culture=neutral, PublicKeyToken=502ed628492ab262, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.bundle_e_sqlite3.2.0.7\lib\net461\SQLitePCLRaw.nativelibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.provider.dynamic_cdecl, Version=2.0.7.1395, Culture=neutral, PublicKeyToken=b68184102cba0b3b, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.provider.dynamic_cdecl.2.0.7\lib\netstandard2.0\SQLitePCLRaw.provider.dynamic_cdecl.dll</HintPath>
+    </Reference>
+    <Reference Include="StreamingClient.Base, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.41\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Collections.Concurrent, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Collections.Immutable, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Specialized, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Tools, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Globalization, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.IO.Compression">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Pipelines, Version=6.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Pipelines.6.0.2\lib\net461\System.IO.Pipelines.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Ports, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Ports.6.0.0\lib\net461\System.IO.Ports.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Primitives, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Security, Version=4.0.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Security.4.3.2\lib\net46\System.Net.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.WebSockets.Client.Managed, Version=1.0.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.WebSockets.Client.Managed.1.0.22\lib\net45\System.Net.WebSockets.Client.Managed.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive, Version=5.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.5.0.0\lib\netstandard2.0\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Core, Version=3.0.6000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Core.5.0.0\lib\netstandard2.0\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.6000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Interfaces.5.0.0\lib\netstandard2.0\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=3.0.6000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Linq.5.0.0\lib\netstandard2.0\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=3.0.6000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.PlatformServices.5.0.0\lib\netstandard2.0\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Reflection.Extensions, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Resources.ResourceManager, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Runtime, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Text.Encoding, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.6.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=6.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.6.0.2\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Threading.Channels, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Channels.6.0.0\lib\net461\System.Threading.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.7\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Trovo.Base, Version=1.0.0.17, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Trovo.1.0.0.17\lib\netstandard2.0\Trovo.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Twitch.Base, Version=1.0.0.41, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.41\lib\netstandard2.0\Twitch.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="websocket-sharp, Version=1.0.1.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocketSharp-netstandard.1.0.1\lib\net45\websocket-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocket4Net.0.15.2\lib\net45\WebSocket4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.2.0.2\lib\net40\WpfAnimatedGif.dll</HintPath>
+    </Reference>
+    <Reference Include="YouTube.Base, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.YouTube.1.0.0.10\lib\netstandard2.0\YouTube.Base.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\AccordianGroupBoxControl.xaml.cs">
+      <DependentUpon>AccordianGroupBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Accounts\StreamingPlatformAccountControl.xaml.cs">
+      <DependentUpon>StreamingPlatformAccountControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ActionEditorContainerControl.xaml.cs">
+      <DependentUpon>ActionEditorContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ActionEditorControlBase.cs" />
+    <Compile Include="Controls\Actions\ActionEditorListControl.xaml.cs">
+      <DependentUpon>ActionEditorListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ChatActionEditorControl.xaml.cs">
+      <DependentUpon>ChatActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\CommandActionEditorControl.xaml.cs">
+      <DependentUpon>CommandActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ConditionalActionEditorControl.xaml.cs">
+      <DependentUpon>ConditionalActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ConsumablesActionEditorControl.xaml.cs">
+      <DependentUpon>ConsumablesActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\CounterActionEditorControl.xaml.cs">
+      <DependentUpon>CounterActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\DiscordActionEditorControl.xaml.cs">
+      <DependentUpon>DiscordActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ExternalProgramActionEditorControl.xaml.cs">
+      <DependentUpon>ExternalProgramActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\FileActionEditorControl.xaml.cs">
+      <DependentUpon>FileActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\GameQueueActionEditorControl.xaml.cs">
+      <DependentUpon>GameQueueActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\IFTTTActionEditorControl.xaml.cs">
+      <DependentUpon>IFTTTActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\InputActionEditorControl.xaml.cs">
+      <DependentUpon>InputActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ModerationActionEditorControl.xaml.cs">
+      <DependentUpon>ModerationActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\OverlayActionEditorControl.xaml.cs">
+      <DependentUpon>OverlayActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\OvrStreamActionEditorControl.xaml.cs">
+      <DependentUpon>OvrStreamActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\PolyPopActionEditorControl.xaml.cs">
+      <DependentUpon>PolyPopActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\PixelChatActionEditorControl.xaml.cs">
+      <DependentUpon>PixelChatActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ScriptActionEditorControl.xaml.cs">
+      <DependentUpon>ScriptActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\SerialActionEditorControl.xaml.cs">
+      <DependentUpon>SerialActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\SoundActionEditorControl.xaml.cs">
+      <DependentUpon>SoundActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\SpecialIdentifierActionEditorControl.xaml.cs">
+      <DependentUpon>SpecialIdentifierActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\StreamingSoftwareActionEditorControl.xaml.cs">
+      <DependentUpon>StreamingSoftwareActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\StreamlabsActionEditorControl.xaml.cs">
+      <DependentUpon>StreamlabsActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\SubActionContainerControl.xaml.cs">
+      <DependentUpon>SubActionContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\TextToSpeechActionEditorControl.xaml.cs">
+      <DependentUpon>TextToSpeechActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\TrovoActionEditorControl.xaml.cs">
+      <DependentUpon>TrovoActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\TwitchActionEditorControl.xaml.cs">
+      <DependentUpon>TwitchActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\TwitterActionEditorControl.xaml.cs">
+      <DependentUpon>TwitterActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\VoicemodActionEditorControl.xaml.cs">
+      <DependentUpon>VoicemodActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\VTubeStudioActionEditorControl.xaml.cs">
+      <DependentUpon>VTubeStudioActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\WaitActionEditorControl.xaml.cs">
+      <DependentUpon>WaitActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\WebRequestActionEditorControl.xaml.cs">
+      <DependentUpon>WebRequestActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\ChatListControl.xaml.cs">
+      <DependentUpon>ChatListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\ChatUserDialogControl.cs" />
+    <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
+      <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\ChatImageControl.xaml.cs">
+      <DependentUpon>ChatImageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\ActionGroupCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>ActionGroupCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\ChatCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>ChatCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\CommandEditorDetailsControlBase.cs" />
+    <Compile Include="Controls\Commands\CommandListingButtonsControl.xaml.cs">
+      <DependentUpon>CommandListingButtonsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\CustomCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>CustomCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\EventCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>EventCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\BetGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>BetGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\BidGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>BidGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\CoinPusherGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>CoinPusherGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\DuelGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>DuelGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\GameCommandEditorDetailsControlBase.cs" />
+    <Compile Include="Controls\Commands\Games\HangmanGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>HangmanGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\HeistGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>HeistGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\HitmanGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>HitmanGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\HotPotatoGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>HotPotatoGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\LockBoxGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>LockBoxGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\RouletteGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>RouletteGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\RussianRouletteGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>RussianRouletteGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\SlotMachineGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>SlotMachineGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\SpinGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>SpinGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\StealGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>StealGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\TreasureDefenseGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TreasureDefenseGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\TriviaGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TriviaGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\VolcanoGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>VolcanoGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\Games\WordScrambleGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>WordScrambleGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\TrovoSpellCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TrovoSpellCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\WebhookCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>WebhookCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\StreamlootsCardCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>StreamlootsCardCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TimerCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\TwitchChannelPointsCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TwitchChannelPointsCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\UnlockCommandControl.xaml.cs">
+      <DependentUpon>UnlockCommandControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CommunityCommands\CommunityCommandListingLargeControl.xaml.cs">
+      <DependentUpon>CommunityCommandListingLargeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CommunityCommands\CommunityCommandListingSmallControl.xaml.cs">
+      <DependentUpon>CommunityCommandListingSmallControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\ChatDashboardControl.xaml.cs">
+      <DependentUpon>ChatDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\DashboardControlBase.cs" />
+    <Compile Include="Controls\Dashboard\GameQueueDashboardControl.xaml.cs">
+      <DependentUpon>GameQueueDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\AlertsDashboardControl.xaml.cs">
+      <DependentUpon>AlertsDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\QuickCommandsDashboardControl.xaml.cs">
+      <DependentUpon>QuickCommandsDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\RedemptionStoreDashboardControl.xaml.cs">
+      <DependentUpon>RedemptionStoreDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\StatisticsDashboardControl.xaml.cs">
+      <DependentUpon>StatisticsDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
+      <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\CalendarDialogControl.xaml.cs">
+      <DependentUpon>CalendarDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\ClockDialogControl.xaml.cs">
+      <DependentUpon>ClockDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\CommandImporterDialogControl.xaml.cs">
+      <DependentUpon>CommandImporterDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\CommandSelectorDialogControl.xaml.cs">
+      <DependentUpon>CommandSelectorDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReportCommandDialogControl.xaml.cs">
+      <DependentUpon>CommunityCommandsReportCommandDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReviewCommandDialogControl.xaml.cs">
+      <DependentUpon>CommunityCommandsReviewCommandDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\EditTestSpecialIdentifiersDialogControl.xaml.cs">
+      <DependentUpon>EditTestSpecialIdentifiersDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\AddUserDialogControl.xaml.cs">
+      <DependentUpon>AddUserDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\GameTypeSelectorDialogControl.xaml.cs">
+      <DependentUpon>GameTypeSelectorDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
+      <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GifImageControl.xaml.cs">
+      <DependentUpon>GifImageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IconButton.xaml.cs">
+      <DependentUpon>IconButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LicenseControl.xaml.cs">
+      <DependentUpon>LicenseControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LoadingWindowControlBase.cs" />
+    <Compile Include="Controls\MainControls\AccountsControl.xaml.cs">
+      <DependentUpon>AccountsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\ChangelogControl.xaml.cs">
+      <DependentUpon>ChangelogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
+      <DependentUpon>ChatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\CommandHistoryControl.xaml.cs">
+      <DependentUpon>CommandHistoryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\CommunityCommandsControl.xaml.cs">
+      <DependentUpon>CommunityCommandsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
+      <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\GroupedCommandsMainControlBase.cs" />
+    <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
+      <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\RedemptionStoreControl.xaml.cs">
+      <DependentUpon>RedemptionStoreControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\TrovoSpellsControl.xaml.cs">
+      <DependentUpon>TrovoSpellsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\WebhooksControl.xaml.cs">
+      <DependentUpon>WebhooksControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\StreamlootsCardsControl.xaml.cs">
+      <DependentUpon>StreamlootsCardsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\StreamPassControl.xaml.cs">
+      <DependentUpon>StreamPassControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\TwitchChannelPointsControl.xaml.cs">
+      <DependentUpon>TwitchChannelPointsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
+      <DependentUpon>UsersControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
+      <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayEndCreditsItemControl.xaml.cs">
+      <DependentUpon>OverlayEndCreditsItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayGameQueueListItemControl.xaml.cs">
+      <DependentUpon>OverlayGameQueueListItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
+      <DependentUpon>OverlayHTMLItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayImageItemControl.xaml.cs">
+      <DependentUpon>OverlayImageItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayItemControl.cs" />
+    <Compile Include="Controls\Overlay\OverlayItemPositionControl.xaml.cs">
+      <DependentUpon>OverlayItemPositionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayEventListItemControl.xaml.cs">
+      <DependentUpon>OverlayEventListItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
+      <DependentUpon>OverlayLeaderboardListItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
+      <DependentUpon>OverlayProgressBarItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayStreamBossItemControl.xaml.cs">
+      <DependentUpon>OverlayStreamBossItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayTextItemControl.xaml.cs">
+      <DependentUpon>OverlayTextItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayTickerTapeListItemControl.xaml.cs">
+      <DependentUpon>OverlayTickerTapeListItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayTimerItemControl.xaml.cs">
+      <DependentUpon>OverlayTimerItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayTimerTrainItemControl.xaml.cs">
+      <DependentUpon>OverlayTimerTrainItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayVideoItemControl.xaml.cs">
+      <DependentUpon>OverlayVideoItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayWebPageItemControl.xaml.cs">
+      <DependentUpon>OverlayWebPageItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overlay\OverlayYouTubeItemControl.xaml.cs">
+      <DependentUpon>OverlayYouTubeItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LoadingControlBase.cs" />
+    <Compile Include="Controls\MainControls\AboutControl.xaml.cs">
+      <DependentUpon>AboutControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\ActionGroupControl.xaml.cs">
+      <DependentUpon>ActionGroupControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\GamesControl.xaml.cs">
+      <DependentUpon>GamesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
+      <DependentUpon>ModerationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\UserDialogControl.xaml.cs">
+      <DependentUpon>UserDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\GameQueueControl.xaml.cs">
+      <DependentUpon>GameQueueControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\MainMenuControl.xaml.cs">
+      <DependentUpon>MainMenuControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\StatisticsControl.xaml.cs">
+      <DependentUpon>StatisticsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NotifyPropertyChangedUserControl.cs" />
+    <Compile Include="Controls\MainControls\ServicesControl.xaml.cs">
+      <DependentUpon>ServicesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\GiveawayControl.xaml.cs">
+      <DependentUpon>GiveawayControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\MainControlBase.cs" />
+    <Compile Include="Controls\MainControls\ChatCommandsControl.xaml.cs">
+      <DependentUpon>ChatCommandsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\EventsControl.xaml.cs">
+      <DependentUpon>EventsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LoadingStatusBar.xaml.cs">
+      <DependentUpon>LoadingStatusBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\QuoteControl.xaml.cs">
+      <DependentUpon>QuoteControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\ArgumentsRequirementControl.xaml.cs">
+      <DependentUpon>ArgumentsRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\CooldownRequirementControl.xaml.cs">
+      <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\CurrencyRequirementControl.xaml.cs">
+      <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\InventoryRequirementControl.xaml.cs">
+      <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RankRequirementControl.xaml.cs">
+      <DependentUpon>RankRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RequirementsSetControl.xaml.cs">
+      <DependentUpon>RequirementsSetControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RoleRequirementControl.xaml.cs">
+      <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\SettingsRequirementControl.xaml.cs">
+      <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\ThresholdRequirementControl.xaml.cs">
+      <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\IFTTTServiceControl.xaml.cs">
+      <DependentUpon>IFTTTServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\JustGivingServiceControl.xaml.cs">
+      <DependentUpon>JustGivingServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
+      <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\PolyPopServiceControl.xaml.cs">
+      <DependentUpon>PolyPopServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\PixelChatServiceControl.xaml.cs">
+      <DependentUpon>PixelChatServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\ServiceContainerControl.xaml.cs">
+      <DependentUpon>ServiceContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\ServiceControlBase.cs" />
+    <Compile Include="Controls\Services\StreamAvatarsServiceControl.xaml.cs">
+      <DependentUpon>StreamAvatarsServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\StreamDeckServiceControl.xaml.cs">
+      <DependentUpon>StreamDeckServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\DeveloperAPIServiceControl.xaml.cs">
+      <DependentUpon>DeveloperAPIServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\DiscordServiceControl.xaml.cs">
+      <DependentUpon>DiscordServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\ExtraLifeServiceControl.xaml.cs">
+      <DependentUpon>ExtraLifeServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\OBSStudioServiceControl.xaml.cs">
+      <DependentUpon>OBSStudioServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\OverlayServiceControl.xaml.cs">
+      <DependentUpon>OverlayServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\PatreonServiceControl.xaml.cs">
+      <DependentUpon>PatreonServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\StreamElementsServiceControl.xaml.cs">
+      <DependentUpon>StreamElementsServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\RainmakerServiceControl.xaml.cs">
+      <DependentUpon>RainmakerServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\StreamlabsOBSServiceControl.xaml.cs">
+      <DependentUpon>StreamlabsOBSServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\StreamlabsServiceControl.xaml.cs">
+      <DependentUpon>StreamlabsServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\StreamlootsServiceControl.xaml.cs">
+      <DependentUpon>StreamlootsServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\TiltifyServiceControl.xaml.cs">
+      <DependentUpon>TiltifyServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\TipeeeStreamServiceControl.xaml.cs">
+      <DependentUpon>TipeeeStreamServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\TreatStreamServiceControl.xaml.cs">
+      <DependentUpon>TreatStreamServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\TwitterServiceControl.xaml.cs">
+      <DependentUpon>TwitterServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\VoicemodServiceControl.xaml.cs">
+      <DependentUpon>VoicemodServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\VTubeStudioServiceControl.xaml.cs">
+      <DependentUpon>VTubeStudioServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\XSplitServiceControl.xaml.cs">
+      <DependentUpon>XSplitServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\AdvancedSettingsControl.xaml.cs">
+      <DependentUpon>AdvancedSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\AlertsSettingsControl.xaml.cs">
+      <DependentUpon>AlertsSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\ChatSettingsControl.xaml.cs">
+      <DependentUpon>ChatSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\CommandsSettingsControl.xaml.cs">
+      <DependentUpon>CommandsSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\CountersSettingsControl.xaml.cs">
+      <DependentUpon>CountersSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
+      <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericButtonSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericColorComboBoxSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericColorComboBoxSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericComboBoxSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericNumberSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericNumberSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\HotKeysSettingsControl.xaml.cs">
+      <DependentUpon>HotKeysSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\MainSettingsContainerControl.xaml.cs">
+      <DependentUpon>MainSettingsContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\NotificationsSettingsControl.xaml.cs">
+      <DependentUpon>NotificationsSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\OverlaySettingsControl.xaml.cs">
+      <DependentUpon>OverlaySettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\SerialDevicesSettingsControl.xaml.cs">
+      <DependentUpon>SerialDevicesSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\SettingsControlBase.cs" />
+    <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
+      <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericToggleSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericToggleSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\UsersSettingsControl.xaml.cs">
+      <DependentUpon>UsersSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SliderWithHeaderControl.xaml.cs">
+      <DependentUpon>SliderWithHeaderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\TimerControl.xaml.cs">
+      <DependentUpon>TimerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SortedDataGrid.cs" />
+    <Compile Include="Controls\Statistics\StatisticsOverviewControl.xaml.cs">
+      <DependentUpon>StatisticsOverviewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\StreamingPlatformStatusAlertControl.xaml.cs">
+      <DependentUpon>StreamingPlatformStatusAlertControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Users\UserProfileAvatarControl.xaml.cs">
+      <DependentUpon>UserProfileAvatarControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\BasicDialogControl.xaml.cs">
+      <DependentUpon>BasicDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\ConfirmationDialogControl.xaml.cs">
+      <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Services\WindowsScriptRunnerService.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\ChatV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\QuotesV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\CommandV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\CurrencyV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\InventoryV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\StatusV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\UserV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\CurrencyV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\InventoryV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\StatusV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\ChatV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\CommandsV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\UsersV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
+    <Compile Include="Services\WindowsOvrStreamService.cs" />
+    <Compile Include="Services\WindowsSocketIOConnection.cs" />
+    <Compile Include="Services\WindowsOBSService.cs" />
+    <Compile Include="Services\WindowsDatabaseService.cs" />
+    <Compile Include="Services\WindowsFileService.cs" />
+    <Compile Include="Services\WindowsImageService.cs" />
+    <Compile Include="Services\WindowsInputService.cs" />
+    <Compile Include="Services\WindowsTelemetryService.cs" />
+    <Compile Include="Services\WindowsAudioService.cs" />
+    <Compile Include="UpdateWindow.xaml.cs">
+      <DependentUpon>UpdateWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Util\ActionListDropHandler.cs" />
+    <Compile Include="Util\AlternationIndexConverter.cs" />
+    <Compile Include="Util\RegistryHelpers.cs" />
+    <Compile Include="Util\StrikethroughConverter.cs" />
+    <Compile Include="Util\FrameworkElementHelpers.cs" />
+    <Compile Include="Util\InstalledFonts.cs" />
+    <Compile Include="Util\InverseBooleanConverter.cs" />
+    <Compile Include="Util\LocalizationConverter.cs" />
+    <Compile Include="Util\LogicalTreeHelpers.cs" />
+    <Compile Include="Util\ColorBrushConverter.cs" />
+    <Compile Include="Util\TimeConverter.cs" />
+    <Compile Include="Util\UIHelpers.cs" />
+    <Compile Include="Util\VisualTreeHelpers.cs" />
+    <Compile Include="Util\WindowsDispatcher.cs" />
+    <Compile Include="Util\WPFDialogShower.cs" />
+    <Compile Include="Windows\Commands\CommandEditorWindow.xaml.cs">
+      <DependentUpon>CommandEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Commands\CommunityCommandUploadWindow.xaml.cs">
+      <DependentUpon>CommunityCommandUploadWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Commands\GameCommandEditorWindow.xaml.cs">
+      <DependentUpon>GameCommandEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\CurrencyWindow.xaml.cs">
+      <DependentUpon>CurrencyWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\InventoryWindow.xaml.cs">
+      <DependentUpon>InventoryWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\RedemptionStoreWindow.xaml.cs">
+      <DependentUpon>RedemptionStoreWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\StreamPassWindow.xaml.cs">
+      <DependentUpon>StreamPassWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Dashboard\DashboardWindow.xaml.cs">
+      <DependentUpon>DashboardWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\LicenseAgreementWindow.xaml.cs">
+      <DependentUpon>LicenseAgreementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\LoadingWindowBase.cs" />
+    <Compile Include="Windows\OAuth\OAuthWebBrowserWindow.xaml.cs">
+      <DependentUpon>OAuthWebBrowserWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Overlay\OverlayWidgetEditorWindow.xaml.cs">
+      <DependentUpon>OverlayWidgetEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\PopOut\PopOutWindow.xaml.cs">
+      <DependentUpon>PopOutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Quotes\QuotesDataImportWindow.xaml.cs">
+      <DependentUpon>QuotesDataImportWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Users\UserDataEditorWindow.xaml.cs">
+      <DependentUpon>UserDataEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Users\UserDataImportWindow.xaml.cs">
+      <DependentUpon>UserDataImportWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Wizard\NewUserWizardWindow.xaml.cs">
+      <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\AccordianGroupBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Accounts\StreamingPlatformAccountControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ActionEditorContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ActionEditorListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ChatActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\CommandActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ConditionalActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ConsumablesActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\CounterActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\DiscordActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ExternalProgramActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\FileActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\GameQueueActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\IFTTTActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\InputActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ModerationActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\OverlayActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\OvrStreamActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\PolyPopActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\PixelChatActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ScriptActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SerialActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SoundActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SpecialIdentifierActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\StreamingSoftwareActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\StreamlabsActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SubActionContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\TextToSpeechActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\TrovoActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\TwitchActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\TwitterActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\VoicemodActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\VTubeStudioActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\WaitActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\WebRequestActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\ChatListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\ChatMessageHeaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\ChatImageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Commands\ActionGroupCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\ChatCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\CommandListingButtonsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\CustomCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\EventCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\BetGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\BidGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\CoinPusherGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\DuelGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\HangmanGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\HeistGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\HitmanGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\HotPotatoGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\LockBoxGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\RouletteGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\RussianRouletteGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\SlotMachineGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\SpinGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\StealGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\TreasureDefenseGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\TriviaGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\VolcanoGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\Games\WordScrambleGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\TrovoSpellCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\WebhookCommandEditorDetailsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Commands\StreamlootsCardCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\TwitchChannelPointsCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\UnlockCommandControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CommunityCommands\CommunityCommandListingLargeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CommunityCommands\CommunityCommandListingSmallControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\ChatDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\GameQueueDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\AlertsDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\QuickCommandsDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\RedemptionStoreDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\StatisticsDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CalendarDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\ClockDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CommandImporterDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CommandSelectorDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReportCommandDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReviewCommandDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\EditTestSpecialIdentifiersDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\AddUserDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\GameTypeSelectorDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\GifImageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\IconButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LicenseControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\AccountsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ChangelogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ChatControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\CommandHistoryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\CommunityCommandsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainControls\OverlayWidgetsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\RedemptionStoreControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\TrovoSpellsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\WebhooksControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainControls\StreamlootsCardsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainControls\StreamPassControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\TwitchChannelPointsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\UsersControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayEndCreditsItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayGameQueueListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayHTMLItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayImageItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayItemPositionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayEventListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayProgressBarItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayStreamBossItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTextItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTickerTapeListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTimerItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTimerTrainItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayVideoItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayWebPageItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayYouTubeItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\AboutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ActionGroupControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\GamesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ModerationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\UserDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\GameQueueControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\MainMenuControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ServicesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\ChatMessageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\ChatUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ChatCommandsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\EventsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\GiveawayControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LoadingStatusBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\QuoteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\StatisticsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\ArgumentsRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\CooldownRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\CurrencyRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\InventoryRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RankRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RequirementsSetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RoleRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\SettingsRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\ThresholdRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\IFTTTServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\JustGivingServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\OvrStreamServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\PolyPopServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\PixelChatServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\ServiceContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\StreamAvatarsServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\StreamDeckServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\DeveloperAPIServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\DiscordServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\ExtraLifeServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\OBSStudioServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\OverlayServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\PatreonServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\StreamElementsServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\RainmakerServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\StreamlabsOBSServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\StreamlabsServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\StreamlootsServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\TiltifyServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\TipeeeStreamServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\TreatStreamServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\TwitterServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\VoicemodServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\VTubeStudioServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\XSplitServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\AdvancedSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\AlertsSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\ChatSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\CommandsSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\CountersSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\GeneralSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericColorComboBoxSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericNumberSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\HotKeysSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\MainSettingsContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\NotificationsSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\OverlaySettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\SerialDevicesSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\ThemeSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericToggleSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\UsersSettingsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SliderWithHeaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\TimerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Statistics\StatisticsOverviewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\StreamingPlatformStatusAlertControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Users\UserProfileAvatarControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Chat\ChatMessageControl.xaml.cs">
+      <DependentUpon>ChatMessageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\ChatUserControl.xaml.cs">
+      <DependentUpon>ChatUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Controls\Dialogs\BasicDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\ConfirmationDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Resource Include="Themes\MixItUpBackgroundColor.Light.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Resource Include="Themes\MixItUpTheme.Common.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Resource Include="Themes\MixItUpBackgroundColor.Dark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Page Include="Themes\MixItUpBaseTheme.Mixer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.Atl3msPlexify.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.AwkwardTysonAmericana.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.Mixer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.TeamBoom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.TacosAfterDark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.AzhtralsCosmicFire.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.DustysPurplePotion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.InsertCoinTheater.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.StarkContrast.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UpdateWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Commands\CommandEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Commands\CommunityCommandUploadWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Commands\GameCommandEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Currency\CurrencyWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Currency\InventoryWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Currency\RedemptionStoreWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Currency\StreamPassWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Dashboard\DashboardWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\LicenseAgreementWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\OAuth\OAuthWebBrowserWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Overlay\OverlayWidgetEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\PopOut\PopOutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Quotes\QuotesDataImportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Users\UserDataEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Users\UserDataImportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Wizard\NewUserWizardWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Installer.nsi">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lib\abc.py" />
+    <None Include="Lib\aifc.py" />
+    <None Include="Lib\antigravity.py" />
+    <None Include="Lib\anydbm.py" />
+    <None Include="Lib\argparse.py" />
+    <None Include="Lib\ast.py" />
+    <None Include="Lib\asynchat.py" />
+    <None Include="Lib\asyncore.py" />
+    <None Include="Lib\atexit.py" />
+    <None Include="Lib\audiodev.py" />
+    <None Include="Lib\base64.py" />
+    <None Include="Lib\BaseHTTPServer.py" />
+    <None Include="Lib\Bastion.py" />
+    <None Include="Lib\bdb.py" />
+    <None Include="Lib\binhex.py" />
+    <None Include="Lib\bisect.py" />
+    <None Include="Lib\calendar.py" />
+    <None Include="Lib\cgi.py" />
+    <None Include="Lib\CGIHTTPServer.py" />
+    <None Include="Lib\cgitb.py" />
+    <None Include="Lib\chunk.py" />
+    <None Include="Lib\clrtype.py" />
+    <None Include="Lib\cmd.py" />
+    <None Include="Lib\code.py" />
+    <None Include="Lib\codecs.py" />
+    <None Include="Lib\codeop.py" />
+    <None Include="Lib\collections.py" />
+    <None Include="Lib\colorsys.py" />
+    <None Include="Lib\commands.py" />
+    <None Include="Lib\compileall.py" />
+    <None Include="Lib\ConfigParser.py" />
+    <None Include="Lib\contextlib.py" />
+    <None Include="Lib\Cookie.py" />
+    <None Include="Lib\cookielib.py" />
+    <None Include="Lib\copy.py" />
+    <None Include="Lib\csv.py" />
+    <None Include="Lib\ctypes\macholib\dyld.py" />
+    <None Include="Lib\ctypes\macholib\dylib.py" />
+    <None Include="Lib\ctypes\macholib\framework.py" />
+    <None Include="Lib\ctypes\macholib\__init__.py" />
+    <None Include="Lib\ctypes\util.py" />
+    <None Include="Lib\ctypes\wintypes.py" />
+    <None Include="Lib\ctypes\_endian.py" />
+    <None Include="Lib\ctypes\__init__.py" />
+    <None Include="Lib\decimal.py" />
+    <None Include="Lib\difflib.py" />
+    <None Include="Lib\dircache.py" />
+    <None Include="Lib\dis.py" />
+    <None Include="Lib\distutils\archive_util.py" />
+    <None Include="Lib\distutils\bcppcompiler.py" />
+    <None Include="Lib\distutils\ccompiler.py" />
+    <None Include="Lib\distutils\cmd.py" />
+    <None Include="Lib\distutils\command\bdist.py" />
+    <None Include="Lib\distutils\command\bdist_dumb.py" />
+    <None Include="Lib\distutils\command\bdist_rpm.py" />
+    <None Include="Lib\distutils\command\bdist_wininst.py" />
+    <None Include="Lib\distutils\command\build.py" />
+    <None Include="Lib\distutils\command\build_clib.py" />
+    <None Include="Lib\distutils\command\build_ext.py" />
+    <None Include="Lib\distutils\command\build_py.py" />
+    <None Include="Lib\distutils\command\build_scripts.py" />
+    <None Include="Lib\distutils\command\check.py" />
+    <None Include="Lib\distutils\command\clean.py" />
+    <None Include="Lib\distutils\command\config.py" />
+    <None Include="Lib\distutils\command\install.py" />
+    <None Include="Lib\distutils\command\install_data.py" />
+    <None Include="Lib\distutils\command\install_egg_info.py" />
+    <None Include="Lib\distutils\command\install_headers.py" />
+    <None Include="Lib\distutils\command\install_lib.py" />
+    <None Include="Lib\distutils\command\install_scripts.py" />
+    <None Include="Lib\distutils\command\register.py" />
+    <None Include="Lib\distutils\command\sdist.py" />
+    <None Include="Lib\distutils\command\upload.py" />
+    <None Include="Lib\distutils\command\__init__.py" />
+    <None Include="Lib\distutils\config.py" />
+    <None Include="Lib\distutils\core.py" />
+    <None Include="Lib\distutils\cygwinccompiler.py" />
+    <None Include="Lib\distutils\debug.py" />
+    <None Include="Lib\distutils\dep_util.py" />
+    <None Include="Lib\distutils\dir_util.py" />
+    <None Include="Lib\distutils\dist.py" />
+    <None Include="Lib\distutils\emxccompiler.py" />
+    <None Include="Lib\distutils\errors.py" />
+    <None Include="Lib\distutils\extension.py" />
+    <None Include="Lib\distutils\fancy_getopt.py" />
+    <None Include="Lib\distutils\filelist.py" />
+    <None Include="Lib\distutils\file_util.py" />
+    <None Include="Lib\distutils\log.py" />
+    <None Include="Lib\distutils\msvccompiler.py" />
+    <None Include="Lib\distutils\spawn.py" />
+    <None Include="Lib\distutils\sysconfig.py" />
+    <None Include="Lib\distutils\text_file.py" />
+    <None Include="Lib\distutils\unixccompiler.py" />
+    <None Include="Lib\distutils\util.py" />
+    <None Include="Lib\distutils\version.py" />
+    <None Include="Lib\distutils\versionpredicate.py" />
+    <None Include="Lib\distutils\__init__.py" />
+    <None Include="Lib\doctest.py" />
+    <None Include="Lib\DocXMLRPCServer.py" />
+    <None Include="Lib\dumbdbm.py" />
+    <None Include="Lib\dummy_thread.py" />
+    <None Include="Lib\dummy_threading.py" />
+    <None Include="Lib\email\base64mime.py" />
+    <None Include="Lib\email\charset.py" />
+    <None Include="Lib\email\encoders.py" />
+    <None Include="Lib\email\errors.py" />
+    <None Include="Lib\email\feedparser.py" />
+    <None Include="Lib\email\generator.py" />
+    <None Include="Lib\email\header.py" />
+    <None Include="Lib\email\iterators.py" />
+    <None Include="Lib\email\message.py" />
+    <None Include="Lib\email\mime\application.py" />
+    <None Include="Lib\email\mime\audio.py" />
+    <None Include="Lib\email\mime\base.py" />
+    <None Include="Lib\email\mime\image.py" />
+    <None Include="Lib\email\mime\message.py" />
+    <None Include="Lib\email\mime\multipart.py" />
+    <None Include="Lib\email\mime\nonmultipart.py" />
+    <None Include="Lib\email\mime\text.py" />
+    <None Include="Lib\email\mime\__init__.py" />
+    <None Include="Lib\email\parser.py" />
+    <None Include="Lib\email\quoprimime.py" />
+    <None Include="Lib\email\utils.py" />
+    <None Include="Lib\email\_parseaddr.py" />
+    <None Include="Lib\email\__init__.py" />
+    <None Include="Lib\encodings\aliases.py" />
+    <None Include="Lib\encodings\ascii.py" />
+    <None Include="Lib\encodings\base64_codec.py" />
+    <None Include="Lib\encodings\bz2_codec.py" />
+    <None Include="Lib\encodings\charmap.py" />
+    <None Include="Lib\encodings\cp037.py" />
+    <None Include="Lib\encodings\cp1006.py" />
+    <None Include="Lib\encodings\cp1026.py" />
+    <None Include="Lib\encodings\cp1140.py" />
+    <None Include="Lib\encodings\cp1250.py" />
+    <None Include="Lib\encodings\cp1251.py" />
+    <None Include="Lib\encodings\cp1252.py" />
+    <None Include="Lib\encodings\cp1253.py" />
+    <None Include="Lib\encodings\cp1254.py" />
+    <None Include="Lib\encodings\cp1255.py" />
+    <None Include="Lib\encodings\cp1256.py" />
+    <None Include="Lib\encodings\cp1257.py" />
+    <None Include="Lib\encodings\cp1258.py" />
+    <None Include="Lib\encodings\cp424.py" />
+    <None Include="Lib\encodings\cp437.py" />
+    <None Include="Lib\encodings\cp500.py" />
+    <None Include="Lib\encodings\cp720.py" />
+    <None Include="Lib\encodings\cp737.py" />
+    <None Include="Lib\encodings\cp775.py" />
+    <None Include="Lib\encodings\cp850.py" />
+    <None Include="Lib\encodings\cp852.py" />
+    <None Include="Lib\encodings\cp855.py" />
+    <None Include="Lib\encodings\cp856.py" />
+    <None Include="Lib\encodings\cp857.py" />
+    <None Include="Lib\encodings\cp858.py" />
+    <None Include="Lib\encodings\cp860.py" />
+    <None Include="Lib\encodings\cp861.py" />
+    <None Include="Lib\encodings\cp862.py" />
+    <None Include="Lib\encodings\cp863.py" />
+    <None Include="Lib\encodings\cp864.py" />
+    <None Include="Lib\encodings\cp865.py" />
+    <None Include="Lib\encodings\cp866.py" />
+    <None Include="Lib\encodings\cp869.py" />
+    <None Include="Lib\encodings\cp874.py" />
+    <None Include="Lib\encodings\cp875.py" />
+    <None Include="Lib\encodings\hex_codec.py" />
+    <None Include="Lib\encodings\hp_roman8.py" />
+    <None Include="Lib\encodings\idna.py" />
+    <None Include="Lib\encodings\iso8859_1.py" />
+    <None Include="Lib\encodings\iso8859_10.py" />
+    <None Include="Lib\encodings\iso8859_11.py" />
+    <None Include="Lib\encodings\iso8859_13.py" />
+    <None Include="Lib\encodings\iso8859_14.py" />
+    <None Include="Lib\encodings\iso8859_15.py" />
+    <None Include="Lib\encodings\iso8859_16.py" />
+    <None Include="Lib\encodings\iso8859_2.py" />
+    <None Include="Lib\encodings\iso8859_3.py" />
+    <None Include="Lib\encodings\iso8859_4.py" />
+    <None Include="Lib\encodings\iso8859_5.py" />
+    <None Include="Lib\encodings\iso8859_6.py" />
+    <None Include="Lib\encodings\iso8859_7.py" />
+    <None Include="Lib\encodings\iso8859_8.py" />
+    <None Include="Lib\encodings\iso8859_9.py" />
+    <None Include="Lib\encodings\koi8_r.py" />
+    <None Include="Lib\encodings\koi8_u.py" />
+    <None Include="Lib\encodings\latin_1.py" />
+    <None Include="Lib\encodings\mac_arabic.py" />
+    <None Include="Lib\encodings\mac_centeuro.py" />
+    <None Include="Lib\encodings\mac_croatian.py" />
+    <None Include="Lib\encodings\mac_cyrillic.py" />
+    <None Include="Lib\encodings\mac_farsi.py" />
+    <None Include="Lib\encodings\mac_greek.py" />
+    <None Include="Lib\encodings\mac_iceland.py" />
+    <None Include="Lib\encodings\mac_latin2.py" />
+    <None Include="Lib\encodings\mac_roman.py" />
+    <None Include="Lib\encodings\mac_romanian.py" />
+    <None Include="Lib\encodings\mac_turkish.py" />
+    <None Include="Lib\encodings\mbcs.py" />
+    <None Include="Lib\encodings\palmos.py" />
+    <None Include="Lib\encodings\ptcp154.py" />
+    <None Include="Lib\encodings\punycode.py" />
+    <None Include="Lib\encodings\quopri_codec.py" />
+    <None Include="Lib\encodings\raw_unicode_escape.py" />
+    <None Include="Lib\encodings\rot_13.py" />
+    <None Include="Lib\encodings\string_escape.py" />
+    <None Include="Lib\encodings\tis_620.py" />
+    <None Include="Lib\encodings\undefined.py" />
+    <None Include="Lib\encodings\unicode_escape.py" />
+    <None Include="Lib\encodings\unicode_internal.py" />
+    <None Include="Lib\encodings\utf_16.py" />
+    <None Include="Lib\encodings\utf_16_be.py" />
+    <None Include="Lib\encodings\utf_16_le.py" />
+    <None Include="Lib\encodings\utf_32.py" />
+    <None Include="Lib\encodings\utf_32_be.py" />
+    <None Include="Lib\encodings\utf_32_le.py" />
+    <None Include="Lib\encodings\utf_7.py" />
+    <None Include="Lib\encodings\utf_8.py" />
+    <None Include="Lib\encodings\utf_8_sig.py" />
+    <None Include="Lib\encodings\uu_codec.py" />
+    <None Include="Lib\encodings\zlib_codec.py" />
+    <None Include="Lib\encodings\__init__.py" />
+    <None Include="Lib\ensurepip\_bundled\pip-19.2.3-py2.py3-none-any.whl" />
+    <None Include="Lib\ensurepip\_bundled\setuptools-41.2.0-py2.py3-none-any.whl" />
+    <None Include="Lib\ensurepip\_uninstall.py" />
+    <None Include="Lib\ensurepip\__init__.py" />
+    <None Include="Lib\ensurepip\__main__.py" />
+    <None Include="Lib\filecmp.py" />
+    <None Include="Lib\fileinput.py" />
+    <None Include="Lib\fnmatch.py" />
+    <None Include="Lib\formatter.py" />
+    <None Include="Lib\fpformat.py" />
+    <None Include="Lib\fractions.py" />
+    <None Include="Lib\ftplib.py" />
+    <None Include="Lib\functools.py" />
+    <None Include="Lib\genericpath.py" />
+    <None Include="Lib\getopt.py" />
+    <None Include="Lib\getpass.py" />
+    <None Include="Lib\gettext.py" />
+    <None Include="Lib\glob.py" />
+    <None Include="Lib\gzip.py" />
+    <None Include="Lib\hashlib.py" />
+    <None Include="Lib\heapq.py" />
+    <None Include="Lib\hmac.py" />
+    <None Include="Lib\htmlentitydefs.py" />
+    <None Include="Lib\htmllib.py" />
+    <None Include="Lib\HTMLParser.py" />
+    <None Include="Lib\httplib.py" />
+    <None Include="Lib\ihooks.py" />
+    <None Include="Lib\imaplib.py" />
+    <None Include="Lib\imghdr.py" />
+    <None Include="Lib\importlib\__init__.py" />
+    <None Include="Lib\imputil.py" />
+    <None Include="Lib\inspect.py" />
+    <None Include="Lib\io.py" />
+    <None Include="Lib\json\decoder.py" />
+    <None Include="Lib\json\encoder.py" />
+    <None Include="Lib\json\scanner.py" />
+    <None Include="Lib\json\tool.py" />
+    <None Include="Lib\json\__init__.py" />
+    <None Include="Lib\keyword.py" />
+    <None Include="Lib\lib2to3\btm_matcher.py" />
+    <None Include="Lib\lib2to3\btm_utils.py" />
+    <None Include="Lib\lib2to3\fixer_base.py" />
+    <None Include="Lib\lib2to3\fixer_util.py" />
+    <None Include="Lib\lib2to3\fixes\fix_apply.py" />
+    <None Include="Lib\lib2to3\fixes\fix_asserts.py" />
+    <None Include="Lib\lib2to3\fixes\fix_basestring.py" />
+    <None Include="Lib\lib2to3\fixes\fix_buffer.py" />
+    <None Include="Lib\lib2to3\fixes\fix_dict.py" />
+    <None Include="Lib\lib2to3\fixes\fix_except.py" />
+    <None Include="Lib\lib2to3\fixes\fix_exec.py" />
+    <None Include="Lib\lib2to3\fixes\fix_execfile.py" />
+    <None Include="Lib\lib2to3\fixes\fix_exitfunc.py" />
+    <None Include="Lib\lib2to3\fixes\fix_filter.py" />
+    <None Include="Lib\lib2to3\fixes\fix_funcattrs.py" />
+    <None Include="Lib\lib2to3\fixes\fix_future.py" />
+    <None Include="Lib\lib2to3\fixes\fix_getcwdu.py" />
+    <None Include="Lib\lib2to3\fixes\fix_has_key.py" />
+    <None Include="Lib\lib2to3\fixes\fix_idioms.py" />
+    <None Include="Lib\lib2to3\fixes\fix_import.py" />
+    <None Include="Lib\lib2to3\fixes\fix_imports.py" />
+    <None Include="Lib\lib2to3\fixes\fix_imports2.py" />
+    <None Include="Lib\lib2to3\fixes\fix_input.py" />
+    <None Include="Lib\lib2to3\fixes\fix_intern.py" />
+    <None Include="Lib\lib2to3\fixes\fix_isinstance.py" />
+    <None Include="Lib\lib2to3\fixes\fix_itertools.py" />
+    <None Include="Lib\lib2to3\fixes\fix_itertools_imports.py" />
+    <None Include="Lib\lib2to3\fixes\fix_long.py" />
+    <None Include="Lib\lib2to3\fixes\fix_map.py" />
+    <None Include="Lib\lib2to3\fixes\fix_metaclass.py" />
+    <None Include="Lib\lib2to3\fixes\fix_methodattrs.py" />
+    <None Include="Lib\lib2to3\fixes\fix_ne.py" />
+    <None Include="Lib\lib2to3\fixes\fix_next.py" />
+    <None Include="Lib\lib2to3\fixes\fix_nonzero.py" />
+    <None Include="Lib\lib2to3\fixes\fix_numliterals.py" />
+    <None Include="Lib\lib2to3\fixes\fix_operator.py" />
+    <None Include="Lib\lib2to3\fixes\fix_paren.py" />
+    <None Include="Lib\lib2to3\fixes\fix_print.py" />
+    <None Include="Lib\lib2to3\fixes\fix_raise.py" />
+    <None Include="Lib\lib2to3\fixes\fix_raw_input.py" />
+    <None Include="Lib\lib2to3\fixes\fix_reduce.py" />
+    <None Include="Lib\lib2to3\fixes\fix_renames.py" />
+    <None Include="Lib\lib2to3\fixes\fix_repr.py" />
+    <None Include="Lib\lib2to3\fixes\fix_set_literal.py" />
+    <None Include="Lib\lib2to3\fixes\fix_standarderror.py" />
+    <None Include="Lib\lib2to3\fixes\fix_sys_exc.py" />
+    <None Include="Lib\lib2to3\fixes\fix_throw.py" />
+    <None Include="Lib\lib2to3\fixes\fix_tuple_params.py" />
+    <None Include="Lib\lib2to3\fixes\fix_types.py" />
+    <None Include="Lib\lib2to3\fixes\fix_unicode.py" />
+    <None Include="Lib\lib2to3\fixes\fix_urllib.py" />
+    <None Include="Lib\lib2to3\fixes\fix_ws_comma.py" />
+    <None Include="Lib\lib2to3\fixes\fix_xrange.py" />
+    <None Include="Lib\lib2to3\fixes\fix_xreadlines.py" />
+    <None Include="Lib\lib2to3\fixes\fix_zip.py" />
+    <None Include="Lib\lib2to3\fixes\__init__.py" />
+    <None Include="Lib\lib2to3\main.py" />
+    <None Include="Lib\lib2to3\patcomp.py" />
+    <None Include="Lib\lib2to3\pgen2\conv.py" />
+    <None Include="Lib\lib2to3\pgen2\driver.py" />
+    <None Include="Lib\lib2to3\pgen2\grammar.py" />
+    <None Include="Lib\lib2to3\pgen2\literals.py" />
+    <None Include="Lib\lib2to3\pgen2\parse.py" />
+    <None Include="Lib\lib2to3\pgen2\pgen.py" />
+    <None Include="Lib\lib2to3\pgen2\token.py" />
+    <None Include="Lib\lib2to3\pgen2\tokenize.py" />
+    <None Include="Lib\lib2to3\pgen2\__init__.py" />
+    <None Include="Lib\lib2to3\pygram.py" />
+    <None Include="Lib\lib2to3\pytree.py" />
+    <None Include="Lib\lib2to3\refactor.py" />
+    <None Include="Lib\lib2to3\__init__.py" />
+    <None Include="Lib\lib2to3\__main__.py" />
+    <None Include="Lib\linecache.py" />
+    <None Include="Lib\locale.py" />
+    <None Include="Lib\logging\config.py" />
+    <None Include="Lib\logging\handlers.py" />
+    <None Include="Lib\logging\__init__.py" />
+    <None Include="Lib\macpath.py" />
+    <None Include="Lib\macurl2path.py" />
+    <None Include="Lib\mailbox.py" />
+    <None Include="Lib\mailcap.py" />
+    <None Include="Lib\markupbase.py" />
+    <None Include="Lib\md5.py" />
+    <None Include="Lib\mhlib.py" />
+    <None Include="Lib\mimetools.py" />
+    <None Include="Lib\mimetypes.py" />
+    <None Include="Lib\MimeWriter.py" />
+    <None Include="Lib\mimify.py" />
+    <None Include="Lib\modulefinder.py" />
+    <None Include="Lib\multifile.py" />
+    <None Include="Lib\multiprocessing\connection.py" />
+    <None Include="Lib\multiprocessing\dummy\connection.py" />
+    <None Include="Lib\multiprocessing\dummy\__init__.py" />
+    <None Include="Lib\multiprocessing\forking.py" />
+    <None Include="Lib\multiprocessing\heap.py" />
+    <None Include="Lib\multiprocessing\managers.py" />
+    <None Include="Lib\multiprocessing\pool.py" />
+    <None Include="Lib\multiprocessing\process.py" />
+    <None Include="Lib\multiprocessing\queues.py" />
+    <None Include="Lib\multiprocessing\reduction.py" />
+    <None Include="Lib\multiprocessing\sharedctypes.py" />
+    <None Include="Lib\multiprocessing\synchronize.py" />
+    <None Include="Lib\multiprocessing\util.py" />
+    <None Include="Lib\multiprocessing\__init__.py" />
+    <None Include="Lib\mutex.py" />
+    <None Include="Lib\netrc.py" />
+    <None Include="Lib\new.py" />
+    <None Include="Lib\nntplib.py" />
+    <None Include="Lib\ntpath.py" />
+    <None Include="Lib\nturl2path.py" />
+    <None Include="Lib\numbers.py" />
+    <None Include="Lib\opcode.py" />
+    <None Include="Lib\optparse.py" />
+    <None Include="Lib\os.py" />
+    <None Include="Lib\os2emxpath.py" />
+    <None Include="Lib\pdb.py" />
+    <None Include="Lib\pickle.py" />
+    <None Include="Lib\pickletools.py" />
+    <None Include="Lib\pipes.py" />
+    <None Include="Lib\pkgutil.py" />
+    <None Include="Lib\platform.py" />
+    <None Include="Lib\plistlib.py" />
+    <None Include="Lib\popen2.py" />
+    <None Include="Lib\poplib.py" />
+    <None Include="Lib\posixfile.py" />
+    <None Include="Lib\posixpath.py" />
+    <None Include="Lib\pprint.py" />
+    <None Include="Lib\profile.py" />
+    <None Include="Lib\pstats.py" />
+    <None Include="Lib\pyclbr.py" />
+    <None Include="Lib\pydoc.py" />
+    <None Include="Lib\pydoc_data\topics.py" />
+    <None Include="Lib\pydoc_data\__init__.py" />
+    <None Include="Lib\py_compile.py" />
+    <None Include="Lib\Queue.py" />
+    <None Include="Lib\quopri.py" />
+    <None Include="Lib\random.py" />
+    <None Include="Lib\repr.py" />
+    <None Include="Lib\rexec.py" />
+    <None Include="Lib\rfc822.py" />
+    <None Include="Lib\rlcompleter.py" />
+    <None Include="Lib\robotparser.py" />
+    <None Include="Lib\runpy.py" />
+    <None Include="Lib\sched.py" />
+    <None Include="Lib\sets.py" />
+    <None Include="Lib\sgmllib.py" />
+    <None Include="Lib\sha.py" />
+    <None Include="Lib\shelve.py" />
+    <None Include="Lib\shlex.py" />
+    <None Include="Lib\shutil.py" />
+    <None Include="Lib\SimpleHTTPServer.py" />
+    <None Include="Lib\SimpleXMLRPCServer.py" />
+    <None Include="Lib\site.py" />
+    <None Include="Lib\smtpd.py" />
+    <None Include="Lib\smtplib.py" />
+    <None Include="Lib\sndhdr.py" />
+    <None Include="Lib\socket.py" />
+    <None Include="Lib\SocketServer.py" />
+    <None Include="Lib\sqlite3\dbapi2.py" />
+    <None Include="Lib\sqlite3\dump.py" />
+    <None Include="Lib\sqlite3\__init__.py" />
+    <None Include="Lib\sre_constants.py" />
+    <None Include="Lib\sre_parse.py" />
+    <None Include="Lib\ssl.py" />
+    <None Include="Lib\stat.py" />
+    <None Include="Lib\statvfs.py" />
+    <None Include="Lib\string.py" />
+    <None Include="Lib\StringIO.py" />
+    <None Include="Lib\stringold.py" />
+    <None Include="Lib\stringprep.py" />
+    <None Include="Lib\struct.py" />
+    <None Include="Lib\subprocess.py" />
+    <None Include="Lib\sunau.py" />
+    <None Include="Lib\sunaudio.py" />
+    <None Include="Lib\symbol.py" />
+    <None Include="Lib\sysconfig.py" />
+    <None Include="Lib\tabnanny.py" />
+    <None Include="Lib\tarfile.py" />
+    <None Include="Lib\telnetlib.py" />
+    <None Include="Lib\tempfile.py" />
+    <None Include="Lib\textwrap.py" />
+    <None Include="Lib\this.py" />
+    <None Include="Lib\threading.py" />
+    <None Include="Lib\timeit.py" />
+    <None Include="Lib\toaiff.py" />
+    <None Include="Lib\token.py" />
+    <None Include="Lib\tokenize.py" />
+    <None Include="Lib\trace.py" />
+    <None Include="Lib\traceback.py" />
+    <None Include="Lib\types.py" />
+    <None Include="Lib\unittest\case.py" />
+    <None Include="Lib\unittest\loader.py" />
+    <None Include="Lib\unittest\main.py" />
+    <None Include="Lib\unittest\result.py" />
+    <None Include="Lib\unittest\runner.py" />
+    <None Include="Lib\unittest\signals.py" />
+    <None Include="Lib\unittest\suite.py" />
+    <None Include="Lib\unittest\util.py" />
+    <None Include="Lib\unittest\__init__.py" />
+    <None Include="Lib\unittest\__main__.py" />
+    <None Include="Lib\urllib.py" />
+    <None Include="Lib\urllib2.py" />
+    <None Include="Lib\urlparse.py" />
+    <None Include="Lib\user.py" />
+    <None Include="Lib\UserDict.py" />
+    <None Include="Lib\UserList.py" />
+    <None Include="Lib\UserString.py" />
+    <None Include="Lib\uu.py" />
+    <None Include="Lib\uuid.py" />
+    <None Include="Lib\warnings.py" />
+    <None Include="Lib\wave.py" />
+    <None Include="Lib\weakref.py" />
+    <None Include="Lib\webbrowser.py" />
+    <None Include="Lib\whichdb.py" />
+    <None Include="Lib\wpf.py" />
+    <None Include="Lib\wsgiref\handlers.py" />
+    <None Include="Lib\wsgiref\headers.py" />
+    <None Include="Lib\wsgiref\simple_server.py" />
+    <None Include="Lib\wsgiref\util.py" />
+    <None Include="Lib\wsgiref\validate.py" />
+    <None Include="Lib\wsgiref\__init__.py" />
+    <None Include="Lib\xdrlib.py" />
+    <None Include="Lib\xmllib.py" />
+    <None Include="Lib\xmlrpclib.py" />
+    <None Include="Lib\xml\dom\domreg.py" />
+    <None Include="Lib\xml\dom\expatbuilder.py" />
+    <None Include="Lib\xml\dom\minicompat.py" />
+    <None Include="Lib\xml\dom\minidom.py" />
+    <None Include="Lib\xml\dom\NodeFilter.py" />
+    <None Include="Lib\xml\dom\pulldom.py" />
+    <None Include="Lib\xml\dom\xmlbuilder.py" />
+    <None Include="Lib\xml\dom\__init__.py" />
+    <None Include="Lib\xml\etree\cElementTree.py" />
+    <None Include="Lib\xml\etree\ElementInclude.py" />
+    <None Include="Lib\xml\etree\ElementPath.py" />
+    <None Include="Lib\xml\etree\ElementTree.py" />
+    <None Include="Lib\xml\etree\SimpleXMLTreeBuilder.py" />
+    <None Include="Lib\xml\etree\__init__.py" />
+    <None Include="Lib\xml\parsers\expat.py" />
+    <None Include="Lib\xml\parsers\__init__.py" />
+    <None Include="Lib\xml\sax\expatreader.py" />
+    <None Include="Lib\xml\sax\handler.py" />
+    <None Include="Lib\xml\sax\saxutils.py" />
+    <None Include="Lib\xml\sax\xmlreader.py" />
+    <None Include="Lib\xml\sax\_exceptions.py" />
+    <None Include="Lib\xml\sax\__init__.py" />
+    <None Include="Lib\xml\__init__.py" />
+    <None Include="Lib\zipfile.py" />
+    <None Include="Lib\_abcoll.py" />
+    <None Include="Lib\_LWPCookieJar.py" />
+    <None Include="Lib\_MozillaCookieJar.py" />
+    <None Include="Lib\_osx_support.py" />
+    <None Include="Lib\_pyio.py" />
+    <None Include="Lib\_strptime.py" />
+    <None Include="Lib\_threading_local.py" />
+    <None Include="Lib\_weakrefset.py" />
+    <None Include="Lib\__future__.py" />
+    <None Include="Lib\__phello__.foo.py" />
+    <None Include="Mix It Up.link">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <Page Include="Themes\MixItUpTheme.BlueLeprechaunTV.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.Twitch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.NibblesCarrotPatch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.1YearAnniversary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Resource Include="Themes\MixItUpTheme.Sample.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Images\Github.png" />
+    <Resource Include="Assets\Images\Twitter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Images\YoutubeMonochrome.png" />
+    <Resource Include="Assets\Images\TwitchMonochrome.png" />
+    <Resource Include="Assets\Images\TrovoMonochrome.png" />
+    <Content Include="Assets\OBS\obs-websocket-4.9.1-Windows-Installer.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Lib\site-packages\README.txt" />
+    <Content Include="Logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\APIs\MixItUp.API\MixItUp.API.csproj">
+      <Project>{6ead4ad5-3606-42b0-a2da-13848a0d4076}</Project>
+      <Name>MixItUp.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
+      <Project>{0E494ACC-C46A-4DED-922B-FF378556BE8A}</Project>
+      <Name>MixItUp.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MixItUp.Reporter\MixItUp.Reporter.csproj">
+      <Project>{ce3896dc-cc98-42ba-9bf7-4073dcc6a393}</Project>
+      <Name>MixItUp.Reporter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj">
+      <Project>{d2a5558c-73e9-4266-9959-1b0b61b4d3cd}</Project>
+      <Name>MixItUp.SignalR.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Images\Discord.png" />
+    <Resource Include="Assets\Images\YouTube.png" />
+    <Resource Include="Assets\Images\Wiki.png" />
+    <Resource Include="..\MixPlay\fortnite-drop-map\src\map.png">
+      <Link>Assets\Images\FortniteDropMap\map.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map1.png">
+      <Link>Assets\Images\PUBGDropMap\map1.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map2.png">
+      <Link>Assets\Images\PUBGDropMap\map2.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map3.png">
+      <Link>Assets\Images\PUBGDropMap\map3.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\black-ops-4-drop-map\src\map.jpg">
+      <Link>Assets\Images\BlackOps4DropMap\map.jpg</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\apex-legends-drop-map\src\map.png">
+      <Link>Assets\Images\ApexLegendsDropMap\map.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\realm-royale-drop-map\src\map.png">
+      <Link>Assets\Images\RealmRoyaleDropMap\map.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map4.png">
+      <Link>Assets\Images\PUBGDropMap\map4.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\super-animal-royale-drop-map\src\map.png">
+      <Link>Assets\Images\SuperAnimalRoyaleDropMap\map.png</Link>
+    </Resource>
+    <Resource Include="Assets\Images\AppleAppStoreDownloadBadge.png" />
+    <Content Include="Assets\CommunityBannedWords.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Assets\Images\MixItUp-Logo-Name.png" />
+    <Resource Include="Assets\Images\CommandExample.png" />
+    <Resource Include="Assets\Images\ExampleRecipe.png" />
+    <Resource Include="Assets\Images\Twitch.png" />
+    <Resource Include="Assets\Images\Twitch-Small.png" />
+    <Resource Include="Assets\Images\Glimesh.png" />
+    <Resource Include="Assets\Images\Trovo.png" />
+    <Content Include="Assets\Sounds\Ariel.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Carme.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Ceres.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Computer Chime.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Doorbell.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Elara.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Europa.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\High Beeps.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Io.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Lapetus.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Level Up.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Low Beeps.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Rhea.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Salacia.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Robot SMS.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Tethys.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Titan.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Watch Alarm.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Changelog.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+  <None Include="$(SolutionDir)Lib\**" 
+        CopyToOutputDirectory="PreserveNewest"
+        LinkBase="Lib\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)ApplicationSettings.json
+
+rmdir /Q /S $(TargetDir)Settings\
+
+rmdir /Q /S $(TargetDir)Logs\
+
+rmdir /Q /S $(TargetDir)ChatEventLogs\
+
+rmdir /Q /S $(TargetDir)Counters\</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.1\build\Microsoft.Extensions.Logging.Abstractions.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.1\build\Microsoft.Extensions.Logging.Abstractions.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets'))" />
+    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.7\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.7\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" />
+  <Import Project="..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.1\build\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.1\build\Microsoft.Extensions.Logging.Abstractions.targets')" />
+  <Import Project="..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" />
+  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.7\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.7\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

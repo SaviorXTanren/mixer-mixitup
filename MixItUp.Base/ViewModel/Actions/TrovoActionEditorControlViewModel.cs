@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
-    public class TrovoActionEditorControlViewModel : SubActionContainerControlViewModel
+    public class TrovoActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Trovo; } }
 
@@ -98,7 +98,7 @@ namespace MixItUp.Base.ViewModel.Actions
         private string roleName;
 
         public TrovoActionEditorControlViewModel(TrovoActionModel action)
-            : base(action, action.Actions)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
 

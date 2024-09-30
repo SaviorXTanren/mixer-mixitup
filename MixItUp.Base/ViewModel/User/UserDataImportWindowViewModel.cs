@@ -233,13 +233,9 @@ namespace MixItUp.Base.ViewModel.User
                                 UserV2ViewModel user = null;
                                 UserImportModel userImport = null;
 
-                                if (user == null && !string.IsNullOrEmpty(platformID))
+                                if (user == null && (!string.IsNullOrEmpty(platformID) || !string.IsNullOrEmpty(platformUsername)))
                                 {
-                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(this.SelectedPlatform, platformID);
-                                }
-                                if (user == null && !string.IsNullOrEmpty(platformUsername))
-                                {
-                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.SelectedPlatform, platformUsername);
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatform(this.SelectedPlatform, platformID: platformID, platformUsername: platformUsername);
                                 }
 
                                 int hours = 0;
@@ -335,8 +331,9 @@ namespace MixItUp.Base.ViewModel.User
             iValue = 0;
             if (this.columnDictionary[columnName].ArrayNumber >= 0 && line.Count >= (this.columnDictionary[columnName].ArrayNumber + 1))
             {
-                if (int.TryParse(line[this.columnDictionary[columnName].ArrayNumber], out iValue))
+                if (double.TryParse(line[this.columnDictionary[columnName].ArrayNumber], out double dValue))
                 {
+                    iValue = (int)dValue;
                     return true;
                 }
             }

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Project post-build event for macOS
+
+PROJECT_DIR=$1
+TARGET_DIR=$2
+
+assert() {
+    if eval $1 ; then
+        echo "$0: Error: $2"
+        exit 1
+    fi
+}
+
+assert "[ -z \"$PROJECT_DIR\" ]" "Project directory was not given"
+assert "[ -z \"$TARGET_DIR\" ]"  "Target directory was not given"
+assert "[ ! -d \"$TARGET_DIR\" ]"  "Target directory does not exist: '$TARGET_DIR'"
+
+METADATA_DIR=${PROJECT_DIR}metadata
+assert "[ ! -d \"$METADATA_DIR\" ]" "metadata directory does not exist: '$METADATA_DIR'"
+
+echo Copying "$METADATA_DIR" to "${TARGET_DIR}../metadata"
+cp -R "$METADATA_DIR" "${TARGET_DIR}../metadata"
+assert "[ $? -ne 0 ]" "Copying metadata failed"
+
+exit 0

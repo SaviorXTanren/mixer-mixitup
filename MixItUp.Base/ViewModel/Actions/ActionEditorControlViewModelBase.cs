@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -122,6 +120,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.ExternalProgram: actionPageName = "external-program-action"; break;
                     case ActionTypeEnum.File: actionPageName = "file-action"; break;
                     case ActionTypeEnum.GameQueue: actionPageName = "game-queue-action"; break;
+                    case ActionTypeEnum.Group: actionPageName = "group-action"; break;
                     case ActionTypeEnum.IFTTT: actionPageName = "ifttt-action"; break;
                     case ActionTypeEnum.InfiniteAlbum: actionPageName = "infinite-album"; break;
                     case ActionTypeEnum.Input: actionPageName = "input-action"; break;
@@ -134,7 +133,9 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.PixelChat: actionPageName = "pixel-chat-action"; break;
                     case ActionTypeEnum.PolyPop: actionPageName = "polypop-action"; break;
                     case ActionTypeEnum.Random: actionPageName = "random-action"; break;
+                    case ActionTypeEnum.Repeat: actionPageName = "repeat-action"; break;
                     case ActionTypeEnum.SAMMI: actionPageName = "sammi-action"; break;
+                    case ActionTypeEnum.Script: actionPageName = "script-action"; break;
                     case ActionTypeEnum.Serial: actionPageName = "serial-action"; break;
                     case ActionTypeEnum.Sound: actionPageName = "sound-action"; break;
                     case ActionTypeEnum.SpecialIdentifier: actionPageName = "special-identifier-action"; break;
@@ -145,6 +146,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.Trovo: actionPageName = "trovo-action"; break;
                     case ActionTypeEnum.Twitch: actionPageName = "twitch-action"; break;
                     case ActionTypeEnum.Voicemod: actionPageName = "voicemod-action"; break;
+                    case ActionTypeEnum.VTSPog: actionPageName = "vts-pog-action"; break;
                     case ActionTypeEnum.VTubeStudio: actionPageName = "vtube-studio-action"; break;
                     case ActionTypeEnum.Wait: actionPageName = "wait-action"; break;
                     case ActionTypeEnum.WebRequest: actionPageName = "web-request-action"; break;

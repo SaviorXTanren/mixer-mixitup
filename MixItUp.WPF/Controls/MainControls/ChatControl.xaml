@@ -69,17 +69,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <MaterialDesign:PackIcon Kind="Eye" Grid.Column="0" Style="{StaticResource ColoredBackgroundPackIcon}" />
-                        <TextBlock Grid.Column="2" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding ViewersCount}" />
-
-                        <MaterialDesign:PackIcon Kind="Message" Grid.Column="4" Style="{StaticResource ColoredBackgroundPackIcon}" />
-                        <TextBlock Grid.Column="6" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding ChattersCount}" />
+                        <TextBlock Grid.Column="0" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding ViewersCount}" />
+                        <TextBlock Grid.Column="2" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.WatchingNow}" />
+                        
                     </Grid>
                 </Grid>
             </GroupBox.Header>

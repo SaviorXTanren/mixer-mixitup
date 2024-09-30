@@ -13,8 +13,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="20">
         <StackPanel>
-            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding OptOutOfDataTracking}" />
-            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DontSaveLastWindowPosition}" />
+            <GenericSettingsControls:GenericTextSettingsOptionControl DataContext="{Binding ProfileName}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AutoLogIn}" />
 
             <Separator Grid.Row="26" Grid.ColumnSpan="2" Margin="10" />
@@ -23,6 +22,11 @@
             <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding DefaultStreamingPlatform}" />
             <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding DefaultStreamingSoftware}" />
             <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding DefaultAudioOutput}" />
+
+            <Separator Grid.Row="26" Grid.ColumnSpan="2" Margin="10" />
+
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DontSaveLastWindowPosition}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding OptOutOfDataTracking}" />
         </StackPanel>
     </Grid>
 </local:SettingsControlBase>

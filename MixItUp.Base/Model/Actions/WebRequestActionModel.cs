@@ -73,6 +73,11 @@ namespace MixItUp.Base.Model.Actions
                     httpClient.DefaultRequestHeaders.Add("Trovo-UserLogin", ServiceManager.Get<TrovoSessionService>().Username ?? string.Empty);
 
                     string targetUrl = await ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true);
+                    if (!Uri.IsWellFormedUriString(targetUrl, UriKind.RelativeOrAbsolute))
+                    {
+                        targetUrl = await ReplaceStringWithSpecialModifiers(this.Url, parameters);
+                    }
+
                     using (HttpResponseMessage response = await httpClient.GetAsync(targetUrl))
                     {
                         if (string.Equals(response?.Content?.Headers?.ContentType?.CharSet, "utf8"))

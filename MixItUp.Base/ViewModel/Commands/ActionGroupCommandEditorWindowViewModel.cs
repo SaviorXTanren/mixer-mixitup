@@ -7,22 +7,9 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class ActionGroupCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public bool RunOneRandomly
-        {
-            get { return this.runOneRandomly; }
-            set
-            {
-                this.runOneRandomly = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private bool runOneRandomly;
-
         public ActionGroupCommandEditorWindowViewModel(ActionGroupCommandModel existingCommand)
             : base(existingCommand)
-        {
-            this.RunOneRandomly = existingCommand.RunOneRandomly;
-        }
+        { }
 
         public ActionGroupCommandEditorWindowViewModel() : base(CommandTypeEnum.ActionGroup) { }
 
@@ -35,13 +22,7 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new ActionGroupCommandModel(this.Name, this.RunOneRandomly)); }
-
-        public override async Task UpdateExistingCommand(CommandModelBase command)
-        {
-            await base.UpdateExistingCommand(command);
-            ((ActionGroupCommandModel)command).RunOneRandomly = this.RunOneRandomly;
-        }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new ActionGroupCommandModel(this.Name)); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {

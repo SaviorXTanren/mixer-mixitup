@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
-    public class RandomActionEditorControlViewModel : SubActionContainerControlViewModel
+    public class RandomActionEditorControlViewModel : GroupActionEditorControlViewModel
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Random; } }
 
@@ -26,15 +26,36 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.noDuplicates = value;
                 this.NotifyPropertyChanged();
+
+                if (!this.NoDuplicates)
+                {
+                    this.PersistNoDuplicates = false;
+                }
+
+                this.NotifyPropertyChanged(nameof(this.IsPersistNoDuplicatesEnabled));
             }
         }
         private bool noDuplicates;
 
+        public bool IsPersistNoDuplicatesEnabled { get { return this.NoDuplicates; } }
+
+        public bool PersistNoDuplicates
+        {
+            get { return this.persistNoDuplicates; }
+            set
+            {
+                this.persistNoDuplicates = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool persistNoDuplicates;
+
         public RandomActionEditorControlViewModel(RandomActionModel action)
-            : base(action, action.Actions)
+            : base(action)
         {
             this.Amount = action.Amount;
             this.NoDuplicates = action.NoDuplicates;
+            this.PersistNoDuplicates = action.PersistNoDuplicates;
         }
 
         public RandomActionEditorControlViewModel() : base() { }
@@ -57,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task<ActionModelBase> GetActionInternal()
         {
-            return new RandomActionModel(this.Amount, this.NoDuplicates, await this.ActionEditorList.GetActions());
+            return new RandomActionModel(this.Amount, this.NoDuplicates, this.PersistNoDuplicates, await this.ActionEditorList.GetActions());
         }
     }
 }

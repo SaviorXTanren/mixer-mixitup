@@ -41,6 +41,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.ExternalProgram: this.ActionControl = new ExternalProgramActionEditorControl(); break;
                     case ActionTypeEnum.File: this.ActionControl = new FileActionEditorControl(); break;
                     case ActionTypeEnum.GameQueue: this.ActionControl = new GameQueueActionEditorControl(); break;
+                    case ActionTypeEnum.Group: this.ActionControl = new GroupActionEditorControl(); break;
                     case ActionTypeEnum.IFTTT: this.ActionControl = new IFTTTActionEditorControl(); break;
                     case ActionTypeEnum.InfiniteAlbum: this.ActionControl = new InfiniteAlbumActionEditorControl(); break;
                     case ActionTypeEnum.Input: this.ActionControl = new InputActionEditorControl(); break;
@@ -53,7 +54,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.PixelChat: this.ActionControl = new PixelChatActionEditorControl(); break;
                     case ActionTypeEnum.PolyPop: this.ActionControl = new PolyPopActionEditorControl(); break;
                     case ActionTypeEnum.Random: this.ActionControl = new RandomActionEditorControl(); break;
+                    case ActionTypeEnum.Repeat: this.ActionControl = new RepeatActionEditorControl(); break;
                     case ActionTypeEnum.SAMMI: this.ActionControl = new SAMMIActionEditorControl(); break;
+                    case ActionTypeEnum.Script: this.ActionControl = new ScriptActionEditorControl(); break;
                     case ActionTypeEnum.Serial: this.ActionControl = new SerialActionEditorControl(); break;
                     case ActionTypeEnum.Sound: this.ActionControl = new SoundActionEditorControl(); break;
                     case ActionTypeEnum.SpecialIdentifier: this.ActionControl = new SpecialIdentifierActionEditorControl(); break;
@@ -64,6 +67,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Trovo: this.ActionControl = new TrovoActionEditorControl(); break;
                     case ActionTypeEnum.Twitch: this.ActionControl = new TwitchActionEditorControl(); break;
                     case ActionTypeEnum.Voicemod: this.ActionControl = new VoicemodActionEditorControl(); break;
+                    case ActionTypeEnum.VTSPog: this.ActionControl = new VTSPogActionEditorControl(); break;
                     case ActionTypeEnum.VTubeStudio: this.ActionControl = new VTubeStudioActionEditorControl(); break;
                     case ActionTypeEnum.Wait: this.ActionControl = new WaitActionEditorControl(); break;
                     case ActionTypeEnum.WebRequest: this.ActionControl = new WebRequestActionEditorControl(); break;

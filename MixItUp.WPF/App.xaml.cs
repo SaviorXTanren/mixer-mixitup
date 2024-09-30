@@ -50,15 +50,17 @@ namespace MixItUp.WPF
                 ServiceManager.Add<ITelemetryService>(new WindowsTelemetryService());
                 ServiceManager.Add<IMusicPlayerService>(new WindowsMusicPlayerService());
                 ServiceManager.Add<IProcessService>(new WindowsProcessService());
-
+                ServiceManager.Add<IScriptRunnerService>(new WindowsScriptRunnerService());
+                ServiceManager.Add(new WindowsMicrosoftAzureSpeechService());
                 ServiceManager.Add(new StreamlabsService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new RainmakerService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new StreamElementsService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new TipeeeStreamService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new TreatStreamService(new WindowsSocketIOConnection()));
                 ServiceManager.Add<IOvrStreamService>(new WindowsOvrStreamService());
-
                 ServiceManager.Add<IOBSStudioService>(new WindowsOBSService());
+                ServiceManager.Add(new WindowsSpeechService());
+                ServiceManager.Add(new WindowsAmazonPollyService());
 
                 ChannelSession.Initialize().Wait();
 

@@ -6,6 +6,7 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using YouTube.Base;
 using YouTube.Base.Model;
@@ -84,6 +85,8 @@ namespace MixItUp.Base.Services.YouTube
 
         public override string Name { get { return "YouTube Connection"; } }
 
+        private SearchResult latestNonStreamVideo;
+
         public YouTubePlatformService(YouTubeConnection connection)
         {
             this.Connection = connection;
@@ -102,6 +105,16 @@ namespace MixItUp.Base.Services.YouTube
         public async Task<LiveCuepoint> StartAdBreak(LiveBroadcast broadcast, long duration) { return await AsyncRunner.RunAsync(this.Connection.LiveBroadcasts.StartAdBreak(broadcast, duration)); }
 
         public async Task<Video> GetVideoByID(string id) { return await AsyncRunner.RunAsync(this.Connection.Videos.GetVideoByID(id)); }
+
+        public async Task<SearchResult> GetLatestNonStreamVideo(string channelID)
+        {
+            if (this.latestNonStreamVideo == null)
+            {
+                IEnumerable<SearchResult> searchResults = await AsyncRunner.RunAsync(this.Connection.Videos.SearchVideos(channelID: channelID, liveType: Google.Apis.YouTube.v3.SearchResource.ListRequest.EventTypeEnum.None, maxResults: 10));
+                this.latestNonStreamVideo = searchResults.FirstOrDefault(s => string.Equals(s.Snippet.LiveBroadcastContent, "none"));
+            }
+            return this.latestNonStreamVideo;
+        }
 
         public async Task<Video> UpdateVideo(Video video, string title = null, string description = null, string categoryId = null) { return await AsyncRunner.RunAsync(this.Connection.Videos.UpdateVideo(video, title, description, categoryId)); }
 

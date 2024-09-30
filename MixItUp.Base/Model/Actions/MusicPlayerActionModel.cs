@@ -17,6 +17,7 @@ namespace MixItUp.Base.Model.Actions
         Next,
         Previous,
         ChangeVolume,
+        ChangeFolder,
     }
 
     [DataContract]
@@ -30,6 +31,9 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string SearchText { get; set; }
+
+        [DataMember]
+        public string FolderPath { get; set; }
 
         public MusicPlayerActionModel(MusicPlayerActionTypeEnum actionType)
             : base(ActionTypeEnum.MusicPlayer)
@@ -85,6 +89,14 @@ namespace MixItUp.Base.Model.Actions
             else if (this.ActionType == MusicPlayerActionTypeEnum.ChangeVolume)
             {
                 await ServiceManager.Get<IMusicPlayerService>().ChangeVolume(this.Volume);
+            }
+            else if (this.ActionType == MusicPlayerActionTypeEnum.ChangeFolder)
+            {
+                string folderPath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FolderPath, parameters);
+                if (!string.IsNullOrWhiteSpace(folderPath))
+                {
+                    await ServiceManager.Get<IMusicPlayerService>().ChangeFolder(folderPath);
+                }
             }
         }
     }

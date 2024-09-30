@@ -44,5 +44,7 @@
         </Grid>
 
         <TextBox Grid.Row="2" Visibility="{Binding ShowSearchText, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding SearchText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchText}" />
+
+        <TextBox Grid.Row="2" Visibility="{Binding ShowFolderPath, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding FolderPath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FolderPath}" />
     </Grid>
 </local:ActionEditorControlBase>

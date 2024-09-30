@@ -26,6 +26,7 @@ namespace MixItUp.WPF.Windows.Commands
 
         private CommunityCommandUploadModel uploadCommand;
 
+        private bool commandContainsScript;
         private bool commandContainsMedia;
         private bool commandReferencesOtherCommand;
 
@@ -71,17 +72,7 @@ namespace MixItUp.WPF.Windows.Commands
                     }
 
                     this.uploadCommand.Tags.Clear();
-                    foreach (ActionModelBase action in this.command.Actions)
-                    {
-                        if (action is ConditionalActionModel)
-                        {
-                            foreach (ActionModelBase subAction in ((ConditionalActionModel)action).Actions)
-                            {
-                                this.uploadCommand.Tags.Add((CommunityCommandTagEnum)subAction.Type);
-                            }
-                        }
-                        this.uploadCommand.Tags.Add((CommunityCommandTagEnum)action.Type);
-                    }
+                    this.SetActionTags(this.uploadCommand.Tags, this.command.Actions);
 
                     switch (this.command.Type)
                     {
@@ -111,6 +102,11 @@ namespace MixItUp.WPF.Windows.Commands
                 this.NameTextBox.Text = this.uploadCommand.Name;
                 this.DescriptionTextBox.Text = this.uploadCommand.Description;
 
+                if (this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Script))
+                {
+                    this.commandContainsScript = true;
+                }
+
                 if (this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Sound) || this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Overlay) ||
                     this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.File) || this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.ExternalProgram))
                 {
@@ -125,6 +121,18 @@ namespace MixItUp.WPF.Windows.Commands
             catch (Exception ex)
             {
                 Logger.Log(ex);
+            }
+        }
+
+        private void SetActionTags(HashSet<CommunityCommandTagEnum> tags, IEnumerable<ActionModelBase> actions)
+        {
+            foreach (ActionModelBase action in actions)
+            {
+                if (action is GroupActionModel)
+                {
+                    this.SetActionTags(tags, ((GroupActionModel)action).Actions);
+                }
+                this.uploadCommand.Tags.Add((CommunityCommandTagEnum)action.Type);
             }
         }
 
@@ -152,6 +160,12 @@ namespace MixItUp.WPF.Windows.Commands
             {
                 try
                 {
+                    if (this.commandContainsScript)
+                    {
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsScriptActionsNotSupported);
+                        return;
+                    }
+
                     if (this.commandContainsMedia)
                     {
                         if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsExternalAssetActionsDetected))

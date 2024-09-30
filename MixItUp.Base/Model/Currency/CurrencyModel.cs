@@ -309,7 +309,7 @@ namespace MixItUp.Base.Model.Currency
             {
                 AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                 {
-                    UserV2ViewModel userVM = await ServiceManager.Get<UserService>().GetUserByID(user.ID);
+                    UserV2ViewModel userVM = await ServiceManager.Get<UserService>().GetUserByID(StreamingPlatformTypeEnum.All, user.ID);
                     await ServiceManager.Get<CommandService>().Queue(this.RankChangedCommand, new CommandParametersModel(userVM));
                 }, new CancellationToken());
             }
@@ -317,7 +317,7 @@ namespace MixItUp.Base.Model.Currency
             {
                 AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                 {
-                    UserV2ViewModel userVM = await ServiceManager.Get<UserService>().GetUserByID(user.ID);
+                    UserV2ViewModel userVM = await ServiceManager.Get<UserService>().GetUserByID(StreamingPlatformTypeEnum.All, user.ID);
                     await ServiceManager.Get<CommandService>().Queue(this.RankDownCommand, new CommandParametersModel(userVM));
                 }, new CancellationToken());
             }
@@ -340,6 +340,14 @@ namespace MixItUp.Base.Model.Currency
         }
 
         public void SubtractAmount(UserV2ViewModel user, int amount)
+        {
+            if (!user.IsSpecialtyExcluded)
+            {
+                this.SetAmount(user, this.GetAmount(user) - amount);
+            }
+        }
+
+        public void SubtractAmount(UserV2Model user, int amount)
         {
             if (!user.IsSpecialtyExcluded)
             {

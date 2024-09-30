@@ -119,11 +119,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged("PauseUnpauseCommandsButtonText");
             });
 
-            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
-
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             AsyncRunner.RunAsyncBackground(this.MinuteBackgroundThread, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            ChatService.OnChatVisualSettingsChanged += ChatService_OnChatVisualSettingsChanged;
         }
 
         protected override async Task OnOpenInternal()
@@ -150,23 +150,14 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.NotifyPropertyChanged("DisplayUsers");
         }
 
-        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
+        private void ChatService_OnChatVisualSettingsChanged(object sender, EventArgs e)
         {
             ChatService_DisplayUsersUpdated(sender, e);
         }
 
         private Task MinuteBackgroundThread(CancellationToken cancellationToken)
         {
-            int viewerCount = 0;
-            StreamingPlatforms.ForEachPlatform(p =>
-            {
-                if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive)
-                {
-                    viewerCount += StreamingPlatforms.GetPlatformSessionService(p).ViewerCount;
-                }
-            });
-            this.ViewersCount = viewerCount;
-
+            this.ViewersCount = ServiceManager.Get<ChatService>().GetViewerCount();
             this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;
 
             return Task.CompletedTask;

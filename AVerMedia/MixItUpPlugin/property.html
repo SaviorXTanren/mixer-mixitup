@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock(JS) Property</title>
+    <link rel="stylesheet" href="css/avt.css">
+</head>
+<body oncontextmenu="return false;">
+    <script src="js/ax_websocket.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <div class="avt-wrapper" style="display: none;" id="options">
+        <div class="avt-item" >
+            <div class="avt-item-label LAB_WIDGET_TYPE">Category</div>
+            <select class="avt-item-value select" id="js_commandType">
+            </select>
+        </div>
+        <div class="avt-item" >
+            <div class="avt-item-label LAB_WIDGET_TYPE">Command</div>
+            <select class="avt-item-value select" id="js_commandId">
+            </select>
+        </div>
+        <div class="avt-item" >
+            <div class="avt-item-label LAB_WIDGET_TYPE">Arguments (optional)</div>
+            <input class="avt-item-value input" value="" id="js_commandArgs" placeholder="Arguments (optional)" oninput="updateArguments()" />
+        </div>
+    </div>
+    <div class="avt-wrapper" style="display: none;" id="error">
+        <div class="avt-item" >
+            <summary>Mix It Up Developer APIs are not enabled</summary>
+            <p><button onclick="getHelp()">Enable Developer APIs</button></p>
+        </div>
+    </div>
+    <div class="avt-wrapper" id="loading">
+        <div class="avt-item" >
+            <div class="avt-item-label LAB_WIDGET_TYPE">Loading...</div>
+        </div>
+    </div>
+    <script src="js/main_property.js"></script>
+</body>
+</html>
+
+

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -25,13 +26,15 @@ namespace MixItUp.Base.Services
         Task<string> ReadFile(string filePath);
         Task<byte[]> ReadFileAsBytes(string filePath);
         Task SaveFile(string filePath, string data);
-        Task SaveFileAsBytes(string filePath, byte[] data);
+        Task SaveFile(string filePath, byte[] data);
+        Task SaveFile(string filePath, Stream data);
         Task AppendFile(string filePath, string data);
 
         string ShowOpenFolderDialog();
 
         string ShowOpenFileDialog();
         string ShowOpenFileDialog(string filter);
+        IEnumerable<string> ShowMultiselectOpenFileDialog(string filter);
 
         string ShowSaveFileDialog(string fileName);
         string ShowSaveFileDialog(string fileName, string filter);
@@ -42,5 +45,9 @@ namespace MixItUp.Base.Services
         string GetTempFolder();
         string GetApplicationDirectory();
         string GetApplicationVersion();
+
+        IEnumerable<string> GetInstalledFonts();
+
+        string ExpandEnvironmentVariablesInFilePath(string path);
     }
 }

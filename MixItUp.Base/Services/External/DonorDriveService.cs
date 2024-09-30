@@ -453,6 +453,7 @@ namespace MixItUp.Base.Services.External
                     }
 
                     this.startTime = DateTime.UtcNow;
+                    this.lastRefresh = DateTimeOffset.Now;
 
                     this.cancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

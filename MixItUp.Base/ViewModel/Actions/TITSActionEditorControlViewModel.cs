@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private double throwDelayTime = 0.05;
 
-        public int ThrowAmount
+        public string ThrowAmount
         {
             get { return this.throwAmount; }
             set
@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private int throwAmount = 1;
+        private string throwAmount = "1";
 
         public bool ShowActivateTriggerGrid { get { return this.SelectedActionType == TITSActionTypeEnum.ActivateTrigger; } }
 
@@ -114,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 if (this.TITSConnected)
                 {
-                    if (this.SelectedItem == null || this.ThrowDelayTime <= 0.0 || this.ThrowAmount <= 0)
+                    if (this.SelectedItem == null || this.ThrowDelayTime <= 0.0 || string.IsNullOrWhiteSpace(this.ThrowAmount))
                     {
                         return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TITSActionMissingItem));
                     }
