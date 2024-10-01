@@ -36,6 +36,9 @@ namespace MixItUp.Base.Model.Commands
         public bool IgnoreRequirements { get; set; }
 
         [DataMember]
+        public bool UseCommandLocks { get; set; }
+
+        [DataMember]
         public UserV2ViewModel TargetUser { get; set; }
 
         [DataMember]

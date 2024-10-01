@@ -17,6 +17,7 @@
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DeleteChatCommandsWhenRun}" />
             <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding MassGiftedSubsFilterAmount}" />
             <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding CommandLockSystem}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AlwaysUseCommandLocksWhenTestingCommands}" />
 
             <Separator Margin="10" />
 

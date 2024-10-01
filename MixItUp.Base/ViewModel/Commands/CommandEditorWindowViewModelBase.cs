@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using Microsoft.Extensions.Options;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -65,10 +66,17 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             }
 
-            await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(command, parameters));
-            if (command.Requirements.Cooldown != null)
+            if (parameters.UseCommandLocks)
             {
-                command.Requirements.Cooldown.Reset();
+                await ServiceManager.Get<CommandService>().Queue(new CommandInstanceModel(command, parameters));
+            }
+            else
+            {
+                await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(command, parameters));
+                if (command.Requirements.Cooldown != null)
+                {
+                    command.Requirements.Cooldown.Reset();
+                }
             }
         }
 
@@ -84,7 +92,14 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             }
 
-            await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(actions, parameters));
+            if (parameters.UseCommandLocks)
+            {
+                await ServiceManager.Get<CommandService>().Queue(new CommandInstanceModel(actions, parameters));
+            }
+            else
+            {
+                await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(actions, parameters));
+            }
         }
 
         public CommandTypeEnum Type

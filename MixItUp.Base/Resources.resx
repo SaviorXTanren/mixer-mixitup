@@ -10763,4 +10763,10 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>A valid counter must be selected</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Use Command Locks</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Always Use Command Locks When Testing Commands</value>
+  </data>
 </root>
