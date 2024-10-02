@@ -21,6 +21,7 @@ namespace MixItUp.Base.Services.External
         public override string Name { get { return this.code; } protected set { } }
         public override string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/3x", this.id); } protected set { } }
         public override string AnimatedImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/3x", this.id); } protected set { } }
+        public override string OverlayAnimatedImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/3x.webp", this.id); } }
 
         public override bool IsAnimated { get { return string.Equals(this.imageType, "gif", StringComparison.OrdinalIgnoreCase); } }
     }
