@@ -188,6 +188,9 @@ namespace MixItUp.Base.Model.Currency
         }
 
         [JsonIgnore]
+        public string UniqueItemsTotalSpecialIdentifier { get { return string.Format("{0}uniqueitemstotal", this.SpecialIdentifier); } }
+
+        [JsonIgnore]
         public string RandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.SpecialIdentifier); } }
 
         [JsonIgnore]
