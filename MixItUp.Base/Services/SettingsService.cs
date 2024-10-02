@@ -1066,7 +1066,7 @@ namespace MixItUp.Base.Services
 
                 result = newItem.GetItem();
 
-                result.HTML = $"<iframe width={oldItem.Width} height={oldItem.Height} frameBorder=0 src=\"{oldItem.FilePath}\" />";
+                result.HTML = $"<iframe width={oldItem.Width} height={oldItem.Height} frameBorder=0 src=\"{oldItem.FilePath}\"></iframe>";
             }
             else if (item.ItemType == OverlayItemModelTypeEnum.YouTube)
             {
