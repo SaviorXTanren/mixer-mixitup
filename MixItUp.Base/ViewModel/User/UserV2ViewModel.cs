@@ -432,6 +432,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public DateTimeOffset LastActivity { get { return this.Model.LastActivity; } }
+        public string LastActivityDateString { get { return this.LastActivity.ToFriendlyDateString(); } }
+        public string LastActivityAgeString { get { return this.LastActivity.GetAge(); } }
+        public int LastActivityDays { get { return this.LastActivity.TotalDaysFromNow(); } }
 
         public DateTimeOffset LastUpdated { get; private set; }
 
