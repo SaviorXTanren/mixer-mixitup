@@ -7,7 +7,7 @@
 
         <h3 style="color: red;"><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application and includes some breaking changes. As such, we recommend NOT updating immediately before a stream and waiting until you have time to walkthrough all of the changes and ensure your Overlay setup and interactions are configured to your liking.</h3>
 
-        <h2 style="color: #2e6c80;">v1.2.0.0-1.2.0.3:</h2>
+        <h2 style="color: #2e6c80;">v1.2.0.0-1.2.0.4:</h2>
         <ul>
             <li>Overlay v3 functionality updates:</li>
             <ul>
@@ -167,9 +167,16 @@
             <li>Adding $substotalpoints Special Identifier to Twitch Channel Mass Gifted Subscriptions event command to indicate the total amount of Twitch Sub Points gained for the channel from all of the subscriptions gifted</li>
             <li>Adding $hypetrainlevel Special Identifier to Twitch Channel Hype Train Start event command</li>
             <li>Adding $gamequeueusersX Special Identifier to retrieve the top X many users in the Game Queue</li>
+            <li>Adding $userlastseendays, $userlastseenage, and $userlastseendate Special Identifiers</li>
+            <li>Adding $____uniqueitemstotal Special Identifier for Inventories</li>
             <li>Adding $usernotes Special Identifier</li>
+            <li>Adding option to command tester dialog for whether to use command locks or not when testing a command</li>
             <li>Adjusting Mix It Up update host &amp; detection method to improve reliability</li>
             <li>Fixing bug with Tiltify service not properly handling team-based campaigns</li>
+            <li>Fixing bug with BetterTTV animated emotes not doing animations on various Overlay types</li>
+            <li>Fixing bug with Height property not getting properly assigned for Stream Boss Overlay Widget</li>
+            <li>Fixing bug with End Credits Overlay Widget not properly processing Special Identifiers</li>
+            <li>Fixing bug with HTML Overlay Widgets not properly refreshing their contents. If you have modified the Javascript at all of an HTML Overlay Widget, please create a new version and copy over your specific changes to the new updates.</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
