@@ -26,7 +26,8 @@ namespace MixItUp.Base.Services
         private static readonly HashSet<ActionTypeEnum> VisualAudioActionTypes = new HashSet<ActionTypeEnum>()
         {
             ActionTypeEnum.Overlay, ActionTypeEnum.OvrStream, ActionTypeEnum.PolyPop, ActionTypeEnum.Sound, ActionTypeEnum.StreamingSoftware, ActionTypeEnum.TextToSpeech,
-            ActionTypeEnum.MusicPlayer, ActionTypeEnum.TITS, ActionTypeEnum.Voicemod, ActionTypeEnum.VTubeStudio
+            ActionTypeEnum.MusicPlayer, ActionTypeEnum.TITS, ActionTypeEnum.Voicemod, ActionTypeEnum.VTubeStudio, ActionTypeEnum.VTSPog, ActionTypeEnum.LumiaStream,
+            ActionTypeEnum.TITS
         };
 
         public bool IsPaused { get; private set; }

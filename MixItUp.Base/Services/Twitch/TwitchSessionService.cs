@@ -382,30 +382,30 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.game_name);
                     }
+                }
 
-                    AdScheduleModel adSchedule = await this.UserConnection.GetAdSchedule(this.User);
-                    if (adSchedule != null)
-                    {
-                        this.AdSchedule = adSchedule;
-                    }
+                AdScheduleModel adSchedule = await this.UserConnection.GetAdSchedule(this.User);
+                if (adSchedule != null)
+                {
+                    this.AdSchedule = adSchedule;
+                }
 
-                    if (this.AdSchedule != null)
+                if (this.AdSchedule != null)
+                {
+                    DateTimeOffset nextAd = this.AdSchedule.NextAdTimestamp();
+                    if (nextAd > this.NextAdTimestamp)
                     {
-                        DateTimeOffset nextAd = this.AdSchedule.NextAdTimestamp();
-                        if (nextAd > this.NextAdTimestamp)
+                        int nextAdMinutes = this.AdSchedule.NextAdMinutesFromNow();
+                        if (nextAdMinutes <= ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount && nextAdMinutes > 0)
                         {
-                            int nextAdMinutes = this.AdSchedule.NextAdMinutesFromNow();
-                            if (nextAdMinutes <= ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount && nextAdMinutes > 0)
-                            {
-                                this.NextAdTimestamp = nextAd;
+                            this.NextAdTimestamp = nextAd;
 
-                                Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
-                                eventCommandSpecialIdentifiers["adsnoozecount"] = this.AdSchedule.snooze_count.ToString();
-                                eventCommandSpecialIdentifiers["adnextduration"] = this.AdSchedule.duration.ToString();
-                                eventCommandSpecialIdentifiers["adnextminutes"] = nextAdMinutes.ToString();
-                                eventCommandSpecialIdentifiers["adnexttime"] = nextAd.ToFriendlyTimeString();
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdUpcoming, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
-                            }
+                            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                            eventCommandSpecialIdentifiers["adsnoozecount"] = this.AdSchedule.snooze_count.ToString();
+                            eventCommandSpecialIdentifiers["adnextduration"] = this.AdSchedule.duration.ToString();
+                            eventCommandSpecialIdentifiers["adnextminutes"] = nextAdMinutes.ToString();
+                            eventCommandSpecialIdentifiers["adnexttime"] = nextAd.ToFriendlyTimeString();
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdUpcoming, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
                         }
                     }
                 }

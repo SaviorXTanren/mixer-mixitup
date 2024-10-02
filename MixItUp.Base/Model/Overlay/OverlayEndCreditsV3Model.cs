@@ -184,7 +184,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (SpecialIdentifierStringBuilder.ContainsSpecialIdentifiers(text))
                 {
-                    await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(text, new CommandParametersModel(item.Key));
+                    text = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(text, new CommandParametersModel(item.Key));
                 }
 
                 items.Add(text);

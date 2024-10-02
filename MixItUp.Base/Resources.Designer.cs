@@ -1123,6 +1123,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Always Use Command Locks When Testing Commands.
+        /// </summary>
+        public static string AlwaysUseCommandLocksWhenTestingCommands {
+            get {
+                return ResourceManager.GetString("AlwaysUseCommandLocksWhenTestingCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amazon Polly.
         /// </summary>
         public static string AmazonPolly {
@@ -25542,6 +25551,15 @@ namespace MixItUp.Base {
         public static string UseAlternatingBackgroundColors {
             get {
                 return ResourceManager.GetString("UseAlternatingBackgroundColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Command Locks.
+        /// </summary>
+        public static string UseCommandLocks {
+            get {
+                return ResourceManager.GetString("UseCommandLocks", resourceCulture);
             }
         }
         

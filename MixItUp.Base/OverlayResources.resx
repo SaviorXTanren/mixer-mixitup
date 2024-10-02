@@ -1458,6 +1458,14 @@ reset({
   <data name="OverlayHTMLWidgetDefaultJavascript" xml:space="preserve">
     <value>function update(data)
 {
+    document.body.innerHTML = data.HTML;
+}
+
+sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
+  </data>
+  <data name="OverlayHTMLWidgetDefaultJavascriptOld" xml:space="preserve">
+    <value>function update(data)
+{
 
 }
 

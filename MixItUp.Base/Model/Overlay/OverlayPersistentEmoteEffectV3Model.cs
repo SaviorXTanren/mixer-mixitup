@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (messagePart is ChatEmoteViewModelBase)
                 {
-                    emoteURLs.Add(((ChatEmoteViewModelBase)messagePart).AnimatedOrStaticImageURL);
+                    emoteURLs.Add(((ChatEmoteViewModelBase)messagePart).OverlayAnimatedOrStaticImageURL);
                 }
                 else if (messagePart is string)
                 {

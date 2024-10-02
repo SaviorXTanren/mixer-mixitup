@@ -37,6 +37,11 @@ namespace MixItUp.WPF.Controls.Dialogs
             }
 
             this.SpecialIdentifiersList.ItemsSource = values;
+
+            if (ChannelSession.Settings.AlwaysUseCommandLocksWhenTestingCommands)
+            {
+                this.UseCommandLocks.IsChecked = true;
+            }
         }
 
         public async Task<CommandParametersModel> GetCommandParameters()
@@ -59,6 +64,8 @@ namespace MixItUp.WPF.Controls.Dialogs
             {
                 this.parameters.SpecialIdentifiers.Add(value.SpecialIdentifier, value.Value);
             }
+
+            this.parameters.UseCommandLocks = this.UseCommandLocks.IsChecked.GetValueOrDefault();
 
             return this.parameters;
         }

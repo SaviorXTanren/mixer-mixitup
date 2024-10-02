@@ -861,7 +861,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to function update(data)
         ///{
-        ///
+        ///    document.body.innerHTML = data.HTML;
         ///}
         ///
         ///sendParentMessage({ Type: &quot;WidgetLoaded&quot;, ID: &quot;{ID}&quot; });.
@@ -869,6 +869,20 @@ namespace MixItUp.Base {
         public static string OverlayHTMLWidgetDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayHTMLWidgetDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to function update(data)
+        ///{
+        ///
+        ///}
+        ///
+        ///sendParentMessage({ Type: &quot;WidgetLoaded&quot;, ID: &quot;{ID}&quot; });.
+        /// </summary>
+        public static string OverlayHTMLWidgetDefaultJavascriptOld {
+            get {
+                return ResourceManager.GetString("OverlayHTMLWidgetDefaultJavascriptOld", resourceCulture);
             }
         }
         

@@ -289,6 +289,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.AssignProperties(result);
 
+            result.Height = this.height;
+
             result.BorderColor = this.BorderColor;
             result.BackgroundColor = this.BackgroundColor;
             result.HealthColor = this.HealthColor;
