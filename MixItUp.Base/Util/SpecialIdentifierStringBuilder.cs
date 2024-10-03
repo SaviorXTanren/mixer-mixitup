@@ -233,6 +233,7 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("dayoftheweek", DateTimeOffset.Now.DayOfWeek.ToString());
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
             this.ReplaceSpecialIdentifier("dateyear", DateTimeOffset.Now.ToString("yyyy"));
+            this.ReplaceSpecialIdentifier("datemonthname", DateTimeOffset.Now.ToString("MMMM"));
             this.ReplaceSpecialIdentifier("datemonth", DateTimeOffset.Now.ToString("MM"));
             this.ReplaceSpecialIdentifier("dateday", DateTimeOffset.Now.ToString("dd"));
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
