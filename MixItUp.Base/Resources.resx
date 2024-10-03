@@ -10769,4 +10769,13 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
     <value>Always Use Command Locks When Testing Commands</value>
   </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Random In</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Random Out</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Random Visible</value>
+  </data>
 </root>
