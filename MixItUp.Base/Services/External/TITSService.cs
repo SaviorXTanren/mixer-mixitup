@@ -102,11 +102,12 @@ namespace MixItUp.Base.Services.External
 
         private const string websocketAddress = "ws://localhost:";
 
-        public bool WebSocketConnected { get; private set; }
-
         private TITSWebSocket websocket = new TITSWebSocket();
 
+        public DateTimeOffset ItemsLastUpdated { get; private set; } = DateTimeOffset.MinValue;
         private IEnumerable<TITSItem> allItemsCache;
+
+        public DateTimeOffset TriggersLastUpdated { get; private set; } = DateTimeOffset.MinValue;
         private IEnumerable<TITSTrigger> allTriggersCache;
 
         private CancellationTokenSource backgroundRefreshCancellationTokenSource;
@@ -121,12 +122,16 @@ namespace MixItUp.Base.Services.External
 
         public bool IsEnabled { get { return ChannelSession.Settings.TITSOAuthToken != null; } }
 
+        public bool IsWebSocketConnected { get { return this.websocket.IsOpen(); } }
+
         public override async Task<Result> Connect()
         {
             try
             {
                 if (await this.ConnectWebSocket())
                 {
+                    this.websocket.OnDisconnectOccurred -= Websocket_OnDisconnectOccurred;
+                    this.websocket.OnDisconnectOccurred += Websocket_OnDisconnectOccurred;
                     return await this.InitializeInternal();
                 }
             }
@@ -146,7 +151,8 @@ namespace MixItUp.Base.Services.External
         public override async Task Disconnect()
         {
             this.token = null;
-            this.WebSocketConnected = false;
+
+            this.websocket.OnDisconnectOccurred -= Websocket_OnDisconnectOccurred;
 
             if (this.backgroundRefreshCancellationTokenSource != null)
             {
@@ -154,20 +160,24 @@ namespace MixItUp.Base.Services.External
                 this.backgroundRefreshCancellationTokenSource = null;
             }
 
-            this.websocket.OnDisconnectOccurred -= Websocket_OnDisconnectOccurred;
             await this.websocket.Disconnect();
         }
 
-        public async Task RequestAllItems()
+        public async Task<bool> RequestAllItems()
         {
             try
             {
-                await this.websocket.Send(new TITSWebSocketRequestPacket("TITSItemListRequest"));
+                if (this.websocket.IsOpen())
+                {
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSItemListRequest"));
+                    return true;
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
+            return false;
         }
 
         public IEnumerable<TITSItem> GetAllItems()
@@ -188,7 +198,10 @@ namespace MixItUp.Base.Services.External
 
             try
             {
-                await this.websocket.Send(new TITSWebSocketRequestPacket("TITSThrowItemsRequest", data));
+                if (this.websocket.IsOpen())
+                {
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSThrowItemsRequest", data));
+                }
             }
             catch (Exception ex)
             {
@@ -198,16 +211,21 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task RequestAllTriggers()
+        public async Task<bool> RequestAllTriggers()
         {
             try
             {
-                await this.websocket.Send(new TITSWebSocketRequestPacket("TITSTriggerListRequest"));
+                if (this.websocket.IsOpen())
+                {
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSTriggerListRequest"));
+                    return true;
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
+            return false;
         }
 
         public IEnumerable<TITSTrigger> GetAllTriggers()
@@ -226,7 +244,10 @@ namespace MixItUp.Base.Services.External
 
             try
             {
-                await this.websocket.Send(new TITSWebSocketRequestPacket("TITSTriggerActivateRequest", data));
+                if (this.websocket.IsOpen())
+                {
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSTriggerActivateRequest", data));
+                }
             }
             catch (Exception ex)
             {
@@ -255,7 +276,6 @@ namespace MixItUp.Base.Services.External
 
         private async Task<bool> ConnectWebSocket()
         {
-            this.websocket.OnDisconnectOccurred -= Websocket_OnDisconnectOccurred;
             return await this.websocket.Connect(websocketAddress + ChannelSession.Settings.TITSPortNumber + "/websocket");
         }
 
@@ -276,6 +296,7 @@ namespace MixItUp.Base.Services.External
                             }
                         }
                         this.allItemsCache = results;
+                        this.ItemsLastUpdated = DateTimeOffset.Now;
                     }
                 }
                 else if (string.Equals(response.messageType, "TITSTriggerListResponse"))
@@ -291,6 +312,7 @@ namespace MixItUp.Base.Services.External
                             }
                         }
                         this.allTriggersCache = results;
+                        this.TriggersLastUpdated = DateTimeOffset.Now;
                     }
                 }
             }
@@ -307,7 +329,7 @@ namespace MixItUp.Base.Services.External
 
                 await Task.Delay(5000);
 
-                result = await this.InitializeInternal();
+                result = await this.Connect();
             }
             while (!result.Success);
 
