@@ -272,6 +272,13 @@ namespace MixItUp.Base.Model.Overlay
                 this.Javascript = OverlayResources.OverlayEndCreditsDefaultJavascript;
             }
 
+            if (this.PositionType != OverlayPositionV3Type.Pixel || this.XPosition != 0 || this.YPosition != 0)
+            {
+                this.PositionType = OverlayPositionV3Type.Pixel;
+                this.XPosition = 0;
+                this.YPosition = 0;
+            }
+
             await base.Initialize();
 
             foreach (OverlayEndCreditsSectionV3Model section in Sections)
