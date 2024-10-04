@@ -150,6 +150,7 @@ namespace MixItUp.Base.Model.Overlay
         private void RemoveEventHandlers()
         {
             ChatService.OnChatUserBanned -= OnChatUserBanned;
+            ChatService.OnChatUserTimedOut -= OnChatUserTimedOut;
             ChatService.OnChatMessageReceived -= OnChatMessageReceived;
             ChatService.OnChatMessageDeleted -= OnChatMessageDeleted;
             ChatService.OnChatCleared -= OnChatCleared;
