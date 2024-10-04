@@ -276,7 +276,13 @@ namespace MixItUp.Base.Model.Actions
                     OverlayEndpointV3Service overlay = widget.GetOverlayEndpointService();
                     if (overlay != null)
                     {
-                        await overlay.Function(widget.ID.ToString(), this.RunWidgetFunctionName, this.RunWidgetFunctionParameters);
+                        Dictionary<string, object> functionParameters = new Dictionary<string, object>();
+                        foreach (var kvp in this.RunWidgetFunctionParameters)
+                        {
+                            functionParameters[kvp.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Value.ToString(), parameters);
+                        }
+
+                        await overlay.Function(widget.ID.ToString(), this.RunWidgetFunctionName, functionParameters);
                     }
                 }
             }
