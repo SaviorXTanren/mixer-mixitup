@@ -267,6 +267,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
+            if (string.Equals(this.Javascript, OverlayResources.OverlayEndCreditsDefaultJavascriptOld, System.StringComparison.OrdinalIgnoreCase))
+            {
+                this.Javascript = OverlayResources.OverlayEndCreditsDefaultJavascript;
+            }
+
             await base.Initialize();
 
             foreach (OverlayEndCreditsSectionV3Model section in Sections)

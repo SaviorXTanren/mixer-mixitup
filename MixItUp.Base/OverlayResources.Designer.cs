@@ -502,7 +502,7 @@ namespace MixItUp.Base {
         ///   Looks up a localized string similar to const animationKeyframes =
         ///[
         ///    { transform: &quot;translateY(0vh)&quot;, offset: 0 },
-        ///    { transform: &quot;translateY(-100%) translateY(-100vh)&quot;, offset: 1 },
+        ///    { transform: &quot;translateY(-100%) translateY(-200vh)&quot;, offset: 1 },
         ///];
         ///
         ///const scrollRate = {ScrollRate};
@@ -525,6 +525,36 @@ namespace MixItUp.Base {
         public static string OverlayEndCreditsDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayEndCreditsDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to const animationKeyframes =
+        ///[
+        ///    { transform: &quot;translateY(0vh)&quot;, offset: 0 },
+        ///    { transform: &quot;translateY(-100%) translateY(-100vh)&quot;, offset: 1 },
+        ///];
+        ///
+        ///const scrollRate = {ScrollRate};
+        ///const animationIterations = {AnimationIterations};
+        ///const fadeTime = 3000;
+        ///
+        ///const main = document.getElementById(&quot;maindiv&quot;);
+        ///const list = document.getElementById(&quot;list&quot;);
+        ///
+        ///const spacerTemplate = document.querySelector(&quot;#spacer&quot;);
+        ///
+        ///var running = false;
+        ///
+        ///function startCredits(data)
+        ///{
+        ///    if (running)
+        ///    {
+        ///  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayEndCreditsDefaultJavascriptOld {
+            get {
+                return ResourceManager.GetString("OverlayEndCreditsDefaultJavascriptOld", resourceCulture);
             }
         }
         
