@@ -519,6 +519,7 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<string, object> data = new Dictionary<string, object>();
             data[nameof(display.Type)] = display.Type.ToString();
             data[nameof(display.Format)] = result;
+            data["User"] = user;
 
             return data;
         }
