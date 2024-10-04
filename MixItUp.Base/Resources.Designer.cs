@@ -17967,11 +17967,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Random In.
+        /// </summary>
+        public static string RandomIn {
+            get {
+                return ResourceManager.GetString("RandomIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Randomize Timers.
         /// </summary>
         public static string RandomizeTimers {
             get {
                 return ResourceManager.GetString("RandomizeTimers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Random Out.
+        /// </summary>
+        public static string RandomOut {
+            get {
+                return ResourceManager.GetString("RandomOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Random Visible.
+        /// </summary>
+        public static string RandomVisible {
+            get {
+                return ResourceManager.GetString("RandomVisible", resourceCulture);
             }
         }
         
@@ -18206,6 +18233,15 @@ namespace MixItUp.Base {
         public static string Refresh {
             get {
                 return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh (May take up to 1 minute).
+        /// </summary>
+        public static string RefreshMayTakeUpTo1Minute {
+            get {
+                return ResourceManager.GetString("RefreshMayTakeUpTo1Minute", resourceCulture);
             }
         }
         

@@ -352,6 +352,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public bool IsConnected { get; private set; }
 
+        public bool StreamLiveStatus { get; private set; }
+
         public TwitchEventSubService() { }
 
         private async Task<Result> Connect()
@@ -708,11 +710,13 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task HandleOnline(JObject payload)
         {
+            this.StreamLiveStatus = true;
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
 
         private async Task HandleOffline(JObject payload)
         {
+            this.StreamLiveStatus = false;
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
 

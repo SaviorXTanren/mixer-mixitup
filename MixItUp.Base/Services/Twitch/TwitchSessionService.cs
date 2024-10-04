@@ -71,7 +71,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             get
             {
-                return this.Stream != null;
+                return this.Stream != null || ServiceManager.Get<TwitchEventSubService>().StreamLiveStatus;
             }
         }
 
