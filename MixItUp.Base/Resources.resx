@@ -10778,4 +10778,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="RandomVisible" xml:space="preserve">
     <value>Random Visible</value>
   </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Refresh (May take up to 1 minute)</value>
+  </data>
 </root>

@@ -50,7 +50,7 @@
 
                 <ComboBox Grid.Column="0" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TITSItem}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
 
-                <Controls:IconButton Grid.Column="2" Command="{Binding RefreshCacheCommand}" Icon="Refresh" ToolTip="{x:Static resx:Resources.Refresh}" />
+                <Controls:IconButton Grid.Column="2" Command="{Binding RefreshCacheCommand}" Icon="Refresh" ToolTip="{x:Static resx:Resources.RefreshMayTakeUpTo1Minute}" />
             </Grid>
 
             <Grid Grid.Row="2">
@@ -75,7 +75,7 @@
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding Triggers}" SelectedItem="{Binding SelectedTrigger}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TITSTrigger}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
 
-            <Controls:IconButton Grid.Column="2" Command="{Binding RefreshCacheCommand}" Icon="Refresh" ToolTip="{x:Static resx:Resources.Refresh}" />
+            <Controls:IconButton Grid.Column="2" Command="{Binding RefreshCacheCommand}" Icon="Refresh" ToolTip="{x:Static resx:Resources.RefreshMayTakeUpTo1Minute}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

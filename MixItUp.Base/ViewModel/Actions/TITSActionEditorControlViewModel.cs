@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -154,15 +155,16 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 if (this.TITSConnected)
                 {
-                    ServiceManager.Get<TITSService>().ClearCaches();
+                    await ServiceManager.Get<TITSService>().RequestAllItems();
+                    await ServiceManager.Get<TITSService>().RequestAllTriggers();
                 }
 
-                await this.LoadData();
+                this.LoadData();
             });
 
             await this.TryConnectToTITS();
 
-            await this.LoadData();
+            this.LoadData();
 
             await base.OnOpenInternal();
         }
@@ -177,14 +179,11 @@ namespace MixItUp.Base.ViewModel.Actions
             return false;
         }
 
-        private async Task LoadData()
+        private void LoadData()
         {
             if (this.TITSConnected)
             {
-                foreach (TITSItem item in await ServiceManager.Get<TITSService>().GetAllItems())
-                {
-                    this.Items.Add(item);
-                }
+                this.Items.ClearAndAddRange(ServiceManager.Get<TITSService>().GetAllItems());
                 this.SelectedItem = this.selectedItem = this.Items.FirstOrDefault(i => string.Equals(i.ID, this.throwItemID));
 
                 if (this.Items.Count == 0)
@@ -192,10 +191,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     Logger.Log(LogLevel.Error, "TITS Action - No items loaded");
                 }
 
-                foreach (TITSTrigger trigger in await ServiceManager.Get<TITSService>().GetAllTriggers())
-                {
-                    this.Triggers.Add(trigger);
-                }
+                this.Triggers.ClearAndAddRange(ServiceManager.Get<TITSService>().GetAllTriggers());
                 this.SelectedTrigger = this.selectedTrigger = this.Triggers.FirstOrDefault(i => string.Equals(i.ID, this.triggerID));
 
                 if (this.Triggers.Count == 0)

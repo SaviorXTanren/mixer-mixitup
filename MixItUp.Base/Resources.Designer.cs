@@ -18237,6 +18237,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh (May take up to 1 minute).
+        /// </summary>
+        public static string RefreshMayTakeUpTo1Minute {
+            get {
+                return ResourceManager.GetString("RefreshMayTakeUpTo1Minute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh Time (Secs).
         /// </summary>
         public static string RefreshTimeSecs {
