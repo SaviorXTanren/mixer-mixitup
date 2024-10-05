@@ -1785,6 +1785,32 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///const wheelCanvas = document.getElementById(&quot;wheelCanvas&quot;);
+        ///const arrowCanvas = document.getElementById(&quot;arrowCanvas&quot;);
+        ///
+        ///hideWheel();
+        ///
+        ///const startingSpeed = 10;
+        ///const spinsPerSpeed = 100;
+        ///const totalIntervals = 15;
+        ///const intervalDivider = 1.5;
+        ///const soundInterval = 75;
+        ///
+        ///const xPosition = {Size} / 2;
+        ///const yPosition = {Size} / 2;
+        ///const radius = {Size} / 2;
+        ///const names = [{OutcomeNames}];
+        ///const colors = [{OutcomeColors}];
+        ///const wheelClickSoundU [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayWheelDefaultJavascriptOld {
+            get {
+                return ResourceManager.GetString("OverlayWheelDefaultJavascriptOld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .youtubeVideo {
         ///
         ///}.

@@ -176,6 +176,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string wheelClickSoundFilePath;
 
+        public int WheelClickVolume
+        {
+            get { return this.wheelClickVolume; }
+            set
+            {
+                this.wheelClickVolume = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int wheelClickVolume = 100;
+
         public CustomCommandModel DefaultOutcomeCommand
         {
             get { return this.defaultOutcomeCommand; }
@@ -280,6 +291,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Size = item.Size;
             this.WheelClickSoundFilePath = item.WheelClickSoundFilePath;
+            this.WheelClickVolume = (int)(item.WheelClickVolume * 100);
 
             this.DefaultOutcomeCommand = this.GetEmbeddedCommand(item.DefaultOutcomeCommand, Resources.DefaultOutcome);
 
@@ -366,6 +378,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             result.Size = this.Size;
             result.WheelClickSoundFilePath = this.WheelClickSoundFilePath;
+            result.WheelClickVolume = ((double)this.WheelClickVolume) / 100.0;
 
             result.DefaultOutcomeCommand = this.DefaultOutcomeCommand.ID;
             ChannelSession.Settings.SetCommand(this.DefaultOutcomeCommand);

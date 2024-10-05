@@ -56,6 +56,8 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public string WheelClickSoundFilePath { get; set; }
+        [DataMember]
+        public double WheelClickVolume { get; set; } = 1.0;
 
         [DataMember]
         public Guid DefaultOutcomeCommand { get; set; }
@@ -120,6 +122,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
+            if (string.Equals(this.Javascript, OverlayResources.OverlayWheelDefaultJavascriptOld, System.StringComparison.OrdinalIgnoreCase))
+            {
+                this.Javascript = OverlayResources.OverlayWheelDefaultJavascript;
+            }
+
             await base.Initialize();
 
             foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
@@ -137,6 +144,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.OutcomeNames)] = this.OutcomeNames;
             properties[nameof(this.OutcomeColors)] = this.OutcomeColors;
             properties[nameof(this.WheelClickSoundURL)] = this.WheelClickSoundURL;
+            properties[nameof(this.WheelClickVolume)] = this.WheelClickVolume.ToString(CultureInfo.InvariantCulture);
 
             this.EntranceAnimation.AddAnimationProperties(properties, nameof(this.EntranceAnimation));
             this.OutcomeSelectedAnimation.AddAnimationProperties(properties, nameof(this.OutcomeSelectedAnimation));
