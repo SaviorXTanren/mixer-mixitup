@@ -4,7 +4,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using System;
 using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.ViewModel.Overlay

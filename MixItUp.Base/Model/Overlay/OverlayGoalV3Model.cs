@@ -1,12 +1,12 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -17,6 +17,8 @@ namespace MixItUp.Base.Model.Overlay
     {
         Custom,
         Counter,
+        Followers,
+        Subscribers,
     }
 
     public enum OverlayGoalSegmentV3Type
@@ -63,6 +65,9 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayGoalV3Type GoalType { get; set; } = OverlayGoalV3Type.Custom;
 
         [DataMember]
+        public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.None;
+
+        [DataMember]
         public OverlayGoalSegmentV3Type SegmentType { get; set; }
         [DataMember]
         public List<OverlayGoalSegmentV3Model> Segments { get; set; } = new List<OverlayGoalSegmentV3Model>();
@@ -101,26 +106,19 @@ namespace MixItUp.Base.Model.Overlay
         {
             get
             {
-                if (this.GoalType == OverlayGoalV3Type.Custom)
-                {
-                    return this.CustomTotalAmount;
-                }
-                else if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
+                if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
                 {
                     return this.Counter.Amount;
                 }
-                return 0;
+                return this.CustomTotalAmount;
             }
             set
             {
-                if (this.GoalType == OverlayGoalV3Type.Custom)
-                {
-                    this.CustomTotalAmount = value;
-                }
-                else if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
+                if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
                 {
                     this.Counter.Amount = value;
                 }
+                this.CustomTotalAmount = value;
             }
         }
 
@@ -200,6 +198,28 @@ namespace MixItUp.Base.Model.Overlay
                 this.CounterPreviousCurrentAmount = this.CurrentAmount;
                 CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
             }
+            else if (this.GoalType == OverlayGoalV3Type.Followers)
+            {
+                if (!this.IsLivePreview)
+                {
+                    this.EnableFollows();
+                    if (this.StreamingPlatform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        this.TotalAmount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
+                    }
+                }
+            }
+            else if (this.GoalType == OverlayGoalV3Type.Subscribers)
+            {
+                if (!this.IsLivePreview)
+                {
+                    this.EnableSubscriptions();
+                    if (this.StreamingPlatform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        this.TotalAmount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
+                    }
+                }
+            }
 
             this.PreviousGoalAmount = 0;
             this.CurrentSegment = this.Segments.First();
@@ -262,6 +282,15 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.CurrentSegment != null)
             {
+                if (this.GoalType == OverlayGoalV3Type.Followers && user.Platform == this.StreamingPlatform)
+                {
+                    amount = 1;
+                }
+                else if (this.GoalType == OverlayGoalV3Type.Subscribers && user.Platform == this.StreamingPlatform)
+                {
+                    amount = 1;
+                }
+
                 OverlayGoalSegmentV3Model previousSegment = this.CurrentSegment;
                 double previousAmount = this.TotalAmount;
                 if (amount != 0)

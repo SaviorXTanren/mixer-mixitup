@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Settings;
@@ -96,6 +97,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.ShowCustomSelections));
                 this.NotifyPropertyChanged(nameof(this.ShowCounterSelections));
+                this.NotifyPropertyChanged(nameof(this.ShowStreamingPlatformSelections));
             }
         }
         private OverlayGoalV3Type selectedGoalType = OverlayGoalV3Type.Custom;
@@ -103,6 +105,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         public bool ShowCustomSelections { get { return this.SelectedGoalType == OverlayGoalV3Type.Custom; } }
 
         public bool ShowCounterSelections { get { return this.SelectedGoalType == OverlayGoalV3Type.Counter; } }
+
+        public bool ShowStreamingPlatformSelections { get { return this.SelectedGoalType == OverlayGoalV3Type.Followers || this.SelectedGoalType == OverlayGoalV3Type.Subscribers; } }
 
         public string Height
         {
@@ -170,6 +174,18 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private CounterModel selectedCounter;
+
+        public ObservableCollection<StreamingPlatformTypeEnum> StreamingPlatforms { get; set; } = new ObservableCollection<StreamingPlatformTypeEnum>() { StreamingPlatformTypeEnum.Twitch };
+        public StreamingPlatformTypeEnum SelectedStreamingPlatform
+        {
+            get { return this.selectedStreamingPlatform; }
+            set
+            {
+                this.selectedStreamingPlatform = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private StreamingPlatformTypeEnum selectedStreamingPlatform = StreamingPlatformTypeEnum.Twitch;
 
         public double StartingAmountCustom
         {
@@ -289,9 +305,13 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Animations.Add(this.SegmentCompletedAnimation);
 
             this.Counters.AddRange(ChannelSession.Settings.Counters.Values);
-            if (this.SelectedGoalType == OverlayGoalV3Type.Counter)
+            if (this.ShowCounterSelections)
             {
                 this.SelectedCounter = this.Counters.FirstOrDefault(c => string.Equals(c.Name, item.CounterName, StringComparison.OrdinalIgnoreCase));
+            }
+            else if (this.ShowStreamingPlatformSelections)
+            {
+                this.SelectedStreamingPlatform = item.StreamingPlatform;
             }
 
             this.InitializeInternal();
@@ -369,6 +389,14 @@ namespace MixItUp.Base.ViewModel.Overlay
             if (this.SelectedGoalType == OverlayGoalV3Type.Counter)
             {
                 result.CounterName = this.SelectedCounter.Name;
+
+                result.ClearAllAmountsToZero();
+            }
+            else if (this.SelectedGoalType == OverlayGoalV3Type.Followers || this.SelectedGoalType == OverlayGoalV3Type.Subscribers)
+            {
+                result.StreamingPlatform = this.SelectedStreamingPlatform;
+
+                result.ClearAllAmountsToZero();
             }
 
             return result;
