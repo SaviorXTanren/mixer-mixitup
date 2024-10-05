@@ -232,6 +232,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         private OverlayWidgetV3Model newWidget;
 
         private bool loaded = false;
+        private DelayedCountSemaphore delayedRefreshPreviewSemaphore = new DelayedCountSemaphore(100);
         private SemaphoreSlim refreshPreviewSemaphoreSlim = new SemaphoreSlim(1);
 
         public OverlayWidgetV3ViewModel(OverlayItemV3Type type)
@@ -435,6 +436,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         private void Initialize()
         {
+            this.delayedRefreshPreviewSemaphore.Completed += DelayedRefreshPreviewSemaphore_Completed;
+
             this.Position.PositionUpdated += (sender, e) =>
             {
                 this.RefreshWidgetPreview();
@@ -549,21 +552,26 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             if (this.loaded && this.Validate().Success)
             {
-                Task.Run(async () =>
-                {
-                    await this.refreshPreviewSemaphoreSlim.WaitAsync();
-
-                    await this.RemoveWidgetPreview();
-
-                    OverlayWidgetV3Model widget = await this.GetWidget();
-                    this.testWidget = widget;
-                    this.testWidget.Item.IsLivePreview = true;
-                    OverlayWidgetV3ViewModel.WidgetsInEditing[this.ID] = this;
-                    await this.testWidget.Enable();
-
-                    this.refreshPreviewSemaphoreSlim.Release();
-                });
+                this.delayedRefreshPreviewSemaphore.Add();
             }
+        }
+
+        private void DelayedRefreshPreviewSemaphore_Completed(object sender, EventArgs e)
+        {
+            Task.Run(async () =>
+            {
+                await this.refreshPreviewSemaphoreSlim.WaitAsync();
+
+                await this.RemoveWidgetPreview();
+
+                OverlayWidgetV3Model widget = await this.GetWidget();
+                this.testWidget = widget;
+                this.testWidget.Item.IsLivePreview = true;
+                OverlayWidgetV3ViewModel.WidgetsInEditing[this.ID] = this;
+                await this.testWidget.Enable();
+
+                this.refreshPreviewSemaphoreSlim.Release();
+            });
         }
 
         private async Task RemoveWidgetPreview()
