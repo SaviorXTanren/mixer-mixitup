@@ -1755,12 +1755,6 @@ else
     labels.children[0].style.visibility = "visible";
 }</value>
   </data>
-  <data name="OverlayLabelUsernameAmountDefaultFormat" xml:space="preserve">
-    <value>$userdisplayname - $labelamount</value>
-  </data>
-  <data name="OverlayLabelUsernameDefaultFormat" xml:space="preserve">
-    <value>$userdisplayname</value>
-  </data>
   <data name="OverlayLeaderboardDefaultCSS" xml:space="preserve">
     <value>.list {
 }

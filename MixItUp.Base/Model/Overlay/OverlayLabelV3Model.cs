@@ -32,6 +32,7 @@ namespace MixItUp.Base.Model.Overlay
         LatestTwitchBits,
         LatestTrovoElixir,
         LatestYouTubeSuperChat,
+        LatestSubscriptionGifter,
 
         Counter = 100,
 
@@ -80,6 +81,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public const string UsernamePropertyName = "Username";
         public const string AmountPropertyName = "Amount";
+        public const string TypeNamePropertyName = "TypeName";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayLabelDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayLabelDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
@@ -194,11 +196,12 @@ namespace MixItUp.Base.Model.Overlay
                 EventService.OnRaidOccurred += EventService_OnRaidOccurred;
             }
 
-            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter))
             {
                 EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
                 EventService.OnResubscribeOccurred += EventService_OnResubscribeOccurred;
                 EventService.OnSubscriptionGiftedOccurred += EventService_OnSubscriptionGiftedOccurred;
+                EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
 
                 if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
                 {
@@ -221,8 +224,6 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
                 {
-                    EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
-
                     long amount = 0;
                     if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
@@ -399,12 +400,39 @@ namespace MixItUp.Base.Model.Overlay
                 this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount++;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
             }
+
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && subscription.Gifter != null)
+            {
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = subscription.Gifter.ID;
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].Amount = 1;
+                await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter);
+            }
         }
 
         private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
         {
-            this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount += subscriptions.Count();
-            await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
+            if (subscriptions != null && subscriptions.Count() > 0)
+            {
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscriptions.Last().User.ID;
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = 1;
+                    await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriber);
+                }
+
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount += subscriptions.Count();
+                    await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
+                }
+
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && subscriptions.Last().Gifter != null)
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = subscriptions.Last().Gifter.ID;
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].Amount = subscriptions.Count();
+                    await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter);
+                }
+            }
         }
 
         private async void EventService_OnDonationOccurred(object sender, UserDonationModel donation)
@@ -513,11 +541,13 @@ namespace MixItUp.Base.Model.Overlay
             {
                 result = OverlayV3Service.ReplaceProperty(result, OverlayLabelV3Model.AmountPropertyName, amount);
             }
+            result = OverlayV3Service.ReplaceProperty(result, OverlayLabelV3Model.TypeNamePropertyName, EnumLocalizationHelper.GetLocalizedName(display.Type));
 
             result = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result, new CommandParametersModel(user));
 
             Dictionary<string, object> data = new Dictionary<string, object>();
             data[nameof(display.Type)] = display.Type.ToString();
+            data[OverlayLabelV3Model.TypeNamePropertyName] = EnumLocalizationHelper.GetLocalizedName(display.Type);
             data[nameof(display.Format)] = result;
             data["User"] = user;
 

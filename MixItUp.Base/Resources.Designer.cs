@@ -12351,6 +12351,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Latest Subscription Gifter.
+        /// </summary>
+        public static string LatestSubscriptionGifter {
+            get {
+                return ResourceManager.GetString("LatestSubscriptionGifter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latest Trovo Elixir.
         /// </summary>
         public static string LatestTrovoElixir {

@@ -1064,24 +1064,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to $userdisplayname - $labelamount.
-        /// </summary>
-        public static string OverlayLabelUsernameAmountDefaultFormat {
-            get {
-                return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to $userdisplayname.
-        /// </summary>
-        public static string OverlayLabelUsernameDefaultFormat {
-            get {
-                return ResourceManager.GetString("OverlayLabelUsernameDefaultFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to .list {
         ///}
         ///
