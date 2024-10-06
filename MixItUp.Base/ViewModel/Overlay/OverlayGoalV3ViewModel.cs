@@ -271,6 +271,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Animations.Add(this.ProgressOccurredAnimation);
             this.Animations.Add(this.SegmentCompletedAnimation);
 
+            this.Counters.AddRange(ChannelSession.Settings.Counters.Values);
+
             this.InitializeInternal();
         }
 
