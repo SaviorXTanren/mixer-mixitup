@@ -77,8 +77,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayLabelV3Model : OverlayVisualTextV3ModelBase
     {
-        public const string LabelAdds = "LabelAdds";
-
         public const string UsernamePropertyName = "Username";
         public const string AmountPropertyName = "Amount";
         public const string TypeNamePropertyName = "TypeName";
@@ -104,6 +102,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
+            if (string.Equals(this.Javascript, OverlayResources.OverlayLabelDefaultJavascriptOld, System.StringComparison.OrdinalIgnoreCase))
+            {
+                this.Javascript = OverlayResources.OverlayLabelDefaultJavascript;
+            }
+
             await base.Initialize();
 
             this.RemoveEventHandlers();
@@ -311,25 +314,18 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
+        protected override async Task Loaded()
         {
-            await base.ProcessGenerationProperties(properties, parameters);
+            await base.Loaded();
 
-            List<string> labelAdds = new List<string>();
             foreach (var display in this.Displays)
             {
                 if (display.Value.IsEnabled)
                 {
-                    string labelAdd = OverlayResources.OverlayLabelAddJavascript;
-                    foreach (var kvp in await this.GetLabelDisplayProperties(display.Value))
-                    {
-                        labelAdd = OverlayV3Service.ReplaceProperty(labelAdd, kvp.Key, kvp.Value);
-                    }
-                    labelAdds.Add(labelAdd);
+                    Dictionary<string, object> data = await this.GetLabelDisplayProperties(display.Value);
+                    await this.CallFunction("add", data);
                 }
             }
-
-            properties[LabelAdds] = string.Join("\n", labelAdds);
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)

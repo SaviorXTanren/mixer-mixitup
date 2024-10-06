@@ -1048,6 +1048,33 @@ namespace MixItUp.Base {
         ///var displayRotationSeconds = {DisplayRotationSeconds};
         ///var displayRotationIndex = 0;
         ///
+        ///function rotateLabelDisplay()
+        ///{
+        ///    if (displayRotationIndex &gt;= labels.children.length)
+        ///    {
+        ///        displayRotationIndex = 0;
+        ///    }
+        ///    
+        ///    for (const labelDisplay of labels.children) {
+        ///        labelDisplay.style.visibility = &apos;hidden&apos;;
+        ///    }
+        ///    
+        ///    let label = labels.children[displayRotationIndex];
+        ///    label.st [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayLabelDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayLabelDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to var labels = document.getElementById(&quot;labels&quot;);
+        ///
+        ///var displaySettings = &quot;{DisplaySetting}&quot;;
+        ///var displayRotationSeconds = {DisplayRotationSeconds};
+        ///var displayRotationIndex = 0;
+        ///
         ///function addLabelDisplay(type, format)
         ///{
         ///    let labelDisplayTemplate = document.getElementById(&quot;labeldisplay&quot;);
@@ -1057,9 +1084,9 @@ namespace MixItUp.Base {
         ///    labelText.innerHTML = format;
         ///    labelText.style. [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string OverlayLabelDefaultJavascript {
+        public static string OverlayLabelDefaultJavascriptOld {
             get {
-                return ResourceManager.GetString("OverlayLabelDefaultJavascript", resourceCulture);
+                return ResourceManager.GetString("OverlayLabelDefaultJavascriptOld", resourceCulture);
             }
         }
         
