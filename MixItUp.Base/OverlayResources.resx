@@ -1719,23 +1719,26 @@ function rotateLabelDisplay()
 
 function add(data)
 {
-    let labelDisplayTemplate = document.getElementById("labeldisplay");
-    const labelDisplay = labelDisplayTemplate.content.cloneNode(true);
-    const labelText = labelDisplay.querySelector(".text");
-    labelText.id = data.Type;
-    labelText.innerHTML = data.Format;
-    labelText.style.visibility = 'hidden';
-    labels.appendChild(labelDisplay);
-    
-    if (labels.children.length == 1)
-    {
-        if (displaySettings == "RotatingDisplays")
+    let typeElement = document.getElementById(data.Type);
+    if (typeElement == null) {
+        let labelDisplayTemplate = document.getElementById("labeldisplay");
+        const labelDisplay = labelDisplayTemplate.content.cloneNode(true);
+        const labelText = labelDisplay.querySelector(".text");
+        labelText.id = data.Type;
+        labelText.innerHTML = data.Format;
+        labelText.style.visibility = 'hidden';
+        labels.appendChild(labelDisplay);
+        
+        if (labels.children.length == 1)
         {
-            rotateLabelDisplay();
-        }
-        else
-        {
-            labels.children[0].style.visibility = "visible";
+            if (displaySettings == "RotatingDisplays")
+            {
+                rotateLabelDisplay();
+            }
+            else
+            {
+                labels.children[0].style.visibility = "visible";
+            }
         }
     }
 }
