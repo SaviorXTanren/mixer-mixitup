@@ -156,20 +156,28 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower))
                 {
                     UserV2ViewModel user = null;
-                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    if (ChannelSession.Settings.LastFollowerUserID != Guid.Empty)
                     {
-                        var followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
-                        if (followers != null && followers.Count() > 0)
-                        {
-                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: followers.First().user_id, performPlatformSearch: true);
-                        }
+                        user = await ServiceManager.Get<UserService>().GetUserByID(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.LastFollowerUserID);
                     }
-                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+
+                    if (user == null)
                     {
-                        var followers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, maxResults: 1);
-                        if (followers != null && followers.Count() > 0)
+                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                         {
-                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: followers.First().user_id, platformUsername: followers.First().nickname, performPlatformSearch: true);
+                            var followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
+                            if (followers != null && followers.Count() > 0)
+                            {
+                                user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: followers.First().user_id, performPlatformSearch: true);
+                            }
+                        }
+                        else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                        {
+                            var followers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, maxResults: 1);
+                            if (followers != null && followers.Count() > 0)
+                            {
+                                user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: followers.First().user_id, platformUsername: followers.First().nickname, performPlatformSearch: true);
+                            }
                         }
                     }
 
@@ -209,12 +217,20 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
                 {
                     UserV2ViewModel user = null;
-                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    if (ChannelSession.Settings.LastSubscriberUserID != Guid.Empty)
                     {
-                        var subscribers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
-                        if (subscribers != null && subscribers.Count() > 0)
+                        user = await ServiceManager.Get<UserService>().GetUserByID(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.LastSubscriberUserID);
+                    }
+
+                    if (user == null)
+                    {
+                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                         {
-                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: subscribers.First().user_id, performPlatformSearch: true);
+                            var subscribers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
+                            if (subscribers != null && subscribers.Count() > 0)
+                            {
+                                user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: subscribers.First().user_id, performPlatformSearch: true);
+                            }
                         }
                     }
 

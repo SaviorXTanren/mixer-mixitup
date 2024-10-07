@@ -1618,6 +1618,7 @@ namespace MixItUp.Base.Services.Twitch
             parameters.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
             parameters.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
 
+            parameters.TargetUser = massGiftedSubEvent.Subs.First().Receiver;
             foreach (TwitchGiftedSubEventModel sub in massGiftedSubEvent.Subs)
             {
                 parameters.Arguments.Add(sub.Receiver.Username);

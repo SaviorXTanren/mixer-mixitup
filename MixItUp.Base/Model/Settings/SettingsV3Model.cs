@@ -668,6 +668,11 @@ namespace MixItUp.Base.Model.Settings
         public Dictionary<string, object> LatestSpecialIdentifiersData { get; set; } = new Dictionary<string, object>();
 
         [DataMember]
+        public Guid LastFollowerUserID { get; set; }
+        [DataMember]
+        public Guid LastSubscriberUserID { get; set; }
+
+        [DataMember]
         public Dictionary<string, HotKeyConfiguration> HotKeys { get; set; } = new Dictionary<string, HotKeyConfiguration>();
         [DataMember]
         public Dictionary<string, CounterModel> Counters { get; set; } = new Dictionary<string, CounterModel>();
