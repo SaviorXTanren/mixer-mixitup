@@ -101,16 +101,22 @@ namespace MixItUp.Base.Model.Overlay
 
         public void Track(UserV2ViewModel user, double amount)
         {
-            if (!this.itemTracking.ContainsKey(user))
+            if (this.ShouldTrack(user))
             {
-                this.itemTracking[user] = 0;
+                if (!this.itemTracking.ContainsKey(user))
+                {
+                    this.itemTracking[user] = 0;
+                }
+                this.itemTracking[user] += amount;
             }
-            this.itemTracking[user] += amount;
         }
 
         public void Track(UserV2ViewModel user, string text)
         {
-            this.customTracking.Add(new Tuple<UserV2ViewModel, string>(user, text));
+            if (this.ShouldTrack(user))
+            {
+                this.customTracking.Add(new Tuple<UserV2ViewModel, string>(user, text));
+            }
         }
 
         public void Untrack(UserV2ViewModel user)
@@ -190,6 +196,11 @@ namespace MixItUp.Base.Model.Overlay
                 items.Add(text);
             }
             return items.OrderBy(i => i);
+        }
+
+        private bool ShouldTrack(UserV2ViewModel user)
+        {
+            return !user.IsSpecialtyExcluded;
         }
     }
 
