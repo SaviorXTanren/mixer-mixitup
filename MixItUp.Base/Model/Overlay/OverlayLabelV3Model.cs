@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -153,7 +154,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 EventService.OnFollowOccurred += EventService_OnFollowOccurred;
 
-                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower))
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower) && this.Displays[OverlayLabelDisplayV3TypeEnum.LatestFollower].UserID == Guid.Empty)
                 {
                     UserV2ViewModel user = null;
                     if (ChannelSession.Settings.LastFollowerUserID != Guid.Empty)
@@ -214,7 +215,7 @@ namespace MixItUp.Base.Model.Overlay
                 EventService.OnSubscriptionGiftedOccurred += EventService_OnSubscriptionGiftedOccurred;
                 EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
 
-                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber) && this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID == Guid.Empty)
                 {
                     UserV2ViewModel user = null;
                     if (ChannelSession.Settings.LastSubscriberUserID != Guid.Empty)
