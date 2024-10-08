@@ -17,7 +17,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string SecondsProperty = "Seconds";
 
         public const string TimerSpecialIdentifierPrefix = "timer";
-        public const string TimerSecondsAddedSpecialIdentifierPrefix = TimerSpecialIdentifierPrefix + "secondsadded";
+        public const string TimerSecondsAdjustedSpecialIdentifierPrefix = TimerSpecialIdentifierPrefix + "secondsadjusted";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayTimerDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
@@ -128,7 +128,7 @@ namespace MixItUp.Base.Model.Overlay
                     await this.CallFunction("adjustTime", properties);
 
                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                    specialIdentifiers[TimerSecondsAddedSpecialIdentifierPrefix] = amount.ToString();
+                    specialIdentifiers[TimerSecondsAdjustedSpecialIdentifierPrefix] = amount.ToString();
 
                     await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user, specialIdentifiers));
                 }
