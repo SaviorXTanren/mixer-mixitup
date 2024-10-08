@@ -6,6 +6,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
@@ -325,8 +326,14 @@ namespace MixItUp.Base.Model.Overlay
                         parameters.SpecialIdentifiers[NextSegmentNameSpecialIdentifier] = this.CurrentSegment.Name;
                         parameters.SpecialIdentifiers[NextSegmentAmountSpecialIdentifier] = this.CurrentSegment.Amount.ToString();
 
-                        await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
-                        await ServiceManager.Get<CommandService>().Queue(segment.CommandID, parameters);
+                        if (ChannelSession.Settings.Commands.TryGetValue(segment.CommandID, out CommandModelBase command) && command.Actions.Count > 0)
+                        {
+                            await ServiceManager.Get<CommandService>().Queue(segment.CommandID, parameters);
+                        }
+                        else
+                        {
+                            await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
+                        }
                     }
                 }
                 else
