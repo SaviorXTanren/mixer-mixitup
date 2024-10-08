@@ -961,16 +961,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to maindiv.style.visibility=&apos;hidden&apos;;
-        ///sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });.
-        /// </summary>
-        public static string OverlayItemHideAndSendParentMessageRemoveJavascript {
-            get {
-                return ResourceManager.GetString("OverlayItemHideAndSendParentMessageRemoveJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///
         ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
@@ -978,17 +968,14 @@ namespace MixItUp.Base {
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
         ///
-        ///    &lt;script src=&quot;/scripts/jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-        ///
-        ///    &lt;script src=&quot;/scripts/video.min.js&quot;&gt;&lt;/script&gt;
-        ///
-        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/scripts/animate.min.css&quot;&gt;
-        ///
         ///    &lt;style type=&quot;text/css&quot;&gt;
-        ///        {CSS}
-        ///    &lt;/style&gt;
-        ///&lt;/head&gt;
-        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max- [rest of string was truncated]&quot;;.
+        ///        @charset &quot;UTF-8&quot;;/*!
+        ///        * animate.css - https://animate.style/
+        ///        * Version - 4.1.1
+        ///        * Licensed under the MIT license - http://opensource.org/licenses/MIT
+        ///        *
+        ///        * Copyright (c) 2020 Animate.css
+        ///        */:root{--animate-duration:1s;--animate-delay:1s;--animate-repeat:1}.animate__animat [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayItemIFrameHTML {
             get {

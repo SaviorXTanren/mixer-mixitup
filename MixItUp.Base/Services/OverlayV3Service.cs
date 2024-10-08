@@ -77,11 +77,20 @@ namespace MixItUp.Base.Services
         [DataMember]
         public string URL { get; set; }
         [DataMember]
+        public string HTML { get; set; }
+        [DataMember]
         public int Layer { get; set; }
 
         public OverlayItemDataV3Model(string id)
         {
             this.ID = id;
+            this.URL = $"/{OverlayV3HttpListenerServer.OverlayDataPrefix}/{this.ID}";
+        }
+
+        public OverlayItemDataV3Model(string id, string html)
+        {
+            this.ID = id;
+            this.HTML = html;
             this.URL = $"/{OverlayV3HttpListenerServer.OverlayDataPrefix}/{this.ID}";
         }
     }
@@ -521,7 +530,7 @@ namespace MixItUp.Base.Services
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
                     ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
-                    await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)
+                    await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id, html)
                     {
                         Layer = layer
                     }));
