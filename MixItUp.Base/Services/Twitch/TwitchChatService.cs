@@ -723,7 +723,7 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
+        public async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
         {
             try
             {
