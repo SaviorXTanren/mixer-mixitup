@@ -7,7 +7,7 @@
 
         <h3 style="color: red;"><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application and includes some breaking changes. As such, we recommend NOT updating immediately before a stream and waiting until you have time to walkthrough all of the changes and ensure your Overlay setup and interactions are configured to your liking.</h3>
 
-        <h2 style="color: #2e6c80;">v1.2.0.0-1.2.0.6:</h2>
+        <h2 style="color: #2e6c80;">v1.2.0.0-1.2.0.7:</h2>
         <ul>
             <li>Overlay v3 functionality updates:</li>
             <ul>
@@ -184,6 +184,11 @@
             <li>Adding Followers and Subscribers types for Goal Overlay Widget to show automatic tracking of your current follower and subscriber amounts</li>
             <li>Adding Latest Subscription Gifter type to Label Overlay Widget</li>
             <li>Adding volume slider for wheel click sound to Wheel Overlay Widget</li>
+            <li>Reducing the amount of libraries and external dependencies loaded in for the Overlay to increase loading speed and reduce the chance of batched Overlay actions drifting</li>
+            <li>Adding the ability to custom the &le;head&gt; tag for an Overlay Endpoint</li>
+            <li>Changing Special Identifier for Time Adjusted sub-command on Persistent Timer Overlay Widget to be $timersecondsadjusted</li>
+            <li>Fixing bug with Twitch multi-gifted subs doubling the amount of subs added for various Overlay Widgets such as Goal and Persistent Timer</li>
+            <li>Adding error message for when the End Credits Overlay Widgets is triggered, but there is no captured data for it from when it was saved</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
