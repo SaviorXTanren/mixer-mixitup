@@ -1112,6 +1112,9 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 
 {CSS}</value>
   </data>
+  <data name="OverlayEndpointDefaultHead" xml:space="preserve">
+    <value />
+  </data>
   <data name="OverlayEndpointDefaultHTML" xml:space="preserve">
     <value>
 
@@ -1615,6 +1618,8 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     &lt;script src="/scripts/video.min.js"&gt;&lt;/script&gt;
 
     &lt;link rel="stylesheet" type="text/css" href="/scripts/animate.min.css"&gt;
+    
+    {Head}
 
     &lt;style type="text/css"&gt;
         {CSS}

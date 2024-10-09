@@ -10784,4 +10784,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="LatestSubscriptionGifter" xml:space="preserve">
     <value>Latest Subscription Gifter</value>
   </data>
+  <data name="Head" xml:space="preserve">
+    <value>Head</value>
+  </data>
 </root>

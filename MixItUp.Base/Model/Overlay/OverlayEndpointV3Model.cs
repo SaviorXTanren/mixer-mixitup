@@ -15,6 +15,8 @@ namespace MixItUp.Base.Model.Overlay
         public string Name { get; set; }
 
         [DataMember]
+        public string Head { get; set; } = OverlayResources.OverlayEndpointDefaultHead;
+        [DataMember]
         public string HTML { get; set; } = OverlayResources.OverlayEndpointDefaultHTML;
         [DataMember]
         public string CSS { get; set; } = OverlayResources.OverlayEndpointDefaultCSS;

@@ -592,6 +592,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayEndpointDefaultHead {
+            get {
+                return ResourceManager.GetString("OverlayEndpointDefaultHead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 
         ///
         ///{HTML}.
@@ -983,12 +992,14 @@ namespace MixItUp.Base {
         ///    &lt;script src=&quot;/scripts/video.min.js&quot;&gt;&lt;/script&gt;
         ///
         ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/scripts/animate.min.css&quot;&gt;
+        ///    
+        ///    {Head}
         ///
         ///    &lt;style type=&quot;text/css&quot;&gt;
         ///        {CSS}
         ///    &lt;/style&gt;
         ///&lt;/head&gt;
-        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max- [rest of string was truncated]&quot;;.
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayItemIFrameHTML {
             get {
