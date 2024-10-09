@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -191,7 +191,8 @@
   </data>
   <data name="Add" xml:space="preserve">
     <value>Добавить</value>
-    <comment>Manual</comment>
+    <comment>Manual
+Fuzzy</comment>
   </data>
   <data name="AddClause" xml:space="preserve">
     <value>Добавить пункт</value>
@@ -311,7 +312,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Автом. доб. "!"</value>
+    <value>Автом. доб. &quot;!&quot;</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +454,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Триггер(ы) для чата ("!" не требуется, разделять пробелами, точка с запятой для нескольких слов)</value>
+    <value>Триггер(ы) для чата (&quot;!&quot; не требуется, разделять пробелами, точка с запятой для нескольких слов)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +510,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Команда ('!' не требуется)</value>
+    <value>Команда (&apos;!&apos; не требуется)</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -1160,7 +1161,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>Имя значения JSON (использовать '\' для вложенных параметров)</value>
+    <value>Имя значения JSON (использовать &apos;\&apos; для вложенных параметров)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1734,7 +1735,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>Время просмотра для статуса "Регулярный"</value>
+    <value>Время просмотра для статуса &quot;Регулярный&quot;</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1766,7 @@
     <value>Сообщать</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Требовать "!claim"</value>
+    <value>Требовать &quot;!claim&quot;</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -1857,7 +1858,8 @@
   </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>
-    <comment>Manual</comment>
+    <comment>Manual
+Fuzzy</comment>
   </data>
   <data name="SaveChatEventLogs" xml:space="preserve">
     <value>Сохранить чат / журнал событий</value>
@@ -2351,7 +2353,8 @@
   </data>
   <data name="Update" xml:space="preserve">
     <value>Обновить</value>
-    <comment>Manual</comment>
+    <comment>Manual
+Fuzzy</comment>
   </data>
   <data name="UpdateCommand" xml:space="preserve">
     <value>Обновить команду</value>
@@ -2651,10 +2654,6 @@
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>Сообщения от пользователя удалены</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>DonorDrive Пожертвование</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -4267,7 +4266,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username получил секретное слово "$gamehangmanответ" и выиграл весь банк $gamepayout {0}!</value>
+    <value>@$username получил секретное слово &quot;$gamehangmanответ&quot; и выиграл весь банк $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4366,7 +4365,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username правильно угадал слово "$gamewordscrambleответ" и получил награду в размере $gamepayout {0}!</value>
+    <value>@$username правильно угадал слово &quot;$gamewordscrambleответ&quot; и получил награду в размере $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -5470,12 +5469,6 @@
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Введите действительный пользовательский секрет клиента.</value>
   </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>Подключение к сервису DonorDrive позволяет вам инициировать события, когда вы или ваша команда получаете пожертвование через соответствующую благотворительную организацию DonorDrive.</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Чтобы подключить DonorDrive к Mix It Up, посетите сайт вашей благотворительной организации и найдите ссылку на свою страницу/участника. Затем выберите благотворительную организацию из раскрывающегося списка или выберите «Пользовательский», если ее нет в списке, скопируйте ссылку на свою страницу/участника в текстовое поле и выберите «Войти».</value>
-  </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Проверка соединения с наложением не удалась. Убедитесь, что страница Mix It Up Overlay видна и запущена в вашем программном обеспечении для потоковой передачи.</value>
   </data>
@@ -6436,6 +6429,8 @@
   </data>
   <data name="Generic" xml:space="preserve">
     <value>Общий</value>
+    <comment>Incorrect translation by meaning.
+Fuzzy</comment>
   </data>
   <data name="DemoteFromMod" xml:space="preserve">
     <value>Удалить из мода</value>
@@ -8006,7 +8001,7 @@
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
     <value>Необходимо указать либо «купить», либо «продать».</value>
-    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
+    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>ИСПОЛЬЗОВАНИЕ: {0} list = список всех предметов, доступных для покупки/продажи ** {0} &lt;ITEM NAME&gt; = список цены покупки/продажи элемента ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = покупки 1 или указанная сумма предмета ** {0} продать &lt;ИМЯ ТОВАРА&gt; [СУММА] = Продается 1 или указанная сумма предмета</value>
@@ -8690,7 +8685,7 @@
     <value>Добавить пользователя</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Не удалось найти пользователя "{0}"</value>
+    <value>Не удалось найти пользователя &quot;{0}&quot;</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8863,53 +8858,6 @@
   </data>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Заклинание Канала Трово</value>
-  </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>Установить заголовок/описание</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>Действие YouTube: Необходимо указать действительную сумму.</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>Действие YouTube: необходимо указать допустимое название или описание.</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>Массовое членство на канале YouTube в подарок</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>Этап для участников канала YouTube</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>Членство на канале YouTube в подарок</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>Новый участник YouTube-канала</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>Начало трансляции канала YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>Остановка трансляции канала YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>Суперчат на канале YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>Суперстикер канала YouTube</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} Суперчат – {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} Суперстикер – {1} – {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>Показать Суперчат YouTube</value>
   </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Ложное соединение</value>
@@ -9180,7 +9128,7 @@
         общедоступный объект Run()
         {
             // Здесь находится ваш код
-            System.Console.WriteLine("Привет, мир!");
+            System.Console.WriteLine(&quot;Привет, мир!&quot;);
 
             // Возвращаем сюда любые данные, которые вы хотите использовать
             вернуть 42;
@@ -9192,19 +9140,19 @@
     <value>функция запуска()
 {
     // Здесь находится ваш код
-    var text = 'Привет, мир!';
+    var text = &apos;Привет, мир!&apos;;
 
     // Возвращаем сюда любые данные, которые вы хотите использовать
     вернуть 42;
 }
 
 результат вар = запустить();
-sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: результат });</value>
+sendParentMessage({ Тип: &quot;ScriptComplete&quot;, ID: &quot;{ID}&quot;, Результат: результат });</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>защита запуска():
     # Здесь будет ваш код
-    text = "Привет, мир!"
+    text = &quot;Привет, мир!&quot;
 
     # Возвращаем сюда любые данные, которые вы хотите использовать
     вернуть 42
@@ -9265,9 +9213,6 @@ sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: р
   <data name="ShellExecute" xml:space="preserve">
     <value>Оболочка выполнить</value>
   </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>Удалить строку с определенным текстом из файла</value>
-  </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Текст для удаления</value>
   </data>
@@ -9304,9 +9249,6 @@ sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: р
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>Необходимо выбрать действительный счетчик.</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>Последний подписчик</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Последнее пожертвование</value>
@@ -9349,6 +9291,66 @@ sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: р
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>ДеСтрим</value>
+  </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive Пожертвование</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>Подключение к сервису DonorDrive позволяет вам инициировать события, когда вы или ваша команда получаете пожертвование через соответствующую благотворительную организацию DonorDrive.</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Чтобы подключить DonorDrive к Mix It Up, посетите сайт вашей благотворительной организации и найдите ссылку на свою страницу/участника. Затем выберите благотворительную организацию из раскрывающегося списка или выберите «Пользовательский», если ее нет в списке, скопируйте ссылку на свою страницу/участника в текстовое поле и выберите «Войти».</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Установить заголовок/описание</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>Действие YouTube: Необходимо указать действительную сумму.</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>Действие YouTube: необходимо указать допустимое название или описание.</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>Массовое членство на канале YouTube в подарок</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>Этап для участников канала YouTube</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>Членство на канале YouTube в подарок</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>Новый участник YouTube-канала</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>Начало трансляции канала YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>Остановка трансляции канала YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>Суперчат на канале YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>Суперстикер канала YouTube</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} Суперчат – {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Суперстикер – {1} – {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>Показать Суперчат YouTube</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Удалить строку с определенным текстом из файла</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Существующий профиль</value>
@@ -9663,6 +9665,12 @@ sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: р
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Выберите новую папку для загрузки музыки из папки или нажмите кнопку «Воспроизвести», чтобы загрузить музыку из последней использованной папки.</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>Нет дубликатов</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Последний подписчик</value>
+  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>ОтзывчивыйГолос</value>
   </data>
@@ -9722,9 +9730,6 @@ sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: р
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>Конкретный клип</value>
-  </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>Нет дубликатов</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Подсчитать строки в файле</value>
