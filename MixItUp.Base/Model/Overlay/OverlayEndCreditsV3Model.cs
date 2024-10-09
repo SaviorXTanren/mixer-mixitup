@@ -570,13 +570,20 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
 
-            Dictionary<string, object> data = new Dictionary<string, object>();
-            data["Order"] = applicableSections.Select(s => s.ID);
-            data["Columns"] = applicableSections.ToDictionary(s => s.ID, s => s.Columns);
-            data["Types"] = applicableSections.ToDictionary(s => s.ID, s => s.Type.ToString());
-            data["Items"] = sectionItems;
+            if (applicableSections.Count > 0)
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                data["Order"] = applicableSections.Select(s => s.ID);
+                data["Columns"] = applicableSections.ToDictionary(s => s.ID, s => s.Columns);
+                data["Types"] = applicableSections.ToDictionary(s => s.ID, s => s.Type.ToString());
+                data["Items"] = sectionItems;
 
-            await this.CallFunction("startCredits", data);
+                await this.CallFunction("startCredits", data);
+            }
+            else
+            {
+                await ServiceManager.Get<ChatService>().SendMessage(Resources.OverlayWidgetEndCreditsNoDataCurrentlyAvailable);
+            }
         }
 
         protected override async Task Loaded()

@@ -16029,6 +16029,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: End Credits Overlay Widget could not be run because there is not currently captured data from this session..
+        /// </summary>
+        public static string OverlayWidgetEndCreditsNoDataCurrentlyAvailable {
+            get {
+                return ResourceManager.GetString("OverlayWidgetEndCreditsNoDataCurrentlyAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows the last X many events that have occurred in your channel. Events are added as they occur..
         /// </summary>
         public static string OverlayWidgetEventListDescription {

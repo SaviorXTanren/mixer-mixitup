@@ -10787,4 +10787,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="Head" xml:space="preserve">
     <value>Head</value>
   </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>ERROR: End Credits Overlay Widget could not be run because there is not currently captured data from this session.</value>
+  </data>
 </root>
