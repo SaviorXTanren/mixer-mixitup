@@ -186,7 +186,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (subscription.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        // Do not count Twitch subs triggered via Mass Subscriptions Gifted, as they're already covered by the regular SubscriptionGifted event
+                        if (this.TwitchSubscriptionsAmount.TryGetValue(subscription.Tier, out double amount))
+                        {
+                            total += amount;
+                        }
                     }
                     else if (subscription.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
