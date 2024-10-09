@@ -10763,4 +10763,31 @@ Nous avons détecté que vous avez créé plus d'un point de terminaison de supe
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Un compteur valide doit être sélectionné</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Utiliser les verrous de commande</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Utilisez toujours les verrous de commande lors du test des commandes</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Entrée aléatoire</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Sortie aléatoire</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Visible au hasard</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Actualiser (peut prendre jusqu'à 1 minute)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Dernier cadeau d'abonnement</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Tête</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>ERREUR : Le widget de superposition des crédits de fin n'a pas pu être exécuté car aucune donnée n'est actuellement capturée pour cette session.</value>
+  </data>
 </root>

@@ -10763,4 +10763,31 @@ Abbiamo rilevato che hai creato più di un endpoint overlay, il che significa ch
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>È necessario selezionare un contatore valido</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Usa i blocchi dei comandi</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Utilizza sempre i blocchi dei comandi durante il test dei comandi</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Ingresso casuale</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Uscita casuale</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Visibile casuale</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Aggiorna (potrebbe richiedere fino a 1 minuto)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Ultimo regalo di abbonamento</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Testa</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>ERRORE: impossibile eseguire il widget Overlay titoli di coda perché al momento non sono presenti dati acquisiti da questa sessione.</value>
+  </data>
 </root>

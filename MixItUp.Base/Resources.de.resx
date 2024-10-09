@@ -10763,4 +10763,31 @@ Wir haben festgestellt, dass Sie mehr als einen Overlay-Endpunkt erstellt haben,
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Es muss ein gültiger Zähler ausgewählt werden</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Verwenden Sie Befehlssperren</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Verwenden Sie beim Testen von Befehlen immer Befehlssperren</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Zufälliger Eingang</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Zufälliger Ausgang</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Zufällig sichtbar</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Aktualisieren (Kann bis zu 1 Minute dauern)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Neuester Abonnement-Geschenker</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Kopf</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>FEHLER: Das End Credits Overlay Widget konnte nicht ausgeführt werden, da derzeit keine Daten aus dieser Sitzung erfasst werden.</value>
+  </data>
 </root>

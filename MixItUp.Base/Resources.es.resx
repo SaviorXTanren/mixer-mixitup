@@ -10763,4 +10763,31 @@ Hemos detectado que tiene más de 1 punto final superpuesto creado, lo que signi
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Se debe seleccionar un contador válido</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Usar bloqueos de comando</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Utilice siempre bloqueos de comandos al probar comandos</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Entrada aleatoria</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Salida aleatoria</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Aleatorio visible</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Actualizar (puede tardar hasta 1 minuto)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Último regalo de suscripción</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Cabeza</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>ERROR: No se pudo ejecutar el widget de superposición de créditos finales porque actualmente no hay datos capturados de esta sesión.</value>
+  </data>
 </root>

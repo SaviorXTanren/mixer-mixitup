@@ -10763,4 +10763,31 @@ sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: р
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Необходимо выбрать действительный счетчик.</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Используйте командные блокировки</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Всегда используйте блокировки команд при тестировании команд</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Случайный вход</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Случайный выход</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Случайный видимый</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Обновить (может занять до 1 минуты)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Последний даритель подписки</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Голова</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>ОШИБКА: не удалось запустить виджет наложения конечных титров, поскольку в настоящее время нет записанных данных из этого сеанса.</value>
+  </data>
 </root>

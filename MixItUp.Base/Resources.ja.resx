@@ -10763,4 +10763,31 @@ sendParentMessage({ タイプ: "ScriptComplete"、ID: "{ID}"、結果: 結果 })
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>有効なカウンターを選択する必要があります</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>コマンドロックを使用する</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>コマンドをテストするときは常にコマンド ロックを使用する</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>ランダムイン</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>ランダムアウト</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>ランダムに表示</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>更新 (最大 1 分かかる場合があります)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>最新の定期購読ギフター</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>頭</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>エラー: 現在このセッションからキャプチャされたデータがないため、エンド クレジット オーバーレイ ウィジェットを実行できませんでした。</value>
+  </data>
 </root>

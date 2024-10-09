@@ -10763,4 +10763,31 @@ print(run())</value>
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Необхідно вибрати дійсний лічильник</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Використовуйте командні блокування</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Завжди використовуйте блокування команд під час тестування команд</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Випадковий вхід</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Випадковий вихід</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Випадкова видимість</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Оновити (може зайняти до 1 хвилини)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Останній дарувальник підписки</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Голова</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>ПОМИЛКА: Не вдалося запустити віджет накладання кінцевих титрів, оскільки наразі немає даних із цього сеансу.</value>
+  </data>
 </root>

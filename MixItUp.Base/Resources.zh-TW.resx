@@ -10763,4 +10763,31 @@ sendParentMessage({ 型別: "ScriptComplete", ID: "{ID}", 結果: 結果 });</va
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>必須選擇有效的計數器</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>使用命令鎖</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>測試命令時始終使用命令鎖</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>隨機輸入</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>隨機輸出</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>隨機可見</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>刷新（最多可能需要 1 分鐘）</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>最新訂閱贈品</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>頭</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>錯誤：由於目前沒有從此會話捕獲數據，因此無法執行 End Credits Overlay Widget。</value>
+  </data>
 </root>

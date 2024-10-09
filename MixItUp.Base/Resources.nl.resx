@@ -10763,4 +10763,31 @@ We hebben gedetecteerd dat u meer dan één overlay-eindpunt heeft gemaakt, wat 
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Er moet een geldige teller worden geselecteerd</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Gebruik opdrachtvergrendelingen</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Gebruik altijd opdrachtvergrendelingen bij het testen van opdrachten</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Willekeurig In</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Willekeurig uit</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Willekeurig zichtbaar</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Vernieuwen (kan maximaal 1 minuut duren)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Nieuwste abonnementsgifter</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Hoofd</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>FOUT: End Credits Overlay Widget kan niet worden uitgevoerd omdat er momenteel geen gegevens van deze sessie zijn vastgelegd.</value>
+  </data>
 </root>

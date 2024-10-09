@@ -10763,4 +10763,31 @@ Wykryliśmy, że masz utworzony więcej niż 1 punkt końcowy nakładki, co ozna
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Należy wybrać prawidłowy licznik</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Użyj blokad poleceń</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Zawsze używaj blokad poleceń podczas testowania poleceń</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Losowe wejście</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Losowe wyjście</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Losowo widoczne</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Odśwież (może zająć do 1 minuty)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Prezenter najnowszej subskrypcji</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Głowa</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>BŁĄD: Nie można uruchomić widżetu nakładki napisów końcowych, ponieważ obecnie nie przechwycono danych z tej sesji.</value>
+  </data>
 </root>

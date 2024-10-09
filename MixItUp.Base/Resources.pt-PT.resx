@@ -10763,4 +10763,31 @@ Detetámos que tem mais do que um endpoint de sobreposição criado, o que signi
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Um contador válido deve ser selecionado</value>
   </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Utilize bloqueios de comando</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Utilize sempre bloqueios de comando ao testar comandos</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Aleatório em</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Saída aleatória</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Visível Aleatório</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Atualizar (pode demorar até 1 minuto)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Último presente de assinatura</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Cabeça</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>ERRO: O widget de sobreposição de créditos finais não pôde ser executado porque não existem dados captados desta sessão no momento.</value>
+  </data>
 </root>
