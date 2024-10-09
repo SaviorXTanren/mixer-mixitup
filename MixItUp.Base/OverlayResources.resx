@@ -1609,6 +1609,8 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     &lt;meta charset="utf-8" /&gt;
     &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
 
+    {Head}
+
     &lt;style type="text/css"&gt;
         @charset "UTF-8";/*!
         * animate.css - https://animate.style/

@@ -977,6 +977,8 @@ namespace MixItUp.Base {
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
         ///
+        ///    {Head}
+        ///
         ///    &lt;style type=&quot;text/css&quot;&gt;
         ///        @charset &quot;UTF-8&quot;;/*!
         ///        * animate.css - https://animate.style/
@@ -984,7 +986,7 @@ namespace MixItUp.Base {
         ///        * Licensed under the MIT license - http://opensource.org/licenses/MIT
         ///        *
         ///        * Copyright (c) 2020 Animate.css
-        ///        */:root{--animate-duration:1s;--animate-delay:1s;--animate-repeat:1}.animate__animat [rest of string was truncated]&quot;;.
+        ///        */:root{--animate-duration:1s;--animate-delay:1s;--animate-repeat:1}.a [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayItemIFrameHTML {
             get {
