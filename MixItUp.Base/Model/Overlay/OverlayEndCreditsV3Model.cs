@@ -320,29 +320,33 @@ namespace MixItUp.Base.Model.Overlay
         {
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
             {
-                switch (section.Type)
+                if (section.Type == OverlayEndCreditsSectionV3Type.Chatters)
                 {
-                    case OverlayEndCreditsSectionV3Type.Chatters:
+                    section.Track(message.User);
+                }
+
+                if (section.Type == OverlayEndCreditsSectionV3Type.Followers)
+                {
+                    if (message.User.IsFollower)
+                    {
                         section.Track(message.User);
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Followers:
-                        if (message.User.IsFollower)
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Subscribers:
-                        if (message.User.IsSubscriber)
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Moderators:
-                        if (message.User.HasRole(UserRoleEnum.Moderator))
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
+                    }
+                }
+
+                if (section.Type == OverlayEndCreditsSectionV3Type.Subscribers)
+                {
+                    if (message.User.IsSubscriber)
+                    {
+                        section.Track(message.User);
+                    }
+                }
+
+                if (section.Type == OverlayEndCreditsSectionV3Type.Moderators)
+                {
+                    if (message.User.HasRole(UserRoleEnum.Moderator))
+                    {
+                        section.Track(message.User);
+                    }
                 }
             }
         }
