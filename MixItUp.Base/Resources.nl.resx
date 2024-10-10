@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Automatisch &quot;!&quot; Toevoegen</value>
+    <value>Automatisch "!" Toevoegen</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Chattrigger(s) (Geen &quot;!&quot; nodig, spatie gescheiden, puntkomma voor multi-woorden)</value>
+    <value>Chattrigger(s) (Geen "!" nodig, spatie gescheiden, puntkomma voor multi-woorden)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Opdracht (Geen &apos;!&apos; nodig)</value>
+    <value>Opdracht (Geen '!' nodig)</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON-Waardenaam (Gebruik &apos;\&apos; voor geneste parameters)</value>
+    <value>JSON-Waardenaam (Gebruik '\' voor geneste parameters)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1546,7 +1546,7 @@
     <comment>Manual</comment>
   </data>
   <data name="OverlayImagesAndVideos" xml:space="preserve">
-    <value>Overlay (Afbeeldingen &amp; Video&apos;s)</value>
+    <value>Overlay (Afbeeldingen &amp; Video's)</value>
     <comment>Manual</comment>
   </data>
   <data name="Overlays" xml:space="preserve">
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>&quot;Normale&quot; Status Online Kijktijd</value>
+    <value>"Normale" Status Online Kijktijd</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Rapport</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Vereist &quot;!claim&quot;</value>
+    <value>Vereist "!claim"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -2225,7 +2225,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ThemesAndColors" xml:space="preserve">
-    <value>Thema&apos;s &amp; Kleuren</value>
+    <value>Thema's &amp; Kleuren</value>
     <comment>Manual</comment>
   </data>
   <data name="ThreeLeft" xml:space="preserve">
@@ -2306,8 +2306,7 @@
   </data>
   <data name="TranslationBy" xml:space="preserve">
     <value>Vertaald door</value>
-    <comment>Manual
-Fuzzy</comment>
+    <comment>Manual</comment>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
     <value>URL van Tweetafbeelding (Optioneel)</value>
@@ -2654,6 +2653,10 @@ Fuzzy</comment>
     <value>Chat Gebruiker Verwijderd</value>
     <comment>Manual</comment>
   </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive-donatie</value>
+    <comment>Manual</comment>
+  </data>
   <data name="JustGivingDonation" xml:space="preserve">
     <value>Gewoon een donatie geven</value>
     <comment>Manual</comment>
@@ -2777,7 +2780,7 @@ Fuzzy</comment>
     <value>Niveau #</value>
   </data>
   <data name="LevelUpCommands" xml:space="preserve">
-    <value>Commando&apos;s voor een hoger niveau</value>
+    <value>Commando's voor een hoger niveau</value>
     <comment>Manual</comment>
   </data>
   <data name="PointsForLevelUp" xml:space="preserve">
@@ -3180,7 +3183,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="UnlockAllCommandTypesTooltip" xml:space="preserve">
-    <value>Mix It Up heeft een ingebouwde opdrachtvergrendelingsfunctionaliteit die ervoor zorgt dat slechts 1 opdrachttype (Chat, Interactief, enz.) tegelijkertijd kan worden uitgevoerd en ervoor zorgt dat elke opdracht eindigt in de volgorde waarin deze werd uitgevoerd. Met deze optie kunt u de vergrendeling uitschakelen op ALLE commando&apos;s. Houd er rekening mee dat dit onvoorziene problemen kan veroorzaken, dus wees voorzichtig.</value>
+    <value>Mix It Up heeft een ingebouwde opdrachtvergrendelingsfunctionaliteit die ervoor zorgt dat slechts 1 opdrachttype (Chat, Interactief, enz.) tegelijkertijd kan worden uitgevoerd en ervoor zorgt dat elke opdracht eindigt in de volgorde waarin deze werd uitgevoerd. Met deze optie kunt u de vergrendeling uitschakelen op ALLE commando's. Houd er rekening mee dat dit onvoorziene problemen kan veroorzaken, dus wees voorzichtig.</value>
     <comment>Manual</comment>
   </data>
   <data name="ClearAllUserDataWarning" xml:space="preserve">
@@ -3279,11 +3282,11 @@ Fuzzy</comment>
     <value>Massabegaafde subs Filterbedrag</value>
   </data>
   <data name="MassGiftedSubsFilterAmountTooltip" xml:space="preserve">
-    <value>Deze optie helpt ervoor te zorgen dat alleen de normale commando&apos;s voor de gebeurtenis Abonnement Gifted OF Massa Abonnement Gifted worden uitgevoerd, afhankelijk van waar het nummer op is ingesteld. Dit is ontworpen om de spam van door abonnementen verstrekte opdrachten te helpen verminderen en een betere ervaring voor uw stream te bieden. Houd er rekening mee dat dit ervoor zorgt dat de verwerking van de gebeurtenisopdrachten voor abonnementsgiften en massale abonnementsgiften enigszins wordt vertraagd, doorgaans minder dan 10 seconden.
+    <value>Deze optie helpt ervoor te zorgen dat alleen de normale commando's voor de gebeurtenis Abonnement Gifted OF Massa Abonnement Gifted worden uitgevoerd, afhankelijk van waar het nummer op is ingesteld. Dit is ontworpen om de spam van door abonnementen verstrekte opdrachten te helpen verminderen en een betere ervaring voor uw stream te bieden. Houd er rekening mee dat dit ervoor zorgt dat de verwerking van de gebeurtenisopdrachten voor abonnementsgiften en massale abonnementsgiften enigszins wordt vertraagd, doorgaans minder dan 10 seconden.
 
-Deze instelling is ook alleen van toepassing op streamingplatforms die het tegelijkertijd cadeau geven van meerdere abonnementen ondersteunen. Streamingplatforms die alleen het schenken van individuele abonnementen ondersteunen, zullen geen misbruik maken van deze instelling en zullen alleen de reguliere opdracht &apos;Abonnement cadeau geven&apos; gebruiken.
+Deze instelling is ook alleen van toepassing op streamingplatforms die het tegelijkertijd cadeau geven van meerdere abonnementen ondersteunen. Streamingplatforms die alleen het schenken van individuele abonnementen ondersteunen, zullen geen misbruik maken van deze instelling en zullen alleen de reguliere opdracht 'Abonnement cadeau geven' gebruiken.
 
-Als deze optie bijvoorbeeld is ingeschakeld en het bedrag is ingesteld op 5, wordt elke keer dat er 5 OF MINDER abonnementen tegelijk worden cadeau gedaan, ALLEEN de normale opdracht &apos;Abonnement cadeau gegeven&apos; voor elk abonnement uitgevoerd. Als er MEER DAN 5 cadeaus zijn, wordt de gebeurtenisopdracht Massa-abonnementen cadeau SLECHTS één keer uitgevoerd.</value>
+Als deze optie bijvoorbeeld is ingeschakeld en het bedrag is ingesteld op 5, wordt elke keer dat er 5 OF MINDER abonnementen tegelijk worden cadeau gedaan, ALLEEN de normale opdracht 'Abonnement cadeau gegeven' voor elk abonnement uitgevoerd. Als er MEER DAN 5 cadeaus zijn, wordt de gebeurtenisopdracht Massa-abonnementen cadeau SLECHTS één keer uitgevoerd.</value>
   </data>
   <data name="AddSeparatorsBetweenMessages" xml:space="preserve">
     <value>Voeg scheidingstekens toe tussen berichten</value>
@@ -3501,7 +3504,7 @@ Als deze optie bijvoorbeeld is ingeschakeld en het bedrag is ingesteld op 5, wor
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Twitter-actie: Tweet mag geen &quot;@&quot;-tags bevatten</value>
+    <value>Twitter-actie: Tweet mag geen "@"-tags bevatten</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3806,7 +3809,7 @@ Als deze optie bijvoorbeeld is ingeschakeld en het bedrag is ingesteld op 5, wor
     <value>Duel</value>
   </data>
   <data name="GameCommandDuelDescription" xml:space="preserve">
-    <value>Het Duel-spel daagt de opgegeven gebruiker uit voor een &apos;winner-takes-all&apos; voor het inzetbedrag. Indien succesvol, neemt de gebruiker het inzetbedrag over van de opgegeven gebruiker. Indien dit niet lukt, neemt de opgegeven gebruiker het inzetbedrag van de gebruiker over.</value>
+    <value>Het Duel-spel daagt de opgegeven gebruiker uit voor een 'winner-takes-all' voor het inzetbedrag. Indien succesvol, neemt de gebruiker het inzetbedrag over van de opgegeven gebruiker. Indien dit niet lukt, neemt de opgegeven gebruiker het inzetbedrag van de gebruiker over.</value>
     <comment>Manual</comment>
   </data>
   <data name="Hangman" xml:space="preserve">
@@ -3829,7 +3832,7 @@ Als deze optie bijvoorbeeld is ingeschakeld en het bedrag is ingesteld op 5, wor
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
-    <value>Met het Hitman-spel kan een gebruiker een &apos;winner-takes-all&apos;-weddenschap starten onder alle ingeschreven gebruikers. Na de initiële tijdslimiet verschijnt er een huurmoordenaar met een specifieke naam in de chat. Als een gebruiker binnen de tijdslimiet de naam van de huurmoordenaar in de chat typt, wint hij de hele pot. Anders verliest iedereen zijn geld.</value>
+    <value>Met het Hitman-spel kan een gebruiker een 'winner-takes-all'-weddenschap starten onder alle ingeschreven gebruikers. Na de initiële tijdslimiet verschijnt er een huurmoordenaar met een specifieke naam in de chat. Als een gebruiker binnen de tijdslimiet de naam van de huurmoordenaar in de chat typt, wint hij de hele pot. Anders verliest iedereen zijn geld.</value>
     <comment>Manual</comment>
   </data>
   <data name="HotPotato" xml:space="preserve">
@@ -3901,7 +3904,7 @@ Als deze optie bijvoorbeeld is ingeschakeld en het bedrag is ingesteld op 5, wor
     <value>Schat verdediging</value>
   </data>
   <data name="GameCommandTreasureDefenseDescription" xml:space="preserve">
-    <value>Met het Treasure Defense-spel kan een gebruiker een &apos;winner-takes-all&apos;-weddenschap starten onder alle ingeschreven gebruikers. Standaard geeft de gebruiker die het spel start aan hoeveel de inzet is en alle volgende gebruikers moeten dat bedrag inzetten om mee te doen, waarbij alle winnaars van het spel de totale uitbetaling gelijk verdelen.
+    <value>Met het Treasure Defense-spel kan een gebruiker een 'winner-takes-all'-weddenschap starten onder alle ingeschreven gebruikers. Standaard geeft de gebruiker die het spel start aan hoeveel de inzet is en alle volgende gebruikers moeten dat bedrag inzetten om mee te doen, waarbij alle winnaars van het spel de totale uitbetaling gelijk verdelen.
 
 Nadat de tijdslimiet is verstreken, wordt een gebruiker uit de deelnemers geselecteerd als Koning. Alle andere gebruikers worden vervolgens geselecteerd als Ridders of Dieven. Het is de taak van de koning om één deelnemer te kiezen in de hoop dat deze een ridder is om de gevonden schat te verdedigen. Als de koning een ridder kiest, delen de koning en de ridders de winst. Als de koning een dief kiest, delen de dieven de winst.</value>
     <comment>Manual</comment>
@@ -4256,15 +4259,15 @@ Zodra de vulkaan fase 3 bereikt, heeft elke volgende afzetting de kans een uitba
     <value>Mislukte gok</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username laat zijn munten in de pot vallen en raadt &quot;$arg1text&quot;...maar het was verkeerd! $gamehangmancurrent</value>
+    <value>@$username laat zijn munten in de pot vallen en raadt "$arg1text"...maar het was verkeerd! $gamehangmancurrent</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>Het spel is verloren als er te veel mislukte gissingen zijn; het juiste antwoord was &quot;$gamehangmanantwoord&quot;. Daar gaat $gametotalmount {0}!</value>
+    <value>Het spel is verloren als er te veel mislukte gissingen zijn; het juiste antwoord was "$gamehangmanantwoord". Daar gaat $gametotalmount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username heeft het geheime woord &quot;$gamehangmanantwoord&quot; en wint de hele pot van $gamepayout {0}!</value>
+    <value>@$username heeft het geheime woord "$gamehangmanantwoord" en wint de hele pot van $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4363,7 +4366,7 @@ Zodra de vulkaan fase 3 bereikt, heeft elke volgende afzetting de kans een uitba
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username raadde het woord &quot;$gamewordscrambleanswer&quot; correct en ging weg met een premie van $gamepayout {0}!</value>
+    <value>@$username raadde het woord "$gamewordscrambleanswer" correct en ging weg met een premie van $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4371,7 +4374,7 @@ Zodra de vulkaan fase 3 bereikt, heeft elke volgende afzetting de kans een uitba
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>Het gecodeerde woord is &quot;$gamewordscrambleword&quot;; los het op en typ het als eerste in de chat!</value>
+    <value>Het gecodeerde woord is "$gamewordscrambleword"; los het op en typ het als eerste in de chat!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4481,7 +4484,7 @@ Zodra de vulkaan fase 3 bereikt, heeft elke volgende afzetting de kans een uitba
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>Koning @$username heeft de schat ontdekt, maar heeft iemand nodig om hem te verdedigen! De dieven moeten proberen de koning ervan te overtuigen ze op te pakken, alle anderen moeten dat voorkomen. De koning moet &quot;!treasure &lt;PLAYER&gt;&quot; in de chat typen om te kiezen wie de schat zal verdedigen!</value>
+    <value>Koning @$username heeft de schat ontdekt, maar heeft iemand nodig om hem te verdedigen! De dieven moeten proberen de koning ervan te overtuigen ze op te pakken, alle anderen moeten dat voorkomen. De koning moet "!treasure &lt;PLAYER&gt;" in de chat typen om te kiezen wie de schat zal verdedigen!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4599,7 +4602,7 @@ Zodra de vulkaan fase 3 bereikt, heeft elke volgende afzetting de kans een uitba
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>Terwijl @$username zijn storting in de vulkaan laat vallen, vindt er een luide uitbarsting plaats en landt $gamepayout {0} erbovenop! De vulkaan explodeert met munten! Typ snel &quot;!volcano collect&quot; in de chat binnen de volgende 30 seconden!</value>
+    <value>Terwijl @$username zijn storting in de vulkaan laat vallen, vindt er een luide uitbarsting plaats en landt $gamepayout {0} erbovenop! De vulkaan explodeert met munten! Typ snel "!volcano collect" in de chat binnen de volgende 30 seconden!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -5102,7 +5105,7 @@ Deze instelling zorgt ervoor dat alle rolvereisten expliciet zijn en vereisen da
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Niemand heeft het woord &quot;$gamewordscrambleanswer&quot; correct geraden.</value>
+    <value>Niemand heeft het woord "$gamewordscrambleanswer" correct geraden.</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5240,7 +5243,7 @@ ingebouwd commandovergrendelingssysteem voor deze specifieke tijd dat het wordt 
 (opdracht loopt vast en kan niet worden voltooid). Dit betekent ook dat andere opdrachten van hetzelfde type als de geselecteerde
 subopdracht kan tegelijkertijd worden uitgevoerd als deze anders is dan de huidige opdracht. Als de geselecteerde
 subopdracht een Actiegroep is, dan is het nog steeds mogelijk dat er tegelijkertijd een andere Actiegroep wordt uitgevoerd als dit het geval is.
-ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de optie &quot;Opdracht ontgrendelen&quot;, maar het is in plaats daarvan alleen van toepassing op dit specifieke tijdstip.</value>
+ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de optie "Opdracht ontgrendelen", maar het is in plaats daarvan alleen van toepassing op dit specifieke tijdstip.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5417,7 +5420,7 @@ ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de opti
     <value>Pin</value>
   </data>
   <data name="RunNewUserWizardWarning" xml:space="preserve">
-    <value>Mix It Up wordt opnieuw opgestart en de wizard Nieuwe gebruiker wordt opnieuw uitgevoerd wanneer u zich aanmeldt. Hierdoor kunt u uw gegevens opnieuw importeren, waardoor uw Commando&apos;s en gebruikersgegevens kunnen worden gedupliceerd en overschreven. Weet u zeker dat u dit wilt doen?</value>
+    <value>Mix It Up wordt opnieuw opgestart en de wizard Nieuwe gebruiker wordt opnieuw uitgevoerd wanneer u zich aanmeldt. Hierdoor kunt u uw gegevens opnieuw importeren, waardoor uw Commando's en gebruikersgegevens kunnen worden gedupliceerd en overschreven. Weet u zeker dat u dit wilt doen?</value>
   </data>
   <data name="Standard" xml:space="preserve">
     <value>Standaard</value>
@@ -5450,7 +5453,7 @@ ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de opti
     <value>De Developer API maakt geavanceerde interactie met Mix It Up mogelijk vanuit andere applicaties die op uw computer draaien met behulp van een reeks REST API-services. Voor meer informatie hierover, zie de Developer API Wiki-pagina.</value>
   </data>
   <data name="DeveloperAPIWarning" xml:space="preserve">
-    <value>WAARSCHUWING: Hierdoor luisteren de ontwikkelaars-API&apos;s naar alle adressen en wordt Mix It Up mogelijk geopend voor bellers van buiten uw netwerk. Gebruik deze optie alleen als u weet wat u doet!</value>
+    <value>WAARSCHUWING: Hierdoor luisteren de ontwikkelaars-API's naar alle adressen en wordt Mix It Up mogelijk geopend voor bellers van buiten uw netwerk. Gebruik deze optie alleen als u weet wat u doet!</value>
   </data>
   <data name="DiscordInfo1" xml:space="preserve">
     <value>Met de Discord-serviceconnectiviteit kunt u informatie krijgen over uw Discord-account, berichten naar kanalen sturen en de audio van spraakkanalen bedienen. Wanneer u inlogt, wordt er een authenticatiepagina geopend waarin u wordt gevraagd in te loggen bij Discord en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
@@ -5466,6 +5469,12 @@ ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de opti
   </data>
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Voer een geldig aangepast klantgeheim in.</value>
+  </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>Met de DonorDrive-serviceconnectiviteit kunt u gebeurtenissen activeren vanaf het moment dat u of uw team een ​​donatie ontvangt via een in aanmerking komende DonorDrive-liefdadigheidsinstelling.</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Om DonorDrive in Mix It Up te koppelen, gaat u naar de website van uw goede doel en zoekt u naar uw pagina/deelnemerlink. Selecteer vervolgens uw goede doel in de vervolgkeuzelijst of selecteer Aangepast als dit niet in de lijst staat, kopieer de link van uw pagina/deelnemer naar het tekstvak en selecteer Inloggen.</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Overlay-verbindingstest mislukt. Zorg ervoor dat de Mix It Up Overlay-pagina zichtbaar en actief is in uw streamingsoftware.</value>
@@ -5566,7 +5575,7 @@ ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de opti
     <value>Met de OBS Studio-service kunt u rechtstreeks communiceren met uw exemplaar van OBS Studio om wijzigingen in scènes en bronnen aan te brengen.</value>
   </data>
   <data name="OBSStudioInfo2" xml:space="preserve">
-    <value>OBS Studio-connectiviteit kan worden ingeschakeld door naar Extra -&gt; obs-websocket in OBS Studio te gaan en op &quot;WebSocket-server inschakelen&quot; te klikken. Zorg ervoor dat &quot;Verificatie inschakelen&quot; is uitgeschakeld of dat u een wachtwoord hebt ingesteld in zowel OBS Studio als Mix It Up.</value>
+    <value>OBS Studio-connectiviteit kan worden ingeschakeld door naar Extra -&gt; obs-websocket in OBS Studio te gaan en op "WebSocket-server inschakelen" te klikken. Zorg ervoor dat "Verificatie inschakelen" is uitgeschakeld of dat u een wachtwoord hebt ingesteld in zowel OBS Studio als Mix It Up.</value>
   </data>
   <data name="OBSStudioSuccess" xml:space="preserve">
     <value>OBS Studio-verbindingstest succesvol!</value>
@@ -5677,7 +5686,7 @@ ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de opti
     <value>Met deze Stream Deck-plug-in kunt u Mix It Up-opdrachten rechtstreeks vanaf uw Stream Deck-apparaat uitvoeren, evenals andere statusinformatie over uw stream.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>Zorg er om te beginnen voor dat de Stream Deck-software is bijgewerkt naar ten minste versie 4.0 en dat de Developer API-service is ingeschakeld in Mix It Up. Om de Mix It Up-plug-in te installeren, klikt u op het winkelpictogram rechtsboven in uw Stream Deck-software en zoekt u vervolgens naar &quot;Mix It Up&quot; in het venster.</value>
+    <value>Zorg er om te beginnen voor dat de Stream Deck-software is bijgewerkt naar ten minste versie 4.0 en dat de Developer API-service is ingeschakeld in Mix It Up. Om de Mix It Up-plug-in te installeren, klikt u op het winkelpictogram rechtsboven in uw Stream Deck-software en zoekt u vervolgens naar "Mix It Up" in het venster.</value>
   </data>
   <data name="StreamElements" xml:space="preserve">
     <value>StreamElementen</value>
@@ -6160,7 +6169,7 @@ ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de opti
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>VOORBEELD: Als het onlinetarief &apos;1 per uur&apos; is en een gebruiker 16 kijkuren heeft, worden de {0} punten van die gebruiker ingesteld op 16.</value>
+    <value>VOORBEELD: Als het onlinetarief '1 per uur' is en een gebruiker 16 kijkuren heeft, worden de {0} punten van die gebruiker ingesteld op 16.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6308,7 +6317,7 @@ ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de opti
   <data name="OBSWebSocketFailed" xml:space="preserve">
     <value>Kan geen verbinding maken met de OBS Studio-websocket. Zorg ervoor dat OBS Studio actief is, dat de obs-websocket is ingeschakeld onder het menu Extra en dat de verbinding en het wachtwoord overeenkomen met uw instellingen in OBS Studio.
 
-Zie de Wiki-pagina op OBS Studio voor verdere stappen voor probleemoplossing door op de &quot;?&quot; knop op de OBS Studio-tabkop in Mix It Up.</value>
+Zie de Wiki-pagina op OBS Studio voor verdere stappen voor probleemoplossing door op de "?" knop op de OBS Studio-tabkop in Mix It Up.</value>
   </data>
   <data name="OverlayAddFailed" xml:space="preserve">
     <value>Kan overlay van {0} niet toevoegen</value>
@@ -6402,7 +6411,7 @@ Zie de Wiki-pagina op OBS Studio voor verdere stappen voor probleemoplossing doo
     <value>Toont een voortgangsbalk voor een opgegeven doel. De voortgang wordt bijgewerkt zodra er gebeurtenissen plaatsvinden of op een door de gebruiker gedefinieerd vernieuwingsinterval.</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>Toont een gebruiker uit je kanaal als &apos;baas&apos; die beschadigd kan raken door acties in je kanaal uit te voeren totdat hij of zij wordt verslagen en een nieuwe baas wordt geselecteerd. Schade wordt toegevoegd zodra deze zich voordoet. De Stream Boss Special Identifiers kunnen parallel met deze overlay-widget worden gebruikt.</value>
+    <value>Toont een gebruiker uit je kanaal als 'baas' die beschadigd kan raken door acties in je kanaal uit te voeren totdat hij of zij wordt verslagen en een nieuwe baas wordt geselecteerd. Schade wordt toegevoegd zodra deze zich voordoet. De Stream Boss Special Identifiers kunnen parallel met deze overlay-widget worden gebruikt.</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>Toont een tekstblok. Vernieuwingen op basis van door de gebruiker gedefinieerd vernieuwingsinterval.</value>
@@ -6612,7 +6621,7 @@ mappad correct is en dat het mappad toegankelijk is voor Mix It Up.</value>
     <value>Command Lock-systeem</value>
   </data>
   <data name="CommandLockSystemTooltip" xml:space="preserve">
-    <value>- Per commandotype: elk commandotype (chat, gebeurtenis, timer, enz.) heeft een vergrendeling die voorkomt dat andere commando&apos;s van hetzelfde type tegelijkertijd worden uitgevoerd.
+    <value>- Per commandotype: elk commandotype (chat, gebeurtenis, timer, enz.) heeft een vergrendeling die voorkomt dat andere commando's van hetzelfde type tegelijkertijd worden uitgevoerd.
 - Per actietype: elk actietype (chat, geluid, voorwaardelijk, enz.) heeft een vergrendeling die voorkomt dat andere opdrachten die deze acties ook bevatten tegelijkertijd worden uitgevoerd.
 - Visuele/audioacties: opdrachten die visuele/audiogebaseerde acties bevatten (geluid, overlay, enz.) delen 1 vergrendeling, terwijl andere opdrachten worden uitgevoerd zodra ze worden geactiveerd.
 - Enkelvoud: alle opdrachten delen dezelfde vergrendeling, waardoor er slechts één opdracht tegelijk kan worden uitgevoerd.
@@ -6811,7 +6820,7 @@ speciale gebruikers aan wie u meer controle wilt geven, zoals een moderator.</va
     <value>Download de opdracht naar *.miucommand-bestand:</value>
   </data>
   <data name="CommunityCommandsMyCommands" xml:space="preserve">
-    <value>Mijn commando&apos;s</value>
+    <value>Mijn commando's</value>
     <comment>Manual</comment>
   </data>
   <data name="CommunityCommandsReportCommand" xml:space="preserve">
@@ -6885,7 +6894,7 @@ Als u een van de volgende handelingen niet uitvoert, kan dit van invloed zijn op
     <value>Dankzij de connectiviteit van de Pixel Chat-service kunt u verschillende elementen van uw Pixel Chat-overlays beheren en specifieke functionaliteit activeren.</value>
   </data>
   <data name="PixelChatInfo2" xml:space="preserve">
-    <value>Om verbinding te maken met PixelChat, moet u een ontwikkelaarstoken maken. Dit kunt u vinden door naar het profiel te gaan, op &quot;Tokens bekijken&quot; te klikken en een nieuwe ontwikkelaarstoken aan te maken.</value>
+    <value>Om verbinding te maken met PixelChat, moet u een ontwikkelaarstoken maken. Dit kunt u vinden door naar het profiel te gaan, op "Tokens bekijken" te klikken en een nieuwe ontwikkelaarstoken aan te maken.</value>
   </data>
   <data name="PixelChatInvalidAPIKey" xml:space="preserve">
     <value>Voer een geldige Pixel Chat API-sleutel in.</value>
@@ -6963,7 +6972,7 @@ Als u niet aan het bovenstaande voldoet, kan uw opdracht worden verwijderd en ku
 
 - Combineer uw andere opdrachten waarnaar wordt verwezen in deze opdracht, zodat gebruikers deze alleen nodig hebben om uw installatie volledig te kunnen gebruiken.
 
-- Upload de andere commando&apos;s die nodig zijn om dit commando ook te laten werken en verwijs naar hun namen in de beschrijving van elk commando.
+- Upload de andere commando's die nodig zijn om dit commando ook te laten werken en verwijs naar hun namen in de beschrijving van elk commando.
 
 - Leg uit wat de bedoeling is van uw opdracht, zodat gebruikers kunnen begrijpen hoe zij hun eigen opdrachten erin kunnen verwerken.
 
@@ -7425,7 +7434,7 @@ Als u een van de volgende handelingen niet uitvoert, kan dit van invloed zijn op
     <value>FOUT: Kan gebruiker met de volgende gebruikersnaam niet vinden: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Het accountkoppelingsproces is gestart. Voer de opdracht opnieuw uit op het andere platform met de gegevens van uw huidige gebruiker: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Het accountkoppelingsproces is gestart. Voer de opdracht opnieuw uit op het andere platform met de gegevens van uw huidige gebruiker: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Gebruik: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM GEBRUIKERSNAAM&gt;</value>
@@ -7827,7 +7836,7 @@ Mislukte importen kunnen te wijten zijn aan ongeldige gegevens of het niet vinde
     <value>Succesvolle import: {0}
 Mislukte import: {1}
 
-Geïmporteerde offertes met ID&apos;s die overeenkomen met bestaande offertes worden gewijzigd naar het volgende maximale aantal. Mislukte importbewerkingen kunnen te wijten zijn aan ongeldige gegevens of opmaak. Neem indien nodig contact op met de ondersteuning voor verdere hulp.</value>
+Geïmporteerde offertes met ID's die overeenkomen met bestaande offertes worden gewijzigd naar het volgende maximale aantal. Mislukte importbewerkingen kunnen te wijten zijn aan ongeldige gegevens of opmaak. Neem indien nodig contact op met de ondersteuning voor verdere hulp.</value>
     <comment>{0} is the number of successes, {1} is the number of failures</comment>
   </data>
   <data name="HearMyselfOnOff" xml:space="preserve">
@@ -7996,8 +8005,8 @@ Geïmporteerde offertes met ID&apos;s die overeenkomen met bestaande offertes wo
     <value>Het door u opgegeven item bestaat niet</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>U moet &apos;kopen&apos; of &apos;verkopen&apos; opgeven</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>U moet 'kopen' of 'verkopen' opgeven</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>GEBRUIK: {0} list = Geeft een overzicht van alle artikelen die beschikbaar zijn voor kopen/verkopen ** {0} &lt;ITEM NAME&gt; = Geeft de koop-/verkoopprijs voor het artikel weer ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = Koopt 1 of het gespecificeerde bedrag van het item ** {0} verkoop &lt;ITEM NAME&gt; [BEDRAG] = Verkoopt 1 of het gespecificeerde bedrag van het item</value>
@@ -8253,7 +8262,7 @@ Geïmporteerde offertes met ID&apos;s die overeenkomen met bestaande offertes wo
     <value>De weggeefherinnering moet 0 of hoger zijn</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} je hebt de weggeefactie gewonnen; typ &quot;!claim&quot; in de chat!</value>
+    <value>@{0} je hebt de weggeefactie gewonnen; typ "!claim" in de chat!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8600,7 +8609,7 @@ We zullen proberen indien mogelijk opnieuw verbinding te maken met de service. A
     <value>Laten we zeggen dat je wat pasta wilde maken; je volgt de stappen in het recept achter elkaar totdat je klaar bent. U volgt ook elke stap in de aangegeven volgorde. Zo moet je bijvoorbeeld het water verwarmen voordat je de pasta kunt toevoegen.</value>
   </data>
   <data name="WizardCommands3" xml:space="preserve">
-    <value>Commando&apos;s zijn als een recept en acties zijn de stappen in dat recept. Stel dat u een shout-out-commando geeft. Wat zijn de dingen die het moet doen? Elk van deze ‘dingen’ kan worden gezien als een actie.</value>
+    <value>Commando's zijn als een recept en acties zijn de stappen in dat recept. Stel dat u een shout-out-commando geeft. Wat zijn de dingen die het moet doen? Elk van deze ‘dingen’ kan worden gezien als een actie.</value>
   </data>
   <data name="WizardCommands4" xml:space="preserve">
     <value>In dit voorbeeld verzendt ons shout-out-commando een bericht om te chatten, speelt een geluid af, wacht 10 seconden en toont vervolgens een afbeelding. Elk van deze komt overeen met een ander actietype (Chat, Geluid, Wachten en Overlay).</value>
@@ -8633,7 +8642,7 @@ We zullen proberen indien mogelijk opnieuw verbinding te maken met de service. A
     <value>Ons YouTube-account bevat veel tutorials die door ons en onze community zijn gemaakt om je te helpen je coole creaties te laten zien of te laten zien.</value>
   </data>
   <data name="WizardIntro6" xml:space="preserve">
-    <value>Onze Wiki-pagina&apos;s bevatten gedetailleerde informatie over veel van de verschillende functies die in de hele app beschikbaar zijn.</value>
+    <value>Onze Wiki-pagina's bevatten gedetailleerde informatie over veel van de verschillende functies die in de hele app beschikbaar zijn.</value>
   </data>
   <data name="WizardNext" xml:space="preserve">
     <value>Volgende &gt;</value>
@@ -8681,7 +8690,7 @@ We zullen proberen indien mogelijk opnieuw verbinding te maken met de service. A
     <value>Gebruiker toevoegen</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Kan de gebruiker &apos;{0}&apos; niet vinden</value>
+    <value>Kan de gebruiker '{0}' niet vinden</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8854,6 +8863,53 @@ via Twitch is het een situatie van ‘uw kilometerstand kan variëren’.</value
   </data>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Trovo Channel Spell-cast</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Titel/beschrijving instellen</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>YouTube-actie: Er moet een geldig bedrag worden opgegeven</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>YouTube-actie: er moet een geldige titel of beschrijving worden opgegeven</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>Massalidmaatschap van YouTube-kanaal cadeau gegeven</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>Mijlpaal voor YouTube-kanaallid</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>YouTube-kanaallidmaatschap cadeau gedaan</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>YouTube-kanaal Nieuw lid</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>YouTube-kanaalstream starten</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>YouTube-kanaalstream stop</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>YouTube-kanaal Super Chat</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>Supersticker voor YouTube-kanaal</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} SuperChat - {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Supersticker - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>YouTube SuperChat weergeven</value>
   </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Mock-verbinding</value>
@@ -9124,7 +9180,7 @@ naamruimte AangepasteNaamruimte
         openbaar object Run()
         {
             // Je code komt hier
-            System.Console.WriteLine(&quot;Hallo wereld!&quot;);
+            System.Console.WriteLine("Hallo wereld!");
 
             // Retourneer hier alle gegevens die u wilt gebruiken
             retour 42;
@@ -9136,19 +9192,19 @@ naamruimte AangepasteNaamruimte
     <value>functie uitvoeren()
 {
     // Je code komt hier
-    var text = &apos;Hallo wereld!&apos;;
+    var text = 'Hallo wereld!';
 
     // Retourneer hier alle gegevens die u wilt gebruiken
     retour 42;
 }
 
 var resultaat = uitvoeren();
-sendParentMessage({ Type: &quot;ScriptComplete&quot;, ID: &quot;{ID}&quot;, Resultaat: resultaat });</value>
+sendParentMessage({ Type: "ScriptComplete", ID: "{ID}", Resultaat: resultaat });</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>zeker uitvoeren():
     # Je code komt hier
-    text = &quot;Hallo wereld!&quot;
+    text = "Hallo wereld!"
 
     # Retourneer hier alle gegevens die u wilt gebruiken
     retour 42
@@ -9156,7 +9212,7 @@ sendParentMessage({ Type: &quot;ScriptComplete&quot;, ID: &quot;{ID}&quot;, Resu
 afdrukken(uitvoeren())</value>
   </data>
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
-    <value>Commando&apos;s die scriptacties bevatten, worden niet ondersteund voor het uploaden naar de functie Community-opdrachten. Vanwege de complexiteit van scripts en de mogelijkheid dat deze kwaadaardige bedoelingen hebben voor gebruikers, ondersteunen we het uploaden ervan via Community Commands niet om ervoor te zorgen dat gebruikers worden beschermd. U kunt desgewenst uw opdracht naar een bestand exporteren en deze op een andere manier met gebruikers delen.</value>
+    <value>Commando's die scriptacties bevatten, worden niet ondersteund voor het uploaden naar de functie Community-opdrachten. Vanwege de complexiteit van scripts en de mogelijkheid dat deze kwaadaardige bedoelingen hebben voor gebruikers, ondersteunen we het uploaden ervan via Community Commands niet om ervoor te zorgen dat gebruikers worden beschermd. U kunt desgewenst uw opdracht naar een bestand exporteren en deze op een andere manier met gebruikers delen.</value>
   </data>
   <data name="OnUpdate" xml:space="preserve">
     <value>Bij bijwerken</value>
@@ -9204,10 +9260,13 @@ afdrukken(uitvoeren())</value>
     <value>Met deze LoupeDeck-plug-in kunt u Mix It Up-opdrachten rechtstreeks vanaf uw LoupeDeck-apparaat uitvoeren, evenals andere statusinformatie over uw stream.</value>
   </data>
   <data name="LoupeDeckInfo2" xml:space="preserve">
-    <value>Zorg er om te beginnen voor dat de LoupeDeck-software is bijgewerkt naar de nieuwste versie en dat de Developer API-service is ingeschakeld in Mix It Up. Om de Mix It Up-plug-in te installeren, klikt u op het Marketplace-pictogram rechtsboven in uw LoupeDeck-software en zoekt u vervolgens naar &quot;Mix It Up&quot;.</value>
+    <value>Zorg er om te beginnen voor dat de LoupeDeck-software is bijgewerkt naar de nieuwste versie en dat de Developer API-service is ingeschakeld in Mix It Up. Om de Mix It Up-plug-in te installeren, klikt u op het Marketplace-pictogram rechtsboven in uw LoupeDeck-software en zoekt u vervolgens naar "Mix It Up".</value>
   </data>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell uitvoeren</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Regel met specifieke tekst uit bestand verwijderen</value>
   </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Tekst om te verwijderen</value>
@@ -9245,6 +9304,9 @@ afdrukken(uitvoeren())</value>
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>Er moet een geldige teller worden geselecteerd</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Laatste volger</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Laatste donatie</value>
@@ -9287,66 +9349,6 @@ afdrukken(uitvoeren())</value>
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>DonorDrive-donatie</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>Met de DonorDrive-serviceconnectiviteit kunt u gebeurtenissen activeren vanaf het moment dat u of uw team een ​​donatie ontvangt via een in aanmerking komende DonorDrive-liefdadigheidsinstelling.</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Om DonorDrive in Mix It Up te koppelen, gaat u naar de website van uw goede doel en zoekt u naar uw pagina/deelnemerlink. Selecteer vervolgens uw goede doel in de vervolgkeuzelijst of selecteer Aangepast als dit niet in de lijst staat, kopieer de link van uw pagina/deelnemer naar het tekstvak en selecteer Inloggen.</value>
-  </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>Titel/beschrijving instellen</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>YouTube-actie: Er moet een geldig bedrag worden opgegeven</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>YouTube-actie: er moet een geldige titel of beschrijving worden opgegeven</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>Massalidmaatschap van YouTube-kanaal cadeau gegeven</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>Mijlpaal voor YouTube-kanaallid</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>YouTube-kanaallidmaatschap cadeau gedaan</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>YouTube-kanaal Nieuw lid</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>YouTube-kanaalstream starten</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>YouTube-kanaalstream stop</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>YouTube-kanaal Super Chat</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>Supersticker voor YouTube-kanaal</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} SuperChat - {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} Supersticker - {1} - {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>YouTube SuperChat weergeven</value>
-  </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>Regel met specifieke tekst uit bestand verwijderen</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Bestaand profiel</value>
@@ -9661,12 +9663,6 @@ afdrukken(uitvoeren())</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Selecteer een nieuwe map om muziek uit een map te laden of druk op de knop Afspelen om muziek uit de laatst gebruikte map te laden.</value>
   </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>Geen duplicaten</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>Laatste volger</value>
-  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>Responsieve stem</value>
   </data>
@@ -9726,6 +9722,9 @@ afdrukken(uitvoeren())</value>
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>Specifieke clip</value>
+  </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>Geen duplicaten</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Tel regels in bestand</value>
@@ -10375,7 +10374,7 @@ afdrukken(uitvoeren())</value>
     <value>Emoji toestaan</value>
   </data>
   <data name="AllowURLs" xml:space="preserve">
-    <value>URL&apos;s toestaan</value>
+    <value>URL's toestaan</value>
   </data>
   <data name="MaxAmountShown" xml:space="preserve">
     <value>Maximaal weergegeven bedrag</value>
@@ -10547,7 +10546,7 @@ afdrukken(uitvoeren())</value>
     <value>Geef Alejo-voornaamwoorden weer</value>
   </data>
   <data name="HideExclamationMessages" xml:space="preserve">
-    <value>Berichten verbergen die beginnen met &quot;!&quot;</value>
+    <value>Berichten verbergen die beginnen met "!"</value>
   </data>
   <data name="PauseUnpausePersistentTimer" xml:space="preserve">
     <value>Persistente timer pauzeren/hervatten</value>
@@ -10690,13 +10689,13 @@ afdrukken(uitvoeren())</value>
   <data name="OverlayV3EndpointsUpgradeDialog" xml:space="preserve">
     <value>Welkom bij de nieuwe Overlay v3-update! Als onderdeel van deze update is er een grote wijziging aangebracht in de manier waarop overlay-eindpunten worden verwerkt. In plaats van dat elk eindpunt een speciaal poortnummer heeft, delen ze nu allemaal hetzelfde poortnummer en hebben ze een unieke URL.
 
-We hebben gedetecteerd dat u meer dan één overlay-eindpunt heeft gemaakt, wat betekent dat de URL&apos;s voor alle overlay-eindpunten **BEHALVE** het standaardeindpunt nu verschillend zijn. Zie de onderstaande lijst voor al uw aangepaste overlay-eindpunten en klik op de overeenkomstige knoppen om de URL te openen of te kopiëren, zodat u uw webbrowserbronnen op de juiste manier kunt bijwerken in uw streamingsoftware:</value>
+We hebben gedetecteerd dat u meer dan één overlay-eindpunt heeft gemaakt, wat betekent dat de URL's voor alle overlay-eindpunten **BEHALVE** het standaardeindpunt nu verschillend zijn. Zie de onderstaande lijst voor al uw aangepaste overlay-eindpunten en klik op de overeenkomstige knoppen om de URL te openen of te kopiëren, zodat u uw webbrowserbronnen op de juiste manier kunt bijwerken in uw streamingsoftware:</value>
   </data>
   <data name="PythonExecutablePath" xml:space="preserve">
     <value>Uitvoerbaar Python-pad</value>
   </data>
   <data name="ScriptActionPythonExecutablePathNotSet" xml:space="preserve">
-    <value>FOUT: Het uitvoerbare pad van Python moet worden ingesteld onder Instellingen -&gt; Commando&apos;s om Python-scripts uit te voeren</value>
+    <value>FOUT: Het uitvoerbare pad van Python moet worden ingesteld onder Instellingen -&gt; Commando's om Python-scripts uit te voeren</value>
   </data>
   <data name="ScriptActionOverlayNotEnableOrConnected" xml:space="preserve">
     <value>FOUT: De Overlay-service moet zijn ingeschakeld en in ten minste één browser worden uitgevoerd om Javascript-scripts uit te voeren</value>
