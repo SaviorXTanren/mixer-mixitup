@@ -1608,6 +1608,8 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
 &lt;head&gt;
     &lt;meta charset="utf-8" /&gt;
     &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+    
+    {JQuery}
 
     {Head}
 
@@ -1630,8 +1632,6 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
     {HTML}
 
     &lt;script&gt;
-        var maindiv = document.getElementById("maindiv");
-        
         function sendParentMessage(obj) {
             window.top.postMessage(JSON.stringify(obj), '*');
         }

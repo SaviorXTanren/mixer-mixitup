@@ -274,6 +274,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public string AnimationIterations { get { return this.RunEndlessly ? "Infinity" : "1"; } }
 
+        [JsonIgnore]
+        public override bool JQuery { get { return true; } }
+
         public OverlayEndCreditsV3Model() : base(OverlayItemV3Type.EndCredits) { }
 
         public override async Task Initialize()
