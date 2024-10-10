@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -158,7 +158,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AccountsDetails" xml:space="preserve">
-    <value>Облікові записи стрімера - це ваш фактичний обліковий запис, з якого ви здійснюєте потокове мовлення. Облікові записи ботів - це окремі, необов’язкові облікові записи, з яких можна надсилати повідомлення у своєму каналі. Облікові записи ботів повинні бути створені вами вручну, і ви повинні переконатися, що ввійшли в них, перш ніж спробувати під&apos;єднати їх у Mix It Up.</value>
+    <value>Облікові записи стрімера - це ваш фактичний обліковий запис, з якого ви здійснюєте потокове мовлення. Облікові записи ботів - це окремі, необов’язкові облікові записи, з яких можна надсилати повідомлення у своєму каналі. Облікові записи ботів повинні бути створені вами вручну, і ви повинні переконатися, що ввійшли в них, перш ніж спробувати під'єднати їх у Mix It Up.</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Автоматично додавати &quot;!&quot;</value>
+    <value>Автоматично додавати "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Тригер(и) чату (Без &quot;!&quot;, розділення пробілом, крапка з комою для групи слів)</value>
+    <value>Тригер(и) чату (Без "!", розділення пробілом, крапка з комою для групи слів)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Команда (Не потрібно &apos;!&apos;)</value>
+    <value>Команда (Не потрібно '!')</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -732,7 +732,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Від&apos;єднати</value>
+    <value>Від'єднати</value>
     <comment>Manual</comment>
   </data>
   <data name="Discord" xml:space="preserve">
@@ -794,11 +794,11 @@
     <value>Увімкнути/Вимкнути чергу</value>
   </data>
   <data name="EnableIFTTT" xml:space="preserve">
-    <value>Будь ласка, увімкніть IFTTT зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть IFTTT зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableOBS" xml:space="preserve">
-    <value>Будь ласка, увімкніть OBS Studio зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть OBS Studio зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableOverlay" xml:space="preserve">
@@ -813,15 +813,15 @@
     <value>Увімкнути Чергу</value>
   </data>
   <data name="EnableStreamlabs" xml:space="preserve">
-    <value>Будь ласка, увімкніть Streamlabs зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть Streamlabs зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableStreamlabsOBS" xml:space="preserve">
-    <value>Будь ласка, увімкніть Streamlabs OBS зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть Streamlabs OBS зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
-    <value>Будь ласка, увімкніть XSplit зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть XSplit зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EndCredits" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON назва змінної (Використовуйте &apos;\&apos; для вкладених параметрів)</value>
+    <value>JSON назва змінної (Використовуйте '\' для вкладених параметрів)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1375,7 +1375,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ModerationReasonOptional" xml:space="preserve">
-    <value>Причина модерації (необов&apos;язково)</value>
+    <value>Причина модерації (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="Moderator" xml:space="preserve">
@@ -1417,7 +1417,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Ім&apos;я</value>
+    <value>Ім'я</value>
     <comment>Manual</comment>
   </data>
   <data name="NameOfProfileHeader" xml:space="preserve">
@@ -1437,7 +1437,7 @@
     <comment>Manual</comment>
   </data>
   <data name="NewProfileName" xml:space="preserve">
-    <value>Нове ім&apos;я профілю</value>
+    <value>Нове ім'я профілю</value>
   </data>
   <data name="NewStreamer" xml:space="preserve">
     <value>Новий стрімер</value>
@@ -1522,7 +1522,7 @@
     <value>Оператор</value>
   </data>
   <data name="OptionalCommandArguments" xml:space="preserve">
-    <value>(Необов&apos;язково) Аргументи команди</value>
+    <value>(Необов'язково) Аргументи команди</value>
     <comment>Manual</comment>
   </data>
   <data name="Options" xml:space="preserve">
@@ -1614,7 +1614,7 @@
     <comment>Manual</comment>
   </data>
   <data name="PortName" xml:space="preserve">
-    <value>Ім&apos;я порту</value>
+    <value>Ім'я порту</value>
   </data>
   <data name="Position" xml:space="preserve">
     <value>Позиція</value>
@@ -1700,7 +1700,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RankName" xml:space="preserve">
-    <value>Ім&apos;я рангу</value>
+    <value>Ім'я рангу</value>
   </data>
   <data name="RankRequirement" xml:space="preserve">
     <value>Вимога рангу</value>
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>&quot;Регулярний&quot; статус онлайн часу перегляду</value>
+    <value>"Регулярний" статус онлайн часу перегляду</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Скарга</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Потрібно &quot;!claim&quot;</value>
+    <value>Потрібно "!claim"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -1876,14 +1876,14 @@
     <comment>Manual</comment>
   </data>
   <data name="SceneCollectionName" xml:space="preserve">
-    <value>Ім&apos;я колекції сцен</value>
+    <value>Ім'я колекції сцен</value>
   </data>
   <data name="SceneName" xml:space="preserve">
-    <value>Ім&apos;я сцени (з урахуванням регістру)</value>
+    <value>Ім'я сцени (з урахуванням регістру)</value>
     <comment>Manual</comment>
   </data>
   <data name="SceneNameOptional" xml:space="preserve">
-    <value>Ім&apos;я сцени (з урахуванням регістру) (необов&apos;язково)</value>
+    <value>Ім'я сцени (з урахуванням регістру) (необов'язково)</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Пошук</value>
@@ -2063,7 +2063,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifierName" xml:space="preserve">
-    <value>Ім&apos;я спеціального ідентифікатора</value>
+    <value>Ім'я спеціального ідентифікатора</value>
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifiers" xml:space="preserve">
@@ -2195,7 +2195,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TargetUserOptional" xml:space="preserve">
-    <value>Цільовий користувач (необов&apos;язково)</value>
+    <value>Цільовий користувач (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="Teal" xml:space="preserve">
@@ -2277,7 +2277,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TitleName" xml:space="preserve">
-    <value>Ім&apos;я заголовка</value>
+    <value>Ім'я заголовка</value>
     <comment>Manual</comment>
   </data>
   <data name="Total" xml:space="preserve">
@@ -2309,7 +2309,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
-    <value>URL-адреса зображення твіту (необов&apos;язково)</value>
+    <value>URL-адреса зображення твіту (необов'язково)</value>
   </data>
   <data name="TweetMessage" xml:space="preserve">
     <value>Повідомлення у Твіттері (не дозволяється @mentions)</value>
@@ -2365,7 +2365,7 @@
     <value>Завантаження</value>
   </data>
   <data name="UploadFilePath" xml:space="preserve">
-    <value>Передати шлях до файлу (необов&apos;язково)</value>
+    <value>Передати шлях до файлу (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="Uptime" xml:space="preserve">
@@ -2412,7 +2412,7 @@
     <comment>Manual</comment>
   </data>
   <data name="UserNameOptional" xml:space="preserve">
-    <value>Ім&apos;я користувача (необов&apos;язково)</value>
+    <value>Ім'я користувача (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="UserOnlyChatCommands" xml:space="preserve">
@@ -2461,7 +2461,7 @@
     <value>Значення 2 (опціонально)</value>
   </data>
   <data name="VariableName" xml:space="preserve">
-    <value>Ім&apos;я змінної</value>
+    <value>Ім'я змінної</value>
     <comment>Manual</comment>
   </data>
   <data name="VariableValue" xml:space="preserve">
@@ -2556,7 +2556,7 @@
     <comment>Manual</comment>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
-    <value>Користувач приватного чату (необов&apos;язково)</value>
+    <value>Користувач приватного чату (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="White" xml:space="preserve">
@@ -2646,11 +2646,15 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatUserLeft" xml:space="preserve">
-    <value>Користувач чату від&apos;єднався</value>
+    <value>Користувач чату від'єднався</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>Очистити чат користувача</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>Пожертвування DonorDrive</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -2897,7 +2901,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Ім&apos;я користувача</value>
+    <value>Ім'я користувача</value>
     <comment>Manual</comment>
   </data>
   <data name="Product" xml:space="preserve">
@@ -3500,7 +3504,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Дії Twitter: твіт не може містити жодних тегів &quot;@&quot;.</value>
+    <value>Дії Twitter: твіт не може містити жодних тегів "@".</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -4255,15 +4259,15 @@
     <value>Невдала здогадка</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username кидає свої монети в горщик і вгадує &quot;$arg1text&quot;... але це було неправильно! $gamehangmancurrent</value>
+    <value>@$username кидає свої монети в горщик і вгадує "$arg1text"... але це було неправильно! $gamehangmancurrent</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>Гра програна через забагато невдалих вгадок; правильною відповіддю було &quot;$gamehangmananswer&quot;. Ось $gametotalamount {0}!</value>
+    <value>Гра програна через забагато невдалих вгадок; правильною відповіддю було "$gamehangmananswer". Ось $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username отримав секретне слово &quot;$gamehangmananswer&quot;, вигравши весь банк $gamepayout {0}!</value>
+    <value>@$username отримав секретне слово "$gamehangmananswer", вигравши весь банк $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4294,7 +4298,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanHitmanAppears" xml:space="preserve">
-    <value>З&apos;являється Hitman</value>
+    <value>З'являється Hitman</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanHitmanApproaching" xml:space="preserve">
@@ -4362,7 +4366,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username правильно вгадав слово &quot;$gamewordscrambleanswer&quot; і пішов із винагородою в $gamepayout {0}!</value>
+    <value>@$username правильно вгадав слово "$gamewordscrambleanswer" і пішов із винагородою в $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4370,7 +4374,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>Зашифроване слово: &quot;$gamewordscrambleword&quot;; вирішіть її та першим напишіть її в чаті!</value>
+    <value>Зашифроване слово: "$gamewordscrambleword"; вирішіть її та першим напишіть її в чаті!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4430,7 +4434,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHeistNoneSucceedExample" xml:space="preserve">
-    <value>Хтось був шпигуном! Копи чекали на вас, як тільки ви з&apos;явилися і всіх забрали!</value>
+    <value>Хтось був шпигуном! Копи чекали на вас, як тільки ви з'явилися і всіх забрали!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHeistStartedExample" xml:space="preserve">
@@ -4598,7 +4602,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>Коли @$username скидає свій депозит у вулкан, відбувається гучне виверження, і $gamepayout {0} потрапляє на них! Вулкан вибухає монети! Швидше, введіть &quot;!volcano collect&quot; у чаті протягом наступних 30 секунд!</value>
+    <value>Коли @$username скидає свій депозит у вулкан, відбувається гучне виверження, і $gamepayout {0} потрапляє на них! Вулкан вибухає монети! Швидше, введіть "!volcano collect" у чаті протягом наступних 30 секунд!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -4967,7 +4971,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DescriptionOptional" xml:space="preserve">
-    <value>Опис (необов&apos;язково)</value>
+    <value>Опис (необов'язково)</value>
   </data>
   <data name="FileActionMissingLineToWrite" xml:space="preserve">
     <value>Дія файлу: відсутній рядок для запису</value>
@@ -5035,7 +5039,7 @@
     <value>Системи рангів не існує</value>
   </data>
   <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
-    <value>Для основної валюти має бути встановлено значення &quot;Лише мінімум&quot;.</value>
+    <value>Для основної валюти має бути встановлено значення "Лише мінімум".</value>
     <comment>Manual</comment>
   </data>
   <data name="ExplicitUserRoleRequirements" xml:space="preserve">
@@ -5101,7 +5105,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Ніхто правильно не вгадав слово &quot;$gamewordscrambleanswer&quot;.</value>
+    <value>Ніхто правильно не вгадав слово "$gamewordscrambleanswer".</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5466,6 +5470,12 @@
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Введіть дійсний спеціальний секрет клієнта.</value>
   </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>Підключення до служби DonorDrive дозволяє запускати події, коли ви або ваша команда отримуєте пожертву через відповідну благодійну організацію DonorDrive.</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Щоб підключити DonorDrive до Mix It Up, відвідайте веб-сайт вашої благодійної організації та знайдіть посилання на свою сторінку/учасника. Потім виберіть свою благодійну організацію зі спадного меню або виберіть «Власна», якщо її немає в списку, скопіюйте посилання на свою сторінку/учасника в текстове поле та виберіть «Увійти».</value>
+  </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Не вдалося перевірити з’єднання накладення. Переконайтеся, що сторінка накладення Mix It Up видима та запущена у вашому програмному забезпеченні потокового передавання.</value>
   </data>
@@ -5480,7 +5490,7 @@
     <comment>{0} is the number of overlays connected</comment>
   </data>
   <data name="ParticipantName" xml:space="preserve">
-    <value>Ім&apos;я учасника</value>
+    <value>Ім'я учасника</value>
   </data>
   <data name="TeamID" xml:space="preserve">
     <value>ID команди</value>
@@ -5595,7 +5605,7 @@
     <value>Щоб отримати інформацію про OvrStream, перегляньте таке посилання:</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Пароль (необов&apos;язково)</value>
+    <value>Пароль (необов'язково)</value>
   </data>
   <data name="Patreon" xml:space="preserve">
     <value>Patreon</value>
@@ -5826,12 +5836,12 @@
   <data name="CurrencyImportFailed" xml:space="preserve">
     <value>Нам не вдалося імпортувати дані. Переконайтеся, що ваш файл має один із таких форматів:
 
-&lt;ІМ&apos;Я КОРИСТУВАЧА&gt; &lt;СУМА&gt;
+&lt;ІМ'Я КОРИСТУВАЧА&gt; &lt;СУМА&gt;
 &lt;ID КОРИСТУВАЧА&gt; &lt;СУМА&gt;
-&lt;ID КОРИСТУВАЧА&gt; &lt;ІМ&apos;Я КОРИСТУВАЧА&gt; &lt;СУМА&gt;</value>
+&lt;ID КОРИСТУВАЧА&gt; &lt;ІМ'Я КОРИСТУВАЧА&gt; &lt;СУМА&gt;</value>
   </data>
   <data name="CurrencyRankInventoryNameNotEmpty" xml:space="preserve">
-    <value>Ім&apos;я повинно містити принаймні 1 літеру.</value>
+    <value>Ім'я повинно містити принаймні 1 літеру.</value>
   </data>
   <data name="CurrencyRankInventoryNameProtected" xml:space="preserve">
     <value>Наступні імена зарезервовані та не можуть бути використані:</value>
@@ -5840,7 +5850,7 @@
     <value>Уже існує валюта або система рангів із такою назвою.</value>
   </data>
   <data name="CurrencyRankNameNoDigits" xml:space="preserve">
-    <value>Ім&apos;я не може містити жодних цифр.</value>
+    <value>Ім'я не може містити жодних цифр.</value>
   </data>
   <data name="CurrencyRankNameRequired" xml:space="preserve">
     <value>Потрібно вказати назву {0}</value>
@@ -6190,7 +6200,7 @@
     <value>Не вдалося завантажити один або кілька файлів налаштувань. Будь ласка, відвідайте Mix It Up discord, щоб отримати допомогу з цього питання.</value>
   </data>
   <data name="Shadow" xml:space="preserve">
-    <value>Тінь (необов&apos;язково)</value>
+    <value>Тінь (необов'язково)</value>
   </data>
   <data name="ShopCurrencyRequired" xml:space="preserve">
     <value>Для магазину необхідно вказати валюту.</value>
@@ -6202,7 +6212,7 @@
     <value>Стартова сума</value>
   </data>
   <data name="StartingHealth" xml:space="preserve">
-    <value>Запуск Здоров&apos;я</value>
+    <value>Запуск Здоров'я</value>
   </data>
   <data name="StartTime" xml:space="preserve">
     <value>Час початку (сек.)</value>
@@ -6214,7 +6224,7 @@
     <value>Уже існує Stream Pass із такою назвою.</value>
   </data>
   <data name="StreamPassNameInvalid" xml:space="preserve">
-    <value>Ім&apos;я може містити лише літери, цифри або пробіли.</value>
+    <value>Ім'я може містити лише літери, цифри або пробіли.</value>
   </data>
   <data name="StreamPassNameRequired" xml:space="preserve">
     <value>Потрібно вказати дійсне ім’я.</value>
@@ -6307,7 +6317,7 @@
   <data name="OBSWebSocketFailed" xml:space="preserve">
     <value>Не вдалося підключитися до веб-сокета OBS Studio. Будь ласка, переконайтеся, що OBS Studio запущено, obs-websocket увімкнено в меню «Інструменти», а підключення та пароль відповідають налаштуванням у OBS Studio.
 
-Перегляньте сторінку Wiki в OBS Studio, щоб дізнатися про подальші дії з усунення несправностей, натиснувши &quot;?&quot; у заголовку вкладки OBS Studio в Mix It Up.</value>
+Перегляньте сторінку Wiki в OBS Studio, щоб дізнатися про подальші дії з усунення несправностей, натиснувши "?" у заголовку вкладки OBS Studio в Mix It Up.</value>
   </data>
   <data name="OverlayAddFailed" xml:space="preserve">
     <value>Не вдалося додати накладання {0}</value>
@@ -6664,7 +6674,7 @@
     <value>множинний</value>
   </data>
   <data name="BitsCostOptional" xml:space="preserve">
-    <value>Вартість бітів (необов&apos;язково)</value>
+    <value>Вартість бітів (необов'язково)</value>
   </data>
   <data name="ChannelPointRewardMissing" xml:space="preserve">
     <value>Відсутня винагорода балів каналу</value>
@@ -7169,7 +7179,7 @@
     <value>Потрібно вказати назву параметра JSON.</value>
   </data>
   <data name="ASpecialIdentifierNameMustBeSpecified" xml:space="preserve">
-    <value>Потрібно вказати ім&apos;я спеціального ідентифікатора.</value>
+    <value>Потрібно вказати ім'я спеціального ідентифікатора.</value>
   </data>
   <data name="NoTitle" xml:space="preserve">
     <value>Без назви</value>
@@ -7181,7 +7191,7 @@
     <value>Ідентифікатор Twitch</value>
   </data>
   <data name="TwitchUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача Twitch</value>
+    <value>Ім'я користувача Twitch</value>
   </data>
   <data name="ViewingHours" xml:space="preserve">
     <value>Години перегляду</value>
@@ -7424,10 +7434,10 @@
     <value>ПОМИЛКА: Не вдалося знайти користувача з таким іменем: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Розпочато процес зв’язування облікових записів. Будь ласка, повторно запустіть команду на іншій платформі з інформацією про поточного користувача: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Розпочато процес зв’язування облікових записів. Будь ласка, повторно запустіть команду на іншій платформі з інформацією про поточного користувача: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
-    <value>Використання: !linkaccount &lt;ПЛАТФОРМА&gt; &lt;ІМ&apos;Я КОРИСТУВАЧА ПЛАТФОРМИ&gt;</value>
+    <value>Використання: !linkaccount &lt;ПЛАТФОРМА&gt; &lt;ІМ'Я КОРИСТУВАЧА ПЛАТФОРМИ&gt;</value>
   </data>
   <data name="DisableEmoteOnly" xml:space="preserve">
     <value>Вимкнути лише емоції</value>
@@ -7480,25 +7490,25 @@
     <value>Глімеш І.Д</value>
   </data>
   <data name="GlimeshUsername" xml:space="preserve">
-    <value>Glimesh Ім&apos;я користувача</value>
+    <value>Glimesh Ім'я користувача</value>
   </data>
   <data name="TrovoID" xml:space="preserve">
     <value>Трово І.Д</value>
   </data>
   <data name="TrovoUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача Trovo</value>
+    <value>Ім'я користувача Trovo</value>
   </data>
   <data name="YouTubeID" xml:space="preserve">
     <value>Ідентифікатор YouTube</value>
   </data>
   <data name="YouTubeUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача YouTube</value>
+    <value>Ім'я користувача YouTube</value>
   </data>
   <data name="PlatformID" xml:space="preserve">
     <value>ID платформи</value>
   </data>
   <data name="PlatformUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача платформи</value>
+    <value>Ім'я користувача платформи</value>
   </data>
   <data name="UserImportResults" xml:space="preserve">
     <value>Успішні імпорти: {0}
@@ -7996,7 +8006,7 @@
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
     <value>Ви повинні вказати «купити» або «продати»</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>ВИКОРИСТАННЯ: {0} list = перелічує всі предмети, доступні для купівлі/продажу ** {0} &lt;НАЗВА ПРЕДМЕТА&gt; = перераховує ціну купівлі/продажу товару ** {0} buy &lt;НАЗВА ПРЕДМЕТА&gt; [СУМА] = Купує 1 або вказану суму товару ** {0} sell &lt;НАЗВА ПРЕДМЕТА&gt; [СУМА] = продається 1 або вказану суму товару</value>
@@ -8025,7 +8035,7 @@
 {4} is the shop command</comment>
   </data>
   <data name="InventoryTradeUsage" xml:space="preserve">
-    <value>{0} &lt;ІМ&apos;Я КОРИСТУВАЧА&gt; &lt;ІМ&apos;Я ПРЕДМЕТА&gt; [СУМА] = Обмін 1 або вказану суму предмета вказаному користувачеві</value>
+    <value>{0} &lt;ІМ'Я КОРИСТУВАЧА&gt; &lt;ІМ'Я ПРЕДМЕТА&gt; [СУМА] = Обмін 1 або вказану суму предмета вказаному користувачеві</value>
     <comment>{0} is the shop command</comment>
   </data>
   <data name="InventoryYouCanOnlyHaveTotal" xml:space="preserve">
@@ -8077,10 +8087,10 @@
     <value>Використання: !setgame &lt;НАЗВА ГРИ&gt;</value>
   </data>
   <data name="PreMadeChatCommandSetTitleUsage" xml:space="preserve">
-    <value>Використання: !settitle &lt;ІМ&apos;Я НАЗВИ&gt;</value>
+    <value>Використання: !settitle &lt;ІМ'Я НАЗВИ&gt;</value>
   </data>
   <data name="PreMadeChatCommandSetUserTitleUsage" xml:space="preserve">
-    <value>Використання: !setusertitle &lt;ІМ&apos;Я КОРИСТУВАЧА&gt; &lt;ІМ&apos;Я НАЗВИ&gt;</value>
+    <value>Використання: !setusertitle &lt;ІМ'Я КОРИСТУВАЧА&gt; &lt;ІМ'Я НАЗВИ&gt;</value>
   </data>
   <data name="PreMadeChatCommandStartGiveawayUsage" xml:space="preserve">
     <value>Використання: !startgiveaway &lt;ПРЕДМЕТ РОЗДАРИ&gt;</value>
@@ -8252,7 +8262,7 @@
     <value>Нагадування про роздачу має бути 0 або більше</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} ви виграли розіграш; наберіть у чаті &quot;!claim&quot;!</value>
+    <value>@{0} ви виграли розіграш; наберіть у чаті "!claim"!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8680,7 +8690,7 @@
     <value>Додати користувача</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Не вдалося знайти користувача &quot;{0}&quot;</value>
+    <value>Не вдалося знайти користувача "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8698,7 +8708,7 @@
 пошепки для використання як форми автоматизованого спілкування. Існують суворі обмеження щодо
 кількість пошепків, які можна надіслати за певний час, що робить його дуже непрактичним для використання, а також спам
 запобіжні заходи, якщо користувача немає у вашому списку друзів на Twitch. Тож хоч пошепки можна надіслати
-через Twitch, це ситуація &quot;ваш пробіг може відрізнятися&quot;.</value>
+через Twitch, це ситуація "ваш пробіг може відрізнятися".</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Назва сповіщення</value>
@@ -8853,6 +8863,53 @@
   </data>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Заклинання Trovo Channel</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Встановіть назву/опис</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>Дія YouTube: потрібно вказати дійсну суму</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>Дія YouTube: необхідно вказати дійсну назву або опис</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>Масове членство в каналі YouTube подаровано</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>Віха членства каналу YouTube</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>Подароване членство в каналі YouTube</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>Новий учасник каналу YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>Початок трансляції каналу YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>Зупинка трансляції каналу YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>Суперчат каналу YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>Супернаклейка каналу YouTube</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} Суперчат – {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Супернаклейка – {1} – {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>Показати YouTube Super Chat</value>
   </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Макет підключення</value>
@@ -9120,10 +9177,10 @@
 {
     публічний клас CustomClass
     {
-        відкритий об&apos;єкт Run()
+        відкритий об'єкт Run()
         {
             // Ваш код міститься тут
-            System.Console.WriteLine(&quot;Привіт, світ!&quot;);
+            System.Console.WriteLine("Привіт, світ!");
 
             // Поверніть сюди будь-які дані, які ви хотіли б використати
             повернення 42;
@@ -9135,19 +9192,19 @@
     <value>функція run()
 {
     // Ваш код міститься тут
-    var text = &apos;Привіт, світ!&apos;;
+    var text = 'Привіт, світ!';
 
     // Поверніть сюди будь-які дані, які ви хотіли б використати
     повернення 42;
 }
 
 var result = run();
-sendParentMessage({ Type: &quot;ScriptComplete&quot;, ID: &quot;{ID}&quot;, Result: result });</value>
+sendParentMessage({ Type: "ScriptComplete", ID: "{ID}", Result: result });</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
     # Ваш код міститься тут
-    text = &quot;Привіт, світ!&quot;
+    text = "Привіт, світ!"
 
     # Поверніть сюди будь-які дані, які ви хотіли б використати
     повернення 42
@@ -9208,6 +9265,9 @@ print(run())</value>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell Виконати</value>
   </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Видалити рядок із певним текстом із файлу</value>
+  </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Текст для видалення</value>
   </data>
@@ -9244,6 +9304,9 @@ print(run())</value>
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>Необхідно вибрати дійсний лічильник</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Останній підписник</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Остання пожертва</value>
@@ -9286,66 +9349,6 @@ print(run())</value>
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>Пожертвування DonorDrive</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>Підключення до служби DonorDrive дозволяє запускати події, коли ви або ваша команда отримуєте пожертву через відповідну благодійну організацію DonorDrive.</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Щоб підключити DonorDrive до Mix It Up, відвідайте веб-сайт вашої благодійної організації та знайдіть посилання на свою сторінку/учасника. Потім виберіть свою благодійну організацію зі спадного меню або виберіть «Власна», якщо її немає в списку, скопіюйте посилання на свою сторінку/учасника в текстове поле та виберіть «Увійти».</value>
-  </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>Встановіть назву/опис</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>Дія YouTube: потрібно вказати дійсну суму</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>Дія YouTube: необхідно вказати дійсну назву або опис</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>Масове членство в каналі YouTube подаровано</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>Віха членства каналу YouTube</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>Подароване членство в каналі YouTube</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>Новий учасник каналу YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>Початок трансляції каналу YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>Зупинка трансляції каналу YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>Суперчат каналу YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>Супернаклейка каналу YouTube</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} Суперчат – {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} Супернаклейка – {1} – {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>Показати YouTube Super Chat</value>
-  </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>Видалити рядок із певним текстом із файлу</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Існуючий профіль</value>
@@ -9660,12 +9663,6 @@ print(run())</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Виберіть нову папку для завантаження музики з папки або натисніть кнопку «Відтворити», щоб завантажити музику з останньої використаної папки.</value>
   </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>Немає дублікатів</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>Останній підписник</value>
-  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>ResponsiveVoice</value>
   </data>
@@ -9725,6 +9722,9 @@ print(run())</value>
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>Конкретний кліп</value>
+  </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>Немає дублікатів</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Підрахунок рядків у файлі</value>
@@ -9888,10 +9888,10 @@ print(run())</value>
     <value>Колір пошкоджень</value>
   </data>
   <data name="HealthColor" xml:space="preserve">
-    <value>Колір здоров&apos;я</value>
+    <value>Колір здоров'я</value>
   </data>
   <data name="BaseHealth" xml:space="preserve">
-    <value>База здоров&apos;я</value>
+    <value>База здоров'я</value>
   </data>
   <data name="Damage" xml:space="preserve">
     <value>Пошкодження</value>
@@ -9909,7 +9909,7 @@ print(run())</value>
     <value>Зцілення відбулося</value>
   </data>
   <data name="KillBonusHealth" xml:space="preserve">
-    <value>Додаткове здоров&apos;я за вбивство</value>
+    <value>Додаткове здоров'я за вбивство</value>
   </data>
   <data name="NewBoss" xml:space="preserve">
     <value>Новий бос</value>
@@ -10245,7 +10245,7 @@ print(run())</value>
     <value>Включити підказку та повідомлення</value>
   </data>
   <data name="StoreInMemory" xml:space="preserve">
-    <value>Зберегти в пам&apos;яті</value>
+    <value>Зберегти в пам'яті</value>
   </data>
   <data name="Pet" xml:space="preserve">
     <value>Домашня тварина</value>
@@ -10386,7 +10386,7 @@ print(run())</value>
     <value>Ефект емоції</value>
   </data>
   <data name="CompoundPreviousBossHealth" xml:space="preserve">
-    <value>Здоров&apos;я складного попереднього боса</value>
+    <value>Здоров'я складного попереднього боса</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
     <value>Змінити папку</value>
@@ -10546,7 +10546,7 @@ print(run())</value>
     <value>Показати займенники Alejo</value>
   </data>
   <data name="HideExclamationMessages" xml:space="preserve">
-    <value>Приховати повідомлення, що починаються з &quot;!&quot;</value>
+    <value>Приховати повідомлення, що починаються з "!"</value>
   </data>
   <data name="PauseUnpausePersistentTimer" xml:space="preserve">
     <value>Призупинити/відновити постійний таймер</value>
@@ -10579,7 +10579,7 @@ print(run())</value>
     <value>Вимкнено звук</value>
   </data>
   <data name="DisplayName" xml:space="preserve">
-    <value>Відображуване ім&apos;я</value>
+    <value>Відображуване ім'я</value>
   </data>
   <data name="Hide" xml:space="preserve">
     <value>Сховати</value>
@@ -10588,7 +10588,7 @@ print(run())</value>
     <value>Активне зображення має бути встановлено для власних візуальних елементів користувача</value>
   </data>
   <data name="ServerDisplayName" xml:space="preserve">
-    <value>Відображуване ім&apos;я сервера</value>
+    <value>Відображуване ім'я сервера</value>
   </data>
   <data name="NameDisplay" xml:space="preserve">
     <value>Відображення імені</value>
@@ -10606,7 +10606,7 @@ print(run())</value>
     <value>Затуманити неактивних користувачів</value>
   </data>
   <data name="DiscordUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача Discord</value>
+    <value>Ім'я користувача Discord</value>
   </data>
   <data name="InactiveImage" xml:space="preserve">
     <value>Неактивне зображення</value>
@@ -10645,7 +10645,7 @@ print(run())</value>
     <value>Потрібно вказати шлях до файлу</value>
   </data>
   <data name="ProfileName" xml:space="preserve">
-    <value>Ім&apos;я профілю</value>
+    <value>Ім'я профілю</value>
   </data>
   <data name="ReadEachLineFromFile" xml:space="preserve">
     <value>Прочитайте кожен рядок із файлу</value>
@@ -10740,7 +10740,7 @@ print(run())</value>
     <value>День тижня</value>
   </data>
   <data name="Friday" xml:space="preserve">
-    <value>П&apos;ятниця</value>
+    <value>П'ятниця</value>
   </data>
   <data name="Monday" xml:space="preserve">
     <value>понеділок</value>
