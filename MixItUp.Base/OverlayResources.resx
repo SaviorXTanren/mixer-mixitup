@@ -2190,8 +2190,6 @@ sendParentMessage({ Type: "WidgetLoaded", ID: "{ID}" });</value>
                 ev.target.contentDocument.head.appendChild(passedDownStyles);
             });
             
-            return iframe;
-
             div.appendChild(iframe);
 
             return div;
