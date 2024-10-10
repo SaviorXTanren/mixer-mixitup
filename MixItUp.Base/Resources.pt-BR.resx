@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Incluir automaticamente &quot;!&quot;</value>
+    <value>Incluir automaticamente "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Gatilho(s) de bate-papo (não é necessário &quot;!&quot;, separado por espaço, ponto e vírgula para várias palavras)</value>
+    <value>Gatilho(s) de bate-papo (não é necessário "!", separado por espaço, ponto e vírgula para várias palavras)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Comando (não é necessário &apos;!&apos;)</value>
+    <value>Comando (não é necessário '!')</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>Nome do valor JSON (use &apos;\&apos; para parâmetros aninhados)</value>
+    <value>Nome do valor JSON (use '\' para parâmetros aninhados)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>Tempo de visualização on-line do status &quot;normal&quot;</value>
+    <value>Tempo de visualização on-line do status "normal"</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Relatório</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Exigir &quot;!reivindicação&quot;</value>
+    <value>Exigir "!reivindicação"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -2653,6 +2653,10 @@
     <value>Usuário de bate-papo eliminado</value>
     <comment>Manual</comment>
   </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>Doação DonorDrive</value>
+    <comment>Manual</comment>
+  </data>
   <data name="JustGivingDonation" xml:space="preserve">
     <value>Apenas dando doação</value>
     <comment>Manual</comment>
@@ -3500,7 +3504,7 @@ Por exemplo, se esta opção estiver habilitada e o valor estiver definido como 
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Ação do Twitter: o tweet não pode conter tags &quot;@&quot;</value>
+    <value>Ação do Twitter: o tweet não pode conter tags "@"</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -4255,15 +4259,15 @@ Quando o vulcão atinge o estágio 3, cada depósito subsequente tem a chance de
     <value>Falha na adivinhação</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username coloca suas moedas no pote e adivinha &quot;$arg1text&quot;...mas estava errado! $gamehangmanatual</value>
+    <value>@$username coloca suas moedas no pote e adivinha "$arg1text"...mas estava errado! $gamehangmanatual</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>O jogo está perdido com muitos palpites errados; a resposta correta era &quot;$gamehangmananswer&quot;. Lá se vai $gametotamount {0}!</value>
+    <value>O jogo está perdido com muitos palpites errados; a resposta correta era "$gamehangmananswer". Lá se vai $gametotamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username obteve a palavra secreta &quot;$gamehangmananswer&quot;, ganhando o prêmio total de $gamepayout {0}!</value>
+    <value>@$username obteve a palavra secreta "$gamehangmananswer", ganhando o prêmio total de $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4362,7 +4366,7 @@ Quando o vulcão atinge o estágio 3, cada depósito subsequente tem a chance de
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username adivinhou corretamente a palavra &quot;$gamewordscrambleanswer&quot; e ganhou uma recompensa de $gamepayout {0}!</value>
+    <value>@$username adivinhou corretamente a palavra "$gamewordscrambleanswer" e ganhou uma recompensa de $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4370,7 +4374,7 @@ Quando o vulcão atinge o estágio 3, cada depósito subsequente tem a chance de
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>A palavra embaralhada é &quot;$gamewordscrambleword&quot;; resolva e seja o primeiro a digitar no chat!</value>
+    <value>A palavra embaralhada é "$gamewordscrambleword"; resolva e seja o primeiro a digitar no chat!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4480,7 +4484,7 @@ Quando o vulcão atinge o estágio 3, cada depósito subsequente tem a chance de
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>King @$username descobriu o tesouro, mas precisa de alguém para defendê-lo! Os ladrões devem trabalhar para convencer o Rei a buscá-los, todos os outros precisam evitar isso. O Rei deve digitar &quot;!tesouro &lt;PLAYER&gt;&quot; no chat para escolher quem defenderá o tesouro!</value>
+    <value>King @$username descobriu o tesouro, mas precisa de alguém para defendê-lo! Os ladrões devem trabalhar para convencer o Rei a buscá-los, todos os outros precisam evitar isso. O Rei deve digitar "!tesouro &lt;PLAYER&gt;" no chat para escolher quem defenderá o tesouro!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4598,7 +4602,7 @@ Quando o vulcão atinge o estágio 3, cada depósito subsequente tem a chance de
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>Quando @$username deposita seu depósito no vulcão, ocorre uma forte erupção e $gamepayout {0} cai em cima deles! O vulcão está explodindo moedas! Rápido, digite &quot;!volcano collect&quot; no chat nos próximos 30 segundos!</value>
+    <value>Quando @$username deposita seu depósito no vulcão, ocorre uma forte erupção e $gamepayout {0} cai em cima deles! O vulcão está explodindo moedas! Rápido, digite "!volcano collect" no chat nos próximos 30 segundos!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -5101,7 +5105,7 @@ Esta configuração alterará todos os requisitos de função para serem explíc
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Ninguém adivinhou corretamente a palavra &quot;$gamewordscrambleanswer&quot;.</value>
+    <value>Ninguém adivinhou corretamente a palavra "$gamewordscrambleanswer".</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5466,6 +5470,12 @@ habilitado. Você pode pensar nisso como algo semelhante a alternar a opção �
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Insira um segredo de cliente personalizado válido.</value>
   </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>A conectividade do serviço DonorDrive permite que você acione eventos a partir do momento em que você ou sua equipe recebem uma doação por meio de uma instituição de caridade DonorDrive elegível.</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Para conectar o DonorDrive no Mix It Up, visite o site da sua instituição de caridade e procure o link da sua página/participante. Em seguida, selecione sua instituição de caridade no menu suspenso ou selecione Personalizado se não estiver na lista, copie o link da sua página/participante na caixa de texto e selecione Login.</value>
+  </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>O teste de conexão de sobreposição falhou. Certifique-se de ter a página Mix It Up Overlay visível e em execução em seu software de streaming.</value>
   </data>
@@ -5565,7 +5575,7 @@ habilitado. Você pode pensar nisso como algo semelhante a alternar a opção �
     <value>O serviço OBS Studio permite que você interaja diretamente com sua instância do OBS Studio para realizar alterações em cenas e fontes.</value>
   </data>
   <data name="OBSStudioInfo2" xml:space="preserve">
-    <value>A conectividade do OBS Studio pode ser habilitada indo em Ferramentas -&gt; obs-websocket no OBS Studio e clicando em &quot;Ativar servidor WebSocket&quot;. Certifique-se de que &quot;Ativar autenticação&quot; esteja desmarcado ou você tenha definido uma senha no OBS Studio e no Mix It Up.</value>
+    <value>A conectividade do OBS Studio pode ser habilitada indo em Ferramentas -&gt; obs-websocket no OBS Studio e clicando em "Ativar servidor WebSocket". Certifique-se de que "Ativar autenticação" esteja desmarcado ou você tenha definido uma senha no OBS Studio e no Mix It Up.</value>
   </data>
   <data name="OBSStudioSuccess" xml:space="preserve">
     <value>Teste de conexão do OBS Studio com sucesso!</value>
@@ -5676,7 +5686,7 @@ habilitado. Você pode pensar nisso como algo semelhante a alternar a opção �
     <value>Este plug-in Stream Deck permite que você execute comandos Mix It Up diretamente de seu dispositivo Stream Deck, bem como outras informações de status sobre seu stream.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>Para começar, certifique-se de que o software Stream Deck esteja atualizado para pelo menos a versão 4.0 e que o serviço Developer API esteja habilitado no Mix It Up. Para instalar o plugin Mix It Up, clique no ícone da loja no canto superior direito do software Stream Deck e pesquise &quot;Mix It Up&quot; na janela.</value>
+    <value>Para começar, certifique-se de que o software Stream Deck esteja atualizado para pelo menos a versão 4.0 e que o serviço Developer API esteja habilitado no Mix It Up. Para instalar o plugin Mix It Up, clique no ícone da loja no canto superior direito do software Stream Deck e pesquise "Mix It Up" na janela.</value>
   </data>
   <data name="StreamElements" xml:space="preserve">
     <value>Elementos de fluxo</value>
@@ -6159,7 +6169,7 @@ habilitado. Você pode pensar nisso como algo semelhante a alternar a opção �
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>EX: Se a tarifa on-line for &quot;1 por hora&quot; e um usuário tiver 16 horas de visualização, os {0} pontos desse usuário serão definidos como 16.</value>
+    <value>EX: Se a tarifa on-line for "1 por hora" e um usuário tiver 16 horas de visualização, os {0} pontos desse usuário serão definidos como 16.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6307,7 +6317,7 @@ habilitado. Você pode pensar nisso como algo semelhante a alternar a opção �
   <data name="OBSWebSocketFailed" xml:space="preserve">
     <value>Falha ao conectar ao soquete da web do OBS Studio. Certifique-se de que o OBS Studio esteja em execução, que o obs-websocket esteja habilitado no menu Ferramentas e que a conexão e a senha correspondam às suas configurações no OBS Studio.
 
-Consulte a página Wiki no OBS Studio para obter mais etapas de solução de problemas clicando no botão &quot;?&quot; botão no cabeçalho da guia OBS Studio em Mix It Up.</value>
+Consulte a página Wiki no OBS Studio para obter mais etapas de solução de problemas clicando no botão "?" botão no cabeçalho da guia OBS Studio em Mix It Up.</value>
   </data>
   <data name="OverlayAddFailed" xml:space="preserve">
     <value>Falha ao adicionar {0} sobreposição</value>
@@ -6401,7 +6411,7 @@ Consulte a página Wiki no OBS Studio para obter mais etapas de solução de pro
     <value>Mostra uma barra de progresso para uma meta específica. O progresso é atualizado à medida que os eventos ocorrem ou no intervalo de atualização definido pelo usuário.</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>Mostra um usuário do seu canal como um &quot;chefe&quot; que pode ser danificado ao realizar ações no seu canal até que seja derrotado e um novo chefe seja selecionado. O dano é adicionado à medida que ocorre. Os identificadores especiais do Stream Boss podem ser usados ​​em paralelo com este widget de sobreposição.</value>
+    <value>Mostra um usuário do seu canal como um "chefe" que pode ser danificado ao realizar ações no seu canal até que seja derrotado e um novo chefe seja selecionado. O dano é adicionado à medida que ocorre. Os identificadores especiais do Stream Boss podem ser usados ​​em paralelo com este widget de sobreposição.</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>Mostra um bloco de texto. Atualizações com base no intervalo de atualização definido pelo usuário.</value>
@@ -7424,7 +7434,7 @@ O não cumprimento de uma das opções a seguir pode afetar a forma como os usu�
     <value>ERRO: não foi possível encontrar o usuário com o seguinte nome de usuário: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Processo de vinculação de conta iniciado. Execute novamente o comando na outra plataforma com as informações do seu usuário atual: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Processo de vinculação de conta iniciado. Execute novamente o comando na outra plataforma com as informações do seu usuário atual: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Uso: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;</value>
@@ -7995,8 +8005,8 @@ As cotações importadas com IDs que correspondam às cotações existentes ser�
     <value>O item que você especificou não existe</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Você deve especificar &quot;comprar&quot; ou &quot;vender&quot;</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>Você deve especificar "comprar" ou "vender"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>USO: {0} list = Lista todos os itens disponíveis para compra/venda ** {0} &lt;ITEM NAME&gt; = Lista o preço de compra/venda do item ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = Compra 1 ou o valor especificado do item ** {0} vender &lt;NOME DO ITEM&gt; [QUANTIA] = Vende 1 ou o valor especificado do item</value>
@@ -8252,7 +8262,7 @@ As cotações importadas com IDs que correspondam às cotações existentes ser�
     <value>O lembrete de sorteio deve ser 0 ou superior</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} você ganhou o sorteio; digite &quot;!claim&quot; no chat!</value>
+    <value>@{0} você ganhou o sorteio; digite "!claim" no chat!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8680,7 +8690,7 @@ Tentaremos nos reconectar ao serviço quando possível. Se isso continuar, acess
     <value>Adicionar usuário</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Não foi possível encontrar o usuário &quot;{0}&quot;</value>
+    <value>Não foi possível encontrar o usuário "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8853,6 +8863,53 @@ via Twitch, é uma situação “sua milhagem pode variar”.</value>
   </data>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Elenco de feitiço do canal Trovo</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Definir título/descrição</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>Ação do YouTube: um valor válido deve ser especificado</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>Ação do YouTube: um título ou descrição válido deve ser especificado</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>Membros em massa do canal do YouTube doados</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>Marco do membro do canal do YouTube</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>Membros do canal do YouTube concedidos</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>Novo membro do canal do YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>Início da transmissão do canal do YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>Parada de transmissão do canal do YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>Superchat do canal do YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>Super adesivo do canal do YouTube</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} Superbate-papo - {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Superadesivo - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>Mostrar Super Chat do YouTube</value>
   </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Conexão simulada</value>
@@ -9123,7 +9180,7 @@ namespace CustomNamespace
         objeto público Executar()
         {
             //Seu código vai aqui
-            System.Console.WriteLine(&quot;Olá Mundo!&quot;);
+            System.Console.WriteLine("Olá Mundo!");
 
             // Retorna aqui todos os dados que você gostaria de usar
             retornar 42;
@@ -9135,19 +9192,19 @@ namespace CustomNamespace
     <value>função executar()
 {
     //Seu código vai aqui
-    var text = &apos;Olá mundo!&apos;;
+    var text = 'Olá mundo!';
 
     // Retorna aqui todos os dados que você gostaria de usar
     retornar 42;
 }
 
 var resultado = correr();
-sendParentMessage({ Tipo: &quot;ScriptComplete&quot;, ID: &quot;{ID}&quot;, Resultado: resultado });</value>
+sendParentMessage({ Tipo: "ScriptComplete", ID: "{ID}", Resultado: resultado });</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def execução():
     # Seu código vai aqui
-    text = &quot;Olá, mundo!&quot;
+    text = "Olá, mundo!"
 
     # Retorne aqui todos os dados que você gostaria de usar
     retornar 42
@@ -9203,10 +9260,13 @@ imprimir(executar())</value>
     <value>Este plug-in LoupeDeck permite que você execute comandos Mix It Up diretamente de seu dispositivo LoupeDeck, bem como outras informações de status sobre seu stream.</value>
   </data>
   <data name="LoupeDeckInfo2" xml:space="preserve">
-    <value>Para começar, certifique-se de que o software LoupeDeck esteja atualizado para a versão mais recente e que o serviço Developer API esteja habilitado no Mix It Up. Para instalar o plugin Mix It Up, clique no ícone do Marketplace no canto superior direito do software LoupeDeck e pesquise &quot;Mix It Up&quot;.</value>
+    <value>Para começar, certifique-se de que o software LoupeDeck esteja atualizado para a versão mais recente e que o serviço Developer API esteja habilitado no Mix It Up. Para instalar o plugin Mix It Up, clique no ícone do Marketplace no canto superior direito do software LoupeDeck e pesquise "Mix It Up".</value>
   </data>
   <data name="ShellExecute" xml:space="preserve">
     <value>Executar shell</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Remover linha com texto específico do arquivo</value>
   </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Texto para remover</value>
@@ -9244,6 +9304,9 @@ imprimir(executar())</value>
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>Um contador válido deve ser selecionado</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Último seguidor</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Última doação</value>
@@ -9286,66 +9349,6 @@ imprimir(executar())</value>
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>Doação DonorDrive</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>A conectividade do serviço DonorDrive permite que você acione eventos a partir do momento em que você ou sua equipe recebem uma doação por meio de uma instituição de caridade DonorDrive elegível.</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Para conectar o DonorDrive no Mix It Up, visite o site da sua instituição de caridade e procure o link da sua página/participante. Em seguida, selecione sua instituição de caridade no menu suspenso ou selecione Personalizado se não estiver na lista, copie o link da sua página/participante na caixa de texto e selecione Login.</value>
-  </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>Definir título/descrição</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>Ação do YouTube: um valor válido deve ser especificado</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>Ação do YouTube: um título ou descrição válido deve ser especificado</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>Membros em massa do canal do YouTube doados</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>Marco do membro do canal do YouTube</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>Membros do canal do YouTube concedidos</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>Novo membro do canal do YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>Início da transmissão do canal do YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>Parada de transmissão do canal do YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>Superchat do canal do YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>Super adesivo do canal do YouTube</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} Superbate-papo - {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} Superadesivo - {1} - {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>Mostrar Super Chat do YouTube</value>
-  </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>Remover linha com texto específico do arquivo</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Perfil Existente</value>
@@ -9660,12 +9663,6 @@ imprimir(executar())</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Selecione uma nova pasta para carregar músicas de uma pasta ou aperte o botão Play para carregar músicas da última pasta usada.</value>
   </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>Sem duplicatas</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>Último seguidor</value>
-  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>Voz Responsiva</value>
   </data>
@@ -9725,6 +9722,9 @@ imprimir(executar())</value>
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>Clipe específico</value>
+  </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>Sem duplicatas</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Contar linhas no arquivo</value>
@@ -10546,7 +10546,7 @@ imprimir(executar())</value>
     <value>Exibir pronomes Alejo</value>
   </data>
   <data name="HideExclamationMessages" xml:space="preserve">
-    <value>Ocultar mensagens que começam com &quot;!&quot;</value>
+    <value>Ocultar mensagens que começam com "!"</value>
   </data>
   <data name="PauseUnpausePersistentTimer" xml:space="preserve">
     <value>Pausar/retomar temporizador persistente</value>
