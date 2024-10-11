@@ -8,6 +8,7 @@ using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,6 +109,12 @@ namespace MixItUp.Base.Model.Overlay
                     this.itemTracking[user] = 0;
                 }
                 this.itemTracking[user] += amount;
+
+                Logger.Log(LogLevel.Debug, $"Tracking added for {user} to {this.itemTracking[user]} for {this.Name} End Credits section");
+            }
+            else
+            {
+                Logger.Log(LogLevel.Debug, $"No tracking {user} for {this.Name} End Credits section");
             }
         }
 
@@ -116,6 +123,11 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ShouldTrack(user))
             {
                 this.customTracking.Add(new Tuple<UserV2ViewModel, string>(user, text));
+                Logger.Log(LogLevel.Debug, $"Tracking added for {user} to {text} for {this.Name} End Credits section");
+            }
+            else
+            {
+                Logger.Log(LogLevel.Debug, $"No tracking {user} for {this.Name} End Credits section");
             }
         }
 
