@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2306,7 +2306,8 @@
   </data>
   <data name="TranslationBy" xml:space="preserve">
     <value>Vertaald door</value>
-    <comment>Manual</comment>
+    <comment>Manual
+Fuzzy</comment>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
     <value>URL van Tweetafbeelding (Optioneel)</value>
@@ -2651,10 +2652,6 @@
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>Chat Gebruiker Verwijderd</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>DonorDrive-donatie</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -5469,12 +5466,6 @@ ingeschakeld. Je kunt het zien als vergelijkbaar met het omschakelen van de opti
   </data>
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Voer een geldig aangepast klantgeheim in.</value>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>Met de DonorDrive-serviceconnectiviteit kunt u gebeurtenissen activeren vanaf het moment dat u of uw team een ​​donatie ontvangt via een in aanmerking komende DonorDrive-liefdadigheidsinstelling.</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Om DonorDrive in Mix It Up te koppelen, gaat u naar de website van uw goede doel en zoekt u naar uw pagina/deelnemerlink. Selecteer vervolgens uw goede doel in de vervolgkeuzelijst of selecteer Aangepast als dit niet in de lijst staat, kopieer de link van uw pagina/deelnemer naar het tekstvak en selecteer Inloggen.</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Overlay-verbindingstest mislukt. Zorg ervoor dat de Mix It Up Overlay-pagina zichtbaar en actief is in uw streamingsoftware.</value>
@@ -8864,53 +8855,6 @@ via Twitch is het een situatie van ‘uw kilometerstand kan variëren’.</value
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Trovo Channel Spell-cast</value>
   </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>Titel/beschrijving instellen</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>YouTube-actie: Er moet een geldig bedrag worden opgegeven</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>YouTube-actie: er moet een geldige titel of beschrijving worden opgegeven</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>Massalidmaatschap van YouTube-kanaal cadeau gegeven</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>Mijlpaal voor YouTube-kanaallid</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>YouTube-kanaallidmaatschap cadeau gedaan</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>YouTube-kanaal Nieuw lid</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>YouTube-kanaalstream starten</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>YouTube-kanaalstream stop</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>YouTube-kanaal Super Chat</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>Supersticker voor YouTube-kanaal</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} SuperChat - {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} Supersticker - {1} - {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>YouTube SuperChat weergeven</value>
-  </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Mock-verbinding</value>
   </data>
@@ -9265,9 +9209,6 @@ afdrukken(uitvoeren())</value>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell uitvoeren</value>
   </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>Regel met specifieke tekst uit bestand verwijderen</value>
-  </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Tekst om te verwijderen</value>
   </data>
@@ -9304,9 +9245,6 @@ afdrukken(uitvoeren())</value>
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>Er moet een geldige teller worden geselecteerd</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>Laatste volger</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Laatste donatie</value>
@@ -9349,6 +9287,66 @@ afdrukken(uitvoeren())</value>
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
+  </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive-donatie</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>Met de DonorDrive-serviceconnectiviteit kunt u gebeurtenissen activeren vanaf het moment dat u of uw team een ​​donatie ontvangt via een in aanmerking komende DonorDrive-liefdadigheidsinstelling.</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Om DonorDrive in Mix It Up te koppelen, gaat u naar de website van uw goede doel en zoekt u naar uw pagina/deelnemerlink. Selecteer vervolgens uw goede doel in de vervolgkeuzelijst of selecteer Aangepast als dit niet in de lijst staat, kopieer de link van uw pagina/deelnemer naar het tekstvak en selecteer Inloggen.</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Titel/beschrijving instellen</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>YouTube-actie: Er moet een geldig bedrag worden opgegeven</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>YouTube-actie: er moet een geldige titel of beschrijving worden opgegeven</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>Massalidmaatschap van YouTube-kanaal cadeau gegeven</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>Mijlpaal voor YouTube-kanaallid</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>YouTube-kanaallidmaatschap cadeau gedaan</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>YouTube-kanaal Nieuw lid</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>YouTube-kanaalstream starten</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>YouTube-kanaalstream stop</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>YouTube-kanaal Super Chat</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>Supersticker voor YouTube-kanaal</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} SuperChat - {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Supersticker - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>YouTube SuperChat weergeven</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Regel met specifieke tekst uit bestand verwijderen</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Bestaand profiel</value>
@@ -9663,6 +9661,12 @@ afdrukken(uitvoeren())</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Selecteer een nieuwe map om muziek uit een map te laden of druk op de knop Afspelen om muziek uit de laatst gebruikte map te laden.</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>Geen duplicaten</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Laatste volger</value>
+  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>Responsieve stem</value>
   </data>
@@ -9722,9 +9726,6 @@ afdrukken(uitvoeren())</value>
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>Specifieke clip</value>
-  </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>Geen duplicaten</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Tel regels in bestand</value>

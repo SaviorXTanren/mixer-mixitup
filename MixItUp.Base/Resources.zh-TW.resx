@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2651,10 +2651,6 @@
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>聊天用戶被清除</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>DonorDrive 捐款</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -5469,12 +5465,6 @@
   </data>
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>請輸入有效的自訂客戶端密碼。</value>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>DonorDrive 服務連線可讓您在您或您的團隊透過符合資格的 DonorDrive 慈善機構收到捐款時觸發事件。</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>要在 Mix It Up 中連接 DonorDrive，請訪問您的慈善機構網站並查找您的頁面/參與者連結。然後從下拉清單中選擇您的慈善機構，如果清單中沒有，則選擇“自訂”，將您的頁面/參與者連結複製到文字方塊中，然後選擇“登入”。</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Overlay 連線測試失敗，請確保 Mix It Up Overlay 頁面可見並在串流軟體中運行。</value>
@@ -8864,53 +8854,6 @@ ID 與現有報價相符的匯入報價將變更為下一個最大數量。匯�
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Trovo 通道施法</value>
   </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>設定標題/描述</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>YouTube 操作：必須指定有效金額</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>YouTube 操作：必須指定有效的標題或說明</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>YouTube 頻道大眾會員有天賦</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>YouTube 頻道會員里程碑</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>YouTube 頻道會員資格</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>YouTube 頻道新成員</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>YouTube 頻道串流開始</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>YouTube 頻道串流停止</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>YouTube 頻道超留言</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>YouTube 頻道超貼紙</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0}超級留言 - {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0}超級貼紙 - {1} - {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>顯示 YouTube 超級留言</value>
-  </data>
   <data name="MockConnection" xml:space="preserve">
     <value>類比連接</value>
   </data>
@@ -9265,9 +9208,6 @@ sendParentMessage({ 型別: "ScriptComplete", ID: "{ID}", 結果: 結果 });</va
   <data name="ShellExecute" xml:space="preserve">
     <value>外殼執行</value>
   </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>從文件中刪除具有特定文字的行</value>
-  </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>要刪除的文本</value>
   </data>
@@ -9304,9 +9244,6 @@ sendParentMessage({ 型別: "ScriptComplete", ID: "{ID}", 結果: 結果 });</va
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>必須選擇有效的計數器</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>最新追蹤者</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>最新捐款</value>
@@ -9349,6 +9286,66 @@ sendParentMessage({ 型別: "ScriptComplete", ID: "{ID}", 結果: 結果 });</va
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>解流</value>
+  </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive 捐款</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>DonorDrive 服務連線可讓您在您或您的團隊透過符合資格的 DonorDrive 慈善機構收到捐款時觸發事件。</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>要在 Mix It Up 中連接 DonorDrive，請訪問您的慈善機構網站並查找您的頁面/參與者連結。然後從下拉清單中選擇您的慈善機構，如果清單中沒有，則選擇“自訂”，將您的頁面/參與者連結複製到文字方塊中，然後選擇“登入”。</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>設定標題/描述</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>YouTube 操作：必須指定有效金額</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>YouTube 操作：必須指定有效的標題或說明</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>YouTube 頻道大眾會員有天賦</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>YouTube 頻道會員里程碑</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>YouTube 頻道會員資格</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>YouTube 頻道新成員</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>YouTube 頻道串流開始</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>YouTube 頻道串流停止</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>YouTube 頻道超留言</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>YouTube 頻道超貼紙</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0}超級留言 - {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0}超級貼紙 - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>顯示 YouTube 超級留言</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>從文件中刪除具有特定文字的行</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>現有資料</value>
@@ -9663,6 +9660,12 @@ sendParentMessage({ 型別: "ScriptComplete", ID: "{ID}", 結果: 結果 });</va
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>選擇一個新資料夾以從資料夾載入音樂，或按一下「播放」按鈕以從上次使用的資料夾中載入音樂。</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>沒有重複項</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>最新追蹤者</value>
+  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>響應式語音</value>
   </data>
@@ -9722,9 +9725,6 @@ sendParentMessage({ 型別: "ScriptComplete", ID: "{ID}", 結果: 結果 });</va
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>特定剪輯</value>
-  </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>沒有重複項</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>計算文件中的行數</value>

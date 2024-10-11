@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2651,10 +2651,6 @@
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>Utilisateur de chat purgé</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>Don DonorDrive</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -5469,12 +5465,6 @@ activé. Vous pouvez considérer cela comme similaire à l'activation de l'optio
   </data>
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Veuillez saisir un secret client personnalisé valide.</value>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>La connectivité du service DonorDrive vous permet de déclencher des événements à partir du moment où vous ou votre équipe recevez un don via un organisme de bienfaisance DonorDrive éligible.</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Pour connecter DonorDrive à Mix It Up, visitez le site Web de votre organisme de bienfaisance et recherchez votre lien de page/participant. Sélectionnez ensuite votre organisme de bienfaisance dans la liste déroulante ou sélectionnez Personnalisé s'il ne figure pas dans la liste, copiez le lien de votre page/participant dans la zone de texte et sélectionnez Connexion.</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Le test de connexion de la superposition a échoué. Veuillez vous assurer que la page Mix It Up Overlay est visible et exécutée dans votre logiciel de streaming.</value>
@@ -8864,53 +8854,6 @@ via Twitch, c'est une situation "votre kilométrage peut varier".</value>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Lancement de sorts de canal Trovo</value>
   </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>Définir le titre/la description</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>Action YouTube : un montant valide doit être spécifié</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>Action YouTube : un titre ou une description valide doit être spécifié</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>Adhésion de masse à la chaîne YouTube offerte</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>Étape importante pour les membres de la chaîne YouTube</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>Abonnement à une chaîne YouTube offert</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>Nouveau membre de la chaîne YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>Démarrage du flux de la chaîne YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>Arrêt du flux de la chaîne YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>Super Chat de la chaîne YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>Super autocollant de chaîne YouTube</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} Super Chat – {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} Super autocollant – {1} - {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>Afficher le Super Chat YouTube</value>
-  </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Connexion simulée</value>
   </data>
@@ -9265,9 +9208,6 @@ imprimer (exécuter ())</value>
   <data name="ShellExecute" xml:space="preserve">
     <value>Exécuter le shell</value>
   </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>Supprimer la ligne avec un texte spécifique du fichier</value>
-  </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Texte à supprimer</value>
   </data>
@@ -9304,9 +9244,6 @@ imprimer (exécuter ())</value>
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>Un compteur valide doit être sélectionné</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>Dernier abonné</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Dernier don</value>
@@ -9349,6 +9286,66 @@ imprimer (exécuter ())</value>
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>DéStream</value>
+  </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>Don DonorDrive</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>La connectivité du service DonorDrive vous permet de déclencher des événements à partir du moment où vous ou votre équipe recevez un don via un organisme de bienfaisance DonorDrive éligible.</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Pour connecter DonorDrive à Mix It Up, visitez le site Web de votre organisme de bienfaisance et recherchez votre lien de page/participant. Sélectionnez ensuite votre organisme de bienfaisance dans la liste déroulante ou sélectionnez Personnalisé s'il ne figure pas dans la liste, copiez le lien de votre page/participant dans la zone de texte et sélectionnez Connexion.</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Définir le titre/la description</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>Action YouTube : un montant valide doit être spécifié</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>Action YouTube : un titre ou une description valide doit être spécifié</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>Adhésion de masse à la chaîne YouTube offerte</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>Étape importante pour les membres de la chaîne YouTube</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>Abonnement à une chaîne YouTube offert</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>Nouveau membre de la chaîne YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>Démarrage du flux de la chaîne YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>Arrêt du flux de la chaîne YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>Super Chat de la chaîne YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>Super autocollant de chaîne YouTube</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} Super Chat – {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Super autocollant – {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>Afficher le Super Chat YouTube</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Supprimer la ligne avec un texte spécifique du fichier</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Profil existant</value>
@@ -9427,6 +9424,7 @@ imprimer (exécuter ())</value>
   </data>
   <data name="Charities" xml:space="preserve">
     <value>Organismes de bienfaisance</value>
+    <comment>Need some context...can be translated either by Caritatif or by Charité</comment>
   </data>
   <data name="DonorDrive" xml:space="preserve">
     <value>DonateurDrive</value>
@@ -9663,6 +9661,12 @@ imprimer (exécuter ())</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Sélectionnez un nouveau dossier pour charger la musique à partir d'un dossier ou appuyez sur le bouton Lecture pour charger la musique à partir du dernier dossier utilisé.</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>Pas de doublons</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Dernier abonné</value>
+  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>ResponsiveVoix</value>
   </data>
@@ -9722,9 +9726,6 @@ imprimer (exécuter ())</value>
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>Clip spécifique</value>
-  </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>Pas de doublons</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Compter les lignes dans le fichier</value>

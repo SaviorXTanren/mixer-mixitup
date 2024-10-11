@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1351,7 +1351,7 @@
     <comment>Manual</comment>
   </data>
   <data name="MixItUpOverlay" xml:space="preserve">
-    <value>Mischen Sie es Overlay</value>
+    <value>Mix It Up Overlay</value>
     <comment>Manual</comment>
   </data>
   <data name="MixPlay" xml:space="preserve">
@@ -2651,10 +2651,6 @@
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>Chat-Benutzer gelöscht</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>DonorDrive-Spende</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -5280,7 +5276,7 @@ ermöglicht. Sie können es sich so vorstellen, als würden Sie die Option „Be
     <comment>Manual</comment>
   </data>
   <data name="TwitchChannelRaided" xml:space="preserve">
-    <value>Twitch-Kanal überfallen</value>
+    <value>Twitch-Kanal Raided</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitchChannelHypeTrainBegin" xml:space="preserve">
@@ -5383,7 +5379,7 @@ ermöglicht. Sie können es sich so vorstellen, als würden Sie die Option „Be
     <value>Absolute</value>
   </data>
   <data name="Twitch" xml:space="preserve">
-    <value>Zucken</value>
+    <value>Twitch</value>
     <comment>Manual</comment>
   </data>
   <data name="Premium" xml:space="preserve">
@@ -5469,12 +5465,6 @@ ermöglicht. Sie können es sich so vorstellen, als würden Sie die Option „Be
   </data>
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Bitte geben Sie ein gültiges benutzerdefiniertes Client-Geheimnis ein.</value>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>Mit der DonorDrive-Dienstkonnektivität können Sie Ereignisse auslösen, sobald Sie oder Ihr Team eine Spende über eine berechtigte DonorDrive-Wohltätigkeitsorganisation erhalten.</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Um DonorDrive mit Mix It Up zu verbinden, besuchen Sie die Website Ihrer Wohltätigkeitsorganisation und suchen Sie nach dem Link zu Ihrer Seite/Teilnehmer. Wählen Sie dann Ihre Wohltätigkeitsorganisation aus der Dropdown-Liste aus oder wählen Sie „Benutzerdefiniert“, wenn sie nicht in der Liste enthalten ist. Kopieren Sie Ihren Seiten-/Teilnehmerlink in das Textfeld und wählen Sie „Anmelden“.</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Der Overlay-Verbindungstest ist fehlgeschlagen. Bitte stellen Sie sicher, dass die Mix It Up Overlay-Seite in Ihrer Streaming-Software sichtbar ist und ausgeführt wird.</value>
@@ -5687,6 +5677,7 @@ ermöglicht. Sie können es sich so vorstellen, als würden Sie die Option „Be
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
     <value>Stellen Sie zunächst sicher, dass die Stream Deck-Software auf mindestens Version 4.0 aktualisiert ist und der Entwickler-API-Dienst in Mix It Up aktiviert ist. Um das Mix It Up-Plugin zu installieren, klicken Sie auf das Store-Symbol oben rechts in Ihrer Stream Deck-Software und suchen Sie dann im Fenster nach „Mix It Up“.</value>
+    <comment>Retranslated. Original translation was for an older version of stream deck software</comment>
   </data>
   <data name="StreamElements" xml:space="preserve">
     <value>StreamElements</value>
@@ -6936,6 +6927,7 @@ Wenn Sie eine der folgenden Maßnahmen nicht ausführen, kann dies Auswirkungen 
     <value>Indem Sie eine Bewertung für dieses Community Command hinterlassen, erklären Sie sich damit einverstanden, dass der Inhalt der Bewertung für die breite Öffentlichkeit geeignet ist und kein sexuell eindeutiges Material, hasserfüllte Sprache oder böswillige Vorgänge enthält.
 
 Die Nichteinhaltung der oben genannten Punkte kann zur Sperrung der Nutzung des Community Commands-Dienstes führen. Sind Sie mit diesen Bedingungen einverstanden?</value>
+    <comment>Changed a few small wording things so it sounds better.</comment>
   </data>
   <data name="CommunityCommandsUploadAgreement" xml:space="preserve">
     <value>Durch das Hochladen eines Befehls in den Community Command-Dienst stimmen Sie Folgendem zu:
@@ -7230,7 +7222,7 @@ Wenn Sie eine der folgenden Maßnahmen nicht ausführen, kann dies Auswirkungen 
     <value>Massenabonnements des Trovo-Kanals verschenkt</value>
   </data>
   <data name="TrovoChannelRaided" xml:space="preserve">
-    <value>Trovo-Kanal überfallen</value>
+    <value>Trovo-Kanal Raided</value>
   </data>
   <data name="TrovoChannelResubscribed" xml:space="preserve">
     <value>Trovo-Kanal erneut abonniert</value>
@@ -7251,7 +7243,7 @@ Wenn Sie eine der folgenden Maßnahmen nicht ausführen, kann dies Auswirkungen 
     <value>Kanal-Massenabonnements verschenkt</value>
   </data>
   <data name="ChannelRaided" xml:space="preserve">
-    <value>Kanal überfallen</value>
+    <value>Kanal Raided</value>
   </data>
   <data name="ChannelResubscribed" xml:space="preserve">
     <value>Kanal erneut abonniert</value>
@@ -7771,6 +7763,7 @@ Fehlgeschlagene Importe können auf ungültige Daten oder darauf zurückzuführe
   </data>
   <data name="Space" xml:space="preserve">
     <value>Raum</value>
+    <comment>"Raum" was the wrong translation for this context</comment>
   </data>
   <data name="String1" xml:space="preserve">
     <value>Löschen</value>
@@ -8102,7 +8095,7 @@ Importierte Angebote mit IDs, die mit vorhandenen Angeboten übereinstimmen, wer
     <value>Zitat hinzugefügt:</value>
   </data>
   <data name="RaidedAmount" xml:space="preserve">
-    <value>Überfallen ({0})</value>
+    <value>Raided ({0})</value>
     <comment>{0} is the size of the raid</comment>
   </data>
   <data name="RedemptionStoreProductsAvailableForPurchaseHeader" xml:space="preserve">
@@ -8628,6 +8621,7 @@ Wir werden versuchen, nach Möglichkeit wieder eine Verbindung zum Dienst herzus
   </data>
   <data name="WizardIntro1" xml:space="preserve">
     <value>Dieser Assistent hilft Ihnen beim Einstieg in Mix It Up, indem er Sie bei Ihren Streaming-Plattform-Konten anmeldet, Ihnen beim Importieren Ihrer vorhandenen Daten von einigen Bots hilft und Sie durch einige Grundlagen der Funktionsweise führt.</value>
+    <comment>"walk you through some of the ropes" can't be translated as is since you don't have that expression in german.</comment>
   </data>
   <data name="WizardIntro2" xml:space="preserve">
     <value>Bevor wir beginnen, möchten wir Sie über einige großartige Ressourcen informieren, die Sie nutzen können, um bei Problemen zu helfen oder Ihnen Ideen für Dinge zu geben, die Sie erstellen können. Klicken Sie auf eine der Schaltflächen unten, um zu dieser Ressource zu gelangen:</value>
@@ -8863,53 +8857,6 @@ vorbeugende Maßnahmen, wenn der Benutzer nicht auf Ihrer Freundesliste auf Twit
   </data>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Trovo-Kanal-Zauberwirkung</value>
-  </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>Titel/Beschreibung festlegen</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>YouTube-Aktion: Es muss ein gültiger Betrag angegeben werden</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>YouTube-Aktion: Es muss ein gültiger Titel oder eine gültige Beschreibung angegeben werden</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>Massenmitgliedschaft für den YouTube-Kanal geschenkt</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>Meilenstein für YouTube-Kanalmitglied</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>YouTube-Kanalmitgliedschaft geschenkt</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>YouTube-Kanal Neues Mitglied</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>Start des YouTube-Kanal-Streams</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>YouTube-Kanal-Stream-Stopp</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>YouTube-Kanal Super Chat</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>Super-Aufkleber für den YouTube-Kanal</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} Super Chat – {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} Superaufkleber - {1} - {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>YouTube Super Chat anzeigen</value>
   </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Scheinverbindung</value>
@@ -9248,7 +9195,8 @@ print(run())</value>
     <value>Der Endbetrag muss größer sein als der Anfangsbetrag</value>
   </data>
   <data name="TwitchBits" xml:space="preserve">
-    <value>Zuckende Bits</value>
+    <value>Twitch Bits</value>
+    <comment>name of the website does not need a translation</comment>
   </data>
   <data name="EndingAmount" xml:space="preserve">
     <value>Endbetrag</value>
@@ -9264,9 +9212,6 @@ print(run())</value>
   </data>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell-Ausführung</value>
-  </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>Zeile mit bestimmtem Text aus der Datei entfernen</value>
   </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Zu entfernender Text</value>
@@ -9304,9 +9249,6 @@ print(run())</value>
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>Es muss ein gültiger Zähler ausgewählt werden</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>Neuester Follower</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Letzte Spende</value>
@@ -9349,6 +9291,66 @@ print(run())</value>
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
+  </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive-Spende</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>Mit der DonorDrive-Dienstkonnektivität können Sie Ereignisse auslösen, sobald Sie oder Ihr Team eine Spende über eine berechtigte DonorDrive-Wohltätigkeitsorganisation erhalten.</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Um DonorDrive mit Mix It Up zu verbinden, besuchen Sie die Website Ihrer Wohltätigkeitsorganisation und suchen Sie nach dem Link zu Ihrer Seite/Teilnehmer. Wählen Sie dann Ihre Wohltätigkeitsorganisation aus der Dropdown-Liste aus oder wählen Sie „Benutzerdefiniert“, wenn sie nicht in der Liste enthalten ist. Kopieren Sie Ihren Seiten-/Teilnehmerlink in das Textfeld und wählen Sie „Anmelden“.</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Titel/Beschreibung festlegen</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>YouTube-Aktion: Es muss ein gültiger Betrag angegeben werden</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>YouTube-Aktion: Es muss ein gültiger Titel oder eine gültige Beschreibung angegeben werden</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>Massenmitgliedschaft für den YouTube-Kanal geschenkt</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>Meilenstein für YouTube-Kanalmitglied</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>YouTube-Kanalmitgliedschaft geschenkt</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>YouTube-Kanal Neues Mitglied</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>Start des YouTube-Kanal-Streams</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>YouTube-Kanal-Stream-Stopp</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>YouTube-Kanal Super Chat</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>Super-Aufkleber für den YouTube-Kanal</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} Super Chat – {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Superaufkleber - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>YouTube Super Chat anzeigen</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Zeile mit bestimmtem Text aus der Datei entfernen</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Vorhandenes Profil</value>
@@ -9663,6 +9665,12 @@ print(run())</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Wählen Sie einen neuen Ordner aus, um Musik aus einem Ordner zu laden, oder klicken Sie auf die Wiedergabetaste, um Musik aus dem zuletzt verwendeten Ordner zu laden.</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>Keine Duplikate</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Neuester Follower</value>
+  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>ResponsiveVoice</value>
   </data>
@@ -9723,9 +9731,6 @@ print(run())</value>
   <data name="SpecificClip" xml:space="preserve">
     <value>Spezifischer Clip</value>
   </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>Keine Duplikate</value>
-  </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Zeilen in der Datei zählen</value>
   </data>
@@ -9742,7 +9747,8 @@ print(run())</value>
     <value>Mix It Up Online ist eine neue Cloud-gehostete Version von Mix It Up, die sich derzeit in der Entwicklung befindet. Benutzer von Mix It Up Desktop können sich jetzt vorab registrieren, um Zugang zum Alpha-Test zu erhalten, indem sie unten auf die Schaltfläche „Registrieren“ klicken.</value>
   </data>
   <data name="MixItUpOnline" xml:space="preserve">
-    <value>Mischen Sie es online</value>
+    <value>MixItUpOnline</value>
+    <comment>The name of the app doesn't need a translation</comment>
   </data>
   <data name="UserOnlyChat" xml:space="preserve">
     <value>Chat nur für Benutzer</value>

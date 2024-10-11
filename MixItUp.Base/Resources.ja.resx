@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2651,10 +2651,6 @@
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>チャット ユーザーが削除されました</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>DonorDrive の寄付</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -5383,7 +5379,7 @@
     <value>絶対</value>
   </data>
   <data name="Twitch" xml:space="preserve">
-    <value>けいれん</value>
+    <value>Twitch</value>
     <comment>Manual</comment>
   </data>
   <data name="Premium" xml:space="preserve">
@@ -5469,12 +5465,6 @@
   </data>
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>有効なカスタム クライアント シークレットを入力してください。</value>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>DonorDrive サービス接続により、あなたまたはあなたのチームが適格な DonorDrive 慈善団体を通じて寄付を受け取ったときからイベントをトリガーできます。</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Mix It Up で DonorDrive に接続するには、慈善団体の Web サイトにアクセスし、ページ/参加者のリンクを探します。次に、ドロップダウンから慈善団体を選択するか、リストにない場合は [カスタム] を選択し、ページ/参加者のリンクをテキスト ボックスにコピーして、[ログイン] を選択します。</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>オーバーレイ接続テストが失敗しました。ストリーミング ソフトウェアで Mix It Up オーバーレイ ページが表示され、実行されていることを確認してください。</value>
@@ -8864,53 +8854,6 @@ Twitch経由では、「マイレージは異なる場合があります」状�
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>トロヴォチャンネルの呪文キャスト</value>
   </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>タイトル/説明を設定する</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>YouTube アクション: 有効な金額を指定する必要があります</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>YouTube アクション: 有効なタイトルまたは説明を指定する必要があります</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>YouTube チャンネルの大量メンバーシップのギフト</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>YouTube チャンネル メンバーのマイルストーン</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>YouTube チャンネル メンバーシップのプレゼント</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>YouTube チャンネルの新規メンバー</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>YouTubeチャンネルストリーム開始</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>YouTubeチャンネルストリーム停止</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>YouTube チャンネルのスーパーチャット</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>YouTubeチャンネルスーパーステッカー</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} スーパー チャット - {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} スーパー ステッカー - {1} - {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>YouTube スーパーチャットを表示する</value>
-  </data>
   <data name="MockConnection" xml:space="preserve">
     <value>模擬接続</value>
   </data>
@@ -9265,9 +9208,6 @@ sendParentMessage({ タイプ: "ScriptComplete"、ID: "{ID}"、結果: 結果 })
   <data name="ShellExecute" xml:space="preserve">
     <value>シェル実行</value>
   </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>特定のテキストを含む行をファイルから削除する</value>
-  </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>削除するテキスト</value>
   </data>
@@ -9304,9 +9244,6 @@ sendParentMessage({ タイプ: "ScriptComplete"、ID: "{ID}"、結果: 結果 })
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>有効なカウンターを選択する必要があります</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>最新のフォロワー</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>最新の寄付</value>
@@ -9349,6 +9286,66 @@ sendParentMessage({ タイプ: "ScriptComplete"、ID: "{ID}"、結果: 結果 })
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>デストリーム</value>
+  </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive の寄付</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>DonorDrive サービス接続により、あなたまたはあなたのチームが適格な DonorDrive 慈善団体を通じて寄付を受け取ったときからイベントをトリガーできます。</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Mix It Up で DonorDrive に接続するには、慈善団体の Web サイトにアクセスし、ページ/参加者のリンクを探します。次に、ドロップダウンから慈善団体を選択するか、リストにない場合は [カスタム] を選択し、ページ/参加者のリンクをテキスト ボックスにコピーして、[ログイン] を選択します。</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>タイトル/説明を設定する</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>YouTube アクション: 有効な金額を指定する必要があります</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>YouTube アクション: 有効なタイトルまたは説明を指定する必要があります</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>YouTube チャンネルの大量メンバーシップのギフト</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>YouTube チャンネル メンバーのマイルストーン</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>YouTube チャンネル メンバーシップのプレゼント</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>YouTube チャンネルの新規メンバー</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>YouTubeチャンネルストリーム開始</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>YouTubeチャンネルストリーム停止</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>YouTube チャンネルのスーパーチャット</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>YouTubeチャンネルスーパーステッカー</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} スーパー チャット - {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} スーパー ステッカー - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>YouTube スーパーチャットを表示する</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>特定のテキストを含む行をファイルから削除する</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>既存のプロファイル</value>
@@ -9663,6 +9660,12 @@ sendParentMessage({ タイプ: "ScriptComplete"、ID: "{ID}"、結果: 結果 })
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>新しいフォルダーを選択してフォルダーから音楽をロードするか、再生ボタンを押して最後に使用したフォルダーから音楽をロードします。</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>重複なし</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>最新のフォロワー</value>
+  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>レスポンシブボイス</value>
   </data>
@@ -9722,9 +9725,6 @@ sendParentMessage({ タイプ: "ScriptComplete"、ID: "{ID}"、結果: 結果 })
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>特定のクリップ</value>
-  </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>重複なし</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>ファイル内の行数を数える</value>
