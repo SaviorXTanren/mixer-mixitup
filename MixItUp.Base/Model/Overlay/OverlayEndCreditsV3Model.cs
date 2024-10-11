@@ -235,6 +235,8 @@ namespace MixItUp.Base.Model.Overlay
         public bool RunCreditsWhenVisible { get; set; }
         [DataMember]
         public bool RunEndlessly { get; set; }
+        [DataMember]
+        public bool DontShowNoDataError { get; set; }
 
         [DataMember]
         public List<OverlayEndCreditsSectionV3Model> Sections { get; set; } = new List<OverlayEndCreditsSectionV3Model>();
@@ -589,7 +591,10 @@ namespace MixItUp.Base.Model.Overlay
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(Resources.OverlayWidgetEndCreditsNoDataCurrentlyAvailable);
+                if (!this.DontShowNoDataError)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage(Resources.OverlayWidgetEndCreditsNoDataCurrentlyAvailable);
+                }
             }
         }
 

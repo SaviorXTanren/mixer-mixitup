@@ -175,13 +175,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding ScrollSpeeds}" SelectedItem="{Binding SelectedScrollSpeed}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ScrollSpeed}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
@@ -193,15 +188,31 @@
             </ComboBox>
 
             <TextBox Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            
-            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunCreditsWhenVisible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="5" IsChecked="{Binding RunCreditsWhenVisible}" VerticalAlignment="Center" Margin="5,0,0,0" />
-
-            <TextBlock Grid.Column="7" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunEndlessly}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="8" IsChecked="{Binding RunEndlessly}" VerticalAlignment="Center" Margin="5,0,0,0" />
         </Grid>
 
-        <Grid Grid.Row="6" HorizontalAlignment="Center">
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunCreditsWhenVisible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="1" IsChecked="{Binding RunCreditsWhenVisible}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunEndlessly}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="4" IsChecked="{Binding RunEndlessly}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+            <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DontShowNoDataError}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="7" IsChecked="{Binding DontShowNoDataError}" VerticalAlignment="Center" Margin="5,0,0,0" />
+        </Grid>
+
+        <Grid Grid.Row="8" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -209,7 +220,7 @@
             <Button Command="{Binding AddSectionCommand}" Content="{x:Static resx:Resources.AddSection}" />
         </Grid>
 
-        <ItemsControl Grid.Row="8" ItemsSource="{Binding Sections}">
+        <ItemsControl Grid.Row="10" ItemsSource="{Binding Sections}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Controls:AccordianGroupBoxControl>

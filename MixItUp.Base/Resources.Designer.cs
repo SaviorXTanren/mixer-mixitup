@@ -6000,6 +6000,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t Show &quot;No Data&quot; Error.
+        /// </summary>
+        public static string DontShowNoDataError {
+            get {
+                return ResourceManager.GetString("DontShowNoDataError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Down Arrow.
         /// </summary>
         public static string DownArrow {
