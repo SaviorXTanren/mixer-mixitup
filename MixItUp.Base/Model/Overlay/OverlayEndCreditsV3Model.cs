@@ -222,6 +222,14 @@ namespace MixItUp.Base.Model.Overlay
         public const string EndCreditsStartedPacketType = "EndCreditsStarted";
         public const string EndCreditsCompletedPacketType = "EndCreditsCompleted";
 
+        private static readonly HashSet<OverlayEndCreditsSectionV3Type> AllChatterSectionTypes = new HashSet<OverlayEndCreditsSectionV3Type>()
+        {
+            OverlayEndCreditsSectionV3Type.Chatters,
+            OverlayEndCreditsSectionV3Type.Followers,
+            OverlayEndCreditsSectionV3Type.Subscribers,
+            OverlayEndCreditsSectionV3Type.Moderators
+        };
+
         private static readonly HashSet<OverlayEndCreditsSectionV3Type> AllSubscriberSectionTypes = new HashSet<OverlayEndCreditsSectionV3Type>()
         {
             OverlayEndCreditsSectionV3Type.Subscribers,
@@ -259,7 +267,7 @@ namespace MixItUp.Base.Model.Overlay
         public Guid EndedCommandID { get; set; }
 
         [DataMember]
-        public override bool Chatters { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Chatters); } set { } }
+        public override bool Chatters { get { return this.Sections.Any(s => OverlayEndCreditsV3Model.AllChatterSectionTypes.Contains(s.Type)); } set { } }
 
         [DataMember]
         public override bool Follows { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Followers || s.Type == OverlayEndCreditsSectionV3Type.NewFollowers); } set { } }
