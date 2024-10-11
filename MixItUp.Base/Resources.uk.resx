@@ -10790,4 +10790,7 @@ print(run())</value>
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>ПОМИЛКА: Не вдалося запустити віджет накладання кінцевих титрів, оскільки наразі немає даних із цього сеансу.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Не показувати помилку "Немає даних".</value>
+  </data>
 </root>

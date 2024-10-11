@@ -10790,4 +10790,7 @@ sendParentMessage({ タイプ: "ScriptComplete"、ID: "{ID}"、結果: 結果 })
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>エラー: 現在このセッションからキャプチャされたデータがないため、エンド クレジット オーバーレイ ウィジェットを実行できませんでした。</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>「データなし」エラーを表示しない</value>
+  </data>
 </root>

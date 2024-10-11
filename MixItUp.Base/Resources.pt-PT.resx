@@ -10790,4 +10790,7 @@ Detetámos que tem mais do que um endpoint de sobreposição criado, o que signi
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>ERRO: O widget de sobreposição de créditos finais não pôde ser executado porque não existem dados captados desta sessão no momento.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Não apresentar erro "Sem dados"</value>
+  </data>
 </root>

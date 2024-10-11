@@ -10790,4 +10790,7 @@ Nous avons détecté que vous avez créé plus d'un point de terminaison de supe
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>ERREUR : Le widget de superposition des crédits de fin n'a pas pu être exécuté car aucune donnée n'est actuellement capturée pour cette session.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Ne pas afficher l'erreur "Aucune donnée"</value>
+  </data>
 </root>

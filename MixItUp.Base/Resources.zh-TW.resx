@@ -10790,4 +10790,7 @@ sendParentMessage({ 型別: "ScriptComplete", ID: "{ID}", 結果: 結果 });</va
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>錯誤：由於目前沒有從此會話捕獲數據，因此無法執行 End Credits Overlay Widget。</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>不顯示“無數據”錯誤</value>
+  </data>
 </root>

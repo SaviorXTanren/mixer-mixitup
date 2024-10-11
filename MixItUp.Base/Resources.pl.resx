@@ -10790,4 +10790,7 @@ Wykryliśmy, że masz utworzony więcej niż 1 punkt końcowy nakładki, co ozna
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>BŁĄD: Nie można uruchomić widżetu nakładki napisów końcowych, ponieważ obecnie nie przechwycono danych z tej sesji.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Nie pokazuj błędu „Brak danych”.</value>
+  </data>
 </root>

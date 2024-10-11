@@ -10790,4 +10790,7 @@ Wir haben festgestellt, dass Sie mehr als einen Overlay-Endpunkt erstellt haben,
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>FEHLER: Das End Credits Overlay Widget konnte nicht ausgeführt werden, da derzeit keine Daten aus dieser Sitzung erfasst werden.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Fehler „Keine Daten“ nicht anzeigen</value>
+  </data>
 </root>

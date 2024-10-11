@@ -10790,4 +10790,7 @@ Abbiamo rilevato che hai creato più di un endpoint overlay, il che significa ch
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>ERRORE: impossibile eseguire il widget Overlay titoli di coda perché al momento non sono presenti dati acquisiti da questa sessione.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Non mostrare l'errore "Nessun dato".</value>
+  </data>
 </root>

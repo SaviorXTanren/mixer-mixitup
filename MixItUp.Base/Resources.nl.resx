@@ -10790,4 +10790,7 @@ We hebben gedetecteerd dat u meer dan één overlay-eindpunt heeft gemaakt, wat 
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>FOUT: End Credits Overlay Widget kan niet worden uitgevoerd omdat er momenteel geen gegevens van deze sessie zijn vastgelegd.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Fout 'Geen gegevens' niet weergeven</value>
+  </data>
 </root>

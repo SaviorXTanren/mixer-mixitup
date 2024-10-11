@@ -10790,4 +10790,7 @@ Hemos detectado que tiene más de 1 punto final superpuesto creado, lo que signi
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>ERROR: No se pudo ejecutar el widget de superposición de créditos finales porque actualmente no hay datos capturados de esta sesión.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>No mostrar el error "Sin datos"</value>
+  </data>
 </root>

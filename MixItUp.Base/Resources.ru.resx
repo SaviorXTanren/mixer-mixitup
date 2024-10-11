@@ -10790,4 +10790,7 @@ sendParentMessage({ Тип: "ScriptComplete", ID: "{ID}", Результат: р
   <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
     <value>ОШИБКА: не удалось запустить виджет наложения конечных титров, поскольку в настоящее время нет записанных данных из этого сеанса.</value>
   </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Не показывать ошибку «Нет данных»</value>
+  </data>
 </root>
