@@ -294,6 +294,16 @@ namespace MixItUp.Base.Services.Twitch
             this.ID = payload["id"].Value<string>();
             this.Title = payload["title"].Value<string>();
 
+            this.StartedAt = TwitchPlatformService.GetTwitchDateTime(payload["started_at"].Value<string>());
+            if (payload.ContainsKey("locks_at"))
+            {
+                this.LocksAt = TwitchPlatformService.GetTwitchDateTime(payload["locks_at"].Value<string>());
+            }
+            else if (payload.ContainsKey("locked_at"))
+            {
+                this.LocksAt = TwitchPlatformService.GetTwitchDateTime(payload["locked_at"].Value<string>());
+            }
+
             this.WinningOutcomeID = payload.GetValue("winning_outcome_id")?.Value<string>();
 
             foreach (JObject oc in (JArray)payload["outcomes"])
