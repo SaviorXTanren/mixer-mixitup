@@ -162,6 +162,10 @@ namespace MixItUp.Base.Model.Overlay
 
         private void StartBackgroundTimer()
         {
+            if (this.cancellationTokenSource != null)
+            {
+                this.cancellationTokenSource.Cancel();
+            }
             this.cancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             AsyncRunner.RunAsyncBackground(this.BackgroundTimer, this.cancellationTokenSource.Token);
