@@ -415,8 +415,6 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
-                    html = this.LocalFilePropertyReplacement(html);
-
                     Logger.Log(LogLevel.Debug, $"Overlay - Setting HTML - {id} - {html}");
                     this.httpListenerServer.SetHTMLData(id, html);
                 }
@@ -534,6 +532,7 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
+                    html = ServiceManager.Get<OverlayV3Service>().LocalFilePropertyReplacement(html);
                     ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
                     await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id, html)
                     {
