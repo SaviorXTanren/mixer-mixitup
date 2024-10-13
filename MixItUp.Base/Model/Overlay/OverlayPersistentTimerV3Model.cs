@@ -118,8 +118,9 @@ namespace MixItUp.Base.Model.Overlay
                 else
                 {
                     this.CurrentAmount += (int)amount;
-                    this.CurrentAmount = Math.Max(this.CurrentAmount, 1);
                 }
+
+                this.CurrentAmount = Math.Max(this.CurrentAmount, 1);
 
                 if (amount != 0)
                 {
