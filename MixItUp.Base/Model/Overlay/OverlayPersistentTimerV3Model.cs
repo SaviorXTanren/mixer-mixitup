@@ -57,6 +57,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private bool paused;
 
+        [JsonIgnore]
+        private object amountLock = new object();
+
         public OverlayPersistentTimerV3Model() : base(OverlayItemV3Type.PersistentTimer) { }
 
         public override async Task Initialize()
@@ -109,18 +112,21 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.paused || this.AllowAdjustmentWhilePaused)
             {
                 amount = Math.Round(amount);
-                if (this.MaxAmount > 0 && amount > 0)
+                lock (amountLock)
                 {
-                    int previousAmount = this.CurrentAmount;
-                    this.CurrentAmount = Math.Min(this.CurrentAmount + (int)amount, this.MaxAmount);
-                    amount = this.CurrentAmount - previousAmount;
-                }
-                else
-                {
-                    this.CurrentAmount += (int)amount;
-                }
+                    if (this.MaxAmount > 0 && amount > 0)
+                    {
+                        int previousAmount = this.CurrentAmount;
+                        this.CurrentAmount = Math.Min(this.CurrentAmount + (int)amount, this.MaxAmount);
+                        amount = this.CurrentAmount - previousAmount;
+                    }
+                    else
+                    {
+                        this.CurrentAmount += (int)amount;
+                    }
 
-                this.CurrentAmount = Math.Max(this.CurrentAmount, 1);
+                    this.CurrentAmount = Math.Max(this.CurrentAmount, 1);
+                }
 
                 if (amount != 0)
                 {
@@ -178,16 +184,25 @@ namespace MixItUp.Base.Model.Overlay
             {
                 await Task.Delay(1000);
 
-                if (this.CurrentAmount > 0)
+                bool timerCompleted = false;
+                lock (amountLock)
                 {
-                    this.CurrentAmount--;
-                    if (this.CurrentAmount == 0)
+                    if (this.CurrentAmount > 0)
                     {
-                        await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
-                        if (this.DisableOnCompletion)
+                        this.CurrentAmount--;
+                        if (this.CurrentAmount == 0)
                         {
-                            await ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID).Disable();
+                            timerCompleted = true;
                         }
+                    }
+                }
+
+                if (timerCompleted)
+                {
+                    await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
+                    if (this.DisableOnCompletion)
+                    {
+                        await ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID).Disable();
                     }
                 }
             }
