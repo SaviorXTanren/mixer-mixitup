@@ -8,6 +8,7 @@ using System;
 using System.Threading;
 using System.Text.Json.Serialization;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -112,6 +113,9 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.paused || this.AllowAdjustmentWhilePaused)
             {
                 amount = Math.Round(amount);
+
+                Logger.Log(LogLevel.Debug, $"Processing timer amount - {amount}");
+
                 lock (amountLock)
                 {
                     if (this.MaxAmount > 0 && amount > 0)
@@ -127,6 +131,8 @@ namespace MixItUp.Base.Model.Overlay
 
                     this.CurrentAmount = Math.Max(this.CurrentAmount, 1);
                 }
+
+                Logger.Log(LogLevel.Debug, $"New timer amount - {this.CurrentAmount}");
 
                 if (amount != 0)
                 {

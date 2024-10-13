@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -283,6 +284,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.CurrentSegment != null)
             {
+                Logger.Log(LogLevel.Debug, $"Processing goal amount - {amount}");
+
                 if (this.GoalType == OverlayGoalV3Type.Followers && user.Platform == this.StreamingPlatform)
                 {
                     amount = 1;
@@ -309,6 +312,8 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     previousAmount = this.CounterPreviousCurrentAmount;
                 }
+
+                Logger.Log(LogLevel.Debug, $"New amounts - {this.CurrentAmount} / {this.GoalAmount} ({this.TotalAmount})");
 
                 if (this.CurrentAmount >= this.GoalAmount && (this.CurrentSegment != this.Segments.Last() || previousAmount < this.GoalAmount))
                 {
