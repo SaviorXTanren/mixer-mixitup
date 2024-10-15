@@ -982,13 +982,18 @@ namespace MixItUp.Base {
         ///    {Head}
         ///
         ///    &lt;style type=&quot;text/css&quot;&gt;
-        ///        @charset &quot;UTF-8&quot;;/*!
-        ///        * animate.css - https://animate.style/
-        ///        * Version - 4.1.1
-        ///        * Licensed under the MIT license - http://opensource.org/licenses/MIT
-        ///        *
-        ///        * Copyright (c) 2020 Animate.css
-        ///        */:root{--animate-duration:1s;--animate-delay:1s;- [rest of string was truncated]&quot;;.
+        ///        {AnimateCSS}
+        ///    &lt;/style&gt;
+        ///
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///        {WoahCSS}
+        ///    &lt;/style&gt;
+        ///
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///        {CSS}
+        ///    &lt;/style&gt;
+        ///&lt;/head&gt;
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayItemIFrameHTML {
             get {
@@ -1940,6 +1945,23 @@ namespace MixItUp.Base {
         public static string videoJS {
             get {
                 return ResourceManager.GetString("videoJS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /*!
+        /// * Woah.css - http://joerezendes.com/woah.css
+        /// * Version - 1.0
+        /// * Licensed under the MIT license - http://opensource.org/licenses/MIT
+        /// *
+        /// * Github - https://github.com/joerez/Woah.css
+        /// *
+        /// * Copyright (c) 2018 Joe Rezendes
+        /// */.dealWithIt::after,.fedoraTip::after{z-index:5;content:&apos;&apos;;vertical-align:baseline;position:absolute;top:-200%;right:-50%;bottom:-50%;left:-50%}.woah{animation-fill-mode:both}.dealWithIt::after,.fedoraTip::after,.leaveInStyle{animation-fill-mode:forwards}.woah.infinite{animat [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string WoahCSS {
+            get {
+                return ResourceManager.GetString("WoahCSS", resourceCulture);
             }
         }
     }

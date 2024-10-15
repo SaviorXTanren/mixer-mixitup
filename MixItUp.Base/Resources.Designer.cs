@@ -2006,6 +2006,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blazing Star.
+        /// </summary>
+        public static string BlazingStar {
+            get {
+                return ResourceManager.GetString("BlazingStar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blue.
         /// </summary>
         public static string Blue {
@@ -4874,6 +4883,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deal With It.
+        /// </summary>
+        public static string DealWithIt {
+            get {
+                return ResourceManager.GetString("DealWithIt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug.
         /// </summary>
         public static string Debug {
@@ -7514,6 +7532,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fedora Tip.
+        /// </summary>
+        public static string FedoraTip {
+            get {
+                return ResourceManager.GetString("FedoraTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field Name.
         /// </summary>
         public static string FieldName {
@@ -7717,6 +7744,24 @@ namespace MixItUp.Base {
         public static string Float {
             get {
                 return ResourceManager.GetString("Float", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fly In.
+        /// </summary>
+        public static string FlyIn {
+            get {
+                return ResourceManager.GetString("FlyIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fly Out.
+        /// </summary>
+        public static string FlyOut {
+            get {
+                return ResourceManager.GetString("FlyOut", resourceCulture);
             }
         }
         
@@ -12428,6 +12473,15 @@ namespace MixItUp.Base {
         public static string Leaderboard {
             get {
                 return ResourceManager.GetString("Leaderboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leave In Style.
+        /// </summary>
+        public static string LeaveInStyle {
+            get {
+                return ResourceManager.GetString("LeaveInStyle", resourceCulture);
             }
         }
         
@@ -19141,6 +19195,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rotate Complex.
+        /// </summary>
+        public static string RotateComplex {
+            get {
+                return ResourceManager.GetString("RotateComplex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rotate Complex Out.
+        /// </summary>
+        public static string RotateComplexOut {
+            get {
+                return ResourceManager.GetString("RotateComplexOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rotate In.
         /// </summary>
         public static string RotateIn {
@@ -19533,6 +19605,15 @@ namespace MixItUp.Base {
         public static string SaveToFile {
             get {
                 return ResourceManager.GetString("SaveToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scale Out.
+        /// </summary>
+        public static string ScaleOut {
+            get {
+                return ResourceManager.GetString("ScaleOut", resourceCulture);
             }
         }
         
@@ -20849,6 +20930,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Simple Entrance.
+        /// </summary>
+        public static string SimpleEntrance {
+            get {
+                return ResourceManager.GetString("SimpleEntrance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Single Widget URL.
         /// </summary>
         public static string SingleWidgetURL {
@@ -21280,6 +21370,15 @@ namespace MixItUp.Base {
         public static string Spin {
             get {
                 return ResourceManager.GetString("Spin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spin 3D.
+        /// </summary>
+        public static string Spin3D {
+            get {
+                return ResourceManager.GetString("Spin3D", resourceCulture);
             }
         }
         
@@ -27410,6 +27509,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Woah.css.
+        /// </summary>
+        public static string WoahCSS {
+            get {
+                return ResourceManager.GetString("WoahCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wobble.
         /// </summary>
         public static string Wobble {
@@ -27433,6 +27541,15 @@ namespace MixItUp.Base {
         public static string WouldYouLikeToDownloadThisUpdate {
             get {
                 return ResourceManager.GetString("WouldYouLikeToDownloadThisUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wowzors.
+        /// </summary>
+        public static string Wowzors {
+            get {
+                return ResourceManager.GetString("Wowzors", resourceCulture);
             }
         }
         

@@ -10793,4 +10793,43 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="DontShowNoDataError" xml:space="preserve">
     <value>Don't Show "No Data" Error</value>
   </data>
+  <data name="BlazingStar" xml:space="preserve">
+    <value>Blazing Star</value>
+  </data>
+  <data name="DealWithIt" xml:space="preserve">
+    <value>Deal With It</value>
+  </data>
+  <data name="FedoraTip" xml:space="preserve">
+    <value>Fedora Tip</value>
+  </data>
+  <data name="FlyIn" xml:space="preserve">
+    <value>Fly In</value>
+  </data>
+  <data name="FlyOut" xml:space="preserve">
+    <value>Fly Out</value>
+  </data>
+  <data name="LeaveInStyle" xml:space="preserve">
+    <value>Leave In Style</value>
+  </data>
+  <data name="RotateComplex" xml:space="preserve">
+    <value>Rotate Complex</value>
+  </data>
+  <data name="RotateComplexOut" xml:space="preserve">
+    <value>Rotate Complex Out</value>
+  </data>
+  <data name="ScaleOut" xml:space="preserve">
+    <value>Scale Out</value>
+  </data>
+  <data name="SimpleEntrance" xml:space="preserve">
+    <value>Simple Entrance</value>
+  </data>
+  <data name="Spin3D" xml:space="preserve">
+    <value>Spin 3D</value>
+  </data>
+  <data name="WoahCSS" xml:space="preserve">
+    <value>Woah.css</value>
+  </data>
+  <data name="Wowzors" xml:space="preserve">
+    <value>Wowzors</value>
+  </data>
 </root>

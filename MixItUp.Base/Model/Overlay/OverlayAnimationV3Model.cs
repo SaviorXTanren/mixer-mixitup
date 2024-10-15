@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Util;
-using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -134,10 +133,31 @@ namespace MixItUp.Base.Model.Overlay
         RandomVisible = 1002,
     }
 
+    public enum OverlayWoahCSSAnimationType
+    {
+        None,
+
+        Random,
+
+        DealWithIt,
+
+        FlyIn,
+        FlyOut,
+
+        LeaveInStyle,
+
+        RotateComplex,
+        RotateComplexOut,
+
+        Spin3D,
+
+        Wowzors,
+    }
+
     [DataContract]
     public class OverlayAnimationV3Model
     {
-        private static readonly List<OverlayAnimateCSSAnimationType> RandomInAnimations = new List<OverlayAnimateCSSAnimationType>()
+        private static readonly List<OverlayAnimateCSSAnimationType> AnimateCSSRandomInAnimations = new List<OverlayAnimateCSSAnimationType>()
         {
             OverlayAnimateCSSAnimationType.BackInDown,
             OverlayAnimateCSSAnimationType.BackInLeft,
@@ -188,7 +208,7 @@ namespace MixItUp.Base.Model.Overlay
             OverlayAnimateCSSAnimationType.ZoomInUp,
         };
 
-        private static readonly List<OverlayAnimateCSSAnimationType> RandomOutAnimations = new List<OverlayAnimateCSSAnimationType>()
+        private static readonly List<OverlayAnimateCSSAnimationType> AnimateCSSRandomOutAnimations = new List<OverlayAnimateCSSAnimationType>()
         {
             OverlayAnimateCSSAnimationType.BackOutDown,
             OverlayAnimateCSSAnimationType.BackOutLeft,
@@ -239,7 +259,7 @@ namespace MixItUp.Base.Model.Overlay
             OverlayAnimateCSSAnimationType.ZoomOutUp,
         };
 
-        private static readonly List<OverlayAnimateCSSAnimationType> RandomVisibleAnimations = new List<OverlayAnimateCSSAnimationType>()
+        private static readonly List<OverlayAnimateCSSAnimationType> AnimateCSSRandomVisibleAnimations = new List<OverlayAnimateCSSAnimationType>()
         {
             OverlayAnimateCSSAnimationType.Bounce,
             OverlayAnimateCSSAnimationType.Flash,
@@ -286,15 +306,41 @@ namespace MixItUp.Base.Model.Overlay
                     }
                     else if (animation == OverlayAnimateCSSAnimationType.RandomIn)
                     {
-                        animation = RandomInAnimations.Random();
+                        animation = AnimateCSSRandomInAnimations.Random();
                     }
                     else if (animation == OverlayAnimateCSSAnimationType.RandomOut)
                     {
-                        animation = RandomOutAnimations.Random();
+                        animation = AnimateCSSRandomOutAnimations.Random();
                     }
                     else if (animation == OverlayAnimateCSSAnimationType.RandomVisible)
                     {
-                        animation = RandomVisibleAnimations.Random();
+                        animation = AnimateCSSRandomVisibleAnimations.Random();
+                    }
+
+                    string animationName = animation.ToString();
+                    return Char.ToLowerInvariant(animationName[0]) + animationName.Substring(1);
+                }
+                return string.Empty;
+            }
+        }
+
+        [DataMember]
+        public OverlayWoahCSSAnimationType WoahCSSAnimation { get; set; }
+        [JsonIgnore]
+        public string WoahCSSAnimationName
+        {
+            get
+            {
+                if (this.WoahCSSAnimation != OverlayWoahCSSAnimationType.None)
+                {
+                    OverlayWoahCSSAnimationType animation = this.WoahCSSAnimation;
+
+                    if (animation == OverlayWoahCSSAnimationType.Random)
+                    {
+                        HashSet<OverlayWoahCSSAnimationType> values = new HashSet<OverlayWoahCSSAnimationType>(EnumHelper.GetEnumList<OverlayWoahCSSAnimationType>().ToList());
+                        values.Remove(OverlayWoahCSSAnimationType.None);
+                        values.Remove(OverlayWoahCSSAnimationType.Random);
+                        animation = values.Random();
                     }
 
                     string animationName = animation.ToString();
@@ -313,6 +359,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     return "animate.css";
                 }
+                if (this.WoahCSSAnimation != OverlayWoahCSSAnimationType.None)
+                {
+                    return "Woah.css";
+                }
                 return null;
             }
         }
@@ -325,6 +375,10 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
                 {
                     return this.AnimateCSSAnimationName;
+                }
+                if (this.WoahCSSAnimation != OverlayWoahCSSAnimationType.None)
+                {
+                    return this.WoahCSSAnimationName;
                 }
                 return null;
             }

@@ -646,6 +646,10 @@ namespace MixItUp.Base.Services
         public void RefreshItemIFrameHTMLCache()
         {
             this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML;
+
+            this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, "AnimateCSS", OverlayResources.animateCSS);
+            this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, "WoahCSS", OverlayResources.WoahCSS);
+
             this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.Head), this.Model.Head);
             this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.HTML), this.Model.HTML);
             this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.CSS), this.Model.CSS);
