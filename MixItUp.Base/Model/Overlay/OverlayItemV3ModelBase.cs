@@ -214,6 +214,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task Reset() { return Task.CompletedTask; }
 
+        public virtual void ImportReset()
+        {
+            this.ID = Guid.NewGuid();
+        }
+
         public virtual Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();

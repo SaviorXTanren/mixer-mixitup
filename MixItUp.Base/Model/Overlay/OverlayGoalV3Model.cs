@@ -261,6 +261,19 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
+        public override void ImportReset()
+        {
+            base.ImportReset();
+
+            this.ProgressOccurredCommandID = Guid.Empty;
+            this.SegmentCompletedCommandID = Guid.Empty;
+
+            foreach (var segment in this.Segments)
+            {
+                segment.CommandID = Guid.Empty;
+            }
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();

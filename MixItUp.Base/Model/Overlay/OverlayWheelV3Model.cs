@@ -135,6 +135,18 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
+        public override void ImportReset()
+        {
+            base.ImportReset();
+
+            this.DefaultOutcomeCommand = Guid.Empty;
+
+            foreach (var outcome in this.Outcomes)
+            {
+                outcome.CommandID = Guid.Empty;
+            }
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();

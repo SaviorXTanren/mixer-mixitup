@@ -95,6 +95,14 @@ namespace MixItUp.Base.Model.Overlay
             this.CurrentAmount = this.InitialAmount;
         }
 
+        public override void ImportReset()
+        {
+            base.ImportReset();
+
+            this.TimerAdjustedCommandID = Guid.Empty;
+            this.TimerCompletedCommandID = Guid.Empty;
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
