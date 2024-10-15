@@ -1,12 +1,14 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
-using System.Runtime;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -17,6 +19,8 @@ namespace MixItUp.Base.Model.Overlay
     {
         Custom,
         Counter,
+        Followers,
+        Subscribers,
     }
 
     public enum OverlayGoalSegmentV3Type
@@ -63,6 +67,9 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayGoalV3Type GoalType { get; set; } = OverlayGoalV3Type.Custom;
 
         [DataMember]
+        public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.None;
+
+        [DataMember]
         public OverlayGoalSegmentV3Type SegmentType { get; set; }
         [DataMember]
         public List<OverlayGoalSegmentV3Model> Segments { get; set; } = new List<OverlayGoalSegmentV3Model>();
@@ -101,26 +108,19 @@ namespace MixItUp.Base.Model.Overlay
         {
             get
             {
-                if (this.GoalType == OverlayGoalV3Type.Custom)
-                {
-                    return this.CustomTotalAmount;
-                }
-                else if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
+                if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
                 {
                     return this.Counter.Amount;
                 }
-                return 0;
+                return this.CustomTotalAmount;
             }
             set
             {
-                if (this.GoalType == OverlayGoalV3Type.Custom)
-                {
-                    this.CustomTotalAmount = value;
-                }
-                else if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
+                if (this.GoalType == OverlayGoalV3Type.Counter && this.Counter != null)
                 {
                     this.Counter.Amount = value;
                 }
+                this.CustomTotalAmount = value;
             }
         }
 
@@ -200,6 +200,28 @@ namespace MixItUp.Base.Model.Overlay
                 this.CounterPreviousCurrentAmount = this.CurrentAmount;
                 CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
             }
+            else if (this.GoalType == OverlayGoalV3Type.Followers)
+            {
+                if (!this.IsLivePreview)
+                {
+                    this.EnableFollows();
+                    if (this.StreamingPlatform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        this.TotalAmount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
+                    }
+                }
+            }
+            else if (this.GoalType == OverlayGoalV3Type.Subscribers)
+            {
+                if (!this.IsLivePreview)
+                {
+                    this.EnableSubscriptions();
+                    if (this.StreamingPlatform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        this.TotalAmount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
+                    }
+                }
+            }
 
             this.PreviousGoalAmount = 0;
             this.CurrentSegment = this.Segments.First();
@@ -239,6 +261,19 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
+        public override void ImportReset()
+        {
+            base.ImportReset();
+
+            this.ProgressOccurredCommandID = Guid.Empty;
+            this.SegmentCompletedCommandID = Guid.Empty;
+
+            foreach (var segment in this.Segments)
+            {
+                segment.CommandID = Guid.Empty;
+            }
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
@@ -262,6 +297,17 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.CurrentSegment != null)
             {
+                Logger.Log(LogLevel.Debug, $"Processing goal amount - {amount}");
+
+                if (this.GoalType == OverlayGoalV3Type.Followers && user.Platform == this.StreamingPlatform)
+                {
+                    amount = 1;
+                }
+                else if (this.GoalType == OverlayGoalV3Type.Subscribers && user.Platform == this.StreamingPlatform)
+                {
+                    amount = 1;
+                }
+
                 OverlayGoalSegmentV3Model previousSegment = this.CurrentSegment;
                 double previousAmount = this.TotalAmount;
                 if (amount != 0)
@@ -280,6 +326,8 @@ namespace MixItUp.Base.Model.Overlay
                     previousAmount = this.CounterPreviousCurrentAmount;
                 }
 
+                Logger.Log(LogLevel.Debug, $"New amounts - {this.CurrentAmount} / {this.GoalAmount} ({this.TotalAmount})");
+
                 if (this.CurrentAmount >= this.GoalAmount && (this.CurrentSegment != this.Segments.Last() || previousAmount < this.GoalAmount))
                 {
                     IEnumerable<OverlayGoalSegmentV3Model> segmentsCompleted = this.ProgressSegments();
@@ -296,8 +344,14 @@ namespace MixItUp.Base.Model.Overlay
                         parameters.SpecialIdentifiers[NextSegmentNameSpecialIdentifier] = this.CurrentSegment.Name;
                         parameters.SpecialIdentifiers[NextSegmentAmountSpecialIdentifier] = this.CurrentSegment.Amount.ToString();
 
-                        await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
-                        await ServiceManager.Get<CommandService>().Queue(segment.CommandID, parameters);
+                        if (ChannelSession.Settings.Commands.TryGetValue(segment.CommandID, out CommandModelBase command) && command.Actions.Count > 0)
+                        {
+                            await ServiceManager.Get<CommandService>().Queue(segment.CommandID, parameters);
+                        }
+                        else
+                        {
+                            await ServiceManager.Get<CommandService>().Queue(this.SegmentCompletedCommandID, parameters);
+                        }
                     }
                 }
                 else

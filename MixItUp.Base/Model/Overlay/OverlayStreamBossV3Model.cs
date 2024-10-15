@@ -106,6 +106,15 @@ namespace MixItUp.Base.Model.Overlay
             this.CurrentHealth = this.CurrentMaxHealth;
         }
 
+        public override void ImportReset()
+        {
+            base.ImportReset();
+
+            this.DamageOccurredCommandID = Guid.Empty;
+            this.HealingOccurredCommandID = Guid.Empty;
+            this.NewBossCommandID = Guid.Empty;
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();

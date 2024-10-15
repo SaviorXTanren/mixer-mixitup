@@ -592,6 +592,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string OverlayEndpointDefaultHead {
+            get {
+                return ResourceManager.GetString("OverlayEndpointDefaultHead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 
         ///
         ///{HTML}.
@@ -961,34 +970,30 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to maindiv.style.visibility=&apos;hidden&apos;;
-        ///sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });.
-        /// </summary>
-        public static string OverlayItemHideAndSendParentMessageRemoveJavascript {
-            get {
-                return ResourceManager.GetString("OverlayItemHideAndSendParentMessageRemoveJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///
         ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+        ///    
+        ///    {JQuery}
         ///
-        ///    &lt;script src=&quot;/scripts/jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+        ///    {Head}
         ///
-        ///    &lt;script src=&quot;/scripts/video.min.js&quot;&gt;&lt;/script&gt;
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///        {AnimateCSS}
+        ///    &lt;/style&gt;
         ///
-        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/scripts/animate.min.css&quot;&gt;
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///        {WoahCSS}
+        ///    &lt;/style&gt;
         ///
         ///    &lt;style type=&quot;text/css&quot;&gt;
         ///        {CSS}
         ///    &lt;/style&gt;
         ///&lt;/head&gt;
-        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max- [rest of string was truncated]&quot;;.
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayItemIFrameHTML {
             get {
@@ -1048,6 +1053,33 @@ namespace MixItUp.Base {
         ///var displayRotationSeconds = {DisplayRotationSeconds};
         ///var displayRotationIndex = 0;
         ///
+        ///function rotateLabelDisplay()
+        ///{
+        ///    if (displayRotationIndex &gt;= labels.children.length)
+        ///    {
+        ///        displayRotationIndex = 0;
+        ///    }
+        ///    
+        ///    for (const labelDisplay of labels.children) {
+        ///        labelDisplay.style.visibility = &apos;hidden&apos;;
+        ///    }
+        ///    
+        ///    let label = labels.children[displayRotationIndex];
+        ///    label.st [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayLabelDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayLabelDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to var labels = document.getElementById(&quot;labels&quot;);
+        ///
+        ///var displaySettings = &quot;{DisplaySetting}&quot;;
+        ///var displayRotationSeconds = {DisplayRotationSeconds};
+        ///var displayRotationIndex = 0;
+        ///
         ///function addLabelDisplay(type, format)
         ///{
         ///    let labelDisplayTemplate = document.getElementById(&quot;labeldisplay&quot;);
@@ -1057,27 +1089,9 @@ namespace MixItUp.Base {
         ///    labelText.innerHTML = format;
         ///    labelText.style. [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string OverlayLabelDefaultJavascript {
+        public static string OverlayLabelDefaultJavascriptOld {
             get {
-                return ResourceManager.GetString("OverlayLabelDefaultJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to $userdisplayname - $labelamount.
-        /// </summary>
-        public static string OverlayLabelUsernameAmountDefaultFormat {
-            get {
-                return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to $userdisplayname.
-        /// </summary>
-        public static string OverlayLabelUsernameDefaultFormat {
-            get {
-                return ResourceManager.GetString("OverlayLabelUsernameDefaultFormat", resourceCulture);
+                return ResourceManager.GetString("OverlayLabelDefaultJavascriptOld", resourceCulture);
             }
         }
         
@@ -1803,6 +1817,32 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to const main = document.getElementById(&quot;maindiv&quot;);
+        ///const wheelCanvas = document.getElementById(&quot;wheelCanvas&quot;);
+        ///const arrowCanvas = document.getElementById(&quot;arrowCanvas&quot;);
+        ///
+        ///hideWheel();
+        ///
+        ///const startingSpeed = 10;
+        ///const spinsPerSpeed = 100;
+        ///const totalIntervals = 15;
+        ///const intervalDivider = 1.5;
+        ///const soundInterval = 75;
+        ///
+        ///const xPosition = {Size} / 2;
+        ///const yPosition = {Size} / 2;
+        ///const radius = {Size} / 2;
+        ///const names = [{OutcomeNames}];
+        ///const colors = [{OutcomeColors}];
+        ///const wheelClickSoundU [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayWheelDefaultJavascriptOld {
+            get {
+                return ResourceManager.GetString("OverlayWheelDefaultJavascriptOld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .youtubeVideo {
         ///
         ///}.
@@ -1905,6 +1945,23 @@ namespace MixItUp.Base {
         public static string videoJS {
             get {
                 return ResourceManager.GetString("videoJS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /*!
+        /// * Woah.css - http://joerezendes.com/woah.css
+        /// * Version - 1.0
+        /// * Licensed under the MIT license - http://opensource.org/licenses/MIT
+        /// *
+        /// * Github - https://github.com/joerez/Woah.css
+        /// *
+        /// * Copyright (c) 2018 Joe Rezendes
+        /// */.dealWithIt::after,.fedoraTip::after{z-index:5;content:&apos;&apos;;vertical-align:baseline;position:absolute;top:-200%;right:-50%;bottom:-50%;left:-50%}.woah{animation-fill-mode:both}.dealWithIt::after,.fedoraTip::after,.leaveInStyle{animation-fill-mode:forwards}.woah.infinite{animat [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string WoahCSS {
+            get {
+                return ResourceManager.GetString("WoahCSS", resourceCulture);
             }
         }
     }

@@ -788,7 +788,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 string statusChatText = string.Empty;
                 if (this.Currency.IsRank)
                 {
-                    statusChatText = string.Format(MixItUp.Base.Resources.ConsumablesCurrencyCommandDefault, this.Currency.UserRankNameSpecialIdentifier, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
+                    statusChatText = string.Format(MixItUp.Base.Resources.ConsumablesRankCommandDefault, this.Currency.UserRankNameSpecialIdentifier, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
                 }
                 else
                 {

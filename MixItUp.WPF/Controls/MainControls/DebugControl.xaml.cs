@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Amazon.Runtime.Internal.Transform;
+using MixItUp.Base;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
@@ -7,8 +8,10 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -118,6 +121,38 @@ namespace MixItUp.WPF.Controls.MainControls
                     sub_message = new JObject()
                 });
             }
+
+            ChatRawPacketModel chatRawPacket = new ChatRawPacketModel()
+            {
+                RawText = "@badge-info=subscriber/1;badges=subscriber/0;color=#00FF7F;display-name=" + twitchUser.DisplayName + ";emotes=;flags=;id=44cb7c41-ecf4-435c-98bd-1e2a891df7af;login=" + twitchUser.Username + ";mod=0;msg-id=submysterygift;msg-param-mass-gift-count=5;msg-param-origin-id=89\\\\s82\\\\s5f\\\\s60\\\\s08\\\\s2e\\\\s6d\\\\sc2\\\\s76\\\\s90\\\\s45\\\\sce\\\\s97\\\\s71\\\\s8f\\\\s25\\\\s52\\\\sac\\\\sd2\\\\sf8;msg-param-sender-count=5;msg-param-sub-plan=1000;room-id=" + ServiceManager.Get<TwitchSessionService>().User.id + ";subscriber=1;system-msg=" + twitchUser.DisplayName + "\\\\sis\\\\sgifting\\\\s5\\\\sTier\\\\s1\\\\sSubs\\\\sto\\\\s" + ServiceManager.Get<TwitchSessionService>().User.display_name + "'s\\\\scommunity!\\\\sThey've\\\\sgifted\\\\sa\\\\stotal\\\\sof\\\\s5\\\\sin\\\\sthe\\\\schannel!;tmi-sent-ts=1594506772399;user-id=" + twitchUser.ID + ";user-type= :tmi.twitch.tv USERNOTICE #" + ServiceManager.Get<TwitchSessionService>().User.login,
+                Prefix = "tmi.twitch.tv",
+                Command = "USERNOTICE",
+                Parameters = new List<string>() { "#mixitupapp" },
+                Tags = new Dictionary<string, string>()
+                {
+                    { "badge-info", "subscriber/1" },
+                    { "badges", "subscriber/0" },
+                    { "color", "#00FF7F" },
+                    { "display-name", twitchUser.DisplayName },
+                    { "emotes", "" },
+                    { "flags", "" },
+                    { "id", "44cb7c41-ecf4-435c-98bd-1e2a891df7af" },
+                    { "login", twitchUser.Username },
+                    { "mod", "0" },
+                    { "msg-id", "submysterygift" },
+                    { "msg-param-mass-gift-count", "5" },
+                    { "msg-param-origin-id", "89 s82 s5f s60 s08 s2e s6d sc2 s76 s90 s45 sce s97 s71 s8f s25 s52 sac sd2 sf8" },
+                    { "msg-param-sender-count", "5" },
+                    { "msg-param-sub-plan", "1000" },
+                    { "room-id", ServiceManager.Get<TwitchSessionService>().User.id },
+                    { "subscriber", "1" },
+                    { "system-msg", twitchUser.DisplayName + " sis sgifting s5 sTier s1 sSubs sto s" + ServiceManager.Get<TwitchSessionService>().User.display_name + "'s scommunity! sThey've sgifted sa stotal sof s5 sin sthe schannel!" },
+                    { "tmi-sent-ts", "1594506772399" },
+                    { "user-id", twitchUser.ID },
+                    { "user-type", "" }
+                }
+            };
+            ServiceManager.Get<TwitchChatService>().UserClient_OnUserNoticeReceived(this, new ChatUserNoticePacketModel(chatRawPacket));
         }
 
         private void Twitch100BitsCheer_Click(object sender, System.Windows.RoutedEventArgs e)

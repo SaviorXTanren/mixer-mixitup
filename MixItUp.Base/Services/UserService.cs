@@ -372,7 +372,7 @@ namespace MixItUp.Base.Services
                     foreach (StreamingPlatformTypeEnum platform in userData.GetPlatforms())
                     {
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
-                        if (platformModel != null)
+                        if (platformModel != null && this.platformUserIDLookups.ContainsKey(platform))
                         {
                             // Check if there is more than 1 user record and if so, merge them together
                             try

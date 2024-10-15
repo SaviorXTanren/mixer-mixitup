@@ -11,6 +11,17 @@ namespace MixItUp.Base.ViewModel.Overlay
     {
         public event EventHandler OnCloseRequested = delegate { };
 
+        public string Head
+        {
+            get { return this.head; }
+            set
+            {
+                this.head = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string head;
+
         public string HTML
         {
             get { return this.html; }
@@ -52,12 +63,14 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.endpoint = endpoint;
 
+            this.Head = endpoint.Head;
             this.HTML = endpoint.HTML;
             this.CSS = endpoint.CSS;
             this.Javascript = endpoint.Javascript;
 
             this.SaveCommand = this.CreateCommand(() =>
             {
+                this.endpoint.Head = this.Head;
                 this.endpoint.HTML = this.HTML;
                 this.endpoint.CSS = this.CSS;
                 this.endpoint.Javascript = this.Javascript;

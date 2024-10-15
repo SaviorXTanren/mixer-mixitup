@@ -119,6 +119,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
             if (!string.IsNullOrEmpty(message))
             {
+                message = message.Trim();
                 string[] parts = message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string part in parts)
                 {

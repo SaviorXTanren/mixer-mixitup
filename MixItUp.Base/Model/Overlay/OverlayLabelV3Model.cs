@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,6 +33,7 @@ namespace MixItUp.Base.Model.Overlay
         LatestTwitchBits,
         LatestTrovoElixir,
         LatestYouTubeSuperChat,
+        LatestSubscriptionGifter,
 
         Counter = 100,
 
@@ -76,10 +78,9 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayLabelV3Model : OverlayVisualTextV3ModelBase
     {
-        public const string LabelAdds = "LabelAdds";
-
         public const string UsernamePropertyName = "Username";
         public const string AmountPropertyName = "Amount";
+        public const string TypeNamePropertyName = "TypeName";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayLabelDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayLabelDefaultCSS + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTextDefaultCSS;
@@ -102,6 +103,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
+            if (string.Equals(this.Javascript, OverlayResources.OverlayLabelDefaultJavascriptOld, System.StringComparison.OrdinalIgnoreCase))
+            {
+                this.Javascript = OverlayResources.OverlayLabelDefaultJavascript;
+            }
+
             await base.Initialize();
 
             this.RemoveEventHandlers();
@@ -148,23 +154,31 @@ namespace MixItUp.Base.Model.Overlay
             {
                 EventService.OnFollowOccurred += EventService_OnFollowOccurred;
 
-                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower))
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestFollower) && this.Displays[OverlayLabelDisplayV3TypeEnum.LatestFollower].UserID == Guid.Empty)
                 {
                     UserV2ViewModel user = null;
-                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    if (ChannelSession.Settings.LastFollowerUserID != Guid.Empty)
                     {
-                        var followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
-                        if (followers != null && followers.Count() > 0)
-                        {
-                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: followers.First().user_id, performPlatformSearch: true);
-                        }
+                        user = await ServiceManager.Get<UserService>().GetUserByID(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.LastFollowerUserID);
                     }
-                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+
+                    if (user == null)
                     {
-                        var followers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, maxResults: 1);
-                        if (followers != null && followers.Count() > 0)
+                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                         {
-                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: followers.First().user_id, platformUsername: followers.First().nickname, performPlatformSearch: true);
+                            var followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
+                            if (followers != null && followers.Count() > 0)
+                            {
+                                user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: followers.First().user_id, performPlatformSearch: true);
+                            }
+                        }
+                        else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                        {
+                            var followers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, maxResults: 1);
+                            if (followers != null && followers.Count() > 0)
+                            {
+                                user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: followers.First().user_id, platformUsername: followers.First().nickname, performPlatformSearch: true);
+                            }
                         }
                     }
 
@@ -194,21 +208,30 @@ namespace MixItUp.Base.Model.Overlay
                 EventService.OnRaidOccurred += EventService_OnRaidOccurred;
             }
 
-            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers) || this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter))
             {
                 EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
                 EventService.OnResubscribeOccurred += EventService_OnResubscribeOccurred;
                 EventService.OnSubscriptionGiftedOccurred += EventService_OnSubscriptionGiftedOccurred;
+                EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
 
-                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber) && this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID == Guid.Empty)
                 {
                     UserV2ViewModel user = null;
-                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    if (ChannelSession.Settings.LastSubscriberUserID != Guid.Empty)
                     {
-                        var subscribers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
-                        if (subscribers != null && subscribers.Count() > 0)
+                        user = await ServiceManager.Get<UserService>().GetUserByID(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.LastSubscriberUserID);
+                    }
+
+                    if (user == null)
+                    {
+                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                         {
-                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: subscribers.First().user_id, performPlatformSearch: true);
+                            var subscribers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
+                            if (subscribers != null && subscribers.Count() > 0)
+                            {
+                                user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: subscribers.First().user_id, performPlatformSearch: true);
+                            }
                         }
                     }
 
@@ -221,8 +244,6 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
                 {
-                    EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
-
                     long amount = 0;
                     if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
@@ -310,25 +331,18 @@ namespace MixItUp.Base.Model.Overlay
             return properties;
         }
 
-        public override async Task ProcessGenerationProperties(Dictionary<string, object> properties, CommandParametersModel parameters)
+        protected override async Task Loaded()
         {
-            await base.ProcessGenerationProperties(properties, parameters);
+            await base.Loaded();
 
-            List<string> labelAdds = new List<string>();
             foreach (var display in this.Displays)
             {
                 if (display.Value.IsEnabled)
                 {
-                    string labelAdd = OverlayResources.OverlayLabelAddJavascript;
-                    foreach (var kvp in await this.GetLabelDisplayProperties(display.Value))
-                    {
-                        labelAdd = OverlayV3Service.ReplaceProperty(labelAdd, kvp.Key, kvp.Value);
-                    }
-                    labelAdds.Add(labelAdd);
+                    Dictionary<string, object> data = await this.GetLabelDisplayProperties(display.Value);
+                    await this.CallFunction("add", data);
                 }
             }
-
-            properties[LabelAdds] = string.Join("\n", labelAdds);
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
@@ -399,12 +413,39 @@ namespace MixItUp.Base.Model.Overlay
                 this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount++;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
             }
+
+            if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && subscription.Gifter != null)
+            {
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = subscription.Gifter.ID;
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].Amount = 1;
+                await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter);
+            }
         }
 
         private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, IEnumerable<SubscriptionDetailsModel> subscriptions)
         {
-            this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount += subscriptions.Count();
-            await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
+            if (subscriptions != null && subscriptions.Count() > 0)
+            {
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriber))
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].UserID = subscriptions.Last().User.ID;
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriber].Amount = 1;
+                    await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriber);
+                }
+
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount += subscriptions.Count();
+                    await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
+                }
+
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && subscriptions.Last().Gifter != null)
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = subscriptions.Last().Gifter.ID;
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].Amount = subscriptions.Count();
+                    await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter);
+                }
+            }
         }
 
         private async void EventService_OnDonationOccurred(object sender, UserDonationModel donation)
@@ -513,12 +554,15 @@ namespace MixItUp.Base.Model.Overlay
             {
                 result = OverlayV3Service.ReplaceProperty(result, OverlayLabelV3Model.AmountPropertyName, amount);
             }
+            result = OverlayV3Service.ReplaceProperty(result, OverlayLabelV3Model.TypeNamePropertyName, EnumLocalizationHelper.GetLocalizedName(display.Type));
 
             result = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result, new CommandParametersModel(user));
 
             Dictionary<string, object> data = new Dictionary<string, object>();
             data[nameof(display.Type)] = display.Type.ToString();
+            data[OverlayLabelV3Model.TypeNamePropertyName] = EnumLocalizationHelper.GetLocalizedName(display.Type);
             data[nameof(display.Format)] = result;
+            data["User"] = user;
 
             return data;
         }

@@ -119,9 +119,17 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBox Grid.Column="2" Visibility="{Binding ShowCustomSelections, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding StartingAmountCustom}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+            <TextBox Grid.Column="2" Visibility="{Binding ShowCustomSelections, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding StartingAmountCustom}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="150" />
 
             <ComboBox Grid.Column="2" Visibility="{Binding ShowCounterSelections, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Counters}" SelectedItem="{Binding SelectedCounter}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Counters}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+
+            <ComboBox Grid.Column="2" Visibility="{Binding ShowStreamingPlatformSelections, Converter={StaticResource BooleanToVisibilityConverter}}"  ItemsSource="{Binding StreamingPlatforms}" SelectedItem="{Binding SelectedStreamingPlatform}" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingPlatform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <CommandControls:CustomCommandListingControl Grid.Column="4" DataContext="{Binding ProgressOccurredCommand}" Header="{x:Static resx:Resources.ProgressOccurred}" />
 

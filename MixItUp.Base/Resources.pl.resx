@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2651,10 +2651,6 @@
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>Użytkownik czatu usunięty</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DonorDriveDonation" xml:space="preserve">
-    <value>DonorDrive Darowizna</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -5383,7 +5379,7 @@ włączony. Można to porównać do przełączania opcji „Polecenie odblokowan
     <value>Absolutny</value>
   </data>
   <data name="Twitch" xml:space="preserve">
-    <value>Skurcz</value>
+    <value>Twitch</value>
     <comment>Manual</comment>
   </data>
   <data name="Premium" xml:space="preserve">
@@ -5469,12 +5465,6 @@ włączony. Można to porównać do przełączania opcji „Polecenie odblokowan
   </data>
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Wprowadź prawidłowy niestandardowy klucz tajny klienta.</value>
-  </data>
-  <data name="DonorDriveInfo1" xml:space="preserve">
-    <value>Łączność z usługą DonorDrive umożliwia wyzwalanie zdarzeń od momentu otrzymania przez Ciebie lub Twój zespół darowizny za pośrednictwem kwalifikującej się organizacji charytatywnej DonorDrive.</value>
-  </data>
-  <data name="DonorDriveInfo2" xml:space="preserve">
-    <value>Aby połączyć DonorDrive z Mix It Up, odwiedź witrynę organizacji charytatywnej i poszukaj linku do swojej strony/uczestnika. Następnie wybierz organizację charytatywną z listy rozwijanej lub wybierz opcję Niestandardowa, jeśli nie ma jej na liście, skopiuj link do strony/uczestnika w polu tekstowym i wybierz opcję Zaloguj się.</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Test połączenia nakładki nie powiódł się. Upewnij się, że strona nakładki Mix It Up jest widoczna i uruchomiona w oprogramowaniu do przesyłania strumieniowego.</value>
@@ -8864,53 +8854,6 @@ za pośrednictwem Twitcha jest to sytuacja „Twój przebieg może się różni�
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Rzucanie zaklęć kanału Trovo</value>
   </data>
-  <data name="SetTitleDescription" xml:space="preserve">
-    <value>Ustaw tytuł/opis</value>
-  </data>
-  <data name="YouTubeActionMissingAmount" xml:space="preserve">
-    <value>Akcja YouTube: należy podać prawidłową kwotę</value>
-  </data>
-  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
-    <value>Akcja YouTube: należy podać prawidłowy tytuł lub opis</value>
-  </data>
-  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
-    <value>Podarowano masowe członkostwo na kanale YouTube</value>
-  </data>
-  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
-    <value>Kamień milowy dla członka kanału YouTube</value>
-  </data>
-  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
-    <value>Prezent dotyczący wspierania kanału YouTube</value>
-  </data>
-  <data name="YouTubeChannelNewMember" xml:space="preserve">
-    <value>Nowy członek kanału YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStart" xml:space="preserve">
-    <value>Rozpoczęcie transmisji na kanale YouTube</value>
-  </data>
-  <data name="YouTubeChannelStreamStop" xml:space="preserve">
-    <value>Zatrzymanie transmisji na kanale YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperChat" xml:space="preserve">
-    <value>Superczat na kanale YouTube</value>
-  </data>
-  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
-    <value>Super naklejka na kanał YouTube</value>
-  </data>
-  <data name="AlertYouTubeSuperChat" xml:space="preserve">
-    <value>{0} Superczat – {1}</value>
-    <comment>{0} is the name of the user
-{1} is the amount of the super chat</comment>
-  </data>
-  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
-    <value>{0} Super naklejka - {1} - {2}</value>
-    <comment>{0} is the name of the user
-{1} is the name of the super sticker
-{2} is the amount of the super chat</comment>
-  </data>
-  <data name="ShowYouTubeSuperChat" xml:space="preserve">
-    <value>Pokaż superczat YouTube</value>
-  </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Próbne połączenie</value>
   </data>
@@ -9265,9 +9208,6 @@ drukuj(uruchom())</value>
   <data name="ShellExecute" xml:space="preserve">
     <value>Powłoka Wykonaj</value>
   </data>
-  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
-    <value>Usuń linię z określonym tekstem z pliku</value>
-  </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Tekst do usunięcia</value>
   </data>
@@ -9304,9 +9244,6 @@ drukuj(uruchom())</value>
   </data>
   <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
     <value>Należy wybrać prawidłowy licznik</value>
-  </data>
-  <data name="LatestFollower" xml:space="preserve">
-    <value>Ostatni obserwujący</value>
   </data>
   <data name="LatestDonation" xml:space="preserve">
     <value>Ostatnia darowizna</value>
@@ -9349,6 +9286,66 @@ drukuj(uruchom())</value>
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
+  </data>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive Darowizna</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>Łączność z usługą DonorDrive umożliwia wyzwalanie zdarzeń od momentu otrzymania przez Ciebie lub Twój zespół darowizny za pośrednictwem kwalifikującej się organizacji charytatywnej DonorDrive.</value>
+  </data>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>Aby połączyć DonorDrive z Mix It Up, odwiedź witrynę organizacji charytatywnej i poszukaj linku do swojej strony/uczestnika. Następnie wybierz organizację charytatywną z listy rozwijanej lub wybierz opcję Niestandardowa, jeśli nie ma jej na liście, skopiuj link do strony/uczestnika w polu tekstowym i wybierz opcję Zaloguj się.</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Ustaw tytuł/opis</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>Akcja YouTube: należy podać prawidłową kwotę</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>Akcja YouTube: należy podać prawidłowy tytuł lub opis</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>Podarowano masowe członkostwo na kanale YouTube</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>Kamień milowy dla członka kanału YouTube</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>Prezent dotyczący wspierania kanału YouTube</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>Nowy członek kanału YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>Rozpoczęcie transmisji na kanale YouTube</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>Zatrzymanie transmisji na kanale YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>Superczat na kanale YouTube</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>Super naklejka na kanał YouTube</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} Superczat – {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Super naklejka - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>Pokaż superczat YouTube</value>
+  </data>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Usuń linię z określonym tekstem z pliku</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
     <value>Istniejący profil</value>
@@ -9663,6 +9660,12 @@ drukuj(uruchom())</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Wybierz nowy folder, aby załadować muzykę z folderu lub naciśnij przycisk Odtwórz, aby załadować muzykę z ostatnio używanego folderu.</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>Brak duplikatów</value>
+  </data>
+  <data name="LatestFollower" xml:space="preserve">
+    <value>Ostatni obserwujący</value>
+  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>Responsywny głos</value>
   </data>
@@ -9722,9 +9725,6 @@ drukuj(uruchom())</value>
   </data>
   <data name="SpecificClip" xml:space="preserve">
     <value>Konkretny klip</value>
-  </data>
-  <data name="NoDuplicates" xml:space="preserve">
-    <value>Brak duplikatów</value>
   </data>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Policz linie w pliku</value>
@@ -10762,5 +10762,35 @@ Wykryliśmy, że masz utworzony więcej niż 1 punkt końcowy nakładki, co ozna
   </data>
   <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
     <value>Należy wybrać prawidłowy licznik</value>
+  </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Użyj blokad poleceń</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Zawsze używaj blokad poleceń podczas testowania poleceń</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Losowe wejście</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Losowe wyjście</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Losowo widoczne</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Odśwież (może zająć do 1 minuty)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Prezenter najnowszej subskrypcji</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Głowa</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>BŁĄD: Nie można uruchomić widżetu nakładki napisów końcowych, ponieważ obecnie nie przechwycono danych z tej sesji.</value>
+  </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Nie pokazuj błędu „Brak danych”.</value>
   </data>
 </root>

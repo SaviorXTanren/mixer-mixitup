@@ -294,6 +294,16 @@ namespace MixItUp.Base.Services.Twitch
             this.ID = payload["id"].Value<string>();
             this.Title = payload["title"].Value<string>();
 
+            this.StartedAt = TwitchPlatformService.GetTwitchDateTime(payload["started_at"].Value<string>());
+            if (payload.ContainsKey("locks_at"))
+            {
+                this.LocksAt = TwitchPlatformService.GetTwitchDateTime(payload["locks_at"].Value<string>());
+            }
+            else if (payload.ContainsKey("locked_at"))
+            {
+                this.LocksAt = TwitchPlatformService.GetTwitchDateTime(payload["locked_at"].Value<string>());
+            }
+
             this.WinningOutcomeID = payload.GetValue("winning_outcome_id")?.Value<string>();
 
             foreach (JObject oc in (JArray)payload["outcomes"])
@@ -1604,9 +1614,9 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelSubscriptionGifted, parameters);
 
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(giftedSubEvent.Gifter, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, giftedSubEvent.Gifter.FullDisplayName, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
-            }
 
-            EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Receiver, giftedSubEvent.Gifter, tier: giftedSubEvent.PlanTierNumber));
+                EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Receiver, giftedSubEvent.Gifter, tier: giftedSubEvent.PlanTierNumber));
+            }
         }
 
         private async Task ProcessMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent)
@@ -1618,6 +1628,7 @@ namespace MixItUp.Base.Services.Twitch
             parameters.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
             parameters.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
 
+            parameters.TargetUser = massGiftedSubEvent.Subs.First().Receiver;
             foreach (TwitchGiftedSubEventModel sub in massGiftedSubEvent.Subs)
             {
                 parameters.Arguments.Add(sub.Receiver.Username);

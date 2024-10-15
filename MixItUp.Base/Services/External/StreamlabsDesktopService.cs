@@ -450,7 +450,7 @@ namespace MixItUp.Base.Services.External
                 using (NamedPipeClientStream namedPipeClient = new NamedPipeClientStream(ConnectionString))
                 {
                     string requestString = requestJObj.ToString(Formatting.None);
-                    Logger.Log(requestString);
+                    Logger.Log("Streamlabs Desktop packet sent - " + requestString);
 
                     byte[] requestBytes = Encoding.UTF8.GetBytes(requestString);
 
@@ -490,7 +490,7 @@ namespace MixItUp.Base.Services.External
 
             if (result != null)
             {
-                Logger.Log(result.ToString());
+                Logger.Log("Streamlabs Desktop packet recieved - " + result.ToString());
             }
 
             return result;

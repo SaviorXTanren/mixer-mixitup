@@ -320,6 +320,30 @@ namespace MixItUp.Base.Services
         {
             try
             {
+                switch (type)
+                {
+                    case EventTypeEnum.TwitchChannelFollowed:
+                    case EventTypeEnum.TrovoChannelFollowed:
+                        ChannelSession.Settings.LastFollowerUserID = parameters.User.ID;
+                        break;
+                    case EventTypeEnum.TwitchChannelSubscribed:
+                    case EventTypeEnum.YouTubeChannelNewMember:
+                    case EventTypeEnum.TrovoChannelSubscribed:
+                    case EventTypeEnum.TwitchChannelResubscribed:
+                    case EventTypeEnum.YouTubeChannelMemberMilestone:
+                    case EventTypeEnum.TrovoChannelResubscribed:
+                        ChannelSession.Settings.LastSubscriberUserID = parameters.User.ID;
+                        break;
+                    case EventTypeEnum.TwitchChannelSubscriptionGifted:
+                    case EventTypeEnum.YouTubeChannelMembershipGifted:
+                    case EventTypeEnum.TrovoChannelSubscriptionGifted:
+                        if (parameters.TargetUser != null)
+                        {
+                            ChannelSession.Settings.LastSubscriberUserID = parameters.TargetUser.ID;
+                        }
+                        break;
+                }
+
                 if (this.CanPerformEvent(type, parameters))
                 {
                     UserV2ViewModel user = parameters.User;
