@@ -75,7 +75,7 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        public int ViewerCount { get { return (int)this.Stream?.viewer_count; } }
+        public int ViewerCount { get { return (int)(this.Stream?.viewer_count ?? 0); } }
 
         public DateTimeOffset StreamStart
         {
