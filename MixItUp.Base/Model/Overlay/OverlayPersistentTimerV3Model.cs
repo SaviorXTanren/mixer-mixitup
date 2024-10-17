@@ -9,6 +9,7 @@ using System.Threading;
 using System.Text.Json.Serialization;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
+using MixItUp.Base.Model.Overlay.Widgets;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -216,7 +217,11 @@ namespace MixItUp.Base.Model.Overlay
                     await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
                     if (this.DisableOnCompletion)
                     {
-                        await ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID).Disable();
+                        OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID);
+                        if (widget != null)
+                        {
+                            await widget.Disable();
+                        }
                     }
                 }
             }
