@@ -501,7 +501,7 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
 
-                    int cpuUsage = await ServiceManager.Get<IProcessService>().GetCPUUsage();
+                    float cpuUsage = await ServiceManager.Get<IProcessService>().GetCPUUsage();
                     int memoryUsage = (int)Math.Round(ServiceManager.Get<IProcessService>().GetMemoryUsage() / 1024 / 1024);
                     long gcMemory = GC.GetTotalMemory(true);
                     Logger.ForceLog(LogLevel.Debug, $"Application Usage: {cpuUsage}% CPU Usage - {memoryUsage} MBs of Memory - {gcMemory} Garbage Collector Memory");

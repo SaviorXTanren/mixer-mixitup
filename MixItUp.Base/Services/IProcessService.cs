@@ -6,7 +6,7 @@ namespace MixItUp.Base.Services
 {
     public interface IProcessService
     {
-        Task<int> GetCPUUsage();
+        Task<float> GetCPUUsage();
 
         float GetMemoryUsage();
 

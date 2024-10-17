@@ -10,24 +10,17 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsProcessService : IProcessService
     {
-        public async Task<int> GetCPUUsage()
+        PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+
+        public async Task<float> GetCPUUsage()
         {
             try
             {
-                var startTime = DateTime.UtcNow;
-                var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+                cpuCounter.NextValue();
 
-                await Task.Delay(500);
+                await Task.Delay(1000);
 
-                var endTime = DateTime.UtcNow;
-                var endCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
-
-                var cpuUsedMs = (endCpuUsage - startCpuUsage).TotalMilliseconds;
-                var totalMsPassed = (endTime - startTime).TotalMilliseconds;
-
-                var cpuUsageTotal = cpuUsedMs / (Environment.ProcessorCount * totalMsPassed);
-
-                return (int)Math.Round(cpuUsageTotal * 100);
+                return cpuCounter.NextValue();
             }
             catch (Exception ex) { Logger.Log(ex); }
             return 0;
