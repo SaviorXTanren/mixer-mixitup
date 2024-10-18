@@ -581,6 +581,10 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<DonorDriveDonor>> GetTeamDonors(string teamID) { return await this.GetAsync<IEnumerable<DonorDriveDonor>>($"teams/{teamID}/donors"); }
 
+        public async Task<IEnumerable<DonorDriveIncentive>> GetTeamIncentives(string teamID) { return await this.GetAsync<IEnumerable<DonorDriveIncentive>>($"teams/{teamID}/incentives"); }
+
+        public async Task<IEnumerable<DonorDriveMilestone>> GetTeamMilestones(string teamID) { return await this.GetAsync<IEnumerable<DonorDriveMilestone>>($"teams/{teamID}/milestones"); }
+
         public async Task<DonorDriveEvent> GetEvent(string eventID) { return await this.GetAsync<DonorDriveEvent>($"events/{eventID}"); }
 
         public async Task<IEnumerable<DonorDriveActivity>> GetEventActivity(string eventID) { return await this.GetAsync<IEnumerable<DonorDriveActivity>>($"events/{eventID}/activity"); }
