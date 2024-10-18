@@ -166,6 +166,8 @@ namespace MixItUp.Base.Services.External
 
         public TiltifyCampaign Campaign { get { return this.campaign; } }
 
+        private DateTimeOffset startTime;
+
         public static double GetValueFromTiltifyJObject(JObject jobj)
         {
             if (jobj != null && jobj.ContainsKey("value") && double.TryParse(jobj["value"].ToString(), out double value))
@@ -195,6 +197,8 @@ namespace MixItUp.Base.Services.External
                         token.authorizationCode = authorizationCode;
                         token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
+
+                        this.startTime = DateTimeOffset.Now;
 
                         return await this.InitializeInternal();
                     }
@@ -350,7 +354,10 @@ namespace MixItUp.Base.Services.External
                     if (!donationsReceived.ContainsKey(tDonation.id))
                     {
                         donationsReceived[tDonation.id] = tDonation;
-                        await EventService.ProcessDonationEvent(EventTypeEnum.TiltifyDonation, tDonation.ToGenericDonation());
+                        if (tDonation.Timestamp > this.startTime)
+                        {
+                            await EventService.ProcessDonationEvent(EventTypeEnum.TiltifyDonation, tDonation.ToGenericDonation());
+                        }
                     }
                 }
             }
