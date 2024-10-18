@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -273,6 +274,8 @@ namespace MixItUp.Base.Model.Currency
 
         public void SetAmount(UserV2ViewModel user, int amount)
         {
+            Logger.Log(LogLevel.Debug, $"Setting {amount} amount of {this.Name} for {user.ID}");
+
             RankModel prevRank = this.GetRank(user);
 
             user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
@@ -295,6 +298,8 @@ namespace MixItUp.Base.Model.Currency
 
         public void SetAmount(UserV2Model user, int amount)
         {
+            Logger.Log(LogLevel.Debug, $"Setting {amount} amount of {this.Name} for {user.ID}");
+
             RankModel prevRank = this.GetRank(user);
 
             user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
