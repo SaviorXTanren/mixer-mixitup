@@ -367,6 +367,8 @@ namespace MixItUp.Base.Model.Currency
 
         public void SetAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
+            Logger.Log(LogLevel.Debug, $"Setting {amount} amount of item {item.Name} of {this.Name} for {user.ID}");
+
             if (!user.InventoryAmounts.ContainsKey(this.ID))
             {
                 user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
