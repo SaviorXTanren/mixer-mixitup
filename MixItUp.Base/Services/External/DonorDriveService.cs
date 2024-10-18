@@ -361,6 +361,9 @@ namespace MixItUp.Base.Services.External
         public string stream { get; set; }
     }
 
+    /// <summary>
+    /// https://github.com/DonorDrive/PublicAPI/tree/master
+    /// </summary>
     public class DonorDriveService : IExternalService
     {
         private const string APIVersion = "1.3";
