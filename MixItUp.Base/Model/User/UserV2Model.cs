@@ -51,6 +51,8 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public string AlejoPronounID { get; set; }
+        [DataMember]
+        public string AlejoAltPronounID { get; set; }
 
         [DataMember]
         public uint ModerationStrikes { get; set; }

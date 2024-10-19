@@ -173,7 +173,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public string AlejoPronoun { get { return ServiceManager.Get<AlejoPronounsService>().GetPronoun(this.Model.AlejoPronounID); } }
+        public string AlejoPronoun { get { return ServiceManager.Get<AlejoPronounsService>().GetPronoun(this.Model.AlejoPronounID, this.Model.AlejoAltPronounID); } }
 
         public bool IsFollower { get { return this.HasRole(UserRoleEnum.Follower) || this.HasRole(UserRoleEnum.YouTubeSubscriber); } }
         public bool IsRegular { get { return this.HasRole(UserRoleEnum.Regular); } }
@@ -588,7 +588,12 @@ namespace MixItUp.Base.ViewModel.User
 
                             if (ChannelSession.Settings.ShowAlejoPronouns && this.Platform == StreamingPlatformTypeEnum.Twitch)
                             {
-                                this.Model.AlejoPronounID = await ServiceManager.Get<AlejoPronounsService>().GetPronounID(this.Username);
+                                AlejoUserPronoun pronouns = await ServiceManager.Get<AlejoPronounsService>().GetPronounData(this.Username);
+                                if (pronouns != null)
+                                {
+                                    this.Model.AlejoPronounID = pronouns.pronoun_id;
+                                    this.Model.AlejoAltPronounID = pronouns.alt_pronoun_id;
+                                }
                             }
 
                             this.RefreshPatreonProperties();
