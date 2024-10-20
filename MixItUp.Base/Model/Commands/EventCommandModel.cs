@@ -188,6 +188,7 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.TiltifyDonation:
                 case EventTypeEnum.DonorDriveDonation:
                 case EventTypeEnum.DonorDriveDonationIncentive:
+                case EventTypeEnum.DonorDriveDonationTeamIncentive:
                 case EventTypeEnum.TipeeeStreamDonation:
                 case EventTypeEnum.TreatStreamDonation:
                 case EventTypeEnum.RainmakerDonation:
@@ -247,6 +248,7 @@ namespace MixItUp.Base.Model.Commands
                     }
                     break;
                 case EventTypeEnum.DonorDriveDonationMilestone:
+                case EventTypeEnum.DonorDriveDonationTeamMilestone:
                     specialIdentifiers["donordrivemilestonedescription"] = "Milestone Description";
                     specialIdentifiers["donordrivemilestoneamountnumber"] = "12.34";
                     specialIdentifiers["donordrivemilestoneamount"] = "$12.34";

@@ -10832,4 +10832,13 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="Wowzors" xml:space="preserve">
     <value>Wowzors</value>
   </data>
+  <data name="DonorDriveDonationTeamIncentive" xml:space="preserve">
+    <value>Donor Drive Donation Team Incentive</value>
+  </data>
+  <data name="DonorDriveDonationTeamMilestone" xml:space="preserve">
+    <value>Donor Drive Donation Team Milestone</value>
+  </data>
+  <data name="DonorDriveIncludeTeamDonationsAndEvents" xml:space="preserve">
+    <value>Include Team Donations and Events</value>
+  </data>
 </root>
