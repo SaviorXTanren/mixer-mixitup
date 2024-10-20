@@ -10730,4 +10730,115 @@
   <data name="PortuguesePortugal" xml:space="preserve">
     <value>[Þöŕţûĝûéšéẋẋẋẋ (Þöŕţûĝåļ)ẋẋẋẋ]</value>
   </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>[Åððẋ Šéĝɱéñţẋẋẋ]</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>[Ðåýẋ öƒẋ ţĥéẋ Ṁöñţĥẋẋ]</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>[Ðåýẋ öƒẋ ţĥéẋ Ŵééķẋẋ]</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>[Ƒŕîðåýẋẋ]</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>[Ṁöñðåýẋẋ]</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>[Šåţûŕðåýẋẋẋ]</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>[Šûñðåýẋẋ]</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>[Ţĥûŕšðåýẋẋẋ]</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>[Ţûéšðåýẋẋẋ]</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>[Ŵéðñéšðåýẋẋẋ]</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>[Åẋ ṽåļîðẋẋ çöûñţéŕẋẋẋ ɱûšţẋẋ ƀéẋ šéļéçţéðẋẋẋ]</value>
+  </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>[Ûšéẋ Çöɱɱåñðẋẋẋ Ļöçķšẋẋ]</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>[Åļŵåýšẋẋ Ûšéẋ Çöɱɱåñðẋẋẋ Ļöçķšẋẋ Ŵĥéñẋẋ Ţéšţîñĝẋẋẋ Çöɱɱåñðšẋẋẋ]</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>[Ŕåñðöɱẋẋ Îñẋ]</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>[Ŕåñðöɱẋẋ Öûţẋ]</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>[Ŕåñðöɱẋẋ Ṽîšîƀļéẋẋẋ]</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>[Ŕéƒŕéšĥẋẋẋ (Ṁåýẋẋ ţåķéẋẋ ûþẋ ţöẋ ①ẋ ɱîñûţé)ẋẋẋ]</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>[Ļåţéšţẋẋ Šûƀšçŕîþţîöñẋẋẋẋ Ĝîƒţéŕẋẋ]</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>[Ĥéåðẋẋ]</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>[ÉŔŔÖŔ∶ẋẋ Éñðẋ Çŕéðîţšẋẋẋ Öṽéŕļåýẋẋẋ Ŵîðĝéţẋẋ çöûļðẋẋ ñöţẋ ƀéẋ ŕûñẋ ƀéçåûšéẋẋẋ ţĥéŕéẋẋ îšẋ ñöţẋ çûŕŕéñţļýẋẋẋ çåþţûŕéðẋẋẋ ðåţåẋẋ ƒŕöɱẋẋ ţĥîšẋẋ šéššîöñ·ẋẋẋ]</value>
+  </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>[Ðöñ´ţẋẋ Šĥöŵẋẋ ″Ñöẋ Ðåţå″ẋẋ Éŕŕöŕẋẋ]</value>
+  </data>
+  <data name="BlazingStar" xml:space="preserve">
+    <value>[Ɓļåžîñĝẋẋẋ Šţåŕẋẋ]</value>
+  </data>
+  <data name="DealWithIt" xml:space="preserve">
+    <value>[Ðéåļẋẋ Ŵîţĥẋẋ Îţẋ]</value>
+  </data>
+  <data name="FedoraTip" xml:space="preserve">
+    <value>[Ƒéðöŕåẋẋ Ţîþẋ]</value>
+  </data>
+  <data name="FlyIn" xml:space="preserve">
+    <value>[Ƒļýẋ Îñẋ]</value>
+  </data>
+  <data name="FlyOut" xml:space="preserve">
+    <value>[Ƒļýẋ Öûţẋ]</value>
+  </data>
+  <data name="LeaveInStyle" xml:space="preserve">
+    <value>[Ļéåṽéẋẋ Îñẋ Šţýļéẋẋ]</value>
+  </data>
+  <data name="RotateComplex" xml:space="preserve">
+    <value>[Ŕöţåţéẋẋ Çöɱþļéẋẋẋẋ]</value>
+  </data>
+  <data name="RotateComplexOut" xml:space="preserve">
+    <value>[Ŕöţåţéẋẋ Çöɱþļéẋẋẋẋ Öûţẋ]</value>
+  </data>
+  <data name="ScaleOut" xml:space="preserve">
+    <value>[Šçåļéẋẋ Öûţẋ]</value>
+  </data>
+  <data name="SimpleEntrance" xml:space="preserve">
+    <value>[Šîɱþļéẋẋ Éñţŕåñçéẋẋẋ]</value>
+  </data>
+  <data name="Spin3D" xml:space="preserve">
+    <value>[Šþîñẋẋ ③Ðẋ]</value>
+  </data>
+  <data name="WoahCSS" xml:space="preserve">
+    <value>[Ŵöåĥ·çššẋẋẋ]</value>
+  </data>
+  <data name="Wowzors" xml:space="preserve">
+    <value>[Ŵöŵžöŕšẋẋẋ]</value>
+  </data>
+  <data name="DonorDriveDonationTeamIncentive" xml:space="preserve">
+    <value>[Ðöñöŕẋẋ Ðŕîṽéẋẋ Ðöñåţîöñẋẋẋ Ţéåɱẋẋ Îñçéñţîṽéẋẋẋ]</value>
+  </data>
+  <data name="DonorDriveDonationTeamMilestone" xml:space="preserve">
+    <value>[Ðöñöŕẋẋ Ðŕîṽéẋẋ Ðöñåţîöñẋẋẋ Ţéåɱẋẋ Ṁîļéšţöñéẋẋẋ]</value>
+  </data>
+  <data name="DonorDriveIncludeTeamDonationsAndEvents" xml:space="preserve">
+    <value>[Îñçļûðéẋẋẋ Ţéåɱẋẋ Ðöñåţîöñšẋẋẋ åñðẋ Éṽéñţšẋẋ]</value>
+  </data>
 </root>

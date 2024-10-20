@@ -144,6 +144,8 @@ namespace MixItUp.Base.Services
         DonorDriveDonation = 1030,
         DonorDriveDonationIncentive = 1031,
         DonorDriveDonationMilestone = 1032,
+        DonorDriveDonationTeamIncentive = 1033,
+        DonorDriveDonationTeamMilestone = 1034,
 
         TipeeeStreamDonation = 1040,
 

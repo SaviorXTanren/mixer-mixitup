@@ -41,7 +41,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.DonorDriveIncludeTeamDonation}"/>
+                <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.DonorDriveIncludeTeamDonationsAndEvents}"/>
                 <ToggleButton Grid.Column="2" IsChecked="{Binding IncludeTeamDonations}" />
 
             </Grid>

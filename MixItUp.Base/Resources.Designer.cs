@@ -5946,6 +5946,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donor Drive Donation Team Incentive.
+        /// </summary>
+        public static string DonorDriveDonationTeamIncentive {
+            get {
+                return ResourceManager.GetString("DonorDriveDonationTeamIncentive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donor Drive Donation Team Milestone.
+        /// </summary>
+        public static string DonorDriveDonationTeamMilestone {
+            get {
+                return ResourceManager.GetString("DonorDriveDonationTeamMilestone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to get DonorDrive data..
         /// </summary>
         public static string DonorDriveFailedToGetData {
@@ -5960,6 +5978,15 @@ namespace MixItUp.Base {
         public static string DonorDriveIncludeTeamDonation {
             get {
                 return ResourceManager.GetString("DonorDriveIncludeTeamDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Team Donations and Events.
+        /// </summary>
+        public static string DonorDriveIncludeTeamDonationsAndEvents {
+            get {
+                return ResourceManager.GetString("DonorDriveIncludeTeamDonationsAndEvents", resourceCulture);
             }
         }
         
