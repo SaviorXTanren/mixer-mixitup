@@ -36,6 +36,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
         public string PlainTextMessageNoCheermotes { get; set; }
 
+        public string UserBadges { get; set; }
+        public string UserBadgeInfo { get; set; }
+
         public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserV2ViewModel user)
             : base(message.ID, StreamingPlatformTypeEnum.Twitch, user)
         {
@@ -57,6 +60,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     }
                 }
             }
+
+            this.UserBadges = message.UserBadges;
+            this.UserBadgeInfo = message.UserBadgeInfo;
 
             this.HasBits = (int.TryParse(message.Bits, out int bits) && bits > 0);
             this.IsHighlightedMessage = message.RawPacket.Tags.ContainsKey(TagMessageID) && message.RawPacket.Tags[TagMessageID].Equals(MessageIDHighlightedMessage);
