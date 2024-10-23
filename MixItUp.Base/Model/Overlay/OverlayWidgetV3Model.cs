@@ -87,11 +87,16 @@ namespace MixItUp.Base.Model.Overlay.Widgets
 
         public async Task Reset()
         {
+            bool isEnabled = this.IsEnabled;
+
             await this.Disable();
 
             await this.Item.Reset();
 
-            await this.Enable();
+            if (isEnabled)
+            {
+                await this.Enable();
+            }
         }
 
         public async Task SendInitial()
