@@ -339,8 +339,15 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (display.Value.IsEnabled)
                 {
-                    Dictionary<string, object> data = await this.GetLabelDisplayProperties(display.Value);
-                    await this.CallFunction("add", data);
+                    try
+                    {
+                        Dictionary<string, object> data = await this.GetLabelDisplayProperties(display.Value);
+                        await this.CallFunction("add", data);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
                 }
             }
         }
@@ -517,8 +524,15 @@ namespace MixItUp.Base.Model.Overlay
             OverlayLabelDisplayV3Model display = this.Displays[type];
             if (display.IsEnabled)
             {
-                Dictionary<string, object> data = await this.GetLabelDisplayProperties(display);
-                await this.CallFunction("update", data);
+                try
+                {
+                    Dictionary<string, object> data = await this.GetLabelDisplayProperties(display);
+                    await this.CallFunction("update", data);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
             }
         }
 
