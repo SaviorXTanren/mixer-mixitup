@@ -30,13 +30,20 @@ namespace MixItUp.WPF.Services
         {
             List<TextToSpeechVoice> voices = new List<TextToSpeechVoice>();
 
-            SpeechSynthesizer synthesizer = new SpeechSynthesizer();
-            foreach (InstalledVoice voice in synthesizer.GetInstalledVoices())
+            try
             {
-                if (voice.Enabled)
+                SpeechSynthesizer synthesizer = new SpeechSynthesizer();
+                foreach (InstalledVoice voice in synthesizer.GetInstalledVoices())
                 {
-                    voices.Add(new TextToSpeechVoice(voice.VoiceInfo.Name));
+                    if (voice.Enabled)
+                    {
+                        voices.Add(new TextToSpeechVoice(voice.VoiceInfo.Name));
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
 
             return voices;
