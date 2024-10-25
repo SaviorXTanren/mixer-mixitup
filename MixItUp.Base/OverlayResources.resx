@@ -3001,8 +3001,8 @@ timerLoop();</value>
   </data>
   <data name="OverlayTwitchClipEmbedDefaultCSS" xml:space="preserve">
     <value>.clip {
-    width: {ClipWidth};
-    height: {ClipHeight};
+    width: {Width};
+    height: {Height};
     border: none;
     margin: 0;
     padding: 0;
@@ -3013,7 +3013,8 @@ timerLoop();</value>
   </data>
   <data name="OverlayTwitchClipEmbedDefaultJavascript" xml:space="preserve">
     <value>var clip = document.getElementById("clip");
-clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.location.hostname + "&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}");</value>
+
+clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=localhost&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}");</value>
   </data>
   <data name="OverlayTwitchClipVideoDefaultCSS" xml:space="preserve">
     <value>.video {

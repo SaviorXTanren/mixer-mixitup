@@ -23,14 +23,19 @@ namespace MixItUp.Base.Model.Overlay
         RandomFeaturedClip,
     }
 
+    public static class TwitchClipExtensions
+    {
+        public static bool HasDirectURL(this ClipModel clip) { return clip.thumbnail_url.Contains(OverlayTwitchClipV3Model.ClipThumbnailURLPreviewSegment); }
+    }
+
     [DataContract]
     public class OverlayTwitchClipV3Model : OverlayItemV3ModelBase
     {
-        private const string ClipThumbnailURLPreviewSegment = "-preview-";
+        public const string ClipThumbnailURLPreviewSegment = "-preview-";
 
-        public static readonly string DefaultHTML = OverlayResources.OverlayTwitchClipVideoDefaultHTML;
-        public static readonly string DefaultCSS = OverlayResources.OverlayTwitchClipVideoDefaultCSS;
-        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayVideoActionDefaultJavascript;
+        public static readonly string DefaultHTML = OverlayResources.OverlayTwitchClipEmbedDefaultHTML;
+        public static readonly string DefaultCSS = OverlayResources.OverlayTwitchClipEmbedDefaultCSS;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayActionDefaultJavascript + Environment.NewLine + Environment.NewLine + OverlayResources.OverlayTwitchClipEmbedDefaultJavascript;
 
         public static readonly List<string> TwitchClipURLPrefixes = new List<string>()
         {
@@ -111,7 +116,11 @@ namespace MixItUp.Base.Model.Overlay
                     IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, featured: featured, maxResults: 500);
                     if (clips != null && clips.Count() > 0)
                     {
-                        clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).Random();
+                        clip = clips.Where(c => c.HasDirectURL()).Random();
+                        if (clip == null)
+                        {
+                            clip = clips.Random();
+                        }
                     }
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.LatestClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
@@ -121,7 +130,11 @@ namespace MixItUp.Base.Model.Overlay
                     IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: 500);
                     if (clips != null && clips.Count() > 0)
                     {
-                        clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).OrderByDescending(c => c.created_at).FirstOrDefault();
+                        clip = clips.Where(c => c.HasDirectURL()).OrderByDescending(c => c.created_at).FirstOrDefault();
+                        if (clip == null)
+                        {
+                            clip = clips.OrderByDescending(c => c.created_at).FirstOrDefault();
+                        }
                     }
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.SpecificClip && !string.IsNullOrEmpty(clipReferenceID))
@@ -154,14 +167,18 @@ namespace MixItUp.Base.Model.Overlay
                 this.ClipID = clip.id;
                 this.ClipDuration = clip.duration;
 
-                int index = clip.thumbnail_url.IndexOf(ClipThumbnailURLPreviewSegment);
-                if (index >= 0)
+                if (clip.HasDirectURL())
                 {
+                    int index = clip.thumbnail_url.IndexOf(ClipThumbnailURLPreviewSegment);
                     this.ClipDirectLink = clip.thumbnail_url.Substring(0, index) + ".mp4";
                     return true;
+
                 }
                 else
                 {
+                    // New clip, use iframe display
+                    return true;
+
                     await ServiceManager.Get<ChatService>().SendMessage(Resources.TwitchClipNewerClipFormatUnsupported, StreamingPlatformTypeEnum.Twitch);
                     Logger.Log(LogLevel.Error, "Failed to process clip due to new formatting: " + JSONSerializerHelper.SerializeToString(clip));
                 }

@@ -1632,8 +1632,8 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to .clip {
-        ///    width: {ClipWidth};
-        ///    height: {ClipHeight};
+        ///    width: {Width};
+        ///    height: {Height};
         ///    border: none;
         ///    margin: 0;
         ///    padding: 0;
@@ -1656,7 +1656,8 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to var clip = document.getElementById(&quot;clip&quot;);
-        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}&quot;);.
+        ///
+        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=localhost&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}&quot;);.
         /// </summary>
         public static string OverlayTwitchClipEmbedDefaultJavascript {
             get {

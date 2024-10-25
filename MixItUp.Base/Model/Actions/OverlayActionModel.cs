@@ -291,15 +291,6 @@ namespace MixItUp.Base.Model.Actions
                 OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayItemV3.OverlayEndpointID);
                 if (overlay != null)
                 {
-                    if (this.OverlayItemV3 is OverlayTwitchClipV3Model)
-                    {
-                        OverlayTwitchClipV3Model overlayTwitchClipItemV3 = (OverlayTwitchClipV3Model)this.OverlayItemV3;
-                        if (!await overlayTwitchClipItemV3.ProcessClip(parameters))
-                        {
-                            return;
-                        }
-                    }
-
                     double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), NumberStyles.Any, CultureInfo.CurrentCulture, out double duration);
                     if (duration <= 0.0)
                     {
@@ -309,6 +300,17 @@ namespace MixItUp.Base.Model.Actions
                             // Invalid item to have 0 duration on
                             return;
                         }
+                    }
+
+                    if (this.OverlayItemV3 is OverlayTwitchClipV3Model)
+                    {
+                        OverlayTwitchClipV3Model overlayTwitchClipItemV3 = (OverlayTwitchClipV3Model)this.OverlayItemV3;
+                        if (!await overlayTwitchClipItemV3.ProcessClip(parameters))
+                        {
+                            return;
+                        }
+
+                        duration = overlayTwitchClipItemV3.ClipDuration;
                     }
 
                     string iframeHTML = overlay.GetItemIFrameHTML();
