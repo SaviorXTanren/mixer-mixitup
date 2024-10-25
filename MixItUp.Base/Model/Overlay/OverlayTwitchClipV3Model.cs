@@ -107,7 +107,6 @@ namespace MixItUp.Base.Model.Overlay
                 ClipModel clip = null;
                 if (this.ClipType == OverlayTwitchClipV3ClipType.RandomClip || this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip)
                 {
-                    DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(30 + RandomHelper.GenerateRandomNumber(365)));
                     bool featured = this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip;
                     IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, featured: featured, maxResults: 500);
                     if (clips != null && clips.Count() > 0)
@@ -117,9 +116,9 @@ namespace MixItUp.Base.Model.Overlay
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.LatestClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
                 {
-                    DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(30));
+                    DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(365));
                     bool featured = this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip;
-                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: int.MaxValue);
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: 500);
                     if (clips != null && clips.Count() > 0)
                     {
                         clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).OrderByDescending(c => c.created_at).FirstOrDefault();
