@@ -2042,6 +2042,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boolean.
+        /// </summary>
+        public static string Boolean {
+            get {
+                return ResourceManager.GetString("Boolean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Border Color.
         /// </summary>
         public static string BorderColor {
@@ -2920,6 +2929,15 @@ namespace MixItUp.Base {
         public static string ChatWhisperSound {
             get {
                 return ResourceManager.GetString("ChatWhisperSound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checkbox.
+        /// </summary>
+        public static string Checkbox {
+            get {
+                return ResourceManager.GetString("Checkbox", resourceCulture);
             }
         }
         
@@ -6072,6 +6090,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drop Down.
+        /// </summary>
+        public static string DropDown {
+            get {
+                return ResourceManager.GetString("DropDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DTR.
         /// </summary>
         public static string DTR {
@@ -7924,6 +7951,15 @@ namespace MixItUp.Base {
         public static string FollowsHeader {
             get {
                 return ResourceManager.GetString("FollowsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Font.
+        /// </summary>
+        public static string Font {
+            get {
+                return ResourceManager.GetString("Font", resourceCulture);
             }
         }
         

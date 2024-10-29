@@ -10841,4 +10841,16 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="DonorDriveIncludeTeamDonationsAndEvents" xml:space="preserve">
     <value>Include Team Donations and Events</value>
   </data>
+  <data name="Boolean" xml:space="preserve">
+    <value>Boolean</value>
+  </data>
+  <data name="DropDown" xml:space="preserve">
+    <value>Drop Down</value>
+  </data>
+  <data name="Checkbox" xml:space="preserve">
+    <value>Checkbox</value>
+  </data>
+  <data name="Font" xml:space="preserve">
+    <value>Font</value>
+  </data>
 </root>
