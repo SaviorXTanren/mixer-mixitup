@@ -30,6 +30,10 @@ namespace MixItUp.Base.Services.External
         public string messageType { get; set; }
         public JObject data { get; set; }
 
+        [Obsolete]
+        // Only for use with TITSItemListRequest request
+        public bool sendImage { get; set; }
+
         public TITSWebSocketRequestPacket() { }
 
         public TITSWebSocketRequestPacket(string messageType)
@@ -169,7 +173,15 @@ namespace MixItUp.Base.Services.External
             {
                 if (this.websocket.IsOpen())
                 {
-                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSItemListRequest"));
+                    JObject data = new JObject();
+                    data["sendImage"] = false;
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSItemListRequest", data)
+                    {
+                        sendImage = false
+                    });
+#pragma warning restore CS0612 // Type or member is obsolete
                     return true;
                 }
             }
