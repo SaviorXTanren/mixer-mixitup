@@ -87,5 +87,34 @@ namespace MixItUp.Base.Model.Overlay
                 return null;
             }
         }
+
+        public Dictionary<string, object> GetGenerationProperties()
+        {
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+            if (this.Type == OverlayPropertyTypeV3Enum.Font)
+            {
+                properties[this.Name + nameof(this.FontValue.FontSize)] = this.FontValue.FontSize;
+                properties[this.Name + nameof(this.FontValue.FontFamily)] = this.FontValue.FontFamily;
+                properties[this.Name + nameof(this.FontValue.FontColor)] = this.FontValue.FontColor;
+                properties[this.Name + nameof(this.FontValue.FontWeight)] = this.FontValue.FontWeight;
+                properties[this.Name + nameof(this.FontValue.TextDecoration)] = this.FontValue.TextDecoration;
+                properties[this.Name + nameof(this.FontValue.FontStyle)] = this.FontValue.FontStyle;
+                properties[this.Name + nameof(this.FontValue.TextAlignment)] = this.FontValue.TextAlignment.ToString().ToLower();
+                properties[this.Name + nameof(this.FontValue.ShadowColor)] = (!string.IsNullOrEmpty(this.FontValue.ShadowColor)) ? $"1px 1px {this.FontValue.ShadowColor}" : "none";
+            }
+            else if (this.Type == OverlayPropertyTypeV3Enum.Number)
+            {
+                properties[this.Name] = this.NumberValue;
+            }
+            else if (this.Type == OverlayPropertyTypeV3Enum.Checkbox)
+            {
+                properties[this.Name] = this.CheckboxValue;
+            }
+            else
+            {
+                properties[this.Name] = this.TextValue;
+            }
+            return properties;
+        }
     }
 }
