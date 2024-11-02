@@ -240,6 +240,7 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("timedigits", DateTimeOffset.Now.ToString("HHmm"));
             this.ReplaceSpecialIdentifier("timehour", DateTimeOffset.Now.ToString("HH"));
             this.ReplaceSpecialIdentifier("timeminute", DateTimeOffset.Now.ToString("mm"));
+            this.ReplaceSpecialIdentifier("timesecond", DateTimeOffset.Now.ToString("ss"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("linebreak", Environment.NewLine);
 
