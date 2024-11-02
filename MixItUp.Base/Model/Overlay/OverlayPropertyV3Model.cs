@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -35,19 +39,6 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public List<object> Options { get; set; } = new List<object>();
-
-        [JsonIgnore]
-        public double NumberValue
-        {
-            get
-            {
-                if (this.Type == OverlayPropertyTypeV3Enum.Number && this.Value is double)
-                {
-                    return (double)this.Value;
-                }
-                return 0;
-            }
-        }
 
         [JsonIgnore]
         public string TextValue
@@ -88,7 +79,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public Dictionary<string, object> GetGenerationProperties()
+        public async Task<Dictionary<string, object>> GetGenerationProperties(CommandParametersModel parameters)
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
             if (this.Type == OverlayPropertyTypeV3Enum.Font)
@@ -104,7 +95,10 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.Type == OverlayPropertyTypeV3Enum.Number)
             {
-                properties[this.Name] = this.NumberValue;
+                double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TextValue, parameters), out double result);
+                result = Math.Max(result, this.Minimum);
+                result = Math.Min(result, this.Maximum);
+                properties[this.Name] = result;
             }
             else if (this.Type == OverlayPropertyTypeV3Enum.Checkbox)
             {
@@ -112,7 +106,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else
             {
-                properties[this.Name] = this.TextValue;
+                properties[this.Name] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.TextValue, parameters);
             }
             return properties;
         }
