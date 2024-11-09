@@ -90,6 +90,15 @@ namespace MixItUp.Base.Services.External
             }
         }
 
+        public string Rarity
+        {
+            get
+            {
+                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("rarity", StringComparison.OrdinalIgnoreCase));
+                return (field != null) ? field.value : string.Empty;
+            }
+        }
+
         public string Username
         {
             get
@@ -308,6 +317,7 @@ namespace MixItUp.Base.Services.External
                 specialIdentifiers["streamlootscardhasvideo"] = (!string.IsNullOrEmpty(card.videoUrl)).ToString();
                 specialIdentifiers["streamlootscardvideo"] = card.videoUrl;
                 specialIdentifiers["streamlootscardsound"] = card.soundUrl;
+                specialIdentifiers["streamlootscardrarity"] = card.data.Rarity;
                 specialIdentifiers["streamlootscardalertmessage"] = card.message;
 
                 string message = card.data.Message;
