@@ -3,19 +3,13 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public enum ServiceState
-    {
-        Disabled,
-        Enabled,
-        Connected,
-        Disconnected,
-    }
-
     public interface IService
     {
-        ServiceState State { get; }
-
         string Name { get; }
+
+        bool IsEnabled { get; }
+
+        bool IsConnected { get; }
 
         Task<Result> Enable();
 
@@ -28,9 +22,11 @@ namespace MixItUp.Base.Services
 
     public abstract class ServiceBase : IService
     {
-        public ServiceState State { get; protected set; }
-
         public abstract string Name { get; }
+
+        public abstract bool IsEnabled { get; }
+
+        public abstract bool IsConnected { get; }
 
         public abstract Task<Result> Enable();
 
