@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace MixItUp.Base.Util
 {
     public static class StringExtensions
     {
-        private const char Comma = ',';
-        private const char Decimal = '.';
+        /// <summary>
+        /// Converts a string to it's base64 equivalent string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string ToBase64String(this string str)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(str);
+            return Convert.ToBase64String(bytes);
+        }
 
         public static string ToFilePathString(this string source)
         {

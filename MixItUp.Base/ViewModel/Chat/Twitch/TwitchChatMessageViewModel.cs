@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Twitch.Clients.Chat;
+using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
@@ -7,8 +9,6 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.Clients.PubSub.Messages;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {

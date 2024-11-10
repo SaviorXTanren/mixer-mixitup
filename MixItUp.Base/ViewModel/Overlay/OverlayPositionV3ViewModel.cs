@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;

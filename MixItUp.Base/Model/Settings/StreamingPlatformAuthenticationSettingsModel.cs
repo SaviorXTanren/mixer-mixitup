@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using StreamingClient.Base.Model.OAuth;
+using MixItUp.Base.Model.Web;
 using System;
 using System.Runtime.Serialization;
 

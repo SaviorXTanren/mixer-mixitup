@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Web;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Windows.Input;
@@ -19,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.ConnectCommand = this.CreateCommand(async () =>
             {
-                ChannelSession.Settings.InfiniteAlbumOAuthToken = new StreamingClient.Base.Model.OAuth.OAuthTokenModel
+                ChannelSession.Settings.InfiniteAlbumOAuthToken = new OAuthTokenModel
                 {
                     refreshToken = this.AppCode
                 };

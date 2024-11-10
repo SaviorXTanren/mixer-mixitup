@@ -1,8 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Twitch.Clips;
+using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,6 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.Clips;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -88,7 +88,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 string clipReferenceID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.ClipReferenceID, parameters);
 
-                Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = ServiceManager.Get<TwitchSessionService>().User;
+                UserModel twitchUser = ServiceManager.Get<TwitchSessionService>().User;
                 if (!string.IsNullOrEmpty(clipReferenceID))
                 {
                     if (this.ClipType == OverlayTwitchClipV3ClipType.RandomClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestClip ||

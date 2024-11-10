@@ -5,15 +5,20 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.Twitch.Ads;
+using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.Twitch.Clips;
+using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +26,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using Twitch.Base.Models.NewAPI.Ads;
-using Twitch.Base.Models.NewAPI.Bits;
-using Twitch.Base.Models.NewAPI.Clips;
-using Twitch.Base.Models.NewAPI.Games;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Util
 {
@@ -1083,11 +1083,11 @@ namespace MixItUp.Base.Util
                         TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
                         if (twitchUser != null)
                         {
-                            Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchUser.ID);
+                            MixItUp.Base.Model.Twitch.User.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchUser.ID);
                             if (tUser != null)
                             {
-                                Task<Twitch.Base.Models.NewAPI.Channels.ChannelInformationModel> tChannel = ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
-                                Task<Twitch.Base.Models.NewAPI.Streams.StreamModel> stream = ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
+                                Task<MixItUp.Base.Model.Twitch.Channels.ChannelInformationModel> tChannel = ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
+                                Task<MixItUp.Base.Model.Twitch.Streams.StreamModel> stream = ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
 
                                 await Task.WhenAll(tChannel, stream);
 
@@ -1121,10 +1121,10 @@ namespace MixItUp.Base.Util
                         TrovoUserPlatformV2Model trovoUser = user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo);
                         if (trovoUser != null)
                         {
-                            Trovo.Base.Models.Users.UserModel tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(trovoUser.Username);
+                            MixItUp.Base.Model.Trovo.Users.UserModel tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(trovoUser.Username);
                             if (tUser != null)
                             {
-                                Trovo.Base.Models.Channels.ChannelModel tChannel = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetChannelByID(tUser.channel_id);
+                                MixItUp.Base.Model.Trovo.Channels.ChannelModel tChannel = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetChannelByID(tUser.channel_id);
 
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.live_title);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "gamename", tChannel?.category_name);

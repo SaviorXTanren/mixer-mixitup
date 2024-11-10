@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Model.Web;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;

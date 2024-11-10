@@ -1,7 +1,7 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
-using Twitch.Base.Models.NewAPI.Bits;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {

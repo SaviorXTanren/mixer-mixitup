@@ -26,11 +26,13 @@
   <ItemGroup>
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <PackageReference Include="Google.Apis" Version="1.68.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
+    <PackageReference Include="Google.Apis.Core" Version="1.68.0" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.68.0.3582" />
+    <PackageReference Include="Google.Apis.YouTubePartner.v1" Version="1.35.1.1334" />
     <PackageReference Include="Jace" Version="1.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.24" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.79" />
-    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.21" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
 

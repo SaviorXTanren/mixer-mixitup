@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Commands;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.IO;
 using System.IO.Pipes;

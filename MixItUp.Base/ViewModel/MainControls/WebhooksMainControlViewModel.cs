@@ -2,7 +2,7 @@
 using MixItUp.Base.Model.Webhooks;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

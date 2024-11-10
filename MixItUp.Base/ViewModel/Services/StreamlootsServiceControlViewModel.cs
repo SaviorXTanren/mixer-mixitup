@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
+using MixItUp.Base.Model.Web;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services

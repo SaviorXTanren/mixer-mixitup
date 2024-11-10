@@ -2,7 +2,7 @@
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

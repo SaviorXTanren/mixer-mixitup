@@ -3,7 +3,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.WPF.Util;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Windows;

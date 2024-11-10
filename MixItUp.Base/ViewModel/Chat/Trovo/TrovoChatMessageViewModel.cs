@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using Trovo.Base.Models.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Trovo
 {

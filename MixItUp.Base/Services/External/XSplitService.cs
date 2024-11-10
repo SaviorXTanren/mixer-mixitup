@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Net;
 using System.Net.WebSockets;

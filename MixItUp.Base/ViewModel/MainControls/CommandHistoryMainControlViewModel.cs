@@ -2,7 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;

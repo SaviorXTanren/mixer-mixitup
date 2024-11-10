@@ -1,8 +1,8 @@
-﻿using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
+﻿using MixItUp.Base.Model.Trovo.Chat;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using Trovo.Base.Models.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Trovo
 {

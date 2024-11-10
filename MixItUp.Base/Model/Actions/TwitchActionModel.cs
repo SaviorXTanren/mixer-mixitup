@@ -1,5 +1,13 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Twitch.Ads;
+using MixItUp.Base.Model.Twitch.ChannelPoints;
+using MixItUp.Base.Model.Twitch.Channels;
+using MixItUp.Base.Model.Twitch.Chat;
+using MixItUp.Base.Model.Twitch.Clips;
+using MixItUp.Base.Model.Twitch.Polls;
+using MixItUp.Base.Model.Twitch.Predictions;
+using MixItUp.Base.Model.Twitch.Streams;
+using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
@@ -12,15 +20,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.Ads;
-using Twitch.Base.Models.NewAPI.ChannelPoints;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.Chat;
-using Twitch.Base.Models.NewAPI.Clips;
-using Twitch.Base.Models.NewAPI.Polls;
-using Twitch.Base.Models.NewAPI.Predictions;
-using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Model.Actions
 {

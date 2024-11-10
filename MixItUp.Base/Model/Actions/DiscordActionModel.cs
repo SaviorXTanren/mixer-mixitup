@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;

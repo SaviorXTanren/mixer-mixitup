@@ -1,19 +1,18 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.Twitch.Ads;
+using MixItUp.Base.Model.Twitch.Channels;
+using MixItUp.Base.Model.Twitch.Games;
+using MixItUp.Base.Model.Twitch.Streams;
+using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.Ads;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.Games;
-using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
@@ -493,7 +492,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (long.TryParse(schedule.next_ad_at, out long seconds) && seconds > 0)
             {
-                return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
+                return DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
             }
             return DateTimeOffset.MinValue;
         }

@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

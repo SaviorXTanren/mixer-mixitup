@@ -2,29 +2,25 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Model.Twitch.Channels;
+using MixItUp.Base.Model.Twitch.Clients.Chat;
+using MixItUp.Base.Model.Twitch.Clients.EventSub;
+using MixItUp.Base.Model.Twitch.Clients.PubSub;
+using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
+using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using Twitch.Base.Clients;
-using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.Clients.EventSub;
-using Twitch.Base.Models.Clients.PubSub;
-using Twitch.Base.Models.Clients.PubSub.Messages;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.EventSub;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
 {

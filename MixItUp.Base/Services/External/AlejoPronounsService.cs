@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
+using MixItUp.Base.Util;
+using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;

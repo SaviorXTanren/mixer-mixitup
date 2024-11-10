@@ -5,11 +5,11 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.Web;
+using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +17,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services
 {

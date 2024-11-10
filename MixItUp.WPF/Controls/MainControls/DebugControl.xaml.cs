@@ -1,6 +1,7 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Twitch.Clients.Chat;
+using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
@@ -10,9 +11,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.Clients.PubSub.Messages;
 
 namespace MixItUp.WPF.Controls.MainControls
 {

@@ -5,7 +5,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows.Users;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Chat

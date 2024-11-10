@@ -2,7 +2,9 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.Twitch.Channels;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Model.Web;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
@@ -10,15 +12,12 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.Channels;
 
 namespace MixItUp.Base
 {

@@ -1,9 +1,10 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.Bits;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Model.Overlay
 {

@@ -1,5 +1,11 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Trovo.Channels;
+using MixItUp.Base.Model.Twitch.Channels;
+using MixItUp.Base.Model.Twitch.Games;
+using MixItUp.Base.Model.Twitch.Streams;
+using MixItUp.Base.Model.Twitch.Teams;
+using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
@@ -7,18 +13,11 @@ using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Twitch;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Trovo.Base.Models.Channels;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.Games;
-using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Teams;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {

@@ -1,15 +1,14 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Web;
+using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.YouTube.API;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using YouTube.Base;
-using YouTube.Base.Model;
 
 namespace MixItUp.Base.Services.YouTube
 {

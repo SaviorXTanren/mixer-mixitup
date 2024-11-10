@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.ViewModels;
 using MixItUp.WPF.Controls;
 using MixItUp.WPF.Util;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Threading.Tasks;
 using System.Windows;

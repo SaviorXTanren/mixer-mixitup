@@ -1,4 +1,4 @@
-﻿using Twitch.Base.Models.NewAPI.Chat;
+﻿using MixItUp.Base.Model.Twitch.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {

@@ -1,12 +1,12 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Trovo.Channels;
+using MixItUp.Base.Model.Trovo.Chat;
+using MixItUp.Base.Model.Trovo.Users;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.Trovo;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Trovo.Base.Models.Channels;
-using Trovo.Base.Models.Chat;
-using Trovo.Base.Models.Users;
 
 namespace MixItUp.Base.Model.User.Platform
 {

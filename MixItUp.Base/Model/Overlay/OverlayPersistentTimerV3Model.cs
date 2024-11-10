@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 using System.Text.Json.Serialization;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using MixItUp.Base.Model.Overlay.Widgets;
 
 namespace MixItUp.Base.Model.Overlay

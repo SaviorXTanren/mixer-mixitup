@@ -1,17 +1,16 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Twitch.Channels;
+using MixItUp.Base.Model.Twitch.Chat;
+using MixItUp.Base.Model.Twitch.Clients.Chat;
+using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
+using MixItUp.Base.Model.Twitch.Subscriptions;
+using MixItUp.Base.Model.Twitch.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.Clients.PubSub.Messages;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.Chat;
-using Twitch.Base.Models.NewAPI.Subscriptions;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Model.User.Platform
 {
