@@ -100,7 +100,7 @@ namespace MixItUp.Base.Services.Trovo
         {
             try
             {
-                TrovoConnection connection = await TrovoConnection.ConnectViaLocalhostOAuthBrowser(TrovoPlatformService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("TrovoSecret"), scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
+                TrovoConnection connection = await TrovoConnection.ConnectViaLocalhostOAuthBrowser(TrovoPlatformService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("TrovoSecret"), scopes, forceApprovalPrompt: true);
                 if (connection != null)
                 {
                     return new Result<TrovoPlatformService>(new TrovoPlatformService(connection));

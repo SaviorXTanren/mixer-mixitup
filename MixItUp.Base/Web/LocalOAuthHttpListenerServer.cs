@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
+using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Web
@@ -8,48 +11,36 @@ namespace MixItUp.Base.Web
     /// </summary>
     public class LocalOAuthHttpListenerServer : LocalHttpListenerServer
     {
-        private const string defaultSuccessResponse = "<!DOCTYPE html><html><body><h1 style=\"text-align:center;\">Logged In Successfully</h1><p style=\"text-align:center;\">You have been logged in, you may now close this webpage</p></body></html>";
+        public const string OAUTH_LOCALHOST_URL = "http://localhost:8919/";
 
-        private string authorizationCodeParameterName = null;
-        private string successResponse = null;
+        private const string AUTHORIZATION_CODE_URL_PARAMETER = "code";
 
-        private string authorizationCode = null;
+        private const string SUCCESS_RESPONSE = "<!DOCTYPE html><html><body><h1 style=\"text-align:center;\">Logged In Successfully</h1><p style=\"text-align:center;\">You have been logged in, you may now close this webpage</p></body></html>";
 
-        /// <summary>
-        /// Creates a new instance of the LocalOAuthHttpListenerService with the specified address.
-        /// </summary>
-        /// <param name="authorizationCodeParameterName">The name of the parameter for the authorization code</param>
-        public LocalOAuthHttpListenerServer(string authorizationCodeParameterName)
+        private string authorizationCode;
+
+        public LocalOAuthHttpListenerServer() { }
+
+        public async Task<string> GetAuthorizationCode(string authorizationURL)
         {
-            this.authorizationCodeParameterName = authorizationCodeParameterName;
-        }
-
-        /// <summary>
-        /// Creates a new instance of the LocalOAuthHttpListenerService with the specified address &amp; login response.
-        /// </summary>
-        /// <param name="authorizationCodeParameterName">The name of the parameter for the authorization code</param>
-        /// <param name="successResponse">The response to send upon successfully obtaining an authorization token</param>
-        public LocalOAuthHttpListenerServer(string authorizationCodeParameterName, string successResponse)
-            : this(authorizationCodeParameterName)
-        {
-            this.successResponse = successResponse;
-        }
-
-        /// <summary>
-        /// Waits for a successful authorization response from the OAuth service.
-        /// </summary>
-        /// <param name="secondsToWait">The total number of seconds to wait</param>
-        /// <returns>The authorization token from the OAuth service</returns>
-        public async Task<string> WaitForAuthorizationCode(int secondsToWait = 30)
-        {
-            for (int i = 0; i < secondsToWait; i++)
+            try
             {
-                if (!string.IsNullOrEmpty(this.authorizationCode))
+                this.Start(OAUTH_LOCALHOST_URL);
+
+                ServiceManager.Get<IProcessService>().LaunchLink(authorizationURL);
+
+                while (string.IsNullOrWhiteSpace(this.authorizationCode))
                 {
-                    break;
+                    await Task.Delay(1000);
                 }
-                await Task.Delay(1000);
             }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+
+            this.Stop();
+
             return this.authorizationCode;
         }
 
@@ -63,15 +54,11 @@ namespace MixItUp.Base.Web
             HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
             string result = string.Empty;
 
-            string token = this.GetRequestParameter(listenerContext, this.authorizationCodeParameterName);
+            string token = this.GetRequestParameter(listenerContext, AUTHORIZATION_CODE_URL_PARAMETER);
             if (!string.IsNullOrEmpty(token))
             {
                 statusCode = HttpStatusCode.OK;
-                result = defaultSuccessResponse;
-                if (!string.IsNullOrEmpty(this.successResponse))
-                {
-                    result = successResponse;
-                }
+                result = SUCCESS_RESPONSE;
 
                 this.authorizationCode = token;
             }

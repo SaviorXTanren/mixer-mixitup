@@ -112,15 +112,8 @@ namespace MixItUp.Base.Services.External
 
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress, int secondsToWait = 45)
         {
-            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
-            oauthServer.Start(listeningAddress);
-
-            ServiceManager.Get<IProcessService>().LaunchLink(oauthPageURL);
-
-            string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait);
-            oauthServer.Stop();
-
-            return authorizationCode;
+            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
+            return await oauthServer.GetAuthorizationCode(listeningAddress);
         }
 
         protected override string GetBaseAddress() { return this.baseAddress; }

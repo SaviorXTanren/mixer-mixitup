@@ -17,17 +17,7 @@ namespace MixItUp.Base.Services.External
             throw new NotImplementedException();
         }
 
-        public override Task<Result> Disable()
-        {
-            throw new NotImplementedException();
-        }
-
         public override Task<Result> Disconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Task<Result> Enable()
         {
             throw new NotImplementedException();
         }

@@ -11,13 +11,9 @@ namespace MixItUp.Base.Services
 
         bool IsConnected { get; }
 
-        Task<Result> Enable();
-
         Task<Result> Connect();
 
         Task<Result> Disconnect();
-
-        Task<Result> Disable();
     }
 
     public abstract class ServiceBase : IService
@@ -28,12 +24,8 @@ namespace MixItUp.Base.Services
 
         public abstract bool IsConnected { get; }
 
-        public abstract Task<Result> Enable();
-
         public abstract Task<Result> Connect();
 
         public abstract Task<Result> Disconnect();
-
-        public abstract Task<Result> Disable();
     }
 }

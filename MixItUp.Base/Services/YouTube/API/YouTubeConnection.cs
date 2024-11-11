@@ -189,15 +189,8 @@ namespace MixItUp.Base.Services.YouTube.API
             Validator.ValidateString(clientID, "clientID");
             Validator.ValidateList(scopes, "scopes");
 
-            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse);
-            oauthServer.Start(oauthListenerURL);
-
-            string url = await YouTubeConnection.GetAuthorizationCodeURLForOAuthBrowser(clientID, scopes, oauthListenerURL, forceApprovalPrompt);
-            ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = url, UseShellExecute = true };
-            Process.Start(startInfo);
-
-            string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait: 60);
-            oauthServer.Stop();
+            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
+            string authorizationCode = await oauthServer.GetAuthorizationCode(await YouTubeConnection.GetAuthorizationCodeURLForOAuthBrowser(clientID, scopes, oauthListenerURL, forceApprovalPrompt));
 
             if (authorizationCode != null)
             {

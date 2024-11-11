@@ -3,7 +3,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -56,16 +55,6 @@ namespace MixItUp.Base.Services.Trovo.API
     /// </summary>
     public class TrovoConnection
     {
-        /// <summary>
-        /// The default OAuth redirect URL used for authentication.
-        /// </summary>
-        public const string DEFAULT_OAUTH_LOCALHOST_URL = "http://localhost:8919/";
-
-        /// <summary>
-        /// The default request parameter for the authorization code from the OAuth service.
-        /// </summary>
-        public const string DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER = "code";
-
         private OAuthTokenModel token;
 
         /// <summary>
@@ -116,24 +105,19 @@ namespace MixItUp.Base.Services.Trovo.API
         /// <param name="oauthListenerURL">The URL to listen for the OAuth successful authentication</param>
         /// <param name="successResponse">The response to send back upon successful authentication</param>
         /// <returns>The TrovoConnection object</returns>
-        public static async Task<TrovoConnection> ConnectViaLocalhostOAuthBrowser(string clientID, string clientSecret, IEnumerable<OAuthClientScopeEnum> scopes, string state = "abc123", bool forceApprovalPrompt = false, string oauthListenerURL = DEFAULT_OAUTH_LOCALHOST_URL, string successResponse = null)
+        public static async Task<TrovoConnection> ConnectViaLocalhostOAuthBrowser(string clientID, string clientSecret, IEnumerable<OAuthClientScopeEnum> scopes, string state = "abc123", bool forceApprovalPrompt = false)
         {
             Validator.ValidateString(clientID, "clientID");
             Validator.ValidateList(scopes, "scopes");
 
-            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse);
-            oauthServer.Start(oauthListenerURL);
+            string url = await TrovoConnection.GetAuthorizationCodeURLForOAuthBrowser(clientID, scopes, LocalOAuthHttpListenerServer.OAUTH_LOCALHOST_URL, state, forceApprovalPrompt);
 
-            string url = await TrovoConnection.GetAuthorizationCodeURLForOAuthBrowser(clientID, scopes, oauthListenerURL, state, forceApprovalPrompt);
-            ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = url, UseShellExecute = true };
-            Process.Start(startInfo);
-
-            string authorizationCode = await oauthServer.WaitForAuthorizationCode();
-            oauthServer.Stop();
+            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
+            string authorizationCode = await oauthServer.GetAuthorizationCode(url);
 
             if (authorizationCode != null)
             {
-                return await TrovoConnection.ConnectViaAuthorizationCode(clientID, clientSecret, authorizationCode, scopes, oauthListenerURL);
+                return await TrovoConnection.ConnectViaAuthorizationCode(clientID, clientSecret, authorizationCode, scopes, LocalOAuthHttpListenerServer.OAUTH_LOCALHOST_URL);
             }
             return null;
         }
