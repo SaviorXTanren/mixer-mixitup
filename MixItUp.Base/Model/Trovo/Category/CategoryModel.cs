@@ -1,4 +1,6 @@
-﻿namespace MixItUp.Base.Model.Trovo.Category
+﻿using System.Collections.Generic;
+
+namespace MixItUp.Base.Model.Trovo.Category
 {
     /// <summary>
     /// Information about a category.
@@ -29,5 +31,10 @@
         /// The description of the category.
         /// </summary>
         public string desc { get; set; }
+    }
+
+    public class CategoriesModel
+    {
+        public List<CategoryModel> category_info { get; set; }
     }
 }

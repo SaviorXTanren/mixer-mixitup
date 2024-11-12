@@ -129,7 +129,7 @@ namespace MixItUp.Base.Services.External
                 {
                     if (!string.IsNullOrEmpty(clientID) && !string.IsNullOrEmpty(clientSecret))
                     {
-                        client.SetBasicClientIDClientSecretAuthorizationHeader(clientID, clientSecret);
+                        client.SetEncodedBasicAuthorization(clientID, clientSecret);
                     }
 
                     using (var content = new FormUrlEncodedContent(bodyContent))

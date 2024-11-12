@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using MixItUp.Base.Util;
 using MixItUp.Base.Model.Web;
+using Jace.Tokenizer;
 
 namespace MixItUp.Base.Web
 {
@@ -154,25 +155,6 @@ namespace MixItUp.Base.Web
         }
 
         /// <summary>
-        /// Creates a new instance of the JSONHttpClient with a specified base address &amp; Basic authorization value.
-        /// </summary>
-        /// <param name="baseAddress">The base address to use for communication</param>
-        /// <param name="basicAuthorizationValue">The basic value to include in the authorization header</param>
-        public AdvancedHttpClient(string baseAddress, string basicAuthorizationValue) : this(baseAddress, "Basic", basicAuthorizationValue) { }
-
-        /// <summary>
-        /// Creates a new instance of the JSONHttpClient with a specified base address &amp; custom authorization type.
-        /// </summary>
-        /// <param name="baseAddress">The base address to use for communication</param>
-        /// <param name="authorizationType">The type of authorization to include in the header</param>
-        /// <param name="authorizationValue">The value to include in the authorization header</param>
-        public AdvancedHttpClient(string baseAddress, string authorizationType, string authorizationValue)
-            : this(baseAddress)
-        {
-            this.DefaultRequestHeaders.Add("Authorization", authorizationType + " " + authorizationValue);
-        }
-
-        /// <summary>
         /// Creates a new instance of the JSONHttpClient with a specified base address &amp; OAuth token.
         /// </summary>
         /// <param name="baseAddress">The base address to use for communication</param>
@@ -180,7 +162,7 @@ namespace MixItUp.Base.Web
         public AdvancedHttpClient(string baseAddress, OAuthTokenModel token)
             : this(baseAddress)
         {
-            this.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.accessToken);
+            this.SetBearerAuthorization(token);
         }
 
         /// <summary>
@@ -413,11 +395,26 @@ namespace MixItUp.Base.Web
             }
         }
 
-        public void SetBasicClientIDClientSecretAuthorizationHeader(string clientID, string clientSecret)
+        public void SetBasicAuthorization(string value)
         {
-            string authorizationValue = string.Format("{0}:{1}", clientID, clientSecret);
+            this.SetAuthorization("Basic", value);
+        }
+
+        public void SetEncodedBasicAuthorization(string key, string value)
+        {
+            string authorizationValue = string.Format("{0}:{1}", key, value);
             byte[] authorizationBytes = Encoding.UTF8.GetBytes(authorizationValue);
-            this.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
+            this.SetBasicAuthorization(Convert.ToBase64String(authorizationBytes));
+        }
+
+        public void SetBearerAuthorization(OAuthTokenModel token)
+        {
+            this.SetAuthorization("Bearer", token?.accessToken);
+        }
+
+        public void SetAuthorization(string scheme, string value)
+        {
+            this.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, value);
         }
 
         private void LogRequest(string requestUri, HttpContent content = null)

@@ -1,4 +1,6 @@
-﻿namespace MixItUp.Base.Model.Trovo.Users
+﻿using System.Collections.Generic;
+
+namespace MixItUp.Base.Model.Trovo.Users
 {
     /// <summary>
     /// Information about a user.
@@ -21,5 +23,11 @@
         /// The ID of the channel for the user.
         /// </summary>
         public string channel_id { get; set; }
+    }
+
+    public class UsersModel
+    {
+        public long total { get; set; }
+        public List<UserModel> users { get; set; } = new List<UserModel>();
     }
 }

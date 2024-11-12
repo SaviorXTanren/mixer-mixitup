@@ -107,4 +107,9 @@ namespace MixItUp.Base.Model.Trovo.Chat
         /// </summary>
         public string update_time { get; set; }
     }
+
+    public class ChatEmotesModel
+    {
+        public ChatEmotePackageModel channels { get; set; }
+    }
 }

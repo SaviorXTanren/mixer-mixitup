@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Trovo.Chat
@@ -112,5 +113,20 @@ namespace MixItUp.Base.Model.Trovo.Chat
         /// </summary>
         [DataMember]
         public List<string> viewers { get; set; } = new List<string>();
+    }
+
+    public class ChatViewersInternalModel : PageDataResponseModel
+    {
+        public string nickname { get; set; }
+
+        public string live_title { get; set; }
+
+        public ChatViewersRolesModel chatters { get; set; } = new ChatViewersRolesModel();
+
+        public JObject custom_roles { get; set; } = new JObject();
+
+        public JObject custome_roles { get; set; } = new JObject();
+
+        public override int GetItemCount() { return this.total; }
     }
 }

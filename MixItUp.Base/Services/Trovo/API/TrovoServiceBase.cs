@@ -246,7 +246,8 @@ namespace MixItUp.Base.Services.Trovo.API
             OAuthTokenModel token = await this.GetOAuthToken(autoRefreshToken);
             if (token != null)
             {
-                client = new AdvancedHttpClient(this.GetBaseAddress(), "OAuth", token.accessToken);
+                client = new AdvancedHttpClient(this.GetBaseAddress());
+                client.SetAuthorization("OAuth", token.accessToken);
             }
             client.DefaultRequestHeaders.Add("Client-ID", this.ClientID);
             return client;

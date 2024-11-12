@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Trovo.Channels
 {
@@ -31,5 +32,12 @@ namespace MixItUp.Base.Model.Trovo.Channels
         /// </summary>
         [DataMember]
         public string followed_at { get; set; }
+    }
+
+    public class ChannelFollowersModel : PageDataResponseModel
+    {
+        public List<ChannelFollowerModel> follower { get; set; } = new List<ChannelFollowerModel>();
+
+        public override int GetItemCount() { return this.follower.Count; }
     }
 }

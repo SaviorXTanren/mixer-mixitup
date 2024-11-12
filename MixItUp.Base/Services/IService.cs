@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.Web;
-using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Util;
 using MixItUp.Base.Web;
 using System;
@@ -21,7 +20,9 @@ namespace MixItUp.Base.Services
 
         Task<Result> Connect();
 
-        Task<Result> Disconnect();
+        Task Disconnect();
+
+        Task Disable();
     }
 
     public abstract class ServiceBase : IService
@@ -34,7 +35,9 @@ namespace MixItUp.Base.Services
 
         public abstract Task<Result> Connect();
 
-        public abstract Task<Result> Disconnect();
+        public abstract Task Disconnect();
+
+        public abstract Task Disable();
     }
 
     public abstract class OAuthServiceBase : ServiceBase
@@ -46,6 +49,15 @@ namespace MixItUp.Base.Services
 
         protected AdvancedHttpClient HttpClient { get; }
 
+        protected OAuthTokenModel OAuthToken
+        {
+            get { return this.token; }
+            set
+            {
+                this.token = value;
+                this.HttpClient.SetBearerAuthorization(this.token);
+            }
+        }
         private OAuthTokenModel token;
 
         public OAuthServiceBase(string baseAddress)
@@ -53,28 +65,17 @@ namespace MixItUp.Base.Services
             this.HttpClient = new AdvancedHttpClient(baseAddress);
         }
 
-        protected void SetOAuthToken(OAuthTokenModel token) { this.token = token; }
-
-        protected async Task<OAuthTokenModel> GetOAuthToken()
-        {
-            if (this.token?.IsExpired ?? true)
-            {
-                await this.RefreshOAuthToken();
-            }
-            return this.token;
-        }
-
         public virtual OAuthTokenModel GetOAuthTokenCopy()
         {
-            if (this.token != null)
+            if (this.OAuthToken != null)
             {
                 return new OAuthTokenModel()
                 {
-                    clientID = this.token.clientID,
-                    authorizationCode = this.token.authorizationCode,
-                    refreshToken = this.token.refreshToken,
-                    accessToken = this.token.accessToken,
-                    expiresIn = this.token.expiresIn
+                    clientID = this.OAuthToken.clientID,
+                    authorizationCode = this.OAuthToken.authorizationCode,
+                    refreshToken = this.OAuthToken.refreshToken,
+                    accessToken = this.OAuthToken.accessToken,
+                    expiresIn = this.OAuthToken.expiresIn
                 };
             }
             return null;
@@ -97,7 +98,7 @@ namespace MixItUp.Base.Services
                     OAuthTokenModel token = await this.RequestOAuthToken(authorizationCode, scopes, state);
                     if (token != null)
                     {
-                        this.SetOAuthToken(token);
+                        this.OAuthToken = token;
                         return new Result();
                     }
                 }
@@ -124,7 +125,7 @@ namespace MixItUp.Base.Services
                 {
                     if (!string.IsNullOrEmpty(this.ClientID) && !string.IsNullOrEmpty(this.ClientSecret))
                     {
-                        client.SetBasicClientIDClientSecretAuthorizationHeader(this.ClientID, this.ClientSecret);
+                        client.SetEncodedBasicAuthorization(this.ClientID, this.ClientSecret);
                     }
 
                     using (var content = new FormUrlEncodedContent(bodyContent))
@@ -144,57 +145,100 @@ namespace MixItUp.Base.Services
 
     public abstract class StreamingPlatformServiceBaseNew : OAuthServiceBase
     {
+        public class StreamingPlatformAccountModel
+        {
+            public string ID { get; set; }
+
+            public string Username { get; set; }
+
+            public string AvatarURL { get; set; }
+        }
+
         public StreamingPlatformTypeEnum Platform { get; }
 
-        public StreamingPlatformServiceBaseNew(string baseAddress) : base(baseAddress) { }
+        public abstract string UserID { get; }
+        public abstract string Username { get; }
+        public abstract string BotID { get; }
+        public abstract string Botname { get; }
+        public abstract string ChannelID { get; }
+        public abstract string ChannelLink { get; }
+
+        public abstract StreamingPlatformAccountModel UserAccount { get; }
+        public abstract StreamingPlatformAccountModel BotAccount { get; }
 
         public override bool IsEnabled { get { return this.GetAuthenticationSettings() != null; } }
+
+        public abstract IEnumerable<string> StreamerScopes { get; protected set; }
+
+        public abstract IEnumerable<string> BotScopes { get; protected set; }
+
+        public StreamingPlatformServiceBaseNew(string baseAddress) : base(baseAddress) { }
 
         public async override Task<Result> Connect()
         {
             StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
             if (authenticationSettings?.IsEnabled ?? false)
             {
-                this.SetOAuthToken(authenticationSettings.UserOAuthToken);
+                this.OAuthToken = authenticationSettings.UserOAuthToken;
                 await this.RefreshOAuthToken();
             }
             else
             {
-                Result result = await this.ConnectWithAuthorization(TrovoService.StreamerScopes);
+                Result result = await this.ConnectWithAuthorization(this.StreamerScopes);
                 if (!result.Success)
                 {
                     return result;
                 }
             }
 
-            return new Result();
+            return await Initialize();
         }
 
-        public override Task<Result> Disconnect()
-        {
-            this.SetOAuthToken(null);
-            return Task.FromResult<Result>(new Result());
-        }
+        public abstract Task<Result> Initialize();
 
-        public async Task<Result> ConnectBot()
+        public override async Task Disable()
         {
+            await this.Disconnect();
+
             StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
-            if (authenticationSettings?.BotOAuthToken != null)
+            if (authenticationSettings != null)
             {
-                this.SetOAuthToken(authenticationSettings.UserOAuthToken);
-                await this.RefreshOAuthToken();
+                authenticationSettings.ClearUserData();
             }
-            else
-            {
-                Result result = await this.ConnectWithAuthorization(TrovoService.BotScopes);
-                if (!result.Success)
-                {
-                    return result;
-                }
-            }
-
-            return new Result();
         }
+
+        //public async Task<Result> ConnectBot()
+        //{
+        //    StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
+        //    if (authenticationSettings?.BotOAuthToken != null)
+        //    {
+        //        this.SetOAuthToken(authenticationSettings.UserOAuthToken);
+        //        await this.RefreshOAuthToken();
+        //    }
+        //    else
+        //    {
+        //        Result result = await this.ConnectWithAuthorization(this.BotScopes);
+        //        if (!result.Success)
+        //        {
+        //            return result;
+        //        }
+        //    }
+
+        //    return new Result();
+        //}
+
+        //public abstract Task DisconnectBot();
+
+        //public async Task DisableBot()
+        //{
+        //    await this.Disconnect();
+
+        //    StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
+        //    if (authenticationSettings != null)
+        //    {
+        //        authenticationSettings.ClearBotData();
+        //    }
+        //}
 
         public StreamingPlatformAuthenticationSettingsModel GetAuthenticationSettings()
         {

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Trovo.Users;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.Model.Trovo.Channels
 {
@@ -26,5 +27,14 @@ namespace MixItUp.Base.Model.Trovo.Channels
         /// The tier of the subscription
         /// </summary>
         public string sub_tier { get; set; }
+    }
+
+    public class ChannelSubscribersModel : PageDataResponseModel
+    {
+        public new int? total { get; set; }
+
+        public List<ChannelSubscriberModel> subscriptions { get; set; }
+
+        public override int GetItemCount() { return this.subscriptions.Count; }
     }
 }

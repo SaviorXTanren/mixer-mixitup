@@ -94,4 +94,11 @@ namespace MixItUp.Base.Model.Trovo.Channels
         /// </summary>
         public ChannelAudienceTypeEnum Audience { get { return EnumHelper.GetEnumValueFromString<ChannelAudienceTypeEnum>(this.audi_type); } }
     }
+
+    public class TopChannelsModel : PageDataResponseModel
+    {
+        public List<TopChannelModel> top_channels_lists { get; set; } = new List<TopChannelModel>();
+
+        public override int GetItemCount() { return this.top_channels_lists.Count; }
+    }
 }
