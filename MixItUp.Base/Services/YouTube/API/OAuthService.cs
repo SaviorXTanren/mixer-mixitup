@@ -62,7 +62,6 @@ namespace MixItUp.Base.Services.YouTube.API
 
             OAuthTokenModel token = await this.PostAsync<OAuthTokenModel>(string.Empty, new StringContent(await content.ReadAsStringAsync(), Encoding.UTF8, "application/x-www-form-urlencoded"), autoRefreshToken: false);
             token.clientID = clientID;
-            token.clientSecret = clientSecret;
             token.authorizationCode = authorizationCode;
             token.ScopeList = string.Join(",", scopes ?? new List<OAuthClientScopeEnum>());
             return token;
@@ -80,7 +79,7 @@ namespace MixItUp.Base.Services.YouTube.API
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
                 { "client_id", token.clientID },
-                { "client_secret", token.clientSecret },
+                //{ "client_secret", token.clientSecret },
                 { "refresh_token", token.refreshToken },
                 { "grant_type", "refresh_token" },
             };
@@ -88,7 +87,6 @@ namespace MixItUp.Base.Services.YouTube.API
 
             OAuthTokenModel newToken = await this.PostAsync<OAuthTokenModel>(string.Empty, new StringContent(await content.ReadAsStringAsync(), Encoding.UTF8, "application/x-www-form-urlencoded"), autoRefreshToken: false);
             newToken.clientID = token.clientID;
-            newToken.clientSecret = token.clientSecret;
             newToken.authorizationCode = token.authorizationCode;
             newToken.refreshToken = token.refreshToken;
             newToken.ScopeList = token.ScopeList;

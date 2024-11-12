@@ -296,7 +296,7 @@ namespace MixItUp.Base.Services.YouTube.API
         {
             UserCredential credential = new UserCredential(new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
             {
-                ClientSecrets = new ClientSecrets() { ClientId = this.token.clientID, ClientSecret = this.token.clientSecret },
+                ClientSecrets = new ClientSecrets() { ClientId = this.token.clientID, ClientSecret = ServiceManager.Get<SecretsService>().GetSecret("YouTubeSecret") },
             }),
             "user",
             new TokenResponse()

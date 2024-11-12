@@ -11,11 +11,31 @@ namespace MixItUp.Base.Web
     /// </summary>
     public class LocalOAuthHttpListenerServer : LocalHttpListenerServer
     {
-        public const string OAUTH_LOCALHOST_URL = "http://localhost:8919/";
+        public const string REDIRECT_URL = "http://localhost:8919/";
 
-        private const string AUTHORIZATION_CODE_URL_PARAMETER = "code";
+        public const string AUTHORIZATION_CODE_URL_PARAMETER = "code";
 
-        private const string SUCCESS_RESPONSE = "<!DOCTYPE html><html><body><h1 style=\"text-align:center;\">Logged In Successfully</h1><p style=\"text-align:center;\">You have been logged in, you may now close this webpage</p></body></html>";
+        public const string LOGIN_REDIRECT_HTML = @"<!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset=""utf-8"" />
+                <title>Mix It Up - Logged In</title>
+                <link rel=""shortcut icon"" type=""image/x-icon"" href=""https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png"" />
+                <style>
+                    body {
+                        background: #0e162a
+                    }
+                </style>
+            </head>
+            <body>
+                <img src=""https://static.mixitupapp.com/desktop/Mix-It-Up_Logo_Auth-Callback.png"" width=""150"" height=""150"" style=""position: absolute; left: 50%; top: 25%; transform: translate(-50%, -50%);"" />
+                <div style='background-color:#232841; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 20px'>
+                    <h1 style=""text-align:center;color:white;margin-top:10px"">Mix It Up</h1>
+                    <h3 style=""text-align:center;color:white;"">Logged In Successfully</h3>
+                    <p style=""text-align:center;color:white;"">You have been logged in, you may now close this webpage</p>
+                </div>
+            </body>
+            </html>";
 
         private string authorizationCode;
 
@@ -25,7 +45,7 @@ namespace MixItUp.Base.Web
         {
             try
             {
-                this.Start(OAUTH_LOCALHOST_URL);
+                this.Start(REDIRECT_URL);
 
                 ServiceManager.Get<IProcessService>().LaunchLink(authorizationURL);
 
@@ -58,7 +78,7 @@ namespace MixItUp.Base.Web
             if (!string.IsNullOrEmpty(token))
             {
                 statusCode = HttpStatusCode.OK;
-                result = SUCCESS_RESPONSE;
+                result = LOGIN_REDIRECT_HTML;
 
                 this.authorizationCode = token;
             }

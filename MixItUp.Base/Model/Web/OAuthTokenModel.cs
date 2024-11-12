@@ -16,11 +16,6 @@ namespace MixItUp.Base.Model.Web
         [DataMember]
         public string clientID { get; set; }
         /// <summary>
-        /// The secret of the client service.
-        /// </summary>
-        [DataMember]
-        public string clientSecret { get; set; }
-        /// <summary>
         /// The authorization code sent when authenticating against the OAuth service.
         /// </summary>
         [DataMember]
@@ -71,6 +66,9 @@ namespace MixItUp.Base.Model.Web
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset ExpirationDateTime { get { return (this.expiresTimeStamp > 0) ? DateTimeOffset.FromUnixTimeSeconds(this.expiresTimeStamp) : this.AcquiredDateTime.AddSeconds(this.expiresIn); } }
+
+        [JsonIgnore]
+        public bool IsExpired { get { return this.ExpirationDateTime < DateTimeOffset.Now; } }
 
         /// <summary>
         /// Creates a new instance of an OAuth token.

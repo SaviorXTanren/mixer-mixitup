@@ -10,7 +10,7 @@ namespace MixItUp.Base.Services.External
 
         public override bool IsEnabled => throw new NotImplementedException();
 
-        public override bool IsConnected => throw new NotImplementedException();
+        public override bool IsConnected { get; protected set; }
 
         public override Task<Result> Connect()
         {

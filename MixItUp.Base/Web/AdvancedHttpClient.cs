@@ -413,6 +413,13 @@ namespace MixItUp.Base.Web
             }
         }
 
+        public void SetBasicClientIDClientSecretAuthorizationHeader(string clientID, string clientSecret)
+        {
+            string authorizationValue = string.Format("{0}:{1}", clientID, clientSecret);
+            byte[] authorizationBytes = Encoding.UTF8.GetBytes(authorizationValue);
+            this.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
+        }
+
         private void LogRequest(string requestUri, HttpContent content = null)
         {
             if (content != null)

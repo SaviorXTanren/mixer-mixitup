@@ -4,7 +4,6 @@ using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -14,16 +13,6 @@ namespace MixItUp.Base.Services.External
         Task<Result> Connect(OAuthTokenModel token);
 
         OAuthTokenModel GetOAuthTokenCopy();
-    }
-
-    public static class AdvancedHttpClientExtensions
-    {
-        public static void SetBasicClientIDClientSecretAuthorizationHeader(this AdvancedHttpClient client, string clientID, string clientSecret)
-        {
-            string authorizationValue = string.Format("{0}:{1}", clientID, clientSecret);
-            byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
-        }
     }
 
     public abstract class OAuthExternalServiceBase : OAuthRestServiceBase, IOAuthExternalService, IDisposable

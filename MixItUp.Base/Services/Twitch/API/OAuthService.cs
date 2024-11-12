@@ -31,9 +31,9 @@ namespace MixItUp.Base.Services.Twitch.API
         /// <param name="scopes">The list of scopes that were requested</param>
         /// <param name="redirectUrl">The URL to redirect to after authorization is complete</param>
         /// <returns>The OAuth token</returns>
-        public async Task<OAuthTokenModel> GetOAuthTokenModel(string clientID, string authorizationCode, IEnumerable<OAuthClientScopeEnum> scopes, string redirectUrl = null)
+        public async Task<OAuthTokenModel> GetOAuthTokenModel(string clientID, string authorizationCode, IEnumerable<OAuthClientScopeEnum> scopes)
         {
-            return await this.GetOAuthTokenModel(clientID, null, authorizationCode, scopes, redirectUrl);
+            return await this.GetOAuthTokenModel(clientID, null, authorizationCode, scopes);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace MixItUp.Base.Services.Twitch.API
         /// <param name="scopes">The list of scopes that were requested</param>
         /// <param name="redirectUrl">The URL to redirect to after authorization is complete</param>
         /// <returns>The OAuth token</returns>
-        public async Task<OAuthTokenModel> GetOAuthTokenModel(string clientID, string clientSecret, string authorizationCode, IEnumerable<OAuthClientScopeEnum> scopes, string redirectUrl = null)
+        public async Task<OAuthTokenModel> GetOAuthTokenModel(string clientID, string clientSecret, string authorizationCode, IEnumerable<OAuthClientScopeEnum> scopes)
         {
             Validator.ValidateString(clientID, "clientID");
             Validator.ValidateString(authorizationCode, "authorizationCode");
@@ -56,13 +56,12 @@ namespace MixItUp.Base.Services.Twitch.API
                 { "client_secret", clientSecret },
                 { "code", authorizationCode },
                 { "grant_type", "authorization_code" },
-                { "redirect_uri", redirectUrl },
+                { "redirect_uri", LocalOAuthHttpListenerServer.REDIRECT_URL },
             };
             FormUrlEncodedContent content = new FormUrlEncodedContent(parameters.AsEnumerable());
 
             OAuthTokenModel token = await this.PostAsync<OAuthTokenModel>("oauth2/token?" + await content.ReadAsStringAsync(), AdvancedHttpClient.CreateContentFromObject(string.Empty), autoRefreshToken: false);
             token.clientID = clientID;
-            token.clientSecret = clientSecret;
             token.authorizationCode = authorizationCode;
             token.ScopeList = string.Join(",", scopes ?? new List<OAuthClientScopeEnum>());
             return token;
@@ -80,7 +79,7 @@ namespace MixItUp.Base.Services.Twitch.API
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
                 { "client_id", token.clientID },
-                { "client_secret", token.clientSecret },
+                //{ "client_secret", token.clientSecret },
                 { "refresh_token", token.refreshToken },
                 { "grant_type", "refresh_token" },
             };
@@ -88,7 +87,6 @@ namespace MixItUp.Base.Services.Twitch.API
 
             OAuthTokenModel newToken = await this.PostAsync<OAuthTokenModel>("oauth2/token?" + await content.ReadAsStringAsync(), AdvancedHttpClient.CreateContentFromObject(string.Empty), autoRefreshToken: false);
             newToken.clientID = token.clientID;
-            newToken.clientSecret = token.clientSecret;
             newToken.authorizationCode = token.authorizationCode;
             newToken.ScopeList = token.ScopeList;
             return newToken;

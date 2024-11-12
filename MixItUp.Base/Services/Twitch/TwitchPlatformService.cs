@@ -142,7 +142,7 @@ namespace MixItUp.Base.Services.Twitch
             try
             {
                 TwitchConnection connection = await TwitchConnection.ConnectViaLocalhostOAuthBrowser(TwitchPlatformService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("TwitchSecret"),
-                    scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
+                    scopes, forceApprovalPrompt: true);
                 if (connection != null)
                 {
                     return new Result<TwitchPlatformService>(new TwitchPlatformService(connection));
