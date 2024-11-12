@@ -156,6 +156,19 @@ namespace MixItUp.Base.Services
 
         public StreamingPlatformTypeEnum Platform { get; }
 
+        protected AdvancedHttpClient BotHttpClient { get; }
+
+        protected OAuthTokenModel BotOAuthToken
+        {
+            get { return this.botToken; }
+            set
+            {
+                this.botToken = value;
+                this.BotHttpClient.SetBearerAuthorization(this.botToken);
+            }
+        }
+        private OAuthTokenModel botToken;
+
         public abstract string UserID { get; }
         public abstract string Username { get; }
         public abstract string BotID { get; }
@@ -168,11 +181,17 @@ namespace MixItUp.Base.Services
 
         public override bool IsEnabled { get { return this.GetAuthenticationSettings() != null; } }
 
+        public bool IsBotEnabled { get { return this.GetAuthenticationSettings()?.IsBotEnabled ?? false; } }
+
         public abstract IEnumerable<string> StreamerScopes { get; protected set; }
 
         public abstract IEnumerable<string> BotScopes { get; protected set; }
 
-        public StreamingPlatformServiceBaseNew(string baseAddress) : base(baseAddress) { }
+        public StreamingPlatformServiceBaseNew(string baseAddress)
+            : base(baseAddress)
+        {
+            this.BotHttpClient = new AdvancedHttpClient(baseAddress);
+        }
 
         public async override Task<Result> Connect()
         {

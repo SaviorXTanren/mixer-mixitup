@@ -117,6 +117,8 @@ namespace MixItUp.Base.Services.Trovo
         public ChannelModel Channel { get; private set; }
         public PrivateUserModel Bot { get; private set; }
 
+        public TrovoClient Client { get; private set; }
+
         public IDictionary<string, TrovoChatEmoteViewModel> ChannelEmotes { get { return this.channelEmotes; } }
         private Dictionary<string, TrovoChatEmoteViewModel> channelEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
 
@@ -126,11 +128,15 @@ namespace MixItUp.Base.Services.Trovo
         public IDictionary<string, TrovoChatEmoteViewModel> GlobalEmotes { get { return this.globalEmotes; } }
         private Dictionary<string, TrovoChatEmoteViewModel> globalEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
 
-        public TrovoService() : base(TrovoRestAPIBaseAddressFormat) { }
+        public TrovoService()
+            : base(TrovoRestAPIBaseAddressFormat)
+        {
+            this.Client = new TrovoClient(this);
+        }
 
         public override async Task<Result> Initialize()
         {
-            this.User = await this.GetCurrentUser();
+            this.User = await this.GetUser();
             if (this.User == null)
             {
                 return new Result(Resources.TrovoFailedToGetUserData);
@@ -177,15 +183,24 @@ namespace MixItUp.Base.Services.Trovo
                 Logger.Log(LogLevel.Error, "Failed to get available Trovo emotes");
             }
 
+            Result result = await this.Client.ConnectUser();
+            if (!result.Success)
+            {
+                await this.Client.DisconnectUser();
+                return result;
+            }
+
             return new Result();
         }
 
-        public override Task Disconnect()
+        public override async Task Disconnect()
         {
-            return Task.CompletedTask;
+            await this.Client.DisconnectUser();
         }
 
-        public async Task<PrivateUserModel> GetCurrentUser() { return await AsyncRunner.RunAsync(this.HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
+        public async Task<PrivateUserModel> GetUser() { return await AsyncRunner.RunAsync(this.HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
+
+        public async Task<PrivateUserModel> GetBot() { return await AsyncRunner.RunAsync(this.BotHttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
 
         public async Task<UserModel> GetUserByName(string username)
         {
@@ -361,7 +376,7 @@ namespace MixItUp.Base.Services.Trovo
             });
         }
 
-        public async Task<string> GetChatToken()
+        public async Task<string> GetUserChatToken()
         {
             return await AsyncRunner.RunAsync(async () =>
             {
@@ -374,11 +389,11 @@ namespace MixItUp.Base.Services.Trovo
             });
         }
 
-        public async Task<string> GetChatToken(string channelID)
+        public async Task<string> GetBotChatToken()
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                JObject jobj = await this.HttpClient.GetJObjectAsync($"chat/channel-token/{channelID}");
+                JObject jobj = await this.BotHttpClient.GetJObjectAsync($"chat/channel-token/{this.ChannelID}");
                 if (jobj != null && jobj.ContainsKey("token"))
                 {
                     return jobj["token"].ToString();
@@ -393,17 +408,30 @@ namespace MixItUp.Base.Services.Trovo
         /// <param name="message">The message to send</param>
         /// <param name="channelID">The ID of the channel to send to</param>
         /// <returns>An awaitable Task</returns>
-        public async Task SendMessage(string message, string channelID = null)
+        public async Task SendUserMessage(string message)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 JObject jobj = new JObject();
-                if (!string.IsNullOrEmpty(channelID))
-                {
-                    jobj["channel_id"] = channelID;
-                }
                 jobj["content"] = message;
                 await this.HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
+            });
+        }
+
+        /// <summary>
+        /// Sends a message to the specified channel.
+        /// </summary>
+        /// <param name="message">The message to send</param>
+        /// <param name="channelID">The ID of the channel to send to</param>
+        /// <returns>An awaitable Task</returns>
+        public async Task SendBotMessage(string message)
+        {
+            await AsyncRunner.RunAsync(async () =>
+            {
+                JObject jobj = new JObject();
+                jobj["channel_id"] = this.ChannelID;
+                jobj["content"] = message;
+                await this.BotHttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
             });
         }
 

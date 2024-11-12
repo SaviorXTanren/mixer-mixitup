@@ -42,6 +42,9 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public bool IsEnabled { get { return this.UserOAuthToken != null; } }
 
+        [JsonIgnore]
+        public bool IsBotEnabled { get { return this.BotOAuthToken != null; } }
+
         public void ClearUserData()
         {
             this.UserID = null;

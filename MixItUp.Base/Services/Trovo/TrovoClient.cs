@@ -21,9 +21,6 @@ namespace MixItUp.Base.Services.Trovo
 {
     public class TrovoClient
     {
-        /// <summary>
-        /// The connection url for Trovo's chat servers.
-        /// </summary>
         public const string TrovoChatConnectionURL = "wss://open-chat.trovo.live/chat";
 
         private const string TreasureBoxUnleashedActivityTopic = "item_drop_box_unleash";
@@ -32,7 +29,8 @@ namespace MixItUp.Base.Services.Trovo
 
         private TrovoService service;
 
-        private CancellationTokenSource cancellationTokenSource;
+        private CancellationTokenSource userCancellationTokenSource;
+        private CancellationTokenSource botCancellationTokenSource;
 
         private AdvancedClientWebSocket userWebSocket;
         private AdvancedClientWebSocket botWebSocket;
@@ -70,37 +68,33 @@ namespace MixItUp.Base.Services.Trovo
             this.botWebSocket.Disconnected += BotWebSocket_Disconnected;
         }
 
-        /// <summary>
-        /// Connects the client to the specified channel.
-        /// </summary>
-        /// <returns>Whether the connection was successful</returns>
         public async Task<Result> ConnectUser()
         {
             this.processMessages = false;
 
-            string userChatToken = await this.service.GetChatToken();
-            if (string.IsNullOrEmpty(userChatToken))
+            string chatToken = await this.service.GetUserChatToken();
+            if (string.IsNullOrEmpty(chatToken))
             {
                 return new Result(Resources.TrovoFailedToGetChatToken);
             }
 
             if (await this.userWebSocket.Connect(TrovoChatConnectionURL))
             {
-                ChatPacketModel authReply = await this.SendAndListen(this.userWebSocket, new ChatPacketModel("AUTH", new JObject() { { "token", userChatToken } }));
+                ChatPacketModel authReply = await this.SendAndListen(this.userWebSocket, new ChatPacketModel("AUTH", new JObject() { { "token", chatToken } }));
                 if (authReply != null && string.IsNullOrEmpty(authReply.error))
                 {
-                    this.cancellationTokenSource = new CancellationTokenSource();
+                    this.userCancellationTokenSource = new CancellationTokenSource();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    AsyncRunner.RunAsyncBackground(this.UserBackgroundPing, this.cancellationTokenSource.Token);
+                    AsyncRunner.RunAsyncBackground(this.UserBackgroundPing, this.userCancellationTokenSource.Token);
 
-                    AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 60000);
+                    AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.userCancellationTokenSource.Token, 60000);
 
                     AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                     {
                         await Task.Delay(2000);
                         this.processMessages = true;
-                    }, this.cancellationTokenSource.Token);
+                    }, this.userCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     ChannelSession.ReconnectionOccurred(Resources.TrovoUserChat);
@@ -112,21 +106,56 @@ namespace MixItUp.Base.Services.Trovo
             return new Result(success: false);
         }
 
-        /// <summary>
-        /// Disconnects the client.
-        /// </summary>
-        /// <returns>An awaitable Task</returns>
         public async Task DisconnectUser()
         {
-            if (this.cancellationTokenSource != null)
+            if (this.userCancellationTokenSource != null)
             {
-                this.cancellationTokenSource.Cancel();
-                this.cancellationTokenSource = null;
+                this.userCancellationTokenSource.Cancel();
+                this.userCancellationTokenSource = null;
             }
 
             this.processMessages = false;
 
             await this.userWebSocket.Disconnect();
+        }
+
+        public async Task<Result> ConnectBot()
+        {
+            string chatToken = await this.service.GetBotChatToken();
+            if (string.IsNullOrEmpty(chatToken))
+            {
+                return new Result(Resources.TrovoFailedToGetChatToken);
+            }
+
+            if (await this.botWebSocket.Connect(TrovoChatConnectionURL))
+            {
+                ChatPacketModel authReply = await this.SendAndListen(this.botWebSocket, new ChatPacketModel("AUTH", new JObject() { { "token", chatToken } }));
+                if (authReply != null && string.IsNullOrEmpty(authReply.error))
+                {
+                    this.botCancellationTokenSource = new CancellationTokenSource();
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsyncBackground(this.BotBackgroundPing, this.userCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                    ChannelSession.ReconnectionOccurred(Resources.TrovoBotChat);
+
+                    return new Result();
+                }
+            }
+
+            return new Result(success: false);
+        }
+
+        public async Task DisconnectBot()
+        {
+            if (this.botCancellationTokenSource != null)
+            {
+                this.botCancellationTokenSource.Cancel();
+                this.botCancellationTokenSource = null;
+            }
+
+            await this.botWebSocket.Disconnect();
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
@@ -142,13 +171,11 @@ namespace MixItUp.Base.Services.Trovo
 
                     if (sendAsStreamer || !this.IsBotConnected)
                     {
-                        await this.service.SendMessage(message);
+                        await this.service.SendUserMessage(message);
                     }
                     else
                     {
-                        // TODO: Add Bot Account send message function
-                        throw new InvalidOperationException();
-                        //await this.service.SendMessage(message, channelID: this.service.ChannelID);
+                        await this.service.SendBotMessage(message);
                     }
 
                     message = subMessage;
@@ -227,12 +254,6 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> FastClip() { return await this.PerformChatCommand("fastclip"); }
 
-        /// <summary>
-        /// Performs an official Trovo command in the specified channel.
-        /// </summary>
-        /// <param name="channelID">The ID of the channel to perform the command in</param>
-        /// <param name="command">The command to perform</param>
-        /// <returns>Null if successful, a status message indicating why the command failed to perform</returns>
         public async Task<bool> PerformChatCommand(string command)
         {
             string result = await this.service.PerformChatCommand(this.service.ChannelID, command);
@@ -244,39 +265,33 @@ namespace MixItUp.Base.Services.Trovo
             return true;
         }
 
-        /// <summary>
-        /// Sends a ping message to the servers.
-        /// </summary>
-        /// <returns>The response packet</returns>
         public async Task<ChatPacketModel> Ping(AdvancedClientWebSocket webSocket)
         {
             return await this.SendAndListen(webSocket, new ChatPacketModel("PING"));
         }
 
-        /// <summary>
-        /// Sends a packet to the server and listens for a reply.
-        /// </summary>
-        /// <param name="packet">The packet to send</param>
-        /// <returns>The reply packet</returns>
-        protected async Task<ChatPacketModel> SendAndListen(AdvancedClientWebSocket webSocket, ChatPacketModel packet)
+        private async Task UserBackgroundPing(CancellationToken token) { await this.BackgroundPing(this.userWebSocket, token); }
+
+        private async Task BotBackgroundPing(CancellationToken token) { await this.BackgroundPing(this.botWebSocket, token); }
+
+        private async Task BackgroundPing(AdvancedClientWebSocket webSocket, CancellationToken token)
         {
-            ChatPacketModel replyPacket = null;
-            this.replyIDListeners[packet.nonce] = null;
-
-            await webSocket.Send(JSONSerializerHelper.SerializeToString(packet));
-
-            await AsyncRunner.WaitForSuccess(() =>
+            while (!token.IsCancellationRequested)
             {
-                if (this.replyIDListeners.ContainsKey(packet.nonce) && this.replyIDListeners[packet.nonce] != null)
+                int delay = 30;
+                try
                 {
-                    replyPacket = this.replyIDListeners[packet.nonce];
-                    return true;
+                    ChatPacketModel reply = await this.Ping(webSocket);
+                    if (reply != null && reply.data != null && reply.data.ContainsKey("gap"))
+                    {
+                        int.TryParse(reply.data["gap"].ToString(), out delay);
+                    }
+                    await Task.Delay(delay * 1000);
                 }
-                return false;
-            }, secondsToWait: 5);
-
-            this.replyIDListeners.Remove(packet.nonce);
-            return replyPacket;
+                catch (ThreadAbortException) { return; }
+                catch (OperationCanceledException) { return; }
+                catch (Exception ex) { Logger.Log(ex); }
+            }
         }
 
         private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
@@ -333,28 +348,6 @@ namespace MixItUp.Base.Services.Trovo
                 {
                     previousViewers.Add(viewer);
                 }
-            }
-        }
-
-        private async Task UserBackgroundPing(CancellationToken token) { await this.BackgroundPing(this.userWebSocket, token); }
-
-        private async Task BackgroundPing(AdvancedClientWebSocket webSocket, CancellationToken token)
-        {
-            while (!token.IsCancellationRequested)
-            {
-                int delay = 30;
-                try
-                {
-                    ChatPacketModel reply = await this.Ping(webSocket);
-                    if (reply != null && reply.data != null && reply.data.ContainsKey("gap"))
-                    {
-                        int.TryParse(reply.data["gap"].ToString(), out delay);
-                    }
-                    await Task.Delay(delay * 1000);
-                }
-                catch (ThreadAbortException) { return; }
-                catch (OperationCanceledException) { return; }
-                catch (Exception ex) { Logger.Log(ex); }
             }
         }
 
@@ -670,7 +663,28 @@ namespace MixItUp.Base.Services.Trovo
 
         private void BotWebSocket_Disconnected(object sender, WebSocketCloseStatus closeStatus)
         {
-            ChannelSession.DisconnectionOccurred(Resources.TrovoUserChat);
+            ChannelSession.DisconnectionOccurred(Resources.TrovoBotChat);
+        }
+
+        protected async Task<ChatPacketModel> SendAndListen(AdvancedClientWebSocket webSocket, ChatPacketModel packet)
+        {
+            ChatPacketModel replyPacket = null;
+            this.replyIDListeners[packet.nonce] = null;
+
+            await webSocket.Send(JSONSerializerHelper.SerializeToString(packet));
+
+            await AsyncRunner.WaitForSuccess(() =>
+            {
+                if (this.replyIDListeners.ContainsKey(packet.nonce) && this.replyIDListeners[packet.nonce] != null)
+                {
+                    replyPacket = this.replyIDListeners[packet.nonce];
+                    return true;
+                }
+                return false;
+            }, secondsToWait: 5);
+
+            this.replyIDListeners.Remove(packet.nonce);
+            return replyPacket;
         }
     }
 }
