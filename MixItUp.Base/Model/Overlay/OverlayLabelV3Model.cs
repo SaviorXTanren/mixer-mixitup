@@ -509,6 +509,8 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (e.ChangeType == WatcherChangeTypes.Changed && this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.File))
                 {
+                    await Task.Delay(1000);
+
                     this.Displays[OverlayLabelDisplayV3TypeEnum.File].Format = await ServiceManager.Get<IFileService>().ReadFile(e.FullPath);
                     await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.File);
                 }
