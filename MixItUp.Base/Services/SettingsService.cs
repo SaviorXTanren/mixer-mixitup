@@ -164,8 +164,6 @@ namespace MixItUp.Base.Services
         {
             if (settings != null)
             {
-                Logger.ForceLog(LogLevel.Information, "Settings save operation started");
-
                 try
                 {
                     await semaphore.WaitAsync();
@@ -182,8 +180,6 @@ namespace MixItUp.Base.Services
                 {
                     semaphore.Release();
                 }
-
-                Logger.ForceLog(LogLevel.Information, "Settings save operation finished");
             }
         }
 
