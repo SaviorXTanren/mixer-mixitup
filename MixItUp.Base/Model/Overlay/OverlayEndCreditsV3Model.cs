@@ -172,7 +172,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.Type == OverlayEndCreditsSectionV3Type.CustomSection)
             {
-                foreach (var item in this.customTracking)
+                foreach (var item in this.customTracking.ToList())
                 {
                     string text = OverlayV3Service.ReplaceProperty(this.ItemTemplate, TextPropertyName, item.Item2);
                     if (SpecialIdentifierStringBuilder.ContainsSpecialIdentifiers(text))
@@ -184,7 +184,7 @@ namespace MixItUp.Base.Model.Overlay
                 return items;
             }
 
-            foreach (var item in this.itemTracking)
+            foreach (var item in this.itemTracking.ToList())
             {
                 string text = OverlayV3Service.ReplaceProperty(this.ItemTemplate, UsernamePropertyName, item.Key.DisplayName);
                 switch (this.Type)
