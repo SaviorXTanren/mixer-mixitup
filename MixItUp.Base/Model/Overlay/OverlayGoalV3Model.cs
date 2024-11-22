@@ -54,6 +54,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public const string TotalAmountSpecialIdentifier = "goaltotalamount";
         public const string ProgressAmountSpecialIdentifier = "goalprogressamount";
+        public const string RemainingAmountSpecialIdentifier = "goalprogressremaining";
         public const string SegmentNameSpecialIdentifier = "goalsegmentname";
         public const string SegmentAmountSpecialIdentifier = "goalsegmentamount";
         public const string NextSegmentNameSpecialIdentifier = "goalnextsegmentname";
@@ -339,6 +340,7 @@ namespace MixItUp.Base.Model.Overlay
                         CommandParametersModel parameters = new CommandParametersModel(user);
                         parameters.SpecialIdentifiers[TotalAmountSpecialIdentifier] = this.CurrentAmount.ToString();
                         parameters.SpecialIdentifiers[ProgressAmountSpecialIdentifier] = amount.ToString();
+                        parameters.SpecialIdentifiers[RemainingAmountSpecialIdentifier] = (this.CurrentAmount - amount).ToString();
                         parameters.SpecialIdentifiers[SegmentNameSpecialIdentifier] = segment.Name;
                         parameters.SpecialIdentifiers[SegmentAmountSpecialIdentifier] = segment.Amount.ToString();
                         parameters.SpecialIdentifiers[NextSegmentNameSpecialIdentifier] = this.CurrentSegment.Name;

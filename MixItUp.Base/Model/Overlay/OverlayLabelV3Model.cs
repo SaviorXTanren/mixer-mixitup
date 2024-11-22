@@ -503,19 +503,24 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            try
+            if (e.ChangeType == WatcherChangeTypes.Changed && this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.File))
             {
-                if (e.ChangeType == WatcherChangeTypes.Changed && this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.File))
+                // Attempt to read from the file up to 5 times with a 1 second delay in-between each attempt in the event there's a file lock
+                for (int i = 0; i < 5; i++)
                 {
-                    await Task.Delay(1000);
+                    try
+                    {
+                        this.Displays[OverlayLabelDisplayV3TypeEnum.File].Format = await ServiceManager.Get<IFileService>().ReadFile(e.FullPath);
+                        await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.File);
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
 
-                    this.Displays[OverlayLabelDisplayV3TypeEnum.File].Format = await ServiceManager.Get<IFileService>().ReadFile(e.FullPath);
-                    await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.File);
+                    await Task.Delay(1000);
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
             }
         }
 
