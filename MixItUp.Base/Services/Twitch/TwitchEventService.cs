@@ -24,6 +24,7 @@ using Twitch.Base.Models.Clients.PubSub;
 using Twitch.Base.Models.Clients.PubSub.Messages;
 using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.EventSub;
+using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
@@ -734,9 +735,13 @@ namespace MixItUp.Base.Services.Twitch
         {
             CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
 
+            string gameID = payload["category_id"].ToString();
+            GameModel game = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(gameID);
+
             parameters.SpecialIdentifiers["streamtitle"] = payload["title"].ToString();
-            parameters.SpecialIdentifiers["streamgameid"] = payload["category_id"].ToString();
-            parameters.SpecialIdentifiers["streamgame"] = payload["category_name"].ToString();
+            parameters.SpecialIdentifiers["streamgameid"] = gameID;
+            parameters.SpecialIdentifiers["streamgameimage"] = game?.box_art_url ?? string.Empty;
+            parameters.SpecialIdentifiers["streamgame"] = parameters.SpecialIdentifiers["streamgamename"] = payload["category_name"].ToString();
 
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUpdated, parameters);
         }
