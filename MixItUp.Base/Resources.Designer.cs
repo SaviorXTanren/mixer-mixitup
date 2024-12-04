@@ -1168,6 +1168,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: Unable to perform Amazon Polly TTS due to a premium voice selected without an AWS account connected.
+        /// </summary>
+        public static string AmazonPollyPremiumVoiceSelectedWithoutCustomKey {
+            get {
+                return ResourceManager.GetString("AmazonPollyPremiumVoiceSelectedWithoutCustomKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amber.
         /// </summary>
         public static string Amber {
