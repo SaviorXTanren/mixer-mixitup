@@ -834,7 +834,7 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetUserTitleUsage, parameters);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandAddCommandUsage, parameters);
             }
         }
     }
