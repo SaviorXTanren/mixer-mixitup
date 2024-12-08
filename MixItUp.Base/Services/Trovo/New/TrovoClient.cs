@@ -25,16 +25,11 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private const string TreasureBoxUnleashedActivityTopic = "item_drop_box_unleash";
 
-        private const int MaxMessageLength = 500;
-
-        private TrovoService service;
-
         private CancellationTokenSource cancellationTokenSource;
 
         private AdvancedClientWebSocket webSocket;
 
         private bool processMessages;
-        private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
         private HashSet<string> messagesProcessed = new HashSet<string>();
         private Dictionary<Guid, int> userSubsGiftedInstanced = new Dictionary<Guid, int>();
@@ -47,9 +42,8 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private bool isFullClient;
 
-        public TrovoClient(TrovoService service, bool isFullClient = false)
+        public TrovoClient(bool isFullClient = false)
         {
-            this.service = service;
             this.isFullClient = isFullClient;
 
             webSocket = new AdvancedClientWebSocket();
@@ -105,106 +99,6 @@ namespace MixItUp.Base.Services.Trovo.New
             processMessages = false;
 
             await webSocket.Disconnect();
-        }
-
-        public async Task SendMessage(string message)
-        {
-            try
-            {
-                await messageSemaphore.WaitAsync();
-
-                string subMessage = null;
-                do
-                {
-                    message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-
-                    await service.SendMessage(message);
-
-                    message = subMessage;
-                    await Task.Delay(500);
-                }
-                while (!string.IsNullOrEmpty(message));
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            finally
-            {
-                messageSemaphore.Release();
-            }
-        }
-
-        public async Task<bool> DeleteMessage(ChatMessageViewModel message)
-        {
-            return await service.DeleteMessage(service.ChannelID, message.ID, message.User?.PlatformID);
-        }
-
-        public async Task<bool> ClearChat() { return await PerformChatCommand("clear"); }
-
-        public async Task<bool> ModUser(string username) { return await PerformChatCommand("mod " + username); }
-
-        public async Task<bool> UnmodUser(string username) { return await PerformChatCommand("unmod " + username); }
-
-        public async Task<bool> TimeoutUser(string username, int duration) { return await PerformChatCommand($"ban {username} {duration}"); }
-
-        public async Task<bool> BanUser(string username) { return await PerformChatCommand("ban " + username); }
-
-        public async Task<bool> UnbanUser(string username) { return await PerformChatCommand("unban " + username); }
-
-        public async Task<bool> HostUser(string username) { return await PerformChatCommand("host " + username); }
-
-        public async Task<bool> SlowMode(int seconds = 0)
-        {
-            if (seconds > 0)
-            {
-                return await PerformChatCommand("slow " + seconds);
-            }
-            else
-            {
-                return await PerformChatCommand("slowoff");
-            }
-        }
-
-        public async Task<bool> FollowersMode(bool enable)
-        {
-            if (enable)
-            {
-                return await PerformChatCommand("followers");
-            }
-            else
-            {
-                return await PerformChatCommand("followersoff");
-            }
-        }
-
-        public async Task<bool> SubscriberMode(bool enable)
-        {
-            if (enable)
-            {
-                return await PerformChatCommand("subscribers");
-            }
-            else
-            {
-                return await PerformChatCommand("subscribersoff");
-            }
-        }
-
-        public async Task<bool> AddRole(string username, string role) { return await PerformChatCommand($"addrole {role} {username}"); }
-
-        public async Task<bool> RemoveRole(string username, string role) { return await PerformChatCommand($"removerole {role} {username}"); }
-
-        public async Task<bool> FastClip() { return await PerformChatCommand("fastclip"); }
-
-        public async Task<bool> PerformChatCommand(string command)
-        {
-            string result = await service.PerformChatCommand(service.ChannelID, command);
-            if (!string.IsNullOrEmpty(result))
-            {
-                await ServiceManager.Get<ChatService>().SendMessage(result, StreamingPlatformTypeEnum.Trovo);
-                return false;
-            }
-            return true;
         }
 
         public async Task<ChatPacketModel> Ping(AdvancedClientWebSocket webSocket)

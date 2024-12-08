@@ -1,10 +1,12 @@
-﻿using MixItUp.Base.Model.Trovo;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Trovo;
 using MixItUp.Base.Model.Trovo.Category;
 using MixItUp.Base.Model.Trovo.Channels;
 using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Model.Trovo.Users;
 using MixItUp.Base.Model.Web;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
@@ -12,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Trovo.New
@@ -41,11 +44,11 @@ namespace MixItUp.Base.Services.Trovo.New
         public IDictionary<string, TrovoChatEmoteViewModel> GlobalEmotes { get { return globalEmotes; } }
         private Dictionary<string, TrovoChatEmoteViewModel> globalEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
 
-        public override bool IsEnabled { get { return GetAuthenticationSettings()?.IsEnabled ?? false; } }
+        public override bool IsEnabled { get { return this.GetAuthenticationSettings()?.IsEnabled ?? false; } }
 
         public StreamerTrovoService()
         {
-            Client = new TrovoClient(this, isFullClient: true);
+            this.Client = new TrovoClient(isFullClient: true);
         }
 
         public override async Task<Result> Initialize()
@@ -107,14 +110,14 @@ namespace MixItUp.Base.Services.Trovo.New
             "user_details_self",
         };
 
-        public override bool IsEnabled { get { return GetAuthenticationSettings()?.IsBotEnabled ?? false; } }
+        public override bool IsEnabled { get { return this.GetAuthenticationSettings()?.IsBotEnabled ?? false; } }
 
         public BotTrovoService()
         {
-            Client = new TrovoClient(this);
-        }
+            this.Client = new TrovoClient();
 
-        public override async Task<string> GetChatToken() { return await GetChannelChatToken(ServiceManager.Get<StreamerTrovoService>().ChannelID); }
+            this.channelIDToConnectTo = this.GetAuthenticationSettings()?.ChannelID ?? string.Empty;
+        }
     }
 
     /// <summary>
@@ -125,6 +128,8 @@ namespace MixItUp.Base.Services.Trovo.New
         private const string OAuthBaseAddress = "https://open.trovo.live/page/login.html";
 
         private const string TrovoRestAPIBaseAddressFormat = "https://open-api.trovo.live/openplatform/";
+
+        private const int MaxMessageLength = 500;
 
         public static DateTimeOffset GetTrovoDateTime(string dateTime)
         {
@@ -182,6 +187,12 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public TrovoClient Client { get; protected set; }
 
+        public bool IsBotService { get { return !string.IsNullOrEmpty(this.channelIDToConnectTo); } }
+        public string ChatChannelID { get { return this.IsBotService ? this.channelIDToConnectTo : this.ChannelID; } }
+        protected string channelIDToConnectTo;
+
+        private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
+
         public TrovoService() : base(TrovoRestAPIBaseAddressFormat) { }
 
         public override async Task<Result> Initialize()
@@ -198,7 +209,7 @@ namespace MixItUp.Base.Services.Trovo.New
                 return new Result(Resources.TrovoFailedToGetChannelData);
             }
 
-            string chatToken = await GetChatToken();
+            string chatToken = this.IsBotService ? await this.GetChatToken(this.channelIDToConnectTo) : await this.GetChatToken();
             if (string.IsNullOrEmpty(chatToken))
             {
                 return new Result(Resources.TrovoChatConnectionCouldNotBeEstablished);
@@ -218,8 +229,6 @@ namespace MixItUp.Base.Services.Trovo.New
         {
             await Client.Disconnect();
         }
-
-        public virtual async Task<string> GetChatToken() { return await GetChannelChatToken(); }
 
         public async Task<PrivateUserModel> GetUser() { return await AsyncRunner.RunAsync(HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
 
@@ -397,7 +406,7 @@ namespace MixItUp.Base.Services.Trovo.New
             });
         }
 
-        public async Task<string> GetChannelChatToken()
+        public async Task<string> GetChatToken()
         {
             return await AsyncRunner.RunAsync(async () =>
             {
@@ -410,7 +419,7 @@ namespace MixItUp.Base.Services.Trovo.New
             });
         }
 
-        public async Task<string> GetChannelChatToken(string channelID)
+        public async Task<string> GetChatToken(string channelID)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
@@ -423,50 +432,104 @@ namespace MixItUp.Base.Services.Trovo.New
             });
         }
 
-        /// <summary>
-        /// Sends a message to the specified channel.
-        /// </summary>
-        /// <param name="message">The message to send</param>
-        /// <param name="channelID">The ID of the channel to send to</param>
-        /// <returns>An awaitable Task</returns>
         public async Task SendMessage(string message)
         {
-            await AsyncRunner.RunAsync(async () =>
+            try
             {
-                JObject jobj = new JObject();
-                jobj["content"] = message;
-                await HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
-            });
+                await messageSemaphore.WaitAsync();
+
+                string subMessage = null;
+                do
+                {
+                    message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
+
+                    await AsyncRunner.RunAsync(async () =>
+                    {
+                        JObject jobj = new JObject();
+                        jobj["content"] = message;
+                        if (this.IsBotService)
+                        {
+                            jobj["channel_id"] = this.ChatChannelID;
+                        }
+                        await HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
+                    });
+
+                    message = subMessage;
+                    await Task.Delay(500);
+                }
+                while (!string.IsNullOrEmpty(message));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                messageSemaphore.Release();
+            }
         }
 
-        /// <summary>
-        /// Sends a message to the specified channel.
-        /// </summary>
-        /// <param name="channelID">The ID of the channel to send to</param>
-        /// <param name="message">The message to send</param>
-        /// <returns>An awaitable Task</returns>
-        public async Task SendMessage(string channelID, string message)
+        public async Task<bool> DeleteMessage(ChatMessageViewModel message)
         {
-            await AsyncRunner.RunAsync(async () =>
-            {
-                JObject jobj = new JObject();
-                jobj["channel_id"] = channelID;
-                jobj["content"] = message;
-                await HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
-            });
+            string channelID = !string.IsNullOrEmpty(this.channelIDToConnectTo) ? this.channelIDToConnectTo : this.ChannelID;
+            return await AsyncRunner.RunAsync(HttpClient.DeleteAsync($"channels/{channelID}/messages/{message.ID}/users/{message.User?.PlatformID}"));
         }
 
-        /// <summary>
-        /// Deletes the specified message in the specified channel.
-        /// </summary>
-        /// <param name="channelID">The ID of the channel to delete</param>
-        /// <param name="messageID">The ID of the message to delete</param>
-        /// <param name="userID">The ID of the user who sent the message</param>
-        /// <returns>Whether the delete was successful</returns>
-        public async Task<bool> DeleteMessage(string channelID, string messageID, string userID)
+        public async Task<bool> ClearChat() { return await this.PerformChatCommand("clear"); }
+
+        public async Task<bool> ModUser(string username) { return await this.PerformChatCommand("mod " + username); }
+
+        public async Task<bool> UnmodUser(string username) { return await this.PerformChatCommand("unmod " + username); }
+
+        public async Task<bool> TimeoutUser(string username, int duration) { return await this.PerformChatCommand($"ban {username} {duration}"); }
+
+        public async Task<bool> BanUser(string username) { return await this.PerformChatCommand("ban " + username); }
+
+        public async Task<bool> UnbanUser(string username) { return await this.PerformChatCommand("unban " + username); }
+
+        public async Task<bool> HostUser(string username) { return await this.PerformChatCommand("host " + username); }
+
+        public async Task<bool> SlowMode(int seconds = 0)
         {
-            return await AsyncRunner.RunAsync(HttpClient.DeleteAsync($"channels/{channelID}/messages/{messageID}/users/{userID}"));
+            if (seconds > 0)
+            {
+                return await this.PerformChatCommand("slow " + seconds);
+            }
+            else
+            {
+                return await this.PerformChatCommand("slowoff");
+            }
         }
+
+        public async Task<bool> FollowersMode(bool enable)
+        {
+            if (enable)
+            {
+                return await this.PerformChatCommand("followers");
+            }
+            else
+            {
+                return await this.PerformChatCommand("followersoff");
+            }
+        }
+
+        public async Task<bool> SubscriberMode(bool enable)
+        {
+            if (enable)
+            {
+                return await this.PerformChatCommand("subscribers");
+            }
+            else
+            {
+                return await this.PerformChatCommand("subscribersoff");
+            }
+        }
+
+        public async Task<bool> AddRole(string username, string role) { return await this.PerformChatCommand($"addrole {role} {username}"); }
+
+        public async Task<bool> RemoveRole(string username, string role) { return await this.PerformChatCommand($"removerole {role} {username}"); }
+
+        public async Task<bool> FastClip() { return await this.PerformChatCommand("fastclip"); }
 
         /// <summary>
         /// Performs an official Trovo command in the specified channel.
@@ -474,12 +537,12 @@ namespace MixItUp.Base.Services.Trovo.New
         /// <param name="channelID">The ID of the channel to perform the command in</param>
         /// <param name="command">The command to perform</param>
         /// <returns>Null if successful, a status message indicating why the command failed to perform</returns>
-        public async Task<string> PerformChatCommand(string channelID, string command)
+        public async Task<bool> PerformChatCommand(string command)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
                 JObject jobj = new JObject();
-                jobj["channel_id"] = channelID;
+                jobj["channel_id"] = this.ChatChannelID;
                 jobj["command"] = command;
 
                 jobj = await HttpClient.PostAsync<JObject>("channels/command", AdvancedHttpClient.CreateContentFromObject(jobj));
@@ -489,10 +552,15 @@ namespace MixItUp.Base.Services.Trovo.New
                     JToken message = jobj.SelectToken("display_msg");
                     if (success != null && Equals(false, success))
                     {
-                        return message.ToString();
+                        string result = message.ToString();
+                        if (!string.IsNullOrEmpty(result))
+                        {
+                            await ServiceManager.Get<ChatService>().SendMessage(result, StreamingPlatformTypeEnum.Trovo);
+                            return false;
+                        }
                     }
                 }
-                return null;
+                return true;
             });
         }
 
