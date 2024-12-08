@@ -960,7 +960,6 @@ namespace MixItUp.Base.Services.External
 
                     if (this.token != null)
                     {
-                        token.authorizationCode = authorizationCode;
                         return await this.InitializeInternal();
                     }
                 }

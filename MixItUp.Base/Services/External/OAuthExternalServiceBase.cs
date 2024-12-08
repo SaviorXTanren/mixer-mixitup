@@ -86,7 +86,6 @@ namespace MixItUp.Base.Services.External
                 return new OAuthTokenModel()
                 {
                     clientID = this.token.clientID,
-                    authorizationCode = this.token.authorizationCode,
                     refreshToken = this.token.refreshToken,
                     accessToken = this.token.accessToken,
                     expiresIn = this.token.expiresIn

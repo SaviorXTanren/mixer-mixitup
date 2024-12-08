@@ -6,130 +6,24 @@ using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Model.Trovo.Users;
 using MixItUp.Base.Model.Web;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Trovo.New
 {
-    public class StreamerTrovoService : TrovoService
-    {
-        public override IEnumerable<string> Scopes { get; protected set; } = new List<string>()
-        {
-            "chat_connect",
-            "chat_send_self",
-            "send_to_my_channel",
-            "manage_messages",
-
-            "channel_details_self",
-            "channel_update_self",
-            "channel_subscriptions",
-
-            "user_details_self",
-        };
-
-        public IDictionary<string, TrovoChatEmoteViewModel> ChannelEmotes { get { return channelEmotes; } }
-        private Dictionary<string, TrovoChatEmoteViewModel> channelEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
-
-        public IDictionary<string, TrovoChatEmoteViewModel> EventEmotes { get { return eventEmotes; } }
-        private Dictionary<string, TrovoChatEmoteViewModel> eventEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
-
-        public IDictionary<string, TrovoChatEmoteViewModel> GlobalEmotes { get { return globalEmotes; } }
-        private Dictionary<string, TrovoChatEmoteViewModel> globalEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
-
-        public override bool IsEnabled { get { return this.GetAuthenticationSettings()?.IsEnabled ?? false; } }
-
-        public StreamerTrovoService()
-        {
-            this.Client = new TrovoClient(isFullClient: true);
-        }
-
-        public override async Task<Result> Initialize()
-        {
-            Result result = await Initialize();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            ChatEmotePackageModel emotePackage = await GetPlatformAndChannelEmotes(ChannelID);
-            if (emotePackage != null)
-            {
-                if (emotePackage.customizedEmotes?.channel != null)
-                {
-                    foreach (ChannelChatEmotesModel channel in emotePackage.customizedEmotes.channel)
-                    {
-                        foreach (ChatEmoteModel emote in channel.emotes)
-                        {
-                            channelEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
-                        }
-                    }
-                }
-
-                if (emotePackage.eventEmotes != null)
-                {
-                    foreach (EventChatEmoteModel emote in emotePackage.eventEmotes)
-                    {
-                        eventEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
-                    }
-                }
-
-                if (emotePackage.globalEmotes != null)
-                {
-                    foreach (GlobalChatEmoteModel emote in emotePackage.globalEmotes)
-                    {
-                        globalEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
-                    }
-                }
-            }
-            else
-            {
-                Logger.Log(LogLevel.Error, "Failed to get available Trovo emotes");
-            }
-
-            return new Result();
-        }
-    }
-
-    public class BotTrovoService : TrovoService
-    {
-        public override IEnumerable<string> Scopes { get; protected set; } = new List<string>()
-        {
-            "chat_connect",
-            "chat_send_self",
-            "end_to_my_channel",
-            "manage_messages",
-
-            "user_details_self",
-        };
-
-        public override bool IsEnabled { get { return this.GetAuthenticationSettings()?.IsBotEnabled ?? false; } }
-
-        public BotTrovoService()
-        {
-            this.Client = new TrovoClient();
-
-            this.channelIDToConnectTo = this.GetAuthenticationSettings()?.ChannelID ?? string.Empty;
-        }
-    }
-
     /// <summary>
-    /// https://trovo.live/policy/apis-developer-doc.html
+    /// https://developer.trovo.live
     /// </summary>
-    public abstract class TrovoService : StreamingPlatformServiceBaseNew
+    public class TrovoService : StreamingPlatformServiceBaseNew
     {
         private const string OAuthBaseAddress = "https://open.trovo.live/page/login.html";
 
-        private const string TrovoRestAPIBaseAddressFormat = "https://open-api.trovo.live/openplatform/";
-
-        private const int MaxMessageLength = 500;
+        private const string BaseAddressFormat = "https://open-api.trovo.live/openplatform/";
 
         public static DateTimeOffset GetTrovoDateTime(string dateTime)
         {
@@ -163,72 +57,7 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public override bool IsConnected { get; protected set; }
 
-        public override string UserID { get { return User?.userId; } }
-        public override string Username { get { return User?.userName; } }
-        public override string ChannelID { get { return User?.channelId; } }
-        public override string ChannelLink { get { return string.Format("trovo.live/{0}", Username?.ToLower()); } }
-
-        public override StreamingPlatformAccountModel Account
-        {
-            get
-            {
-                return new StreamingPlatformAccountModel()
-                {
-                    ID = UserID,
-                    Username = Username,
-                    AvatarURL = User?.profilePic
-                };
-            }
-        }
-
-        public PrivateUserModel User { get; private set; }
-        public ChannelModel Channel { get; private set; }
-        public PrivateUserModel Bot { get; private set; }
-
-        public TrovoClient Client { get; protected set; }
-
-        public bool IsBotService { get { return !string.IsNullOrEmpty(this.channelIDToConnectTo); } }
-        public string ChatChannelID { get { return this.IsBotService ? this.channelIDToConnectTo : this.ChannelID; } }
-        protected string channelIDToConnectTo;
-
-        private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
-
-        public TrovoService() : base(TrovoRestAPIBaseAddressFormat) { }
-
-        public override async Task<Result> Initialize()
-        {
-            User = await GetUser();
-            if (User == null)
-            {
-                return new Result(Resources.TrovoFailedToGetUserData);
-            }
-
-            Channel = await GetChannelByID(ChannelID);
-            if (Channel == null)
-            {
-                return new Result(Resources.TrovoFailedToGetChannelData);
-            }
-
-            string chatToken = this.IsBotService ? await this.GetChatToken(this.channelIDToConnectTo) : await this.GetChatToken();
-            if (string.IsNullOrEmpty(chatToken))
-            {
-                return new Result(Resources.TrovoChatConnectionCouldNotBeEstablished);
-            }
-
-            Result result = await Client.Connect(chatToken);
-            if (!result.Success)
-            {
-                await Client.Disconnect();
-                return result;
-            }
-
-            return new Result();
-        }
-
-        public override async Task Disconnect()
-        {
-            await Client.Disconnect();
-        }
+        public TrovoService(IEnumerable<string> scopes) : base(BaseAddressFormat, scopes) { }
 
         public async Task<PrivateUserModel> GetUser() { return await AsyncRunner.RunAsync(HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
 
@@ -432,104 +261,80 @@ namespace MixItUp.Base.Services.Trovo.New
             });
         }
 
-        public async Task SendMessage(string message)
+        public async Task SendMessage(string message, string channelID = null)
         {
-            try
+            await AsyncRunner.RunAsync(async () =>
             {
-                await messageSemaphore.WaitAsync();
-
-                string subMessage = null;
-                do
+                JObject jobj = new JObject();
+                jobj["content"] = message;
+                if (!string.IsNullOrEmpty(channelID))
                 {
-                    message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-
-                    await AsyncRunner.RunAsync(async () =>
-                    {
-                        JObject jobj = new JObject();
-                        jobj["content"] = message;
-                        if (this.IsBotService)
-                        {
-                            jobj["channel_id"] = this.ChatChannelID;
-                        }
-                        await HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
-                    });
-
-                    message = subMessage;
-                    await Task.Delay(500);
+                    jobj["channel_id"] = channelID;
                 }
-                while (!string.IsNullOrEmpty(message));
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            finally
-            {
-                messageSemaphore.Release();
-            }
+                await HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
+            });
         }
 
-        public async Task<bool> DeleteMessage(ChatMessageViewModel message)
+        public async Task<bool> DeleteMessage(string channelID, string userID, string messageID)
         {
-            string channelID = !string.IsNullOrEmpty(this.channelIDToConnectTo) ? this.channelIDToConnectTo : this.ChannelID;
-            return await AsyncRunner.RunAsync(HttpClient.DeleteAsync($"channels/{channelID}/messages/{message.ID}/users/{message.User?.PlatformID}"));
+            return await AsyncRunner.RunAsync(HttpClient.DeleteAsync($"channels/{channelID}/messages/{messageID}/users/{userID}"));
         }
 
-        public async Task<bool> ClearChat() { return await this.PerformChatCommand("clear"); }
+        public async Task<bool> ClearChat(string channelID) { return await this.PerformChatCommand(channelID, "clear"); }
 
-        public async Task<bool> ModUser(string username) { return await this.PerformChatCommand("mod " + username); }
+        public async Task<bool> ModUser(string channelID, string username) { return await this.PerformChatCommand(channelID, "mod " + username); }
 
-        public async Task<bool> UnmodUser(string username) { return await this.PerformChatCommand("unmod " + username); }
+        public async Task<bool> UnmodUser(string channelID, string username) { return await this.PerformChatCommand(channelID, "unmod " + username); }
 
-        public async Task<bool> TimeoutUser(string username, int duration) { return await this.PerformChatCommand($"ban {username} {duration}"); }
+        public async Task<bool> TimeoutUser(string channelID, string username, int duration) { return await this.PerformChatCommand(channelID, $"ban {username} {duration}"); }
 
-        public async Task<bool> BanUser(string username) { return await this.PerformChatCommand("ban " + username); }
+        public async Task<bool> BanUser(string channelID, string username) { return await this.PerformChatCommand(channelID, "ban " + username); }
 
-        public async Task<bool> UnbanUser(string username) { return await this.PerformChatCommand("unban " + username); }
+        public async Task<bool> UnbanUser(string channelID, string username) { return await this.PerformChatCommand(channelID, "unban " + username); }
 
-        public async Task<bool> HostUser(string username) { return await this.PerformChatCommand("host " + username); }
+        public async Task<bool> HostUser(string channelID, string username) { return await this.PerformChatCommand(channelID, "host " + username); }
 
-        public async Task<bool> SlowMode(int seconds = 0)
+        public async Task<bool> SlowMode(string channelID, int seconds = 0)
         {
             if (seconds > 0)
             {
-                return await this.PerformChatCommand("slow " + seconds);
+                return await this.PerformChatCommand(channelID, "slow " + seconds);
             }
             else
             {
-                return await this.PerformChatCommand("slowoff");
+                return await this.PerformChatCommand(channelID, "slowoff");
             }
         }
 
-        public async Task<bool> FollowersMode(bool enable)
+        public async Task<bool> FollowersMode(string channelID, bool enable)
         {
             if (enable)
             {
-                return await this.PerformChatCommand("followers");
+                return await this.PerformChatCommand(channelID, "followers");
             }
             else
             {
-                return await this.PerformChatCommand("followersoff");
+                return await this.PerformChatCommand(channelID, "followersoff");
             }
         }
 
-        public async Task<bool> SubscriberMode(bool enable)
+        public async Task<bool> SubscriberMode(string channelID, bool enable)
         {
             if (enable)
             {
-                return await this.PerformChatCommand("subscribers");
+                return await this.PerformChatCommand(channelID, "subscribers");
             }
             else
             {
-                return await this.PerformChatCommand("subscribersoff");
+                return await this.PerformChatCommand(channelID, "subscribersoff");
             }
         }
 
-        public async Task<bool> AddRole(string username, string role) { return await this.PerformChatCommand($"addrole {role} {username}"); }
+        public async Task<bool> AddRole(string channelID, string username, string role) { return await this.PerformChatCommand(channelID, $"addrole {role} {username}"); }
 
-        public async Task<bool> RemoveRole(string username, string role) { return await this.PerformChatCommand($"removerole {role} {username}"); }
+        public async Task<bool> RemoveRole(string channelID, string username, string role) { return await this.PerformChatCommand(channelID, $"removerole {role} {username}"); }
 
-        public async Task<bool> FastClip() { return await this.PerformChatCommand("fastclip"); }
+        public async Task<bool> FastClip(string channelID) { return await this.PerformChatCommand(channelID, "fastclip"); }
 
         /// <summary>
         /// Performs an official Trovo command in the specified channel.
@@ -537,12 +342,12 @@ namespace MixItUp.Base.Services.Trovo.New
         /// <param name="channelID">The ID of the channel to perform the command in</param>
         /// <param name="command">The command to perform</param>
         /// <returns>Null if successful, a status message indicating why the command failed to perform</returns>
-        public async Task<bool> PerformChatCommand(string command)
+        public async Task<bool> PerformChatCommand(string channelID, string command)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
                 JObject jobj = new JObject();
-                jobj["channel_id"] = this.ChatChannelID;
+                jobj["channel_id"] = channelID;
                 jobj["command"] = command;
 
                 jobj = await HttpClient.PostAsync<JObject>("channels/command", AdvancedHttpClient.CreateContentFromObject(jobj));
@@ -753,7 +558,6 @@ namespace MixItUp.Base.Services.Trovo.New
             if (newToken != null)
             {
                 newToken.clientID = OAuthToken.clientID;
-                newToken.authorizationCode = OAuthToken.authorizationCode;
                 newToken.ScopeList = OAuthToken.ScopeList;
                 OAuthToken = newToken;
             }
@@ -794,7 +598,6 @@ namespace MixItUp.Base.Services.Trovo.New
             if (token != null)
             {
                 token.clientID = ClientID;
-                token.authorizationCode = authorizationCode;
                 token.ScopeList = string.Join(",", scopes ?? new List<string>());
                 return token;
             }

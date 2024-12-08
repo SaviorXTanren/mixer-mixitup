@@ -72,10 +72,11 @@ namespace MixItUp.Base.Services
                 return new OAuthTokenModel()
                 {
                     clientID = this.OAuthToken.clientID,
-                    authorizationCode = this.OAuthToken.authorizationCode,
+                    ScopeList = this.OAuthToken.ScopeList,
                     refreshToken = this.OAuthToken.refreshToken,
                     accessToken = this.OAuthToken.accessToken,
-                    expiresIn = this.OAuthToken.expiresIn
+                    expiresIn = this.OAuthToken.expiresIn,
+                    AcquiredDateTime = this.OAuthToken.AcquiredDateTime,
                 };
             }
             return null;
@@ -145,27 +146,17 @@ namespace MixItUp.Base.Services
 
     public abstract class StreamingPlatformServiceBaseNew : OAuthServiceBase
     {
-        public class StreamingPlatformAccountModel
-        {
-            public string ID { get; set; }
-
-            public string Username { get; set; }
-
-            public string AvatarURL { get; set; }
-        }
-
         public StreamingPlatformTypeEnum Platform { get; }
 
-        public abstract string UserID { get; }
-        public abstract string Username { get; }
-        public abstract string ChannelID { get; }
-        public abstract string ChannelLink { get; }
+        private IEnumerable<string> scopes;
 
-        public abstract StreamingPlatformAccountModel Account { get; }
+        public override bool IsEnabled { get { return true; } }
 
-        public abstract IEnumerable<string> Scopes { get; protected set; }
-
-        public StreamingPlatformServiceBaseNew(string baseAddress) : base(baseAddress) { }
+        public StreamingPlatformServiceBaseNew(string baseAddress, IEnumerable<string> scopes)
+            : base(baseAddress)
+        {
+            this.scopes = scopes;
+        }
 
         public async override Task<Result> Connect()
         {
@@ -177,28 +168,105 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                Result result = await this.ConnectWithAuthorization(this.Scopes);
+                Result result = await this.ConnectWithAuthorization(this.scopes);
                 if (!result.Success)
                 {
                     return result;
                 }
             }
 
-            return await Initialize();
+            return new Result();
         }
 
-        public abstract Task<Result> Initialize();
-
-        public override async Task Disable()
+        public override Task Disconnect()
         {
-            await this.Disconnect();
+            return Task.CompletedTask;
+        }
 
+        public override Task Disable()
+        {
             StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
             if (authenticationSettings != null)
             {
                 authenticationSettings.ClearUserData();
             }
+
+            return Task.CompletedTask;
         }
+
+        //public async Task<Result> ConnectBot()
+        //{
+        //    StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
+        //    if (authenticationSettings?.BotOAuthToken != null)
+        //    {
+        //        this.SetOAuthToken(authenticationSettings.UserOAuthToken);
+        //        await this.RefreshOAuthToken();
+        //    }
+        //    else
+        //    {
+        //        Result result = await this.ConnectWithAuthorization(this.BotScopes);
+        //        if (!result.Success)
+        //        {
+        //            return result;
+        //        }
+        //    }
+
+        //    return new Result();
+        //}
+
+        //public abstract Task DisconnectBot();
+
+        //public async Task DisableBot()
+        //{
+        //    await this.Disconnect();
+
+        //    StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
+        //    if (authenticationSettings != null)
+        //    {
+        //        authenticationSettings.ClearBotData();
+        //    }
+        //}
+
+        public StreamingPlatformAuthenticationSettingsModel GetAuthenticationSettings()
+        {
+            ChannelSession.Settings.StreamingPlatformAuthentications.TryGetValue(this.Platform, out StreamingPlatformAuthenticationSettingsModel authentication);
+            return authentication;
+        }
+    }
+
+    public abstract class StreamingPlatformSessionBase
+    {
+        public class StreamingPlatformAccountModel
+        {
+            public string ID { get; set; }
+
+            public string Username { get; set; }
+
+            public string AvatarURL { get; set; }
+        }
+
+        public StreamingPlatformTypeEnum Platform { get; }
+
+        public abstract string StreamerID { get; }
+        public abstract string StreamerUsername { get; }
+        public abstract string BotID { get; }
+        public abstract string BotUsername { get; }
+        public abstract string ChannelID { get; }
+        public abstract string ChannelLink { get; }
+        public virtual string StreamLink { get { return this.ChannelLink; } }
+
+        public abstract bool IsLive { get; }
+
+        public abstract int ViewerCount { get; }
+
+        public abstract IEnumerable<string> StreamerScopes { get; protected set; }
+        public abstract IEnumerable<string> BotScopes { get; protected set; }
+
+        public StreamingPlatformSessionBase() { }
+
+        public abstract Task<Result> Connect();
+
+        public abstract Task Disconnect();
 
         //public async Task<Result> ConnectBot()
         //{

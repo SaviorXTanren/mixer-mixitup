@@ -15,9 +15,11 @@ namespace MixItUp.Base.Model.Web
         /// </summary>
         [DataMember]
         public string clientID { get; set; }
+
         /// <summary>
         /// The authorization code sent when authenticating against the OAuth service.
         /// </summary>
+        [Obsolete]
         [DataMember]
         public string authorizationCode { get; set; }
 
@@ -66,7 +68,8 @@ namespace MixItUp.Base.Model.Web
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset ExpirationDateTime { get { return (this.expiresTimeStamp > 0) ? DateTimeOffset.FromUnixTimeSeconds(this.expiresTimeStamp) : this.AcquiredDateTime.AddSeconds(this.expiresIn); } }
-
+        [JsonIgnore]
+        public TimeSpan TimeUntilExpiration { get { return this.ExpirationDateTime - DateTimeOffset.Now; } }
         [JsonIgnore]
         public bool IsExpired { get { return this.ExpirationDateTime < DateTimeOffset.Now; } }
 

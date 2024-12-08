@@ -171,9 +171,5 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\YouTube\New\" />
-  </ItemGroup>
   
 </Project>
