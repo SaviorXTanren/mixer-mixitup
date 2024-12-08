@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Twitch.Clients.EventSub;
 using MixItUp.Base.Model.Twitch.Clients.PubSub;
 using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.Twitch.EventSub;
+using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.Twitch.API;

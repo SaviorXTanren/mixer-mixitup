@@ -4,7 +4,6 @@ using MixItUp.Base.Model;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.Util;
 using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;

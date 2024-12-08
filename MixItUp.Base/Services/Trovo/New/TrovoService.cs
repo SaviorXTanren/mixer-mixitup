@@ -14,12 +14,113 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services.Trovo
+namespace MixItUp.Base.Services.Trovo.New
 {
+    public class StreamerTrovoService : TrovoService
+    {
+        public override IEnumerable<string> Scopes { get; protected set; } = new List<string>()
+        {
+            "chat_connect",
+            "chat_send_self",
+            "send_to_my_channel",
+            "manage_messages",
+
+            "channel_details_self",
+            "channel_update_self",
+            "channel_subscriptions",
+
+            "user_details_self",
+        };
+
+        public IDictionary<string, TrovoChatEmoteViewModel> ChannelEmotes { get { return channelEmotes; } }
+        private Dictionary<string, TrovoChatEmoteViewModel> channelEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
+
+        public IDictionary<string, TrovoChatEmoteViewModel> EventEmotes { get { return eventEmotes; } }
+        private Dictionary<string, TrovoChatEmoteViewModel> eventEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
+
+        public IDictionary<string, TrovoChatEmoteViewModel> GlobalEmotes { get { return globalEmotes; } }
+        private Dictionary<string, TrovoChatEmoteViewModel> globalEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
+
+        public override bool IsEnabled { get { return GetAuthenticationSettings()?.IsEnabled ?? false; } }
+
+        public StreamerTrovoService()
+        {
+            Client = new TrovoClient(this, isFullClient: true);
+        }
+
+        public override async Task<Result> Initialize()
+        {
+            Result result = await Initialize();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            ChatEmotePackageModel emotePackage = await GetPlatformAndChannelEmotes(ChannelID);
+            if (emotePackage != null)
+            {
+                if (emotePackage.customizedEmotes?.channel != null)
+                {
+                    foreach (ChannelChatEmotesModel channel in emotePackage.customizedEmotes.channel)
+                    {
+                        foreach (ChatEmoteModel emote in channel.emotes)
+                        {
+                            channelEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
+                        }
+                    }
+                }
+
+                if (emotePackage.eventEmotes != null)
+                {
+                    foreach (EventChatEmoteModel emote in emotePackage.eventEmotes)
+                    {
+                        eventEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
+                    }
+                }
+
+                if (emotePackage.globalEmotes != null)
+                {
+                    foreach (GlobalChatEmoteModel emote in emotePackage.globalEmotes)
+                    {
+                        globalEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
+                    }
+                }
+            }
+            else
+            {
+                Logger.Log(LogLevel.Error, "Failed to get available Trovo emotes");
+            }
+
+            return new Result();
+        }
+    }
+
+    public class BotTrovoService : TrovoService
+    {
+        public override IEnumerable<string> Scopes { get; protected set; } = new List<string>()
+        {
+            "chat_connect",
+            "chat_send_self",
+            "end_to_my_channel",
+            "manage_messages",
+
+            "user_details_self",
+        };
+
+        public override bool IsEnabled { get { return GetAuthenticationSettings()?.IsBotEnabled ?? false; } }
+
+        public BotTrovoService()
+        {
+            Client = new TrovoClient(this);
+        }
+
+        public override async Task<string> GetChatToken() { return await GetChannelChatToken(ServiceManager.Get<StreamerTrovoService>().ChannelID); }
+    }
+
     /// <summary>
     /// https://trovo.live/policy/apis-developer-doc.html
     /// </summary>
-    public class TrovoService : StreamingPlatformServiceBaseNew
+    public abstract class TrovoService : StreamingPlatformServiceBaseNew
     {
         private const string OAuthBaseAddress = "https://open.trovo.live/page/login.html";
 
@@ -57,58 +158,20 @@ namespace MixItUp.Base.Services.Trovo
 
         public override bool IsConnected { get; protected set; }
 
-        public override IEnumerable<string> StreamerScopes { get; protected set; } = new List<string>()
-        {
-            "chat_connect",
-            "chat_send_self",
-            "send_to_my_channel",
-            "manage_messages",
+        public override string UserID { get { return User?.userId; } }
+        public override string Username { get { return User?.userName; } }
+        public override string ChannelID { get { return User?.channelId; } }
+        public override string ChannelLink { get { return string.Format("trovo.live/{0}", Username?.ToLower()); } }
 
-            "channel_details_self",
-            "channel_update_self",
-            "channel_subscriptions",
-
-            "user_details_self",
-        };
-
-        public override IEnumerable<string> BotScopes { get; protected set; } = new List<string>()
-        {
-            "chat_connect",
-            "chat_send_self",
-            "end_to_my_channel",
-            "manage_messages",
-
-            "user_details_self",
-        };
-
-        public override string UserID { get { return this.User?.userId; } }
-        public override string Username { get { return this.User?.userName; } }
-        public override string BotID { get { return this.Bot?.userId; } }
-        public override string Botname { get { return this.Bot?.userName; } }
-        public override string ChannelID { get { return this.User?.channelId; } }
-        public override string ChannelLink { get { return string.Format("trovo.live/{0}", this.Username?.ToLower()); } }
-
-        public override StreamingPlatformAccountModel UserAccount
+        public override StreamingPlatformAccountModel Account
         {
             get
             {
                 return new StreamingPlatformAccountModel()
                 {
-                    ID = this.UserID,
-                    Username = this.Username,
-                    AvatarURL = this.User?.profilePic
-                };
-            }
-        }
-        public override StreamingPlatformAccountModel BotAccount
-        {
-            get
-            {
-                return new StreamingPlatformAccountModel()
-                {
-                    ID = this.BotID,
-                    Username = this.Botname,
-                    AvatarURL = this.Bot?.profilePic
+                    ID = UserID,
+                    Username = Username,
+                    AvatarURL = User?.profilePic
                 };
             }
         }
@@ -117,76 +180,34 @@ namespace MixItUp.Base.Services.Trovo
         public ChannelModel Channel { get; private set; }
         public PrivateUserModel Bot { get; private set; }
 
-        public TrovoClient Client { get; private set; }
+        public TrovoClient Client { get; protected set; }
 
-        public IDictionary<string, TrovoChatEmoteViewModel> ChannelEmotes { get { return this.channelEmotes; } }
-        private Dictionary<string, TrovoChatEmoteViewModel> channelEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
-
-        public IDictionary<string, TrovoChatEmoteViewModel> EventEmotes { get { return this.eventEmotes; } }
-        private Dictionary<string, TrovoChatEmoteViewModel> eventEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
-
-        public IDictionary<string, TrovoChatEmoteViewModel> GlobalEmotes { get { return this.globalEmotes; } }
-        private Dictionary<string, TrovoChatEmoteViewModel> globalEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
-
-        public TrovoService()
-            : base(TrovoRestAPIBaseAddressFormat)
-        {
-            this.Client = new TrovoClient(this);
-        }
+        public TrovoService() : base(TrovoRestAPIBaseAddressFormat) { }
 
         public override async Task<Result> Initialize()
         {
-            this.User = await this.GetUser();
-            if (this.User == null)
+            User = await GetUser();
+            if (User == null)
             {
                 return new Result(Resources.TrovoFailedToGetUserData);
             }
 
-            this.Channel = await this.GetChannelByID(this.ChannelID);
-            if (this.Channel == null)
+            Channel = await GetChannelByID(ChannelID);
+            if (Channel == null)
             {
                 return new Result(Resources.TrovoFailedToGetChannelData);
             }
 
-            ChatEmotePackageModel emotePackage = await this.GetPlatformAndChannelEmotes(this.ChannelID);
-            if (emotePackage != null)
+            string chatToken = await GetChatToken();
+            if (string.IsNullOrEmpty(chatToken))
             {
-                if (emotePackage.customizedEmotes?.channel != null)
-                {
-                    foreach (ChannelChatEmotesModel channel in emotePackage.customizedEmotes.channel)
-                    {
-                        foreach (ChatEmoteModel emote in channel.emotes)
-                        {
-                            this.channelEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
-                        }
-                    }
-                }
-
-                if (emotePackage.eventEmotes != null)
-                {
-                    foreach (EventChatEmoteModel emote in emotePackage.eventEmotes)
-                    {
-                        this.eventEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
-                    }
-                }
-
-                if (emotePackage.globalEmotes != null)
-                {
-                    foreach (GlobalChatEmoteModel emote in emotePackage.globalEmotes)
-                    {
-                        this.globalEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
-                    }
-                }
-            }
-            else
-            {
-                Logger.Log(LogLevel.Error, "Failed to get available Trovo emotes");
+                return new Result(Resources.TrovoChatConnectionCouldNotBeEstablished);
             }
 
-            Result result = await this.Client.ConnectUser();
+            Result result = await Client.Connect(chatToken);
             if (!result.Success)
             {
-                await this.Client.DisconnectUser();
+                await Client.Disconnect();
                 return result;
             }
 
@@ -195,12 +216,12 @@ namespace MixItUp.Base.Services.Trovo
 
         public override async Task Disconnect()
         {
-            await this.Client.DisconnectUser();
+            await Client.Disconnect();
         }
 
-        public async Task<PrivateUserModel> GetUser() { return await AsyncRunner.RunAsync(this.HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
+        public virtual async Task<string> GetChatToken() { return await GetChannelChatToken(); }
 
-        public async Task<PrivateUserModel> GetBot() { return await AsyncRunner.RunAsync(this.BotHttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
+        public async Task<PrivateUserModel> GetUser() { return await AsyncRunner.RunAsync(HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
 
         public async Task<UserModel> GetUserByName(string username)
         {
@@ -209,7 +230,7 @@ namespace MixItUp.Base.Services.Trovo
                 JObject jobj = new JObject();
                 jobj["user"] = new JArray { username };
 
-                UsersModel result = await this.HttpClient.PostAsync<UsersModel>("getusers", AdvancedHttpClient.CreateContentFromObject(jobj));
+                UsersModel result = await HttpClient.PostAsync<UsersModel>("getusers", AdvancedHttpClient.CreateContentFromObject(jobj));
                 if (result?.users != null)
                 {
                     return result.users.FirstOrDefault();
@@ -222,7 +243,7 @@ namespace MixItUp.Base.Services.Trovo
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                IEnumerable<ChannelFollowersModel> response = await this.PostPagedCursorAsync<ChannelFollowersModel>($"channels/{channelID}/followers", maxResults, maxLimit: 100);
+                IEnumerable<ChannelFollowersModel> response = await PostPagedCursorAsync<ChannelFollowersModel>($"channels/{channelID}/followers", maxResults, maxLimit: 100);
 
                 List<ChannelFollowerModel> result = new List<ChannelFollowerModel>();
                 foreach (ChannelFollowersModel r in response)
@@ -237,7 +258,7 @@ namespace MixItUp.Base.Services.Trovo
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                IEnumerable<ChannelSubscribersModel> response = await this.GetPagedOffsetAsync<ChannelSubscribersModel>($"channels/{channelID}/subscriptions", maxResults, maxLimit: 100);
+                IEnumerable<ChannelSubscribersModel> response = await GetPagedOffsetAsync<ChannelSubscribersModel>($"channels/{channelID}/subscriptions", maxResults, maxLimit: 100);
 
                 List<ChannelSubscriberModel> result = new List<ChannelSubscriberModel>();
                 foreach (ChannelSubscribersModel r in response)
@@ -255,7 +276,7 @@ namespace MixItUp.Base.Services.Trovo
                 JObject requestParameters = new JObject();
                 requestParameters["channel_id"] = channelID;
 
-                return await this.HttpClient.PostAsync<ChannelModel>("channels/id", AdvancedHttpClient.CreateContentFromObject(requestParameters));
+                return await HttpClient.PostAsync<ChannelModel>("channels/id", AdvancedHttpClient.CreateContentFromObject(requestParameters));
             });
         }
 
@@ -270,7 +291,7 @@ namespace MixItUp.Base.Services.Trovo
                 if (!string.IsNullOrEmpty(langaugeCode)) { jobj["language_code"] = langaugeCode; }
                 if (audience != null) { jobj["audi_type"] = audience.ToString(); }
 
-                HttpResponseMessage response = await this.HttpClient.PostAsync("channels/update", AdvancedHttpClient.CreateContentFromObject(jobj));
+                HttpResponseMessage response = await HttpClient.PostAsync("channels/update", AdvancedHttpClient.CreateContentFromObject(jobj));
                 return response.IsSuccessStatusCode;
             });
         }
@@ -283,7 +304,7 @@ namespace MixItUp.Base.Services.Trovo
                 jobj["query"] = query;
                 jobj["limit"] = maxResults;
 
-                CategoriesModel categories = await this.HttpClient.PostAsync<CategoriesModel>("searchcategory", AdvancedHttpClient.CreateContentFromObject(jobj));
+                CategoriesModel categories = await HttpClient.PostAsync<CategoriesModel>("searchcategory", AdvancedHttpClient.CreateContentFromObject(jobj));
                 if (categories != null)
                 {
                     return categories.category_info;
@@ -292,15 +313,15 @@ namespace MixItUp.Base.Services.Trovo
             });
         }
 
-        public async Task<ChatEmotePackageModel> GetPlatformEmotes() { return await AsyncRunner.RunAsync(this.GetEmotes()); }
+        public async Task<ChatEmotePackageModel> GetPlatformEmotes() { return await AsyncRunner.RunAsync(GetEmotes()); }
 
-        public async Task<ChatEmotePackageModel> GetPlatformAndChannelEmotes(string channelID) { return await AsyncRunner.RunAsync(this.GetEmotes(new List<string>() { channelID })); }
+        public async Task<ChatEmotePackageModel> GetPlatformAndChannelEmotes(string channelID) { return await AsyncRunner.RunAsync(GetEmotes(new List<string>() { channelID })); }
 
         public async Task<ChatViewersModel> GetViewers(string channelID, int maxResults = 1000)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                IEnumerable<ChatViewersInternalModel> viewers = await this.PostPagedCursorAsync<ChatViewersInternalModel>($"channels/{channelID}/viewers", maxResults);
+                IEnumerable<ChatViewersInternalModel> viewers = await PostPagedCursorAsync<ChatViewersInternalModel>($"channels/{channelID}/viewers", maxResults);
 
                 ChatViewersModel result = new ChatViewersModel();
                 foreach (ChatViewersInternalModel viewer in viewers)
@@ -361,7 +382,7 @@ namespace MixItUp.Base.Services.Trovo
                     parameters["category_id"] = categoryID;
                 }
 
-                IEnumerable<TopChannelsModel> response = await this.PostPagedTokenAsync<TopChannelsModel>("gettopchannels", maxResults, maxLimit: 100, parameters: parameters);
+                IEnumerable<TopChannelsModel> response = await PostPagedTokenAsync<TopChannelsModel>("gettopchannels", maxResults, maxLimit: 100, parameters: parameters);
 
                 List<TopChannelModel> results = new List<TopChannelModel>();
                 foreach (TopChannelsModel r in response)
@@ -376,11 +397,11 @@ namespace MixItUp.Base.Services.Trovo
             });
         }
 
-        public async Task<string> GetUserChatToken()
+        public async Task<string> GetChannelChatToken()
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                JObject jobj = await this.HttpClient.GetJObjectAsync("chat/token");
+                JObject jobj = await HttpClient.GetJObjectAsync("chat/token");
                 if (jobj != null && jobj.ContainsKey("token"))
                 {
                     return jobj["token"].ToString();
@@ -389,11 +410,11 @@ namespace MixItUp.Base.Services.Trovo
             });
         }
 
-        public async Task<string> GetBotChatToken()
+        public async Task<string> GetChannelChatToken(string channelID)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                JObject jobj = await this.BotHttpClient.GetJObjectAsync($"chat/channel-token/{this.ChannelID}");
+                JObject jobj = await HttpClient.GetJObjectAsync($"chat/channel-token/{channelID}");
                 if (jobj != null && jobj.ContainsKey("token"))
                 {
                     return jobj["token"].ToString();
@@ -408,30 +429,30 @@ namespace MixItUp.Base.Services.Trovo
         /// <param name="message">The message to send</param>
         /// <param name="channelID">The ID of the channel to send to</param>
         /// <returns>An awaitable Task</returns>
-        public async Task SendUserMessage(string message)
+        public async Task SendMessage(string message)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 JObject jobj = new JObject();
                 jobj["content"] = message;
-                await this.HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
+                await HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
             });
         }
 
         /// <summary>
         /// Sends a message to the specified channel.
         /// </summary>
-        /// <param name="message">The message to send</param>
         /// <param name="channelID">The ID of the channel to send to</param>
+        /// <param name="message">The message to send</param>
         /// <returns>An awaitable Task</returns>
-        public async Task SendBotMessage(string message)
+        public async Task SendMessage(string channelID, string message)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 JObject jobj = new JObject();
-                jobj["channel_id"] = this.ChannelID;
+                jobj["channel_id"] = channelID;
                 jobj["content"] = message;
-                await this.BotHttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
+                await HttpClient.PostAsync("chat/send", AdvancedHttpClient.CreateContentFromObject(jobj));
             });
         }
 
@@ -444,7 +465,7 @@ namespace MixItUp.Base.Services.Trovo
         /// <returns>Whether the delete was successful</returns>
         public async Task<bool> DeleteMessage(string channelID, string messageID, string userID)
         {
-            return await AsyncRunner.RunAsync(this.HttpClient.DeleteAsync($"channels/{channelID}/messages/{messageID}/users/{userID}"));
+            return await AsyncRunner.RunAsync(HttpClient.DeleteAsync($"channels/{channelID}/messages/{messageID}/users/{userID}"));
         }
 
         /// <summary>
@@ -461,12 +482,12 @@ namespace MixItUp.Base.Services.Trovo
                 jobj["channel_id"] = channelID;
                 jobj["command"] = command;
 
-                jobj = await this.HttpClient.PostAsync<JObject>("channels/command", AdvancedHttpClient.CreateContentFromObject(jobj));
+                jobj = await HttpClient.PostAsync<JObject>("channels/command", AdvancedHttpClient.CreateContentFromObject(jobj));
                 if (jobj != null)
                 {
                     JToken success = jobj.SelectToken("is_success");
                     JToken message = jobj.SelectToken("display_msg");
-                    if (success != null && bool.Equals(false, success))
+                    if (success != null && Equals(false, success))
                     {
                         return message.ToString();
                     }
@@ -478,10 +499,10 @@ namespace MixItUp.Base.Services.Trovo
         private async Task<ChatEmotePackageModel> GetEmotes(IEnumerable<string> channelIDs = null)
         {
             JObject jobj = new JObject();
-            jobj["emote_type"] = (channelIDs != null && channelIDs.Count() > 0) ? 0 : 2;
+            jobj["emote_type"] = channelIDs != null && channelIDs.Count() > 0 ? 0 : 2;
             jobj["channel_id"] = new JArray(channelIDs);
 
-            ChatEmotesModel result = await this.HttpClient.PostAsync<ChatEmotesModel>("getemotes", AdvancedHttpClient.CreateContentFromObject(jobj));
+            ChatEmotesModel result = await HttpClient.PostAsync<ChatEmotesModel>("getemotes", AdvancedHttpClient.CreateContentFromObject(jobj));
             if (result != null)
             {
                 return result.channels;
@@ -522,7 +543,7 @@ namespace MixItUp.Base.Services.Trovo
                 {
                     queryParameters["offset"] = totalCount.ToString();
                 }
-                T data = await this.HttpClient.GetAsync<T>(requestUri + string.Join("&", queryParameters.Select(kvp => kvp.Key + "=" + kvp.Value)));
+                T data = await HttpClient.GetAsync<T>(requestUri + string.Join("&", queryParameters.Select(kvp => kvp.Key + "=" + kvp.Value)));
 
                 lastCount = -1;
                 if (data != null)
@@ -573,7 +594,7 @@ namespace MixItUp.Base.Services.Trovo
                     requestParameters["token"] = token;
                     requestParameters["cursor"] = cursor;
                 }
-                T data = await this.HttpClient.PostAsync<T>(requestUri, AdvancedHttpClient.CreateContentFromObject(requestParameters));
+                T data = await HttpClient.PostAsync<T>(requestUri, AdvancedHttpClient.CreateContentFromObject(requestParameters));
 
                 if (data != null)
                 {
@@ -630,7 +651,7 @@ namespace MixItUp.Base.Services.Trovo
                 {
                     requestParameters["cursor"] = cursor;
                 }
-                T data = await this.HttpClient.PostAsync<T>(requestUri, AdvancedHttpClient.CreateContentFromObject(requestParameters));
+                T data = await HttpClient.PostAsync<T>(requestUri, AdvancedHttpClient.CreateContentFromObject(requestParameters));
 
                 if (data != null)
                 {
@@ -655,18 +676,18 @@ namespace MixItUp.Base.Services.Trovo
         {
             JObject content = new JObject()
             {
-                { "client_secret", this.ClientSecret },
+                { "client_secret", ClientSecret },
                 { "grant_type", "refresh_token" },
-                { "refresh_token", this.OAuthToken.refreshToken }
+                { "refresh_token", OAuthToken.refreshToken }
             };
 
-            OAuthTokenModel newToken = await this.HttpClient.PostAsync<OAuthTokenModel>("refreshtoken", AdvancedHttpClient.CreateContentFromObject(content));
+            OAuthTokenModel newToken = await HttpClient.PostAsync<OAuthTokenModel>("refreshtoken", AdvancedHttpClient.CreateContentFromObject(content));
             if (newToken != null)
             {
-                newToken.clientID = this.OAuthToken.clientID;
-                newToken.authorizationCode = this.OAuthToken.authorizationCode;
-                newToken.ScopeList = this.OAuthToken.ScopeList;
-                this.OAuthToken = newToken;
+                newToken.clientID = OAuthToken.clientID;
+                newToken.authorizationCode = OAuthToken.authorizationCode;
+                newToken.ScopeList = OAuthToken.ScopeList;
+                OAuthToken = newToken;
             }
         }
 
@@ -674,9 +695,9 @@ namespace MixItUp.Base.Services.Trovo
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
-                { "client_id", this.ClientID },
+                { "client_id", ClientID },
                 { "response_type", LocalOAuthHttpListenerServer.AUTHORIZATION_CODE_URL_PARAMETER },
-                { "scope", TrovoService.ConvertClientScopesToString(scopes) },
+                { "scope", ConvertClientScopesToString(scopes) },
                 { "redirect_uri", LocalOAuthHttpListenerServer.REDIRECT_URL },
                 { "state", state },
             };
@@ -694,17 +715,17 @@ namespace MixItUp.Base.Services.Trovo
         {
             JObject content = new JObject()
             {
-                { "client_id", this.ClientID },
-                { "client_secret", this.ClientSecret },
+                { "client_id", ClientID },
+                { "client_secret", ClientSecret },
                 { "code", authorizationCode },
                 { "grant_type", "authorization_code" },
                 { "redirect_uri", LocalOAuthHttpListenerServer.REDIRECT_URL },
             };
 
-            OAuthTokenModel token = await this.HttpClient.PostAsync<OAuthTokenModel>("exchangetoken", AdvancedHttpClient.CreateContentFromObject(content));
+            OAuthTokenModel token = await HttpClient.PostAsync<OAuthTokenModel>("exchangetoken", AdvancedHttpClient.CreateContentFromObject(content));
             if (token != null)
             {
-                token.clientID = this.ClientID;
+                token.clientID = ClientID;
                 token.authorizationCode = authorizationCode;
                 token.ScopeList = string.Join(",", scopes ?? new List<string>());
                 return token;

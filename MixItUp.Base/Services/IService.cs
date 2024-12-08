@@ -156,42 +156,16 @@ namespace MixItUp.Base.Services
 
         public StreamingPlatformTypeEnum Platform { get; }
 
-        protected AdvancedHttpClient BotHttpClient { get; }
-
-        protected OAuthTokenModel BotOAuthToken
-        {
-            get { return this.botToken; }
-            set
-            {
-                this.botToken = value;
-                this.BotHttpClient.SetBearerAuthorization(this.botToken);
-            }
-        }
-        private OAuthTokenModel botToken;
-
         public abstract string UserID { get; }
         public abstract string Username { get; }
-        public abstract string BotID { get; }
-        public abstract string Botname { get; }
         public abstract string ChannelID { get; }
         public abstract string ChannelLink { get; }
 
-        public abstract StreamingPlatformAccountModel UserAccount { get; }
-        public abstract StreamingPlatformAccountModel BotAccount { get; }
+        public abstract StreamingPlatformAccountModel Account { get; }
 
-        public override bool IsEnabled { get { return this.GetAuthenticationSettings() != null; } }
+        public abstract IEnumerable<string> Scopes { get; protected set; }
 
-        public bool IsBotEnabled { get { return this.GetAuthenticationSettings()?.IsBotEnabled ?? false; } }
-
-        public abstract IEnumerable<string> StreamerScopes { get; protected set; }
-
-        public abstract IEnumerable<string> BotScopes { get; protected set; }
-
-        public StreamingPlatformServiceBaseNew(string baseAddress)
-            : base(baseAddress)
-        {
-            this.BotHttpClient = new AdvancedHttpClient(baseAddress);
-        }
+        public StreamingPlatformServiceBaseNew(string baseAddress) : base(baseAddress) { }
 
         public async override Task<Result> Connect()
         {
@@ -203,7 +177,7 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                Result result = await this.ConnectWithAuthorization(this.StreamerScopes);
+                Result result = await this.ConnectWithAuthorization(this.Scopes);
                 if (!result.Success)
                 {
                     return result;
