@@ -1,4 +1,6 @@
-﻿namespace MixItUp.Base.Model.Twitch.User
+﻿using System;
+
+namespace MixItUp.Base.Model.Twitch.User
 {
     /// <summary>
     /// Information about a user.
@@ -60,5 +62,25 @@
         /// Gets the current thumbnail preview image for the user's channel in a small size.
         /// </summary>
         public string ThumbnailPreviewSmall { get { return string.Format(ThumbnailPreviewURLFormat, this.login, "-640x360"); } }
+
+        public bool IsAffiliate()
+        {
+            return string.Equals(this.broadcaster_type, "affiliate", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public bool IsPartner()
+        {
+            return string.Equals(this.broadcaster_type, "partner", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public bool IsStaff()
+        {
+            return string.Equals(this.type, "staff", StringComparison.OrdinalIgnoreCase) || string.Equals(this.type, "admin", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public bool IsGlobalMod()
+        {
+            return string.Equals(this.type, "global_mod", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

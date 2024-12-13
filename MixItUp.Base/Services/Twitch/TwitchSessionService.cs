@@ -462,49 +462,4 @@ namespace MixItUp.Base.Services.Twitch
             return false;
         }
     }
-
-    public static class TwitchNewAPIUserModelExtensions
-    {
-        public static bool IsAffiliate(this UserModel twitchUser)
-        {
-            return string.Equals(twitchUser.broadcaster_type, "affiliate", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsPartner(this UserModel twitchUser)
-        {
-            return string.Equals(twitchUser.broadcaster_type, "partner", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsStaff(this UserModel twitchUser)
-        {
-            return string.Equals(twitchUser.type, "staff", StringComparison.OrdinalIgnoreCase) || string.Equals(twitchUser.type, "admin", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsGlobalMod(this UserModel twitchUser)
-        {
-            return string.Equals(twitchUser.type, "global_mod", StringComparison.OrdinalIgnoreCase);
-        }
-    }
-
-    public static class TwitchNewAPIAdScheduleExtensions
-    {
-        public static DateTimeOffset NextAdTimestamp(this AdScheduleModel schedule)
-        {
-            if (long.TryParse(schedule.next_ad_at, out long seconds) && seconds > 0)
-            {
-                return DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
-            }
-            return DateTimeOffset.MinValue;
-        }
-
-        public static int NextAdMinutesFromNow(this AdScheduleModel schedule)
-        {
-            DateTimeOffset nextAd = schedule.NextAdTimestamp();
-            if (nextAd != DateTimeOffset.MinValue)
-            {
-                return (int)(nextAd - DateTimeOffset.Now).TotalMinutes;
-            }
-            return 0;
-        }
-    }
 }

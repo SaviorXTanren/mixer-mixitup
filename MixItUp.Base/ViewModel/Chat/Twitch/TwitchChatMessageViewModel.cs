@@ -111,10 +111,16 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents(messageDeletion.Message);
         }
 
-        public TwitchChatMessageViewModel(UserV2ViewModel user, string message, string replyMessageID = null)
+        public TwitchChatMessageViewModel(UserV2ViewModel user, string message, string replyMessageID = null, UserV2ViewModel recipient = null)
             : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.ReplyThreadID = replyMessageID;
+
+            if (recipient != null)
+            {
+                this.WhisperRecipient = recipient;
+                this.TargetUsername = recipient.Username;
+            }
 
             this.ProcessMessageContents(message);
         }

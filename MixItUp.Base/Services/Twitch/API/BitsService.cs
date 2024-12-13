@@ -5,38 +5,10 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Twitch.API
 {
-    /// <summary>
-    /// The period of time for a Bits leaderboard.
-    /// </summary>
-    public enum BitsLeaderboardPeriodEnum
-    {
-        /// <summary>
-        /// Day
-        /// </summary>
-        Day,
-        /// <summary>
-        /// Week
-        /// </summary>
-        Week,
-        /// <summary>
-        /// Month
-        /// </summary>
-        Month,
-        /// <summary>
-        /// Year
-        /// </summary>
-        Year,
-        /// <summary>
-        /// All
-        /// </summary>
-        All
-    }
-
     /// <summary>
     /// The APIs for Bits-based services.
     /// </summary>

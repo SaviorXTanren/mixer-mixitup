@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Twitch.Chat;
 using MixItUp.Base.Model.Twitch.Clients.Chat;
 using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
+using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Model.Twitch.Subscriptions;
 using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Services;
@@ -74,7 +75,13 @@ namespace MixItUp.Base.Model.User.Platform
 
         public TwitchUserPlatformV2Model(PubSubSubscriptionsEventModel packet) : this(packet.user_id, packet.user_name, null) { }
 
-        public TwitchUserPlatformV2Model(ChannelFollowerModel follow) : this(follow.user_id, follow.user_name, follow.user_login) { }
+        public TwitchUserPlatformV2Model(ChannelFollowerModel follow) : this(follow.user_id, follow.user_login, follow.user_name) { }
+
+        public TwitchUserPlatformV2Model(UserSubscriptionNotification subscription) : this(subscription.user_id, subscription.user_login, subscription.user_name) { }
+
+        public TwitchUserPlatformV2Model(UserSubscriptionGiftNotification subscriptionGift) : this(subscriptionGift.user_id, subscriptionGift.user_login, subscriptionGift.user_name) { }
+
+        public TwitchUserPlatformV2Model(ChannelPointRewardCustomRedemptionNotification redemption) : this(redemption.user_id, redemption.user_login, redemption.user_name) { }
 
         public TwitchUserPlatformV2Model(string id, string username, string displayName)
         {

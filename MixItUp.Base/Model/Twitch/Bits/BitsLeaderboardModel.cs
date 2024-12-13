@@ -3,6 +3,33 @@
 namespace MixItUp.Base.Model.Twitch.Bits
 {
     /// <summary>
+    /// The period of time for a Bits leaderboard.
+    /// </summary>
+    public enum BitsLeaderboardPeriodEnum
+    {
+        /// <summary>
+        /// Day
+        /// </summary>
+        Day,
+        /// <summary>
+        /// Week
+        /// </summary>
+        Week,
+        /// <summary>
+        /// Month
+        /// </summary>
+        Month,
+        /// <summary>
+        /// Year
+        /// </summary>
+        Year,
+        /// <summary>
+        /// All
+        /// </summary>
+        All
+    }
+
+    /// <summary>
     /// Information about a specific user on a channel's Bits leaderboard.
     /// </summary>
     public class BitsLeaderboardUserModel

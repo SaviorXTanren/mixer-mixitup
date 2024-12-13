@@ -45,11 +45,6 @@ namespace MixItUp.Base.Services.Trovo.New
             return DateTimeOffset.MinValue;
         }
 
-        internal static string ConvertClientScopesToString(IEnumerable<string> scopes)
-        {
-            return string.Join("+", scopes);
-        }
-
         public override string Name { get { return Resources.Trovo; } }
 
         public override string ClientID { get { return "8FMjuk785AX4FMyrwPTU3B8vYvgHWN33"; } }
@@ -545,24 +540,6 @@ namespace MixItUp.Base.Services.Trovo.New
             return results;
         }
 
-        protected override async Task RefreshOAuthToken()
-        {
-            JObject content = new JObject()
-            {
-                { "client_secret", ClientSecret },
-                { "grant_type", "refresh_token" },
-                { "refresh_token", OAuthToken.refreshToken }
-            };
-
-            OAuthTokenModel newToken = await HttpClient.PostAsync<OAuthTokenModel>("refreshtoken", AdvancedHttpClient.CreateContentFromObject(content));
-            if (newToken != null)
-            {
-                newToken.clientID = OAuthToken.clientID;
-                newToken.ScopeList = OAuthToken.ScopeList;
-                OAuthToken = newToken;
-            }
-        }
-
         protected async override Task<string> GetAuthorizationCodeURL(IEnumerable<string> scopes, string state, bool forceApprovalPrompt = false)
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>()
@@ -602,6 +579,29 @@ namespace MixItUp.Base.Services.Trovo.New
                 return token;
             }
             return null;
+        }
+
+        protected override async Task RefreshOAuthToken()
+        {
+            JObject content = new JObject()
+            {
+                { "client_secret", ClientSecret },
+                { "grant_type", "refresh_token" },
+                { "refresh_token", OAuthToken.refreshToken }
+            };
+
+            OAuthTokenModel newToken = await HttpClient.PostAsync<OAuthTokenModel>("refreshtoken", AdvancedHttpClient.CreateContentFromObject(content));
+            if (newToken != null)
+            {
+                newToken.clientID = OAuthToken.clientID;
+                newToken.ScopeList = OAuthToken.ScopeList;
+                OAuthToken = newToken;
+            }
+        }
+
+        private string ConvertClientScopesToString(IEnumerable<string> scopes)
+        {
+            return string.Join("+", scopes);
         }
     }
 }

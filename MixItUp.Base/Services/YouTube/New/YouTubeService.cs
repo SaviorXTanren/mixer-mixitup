@@ -33,11 +33,6 @@ namespace MixItUp.Base.Services.YouTube.New
 
         private static readonly IgnorePropertiesResolver requestPropertiesToIgnore = new IgnorePropertiesResolver(new List<string>() { "Service" });
 
-        internal static string ConvertClientScopesToString(IEnumerable<string> scopes)
-        {
-            return string.Join(" ", scopes);
-        }
-
         public override string Name { get { return Resources.YouTube; } }
 
         public override string ClientID { get { return "284178717531-kago2rk85ip02qb0vmlo8898m17s6oo8.apps.googleusercontent.com"; } }
@@ -636,28 +631,6 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        protected override async Task RefreshOAuthToken()
-        {
-            Dictionary<string, string> parameters = new Dictionary<string, string>()
-            {
-                { "client_id", ClientID },
-                //{ "client_secret", token.clientSecret },
-                { "refresh_token", OAuthToken.refreshToken },
-                { "grant_type", "refresh_token" },
-            };
-            FormUrlEncodedContent content = new FormUrlEncodedContent(parameters.AsEnumerable());
-
-            OAuthTokenModel newToken = await this.HttpClient.PostAsync<OAuthTokenModel>(OAuthBaseAddress, new StringContent(await content.ReadAsStringAsync(), Encoding.UTF8, "application/x-www-form-urlencoded"));
-            if (newToken != null)
-            {
-                newToken.clientID = OAuthToken.clientID;
-                newToken.ScopeList = OAuthToken.ScopeList;
-                OAuthToken = newToken;
-
-                this.BuildYouTubeServices();
-            }
-        }
-
         protected async override Task<string> GetAuthorizationCodeURL(IEnumerable<string> scopes, string state, bool forceApprovalPrompt = false)
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>()
@@ -697,6 +670,28 @@ namespace MixItUp.Base.Services.YouTube.New
                 return token;
             }
             return null;
+        }
+
+        protected override async Task RefreshOAuthToken()
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "client_id", ClientID },
+                //{ "client_secret", token.clientSecret },
+                { "refresh_token", OAuthToken.refreshToken },
+                { "grant_type", "refresh_token" },
+            };
+            FormUrlEncodedContent content = new FormUrlEncodedContent(parameters.AsEnumerable());
+
+            OAuthTokenModel newToken = await this.HttpClient.PostAsync<OAuthTokenModel>(OAuthBaseAddress, new StringContent(await content.ReadAsStringAsync(), Encoding.UTF8, "application/x-www-form-urlencoded"));
+            if (newToken != null)
+            {
+                newToken.clientID = OAuthToken.clientID;
+                newToken.ScopeList = OAuthToken.ScopeList;
+                OAuthToken = newToken;
+
+                this.BuildYouTubeServices();
+            }
         }
 
         private void BuildYouTubeServices()
@@ -794,6 +789,11 @@ namespace MixItUp.Base.Services.YouTube.New
             {
                 Logger.Log(LogLevel.Debug, "Rest API Request Complete: " + request.RestPath + " - " + JSONSerializerHelper.SerializeToString(response));
             }
+        }
+
+        private string ConvertClientScopesToString(IEnumerable<string> scopes)
+        {
+            return string.Join(" ", scopes);
         }
     }
 }

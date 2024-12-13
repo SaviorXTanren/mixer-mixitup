@@ -226,6 +226,17 @@ namespace MixItUp.Base.Web
         /// </summary>
         /// <param name="requestUri">The request URI to use</param>
         /// <returns>A type-casted object of the contents of the response</returns>
+        public async Task PostAsync(string requestUri)
+        {
+            this.LogRequest(requestUri);
+            await this.PostAsync(requestUri, AdvancedHttpClient.CreateContentFromString(string.Empty));
+        }
+
+        /// <summary>
+        /// Performs a POST REST request using the provided request URI.
+        /// </summary>
+        /// <param name="requestUri">The request URI to use</param>
+        /// <returns>A type-casted object of the contents of the response</returns>
         public async Task<T> PostAsync<T>(string requestUri)
         {
             this.LogRequest(requestUri);
