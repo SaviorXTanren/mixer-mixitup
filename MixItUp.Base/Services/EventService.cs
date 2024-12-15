@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MixItUp.Base.Services.Twitch.New;
 
 namespace MixItUp.Base.Services
 {
@@ -228,8 +229,8 @@ namespace MixItUp.Base.Services
         public static event EventHandler<UserDonationModel> OnDonationOccurred = delegate { };
         public static void DonationOccurred(UserDonationModel donation) { OnDonationOccurred(null, donation); }
 
-        public static event EventHandler<TwitchUserBitsCheeredModel> OnTwitchBitsCheeredOccurred = delegate { };
-        public static void TwitchBitsCheeredOccurred(TwitchUserBitsCheeredModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
+        public static event EventHandler<TwitchBitsCheeredModel> OnTwitchBitsCheeredOccurred = delegate { };
+        public static void TwitchBitsCheeredOccurred(TwitchBitsCheeredModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
 
         public static event EventHandler<TrovoChatSpellViewModel> OnTrovoSpellCastOccurred = delegate { };
         public static void TrovoSpellCastOccurred(TrovoChatSpellViewModel spell) { OnTrovoSpellCastOccurred(null, spell); }

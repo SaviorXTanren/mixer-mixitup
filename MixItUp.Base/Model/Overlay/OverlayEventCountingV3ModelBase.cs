@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using MixItUp.Base.Services.Twitch.New;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -217,7 +218,7 @@ namespace MixItUp.Base.Model.Overlay
             await this.ProcessEvent(donation.User, this.DonationAmount * donation.Amount);
         }
 
-        private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchBitsCheeredModel bitsCheered)
         {
             Logger.Log(LogLevel.Debug, $"Processing Twitch bits of {bitsCheered.Amount} for {this.ID} Overlay Widget");
             await this.ProcessEvent(bitsCheered.User, this.TwitchBitsAmount * bitsCheered.Amount);

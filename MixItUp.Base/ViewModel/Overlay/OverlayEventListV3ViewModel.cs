@@ -6,8 +6,10 @@ using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -581,11 +583,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
                 else if (type == OverlayEventListV3TestTypeEnum.TwitchBits)
                 {
-                    eventList.OnTwitchBits(this, new TwitchUserBitsCheeredModel(ChannelSession.User, new PubSubBitsEventV2Model()
-                    {
-                        bits_used = 100,
-                        chat_message = "Hello World"
-                    }));
+                    eventList.OnTwitchBits(this, new TwitchBitsCheeredModel(ChannelSession.User, 100, new TwitchChatMessageViewModel(ChannelSession.User, "Hello World")));
                 }
                 else if (type == OverlayEventListV3TestTypeEnum.YouTubeSuperChat)
                 {

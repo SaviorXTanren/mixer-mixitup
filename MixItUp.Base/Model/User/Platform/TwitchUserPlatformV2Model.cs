@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Twitch.Subscriptions;
 using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +29,14 @@ namespace MixItUp.Base.Model.User.Platform
         [DataMember]
         public string Color { get; set; }
 
+        [Obsolete]
         [DataMember]
         public Dictionary<string, int> Badges { get; set; } = new Dictionary<string, int>();
         [DataMember]
         public Dictionary<string, int> BadgeInfo { get; set; } = new Dictionary<string, int>();
+
+        [DataMember]
+        public Dictionary<string, ChatMessageNotificationBadge> NewBadges { get; set; } = new Dictionary<string, ChatMessageNotificationBadge>();
 
         [DataMember]
         public ChatBadgeModel SubscriberBadge { get; set; }
@@ -82,6 +87,24 @@ namespace MixItUp.Base.Model.User.Platform
         public TwitchUserPlatformV2Model(UserSubscriptionGiftNotification subscriptionGift) : this(subscriptionGift.user_id, subscriptionGift.user_login, subscriptionGift.user_name) { }
 
         public TwitchUserPlatformV2Model(ChannelPointRewardCustomRedemptionNotification redemption) : this(redemption.user_id, redemption.user_login, redemption.user_name) { }
+
+        public TwitchUserPlatformV2Model(ChatUserClearNotification userClear) : this(userClear.target_user_id, userClear.target_user_login, userClear.target_user_name) { }
+
+        public TwitchUserPlatformV2Model(CheerNotification cheer) : this(cheer.user_id, cheer.user_login, cheer.user_name) { }
+
+        public TwitchUserPlatformV2Model(ChatMessageDeletedNotification messageDeleted) : this(messageDeleted.target_user_id, messageDeleted.target_user_login, messageDeleted.target_user_name) { }
+
+        public TwitchUserPlatformV2Model(ChatNotification notification) : this(notification.chatter_user_id, notification.chatter_user_login, notification.chatter_user_name) { this.SetUserProperties(notification); }
+
+        public TwitchUserPlatformV2Model(ChatMessageNotification message) : this(message.chatter_user_id, message.chatter_user_login, message.chatter_user_name) { this.SetUserProperties(message); }
+
+        public TwitchUserPlatformV2Model(ChatNotificationResub resub) : this(resub.gifter_user_id, resub.gifter_user_login, resub.gifter_user_name) { }
+
+        public TwitchUserPlatformV2Model(ChatNotificationSubGift subGift) : this(subGift.recipient_user_id, subGift.recipient_user_login, subGift.recipient_user_name) { }
+
+        public TwitchUserPlatformV2Model(ModerationNotification moderation) : this(moderation.moderator_user_id, moderation.moderator_user_login, moderation.moderator_user_name) { }
+
+        public TwitchUserPlatformV2Model(ModerationNotificationBasicUser moderation) : this(moderation.user_id, moderation.user_login, moderation.user_name) { }
 
         public TwitchUserPlatformV2Model(string id, string username, string displayName)
         {
@@ -261,6 +284,89 @@ namespace MixItUp.Base.Model.User.Platform
             this.SpecialtyBadgeLink = this.SpecialtyBadge?.image_url_1x;
         }
 
+        public void SetUserProperties(ChatMessageNotification notification)
+        {
+            this.SetUserProperties(notification.chatter_user_name, notification.badges, notification.color);
+        }
+
+        public void SetUserProperties(ChatNotification notification)
+        {
+            this.SetUserProperties(notification.chatter_user_name, notification.badges, notification.color);
+        }
+
+        private void SetUserProperties(string displayName, List<ChatMessageNotificationBadge> badges, string color)
+        {
+            this.DisplayName = displayName;
+
+            this.NewBadges.Clear();
+            if (badges != null)
+            {
+                foreach (ChatMessageNotificationBadge badge in badges)
+                {
+                    this.NewBadges[badge.set_id] = badge;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(color))
+            {
+                this.Color = color;
+            }
+
+            if (string.Equals(this.ID, ServiceManager.Get<TwitchSession>().StreamerID)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
+
+            if (this.HasNewTwitchBadge("admin") || this.HasNewTwitchBadge("staff")) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
+            if (this.HasNewTwitchBadge("global_mod")) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }
+            if (this.HasNewTwitchBadge("moderator")) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
+            if (this.IsTwitchSubscriber)
+            {
+                this.Roles.Add(UserRoleEnum.Subscriber);
+            }
+            else
+            {
+                this.Roles.Remove(UserRoleEnum.Subscriber);
+            }
+            if (this.HasNewTwitchBadge("vip")) { this.Roles.Add(UserRoleEnum.TwitchVIP); } else { this.Roles.Remove(UserRoleEnum.TwitchVIP); }
+
+            if (ServiceManager.Get<TwitchChatService>() != null)
+            {
+                if (this.HasNewTwitchBadge("broadcaster")) { this.RoleBadge = this.GetNewTwitchBadgeURL("broadcaster"); }
+                else if (this.HasNewTwitchBadge("staff")) { this.RoleBadge = this.GetNewTwitchBadgeURL("staff"); }
+                else if (this.HasNewTwitchBadge("admin")) { this.RoleBadge = this.GetNewTwitchBadgeURL("admin"); }
+                else if (this.HasNewTwitchBadge("extension")) { this.RoleBadge = this.GetNewTwitchBadgeURL("extension"); }
+                else if (this.HasNewTwitchBadge("twitchbot")) { this.RoleBadge = this.GetNewTwitchBadgeURL("twitchbot"); }
+                else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.RoleBadge = this.GetNewTwitchBadgeURL("moderator"); }
+                else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.RoleBadge = this.GetNewTwitchBadgeURL("vip"); }
+                else if (this.HasNewTwitchBadge("artist-badge")) { this.RoleBadge = this.GetNewTwitchBadgeURL("artist-badge"); }
+                else { this.RoleBadge = null; }
+
+                if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetNewTwitchBadgeURL("founder"); }
+                else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetNewTwitchBadgeURL("subscriber"); }
+                else { this.SubscriberBadge = null; }
+
+                this.SpecialtyBadge = null;
+                if (this.HasNewTwitchBadge("sub-gift-leader")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("sub-gift-leader"); }
+                else if (this.HasNewTwitchBadge("bits-leader")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("bits-leader"); }
+                else if (this.HasNewTwitchBadge("sub-gifter")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("sub-gifter"); }
+                else if (this.HasNewTwitchBadge("bits")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("bits"); }
+                else if (this.HasNewTwitchBadge("premium")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("premium"); }
+                else if (this.NewBadges.Count > 0)
+                {
+                    foreach (string name in this.NewBadges.Keys.ToList())
+                    {
+                        if (!TwitchUserPlatformV2Model.NonApplicableSpecialtyBadges.Contains(name))
+                        {
+                            this.SpecialtyBadge = this.GetNewTwitchBadgeURL(name);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            this.SubscriberBadgeLink = this.SubscriberBadge?.image_url_1x;
+            this.RoleBadgeLink = this.RoleBadge?.image_url_1x;
+            this.SpecialtyBadgeLink = this.SpecialtyBadge?.image_url_1x;
+        }
+
         private int GetTwitchBadgeID(string name)
         {
             if (this.Badges != null && this.Badges.TryGetValue(name, out int version))
@@ -280,6 +386,30 @@ namespace MixItUp.Base.Model.User.Platform
                 if (ServiceManager.Get<TwitchChatService>().ChatBadges[name].ContainsKey(id.ToString()))
                 {
                     return ServiceManager.Get<TwitchChatService>().ChatBadges[name][id.ToString()];
+                }
+            }
+            return null;
+        }
+
+        private ChatMessageNotificationBadge GetUserNewTwitchBadgeID(string name)
+        {
+            if (this.NewBadges.TryGetValue(name, out ChatMessageNotificationBadge version))
+            {
+                return version;
+            }
+            return null;
+        }
+
+        private bool HasNewTwitchBadge(string name) { return this.GetUserNewTwitchBadgeID(name) != null; }
+
+        private ChatBadgeModel GetNewTwitchBadgeURL(string name)
+        {
+            if (ServiceManager.Get<TwitchSession>().ChatBadges.ContainsKey(name))
+            {
+                ChatMessageNotificationBadge badge = this.GetUserNewTwitchBadgeID(name);
+                if (ServiceManager.Get<TwitchSession>().ChatBadges.TryGetValue(name, out var badgeDictionary) && badgeDictionary.TryGetValue(badge.ID, out ChatBadgeModel b))
+                {
+                    return b;
                 }
             }
             return null;

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
 using System;

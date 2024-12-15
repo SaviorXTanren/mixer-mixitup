@@ -1231,6 +1231,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An Anonymous Gifter.
+        /// </summary>
+        public static string AnAnonymousGifter {
+            get {
+                return ResourceManager.GetString("AnAnonymousGifter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A new update is available for Mix It Up!.
         /// </summary>
         public static string ANewUpdateIsAvailableForMixItUp {

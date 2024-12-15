@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -177,7 +178,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e)
+        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchBitsCheeredModel e)
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || e.Amount >= this.MinimumAmountRequiredToShow)
             {

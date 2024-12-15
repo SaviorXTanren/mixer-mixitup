@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
@@ -133,7 +134,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual void OnDonation(object sender, UserDonationModel donation) { }
 
-        public virtual void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered) { }
+        public virtual void OnTwitchBits(object sender, TwitchBitsCheeredModel bitsCheered) { }
 
         public virtual void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat) { }
 

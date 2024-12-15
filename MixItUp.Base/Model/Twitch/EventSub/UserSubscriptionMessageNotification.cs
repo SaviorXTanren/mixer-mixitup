@@ -27,6 +27,13 @@ namespace MixItUp.Base.Model.Twitch.EventSub
     public class UserSubscriptionMessageNotificationMessage
     {
         public string text { get; set; }
-        public List<ChatMessageNotificationEmote> emotes { get; set; } = new List<ChatMessageNotificationEmote>();
+        public List<UserSubscriptionMessageNotificationEmote> emotes { get; set; } = new List<UserSubscriptionMessageNotificationEmote>();
+    }
+
+    public class UserSubscriptionMessageNotificationEmote
+    {
+        public string id { get; set; }
+        public int begin { get; set; }
+        public int end { get; set; }
     }
 }

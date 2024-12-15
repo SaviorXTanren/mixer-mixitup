@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Twitch.Chat;
+using MixItUp.Base.Model.Twitch.EventSub;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
@@ -23,6 +24,14 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.Name = emoteCode;
 
             this.ImageURL = this.BuildV2EmoteURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
+        }
+
+        public TwitchChatEmoteViewModel(string text, ChatMessageNotificationFragmentEmote emote)
+        {
+            this.ID = emote.id;
+            this.Name = text;
+
+            this.ImageURL = this.BuildV2EmoteURL("default", ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
         }
 
         private string BuildV2EmoteURL(string type, string theme, string size) { return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.ID}/{type}/{theme}/{size}"; }

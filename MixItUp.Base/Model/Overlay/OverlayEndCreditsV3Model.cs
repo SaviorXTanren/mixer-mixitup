@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MixItUp.Base.Services.Twitch.New;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -477,7 +478,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public override void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        public override void OnTwitchBits(object sender, TwitchBitsCheeredModel bitsCheered)
         {
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
             {

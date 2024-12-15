@@ -1250,7 +1250,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchBitsCheered, user.FullDisplayName, bitsCheered.Amount), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
-            EventService.TwitchBitsCheeredOccurred(bitsCheered);
+            //EventService.TwitchBitsCheeredOccurred(bitsCheered);
         }
 
         public async void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel packet)

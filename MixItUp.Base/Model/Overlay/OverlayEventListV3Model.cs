@@ -5,8 +5,10 @@ using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -207,7 +209,7 @@ namespace MixItUp.Base.Model.Overlay
             await this.AddEvent(donation.User, nameof(this.Donations), this.DonationsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, donation.AmountText } });
         }
 
-        public override async void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        public override async void OnTwitchBits(object sender, TwitchBitsCheeredModel bitsCheered)
         {
             await this.AddEvent(bitsCheered.User, nameof(this.TwitchBits), this.TwitchBitsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, bitsCheered.Amount.ToString() } });
         }
@@ -313,7 +315,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.TwitchBits)
                 {
-                    this.OnTwitchBits(this, new TwitchUserBitsCheeredModel(ChannelSession.User, new PubSubBitsEventV2Model() { bits_used = 100 }));
+                    this.OnTwitchBits(this, new TwitchBitsCheeredModel(ChannelSession.User, 100, new TwitchChatMessageViewModel(ChannelSession.User, "Hello World")));
                     await Task.Delay(3000);
                 }
 

@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
     {
         public BitsCheermoteModel Cheermote { get; set; }
 
-        public List<TwitchBitsCheermoteTierViewModel> Tiers { get; set; } = new List<TwitchBitsCheermoteTierViewModel>();
+        public Dictionary<string, TwitchBitsCheermoteTierViewModel> Tiers { get; set; } = new Dictionary<string, TwitchBitsCheermoteTierViewModel>();
 
         public TwitchBitsCheermoteViewModel(BitsCheermoteModel cheermote)
         {
@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             {
                 if (tier.can_cheer)
                 {
-                    this.Tiers.Add(new TwitchBitsCheermoteTierViewModel(tier));
+                    this.Tiers[tier.id] = new TwitchBitsCheermoteTierViewModel(tier);
                 }
             }
         }
@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
         public TwitchBitsCheermoteTierViewModel GetAppropriateTier(int amount)
         {
-            return this.Tiers.Where(t => t.Amount <= amount).Top(t => t.Amount);
+            return this.Tiers.Where(t => t.Value.Amount <= amount).Top(t => t.Value.Amount).Value;
         }
     }
 
@@ -40,6 +40,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.Tier = tier;
         }
 
+        public string ID { get { return this.Tier.id; } }
         public int Amount { get { return this.Tier.min_bits; } }
 
         public string LightStaticImage { get { return (this.Tier.LightStaticImages.ContainsKey("2")) ? this.Tier.LightStaticImages["2"] : this.Tier.LightStaticImages.First().Value; } }

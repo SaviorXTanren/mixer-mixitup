@@ -4,6 +4,7 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
@@ -468,7 +469,7 @@ namespace MixItUp.Base.Model.Overlay
             await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestDonation);
         }
 
-        private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchBitsCheeredModel bitsCheered)
         {
             this.Displays[OverlayLabelDisplayV3TypeEnum.LatestTwitchBits].UserID = bitsCheered.User.ID;
             this.Displays[OverlayLabelDisplayV3TypeEnum.LatestTwitchBits].Amount = bitsCheered.Amount;
