@@ -113,6 +113,15 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).Random();
                     }
+
+                    if (clip == null && this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip)
+                    {
+                        clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, featured: false, maxResults: 500);
+                        if (clips != null && clips.Count() > 0)
+                        {
+                            clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).Random();
+                        }
+                    }
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.LatestClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
                 {
@@ -122,6 +131,15 @@ namespace MixItUp.Base.Model.Overlay
                     if (clips != null && clips.Count() > 0)
                     {
                         clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).OrderByDescending(c => c.created_at).FirstOrDefault();
+                    }
+
+                    if (clip == null && this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
+                    {
+                        clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: false, maxResults: 500);
+                        if (clips != null && clips.Count() > 0)
+                        {
+                            clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).OrderByDescending(c => c.created_at).FirstOrDefault();
+                        }
                     }
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.SpecificClip && !string.IsNullOrEmpty(clipReferenceID))
