@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +26,7 @@ namespace MixItUp.Base.Services
         {
             ActionTypeEnum.Overlay, ActionTypeEnum.OvrStream, ActionTypeEnum.PolyPop, ActionTypeEnum.Sound, ActionTypeEnum.StreamingSoftware, ActionTypeEnum.TextToSpeech,
             ActionTypeEnum.MusicPlayer, ActionTypeEnum.TITS, ActionTypeEnum.Voicemod, ActionTypeEnum.VTubeStudio, ActionTypeEnum.VTSPog, ActionTypeEnum.LumiaStream,
-            ActionTypeEnum.TITS
+            ActionTypeEnum.MtionStudio,
         };
 
         public bool IsPaused { get; private set; }
