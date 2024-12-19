@@ -20,6 +20,8 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
         public double Amount { get; set; }
         public string AmountDisplay { get; set; }
 
+        public string CurrencyType { get; set; }
+
         public long Tier { get; set; }
 
         public string Message { get; set; }
@@ -32,6 +34,7 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
 
             this.SetAmountFromMicros(superChat.AmountMicros);
             this.AmountDisplay = superChat.AmountDisplayString;
+            this.CurrencyType = superChat.Currency;
             this.Tier = superChat.Tier.GetValueOrDefault();
             this.Message = superChat.UserComment;
         }
@@ -44,6 +47,7 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
 
             this.SetAmountFromMicros(sticker.AmountMicros);
             this.AmountDisplay = sticker.AmountDisplayString;
+            this.CurrencyType = sticker.Currency;
             this.Tier = sticker.Tier.GetValueOrDefault();
             this.Message = sticker.SuperStickerMetadata.AltText;
         }
@@ -54,6 +58,7 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
             parameters.SpecialIdentifiers["amountnumber"] = this.Amount.ToString();
             parameters.SpecialIdentifiers["amount"] = this.AmountDisplay;
             parameters.SpecialIdentifiers["tier"] = this.Tier.ToString();
+            parameters.SpecialIdentifiers["currencytype"] = this.CurrencyType;
             parameters.SpecialIdentifiers["message"] = this.Message;
         }
 
