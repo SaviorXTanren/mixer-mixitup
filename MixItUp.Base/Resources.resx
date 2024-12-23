@@ -10859,4 +10859,10 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="AnAnonymousGifter" xml:space="preserve">
     <value>An Anonymous Gifter</value>
   </data>
+  <data name="FailedToRestoreSettings" xml:space="preserve">
+    <value>ERROR: Failed to restore settings file due to an error. Please try restarting your PC to ensure all files are not lock-protected and try again.</value>
+  </data>
+  <data name="FailedToDeleteSettings" xml:space="preserve">
+    <value>ERROR: Failed to delete settings file due to an error. Please try restarting your PC to ensure all files are not lock-protected and try again.</value>
+  </data>
 </root>

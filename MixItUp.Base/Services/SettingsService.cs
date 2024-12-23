@@ -100,41 +100,59 @@ namespace MixItUp.Base.Services
 
             if (!string.IsNullOrEmpty(ChannelSession.AppSettings.SettingsRestoreFilePath))
             {
-                Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
-
-                if (ChannelSession.AppSettings.SettingsToReplaceDuringRestore != Guid.Empty)
+                try
                 {
-                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToReplaceDuringRestore));
+                    Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
+
+                    if (ChannelSession.AppSettings.SettingsToReplaceDuringRestore != Guid.Empty)
+                    {
+                        SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToReplaceDuringRestore));
+                        if (settings != null)
+                        {
+
+                                File.Delete(settings.SettingsFilePath);
+                                File.Delete(settings.DatabaseFilePath);
+
+                                // Adding delay to ensure the above files are actually deleted
+                                await Task.Delay(2000);
+
+                        }
+                    }
+
+                    await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.SettingsRestoreFilePath, SettingsV3Model.SettingsDirectoryName);
+
+                    ChannelSession.AppSettings.SettingsRestoreFilePath = null;
+                    ChannelSession.AppSettings.SettingsToReplaceDuringRestore = Guid.Empty;
+
+                    return await this.GetAllSettings();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                    await DialogHelper.ShowMessage(Resources.FailedToRestoreSettings);
+                }
+            }
+            else if (ChannelSession.AppSettings.SettingsToDelete != Guid.Empty)
+            {
+                try
+                {
+                    Logger.Log(LogLevel.Debug, "Settings deletion detected, starting deletion process");
+
+                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
+                    ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
+
                     if (settings != null)
                     {
                         File.Delete(settings.SettingsFilePath);
                         File.Delete(settings.DatabaseFilePath);
 
-                        // Adding delay to ensure the above files are actually deleted
-                        await Task.Delay(2000);
+                        return await this.GetAllSettings();
                     }
                 }
-
-                await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.SettingsRestoreFilePath, SettingsV3Model.SettingsDirectoryName);
-
-                ChannelSession.AppSettings.SettingsRestoreFilePath = null;
-                ChannelSession.AppSettings.SettingsToReplaceDuringRestore = Guid.Empty;
-
-                return await this.GetAllSettings();
-            }
-            else if (ChannelSession.AppSettings.SettingsToDelete != Guid.Empty)
-            {
-                Logger.Log(LogLevel.Debug, "Settings deletion detected, starting deletion process");
-
-                SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
-                ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
-
-                if (settings != null)
+                catch (Exception ex)
                 {
-                    File.Delete(settings.SettingsFilePath);
-                    File.Delete(settings.DatabaseFilePath);
-
-                    return await this.GetAllSettings();
+                    Logger.Log(ex);
+                    await DialogHelper.ShowMessage(Resources.FailedToDeleteSettings);
                 }
             }
 

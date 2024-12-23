@@ -7442,6 +7442,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: Failed to delete settings file due to an error. Please try restarting your PC to ensure all files are not lock-protected and try again..
+        /// </summary>
+        public static string FailedToDeleteSettings {
+            get {
+                return ResourceManager.GetString("FailedToDeleteSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to export command.
         /// </summary>
         public static string FailedToExportCommand {
@@ -7528,6 +7537,15 @@ namespace MixItUp.Base {
         public static string FailedToInitializeStreamerBasedServices {
             get {
                 return ResourceManager.GetString("FailedToInitializeStreamerBasedServices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Failed to restore settings file due to an error. Please try restarting your PC to ensure all files are not lock-protected and try again..
+        /// </summary>
+        public static string FailedToRestoreSettings {
+            get {
+                return ResourceManager.GetString("FailedToRestoreSettings", resourceCulture);
             }
         }
         
