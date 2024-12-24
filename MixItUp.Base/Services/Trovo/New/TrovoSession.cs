@@ -53,17 +53,6 @@ namespace MixItUp.Base.Services.Trovo.New
         public override string ChannelID { get { return Streamer?.channelId; } }
         public override string ChannelLink { get { return string.Format("trovo.live/{0}", StreamerUsername?.ToLower()); } }
 
-        public override bool IsLive
-        {
-            get
-            {
-                bool? isLive = this.Channel?.is_live;
-                return isLive.GetValueOrDefault();
-            }
-        }
-
-        public override int ViewerCount { get { return (int)this.Channel?.current_viewers; } }
-
         public PrivateUserModel Streamer { get; private set; }
         public PrivateUserModel Bot { get; private set; }
         public ChannelModel Channel { get; private set; }
@@ -92,6 +81,9 @@ namespace MixItUp.Base.Services.Trovo.New
             {
                 return new Result(Resources.TrovoFailedToGetChannelData);
             }
+
+            this.IsLive = Channel.is_live;
+            this.StreamViewerCount = (int)Channel?.current_viewers;
 
             result = await BotService.Connect();
             if (!result.Success)

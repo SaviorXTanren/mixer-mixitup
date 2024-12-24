@@ -245,6 +245,9 @@ namespace MixItUp.Base.Services
             public string AvatarURL { get; set; }
         }
 
+        public abstract IEnumerable<string> StreamerScopes { get; protected set; }
+        public abstract IEnumerable<string> BotScopes { get; protected set; }
+
         public StreamingPlatformTypeEnum Platform { get; }
 
         public abstract string StreamerID { get; }
@@ -255,18 +258,22 @@ namespace MixItUp.Base.Services
         public abstract string ChannelLink { get; }
         public virtual string StreamLink { get { return this.ChannelLink; } }
 
-        public abstract bool IsLive { get; }
+        public bool IsLive { get; protected set; }
 
-        public abstract int ViewerCount { get; }
-
-        public abstract IEnumerable<string> StreamerScopes { get; protected set; }
-        public abstract IEnumerable<string> BotScopes { get; protected set; }
+        public string StreamTitle { get; protected set; }
+        public string StreamCategoryID { get; protected set; }
+        public string StreamCategoryName { get; protected set; }
+        public string StreamCategoryImageURL { get; protected set; }
+        public DateTimeOffset StreamStart { get; protected set; }
+        public int StreamViewerCount { get; protected set; }
 
         public StreamingPlatformSessionBase() { }
 
         public abstract Task<Result> Connect();
 
         public abstract Task Disconnect();
+
+        public abstract Task RefreshDetails();
 
         //public async Task<Result> ConnectBot()
         //{

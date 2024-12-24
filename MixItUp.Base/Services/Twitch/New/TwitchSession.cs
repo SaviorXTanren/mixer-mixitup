@@ -5,6 +5,8 @@ using MixItUp.Base.Model.Twitch.Ads;
 using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.Twitch.Channels;
 using MixItUp.Base.Model.Twitch.Chat;
+using MixItUp.Base.Model.Twitch.EventSub;
+using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.Twitch.Streams;
 using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User;
@@ -122,27 +124,9 @@ namespace MixItUp.Base.Services.Twitch.New
         public override string ChannelID { get { return this.Streamer?.id; } }
         public override string ChannelLink { get { return string.Format("twitch.tv/{0}", this.StreamerUsername?.ToLower()); } }
 
-        public override bool IsLive { get { return this.Stream != null || ServiceManager.Get<TwitchEventSubService>().StreamLiveStatus; } }
-
-        public override int ViewerCount { get { return (int)(this.Stream?.viewer_count ?? 0); } }
-
-        public DateTimeOffset StreamStart
-        {
-            get
-            {
-                if (this.IsLive)
-                {
-                    return TwitchPlatformService.GetTwitchDateTime(this.Stream?.started_at);
-                }
-                return DateTimeOffset.MinValue;
-            }
-        }
-
         public TwitchService StreamerService { get; private set; }
         public TwitchService BotService { get; private set; }
         private TwitchClient Client;
-
-        private StreamModel streamCache;
 
         private List<string> emoteSetIDs = new List<string>();
 
@@ -162,7 +146,42 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public override async Task<Result> Connect()
         {
-            await this.Client.Connect();
+            Result result = await StreamerService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            Streamer = await StreamerService.GetNewAPICurrentUser();
+            if (Streamer == null)
+            {
+                return new Result(Resources.TrovoFailedToGetUserData);
+            }
+
+            Channel = await StreamerService.GetChannelInformation(Streamer);
+            if (Channel == null)
+            {
+                return new Result(Resources.TrovoFailedToGetChannelData);
+            }
+
+            result = await BotService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            Bot = await BotService.GetNewAPICurrentUser();
+            if (Bot == null)
+            {
+                return new Result(Resources.TrovoFailedToGetUserData);
+            }
+
+            result = await this.Client.Connect();
+            if (!result.Success)
+            {
+                await Client.Disconnect();
+                return result;
+            }
 
             List<Task> initializationTasks = new List<Task>();
 
@@ -259,6 +278,47 @@ namespace MixItUp.Base.Services.Twitch.New
             }
 
             await this.Client.Disconnect();
+        }
+
+        public async Task StreamOnline()
+        {
+            this.IsLive = true;
+            this.StreamStart = DateTimeOffset.Now;
+
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
+        }
+
+        public async Task StreamOffline()
+        {
+            this.IsLive = true;
+            this.StreamStart = DateTimeOffset.MinValue;
+
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
+        }
+
+        public async Task ChannelUpdated(ChannelUpdateNotification update)
+        {
+            if (this.StreamCategoryID != update.category_id)
+            {
+                GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
+                if (game != null)
+                {
+                    this.StreamCategoryImageURL = game.box_art_url;
+                }
+            }
+
+            this.StreamTitle = update.title;
+            this.StreamCategoryID = update.category_id;
+            this.StreamCategoryName = update.category_name;
+
+            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
+            parameters.SpecialIdentifiers["streamtitle"] = this.StreamTitle;
+            parameters.SpecialIdentifiers["streamgameid"] = this.StreamCategoryID;
+            parameters.SpecialIdentifiers["streamgameimage"] = this.StreamCategoryImageURL;
+            parameters.SpecialIdentifiers["streamgame"] = this.StreamCategoryName;
+            parameters.SpecialIdentifiers["streamgamename"] = this.StreamCategoryName;
+
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUpdated, parameters);
         }
 
         public void AddGiftedSub(TwitchSubEventModel sub)

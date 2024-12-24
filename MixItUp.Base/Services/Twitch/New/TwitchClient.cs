@@ -3,9 +3,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Twitch.Channels;
-using MixItUp.Base.Model.Twitch.Clients.Chat;
 using MixItUp.Base.Model.Twitch.Clients.EventSub;
-using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.User;
@@ -265,8 +263,6 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public bool IsConnected { get { return webSocket != null && webSocket.IsOpen() && this.eventSubSubscriptionsConnected; } }
 
-        public bool StreamLiveStatus { get; private set; }
-
         private AdvancedClientWebSocket webSocket;
 
         private bool eventSubSubscriptionsConnected = false;
@@ -517,29 +513,17 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private async Task HandleOnline(JObject payload)
         {
-            this.StreamLiveStatus = true;
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
+            await ServiceManager.Get<TwitchSession>().StreamOnline();
         }
 
         private async Task HandleOffline(JObject payload)
         {
-            this.StreamLiveStatus = false;
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
+            await ServiceManager.Get<TwitchSession>().StreamOffline();
         }
 
         private async Task HandleChannelUpdate(JObject payload)
         {
-            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
-
-            string gameID = payload["category_id"].ToString();
-            GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(gameID);
-
-            parameters.SpecialIdentifiers["streamtitle"] = payload["title"].ToString();
-            parameters.SpecialIdentifiers["streamgameid"] = gameID;
-            parameters.SpecialIdentifiers["streamgameimage"] = game?.box_art_url ?? string.Empty;
-            parameters.SpecialIdentifiers["streamgame"] = parameters.SpecialIdentifiers["streamgamename"] = payload["category_name"].ToString();
-
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUpdated, parameters);
+            await ServiceManager.Get<TwitchSession>().ChannelUpdated(payload.ToObject<ChannelUpdateNotification>());
         }
 
         private async Task HandleFollow(JObject payload)

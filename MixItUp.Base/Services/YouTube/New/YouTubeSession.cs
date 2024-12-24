@@ -13,6 +13,7 @@ using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System.Threading;
+using System.Linq;
 
 namespace MixItUp.Base.Services.YouTube.New
 {
@@ -62,15 +63,21 @@ namespace MixItUp.Base.Services.YouTube.New
         public override string BotUsername { get { return this.Bot?.Snippet?.Title; } }
         public override string ChannelID { get { return this.Streamer?.Id; } }
         public override string ChannelLink { get { return this.Streamer?.Snippet?.CustomUrl; } }
-        public override string StreamLink { get { return $"https://youtube.com/watch?v={this.Broadcast?.Id}"; } }
-
-        public override bool IsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
-
-        public override int ViewerCount { get { return (int)this.Video?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault(); } }
+        public override string StreamLink
+        {
+            get
+            {
+                if (this.LiveBroadcasts.Count > 0)
+                {
+                    return $"https://youtube.com/watch?v={this.LiveBroadcasts.First().Id}";
+                }
+                return string.Empty;
+            }
+        }
 
         public Channel Streamer { get; private set; }
         public Channel Bot { get; private set; }
-        public LiveBroadcast Broadcast { get; private set; }
+        public List<LiveBroadcast> LiveBroadcasts { get; private set; } = new List<LiveBroadcast>();
         public Video Video { get; private set; }
 
         public YouTubeService StreamerService { get; private set; }
@@ -114,43 +121,6 @@ namespace MixItUp.Base.Services.YouTube.New
                 return new Result(Resources.YouTubeFailedToGetUserData);
             }
 
-            if (this.Broadcast == null)
-            {
-                this.Broadcast = await this.StreamerService.GetMyActiveBroadcast();
-            }
-
-            if (this.Broadcast != null)
-            {
-                LiveBroadcast broadcast = await this.StreamerService.GetBroadcastByID(this.Broadcast.Id);
-                if (broadcast != null)
-                {
-                    if (broadcast?.Snippet?.Title != null && !string.Equals(this.Broadcast?.Snippet?.Title, broadcast?.Snippet?.Title, StringComparison.OrdinalIgnoreCase))
-                    {
-                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.YouTube, description: broadcast?.Snippet?.Title);
-                    }
-                    this.Broadcast = broadcast;
-                }
-
-                Video video = await this.StreamerService.GetVideoByID(this.Broadcast.Id);
-                if (video != null)
-                {
-                    this.Video = video;
-                }
-
-                if (ChannelSession.User != null)
-                {
-                    if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
-                    {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
-                    }
-
-                    if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
-                    {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
-                    }
-                }
-            }
-
             this.EmoteDictionary.Clear();
             this.Emotes = await this.StreamerService.GetChatEmotes();
             if (this.Emotes != null)
@@ -187,6 +157,58 @@ namespace MixItUp.Base.Services.YouTube.New
             }
 
             return Task.CompletedTask;
+        }
+
+        public override async Task RefreshDetails()
+        {
+            if (this.Broadcast == null)
+            {
+                IEnumerable<LiveBroadcast> broadcasts = await this.StreamerService.GetActiveBroadcasts();
+                if (broadcasts != null)
+                {
+                    foreach (LiveBroadcast broadcast in broadcasts)
+                    {
+                        if (broadcast.IsLive())
+                        {
+                            this.LiveBroadcasts.Add(broadcast);
+                        }
+                    }
+                }
+            }
+
+            if (this.Broadcast != null)
+            {
+                LiveBroadcast broadcast = await this.StreamerService.GetBroadcastByID(this.Broadcast.Id);
+                if (broadcast != null)
+                {
+                    if (broadcast?.Snippet?.Title != null && !string.Equals(this.Broadcast?.Snippet?.Title, broadcast?.Snippet?.Title, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.YouTube, description: broadcast?.Snippet?.Title);
+                    }
+                    this.Broadcast = broadcast;
+                }
+                this.IsLive = this.Broadcast.IsLive();
+
+                Video video = await this.StreamerService.GetVideoByID(this.Broadcast.Id);
+                if (video != null)
+                {
+                    this.Video = video;
+                }
+                this.StreamViewerCount = (int)this.Video?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault();
+
+                if (ChannelSession.User != null)
+                {
+                    if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
+                    }
+
+                    if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
+                    }
+                }
+            }
         }
 
         private async Task MessageBackgroundPolling()

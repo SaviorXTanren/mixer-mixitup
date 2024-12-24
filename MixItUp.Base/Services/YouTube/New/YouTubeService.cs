@@ -25,6 +25,11 @@ using static Google.Apis.YouTube.v3.LiveBroadcastsResource.ListRequest;
 
 namespace MixItUp.Base.Services.YouTube.New
 {
+    public static class YouTubeAPIModelExtensions
+    {
+        public static bool IsLive(this LiveBroadcast broadcast) { return string.Equals(broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); }
+    }
+
     public class YouTubeService : StreamingPlatformServiceBaseNew
     {
         private const string OAuthBaseAddress = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -248,19 +253,19 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task<LiveBroadcast> GetMyActiveBroadcast()
+        public async Task<IEnumerable<LiveBroadcast>> GetActiveBroadcasts()
         {
             return await AsyncRunner.RunAsync(async () =>
             {
                 LiveBroadcastsResource.ListRequest request = this.GoogleYouTubeService.LiveBroadcasts.List("snippet,contentDetails,status");
                 request.BroadcastType = BroadcastTypeEnum.All;
                 request.BroadcastStatus = BroadcastStatusEnum.Active;
-                request.MaxResults = 5;
+                request.MaxResults = 10;
                 LogRequest(request);
 
                 LiveBroadcastListResponse response = await request.ExecuteAsync();
                 LogResponse(request, response);
-                return response.Items.FirstOrDefault(b => string.Equals(b.Status.LifeCycleStatus, "live"));
+                return response.Items;
             });
         }
 
