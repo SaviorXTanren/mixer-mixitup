@@ -269,6 +269,22 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
+        public async Task<IEnumerable<LiveBroadcast>> GetUpcomingBroadcasts()
+        {
+            return await AsyncRunner.RunAsync(async () =>
+            {
+                LiveBroadcastsResource.ListRequest request = this.GoogleYouTubeService.LiveBroadcasts.List("snippet,contentDetails,status");
+                request.BroadcastType = BroadcastTypeEnum.All;
+                request.BroadcastStatus = BroadcastStatusEnum.Upcoming;
+                request.MaxResults = 10;
+                LogRequest(request);
+
+                LiveBroadcastListResponse response = await request.ExecuteAsync();
+                LogResponse(request, response);
+                return response.Items;
+            });
+        }
+
         public async Task<LiveBroadcast> GetBroadcastByID(string id)
         {
             return await AsyncRunner.RunAsync(async () =>
@@ -304,19 +320,25 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task<Video> GetVideoByID(string id, bool isOwned = true)
+        public async Task<IEnumerable<Video>> GetVideosByID(IEnumerable<string> ids, bool isOwned = true)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                VideosResource.ListRequest request = this.GoogleYouTubeService.Videos.List("snippet,contentDetails,statistics,liveStreamingDetails,recordingDetails,status,topicDetails,fileDetails,processingDetails");
-                request.MaxResults = 1;
-                request.Id = new List<string> { id };
+                string parts = "snippet,contentDetails,statistics,liveStreamingDetails,recordingDetails,status,topicDetails";
+                if (isOwned)
+                {
+                    parts += ",fileDetails,processingDetails";
+                }
+
+                VideosResource.ListRequest request = this.GoogleYouTubeService.Videos.List(parts);
+                request.MaxResults = ids.Count();
+                request.Id = new List<string>(ids);
                 LogRequest(request);
 
                 VideoListResponse response = await request.ExecuteAsync();
                 LogResponse(request, response);
 
-                return response?.Items?.FirstOrDefault();
+                return response?.Items;
             });
         }
 

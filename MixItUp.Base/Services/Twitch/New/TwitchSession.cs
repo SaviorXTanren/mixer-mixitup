@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Twitch.Ads;
@@ -144,7 +145,31 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private CancellationTokenSource cancellationTokenSource;
 
-        public override async Task<Result> Connect()
+        public override async Task RefreshDetails()
+        {
+            StreamModel stream = await StreamerService.GetStream(Streamer);
+            if (stream != null)
+            {
+                if (!string.Equals(this.StreamCategoryID, stream.game_id, StringComparison.OrdinalIgnoreCase))
+                {
+                    GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
+                    if (game != null)
+                    {
+                        this.StreamCategoryImageURL = game.box_art_url;
+                    }
+                }
+
+                this.StreamTitle = stream.title;
+                this.StreamCategoryID = stream.game_id;
+                this.StreamCategoryName = stream.game_name;
+
+                this.Stream = stream;
+
+                this.StreamViewerCount = (int)this.Stream.viewer_count;
+            }
+        }
+
+        protected override async Task<Result> ConnectStreamer()
         {
             Result result = await StreamerService.Connect();
             if (!result.Success)
@@ -155,25 +180,13 @@ namespace MixItUp.Base.Services.Twitch.New
             Streamer = await StreamerService.GetNewAPICurrentUser();
             if (Streamer == null)
             {
-                return new Result(Resources.TrovoFailedToGetUserData);
+                return new Result(Resources.TwitchFailedToGetUserData);
             }
 
             Channel = await StreamerService.GetChannelInformation(Streamer);
             if (Channel == null)
             {
-                return new Result(Resources.TrovoFailedToGetChannelData);
-            }
-
-            result = await BotService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            Bot = await BotService.GetNewAPICurrentUser();
-            if (Bot == null)
-            {
-                return new Result(Resources.TrovoFailedToGetUserData);
+                return new Result(Resources.TwitchFailedToGetUserData);
             }
 
             result = await this.Client.Connect();
@@ -269,7 +282,7 @@ namespace MixItUp.Base.Services.Twitch.New
             return new Result();
         }
 
-        public override async Task Disconnect()
+        protected override async Task DisconnectStreamer()
         {
             if (this.cancellationTokenSource != null)
             {
@@ -278,6 +291,28 @@ namespace MixItUp.Base.Services.Twitch.New
             }
 
             await this.Client.Disconnect();
+        }
+
+        protected override async Task<Result> ConnectBot()
+        {
+            Result result = await BotService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            Bot = await BotService.GetNewAPICurrentUser();
+            if (Bot == null)
+            {
+                return new Result(Resources.TwitchFailedToGetUserData);
+            }
+
+            return new Result();
+        }
+
+        protected override Task DisconnectBot()
+        {
+            return Task.CompletedTask;
         }
 
         public async Task StreamOnline()
@@ -298,7 +333,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public async Task ChannelUpdated(ChannelUpdateNotification update)
         {
-            if (this.StreamCategoryID != update.category_id)
+            if (!string.Equals(this.StreamCategoryID, update.category_id, StringComparison.OrdinalIgnoreCase))
             {
                 GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
                 if (game != null)

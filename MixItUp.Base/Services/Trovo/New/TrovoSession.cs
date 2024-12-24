@@ -1,10 +1,15 @@
-﻿using MixItUp.Base.Model.Trovo.Channels;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Trovo.Category;
+using MixItUp.Base.Model.Trovo.Channels;
 using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Model.Trovo.Users;
+using MixItUp.Base.Model.Twitch.Games;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
+using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Trovo.New
@@ -62,7 +67,16 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private TrovoClient Client;
 
-        public override async Task<Result> Connect()
+        public override async Task RefreshDetails()
+        {
+            ChannelModel channel = await StreamerService.GetChannelByID(ChannelID);
+            if (channel != null)
+            {
+                await this.UpdateChannelData(channel);
+            }
+        }
+
+        protected override async Task<Result> ConnectStreamer()
         {
             Result result = await StreamerService.Connect();
             if (!result.Success)
@@ -81,21 +95,7 @@ namespace MixItUp.Base.Services.Trovo.New
             {
                 return new Result(Resources.TrovoFailedToGetChannelData);
             }
-
-            this.IsLive = Channel.is_live;
-            this.StreamViewerCount = (int)Channel?.current_viewers;
-
-            result = await BotService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            Bot = await BotService.GetUser();
-            if (Bot == null)
-            {
-                return new Result(Resources.TrovoFailedToGetUserData);
-            }
+            await this.UpdateChannelData(Channel);
 
             string chatToken = await this.StreamerService.GetChatToken();
             if (string.IsNullOrEmpty(chatToken))
@@ -148,9 +148,56 @@ namespace MixItUp.Base.Services.Trovo.New
             return new Result();
         }
 
-        public override async Task Disconnect()
+        protected override async Task DisconnectStreamer()
         {
             await Client.Disconnect();
+        }
+
+        protected override async Task<Result> ConnectBot()
+        {
+            Result result = await BotService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            Bot = await BotService.GetUser();
+            if (Bot == null)
+            {
+                return new Result(Resources.TrovoFailedToGetUserData);
+            }
+
+            return new Result();
+        }
+
+        protected override Task DisconnectBot()
+        {
+            return Task.CompletedTask;
+        }
+
+        private async Task UpdateChannelData(ChannelModel channel)
+        {
+            Channel = channel;
+
+            this.IsLive = Channel.is_live;
+
+            if (!string.Equals(this.StreamCategoryID, Channel.category_id, StringComparison.OrdinalIgnoreCase))
+            {
+                IEnumerable<CategoryModel> categories = await this.StreamerService.SearchCategories(Channel.category_name, maxResults: 10);
+                if (categories != null && categories.Count() > 0)
+                {
+                    CategoryModel category = categories.FirstOrDefault(c => string.Equals(c.id, Channel.category_id, StringComparison.OrdinalIgnoreCase));
+                    if (category != null)
+                    {
+                        this.StreamCategoryImageURL = category.icon_url;
+                    }
+                }
+            }
+
+            this.StreamTitle = Channel.live_title;
+            this.StreamCategoryID = Channel.category_id;
+            this.StreamCategoryName = Channel.category_name;
+            this.StreamViewerCount = (int)Channel?.current_viewers;
         }
     }
 }

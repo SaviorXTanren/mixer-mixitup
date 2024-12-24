@@ -267,13 +267,56 @@ namespace MixItUp.Base.Services
         public DateTimeOffset StreamStart { get; protected set; }
         public int StreamViewerCount { get; protected set; }
 
+        public bool IsBotEnabled
+        {
+            get
+            {
+                StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
+                return authenticationSettings?.IsBotEnabled ?? false;
+            }
+        }
+
         public StreamingPlatformSessionBase() { }
 
-        public abstract Task<Result> Connect();
+        public async Task<Result> Connect()
+        {
+            Result result = await this.ConnectStreamer();
+            if (!result.Success)
+            {
+                return result;
+            }
 
-        public abstract Task Disconnect();
+            if (this.IsBotEnabled)
+            {
+                result = await this.ConnectBot();
+                if (!result.Success)
+                {
+                    await DialogHelper.ShowFailedResult(result);
+                }
+            }
+
+            return new Result();
+        }
+
+        public async Task Disconnect()
+        {
+            await this.DisconnectStreamer();
+
+            if (this.IsBotEnabled)
+            {
+                await this.DisconnectBot();
+            }
+        }
 
         public abstract Task RefreshDetails();
+
+        protected abstract Task<Result> ConnectStreamer();
+
+        protected abstract Task DisconnectStreamer();
+
+        protected abstract Task<Result> ConnectBot();
+
+        protected abstract Task DisconnectBot();
 
         //public async Task<Result> ConnectBot()
         //{

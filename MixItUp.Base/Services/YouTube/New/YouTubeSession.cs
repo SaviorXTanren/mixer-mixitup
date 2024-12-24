@@ -67,9 +67,10 @@ namespace MixItUp.Base.Services.YouTube.New
         {
             get
             {
-                if (this.LiveBroadcasts.Count > 0)
+                var broadcast = this.LiveBroadcasts.FirstOrDefault();
+                if (broadcast.Value != null)
                 {
-                    return $"https://youtube.com/watch?v={this.LiveBroadcasts.First().Id}";
+                    return $"https://youtube.com/watch?v={broadcast.Value.Id}";
                 }
                 return string.Empty;
             }
@@ -77,8 +78,8 @@ namespace MixItUp.Base.Services.YouTube.New
 
         public Channel Streamer { get; private set; }
         public Channel Bot { get; private set; }
-        public List<LiveBroadcast> LiveBroadcasts { get; private set; } = new List<LiveBroadcast>();
-        public Video Video { get; private set; }
+        public Dictionary<string, LiveBroadcast> LiveBroadcasts { get; private set; } = new Dictionary<string, LiveBroadcast>();
+        public Dictionary<string, Video> Videos { get; private set; } = new Dictionary<string, Video>();
 
         public YouTubeService StreamerService { get; private set; }
         public YouTubeService BotService { get; private set; }
@@ -95,7 +96,55 @@ namespace MixItUp.Base.Services.YouTube.New
 
         private DateTime launchDateTime = DateTime.Now;
 
-        public override async Task<Result> Connect()
+        public override async Task RefreshDetails()
+        {
+            IEnumerable<LiveBroadcast> broadcasts = await this.StreamerService.GetActiveBroadcasts();
+            if (broadcasts != null)
+            {
+                Dictionary<string, LiveBroadcast> newBroadcasts = new Dictionary<string, LiveBroadcast>();
+                foreach (LiveBroadcast broadcast in broadcasts)
+                {
+                    if (broadcast.IsLive())
+                    {
+                        newBroadcasts[broadcast.Id] = broadcast;
+                    }
+                }
+                this.LiveBroadcasts = newBroadcasts;
+            }
+
+            this.IsLive = this.LiveBroadcasts.Count > 0;
+
+            if (this.IsLive)
+            {
+                IEnumerable<Video> videos = await this.StreamerService.GetVideosByID(this.LiveBroadcasts.Keys.ToList());
+                if (videos != null)
+                {
+                    Dictionary<string, Video> newVideos = new Dictionary<string, Video>();
+                    foreach (Video video in videos)
+                    {
+                        newVideos[video.Id] = video;
+                    }
+                    this.Videos = newVideos;
+                }
+            }
+
+            this.StreamViewerCount = this.Videos.Sum(v => (int)v.Value?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault());
+
+            if (ChannelSession.User != null)
+            {
+                if (this.LiveBroadcasts.Any(b => this.launchDateTime < b.Value.Snippet.ActualStartTimeDateTimeOffset.GetValueOrDefault()))
+                {
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
+                }
+
+                if (this.LiveBroadcasts.Any(b => this.launchDateTime < b.Value.Snippet.ActualEndTimeDateTimeOffset.GetValueOrDefault()))
+                {
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
+                }
+            }
+        }
+
+        protected override async Task<Result> ConnectStreamer()
         {
             Result result = await StreamerService.Connect();
             if (!result.Success)
@@ -105,18 +154,6 @@ namespace MixItUp.Base.Services.YouTube.New
 
             this.Streamer = await this.StreamerService.GetCurrentChannel();
             if (this.Streamer == null)
-            {
-                return new Result(Resources.YouTubeFailedToGetUserData);
-            }
-
-            result = await BotService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            this.Bot = await this.BotService.GetCurrentChannel();
-            if (this.Bot == null)
             {
                 return new Result(Resources.YouTubeFailedToGetUserData);
             }
@@ -142,7 +179,7 @@ namespace MixItUp.Base.Services.YouTube.New
             return new Result();
         }
 
-        public override Task Disconnect()
+        protected override Task DisconnectStreamer()
         {
             try
             {
@@ -159,56 +196,26 @@ namespace MixItUp.Base.Services.YouTube.New
             return Task.CompletedTask;
         }
 
-        public override async Task RefreshDetails()
+        protected override async Task<Result> ConnectBot()
         {
-            if (this.Broadcast == null)
+            Result result = await BotService.Connect();
+            if (!result.Success)
             {
-                IEnumerable<LiveBroadcast> broadcasts = await this.StreamerService.GetActiveBroadcasts();
-                if (broadcasts != null)
-                {
-                    foreach (LiveBroadcast broadcast in broadcasts)
-                    {
-                        if (broadcast.IsLive())
-                        {
-                            this.LiveBroadcasts.Add(broadcast);
-                        }
-                    }
-                }
+                return result;
             }
 
-            if (this.Broadcast != null)
+            this.Bot = await this.BotService.GetCurrentChannel();
+            if (this.Bot == null)
             {
-                LiveBroadcast broadcast = await this.StreamerService.GetBroadcastByID(this.Broadcast.Id);
-                if (broadcast != null)
-                {
-                    if (broadcast?.Snippet?.Title != null && !string.Equals(this.Broadcast?.Snippet?.Title, broadcast?.Snippet?.Title, StringComparison.OrdinalIgnoreCase))
-                    {
-                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.YouTube, description: broadcast?.Snippet?.Title);
-                    }
-                    this.Broadcast = broadcast;
-                }
-                this.IsLive = this.Broadcast.IsLive();
-
-                Video video = await this.StreamerService.GetVideoByID(this.Broadcast.Id);
-                if (video != null)
-                {
-                    this.Video = video;
-                }
-                this.StreamViewerCount = (int)this.Video?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault();
-
-                if (ChannelSession.User != null)
-                {
-                    if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
-                    {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
-                    }
-
-                    if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
-                    {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
-                    }
-                }
+                return new Result(Resources.YouTubeFailedToGetUserData);
             }
+
+            return new Result();
+        }
+
+        protected override Task DisconnectBot()
+        {
+            return Task.CompletedTask;
         }
 
         private async Task MessageBackgroundPolling()
@@ -217,39 +224,43 @@ namespace MixItUp.Base.Services.YouTube.New
             {
                 try
                 {
-                    if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                    IEnumerable<LiveBroadcast> broadcasts = this.LiveBroadcasts.Values.ToList();
+                    if (broadcasts.Count() > 0)
                     {
-                        LiveChatMessagesResultModel result = await this.StreamerService.GetChatMessages(this.Broadcast, this.nextMessagesToken);
-                        if (result != null)
+                        foreach (LiveBroadcast broadcast in broadcasts)
                         {
-                            // Only process messages after the first time polling chat so we don't re-trigger commands on old messages
-                            if (this.nextMessagesToken != null)
+                            LiveChatMessagesResultModel result = await this.StreamerService.GetChatMessages(broadcast, this.nextMessagesToken);
+                            if (result != null)
                             {
-                                List<LiveChatMessage> newMessages = new List<LiveChatMessage>();
-                                foreach (LiveChatMessage message in result.Messages)
+                                // Only process messages after the first time polling chat so we don't re-trigger commands on old messages
+                                if (this.nextMessagesToken != null)
                                 {
-                                    newMessages.Add(message);
+                                    List<LiveChatMessage> newMessages = new List<LiveChatMessage>();
+                                    foreach (LiveChatMessage message in result.Messages)
+                                    {
+                                        newMessages.Add(message);
+                                    }
+
+                                    if (newMessages.Count > 0)
+                                    {
+                                        await this.ProcessMessages(newMessages);
+
+                                        this.messagePollingInterval = Math.Max((int)result.PollingInterval, MinMessagePollingInterval);
+                                    }
+                                    else
+                                    {
+                                        this.messagePollingInterval = Math.Min(this.messagePollingInterval + 1000, MaxMessagePollingInterval);
+                                    }
                                 }
 
-                                if (newMessages.Count > 0)
-                                {
-                                    await this.ProcessMessages(newMessages);
+                                this.nextMessagesToken = result.NextResultsToken;
 
-                                    this.messagePollingInterval = Math.Max((int)result.PollingInterval, MinMessagePollingInterval);
-                                }
-                                else
-                                {
-                                    this.messagePollingInterval = Math.Min(this.messagePollingInterval + 1000, MaxMessagePollingInterval);
-                                }
+                                await Task.Delay(this.messagePollingInterval);
                             }
-
-                            this.nextMessagesToken = result.NextResultsToken;
-
-                            await Task.Delay(this.messagePollingInterval);
-                        }
-                        else
-                        {
-                            await Task.Delay(MaxMessagePollingInterval);
+                            else
+                            {
+                                await Task.Delay(MaxMessagePollingInterval);
+                            }
                         }
                     }
                     else
