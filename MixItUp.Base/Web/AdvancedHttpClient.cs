@@ -142,6 +142,8 @@ namespace MixItUp.Base.Web
             this.Timeout = DefaultRequestTimeout;
 
             this.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            this.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true };
         }
 
         /// <summary>
