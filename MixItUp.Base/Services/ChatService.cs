@@ -850,10 +850,14 @@ namespace MixItUp.Base.Services
             {
                 liveStreams[p] = StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive;
                 chatterCount[p] = 0;
+
+                Logger.Log(LogLevel.Debug, $"{p} Stream Status: {liveStreams[p]}");
             });
 
             if (liveStreams.Any(s => s.Value))
             {
+                Logger.Log(LogLevel.Debug, $"A valid live stream has been detected, starting minute background processing");
+
                 foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
                 {
                     if (liveStreams.TryGetValue(user.Platform, out bool active) && active)

@@ -721,12 +721,14 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task HandleOnline(JObject payload)
         {
+            Logger.Log(LogLevel.Debug, "Twitch Stream Online");
             this.StreamLiveStatus = true;
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
 
         private async Task HandleOffline(JObject payload)
         {
+            Logger.Log(LogLevel.Debug, "Twitch Stream Offline");
             this.StreamLiveStatus = false;
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
