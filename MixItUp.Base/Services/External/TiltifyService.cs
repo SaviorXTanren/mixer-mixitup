@@ -327,6 +327,8 @@ namespace MixItUp.Base.Services.External
             }
             else if (this.campaign == null || ChannelSession.Settings.TiltifyCampaignV5 != this.campaign.id)
             {
+                Logger.Log(LogLevel.Debug, $"Initializing campaign donations...");
+
                 donationsReceived.Clear();
 
                 if (ChannelSession.Settings.TiltifyCampaignV5IsTeam)
@@ -351,13 +353,24 @@ namespace MixItUp.Base.Services.External
             {
                 foreach (TiltifyDonation tDonation in await this.GetCampaignDonations(this.campaign))
                 {
+                    Logger.Log(LogLevel.Debug, $"Checking of donation {tDonation.id} at {tDonation.Timestamp} has already been processed...");
                     if (!donationsReceived.ContainsKey(tDonation.id))
                     {
+                        Logger.Log(LogLevel.Debug, $"Donation {tDonation.id} is not known, checking timestamp...");
                         donationsReceived[tDonation.id] = tDonation;
                         if (tDonation.Timestamp > this.startTime)
                         {
+                            Logger.Log(LogLevel.Debug, $"Donation {tDonation.id} is new, start processing...");
                             await EventService.ProcessDonationEvent(EventTypeEnum.TiltifyDonation, tDonation.ToGenericDonation());
                         }
+                        else
+                        {
+                            Logger.Log(LogLevel.Debug, $"Donation {tDonation.id} at {tDonation.Timestamp} is earlier than {this.startTime}");
+                        }
+                    }
+                    else
+                    {
+                        Logger.Log(LogLevel.Debug, $"Donation {tDonation.id} has already been processed, skipping");
                     }
                 }
             }
