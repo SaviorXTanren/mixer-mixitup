@@ -19,8 +19,6 @@ namespace MixItUp.Base.Services.YouTube.New
 {
     public class YouTubeSession : StreamingPlatformSessionBase
     {
-        private const int MaxMessageLength = 200;
-
         private const int MinMessagePollingInterval = 5000;
         private const int MaxMessagePollingInterval = 10000;
 
@@ -56,6 +54,8 @@ namespace MixItUp.Base.Services.YouTube.New
             "https://www.googleapis.com/auth/youtube.force-ssl",
             "https://www.googleapis.com/auth/youtube.readonly",
         };
+
+        public override int MaxMessageLength { get { return 200; } }
 
         public override string StreamerID { get { return this.Streamer?.Id; } }
         public override string StreamerUsername { get { return this.Streamer?.Snippet?.Title; } }

@@ -16,8 +16,6 @@ namespace MixItUp.Base.Services.Trovo.New
 {
     public class TrovoSession : StreamingPlatformSessionBase
     {
-        private const int MaxMessageLength = 500;
-
         public override IEnumerable<string> StreamerScopes { get; protected set; } = new List<string>()
         {
             "chat_connect",
@@ -41,6 +39,8 @@ namespace MixItUp.Base.Services.Trovo.New
 
             "user_details_self",
         };
+
+        public override int MaxMessageLength { get { return 500; } }
 
         public IDictionary<string, TrovoChatEmoteViewModel> ChannelEmotes { get { return channelEmotes; } }
         private Dictionary<string, TrovoChatEmoteViewModel> channelEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();

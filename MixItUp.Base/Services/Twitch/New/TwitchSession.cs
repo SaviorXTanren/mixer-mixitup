@@ -1,5 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Twitch.Ads;
@@ -108,6 +107,8 @@ namespace MixItUp.Base.Services.Twitch.New
             "whispers:read",
             "whispers:edit",
         };
+
+        public override int MaxMessageLength { get { return 500; } }
 
         public HashSet<string> ChannelEditors { get; private set; } = new HashSet<string>();
         public UserModel Streamer { get; set; }

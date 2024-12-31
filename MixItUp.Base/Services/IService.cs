@@ -248,6 +248,8 @@ namespace MixItUp.Base.Services
         public abstract IEnumerable<string> StreamerScopes { get; protected set; }
         public abstract IEnumerable<string> BotScopes { get; protected set; }
 
+        public abstract int MaxMessageLength { get; }
+
         public StreamingPlatformTypeEnum Platform { get; }
 
         public abstract string StreamerID { get; }
