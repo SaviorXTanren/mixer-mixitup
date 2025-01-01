@@ -62,7 +62,6 @@ namespace MixItUp.Base.Services.Twitch.API
 
             OAuthTokenModel token = await this.PostAsync<OAuthTokenModel>("oauth2/token?" + await content.ReadAsStringAsync(), AdvancedHttpClient.CreateContentFromObject(string.Empty), autoRefreshToken: false);
             token.clientID = clientID;
-            token.authorizationCode = authorizationCode;
             token.ScopeList = string.Join(",", scopes ?? new List<OAuthClientScopeEnum>());
             return token;
         }
@@ -87,7 +86,6 @@ namespace MixItUp.Base.Services.Twitch.API
 
             OAuthTokenModel newToken = await this.PostAsync<OAuthTokenModel>("oauth2/token?" + await content.ReadAsStringAsync(), AdvancedHttpClient.CreateContentFromObject(string.Empty), autoRefreshToken: false);
             newToken.clientID = token.clientID;
-            newToken.authorizationCode = token.authorizationCode;
             newToken.ScopeList = token.ScopeList;
             return newToken;
         }

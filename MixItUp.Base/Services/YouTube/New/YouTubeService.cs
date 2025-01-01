@@ -12,7 +12,6 @@ using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Model.Web;
 using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.Web;
 using System;
@@ -93,11 +92,11 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task DeleteMessage(ChatMessageViewModel message)
+        public async Task DeleteMessage(string messageID)
         {
             await AsyncRunner.RunAsync(async () =>
             {
-                LiveChatMessagesResource.DeleteRequest request = this.GoogleYouTubeService.LiveChatMessages.Delete(message.ID);
+                LiveChatMessagesResource.DeleteRequest request = this.GoogleYouTubeService.LiveChatMessages.Delete(messageID);
                 LogRequest(request);
 
                 string response = await request.ExecuteAsync();
@@ -107,7 +106,7 @@ namespace MixItUp.Base.Services.YouTube.New
 
         public async Task<LiveChatModerator> ModUser(LiveBroadcast broadcast, UserV2ViewModel user)
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+            return await AsyncRunner.RunAsync(async () =>
             {
                 LiveChatModerator moderator = await AsyncRunner.RunAsync(async () =>
                 {
@@ -129,13 +128,14 @@ namespace MixItUp.Base.Services.YouTube.New
                 {
                     user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).ModeratorID = moderator.Id;
                 }
-            }
-            return null;
+
+                return moderator;
+            });
         }
 
         public async Task UnmodUser(UserV2ViewModel user)
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+            await AsyncRunner.RunAsync(async () =>
             {
                 string moderatorID = user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube)?.ModeratorID;
                 if (!string.IsNullOrWhiteSpace(moderatorID))
@@ -151,34 +151,27 @@ namespace MixItUp.Base.Services.YouTube.New
 
                     user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).ModeratorID = null;
                 }
-            }
+            });
         }
 
-        public async Task<LiveChatBan> TimeoutUser(LiveBroadcast broadcast, UserV2ViewModel user, ulong duration)
+        public async Task<LiveChatBan> TimeoutUser(LiveBroadcast broadcast, UserV2ViewModel user, int duration)
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsLive)
-            {
-                return await this.BanUserInternal(broadcast, user.PlatformID, "temporary", banDuration: duration);
-            }
-            return null;
+            return await this.BanUserInternal(broadcast, user.PlatformID, "temporary", banDuration: duration);
         }
 
         public async Task<LiveChatBan> BanUser(LiveBroadcast broadcast, UserV2ViewModel user)
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+            LiveChatBan ban = await this.BanUserInternal(broadcast, user.PlatformID, "permanent", banDuration: 0);
+            if (ban != null)
             {
-                LiveChatBan ban = await this.BanUserInternal(broadcast, user.PlatformID, "permanent", banDuration: 0);
-                if (ban != null)
-                {
-                    user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).BanID = ban.Id;
-                }
+                user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).BanID = ban.Id;
             }
-            return null;
+            return ban;
         }
 
         public async Task UnbanUser(UserV2ViewModel user)
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+            await AsyncRunner.RunAsync(async () =>
             {
                 string banID = user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube)?.BanID;
                 if (!string.IsNullOrWhiteSpace(banID))
@@ -194,7 +187,7 @@ namespace MixItUp.Base.Services.YouTube.New
 
                     user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).BanID = null;
                 }
-            }
+            });
         }
 
         public async Task<Channel> GetCurrentChannel()
@@ -590,7 +583,7 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task<IEnumerable<YouTubeChatEmoteModel>> GetChatEmotes()
+        public async Task<IEnumerable<Model.YouTube.YouTubeChatEmoteModel>> GetChatEmotes()
         {
             try
             {
@@ -599,7 +592,7 @@ namespace MixItUp.Base.Services.YouTube.New
                     HttpResponseMessage response = await client.GetAsync("https://www.gstatic.com/youtube/img/emojis/emojis-svg-8.json");
                     if (response.IsSuccessStatusCode)
                     {
-                        return JSONSerializerHelper.DeserializeFromString<List<YouTubeChatEmoteModel>>(await response.Content.ReadAsStringAsync());
+                        return JSONSerializerHelper.DeserializeFromString<List<Model.YouTube.YouTubeChatEmoteModel>>(await response.Content.ReadAsStringAsync());
                     }
                 }
             }
@@ -607,7 +600,7 @@ namespace MixItUp.Base.Services.YouTube.New
             {
                 Logger.Log(ex);
             }
-            return new List<YouTubeChatEmoteModel>();
+            return new List<Model.YouTube.YouTubeChatEmoteModel>();
         }
 
         public async Task<IEnumerable<LiveChatModerator>> GetModerators(LiveBroadcast broadcast, int maxResults = 1)
@@ -634,7 +627,7 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        private async Task<LiveChatBan> BanUserInternal(LiveBroadcast broadcast, string userID, string banType, ulong banDuration = 0)
+        private async Task<LiveChatBan> BanUserInternal(LiveBroadcast broadcast, string userID, string banType, int banDuration = 0)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
@@ -644,7 +637,7 @@ namespace MixItUp.Base.Services.YouTube.New
                 ban.Snippet.Type = banType;
                 if (banDuration > 0)
                 {
-                    ban.Snippet.BanDurationSeconds = banDuration;
+                    ban.Snippet.BanDurationSeconds = Convert.ToUInt64(banDuration);
                 }
                 ban.Snippet.BannedUserDetails = new ChannelProfileDetails();
                 ban.Snippet.BannedUserDetails.ChannelId = userID;

@@ -1,9 +1,8 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Util;
+using MixItUp.Base.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using MixItUp.Base.Util;
-using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;

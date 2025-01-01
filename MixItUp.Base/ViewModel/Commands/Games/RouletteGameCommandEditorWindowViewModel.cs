@@ -2,12 +2,10 @@
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {

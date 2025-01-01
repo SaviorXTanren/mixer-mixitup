@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using MixItUp.Base.Util;
 using System;
 using System.Runtime.Serialization;
 

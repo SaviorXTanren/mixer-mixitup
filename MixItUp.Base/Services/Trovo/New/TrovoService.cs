@@ -146,6 +146,20 @@ namespace MixItUp.Base.Services.Trovo.New
             });
         }
 
+        public async Task<bool> SetGame(string channelID, string gameName)
+        {
+            IEnumerable<CategoryModel> categories = await this.SearchCategories(gameName, maxResults: 10);
+            if (categories != null && categories.Count() > 0)
+            {
+                string categoryID = categories.FirstOrDefault()?.id;
+                if (!string.IsNullOrEmpty(categoryID))
+                {
+                    return await this.UpdateChannel(channelID, categoryID: categoryID);
+                }
+            }
+            return false;
+        }
+
         public async Task<ChatEmotePackageModel> GetPlatformEmotes() { return await AsyncRunner.RunAsync(GetEmotes()); }
 
         public async Task<ChatEmotePackageModel> GetPlatformAndChannelEmotes(string channelID) { return await AsyncRunner.RunAsync(GetEmotes(new List<string>() { channelID })); }

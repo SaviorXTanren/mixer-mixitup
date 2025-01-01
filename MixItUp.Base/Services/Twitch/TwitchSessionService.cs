@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    [Obsolete]
     public class TwitchSessionService : IStreamingPlatformSessionService
     {
         public TwitchPlatformService UserConnection { get; private set; }

@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json.Linq;
-using MixItUp.Base.Util;
 using MixItUp.Base.Web;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Net.WebSockets;

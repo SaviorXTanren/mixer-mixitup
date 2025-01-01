@@ -1,21 +1,19 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using MixItUp.Base.Services.Twitch.New;
 
 namespace MixItUp.Base.Model.Overlay
 {

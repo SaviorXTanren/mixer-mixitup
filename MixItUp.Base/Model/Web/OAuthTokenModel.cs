@@ -55,7 +55,7 @@ namespace MixItUp.Base.Model.Web
         /// The time when the token was obtained.
         /// </summary>
         [DataMember]
-        public DateTimeOffset AcquiredDateTime { get; set; }
+        public DateTimeOffset AcquiredDateTime { get; set; } = DateTimeOffset.Now;
 
         /// <summary>
         /// Comma-delimited list of all scopes requested as part of the authorization token.
@@ -72,14 +72,6 @@ namespace MixItUp.Base.Model.Web
         public TimeSpan TimeUntilExpiration { get { return this.ExpirationDateTime - DateTimeOffset.Now; } }
         [JsonIgnore]
         public bool IsExpired { get { return this.ExpirationDateTime < DateTimeOffset.Now; } }
-
-        /// <summary>
-        /// Creates a new instance of an OAuth token.
-        /// </summary>
-        public OAuthTokenModel()
-        {
-            this.AcquiredDateTime = DateTimeOffset.Now;
-        }
     }
 }
 

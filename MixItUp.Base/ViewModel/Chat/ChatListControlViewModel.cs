@@ -121,7 +121,7 @@ namespace MixItUp.Base.ViewModel.Chat
                             UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.All, platformUsername: username);
                             if (user != null)
                             {
-                                if (uint.TryParse(splits[2], out uint amount) && amount > 0)
+                                if (int.TryParse(splits[2], out int amount) && amount > 0)
                                 {
                                     await ServiceManager.Get<ChatService>().TimeoutUser(user, amount);
                                 }

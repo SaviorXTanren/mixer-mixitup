@@ -4,7 +4,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -391,8 +390,6 @@ namespace MixItUp.Base.Services.External
                     this.token = await this.GetWWWFormUrlEncodedOAuthToken(PatreonService.TokenUrl, PatreonService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("PatreonSecret"), body);
                     if (this.token != null)
                     {
-                        token.authorizationCode = authorizationCode;
-
                         return await this.InitializeInternal();
                     }
                 }

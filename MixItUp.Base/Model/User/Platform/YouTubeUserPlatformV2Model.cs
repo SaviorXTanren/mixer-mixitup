@@ -67,7 +67,7 @@ namespace MixItUp.Base.Model.User.Platform
                     {
                         this.Roles.Add(UserRoleEnum.YouTubeSubscriber);
                         this.Roles.Add(UserRoleEnum.Follower);
-                        this.FollowDate = subscription.Snippet.PublishedAt.GetValueOrDefault();
+                        this.FollowDate = subscription.Snippet.PublishedAtDateTimeOffset.GetValueOrDefault();
                     }
                     else
                     {
@@ -137,7 +137,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.DisplayName = channel.Snippet.Title;
             this.AvatarLink = channel.Snippet.Thumbnails.Default__.Url;
             this.YouTubeURL = "https://www.youtube.com/channel/" + channel.Id;
-            this.AccountDate = channel.Snippet.PublishedAt.GetValueOrDefault();
+            this.AccountDate = channel.Snippet.PublishedAtDateTimeOffset.GetValueOrDefault();
         }
     }
 }

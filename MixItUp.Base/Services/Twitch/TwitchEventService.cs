@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    [Obsolete]
     public class TwitchSubEventModel
     {
         public static int GetSubPoints(int tier)
@@ -78,6 +79,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchGiftedSubEventModel
     {
         public UserV2ViewModel Gifter { get; set; }
@@ -108,6 +110,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchMassGiftedSubEventModel
     {
         public const string AnonymousGiftedUserNoticeLogin = "ananonymousgifter";
@@ -141,6 +144,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchUserBitsCheeredModel
     {
         public UserV2ViewModel User { get; set; }
@@ -159,6 +163,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchWebhookUserFollowModel
     {
         public string ID { get; set; }
@@ -166,6 +171,7 @@ namespace MixItUp.Base.Services.Twitch
         public string DisplayName { get; set; }
     }
 
+    [Obsolete]
     public class TwitchEventSubService : StreamingPlatformServiceBase
     {
         private const string ChannelFollowEventSubSubscription = "channel.follow";
@@ -637,9 +643,9 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task HandlePredictionLock(JObject payload)
+        private Task HandlePredictionLock(JObject payload)
         {
-
+            return Task.CompletedTask;
         }
 
         private async Task HandlePredictionEnd(JObject payload)
@@ -904,6 +910,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchPubSubService : StreamingPlatformServiceBase
     {
         public const string PrimeSubPlan = "Prime";

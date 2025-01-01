@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;

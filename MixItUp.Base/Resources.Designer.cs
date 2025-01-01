@@ -24290,6 +24290,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to get emote data.
+        /// </summary>
+        public static string TrovoFailedToGetEmoteData {
+            get {
+                return ResourceManager.GetString("TrovoFailedToGetEmoteData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get subscriber data.
+        /// </summary>
+        public static string TrovoFailedToGetSubscriberData {
+            get {
+                return ResourceManager.GetString("TrovoFailedToGetSubscriberData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to get Trovo user data.
         /// </summary>
         public static string TrovoFailedToGetUserData {

@@ -237,13 +237,13 @@ namespace MixItUp.Base.Services.Twitch.New
             });
         }
 
-        public async Task SendWhisper(UserModel channel, UserModel user, string message)
+        public async Task SendWhisper(UserModel from, string to_id, string message)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 JObject jobj = new JObject();
                 jobj["message"] = message;
-                await this.HttpClient.PostAsync("whispers?from_user_id=" + channel.id + "&to_user_id=" + user.id, AdvancedHttpClient.CreateContentFromObject(jobj));
+                await this.HttpClient.PostAsync("whispers?from_user_id=" + from.id + "&to_user_id=" + to_id, AdvancedHttpClient.CreateContentFromObject(jobj));
             });
         }
 
@@ -271,49 +271,49 @@ namespace MixItUp.Base.Services.Twitch.New
             });
         }
 
-        public async Task VIPUser(UserModel channel, UserModel user)
+        public async Task VIPUser(UserModel channel, string user_id)
         {
             await AsyncRunner.RunAsync(async () =>
             {
-                await this.HttpClient.PostAsync("channels/vips?broadcaster_id=" + channel.id + "&user_id=" + user.id);
+                await this.HttpClient.PostAsync("channels/vips?broadcaster_id=" + channel.id + "&user_id=" + user_id);
             });
         }
 
-        public async Task UnVIPUser(UserModel channel, UserModel user)
+        public async Task UnVIPUser(UserModel channel, string user_id)
         {
             await AsyncRunner.RunAsync(async () =>
             {
-                await this.HttpClient.DeleteAsync("channels/vips?broadcaster_id=" + channel.id + "&user_id=" + user.id);
+                await this.HttpClient.DeleteAsync("channels/vips?broadcaster_id=" + channel.id + "&user_id=" + user_id);
             });
         }
 
-        public async Task ModUser(UserModel channel, UserModel user)
+        public async Task ModUser(UserModel channel, string user_id)
         {
             await AsyncRunner.RunAsync(async () =>
             {
-                await this.HttpClient.PostAsync("moderation/moderators?broadcaster_id=" + channel.id + "&user_id=" + user.id);
+                await this.HttpClient.PostAsync("moderation/moderators?broadcaster_id=" + channel.id + "&user_id=" + user_id);
             });
         }
 
-        public async Task UnmodUser(UserModel channel, UserModel user)
+        public async Task UnmodUser(UserModel channel, string user_id)
         {
             await AsyncRunner.RunAsync(async () =>
             {
-                await this.HttpClient.DeleteAsync("moderation/moderators?broadcaster_id=" + channel.id + "&user_id=" + user.id);
+                await this.HttpClient.DeleteAsync("moderation/moderators?broadcaster_id=" + channel.id + "&user_id=" + user_id);
             });
         }
 
-        public async Task BanUser(UserModel channel, UserModel user, string reason) { await this.TimeoutUser(channel, user, 0, reason); }
+        public async Task BanUser(UserModel channel, string user_id, string reason) { await this.TimeoutUser(channel, user_id, 0, reason); }
 
-        public async Task UnbanUser(UserModel channel, UserModel user) { await this.UntimeoutUser(channel, user); }
+        public async Task UnbanUser(UserModel channel, string user_id) { await this.UntimeoutUser(channel, user_id); }
 
-        public async Task TimeoutUser(UserModel channel, UserModel user, int duration, string reason)
+        public async Task TimeoutUser(UserModel channel, string user_id, int duration, string reason)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 JObject jdata = new JObject();
                 JObject jobj = new JObject();
-                jobj["user_id"] = user.id;
+                jobj["user_id"] = user_id;
                 jobj["reason"] = reason ?? string.Empty;
                 if (duration > 0)
                 {
@@ -325,11 +325,11 @@ namespace MixItUp.Base.Services.Twitch.New
             });
         }
 
-        public async Task UntimeoutUser(UserModel channel, UserModel user)
+        public async Task UntimeoutUser(UserModel channel, string user_id)
         {
             await AsyncRunner.RunAsync(async () =>
             {
-                await this.HttpClient.DeleteAsync("moderation/bans?broadcaster_id=" + channel.id + "&moderator_id=" + channel.id + "&user_id=" + user.id);
+                await this.HttpClient.DeleteAsync("moderation/bans?broadcaster_id=" + channel.id + "&moderator_id=" + channel.id + "&user_id=" + user_id);
             });
         }
 
@@ -610,11 +610,11 @@ namespace MixItUp.Base.Services.Twitch.New
             });
         }
 
-        public async Task<SubscriptionModel> GetBroadcasterSubscription(UserModel broadcaster, UserModel user)
+        public async Task<SubscriptionModel> GetBroadcasterSubscription(UserModel broadcaster, string user_id)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                IEnumerable<SubscriptionModel> subscriptions = await this.GetPagedDataResultAsync<SubscriptionModel>($"subscriptions?broadcaster_id={broadcaster.id}&user_id={user.id}");
+                IEnumerable<SubscriptionModel> subscriptions = await this.GetPagedDataResultAsync<SubscriptionModel>($"subscriptions?broadcaster_id={broadcaster.id}&user_id={user_id}");
                 return subscriptions?.FirstOrDefault();
             });
         }

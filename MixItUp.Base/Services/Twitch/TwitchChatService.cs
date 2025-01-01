@@ -20,12 +20,14 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    [Obsolete]
     public class TwitchTMIChatModel
     {
         public long chatter_count { get; set; }
         public TwitchTMIChatGroupsModel chatters { get; set; } = new TwitchTMIChatGroupsModel();
     }
 
+    [Obsolete]
     public class TwitchTMIChatGroupsModel
     {
         public List<string> broadcaster { get; set; } = new List<string>();
@@ -37,6 +39,7 @@ namespace MixItUp.Base.Services.Twitch
         public List<string> viewers { get; set; } = new List<string>();
     }
 
+    [Obsolete]
     public class TwitchChatService : StreamingPlatformServiceBase
     {
         private const int MaxMessageLength = 500;

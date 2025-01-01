@@ -4,7 +4,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Accounts;
 using MixItUp.Base.ViewModels;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;

@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Trovo
 {
+    [Obsolete]
     public class TrovoSubscriptionMessageModel
     {
         private const string SubscriptionRenewedMessageText = "has renewed subscription";
@@ -73,6 +74,7 @@ namespace MixItUp.Base.Services.Trovo
         }
     }
 
+    [Obsolete]
     public class TrovoChatEventService : StreamingPlatformServiceBase
     {
         private const string TreasureBoxUnleashedActivityTopic = "item_drop_box_unleash";

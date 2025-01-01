@@ -1,11 +1,10 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Util;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using MixItUp.Base.Model.Web;
 using MixItUp.Base.Util;
 using MixItUp.Base.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -117,8 +116,6 @@ namespace MixItUp.Base.Services.External
                     this.token = await this.PostAsync<OAuthTokenModel>(TreatStreamService.OAuthTokenURL, AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
-                        token.authorizationCode = this.authorizationToken;
-                        token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
 
                         return await this.InitializeInternal();

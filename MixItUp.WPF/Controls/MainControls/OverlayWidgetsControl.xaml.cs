@@ -6,7 +6,6 @@ using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

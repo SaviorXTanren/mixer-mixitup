@@ -3,7 +3,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;

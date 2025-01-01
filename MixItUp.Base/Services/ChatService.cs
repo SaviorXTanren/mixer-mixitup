@@ -4,14 +4,13 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mock;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.Trovo.New;
+using MixItUp.Base.Services.Twitch.New;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -107,17 +106,17 @@ namespace MixItUp.Base.Services
         public int GetViewerCount()
         {
             int viewerCount = 0;
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
+            if (ServiceManager.Get<TwitchSession>().IsConnected && ServiceManager.Get<TwitchSession>().IsLive)
             {
-                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count;
+                viewerCount += ServiceManager.Get<TwitchSession>().StreamViewerCount;
             }
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
+            if (ServiceManager.Get<TrovoSession>().IsConnected && ServiceManager.Get<TrovoSession>().IsLive)
             {
-                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
+                viewerCount += ServiceManager.Get<TrovoSession>().StreamViewerCount;
             }
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected && ServiceManager.Get<YouTubeSessionService>().IsLive)
+            if (ServiceManager.Get<YouTubeSession>().IsConnected && ServiceManager.Get<YouTubeSession>().IsLive)
             {
-                viewerCount += ServiceManager.Get<YouTubeSessionService>().ViewerCount;
+                viewerCount += ServiceManager.Get<YouTubeSession>().StreamViewerCount;
             }
             return viewerCount;
         }
@@ -145,32 +144,19 @@ namespace MixItUp.Base.Services
                 }
                 else if (!string.IsNullOrEmpty(message))
                 {
-                    if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                    if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                     {
-                        if (!ChannelSession.Settings.TwitchReplyToCommandChatMessages)
-                        {
-                            replyMessageID = null;
-                        }
-
-                        await ServiceManager.Get<TwitchChatService>().SendMessage(message, sendAsStreamer, replyMessageID);
-
-                        if (sendAsStreamer || !ServiceManager.Get<TwitchChatService>().IsBotConnected)
-                        {
-                            await this.AddMessage(new TwitchChatMessageViewModel(ChannelSession.User, message, replyMessageID));
-                        }
+                        await ServiceManager.Get<TwitchSession>().SendMessage(message, sendAsStreamer, replyMessageID);
                     }
-
-                    if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+                    else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
                     {
-                        await ServiceManager.Get<YouTubeChatService>().SendMessage(message, sendAsStreamer);
+                        await ServiceManager.Get<YouTubeSession>().SendMessage(message, sendAsStreamer);
                     }
-
-                    if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+                    else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                     {
-                        await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
+                        await ServiceManager.Get<TrovoSession>().SendMessage(message, sendAsStreamer);
                     }
-
-                    if (platform == StreamingPlatformTypeEnum.Mock)
+                    else if (platform == StreamingPlatformTypeEnum.Mock)
                     {
                         await ServiceManager.Get<MockChatEventService>().SendMessage(message, sendAsStreamer);
                     }
@@ -182,9 +168,9 @@ namespace MixItUp.Base.Services
         {
             if (user != null && !string.IsNullOrEmpty(message))
             {
-                if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                 {
-                    await ServiceManager.Get<TwitchChatService>().SendWhisperMessage(user, message, sendAsStreamer);
+                    await ServiceManager.Get<TwitchSession>().SendWhisper(user, message, sendAsStreamer);
                 }
             }
         }
@@ -225,17 +211,17 @@ namespace MixItUp.Base.Services
 
             if (!externalDeletion && !string.IsNullOrEmpty(message.ID))
             {
-                if (message.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                if (message.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                 {
-                    await ServiceManager.Get<TwitchChatService>().DeleteMessage(message);
+                    await ServiceManager.Get<TwitchSession>().DeleteMessage(message);
                 }
-                else if (message.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+                else if (message.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
                 {
-                    await ServiceManager.Get<YouTubeChatService>().DeleteMessage(message);
+                    await ServiceManager.Get<YouTubeSession>().DeleteMessage(message);
                 }
-                else if (message.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+                else if (message.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().DeleteMessage(message);
+                    await ServiceManager.Get<TrovoSession>().DeleteMessage(message);
                 }
                 else if (message.Platform == StreamingPlatformTypeEnum.Mock)
                 {
@@ -267,19 +253,13 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                if (platform == StreamingPlatformTypeEnum.Twitch)
+                if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                 {
-                    if (ServiceManager.Get<TwitchChatService>().IsUserConnected)
-                    {
-                        await ServiceManager.Get<TwitchChatService>().ClearMessages();
-                    }
+                    await ServiceManager.Get<TwitchSession>().ClearMessages();
                 }
-                else if (platform == StreamingPlatformTypeEnum.Trovo)
+                else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                 {
-                    if (ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
-                    {
-                        await ServiceManager.Get<TrovoChatEventService>().ClearChat();
-                    }
+                    await ServiceManager.Get<TrovoSession>().ClearMessages();
                 }
 
                 this.messagesLookup.Clear();
@@ -291,29 +271,29 @@ namespace MixItUp.Base.Services
 
         public async Task PurgeUser(UserV2ViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, 1);
+                await ServiceManager.Get<TwitchSession>().TimeoutUser(user, 1);
             }
 
             ChatService.ChatUserTimedOut(user);
         }
 
-        public async Task TimeoutUser(UserV2ViewModel user, uint durationInSeconds, string reason = null)
+        public async Task TimeoutUser(UserV2ViewModel user, int durationInSeconds, string reason = null)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, (int)durationInSeconds, reason);
+                await ServiceManager.Get<TwitchSession>().TimeoutUser(user, durationInSeconds, reason);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                await ServiceManager.Get<YouTubeChatService>().TimeoutUser(user, durationInSeconds);
+                await ServiceManager.Get<YouTubeSession>().TimeoutUser(user, durationInSeconds);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user.Username, (int)durationInSeconds);
+                await ServiceManager.Get<TrovoSession>().TimeoutUser(user, durationInSeconds);
             }
 
             ChatService.ChatUserTimedOut(user);
@@ -321,55 +301,55 @@ namespace MixItUp.Base.Services
 
         public async Task ModUser(UserV2ViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                await ServiceManager.Get<TwitchChatService>().ModUser(user);
+                await ServiceManager.Get<TwitchSession>().ModUser(user);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                await ServiceManager.Get<YouTubeChatService>().ModUser(user);
+                await ServiceManager.Get<YouTubeSession>().ModUser(user);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().ModUser(user.Username);
+                await ServiceManager.Get<TrovoSession>().ModUser(user);
             }
         }
 
         public async Task UnmodUser(UserV2ViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                await ServiceManager.Get<TwitchChatService>().UnmodUser(user);
+                await ServiceManager.Get<TwitchSession>().UnmodUser(user);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                await ServiceManager.Get<YouTubeChatService>().UnmodUser(user);
+                await ServiceManager.Get<YouTubeSession>().UnmodUser(user);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().UnmodUser(user.Username);
+                await ServiceManager.Get<TrovoSession>().UnmodUser(user);
             }
         }
 
         public async Task BanUser(UserV2ViewModel user, string reason = null)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                await ServiceManager.Get<TwitchChatService>().BanUser(user);
+                await ServiceManager.Get<TwitchSession>().BanUser(user, reason);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                await ServiceManager.Get<YouTubeChatService>().BanUser(user);
+                await ServiceManager.Get<YouTubeSession>().BanUser(user, reason);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().BanUser(user.Username);
+                await ServiceManager.Get<TrovoSession>().BanUser(user, reason);
             }
 
             ChatService.ChatUserBanned(user);
@@ -377,19 +357,19 @@ namespace MixItUp.Base.Services
 
         public async Task UnbanUser(UserV2ViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                await ServiceManager.Get<TwitchChatService>().UnbanUser(user);
+                await ServiceManager.Get<TwitchSession>().UnbanUser(user);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                await ServiceManager.Get<YouTubeChatService>().UnbanUser(user);
+                await ServiceManager.Get<YouTubeSession>().UnbanUser(user);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().UnbanUser(user.Username);
+                await ServiceManager.Get<TrovoSession>().UnbanUser(user);
             }
         }
 

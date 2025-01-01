@@ -52,7 +52,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayListIndividualItemModel() { }
 
-        public async Task<UserV2ViewModel> GetUser()
+        public Task<UserV2ViewModel> GetUser()
         {
             if (this.cachedUser == null && this.UserID != Guid.Empty)
             {
@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.Overlay
                     //}
                 //}
             }
-            return this.cachedUser;
+            return Task.FromResult(this.cachedUser);
         }
 
         public static OverlayListIndividualItemModel CreateAddItem(string id, UserV2ViewModel user, int position, string html)

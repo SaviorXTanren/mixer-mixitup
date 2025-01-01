@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Services.YouTube;
+﻿using MixItUp.Base.Model.YouTube;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Chat.YouTube

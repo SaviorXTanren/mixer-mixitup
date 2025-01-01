@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Trovo
 {
+    [Obsolete]
     public class TrovoSessionService : IStreamingPlatformSessionService
     {
         public TrovoPlatformService UserConnection { get; private set; }

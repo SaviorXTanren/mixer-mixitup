@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.YouTube
 {
+    [Obsolete]
     public class YouTubeSessionService : IStreamingPlatformSessionService
     {
         public YouTubePlatformService UserConnection { get; private set; }

@@ -25,6 +25,8 @@ namespace MixItUp.Base.Services.Twitch.New
 {
     public class TwitchSession : StreamingPlatformSessionBase
     {
+        private const string SlashMeMessagePrefix = "/me";
+
         public override IEnumerable<string> StreamerScopes { get; protected set; } = new List<string>()
         {
             "bits:read",
@@ -314,6 +316,85 @@ namespace MixItUp.Base.Services.Twitch.New
         protected override Task DisconnectBot()
         {
             return Task.CompletedTask;
+        }
+
+        public override async Task SendMessage(string message, bool sendAsStreamer = false)
+        {
+            await this.SendMessage(message, sendAsStreamer);
+        }
+
+        public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
+        {
+            if (!ChannelSession.Settings.TwitchReplyToCommandChatMessages)
+            {
+                replyMessageID = null;
+            }
+
+            if (ChannelSession.Settings.TwitchSlashMeForAllChatMessages)
+            {
+                message = $"{SlashMeMessagePrefix} {message}";
+            }
+
+            foreach (string m in this.SplitLargeMessage(message))
+            {
+                if (!sendAsStreamer && this.IsBotConnected)
+                {
+                    await this.BotService.SendChatMessage(this.Streamer, this.Bot, m, replyMessageID);
+                }
+                else
+                {
+                    await this.StreamerService.SendChatMessage(this.Streamer, this.Streamer, m, replyMessageID);
+
+                    await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(ChannelSession.User, message, replyMessageID));
+                }
+            }
+        }
+
+        public override async Task DeleteMessage(ChatMessageViewModel message)
+        {
+            await this.StreamerService.DeleteChatMessage(this.Streamer, message.ID);
+        }
+
+        public override async Task ClearMessages()
+        {
+            await this.StreamerService.ClearChat(this.Streamer);
+        }
+
+        public override async Task TimeoutUser(UserV2ViewModel user, int durationInSeconds, string reason = null)
+        {
+            await this.StreamerService.TimeoutUser(this.Streamer, user.PlatformID, durationInSeconds, reason);
+        }
+
+        public override async Task ModUser(UserV2ViewModel user)
+        {
+            await this.StreamerService.ModUser(this.Streamer, user.PlatformID);
+        }
+
+        public override async Task UnmodUser(UserV2ViewModel user)
+        {
+            await this.StreamerService.UnmodUser(this.Streamer, user.PlatformID);
+        }
+
+        public override async Task BanUser(UserV2ViewModel user, string reason = null)
+        {
+            await this.StreamerService.BanUser(this.Streamer, user.PlatformID, reason);
+        }
+
+        public override async Task UnbanUser(UserV2ViewModel user)
+        {
+            await this.StreamerService.UnbanUser(this.Streamer, user.PlatformID);
+        }
+
+        public async Task SendWhisper(UserV2ViewModel user, string message, bool sendAsStreamer = false)
+        {
+            if (!sendAsStreamer || ServiceManager.Get<TwitchSession>().IsBotConnected)
+            {
+                await ServiceManager.Get<TwitchSession>().BotService.SendWhisper(this.Bot, user.PlatformID, message);
+            }
+            else
+            {
+                await ServiceManager.Get<TwitchSession>().StreamerService.SendWhisper(this.Streamer, user.PlatformID, message);
+            }
         }
 
         public async Task StreamOnline()

@@ -5,7 +5,6 @@ using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

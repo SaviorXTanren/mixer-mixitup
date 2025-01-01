@@ -1,4 +1,6 @@
-﻿using MixItUp.Base;
+﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using MixItUp.Base;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
@@ -6,7 +8,6 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Services;
 using MixItUp.WPF.Services.DeveloperAPI;
 using MixItUp.WPF.Util;
-using MixItUp.Base.Util;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -20,8 +21,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 
 namespace MixItUp.WPF
 {

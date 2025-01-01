@@ -535,7 +535,7 @@ namespace MixItUp.Base.Model.Overlay
             return true;
         }
 
-        private async Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(HashSet<Guid> data)
+        private Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(HashSet<Guid> data)
         {
             Dictionary<UserV2ViewModel, string> results = new Dictionary<UserV2ViewModel, string>();
             foreach (Guid userID in data)
@@ -553,10 +553,10 @@ namespace MixItUp.Base.Model.Overlay
                     Logger.Log(ex);
                 }
             }
-            return results;
+            return Task.FromResult(results);
         }
 
-        private async Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(Dictionary<Guid, uint> data)
+        private Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(Dictionary<Guid, uint> data)
         {
             Dictionary<UserV2ViewModel, string> results = new Dictionary<UserV2ViewModel, string>();
             foreach (var kvp in data)
@@ -574,10 +574,10 @@ namespace MixItUp.Base.Model.Overlay
                     Logger.Log(ex);
                 }
             }
-            return results;
+            return Task.FromResult(results);
         }
 
-        private async Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(Dictionary<Guid, double> data)
+        private Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(Dictionary<Guid, double> data)
         {
             Dictionary<UserV2ViewModel, string> results = new Dictionary<UserV2ViewModel, string>();
             foreach (var kvp in data)
@@ -595,7 +595,7 @@ namespace MixItUp.Base.Model.Overlay
                     Logger.Log(ex);
                 }
             }
-            return results;
+            return Task.FromResult(results);
         }
 
         private async Task PerformSectionTemplateReplacement(StringBuilder htmlBuilder, OverlayEndCreditsSectionTypeEnum itemType, Dictionary<UserV2ViewModel, string> replacers, CommandParametersModel parameters)

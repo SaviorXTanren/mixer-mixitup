@@ -1,9 +1,8 @@
-﻿using MixItUp.Base.Util;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using MixItUp.Base.Model.Web;
+﻿using MixItUp.Base.Model.Web;
 using MixItUp.Base.Util;
 using MixItUp.Base.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -115,7 +114,6 @@ namespace MixItUp.Base.Services.External
                     {
                         accessToken = iaToken.Token,
                         clientID = iaToken.UserId,
-                        AcquiredDateTime = DateTimeOffset.Now,
                         expiresIn = int.MaxValue,
                     };
                 }
@@ -130,7 +128,6 @@ namespace MixItUp.Base.Services.External
                     {
                         accessToken = iaToken.Token,
                         clientID = iaToken.UserId,
-                        AcquiredDateTime = DateTimeOffset.Now,
                         expiresIn = int.MaxValue,
                     };
                 }

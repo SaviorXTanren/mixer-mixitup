@@ -1,15 +1,14 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
-using System;
-using System.Threading;
 using System.Text.Json.Serialization;
-using MixItUp.Base.Util;
-using MixItUp.Base.Util;
-using MixItUp.Base.Model.Overlay.Widgets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {

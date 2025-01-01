@@ -10865,4 +10865,10 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="FailedToDeleteSettings" xml:space="preserve">
     <value>ERROR: Failed to delete settings file due to an error. Please try restarting your PC to ensure all files are not lock-protected and try again.</value>
   </data>
+  <data name="TrovoFailedToGetSubscriberData" xml:space="preserve">
+    <value>Failed to get subscriber data</value>
+  </data>
+  <data name="TrovoFailedToGetEmoteData" xml:space="preserve">
+    <value>Failed to get emote data</value>
+  </data>
 </root>

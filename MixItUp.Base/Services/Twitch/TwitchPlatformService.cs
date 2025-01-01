@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    [Obsolete]
     public class TwitchPlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";

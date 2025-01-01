@@ -1,15 +1,15 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model.Trovo.Category;
+﻿using MixItUp.Base.Model.Trovo.Category;
 using MixItUp.Base.Model.Trovo.Channels;
 using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Model.Trovo.Users;
-using MixItUp.Base.Model.Twitch.Games;
-using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Trovo.New
@@ -67,6 +67,10 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private TrovoClient Client;
 
+        public Dictionary<string, ChannelSubscriberModel> Subscribers { get; private set; } = new Dictionary<string, ChannelSubscriberModel>();
+
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
         public override async Task RefreshDetails()
         {
             ChannelModel channel = await StreamerService.GetChannelByID(ChannelID);
@@ -110,7 +114,131 @@ namespace MixItUp.Base.Services.Trovo.New
                 return result;
             }
 
-            ChatEmotePackageModel emotePackage = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetPlatformAndChannelEmotes(ServiceManager.Get<TrovoSessionService>().ChannelID);
+            List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
+            platformServiceTasks.Add(this.GetEmotes());
+            platformServiceTasks.Add(this.GetSubscriberCache());
+
+            await Task.WhenAll(platformServiceTasks);
+
+            if (platformServiceTasks.Any(c => !c.Result.Success))
+            {
+                string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                return new Result(MixItUp.Base.Resources.TrovoFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
+            }
+
+            return new Result();
+        }
+
+        protected override async Task DisconnectStreamer()
+        {
+            await Client.Disconnect();
+
+            if (this.cancellationTokenSource != null)
+            {
+                this.cancellationTokenSource.Cancel();
+            }
+        }
+
+        protected override async Task<Result> ConnectBot()
+        {
+            Result result = await BotService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            Bot = await BotService.GetUser();
+            if (Bot == null)
+            {
+                return new Result(Resources.TrovoFailedToGetUserData);
+            }
+
+            return new Result();
+        }
+
+        protected override Task DisconnectBot()
+        {
+            return Task.CompletedTask;
+        }
+
+        public override async Task SendMessage(string message, bool sendAsStreamer = false)
+        {
+            foreach (string m in this.SplitLargeMessage(message))
+            {
+                if (!sendAsStreamer && this.IsBotConnected)
+                {
+                    await this.BotService.SendMessage(m, this.ChannelID);
+                }
+                else
+                {
+                    await this.StreamerService.SendMessage(m);
+                }
+            }
+        }
+
+        public override async Task DeleteMessage(ChatMessageViewModel message)
+        {
+            await this.StreamerService.DeleteMessage(this.ChannelID, message.ID, message.User?.PlatformID);
+        }
+
+        public override async Task ClearMessages()
+        {
+            await this.StreamerService.ClearChat(this.ChannelID);
+        }
+
+        public override async Task TimeoutUser(UserV2ViewModel user, int durationInSeconds, string reason = null)
+        {
+            await this.StreamerService.TimeoutUser(this.ChannelID, user.Username, durationInSeconds);
+        }
+
+        public override async Task ModUser(UserV2ViewModel user)
+        {
+            await this.StreamerService.ModUser(this.ChannelID, user.Username);
+        }
+
+        public override async Task UnmodUser(UserV2ViewModel user)
+        {
+            await this.StreamerService.UnmodUser(this.ChannelID, user.Username);
+        }
+
+        public override async Task BanUser(UserV2ViewModel user, string reason = null)
+        {
+            await this.StreamerService.BanUser(this.ChannelID, user.Username);
+        }
+
+        public override async Task UnbanUser(UserV2ViewModel user)
+        {
+            await this.StreamerService.UnbanUser(this.ChannelID, user.Username);
+        }
+
+        private async Task UpdateChannelData(ChannelModel channel)
+        {
+            Channel = channel;
+
+            this.IsLive = Channel.is_live;
+
+            if (!string.Equals(this.StreamCategoryID, Channel.category_id, StringComparison.OrdinalIgnoreCase))
+            {
+                IEnumerable<CategoryModel> categories = await this.StreamerService.SearchCategories(Channel.category_name, maxResults: 10);
+                if (categories != null && categories.Count() > 0)
+                {
+                    CategoryModel category = categories.FirstOrDefault(c => string.Equals(c.id, Channel.category_id, StringComparison.OrdinalIgnoreCase));
+                    if (category != null)
+                    {
+                        this.StreamCategoryImageURL = category.icon_url;
+                    }
+                }
+            }
+
+            this.StreamTitle = Channel.live_title;
+            this.StreamCategoryID = Channel.category_id;
+            this.StreamCategoryName = Channel.category_name;
+            this.StreamViewerCount = (int)Channel?.current_viewers;
+        }
+
+        private async Task<Result> GetEmotes()
+        {
+            ChatEmotePackageModel emotePackage = await this.StreamerService.GetPlatformAndChannelEmotes(this.ChannelID);
             if (emotePackage != null)
             {
                 if (emotePackage.customizedEmotes?.channel != null)
@@ -139,65 +267,25 @@ namespace MixItUp.Base.Services.Trovo.New
                         this.GlobalEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
                     }
                 }
-            }
-            else
-            {
-                Logger.Log(LogLevel.Error, "Failed to get available Trovo emotes");
-            }
 
-            return new Result();
+                return new Result();
+            }
+            return new Result(Resources.TrovoFailedToGetEmoteData);
         }
 
-        protected override async Task DisconnectStreamer()
+        private async Task<Result> GetSubscriberCache()
         {
-            await Client.Disconnect();
-        }
-
-        protected override async Task<Result> ConnectBot()
-        {
-            Result result = await BotService.Connect();
-            if (!result.Success)
+            IEnumerable<ChannelSubscriberModel> subscribers = await this.StreamerService.GetSubscribers(this.ChannelID, int.MaxValue);
+            if (subscribers != null)
             {
-                return result;
-            }
-
-            Bot = await BotService.GetUser();
-            if (Bot == null)
-            {
-                return new Result(Resources.TrovoFailedToGetUserData);
-            }
-
-            return new Result();
-        }
-
-        protected override Task DisconnectBot()
-        {
-            return Task.CompletedTask;
-        }
-
-        private async Task UpdateChannelData(ChannelModel channel)
-        {
-            Channel = channel;
-
-            this.IsLive = Channel.is_live;
-
-            if (!string.Equals(this.StreamCategoryID, Channel.category_id, StringComparison.OrdinalIgnoreCase))
-            {
-                IEnumerable<CategoryModel> categories = await this.StreamerService.SearchCategories(Channel.category_name, maxResults: 10);
-                if (categories != null && categories.Count() > 0)
+                this.Subscribers.Clear();
+                foreach (ChannelSubscriberModel subscriber in subscribers)
                 {
-                    CategoryModel category = categories.FirstOrDefault(c => string.Equals(c.id, Channel.category_id, StringComparison.OrdinalIgnoreCase));
-                    if (category != null)
-                    {
-                        this.StreamCategoryImageURL = category.icon_url;
-                    }
+                    this.Subscribers[subscriber.user.user_id] = subscriber;
                 }
+                return new Result();
             }
-
-            this.StreamTitle = Channel.live_title;
-            this.StreamCategoryID = Channel.category_id;
-            this.StreamCategoryName = Channel.category_name;
-            this.StreamViewerCount = (int)Channel?.current_viewers;
+            return new Result(Resources.TrovoFailedToGetSubscriberData);
         }
     }
 }

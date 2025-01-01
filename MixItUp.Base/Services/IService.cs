@@ -1,7 +1,10 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.Web;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
@@ -269,6 +272,14 @@ namespace MixItUp.Base.Services
         public DateTimeOffset StreamStart { get; protected set; }
         public int StreamViewerCount { get; protected set; }
 
+        public bool IsEnabled
+        {
+            get
+            {
+                StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
+                return authenticationSettings?.IsEnabled ?? false;
+            }
+        }
         public bool IsBotEnabled
         {
             get
@@ -277,6 +288,9 @@ namespace MixItUp.Base.Services
                 return authenticationSettings?.IsBotEnabled ?? false;
             }
         }
+
+        public bool IsConnected { get; private set; }
+        public bool IsBotConnected { get; private set; }
 
         public StreamingPlatformSessionBase() { }
 
@@ -287,11 +301,16 @@ namespace MixItUp.Base.Services
             {
                 return result;
             }
+            this.IsConnected = true;
 
             if (this.IsBotEnabled)
             {
                 result = await this.ConnectBot();
-                if (!result.Success)
+                if (result.Success)
+                {
+                    this.IsBotConnected = true;
+                }
+                else
                 {
                     await DialogHelper.ShowFailedResult(result);
                 }
@@ -303,11 +322,13 @@ namespace MixItUp.Base.Services
         public async Task Disconnect()
         {
             await this.DisconnectStreamer();
+            this.IsConnected = false;
 
             if (this.IsBotEnabled)
             {
                 await this.DisconnectBot();
             }
+            this.IsBotConnected = false;
         }
 
         public abstract Task RefreshDetails();
@@ -352,6 +373,37 @@ namespace MixItUp.Base.Services
         //        authenticationSettings.ClearBotData();
         //    }
         //}
+
+        public abstract Task SendMessage(string message, bool sendAsStreamer = false);
+
+        public abstract Task DeleteMessage(ChatMessageViewModel message);
+
+        public abstract Task ClearMessages();
+
+        public abstract Task TimeoutUser(UserV2ViewModel user, int durationInSeconds, string reason = null);
+
+        public abstract Task ModUser(UserV2ViewModel user);
+
+        public abstract Task UnmodUser(UserV2ViewModel user);
+
+        public abstract Task BanUser(UserV2ViewModel user, string reason = null);
+
+        public abstract Task UnbanUser(UserV2ViewModel user);
+
+        protected IEnumerable<string> SplitLargeMessage(string message)
+        {
+            List<string> messages = new List<string>();
+
+            do
+            {
+                message = ChatService.SplitLargeMessage(message, MaxMessageLength, out string subMessage);
+                messages.Add(message);
+                message = subMessage;
+            }
+            while (!string.IsNullOrEmpty(message));
+
+            return messages;
+        }
 
         public StreamingPlatformAuthenticationSettingsModel GetAuthenticationSettings()
         {

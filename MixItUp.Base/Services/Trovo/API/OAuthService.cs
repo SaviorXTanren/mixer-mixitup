@@ -83,7 +83,6 @@ namespace MixItUp.Base.Services.Trovo.API
 
             OAuthTokenModel token = await this.PostAsync<OAuthTokenModel>("exchangetoken", AdvancedHttpClient.CreateContentFromObject(content), autoRefreshToken: false);
             token.clientID = clientID;
-            token.authorizationCode = authorizationCode;
             token.ScopeList = string.Join(",", scopes ?? new List<OAuthClientScopeEnum>());
             return token;
         }
@@ -106,7 +105,6 @@ namespace MixItUp.Base.Services.Trovo.API
 
             OAuthTokenModel newToken = await this.PostAsync<OAuthTokenModel>("refreshtoken", AdvancedHttpClient.CreateContentFromObject(content), autoRefreshToken: false);
             newToken.clientID = token.clientID;
-            newToken.authorizationCode = token.authorizationCode;
             newToken.ScopeList = token.ScopeList;
             return newToken;
         }

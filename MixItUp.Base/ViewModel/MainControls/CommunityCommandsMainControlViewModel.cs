@@ -2,7 +2,6 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

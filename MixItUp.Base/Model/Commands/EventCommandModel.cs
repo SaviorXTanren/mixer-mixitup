@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;

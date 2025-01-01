@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

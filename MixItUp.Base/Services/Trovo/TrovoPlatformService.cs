@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Trovo
 {
+    [Obsolete]
     public class TrovoPlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "8FMjuk785AX4FMyrwPTU3B8vYvgHWN33";

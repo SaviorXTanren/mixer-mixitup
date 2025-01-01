@@ -1,12 +1,10 @@
 ﻿using Microsoft.Win32;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
-using MixItUp.Base.Util;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.AccessControl;
 
 namespace MixItUp.WPF.Util
 {

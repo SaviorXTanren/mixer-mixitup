@@ -8,8 +8,11 @@ using MixItUp.Base.Model.Web;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -100,17 +103,25 @@ namespace MixItUp.Base
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            ServiceManager.Add(new TwitchSessionService());
-            ServiceManager.Add(new TwitchChatService());
-            ServiceManager.Add(new TwitchEventSubService());
-            ServiceManager.Add(new TwitchPubSubService());
-            ServiceManager.Add(new TwitchStatusService());
+            //ServiceManager.Add(new TwitchSessionService());
+            //ServiceManager.Add(new TwitchChatService());
+            //ServiceManager.Add(new TwitchEventSubService());
+            //ServiceManager.Add(new TwitchPubSubService());
+            //ServiceManager.Add(new TwitchStatusService());
 
-            ServiceManager.Add(new YouTubeSessionService());
-            ServiceManager.Add(new YouTubeChatService());
+            //ServiceManager.Add(new YouTubeSessionService());
+            //ServiceManager.Add(new YouTubeChatService());
 
-            ServiceManager.Add(new TrovoSessionService());
-            ServiceManager.Add(new TrovoChatEventService());
+            //ServiceManager.Add(new TrovoSessionService());
+            //ServiceManager.Add(new TrovoChatEventService());
+
+
+
+            ServiceManager.Add(new TwitchSession());
+            ServiceManager.Add(new YouTubeSession());
+            ServiceManager.Add(new TrovoSession());
+
+
 
             try
             {

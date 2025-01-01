@@ -1,19 +1,19 @@
 ﻿using Google.Apis.YouTube.v3.Data;
-using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.YouTube;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User.Platform;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.YouTube;
-using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.User;
-using System.Threading;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.YouTube.New
 {
@@ -84,7 +84,7 @@ namespace MixItUp.Base.Services.YouTube.New
         public YouTubeService StreamerService { get; private set; }
         public YouTubeService BotService { get; private set; }
 
-        public IEnumerable<YouTubeChatEmoteModel> Emotes { get; private set; } = new List<YouTubeChatEmoteModel>();
+        public IEnumerable<Model.YouTube.YouTubeChatEmoteModel> Emotes { get; private set; } = new List<Model.YouTube.YouTubeChatEmoteModel>();
         public Dictionary<string, YouTubeChatEmoteViewModel> EmoteDictionary { get; private set; } = new Dictionary<string, YouTubeChatEmoteViewModel>();
 
         private string nextMessagesToken = null;
@@ -92,7 +92,7 @@ namespace MixItUp.Base.Services.YouTube.New
         private CancellationTokenSource messageBackgroundPollingTokenSource;
         private int messagePollingInterval = 5000;
 
-        private Dictionary<string, YouTubeMembershipsGiftedModel> userGiftedMembershipDictionary = new Dictionary<string, YouTubeMembershipsGiftedModel>();
+        private Dictionary<string, MixItUp.Base.Model.YouTube.YouTubeMembershipsGiftedModel> userGiftedMembershipDictionary = new Dictionary<string, MixItUp.Base.Model.YouTube.YouTubeMembershipsGiftedModel>();
 
         private DateTime launchDateTime = DateTime.Now;
 
@@ -162,7 +162,7 @@ namespace MixItUp.Base.Services.YouTube.New
             this.Emotes = await this.StreamerService.GetChatEmotes();
             if (this.Emotes != null)
             {
-                foreach (YouTubeChatEmoteModel emote in this.Emotes)
+                foreach (MixItUp.Base.Model.YouTube.YouTubeChatEmoteModel emote in this.Emotes)
                 {
                     foreach (string shortcut in emote.shortcuts)
                     {
@@ -216,6 +216,70 @@ namespace MixItUp.Base.Services.YouTube.New
         protected override Task DisconnectBot()
         {
             return Task.CompletedTask;
+        }
+
+        public override async Task SendMessage(string message, bool sendAsStreamer = false)
+        {
+            foreach (string m in this.SplitLargeMessage(message))
+            {
+                foreach (LiveBroadcast broadcast in this.LiveBroadcasts.Values.ToList())
+                {
+                    if (!sendAsStreamer && this.IsBotConnected)
+                    {
+                        await this.BotService.SendMessage(broadcast, m);
+                    }
+                    else
+                    {
+                        await this.StreamerService.SendMessage(broadcast, m);
+                    }
+                }
+            }
+        }
+
+        public override async Task DeleteMessage(ChatMessageViewModel message)
+        {
+            await this.StreamerService.DeleteMessage(message.ID);
+        }
+
+        public override Task ClearMessages()
+        {
+            return Task.CompletedTask;
+        }
+
+        public override async Task TimeoutUser(UserV2ViewModel user, int durationInSeconds, string reason = null)
+        {
+            foreach (LiveBroadcast broadcast in this.LiveBroadcasts.Values.ToList())
+            {
+                await this.StreamerService.TimeoutUser(broadcast, user, durationInSeconds);
+            }
+        }
+
+        public override async Task ModUser(UserV2ViewModel user)
+        {
+            LiveBroadcast broadcast = this.LiveBroadcasts.Values.FirstOrDefault();
+            if (broadcast != null)
+            {
+                await this.StreamerService.ModUser(broadcast, user);
+            }
+        }
+
+        public override async Task UnmodUser(UserV2ViewModel user)
+        {
+            await this.StreamerService.UnmodUser(user);
+        }
+
+        public override async Task BanUser(UserV2ViewModel user, string reason = null)
+        {
+            LiveBroadcast broadcast = this.LiveBroadcasts.Values.FirstOrDefault();
+            if (broadcast != null)
+            {
+                await this.StreamerService.BanUser(broadcast, user);
+            }
+        }
+
+        public override async Task UnbanUser(UserV2ViewModel user)
+        {
+            await this.StreamerService.UnbanUser(user);
         }
 
         private async Task MessageBackgroundPolling()
@@ -378,7 +442,7 @@ namespace MixItUp.Base.Services.YouTube.New
                         }
                         else if (MembershipGiftingEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {
-                            YouTubeMembershipsGiftedModel membershipsGifted = new YouTubeMembershipsGiftedModel(user, liveChatMessage.Snippet.MembershipGiftingDetails);
+                            MixItUp.Base.Model.YouTube.YouTubeMembershipsGiftedModel membershipsGifted = new MixItUp.Base.Model.YouTube.YouTubeMembershipsGiftedModel(user, liveChatMessage.Snippet.MembershipGiftingDetails);
                             if (membershipsGifted.Amount > ChannelSession.Settings.MassGiftedSubsFilterAmount)
                             {
                                 this.userGiftedMembershipDictionary[membershipsGifted.Gifter.PlatformID] = membershipsGifted;
@@ -425,7 +489,7 @@ namespace MixItUp.Base.Services.YouTube.New
                             receiver.TotalSubsReceived++;
                             receiver.TotalMonthsSubbed++;
 
-                            if (this.userGiftedMembershipDictionary.TryGetValue(liveChatMessage.Snippet.GiftMembershipReceivedDetails.GifterChannelId, out YouTubeMembershipsGiftedModel membershipsGifted))
+                            if (this.userGiftedMembershipDictionary.TryGetValue(liveChatMessage.Snippet.GiftMembershipReceivedDetails.GifterChannelId, out MixItUp.Base.Model.YouTube.YouTubeMembershipsGiftedModel membershipsGifted))
                             {
                                 membershipsGifted.Amount--;
                                 if (membershipsGifted.Amount == 0)

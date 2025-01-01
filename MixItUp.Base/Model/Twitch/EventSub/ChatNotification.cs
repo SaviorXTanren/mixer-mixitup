@@ -88,8 +88,8 @@ namespace MixItUp.Base.Model.Twitch.EventSub
 
     public class ChatNotificationResub
     {
-        public int cumulative_months { get; set; }
-        public int duration_months { get; set; }
+        public int? cumulative_months { get; set; }
+        public int? duration_months { get; set; }
         public int? streak_months { get; set; }
         public string sub_tier { get; set; }
         public bool is_prime { get; set; }
