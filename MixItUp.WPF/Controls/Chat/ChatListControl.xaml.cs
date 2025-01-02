@@ -4,8 +4,11 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -172,15 +175,15 @@ namespace MixItUp.WPF.Controls.Chat
                             List<ChatEmoteViewModelBase> emotes = new List<ChatEmoteViewModelBase>();
 
                             string tagText = tag.Substring(1, tag.Length - 1);
-                            if (ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                            if (ServiceManager.Get<TwitchSession>().IsConnected)
                             {
-                                emotes.AddRange(this.FindMatchingEmoticons<TwitchChatEmoteViewModel>(tagText, ServiceManager.Get<TwitchChatService>().Emotes));
+                                emotes.AddRange(this.FindMatchingEmoticons<TwitchChatEmoteViewModel>(tagText, ServiceManager.Get<TwitchSession>().Emotes));
                             }
-                            if (ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+                            if (ServiceManager.Get<TrovoSession>().IsConnected)
                             {
-                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().ChannelEmotes));
-                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().EventEmotes));
-                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().GlobalEmotes));
+                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoSession>().ChannelEmotes));
+                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoSession>().EventEmotes));
+                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoSession>().GlobalEmotes));
                             }
 
                             this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes);
@@ -191,7 +194,7 @@ namespace MixItUp.WPF.Controls.Chat
                         // Short circuit for very short searches that start with letters or digits
                         if (tag.Length > 2)
                         {
-                            if (ServiceManager.Get<TwitchChatService>().IsUserConnected || ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+                            if (ServiceManager.Get<TwitchSession>().IsConnected || ServiceManager.Get<YouTubeSession>().IsConnected)
                             {
                                 Dictionary<string, object> emotes = new Dictionary<string, object>();
                                 if (ChannelSession.Settings.ShowBetterTTVEmotes)

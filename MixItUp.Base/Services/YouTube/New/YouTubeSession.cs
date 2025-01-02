@@ -282,6 +282,25 @@ namespace MixItUp.Base.Services.YouTube.New
             await this.StreamerService.UnbanUser(user);
         }
 
+        public async Task<Result> UpdateStreamTitleAndDescription(string title, string description)
+        {
+            Result result = new Result();
+            foreach (Video video in ServiceManager.Get<YouTubeSession>().Videos.Values.ToList())
+            {
+                Video v = await ServiceManager.Get<YouTubeSession>().StreamerService.UpdateVideo(video, title: title, description: description);
+                if (v == null)
+                {
+                    result.Append(string.Format(Resources.YouTubeFailedToUpdateVideoID, video.Id));
+                    result.Success = false;
+                }
+                else
+                {
+                    ServiceManager.Get<YouTubeSession>().Videos[v.Id] = v;
+                }
+            }
+            return result;
+        }
+
         private async Task MessageBackgroundPolling()
         {
             while (!this.messageBackgroundPollingTokenSource.IsCancellationRequested)

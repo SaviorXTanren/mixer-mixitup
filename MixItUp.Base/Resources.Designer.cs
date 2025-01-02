@@ -28031,6 +28031,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to update video ID: {0}.
+        /// </summary>
+        public static string YouTubeFailedToUpdateVideoID {
+            get {
+                return ResourceManager.GetString("YouTubeFailedToUpdateVideoID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to YouTube ID.
         /// </summary>
         public static string YouTubeID {

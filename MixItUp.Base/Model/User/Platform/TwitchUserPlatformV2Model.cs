@@ -125,19 +125,19 @@ namespace MixItUp.Base.Model.User.Platform
 
         public override async Task Refresh()
         {
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                UserModel user = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(this.ID);
+                UserModel user = await ServiceManager.Get<TwitchSession>().UserConnection.GetNewAPIUserByID(this.ID);
                 if (user != null)
                 {
                     this.SetUserProperties(user);
                 }
 
-                ChannelFollowerModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
+                ChannelFollowerModel follow = await ServiceManager.Get<TwitchSession>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSession>().User, this.GetTwitchNewAPIUserModel());
                 if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {
                     this.Roles.Add(UserRoleEnum.Follower);
-                    this.FollowDate = TwitchPlatformService.GetTwitchDateTime(follow.followed_at);
+                    this.FollowDate = TwitchService.GetTwitchDateTime(follow.followed_at);
                 }
                 else
                 {
@@ -148,13 +148,13 @@ namespace MixItUp.Base.Model.User.Platform
                     }
                 }
 
-                if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().User.IsPartner())
+                if (ServiceManager.Get<TwitchSession>().User.IsAffiliate() || ServiceManager.Get<TwitchSession>().User.IsPartner())
                 {
-                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBroadcasterSubscription(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
+                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSession>().UserConnection.GetBroadcasterSubscription(ServiceManager.Get<TwitchSession>().User, this.GetTwitchNewAPIUserModel());
                     if (subscription != null)
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
-                        this.SubscriberTier = TwitchPubSubService.GetSubTierNumberFromText(subscription.tier);
+                        this.SubscriberTier = TwitchCli.GetSubTierNumberFromText(subscription.tier);
                         // TODO: No subscription data from this API. https://twitch.uservoice.com/forums/310213-developers/suggestions/43806120-add-subscription-date-to-subscription-apis
                         //this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
                     }
@@ -265,9 +265,9 @@ namespace MixItUp.Base.Model.User.Platform
             this.Username = user.login;
             this.DisplayName = user.display_name;
             this.AvatarLink = user.profile_image_url;
-            this.AccountDate = TwitchPlatformService.GetTwitchDateTime(user.created_at);
+            this.AccountDate = TwitchService.GetTwitchDateTime(user.created_at);
 
-            if (string.Equals(this.ID, ServiceManager.Get<TwitchSessionService>().UserID)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
+            if (string.Equals(this.ID, ServiceManager.Get<TwitchSession>().StreamerID)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
             if (user.IsAffiliate()) { this.Roles.Add(UserRoleEnum.TwitchAffiliate); } else { this.Roles.Remove(UserRoleEnum.TwitchAffiliate); }
             if (user.IsPartner()) { this.Roles.Add(UserRoleEnum.TwitchPartner); } else { this.Roles.Remove(UserRoleEnum.TwitchPartner); }
             if (user.IsGlobalMod()) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }
@@ -277,7 +277,7 @@ namespace MixItUp.Base.Model.User.Platform
             else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }
             else { this.SubscriberBadge = null; }
 
-            if (ServiceManager.Get<TwitchSessionService>().ChannelEditors.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.TwitchChannelEditor); } else { this.Roles.Remove(UserRoleEnum.TwitchChannelEditor); }
+            if (ServiceManager.Get<TwitchSession>().ChannelEditors.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.TwitchChannelEditor); } else { this.Roles.Remove(UserRoleEnum.TwitchChannelEditor); }
 
             this.SubscriberBadgeLink = this.SubscriberBadge?.image_url_1x;
             this.RoleBadgeLink = this.RoleBadge?.image_url_1x;
@@ -327,37 +327,34 @@ namespace MixItUp.Base.Model.User.Platform
             }
             if (this.HasNewTwitchBadge("vip")) { this.Roles.Add(UserRoleEnum.TwitchVIP); } else { this.Roles.Remove(UserRoleEnum.TwitchVIP); }
 
-            if (ServiceManager.Get<TwitchChatService>() != null)
+            if (this.HasNewTwitchBadge("broadcaster")) { this.RoleBadge = this.GetNewTwitchBadgeURL("broadcaster"); }
+            else if (this.HasNewTwitchBadge("staff")) { this.RoleBadge = this.GetNewTwitchBadgeURL("staff"); }
+            else if (this.HasNewTwitchBadge("admin")) { this.RoleBadge = this.GetNewTwitchBadgeURL("admin"); }
+            else if (this.HasNewTwitchBadge("extension")) { this.RoleBadge = this.GetNewTwitchBadgeURL("extension"); }
+            else if (this.HasNewTwitchBadge("twitchbot")) { this.RoleBadge = this.GetNewTwitchBadgeURL("twitchbot"); }
+            else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.RoleBadge = this.GetNewTwitchBadgeURL("moderator"); }
+            else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.RoleBadge = this.GetNewTwitchBadgeURL("vip"); }
+            else if (this.HasNewTwitchBadge("artist-badge")) { this.RoleBadge = this.GetNewTwitchBadgeURL("artist-badge"); }
+            else { this.RoleBadge = null; }
+
+            if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetNewTwitchBadgeURL("founder"); }
+            else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetNewTwitchBadgeURL("subscriber"); }
+            else { this.SubscriberBadge = null; }
+
+            this.SpecialtyBadge = null;
+            if (this.HasNewTwitchBadge("sub-gift-leader")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("sub-gift-leader"); }
+            else if (this.HasNewTwitchBadge("bits-leader")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("bits-leader"); }
+            else if (this.HasNewTwitchBadge("sub-gifter")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("sub-gifter"); }
+            else if (this.HasNewTwitchBadge("bits")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("bits"); }
+            else if (this.HasNewTwitchBadge("premium")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("premium"); }
+            else if (this.NewBadges.Count > 0)
             {
-                if (this.HasNewTwitchBadge("broadcaster")) { this.RoleBadge = this.GetNewTwitchBadgeURL("broadcaster"); }
-                else if (this.HasNewTwitchBadge("staff")) { this.RoleBadge = this.GetNewTwitchBadgeURL("staff"); }
-                else if (this.HasNewTwitchBadge("admin")) { this.RoleBadge = this.GetNewTwitchBadgeURL("admin"); }
-                else if (this.HasNewTwitchBadge("extension")) { this.RoleBadge = this.GetNewTwitchBadgeURL("extension"); }
-                else if (this.HasNewTwitchBadge("twitchbot")) { this.RoleBadge = this.GetNewTwitchBadgeURL("twitchbot"); }
-                else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.RoleBadge = this.GetNewTwitchBadgeURL("moderator"); }
-                else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.RoleBadge = this.GetNewTwitchBadgeURL("vip"); }
-                else if (this.HasNewTwitchBadge("artist-badge")) { this.RoleBadge = this.GetNewTwitchBadgeURL("artist-badge"); }
-                else { this.RoleBadge = null; }
-
-                if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetNewTwitchBadgeURL("founder"); }
-                else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetNewTwitchBadgeURL("subscriber"); }
-                else { this.SubscriberBadge = null; }
-
-                this.SpecialtyBadge = null;
-                if (this.HasNewTwitchBadge("sub-gift-leader")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("sub-gift-leader"); }
-                else if (this.HasNewTwitchBadge("bits-leader")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("bits-leader"); }
-                else if (this.HasNewTwitchBadge("sub-gifter")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("sub-gifter"); }
-                else if (this.HasNewTwitchBadge("bits")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("bits"); }
-                else if (this.HasNewTwitchBadge("premium")) { this.SpecialtyBadge = this.GetNewTwitchBadgeURL("premium"); }
-                else if (this.NewBadges.Count > 0)
+                foreach (string name in this.NewBadges.Keys.ToList())
                 {
-                    foreach (string name in this.NewBadges.Keys.ToList())
+                    if (!TwitchUserPlatformV2Model.NonApplicableSpecialtyBadges.Contains(name))
                     {
-                        if (!TwitchUserPlatformV2Model.NonApplicableSpecialtyBadges.Contains(name))
-                        {
-                            this.SpecialtyBadge = this.GetNewTwitchBadgeURL(name);
-                            break;
-                        }
+                        this.SpecialtyBadge = this.GetNewTwitchBadgeURL(name);
+                        break;
                     }
                 }
             }

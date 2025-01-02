@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Services.Twitch;
+﻿using MixItUp.Base.Services.Twitch.New;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -24,14 +24,14 @@ namespace MixItUp.Base.Model.Twitch.EventSub
         {
             this.ID = payload["id"].Value<string>();
             this.Title = payload["title"].Value<string>();
-            this.StartedAt = TwitchPlatformService.GetTwitchDateTime(payload["started_at"].Value<string>());
+            this.StartedAt = TwitchService.GetTwitchDateTime(payload["started_at"].Value<string>());
             if (payload.ContainsKey("ends_at"))
             {
-                this.EndsAt = TwitchPlatformService.GetTwitchDateTime(payload["ends_at"].Value<string>());
+                this.EndsAt = TwitchService.GetTwitchDateTime(payload["ends_at"].Value<string>());
             }
             else if (payload.ContainsKey("ended_at"))
             {
-                this.EndsAt = TwitchPlatformService.GetTwitchDateTime(payload["ended_at"].Value<string>());
+                this.EndsAt = TwitchService.GetTwitchDateTime(payload["ended_at"].Value<string>());
             }
 
             foreach (JObject choice in (JArray)payload["choices"])

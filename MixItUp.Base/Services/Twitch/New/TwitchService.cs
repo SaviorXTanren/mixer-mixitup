@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Twitch;
+﻿using MixItUp.Base.Model.Trovo.Category;
+using MixItUp.Base.Model.Twitch;
 using MixItUp.Base.Model.Twitch.Ads;
 using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.Twitch.ChannelPoints;
@@ -202,6 +203,26 @@ namespace MixItUp.Base.Services.Twitch.New
                 HttpResponseMessage response = await this.HttpClient.PatchAsync("channels?broadcaster_id=" + channel.id, AdvancedHttpClient.CreateContentFromObject(jobj));
                 return response.IsSuccessStatusCode;
             });
+        }
+
+        public async Task<bool> SetGame(UserModel user, string gameName)
+        {
+            IEnumerable<GameModel> games = await this.GetNewAPIGamesByName(gameName);
+            if (games != null && games.Count() > 0)
+            {
+                GameModel game = games.FirstOrDefault(g => g.name.ToLower().Equals(gameName));
+                if (game == null)
+                {
+                    game = games.First();
+                }
+
+                if (this.IsConnected && game != null)
+                {
+                    await this.UpdateChannelInformation(user, gameID: game.id);
+                    return true;
+                }
+            }
+            return false;
         }
 
         public async Task<SendChatMessageResponseModel> SendChatMessage(UserModel channel, UserModel sender, string message, string replyMessageID = null)

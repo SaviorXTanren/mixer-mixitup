@@ -10871,4 +10871,8 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="TrovoFailedToGetEmoteData" xml:space="preserve">
     <value>Failed to get emote data</value>
   </data>
+  <data name="YouTubeFailedToUpdateVideoID" xml:space="preserve">
+    <value>Failed to update video ID: {0}</value>
+    <comment>{0} is the ID of the video</comment>
+  </data>
 </root>

@@ -624,7 +624,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 }
 
                 // The streamer was raided by a channel
-                if (string.Equals(toId, ServiceManager.Get<TwitchSessionService>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(toId, ServiceManager.Get<TwitchSession>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
                 {
                     UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: fromId, platformUsername: fromUsername);
                     if (user == null)
@@ -660,7 +660,7 @@ namespace MixItUp.Base.Services.Twitch.New
                     }
                 }
                 // The streamer is raiding another channel
-                else if (string.Equals(fromId, ServiceManager.Get<TwitchSessionService>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(fromId, ServiceManager.Get<TwitchSession>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
                 {
                     CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch, new List<string>() { toUsername });
                     parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();

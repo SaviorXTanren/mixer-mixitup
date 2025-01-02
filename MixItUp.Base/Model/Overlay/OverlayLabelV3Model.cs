@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
@@ -163,17 +164,17 @@ namespace MixItUp.Base.Model.Overlay
 
                     if (user == null)
                     {
-                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                         {
-                            var followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
+                            var followers = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIFollowers(ServiceManager.Get<TwitchSession>().Streamer, maxResults: 1);
                             if (followers != null && followers.Count() > 0)
                             {
                                 user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: followers.First().user_id, performPlatformSearch: true);
                             }
                         }
-                        else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                        else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                         {
-                            var followers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, maxResults: 1);
+                            var followers = await ServiceManager.Get<TrovoSession>().StreamerService.GetFollowers(ServiceManager.Get<TrovoSession>().ChannelID, maxResults: 1);
                             if (followers != null && followers.Count() > 0)
                             {
                                 user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: followers.First().user_id, platformUsername: followers.First().nickname, performPlatformSearch: true);
@@ -190,13 +191,13 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalFollowers))
                 {
                     long amount = 0;
-                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                     {
-                        amount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
+                        amount = await ServiceManager.Get<TwitchSession>().StreamerService.GetFollowerCount(ServiceManager.Get<TwitchSession>().Streamer);
                     }
-                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                     {
-                        amount = (await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TrovoSessionService>().ChannelID, int.MaxValue)).Count();
+                        amount = (await ServiceManager.Get<TrovoSession>().StreamerService.GetFollowers(ServiceManager.Get<TrovoSession>().ChannelID, int.MaxValue)).Count();
                     }
                     this.Displays[OverlayLabelDisplayV3TypeEnum.TotalFollowers].Amount = amount;
                 }
@@ -224,9 +225,9 @@ namespace MixItUp.Base.Model.Overlay
 
                     if (user == null)
                     {
-                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                         {
-                            var subscribers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 1);
+                            var subscribers = await ServiceManager.Get<TwitchSession>().StreamerService.GetSubscribers(ServiceManager.Get<TwitchSession>().Streamer, maxResults: 1);
                             if (subscribers != null && subscribers.Count() > 0)
                             {
                                 user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: subscribers.First().user_id, performPlatformSearch: true);
@@ -244,13 +245,13 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.TotalSubscribers))
                 {
                     long amount = 0;
-                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                     {
-                        amount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
+                        amount = await ServiceManager.Get<TwitchSession>().StreamerService.GetSubscriberCount(ServiceManager.Get<TwitchSession>().Streamer);
                     }
-                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                     {
-                        amount = (await ServiceManager.Get<TrovoSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TrovoSessionService>().ChannelID, int.MaxValue)).Count();
+                        amount = (await ServiceManager.Get<TrovoSession>().StreamerService.GetSubscribers(ServiceManager.Get<TrovoSession>().ChannelID, int.MaxValue)).Count();
                     }
                     this.Displays[OverlayLabelDisplayV3TypeEnum.TotalSubscribers].Amount = amount;
                 }

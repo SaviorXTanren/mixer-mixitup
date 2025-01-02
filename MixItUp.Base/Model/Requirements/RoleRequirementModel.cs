@@ -4,7 +4,9 @@ using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -139,7 +141,7 @@ namespace MixItUp.Base.Model.Requirements
                     }
                 }
 
-                if (parameters.Platform == StreamingPlatformTypeEnum.YouTube && !string.IsNullOrEmpty(this.YouTubeMembershipLevelID) && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                if (parameters.Platform == StreamingPlatformTypeEnum.YouTube && !string.IsNullOrEmpty(this.YouTubeMembershipLevelID) && ServiceManager.Get<YouTubeSession>().IsConnected)
                 {
                     YouTubeUserPlatformV2Model youtubeUser = parameters.User.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube);
                     if (youtubeUser != null && youtubeUser.MemberLevels.Contains(this.YouTubeMembershipLevelID))
@@ -148,7 +150,7 @@ namespace MixItUp.Base.Model.Requirements
                     }
                 }    
 
-                if (parameters.Platform == StreamingPlatformTypeEnum.Trovo && !string.IsNullOrEmpty(this.TrovoCustomRole) && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                if (parameters.Platform == StreamingPlatformTypeEnum.Trovo && !string.IsNullOrEmpty(this.TrovoCustomRole) && ServiceManager.Get<TrovoSession>().IsConnected)
                 {
                     TrovoUserPlatformV2Model trovoUser = parameters.User.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo);
                     if (trovoUser != null && trovoUser.CustomRoles.Contains(this.TrovoCustomRole))

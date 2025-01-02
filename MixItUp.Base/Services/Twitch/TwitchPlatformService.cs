@@ -12,7 +12,6 @@ using MixItUp.Base.Model.Twitch.Subscriptions;
 using MixItUp.Base.Model.Twitch.Teams;
 using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.Web;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
