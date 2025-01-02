@@ -48,7 +48,7 @@ namespace MixItUp.Base.Model.Overlay
         public string Hash { get; set; } = string.Empty;
 
         [JsonIgnore]
-        private UserV2ViewModel cachedUser;
+        private UserV2ViewModel cachedUser = null;
 
         public OverlayListIndividualItemModel() { }
 

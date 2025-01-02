@@ -203,7 +203,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
             List<Task<IEnumerable<ChatEmoteModel>>> twitchEmoteTasks = new List<Task<IEnumerable<ChatEmoteModel>>>();
             twitchEmoteTasks.Add(this.StreamerService.GetGlobalEmotes());
-            twitchEmoteTasks.Add(this.StreamerService.GetChannelEmotes(ServiceManager.Get<TwitchSessionService>().User));
+            twitchEmoteTasks.Add(this.StreamerService.GetChannelEmotes(this.Streamer));
             if (this.emoteSetIDs != null)
             {
                 twitchEmoteTasks.Add(this.StreamerService.GetEmoteSets(this.emoteSetIDs));
@@ -213,7 +213,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
             Task<IEnumerable<ChatBadgeSetModel>> globalChatBadgesTask = this.StreamerService.GetGlobalChatBadges();
             initializationTasks.Add(globalChatBadgesTask);
-            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = this.StreamerService.GetChannelChatBadges(ServiceManager.Get<TwitchSessionService>().User);
+            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = this.StreamerService.GetChannelChatBadges(this.Streamer);
             initializationTasks.Add(channelChatBadgesTask);
 
             if (ChannelSession.Settings.ShowAlejoPronouns)
@@ -226,17 +226,17 @@ namespace MixItUp.Base.Services.Twitch.New
             {
                 ServiceManager.Get<ITelemetryService>().TrackService("BetterTTV");
                 initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadGlobalBetterTTVEmotes());
-                initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadTwitchBetterTTVEmotes(ServiceManager.Get<TwitchSessionService>().User.id));
+                initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadTwitchBetterTTVEmotes(this.StreamerID));
             }
 
             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
             {
                 ServiceManager.Get<ITelemetryService>().TrackService("FrankerFaceZ");
                 initializationTasks.Add(ServiceManager.Get<FrankerFaceZService>().DownloadGlobalFrankerFaceZEmotes());
-                initializationTasks.Add(ServiceManager.Get<FrankerFaceZService>().DownloadTwitchFrankerFaceZEmotes(ServiceManager.Get<TwitchSessionService>().Username));
+                initializationTasks.Add(ServiceManager.Get<FrankerFaceZService>().DownloadTwitchFrankerFaceZEmotes(this.StreamerUsername));
             }
 
-            Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = this.StreamerService.GetBitsCheermotes(ServiceManager.Get<TwitchSessionService>().User);
+            Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = this.StreamerService.GetBitsCheermotes(this.Streamer);
             initializationTasks.Add(cheermotesTask);
 
             await Task.WhenAll(initializationTasks);
@@ -466,7 +466,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private async Task ChatterUpdateBackground(CancellationToken cancellationToken)
         {
-            IEnumerable<ChatterModel> chatterModels = await this.StreamerService.GetChatters(ServiceManager.Get<TwitchSessionService>().User);
+            IEnumerable<ChatterModel> chatterModels = await this.StreamerService.GetChatters(this.Streamer);
 
             HashSet<string> chatters = (chatterModels != null) ? new HashSet<string>(chatterModels.Select(c => c.user_login)) : new HashSet<string>();
 

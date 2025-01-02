@@ -2,8 +2,8 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Trovo.Chat;
-using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -293,7 +293,7 @@ namespace MixItUp.Base.Services.Trovo.New
                         }
                         else if (message.type == ChatMessageTypeEnum.SubscriptionAlert)
                         {
-                            TrovoSubscriptionMessageModel subMessage = new TrovoSubscriptionMessageModel(message);
+                            MixItUp.Base.Model.Trovo.Subscriptions.TrovoSubscriptionMessageModel subMessage = new MixItUp.Base.Model.Trovo.Subscriptions.TrovoSubscriptionMessageModel(message);
 
                             EventTypeEnum subEventType = EventTypeEnum.TrovoChannelSubscribed;
                             if (subMessage.IsResub)
@@ -345,7 +345,7 @@ namespace MixItUp.Base.Services.Trovo.New
                         }
                         else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionSentMessage)
                         {
-                            TrovoSubscriptionMessageModel subMessage = new TrovoSubscriptionMessageModel(message);
+                            MixItUp.Base.Model.Trovo.Subscriptions.TrovoSubscriptionMessageModel subMessage = new MixItUp.Base.Model.Trovo.Subscriptions.TrovoSubscriptionMessageModel(message);
 
                             int totalGifted = 1;
                             int.TryParse(message.content, out totalGifted);

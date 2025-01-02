@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.ObjectModel;
@@ -245,9 +246,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayEventTrackingV3ViewModelBase(OverlayItemV3Type type)
             : base(type)
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSessionService>().MembershipLevels)
+                foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSession>().MembershipLevels)
                 {
                     this.YouTubeMemberships.Add(new OverlayEventTrackingYouTubeMembershipViewModel(membershipsLevel.Snippet.LevelDetails.DisplayName, 0));
                 }
@@ -269,9 +270,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.TwitchSubscriptionTier3Amount = item.TwitchSubscriptionsAmount[3];
             this.TwitchBitsAmount = item.TwitchBitsAmount;
 
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSessionService>().MembershipLevels)
+                foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSession>().MembershipLevels)
                 {
                     if (item.YouTubeMembershipsAmount.TryGetValue(membershipsLevel.Snippet.LevelDetails.DisplayName, out double damageAmount))
                     {
