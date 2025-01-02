@@ -127,13 +127,13 @@ namespace MixItUp.Base.Model.User.Platform
         {
             if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                UserModel user = await ServiceManager.Get<TwitchSession>().UserConnection.GetNewAPIUserByID(this.ID);
+                UserModel user = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIUserByID(this.ID);
                 if (user != null)
                 {
                     this.SetUserProperties(user);
                 }
 
-                ChannelFollowerModel follow = await ServiceManager.Get<TwitchSession>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSession>().User, this.GetTwitchNewAPIUserModel());
+                ChannelFollowerModel follow = await ServiceManager.Get<TwitchSession>().StreamerService.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSession>().Streamer, this.GetTwitchNewAPIUserModel());
                 if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {
                     this.Roles.Add(UserRoleEnum.Follower);
@@ -148,13 +148,13 @@ namespace MixItUp.Base.Model.User.Platform
                     }
                 }
 
-                if (ServiceManager.Get<TwitchSession>().User.IsAffiliate() || ServiceManager.Get<TwitchSession>().User.IsPartner())
+                if (ServiceManager.Get<TwitchSession>().Streamer.IsAffiliate() || ServiceManager.Get<TwitchSession>().Streamer.IsPartner())
                 {
-                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSession>().UserConnection.GetBroadcasterSubscription(ServiceManager.Get<TwitchSession>().User, this.GetTwitchNewAPIUserModel());
+                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSession>().StreamerService.GetBroadcasterSubscription(ServiceManager.Get<TwitchSession>().Streamer, this.ID);
                     if (subscription != null)
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
-                        this.SubscriberTier = TwitchCli.GetSubTierNumberFromText(subscription.tier);
+                        this.SubscriberTier = TwitchClient.GetSubTierNumberFromText(subscription.tier);
                         // TODO: No subscription data from this API. https://twitch.uservoice.com/forums/310213-developers/suggestions/43806120-add-subscription-date-to-subscription-apis
                         //this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
                     }

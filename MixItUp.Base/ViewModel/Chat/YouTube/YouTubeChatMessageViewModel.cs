@@ -2,7 +2,7 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.ViewModel.User;
 using System;
 
@@ -38,9 +38,9 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
 
                 if (part.StartsWith(":"))
                 {
-                    if (ServiceManager.Get<YouTubeChatService>().EmoteDictionary.ContainsKey(part))
+                    if (ServiceManager.Get<YouTubeSession>().EmoteDictionary.ContainsKey(part))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<YouTubeChatService>().EmoteDictionary[part];
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<YouTubeSession>().EmoteDictionary[part];
                     }
                 }
                 else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.ContainsKey(part))

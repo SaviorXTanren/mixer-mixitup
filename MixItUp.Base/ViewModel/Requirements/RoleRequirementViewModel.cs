@@ -4,8 +4,9 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
@@ -138,7 +139,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private int subscriberTier = 1;
 
-        public bool IsYouTubeConnected { get { return ServiceManager.Get<YouTubeSessionService>().IsConnected; } }
+        public bool IsYouTubeConnected { get { return ServiceManager.Get<YouTubeSession>().IsConnected; } }
 
         public IEnumerable<MembershipsLevel> YouTubeMembershipLevels { get; private set; }
 
@@ -153,7 +154,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private MembershipsLevel youtubeMembershipLevel;
 
-        public bool IsTrovoConnected { get { return ServiceManager.Get<TrovoSessionService>().IsConnected; } }
+        public bool IsTrovoConnected { get { return ServiceManager.Get<TrovoSession>().IsConnected; } }
 
         public string TrovoCustomRole
         {
@@ -228,7 +229,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
             if (this.IsYouTubeConnected)
             {
-                this.YouTubeMembershipLevels = ServiceManager.Get<YouTubeSessionService>().MembershipLevels;
+                this.YouTubeMembershipLevels = ServiceManager.Get<YouTubeSession>().MembershipLevels;
                 this.YouTubeMembershipLevel = this.YouTubeMembershipLevels.FirstOrDefault(m => string.Equals(m.Id, requirement.YouTubeMembershipLevelID));
             }
 

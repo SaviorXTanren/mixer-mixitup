@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Twitch.Channels;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -57,7 +57,7 @@ namespace MixItUp.Base.ViewModel.Twitch
 
         public TwitchContentClassificationLabelsEditorViewModel()
         {
-            this.AllLabels = ServiceManager.Get<TwitchSessionService>().ContentClassificationLabels;
+            this.AllLabels = ServiceManager.Get<TwitchSession>().ContentClassificationLabels;
         }
 
         public void AddLabel(string labelID)

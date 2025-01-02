@@ -1,6 +1,7 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -55,14 +56,14 @@ namespace MixItUp.Base.Model.User.Platform
 
         public override async Task Refresh()
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                Channel channel = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(this.ID);
+                Channel channel = await ServiceManager.Get<YouTubeSession>().StreamerService.GetChannelByID(this.ID);
                 if (channel != null)
                 {
                     this.SetChannelProperties(channel);
 
-                    Subscription subscription = await ServiceManager.Get<YouTubeSessionService>().UserConnection.CheckIfSubscribed(ServiceManager.Get<YouTubeSessionService>().ChannelID, this.ID);
+                    Subscription subscription = await ServiceManager.Get<YouTubeSession>().StreamerService.CheckIfSubscribed(ServiceManager.Get<YouTubeSession>().ChannelID, this.ID);
                     if (subscription != null)
                     {
                         this.Roles.Add(UserRoleEnum.YouTubeSubscriber);
@@ -109,9 +110,9 @@ namespace MixItUp.Base.Model.User.Platform
 
         public async Task RefreshMembershipDetails()
         {
-            if (ServiceManager.Get<YouTubeSessionService>().HasMembershipCapabilities)
+            if (ServiceManager.Get<YouTubeSession>().HasMembershipCapabilities)
             {
-                Member membership = await ServiceManager.Get<YouTubeSessionService>().UserConnection.CheckIfMember(this.ID);
+                Member membership = await ServiceManager.Get<YouTubeSession>().StreamerService.CheckIfMember(this.ID);
                 if (membership != null)
                 {
                     this.Roles.Add(UserRoleEnum.YouTubeMember);

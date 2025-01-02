@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
+using MixItUp.Base.Services.YouTube.New;
+using MixItUp.Base.Services.Trovo.New;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -288,7 +291,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 if (platform == StreamingPlatformTypeEnum.Twitch)
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: ServiceManager.Get<TwitchSessionService>().UserID);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: ServiceManager.Get<TwitchSession>().StreamerID);
                     if (user == null)
                     {
                         user = ChannelSession.User;
@@ -299,7 +302,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
                 else if (platform == StreamingPlatformTypeEnum.YouTube)
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: ServiceManager.Get<YouTubeSessionService>().UserID);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: ServiceManager.Get<YouTubeSession>().StreamerID);
                     if (user == null)
                     {
                         user = ChannelSession.User;
@@ -310,7 +313,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
                 else if (platform == StreamingPlatformTypeEnum.Trovo)
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: ServiceManager.Get<TrovoSessionService>().UserID);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: ServiceManager.Get<TrovoSession>().StreamerID);
                     if (user == null)
                     {
                         user = ChannelSession.User;

@@ -6,8 +6,11 @@ using MixItUp.Base.Model.Store;
 using MixItUp.Base.Model.Web;
 using MixItUp.Base.Model.Webhooks;
 using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.Web;
 using MixItUp.SignalR.Client;
@@ -506,18 +509,18 @@ namespace MixItUp.Base.Services
         {
             var login = new CommunityCommandLoginModel();
 
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                login.TwitchAccessToken = ServiceManager.Get<TwitchSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+                login.TwitchAccessToken = ServiceManager.Get<TwitchSession>()?.StreamerService?.GetOAuthTokenCopy()?.accessToken;
                 login.BypassTwitchWebhooks = true;
             }
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                login.YouTubeOAuthToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
+                login.YouTubeOAuthToken = ServiceManager.Get<YouTubeSession>()?.StreamerService?.GetOAuthTokenCopy();
             }
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+            if (ServiceManager.Get<TrovoSession>().IsConnected)
             {
-                login.TrovoAccessToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+                login.TrovoAccessToken = ServiceManager.Get<TrovoSession>()?.StreamerService?.GetOAuthTokenCopy()?.accessToken;
             }
 
             return login;

@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -31,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Chat
             get
             {
                 List<string> results = new List<string>() { MixItUp.Base.Resources.Streamer };
-                if (ServiceManager.Get<TwitchChatService>() != null && ServiceManager.Get<TwitchChatService>().IsBotConnected)
+                if (ServiceManager.Get<TwitchSession>().IsBotConnected)
                 {
                     results.Add(MixItUp.Base.Resources.Bot);
                 }

@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.User.Platform;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -38,14 +38,14 @@ namespace MixItUp.Base.Model.Twitch.EventSub
             this.ID = payload["id"].Value<string>();
             this.Title = payload["title"].Value<string>();
 
-            this.StartedAt = TwitchPlatformService.GetTwitchDateTime(payload["started_at"].Value<string>());
+            this.StartedAt = TwitchService.GetTwitchDateTime(payload["started_at"].Value<string>());
             if (payload.ContainsKey("locks_at"))
             {
-                this.LocksAt = TwitchPlatformService.GetTwitchDateTime(payload["locks_at"].Value<string>());
+                this.LocksAt = TwitchService.GetTwitchDateTime(payload["locks_at"].Value<string>());
             }
             else if (payload.ContainsKey("locked_at"))
             {
-                this.LocksAt = TwitchPlatformService.GetTwitchDateTime(payload["locked_at"].Value<string>());
+                this.LocksAt = TwitchService.GetTwitchDateTime(payload["locked_at"].Value<string>());
             }
 
             this.WinningOutcomeID = payload.GetValue("winning_outcome_id")?.Value<string>();

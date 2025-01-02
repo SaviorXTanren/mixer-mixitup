@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.YouTube;
-using MixItUp.Base.Util;
+using MixItUp.Base.Services.Twitch.New;
+using MixItUp.Base.Services.YouTube.New;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -20,13 +19,13 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.StreamlootsManageCollectionCommand = this.CreateCommand((parameters) =>
             {
-                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                if (ServiceManager.Get<TwitchSession>().IsConnected)
                 {
-                    ServiceManager.Get<IProcessService>().LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<TwitchSessionService>().Username}/manage/cards");
+                    ServiceManager.Get<IProcessService>().LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<TwitchSession>().StreamerUsername}/manage/cards");
                 }
-                else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                else if (ServiceManager.Get<YouTubeSession>().IsConnected)
                 {
-                    ServiceManager.Get<IProcessService>().LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<YouTubeSessionService>().UserID}/manage/cards");
+                    ServiceManager.Get<IProcessService>().LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<YouTubeSession>().StreamerID}/manage/cards");
                 }
             });
         }

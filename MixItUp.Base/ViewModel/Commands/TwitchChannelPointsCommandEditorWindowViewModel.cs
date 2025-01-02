@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Twitch.ChannelPoints;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -67,9 +68,9 @@ namespace MixItUp.Base.ViewModel.Commands
 
         protected override async Task OnOpenInternal()
         {
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User)).OrderBy(c => c.title))
+                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSession>().StreamerService.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().Streamer)).OrderBy(c => c.title))
                 {
                     this.ChannelPointRewards.Add(channelPoint);
                 }

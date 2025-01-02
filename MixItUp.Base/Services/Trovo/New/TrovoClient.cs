@@ -149,7 +149,7 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
         {
-            ChatViewersModel viewers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetViewers(ServiceManager.Get<TrovoSessionService>().ChannelID);
+            ChatViewersModel viewers = await ServiceManager.Get<TrovoSession>().StreamerService.GetViewers(ServiceManager.Get<TrovoSession>().ChannelID);
             if (viewers != null)
             {
                 List<UserV2ViewModel> userJoins = new List<UserV2ViewModel>();

@@ -87,6 +87,9 @@ namespace MixItUp.Base.Services.YouTube.New
         public IEnumerable<Model.YouTube.YouTubeChatEmoteModel> Emotes { get; private set; } = new List<Model.YouTube.YouTubeChatEmoteModel>();
         public Dictionary<string, YouTubeChatEmoteViewModel> EmoteDictionary { get; private set; } = new Dictionary<string, YouTubeChatEmoteViewModel>();
 
+        public List<MembershipsLevel> MembershipLevels { get; private set; } = new List<MembershipsLevel>();
+        public bool HasMembershipCapabilities { get { return this.MembershipLevels.Count > 0; } }
+
         private string nextMessagesToken = null;
 
         private CancellationTokenSource messageBackgroundPollingTokenSource;
@@ -158,17 +161,16 @@ namespace MixItUp.Base.Services.YouTube.New
                 return new Result(Resources.YouTubeFailedToGetUserData);
             }
 
-            this.EmoteDictionary.Clear();
-            this.Emotes = await this.StreamerService.GetChatEmotes();
-            if (this.Emotes != null)
+            List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
+            platformServiceTasks.Add(this.SetChatEmotes());
+            platformServiceTasks.Add(this.SetMembershipLevels());
+
+            await Task.WhenAll(platformServiceTasks);
+
+            if (platformServiceTasks.Any(c => !c.Result.Success))
             {
-                foreach (MixItUp.Base.Model.YouTube.YouTubeChatEmoteModel emote in this.Emotes)
-                {
-                    foreach (string shortcut in emote.shortcuts)
-                    {
-                        this.EmoteDictionary[shortcut] = new YouTubeChatEmoteViewModel(emote);
-                    }
-                }
+                string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
             }
 
             this.messageBackgroundPollingTokenSource = new CancellationTokenSource();
@@ -299,6 +301,40 @@ namespace MixItUp.Base.Services.YouTube.New
                 }
             }
             return result;
+        }
+
+        private async Task<Result> SetChatEmotes()
+        {
+            this.EmoteDictionary.Clear();
+            this.Emotes = await this.StreamerService.GetChatEmotes();
+            if (this.Emotes != null)
+            {
+                foreach (MixItUp.Base.Model.YouTube.YouTubeChatEmoteModel emote in this.Emotes)
+                {
+                    foreach (string shortcut in emote.shortcuts)
+                    {
+                        this.EmoteDictionary[shortcut] = new YouTubeChatEmoteViewModel(emote);
+                    }
+                }
+            }
+            return new Result();
+        }
+
+        private async Task<Result> SetMembershipLevels()
+        {
+            try
+            {
+                IEnumerable<MembershipsLevel> membershipLevels = await this.StreamerService.GetMembershipLevels();
+                if (membershipLevels != null && membershipLevels.Count() > 0)
+                {
+                    this.MembershipLevels.AddRange(membershipLevels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return new Result();
         }
 
         private async Task MessageBackgroundPolling()

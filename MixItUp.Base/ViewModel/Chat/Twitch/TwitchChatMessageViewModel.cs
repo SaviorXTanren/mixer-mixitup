@@ -195,9 +195,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                         }
                     }
 
-                    if (ServiceManager.Get<TwitchChatService>().Emotes.ContainsKey(part))
+                    if (ServiceManager.Get<TwitchSession>().Emotes.ContainsKey(part))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().Emotes[part];
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchSession>().Emotes[part];
                     }
                     else if (messageEmotesCache.ContainsKey(part))
                     {

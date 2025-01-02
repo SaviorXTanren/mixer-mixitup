@@ -74,9 +74,9 @@ namespace MixItUp.Base.Util
         public void Append(string message)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(message);
+            stringBuilder.AppendLine(this.Message);
             stringBuilder.AppendLine();
-            stringBuilder.Append(exception.Message);
+            stringBuilder.Append(message);
             this.Message = stringBuilder.ToString();
         }
     }

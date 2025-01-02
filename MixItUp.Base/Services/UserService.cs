@@ -3,8 +3,11 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -156,23 +159,23 @@ namespace MixItUp.Base.Services
                 UserPlatformV2ModelBase platformModel = null;
                 if (platformModel == null && !string.IsNullOrEmpty(platformID))
                 {
-                    if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
+                    if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                     {
-                        var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(platformID);
+                        var twitchUser = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIUserByID(platformID);
                         if (twitchUser != null)
                         {
                             platformModel = new TwitchUserPlatformV2Model(twitchUser);
                         }
                     }
-                    else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
+                    else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
                     {
-                        var youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(platformID);
+                        var youtubeUser = await ServiceManager.Get<YouTubeSession>().StreamerService.GetChannelByID(platformID);
                         if (youtubeUser != null)
                         {
                             platformModel = new YouTubeUserPlatformV2Model(youtubeUser);
                         }
                     }
-                    else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
+                    else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                     {
                         // Trovo does not support user look-up by user ID
                     }
@@ -180,25 +183,25 @@ namespace MixItUp.Base.Services
 
                 if (platformModel == null && !string.IsNullOrEmpty(platformUsername))
                 {
-                    if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
+                    if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                     {
-                        var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(platformUsername);
+                        var twitchUser = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIUserByLogin(platformUsername);
                         if (twitchUser != null)
                         {
                             platformModel = new TwitchUserPlatformV2Model(twitchUser);
                         }
                     }
-                    else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
+                    else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
                     {
-                        var youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(platformUsername);
+                        var youtubeUser = await ServiceManager.Get<YouTubeSession>().StreamerService.GetChannelByUsername(platformUsername);
                         if (youtubeUser != null)
                         {
                             platformModel = new YouTubeUserPlatformV2Model(youtubeUser);
                         }
                     }
-                    else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
+                    else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                     {
-                        var trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(platformUsername);
+                        var trovoUser = await ServiceManager.Get<TrovoSession>().StreamerService.GetUserByName(platformUsername);
                         if (trovoUser != null)
                         {
                             platformModel = new TrovoUserPlatformV2Model(trovoUser);
