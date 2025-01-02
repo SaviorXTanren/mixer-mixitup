@@ -56,8 +56,6 @@
                 </Grid>
             </GroupBox>
 
-            <Controls:StreamingPlatformStatusAlertControl Grid.Column="1" HorizontalAlignment="Center" />
-
             <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.NewProfile}" Margin="0,8,0,8" Width="160">
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>

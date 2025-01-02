@@ -1226,9 +1226,6 @@
       <DependentUpon>TimerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SortedDataGrid.cs" />
-    <Compile Include="Controls\StreamingPlatformStatusAlertControl.xaml.cs">
-      <DependentUpon>StreamingPlatformStatusAlertControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Twitch\TwitchContentClassificationLabelsEditorControl.xaml.cs">
       <DependentUpon>TwitchContentClassificationLabelsEditorControl.xaml</DependentUpon>
     </Compile>
@@ -2338,10 +2335,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\TimerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\StreamingPlatformStatusAlertControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
