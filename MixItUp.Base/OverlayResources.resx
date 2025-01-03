@@ -530,6 +530,14 @@ function SubscriptionGifted(data)
     addToDiv("SubscriptionGifted");
 }
 
+function MassSubscriptionGifted(data)
+{
+    console.log("MassSubscriptionGifted");
+    console.log(data);
+    
+    addToDiv("MassSubscriptionGifted");
+}
+
 function Donation(data)
 {
     console.log("Donation");
