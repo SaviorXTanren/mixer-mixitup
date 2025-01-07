@@ -25182,6 +25182,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to get Twitch channel data.
+        /// </summary>
+        public static string TwitchFailedToGetChannelData {
+            get {
+                return ResourceManager.GetString("TwitchFailedToGetChannelData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to get Twitch user data.
         /// </summary>
         public static string TwitchFailedToGetUserData {

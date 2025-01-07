@@ -190,7 +190,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public string PlatformImageURL { get { return StreamingPlatforms.GetPlatformImage(this.Platform); } }
 
-        public bool ShowPlatformImage { get { return ServiceManager.GetAll<IStreamingPlatformSessionService>().Count(s => s.IsConnected) > 1; } }
+        public bool ShowPlatformImage { get { return StreamingPlatforms.GetConnectedPlatformSessions().Count() > 1; } }
 
         public string PlatformBadgeLink
         {

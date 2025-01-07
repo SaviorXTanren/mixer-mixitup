@@ -164,7 +164,7 @@ namespace MixItUp.Base.Services.Twitch.New
             });
         }
 
-        public async Task<bool> UpdateChannelInformation(UserModel channel, string title = null, string gameID = null, IEnumerable<string> tags = null, IEnumerable<string> cclIdsToAdd = null, IEnumerable<string> cclIdsToRemove = null)
+        public async Task<Result> UpdateChannelInformation(UserModel channel, string title = null, string gameID = null, IEnumerable<string> tags = null, IEnumerable<string> cclIdsToAdd = null, IEnumerable<string> cclIdsToRemove = null)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
@@ -201,7 +201,12 @@ namespace MixItUp.Base.Services.Twitch.New
                     jobj["content_classification_labels"] = ccls;
                 }
                 HttpResponseMessage response = await this.HttpClient.PatchAsync("channels?broadcaster_id=" + channel.id, AdvancedHttpClient.CreateContentFromObject(jobj));
-                return response.IsSuccessStatusCode;
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Result(await response.Content.ReadAsStringAsync());
+                }
+
+                return new Result();
             });
         }
 

@@ -54,7 +54,7 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public TrovoService(IEnumerable<string> scopes) : base(BaseAddressFormat, scopes) { }
 
-        public async Task<PrivateUserModel> GetUser() { return await AsyncRunner.RunAsync(HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
+        public async Task<PrivateUserModel> GetCurrentUser() { return await AsyncRunner.RunAsync(HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
 
         public async Task<UserModel> GetUserByName(string username)
         {
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Services.Trovo.New
             });
         }
 
-        public async Task<bool> UpdateChannel(string id, string title = null, string categoryID = null, string langaugeCode = null, ChannelAudienceTypeEnum? audience = null)
+        public async Task<Result> UpdateChannel(string id, string title = null, string categoryID = null, string langaugeCode = null, ChannelAudienceTypeEnum? audience = null)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
@@ -125,7 +125,12 @@ namespace MixItUp.Base.Services.Trovo.New
                 if (audience != null) { jobj["audi_type"] = audience.ToString(); }
 
                 HttpResponseMessage response = await HttpClient.PostAsync("channels/update", AdvancedHttpClient.CreateContentFromObject(jobj));
-                return response.IsSuccessStatusCode;
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Result(await response.Content.ReadAsStringAsync());
+                }
+
+                return new Result();
             });
         }
 
@@ -154,7 +159,8 @@ namespace MixItUp.Base.Services.Trovo.New
                 string categoryID = categories.FirstOrDefault()?.id;
                 if (!string.IsNullOrEmpty(categoryID))
                 {
-                    return await this.UpdateChannel(channelID, categoryID: categoryID);
+                    Result result = await this.UpdateChannel(channelID, categoryID: categoryID);
+                    return result.Success;
                 }
             }
             return false;

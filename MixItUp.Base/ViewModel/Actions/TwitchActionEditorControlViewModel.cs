@@ -893,7 +893,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
             if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSession>().StreamerService.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().Streamer, managableRewardsOnly: true)).OrderBy(c => c.title))
+                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSession>().StreamerService.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().StreamerModel, managableRewardsOnly: true)).OrderBy(c => c.title))
                 {
                     this.ChannelPointRewards.Add(channelPoint);
                 }

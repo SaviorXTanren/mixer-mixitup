@@ -207,7 +207,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.EnableFollows();
                     if (this.StreamingPlatform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        this.TotalAmount = await ServiceManager.Get<TwitchSession>().StreamerService.GetFollowerCount(ServiceManager.Get<TwitchSession>().Streamer);
+                        this.TotalAmount = await ServiceManager.Get<TwitchSession>().StreamerService.GetFollowerCount(ServiceManager.Get<TwitchSession>().StreamerModel);
                     }
                 }
             }
@@ -218,7 +218,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.EnableSubscriptions();
                     if (this.StreamingPlatform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        this.TotalAmount = await ServiceManager.Get<TwitchSession>().StreamerService.GetSubscriberCount(ServiceManager.Get<TwitchSession>().Streamer);
+                        this.TotalAmount = await ServiceManager.Get<TwitchSession>().StreamerService.GetSubscriberCount(ServiceManager.Get<TwitchSession>().StreamerModel);
                     }
                 }
             }

@@ -57,12 +57,6 @@ namespace MixItUp.Base.Services.YouTube.New
 
         public override int MaxMessageLength { get { return 200; } }
 
-        public override string StreamerID { get { return this.Streamer?.Id; } }
-        public override string StreamerUsername { get { return this.Streamer?.Snippet?.Title; } }
-        public override string BotID { get { return this.Bot?.Id; } }
-        public override string BotUsername { get { return this.Bot?.Snippet?.Title; } }
-        public override string ChannelID { get { return this.Streamer?.Id; } }
-        public override string ChannelLink { get { return this.Streamer?.Snippet?.CustomUrl; } }
         public override string StreamLink
         {
             get
@@ -76,9 +70,28 @@ namespace MixItUp.Base.Services.YouTube.New
             }
         }
 
-        public Channel Streamer { get; private set; }
-        public Channel Bot { get; private set; }
-        public Dictionary<string, LiveBroadcast> LiveBroadcasts { get; private set; } = new Dictionary<string, LiveBroadcast>();
+        public Channel StreamerModel { get; private set; }
+        public Channel BotModel { get; private set; }
+
+        public Dictionary<string, LiveBroadcast> LiveBroadcasts
+        {
+            get
+            {
+                Dictionary<string, LiveBroadcast> broadcasts = new Dictionary<string, LiveBroadcast>();
+                foreach (var kvp in this.AutomaticLiveBroadcasts)
+                {
+                    broadcasts[kvp.Key] = kvp.Value;
+                }
+                foreach (var kvp in this.ManualLiveBroadcasts)
+                {
+                    broadcasts[kvp.Key] = kvp.Value;
+                }
+                return broadcasts;
+            }
+        }
+        public Dictionary<string, LiveBroadcast> AutomaticLiveBroadcasts { get; private set; } = new Dictionary<string, LiveBroadcast>();
+        public Dictionary<string, LiveBroadcast> ManualLiveBroadcasts { get; private set; } = new Dictionary<string, LiveBroadcast>();
+
         public Dictionary<string, Video> Videos { get; private set; } = new Dictionary<string, Video>();
 
         public YouTubeService StreamerService { get; private set; }
@@ -99,7 +112,7 @@ namespace MixItUp.Base.Services.YouTube.New
 
         private DateTime launchDateTime = DateTime.Now;
 
-        public override async Task RefreshDetails()
+        public override async Task<Result> RefreshDetails()
         {
             IEnumerable<LiveBroadcast> broadcasts = await this.StreamerService.GetActiveBroadcasts();
             if (broadcasts != null)
@@ -112,11 +125,10 @@ namespace MixItUp.Base.Services.YouTube.New
                         newBroadcasts[broadcast.Id] = broadcast;
                     }
                 }
-                this.LiveBroadcasts = newBroadcasts;
+                this.AutomaticLiveBroadcasts = newBroadcasts;
             }
 
             this.IsLive = this.LiveBroadcasts.Count > 0;
-
             if (this.IsLive)
             {
                 IEnumerable<Video> videos = await this.StreamerService.GetVideosByID(this.LiveBroadcasts.Keys.ToList());
@@ -145,9 +157,11 @@ namespace MixItUp.Base.Services.YouTube.New
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
                 }
             }
+
+            return new Result();
         }
 
-        protected override async Task<Result> ConnectStreamer()
+        public override async Task<Result> ConnectStreamer()
         {
             Result result = await StreamerService.Connect();
             if (!result.Success)
@@ -155,10 +169,29 @@ namespace MixItUp.Base.Services.YouTube.New
                 return result;
             }
 
-            this.Streamer = await this.StreamerService.GetCurrentChannel();
-            if (this.Streamer == null)
+            this.StreamerModel = await this.StreamerService.GetCurrentChannel();
+            if (this.StreamerModel == null)
             {
                 return new Result(Resources.YouTubeFailedToGetUserData);
+            }
+
+            this.StreamerID = this.StreamerModel?.Id;
+            this.StreamerUsername = this.StreamerModel?.Snippet?.Title;
+            this.StreamerAvatarURL = this.StreamerModel?.Snippet?.Thumbnails?.Medium?.Url;
+
+            this.ChannelID = this.StreamerModel?.Id;
+            this.ChannelLink = this.StreamerModel?.Snippet?.CustomUrl;
+
+            this.Streamer = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: this.StreamerID);
+            if (this.Streamer == null)
+            {
+                this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(this.StreamerModel));
+            }
+
+            result = await this.RefreshDetails();
+            if (!result.Success)
+            {
+                return result;
             }
 
             List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
@@ -198,7 +231,7 @@ namespace MixItUp.Base.Services.YouTube.New
             return Task.CompletedTask;
         }
 
-        protected override async Task<Result> ConnectBot()
+        public override async Task<Result> ConnectBot()
         {
             Result result = await BotService.Connect();
             if (!result.Success)
@@ -206,10 +239,20 @@ namespace MixItUp.Base.Services.YouTube.New
                 return result;
             }
 
-            this.Bot = await this.BotService.GetCurrentChannel();
-            if (this.Bot == null)
+            this.BotModel = await this.BotService.GetCurrentChannel();
+            if (this.BotModel == null)
             {
                 return new Result(Resources.YouTubeFailedToGetUserData);
+            }
+
+            this.BotID = this.BotModel?.Id;
+            this.BotUsername = this.BotModel?.Snippet?.Title;
+            this.BotAvatarURL = this.BotModel?.Snippet?.Thumbnails?.Medium?.Url;
+
+            this.Bot = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: this.BotID);
+            if (this.Bot == null)
+            {
+                this.Bot = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(this.BotModel));
             }
 
             return new Result();
@@ -218,6 +261,16 @@ namespace MixItUp.Base.Services.YouTube.New
         protected override Task DisconnectBot()
         {
             return Task.CompletedTask;
+        }
+
+        public override async Task<Result> SetStreamTitle(string title)
+        {
+            return await this.UpdateStreamTitleAndDescription(title, description: null);
+        }
+
+        public override Task<Result> SetStreamCategory(string category)
+        {
+            return Task.FromResult(new Result());
         }
 
         public override async Task SendMessage(string message, bool sendAsStreamer = false)

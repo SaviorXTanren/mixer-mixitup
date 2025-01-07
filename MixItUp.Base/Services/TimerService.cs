@@ -118,7 +118,7 @@ namespace MixItUp.Base.Services
                 bool isLive = false;
                 StreamingPlatforms.ForEachPlatform(p =>
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive)
+                    if (StreamingPlatforms.GetPlatformSession(p).IsConnected && StreamingPlatforms.GetPlatformSession(p).IsLive)
                     {
                         isLive = true;
                     }

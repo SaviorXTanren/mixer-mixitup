@@ -41,6 +41,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public string UserBadges { get; set; }
         public string UserBadgeInfo { get; set; }
 
+        [Obsolete]
         public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserV2ViewModel user)
             : base(message.ID, StreamingPlatformTypeEnum.Twitch, user)
         {

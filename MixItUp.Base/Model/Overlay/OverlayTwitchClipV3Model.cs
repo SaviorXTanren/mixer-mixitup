@@ -89,7 +89,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 string clipReferenceID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.ClipReferenceID, parameters);
 
-                UserModel twitchUser = ServiceManager.Get<TwitchSession>().Streamer;
+                UserModel twitchUser = ServiceManager.Get<TwitchSession>().StreamerModel;
                 if (!string.IsNullOrEmpty(clipReferenceID))
                 {
                     if (this.ClipType == OverlayTwitchClipV3ClipType.RandomClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestClip ||

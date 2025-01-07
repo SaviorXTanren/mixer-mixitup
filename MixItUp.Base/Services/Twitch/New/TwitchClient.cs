@@ -328,6 +328,11 @@ namespace MixItUp.Base.Services.Twitch.New
             await webSocket.Disconnect();
         }
 
+        public async Task ProcessMockNotification(NotificationMessage message)
+        {
+            await this.ProcessNotification(message);
+        }
+
         private async Task ProcessSessionWelcome(WelcomeMessage message)
         {
             IEnumerable<EventSubSubscriptionModel> allSubs = await ServiceManager.Get<TwitchSession>().StreamerService.GetEventSubSubscriptions();
@@ -374,7 +379,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
             this.eventSubSubscriptionsConnected = true;
 
-            IEnumerable<ChannelFollowerModel> followers = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIFollowers(ServiceManager.Get<TwitchSession>().Streamer, maxResults: 100);
+            IEnumerable<ChannelFollowerModel> followers = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIFollowers(ServiceManager.Get<TwitchSession>().StreamerModel, maxResults: 100);
             if (followers != null)
             {
                 this.followCache.Clear();
@@ -1345,7 +1350,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
                 if (subscription.IsPrimeUpgrade || subscription.IsGiftedUpgrade)
                 {
-                    var subData = await ServiceManager.Get<TwitchSession>().StreamerService.GetBroadcasterSubscription(ServiceManager.Get<TwitchSession>().Streamer, subscription.User.PlatformID);
+                    var subData = await ServiceManager.Get<TwitchSession>().StreamerService.GetBroadcasterSubscription(ServiceManager.Get<TwitchSession>().StreamerModel, subscription.User.PlatformID);
                     if (subData != null)
                     {
                         subscription.SetSubData(subData);

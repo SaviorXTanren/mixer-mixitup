@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mock
 {
+    [Obsolete]
     public class MockChatEventService : StreamingPlatformServiceBase
     {
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);

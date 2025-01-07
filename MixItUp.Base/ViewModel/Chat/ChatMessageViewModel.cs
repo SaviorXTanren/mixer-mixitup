@@ -105,7 +105,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string PlatformImageURL { get { return StreamingPlatforms.GetPlatformImage(this.Platform); } }
 
-        public bool ShowPlatformImage { get { return ServiceManager.GetAll<IStreamingPlatformSessionService>().Count(s => s.IsConnected) > 1; } }
+        public bool ShowPlatformImage { get { return StreamingPlatforms.GetConnectedPlatformSessions().Count() > 1; } }
 
         public double ProcessingTime { get { return (DateTimeOffset.Now - this.ProcessingStartTime).TotalMilliseconds; } }
 
@@ -119,11 +119,11 @@ namespace MixItUp.Base.ViewModel.Chat
             {
                 if (this.User != null && this.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsConnected && string.Equals(this.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.UserID))
+                    if (StreamingPlatforms.GetPlatformSession(this.Platform).IsConnected && string.Equals(this.User?.PlatformID, StreamingPlatforms.GetPlatformSession(this.Platform)?.StreamerID))
                     {
                         return true;
                     }
-                    else if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsBotConnected && string.Equals(this.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.BotID))
+                    else if (StreamingPlatforms.GetPlatformSession(this.Platform).IsBotConnected && string.Equals(this.User?.PlatformID, StreamingPlatforms.GetPlatformSession(this.Platform)?.BotID))
                     {
                         return true;
                     }

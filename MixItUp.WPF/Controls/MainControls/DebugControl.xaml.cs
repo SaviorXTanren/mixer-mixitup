@@ -1,11 +1,11 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model;
-using MixItUp.Base.Model.Twitch.Clients.Chat;
-using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
+using MixItUp.Base.Model.Twitch.Clients.EventSub;
+using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, donation);
         }
 
-        private void TriggerTwitchTier1Sub_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void TriggerTwitchTier1Sub_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUsers().FirstOrDefault(u => u.ID != ChannelSession.User.ID && u.HasPlatformData(Base.Model.StreamingPlatformTypeEnum.Twitch));
             if (user == null)
@@ -60,29 +60,36 @@ namespace MixItUp.WPF.Controls.MainControls
 
             TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
 
-            ServiceManager.Get<TwitchPubSubService>().PubSub_OnSubscribedReceived(this, new PubSubSubscriptionsEventModel()
+            await ServiceManager.Get<TwitchSession>().Client.ProcessMockNotification(new NotificationMessage()
             {
-                user_name = twitchUser.Username,
-                user_id = twitchUser.ID,
-                display_name = twitchUser.DisplayName,
+                Metadata = new MessageMetadata()
+                {
+                    SubscriptionType = "channel.chat.notification"
+                },
+                Payload = new NotificationMessagePayload()
+                {
+                    Event = new JObject(new ChatNotification()
+                    {
+                        notice_type = "sub",
 
-                channel_name = ServiceManager.Get<TwitchSessionService>().User.login,
-                channel_id = ServiceManager.Get<TwitchSessionService>().User.id,
+                        broadcaster_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        broadcaster_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        broadcaster_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
-                time = DateTimeOffset.Now.ToString(),
+                        chatter_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
-                sub_plan = "1000",
-
-                cumulative_months = 1,
-                streak_months = 1,
-
-                context = "sub",
-
-                sub_message = new JObject()
+                        sub = new ChatNotificationSub()
+                        {
+                            sub_tier = "1000"
+                        }
+                    })
+                }
             });
         }
 
-        private void Twitch5GiftedTier1Sub_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void Twitch5GiftedTier1Sub_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUsers().FirstOrDefault(u => u.ID != ChannelSession.User.ID && u.HasPlatformData(Base.Model.StreamingPlatformTypeEnum.Twitch));
             if (user == null)
@@ -92,68 +99,76 @@ namespace MixItUp.WPF.Controls.MainControls
 
             TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
 
+            string communityGiftID = Guid.NewGuid().ToString();
             for (int i = 0; i < 5; i++)
             {
-                ServiceManager.Get<TwitchPubSubService>().PubSub_OnSubscriptionsGiftedReceived(this, new PubSubSubscriptionsGiftEventModel()
+                await ServiceManager.Get<TwitchSession>().Client.ProcessMockNotification(new NotificationMessage()
                 {
-                    user_name = twitchUser.Username,
-                    user_id = twitchUser.ID,
-                    display_name = twitchUser.DisplayName,
+                    Metadata = new MessageMetadata()
+                    {
+                        SubscriptionType = "channel.chat.notification"
+                    },
+                    Payload = new NotificationMessagePayload()
+                    {
+                        Event = new JObject(new ChatNotification()
+                        {
+                            notice_type = "sub_gift",
 
-                    recipient_user_name = twitchUser.Username,
-                    recipient_id = twitchUser.ID,
-                    recipient_display_name = twitchUser.DisplayName,
+                            broadcaster_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                            broadcaster_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                            broadcaster_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
-                    channel_name = ServiceManager.Get<TwitchSessionService>().User.login,
-                    channel_id = ServiceManager.Get<TwitchSessionService>().User.id,
+                            chatter_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                            chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                            chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
-                    time = DateTimeOffset.Now.ToString(),
+                            sub_gift = new ChatNotificationSubGift()
+                            {
+                                sub_tier = "1000",
+                                duration_months = 1,
+                                community_gift_id = communityGiftID,
 
-                    sub_plan = "1000",
-
-                    cumulative_months = 1,
-                    streak_months = 1,
-
-                    context = "subgift",
-
-                    sub_message = new JObject()
+                                recipient_user_id = twitchUser.ID,
+                                recipient_user_login = twitchUser.Username,
+                                recipient_user_name = twitchUser.DisplayName
+                            }
+                        })
+                    }
                 });
             }
 
-            ChatRawPacketModel chatRawPacket = new ChatRawPacketModel()
+            await ServiceManager.Get<TwitchSession>().Client.ProcessMockNotification(new NotificationMessage()
             {
-                RawText = "@badge-info=subscriber/1;badges=subscriber/0;color=#00FF7F;display-name=" + twitchUser.DisplayName + ";emotes=;flags=;id=44cb7c41-ecf4-435c-98bd-1e2a891df7af;login=" + twitchUser.Username + ";mod=0;msg-id=submysterygift;msg-param-mass-gift-count=5;msg-param-origin-id=89\\\\s82\\\\s5f\\\\s60\\\\s08\\\\s2e\\\\s6d\\\\sc2\\\\s76\\\\s90\\\\s45\\\\sce\\\\s97\\\\s71\\\\s8f\\\\s25\\\\s52\\\\sac\\\\sd2\\\\sf8;msg-param-sender-count=5;msg-param-sub-plan=1000;room-id=" + ServiceManager.Get<TwitchSessionService>().User.id + ";subscriber=1;system-msg=" + twitchUser.DisplayName + "\\\\sis\\\\sgifting\\\\s5\\\\sTier\\\\s1\\\\sSubs\\\\sto\\\\s" + ServiceManager.Get<TwitchSessionService>().User.display_name + "'s\\\\scommunity!\\\\sThey've\\\\sgifted\\\\sa\\\\stotal\\\\sof\\\\s5\\\\sin\\\\sthe\\\\schannel!;tmi-sent-ts=1594506772399;user-id=" + twitchUser.ID + ";user-type= :tmi.twitch.tv USERNOTICE #" + ServiceManager.Get<TwitchSessionService>().User.login,
-                Prefix = "tmi.twitch.tv",
-                Command = "USERNOTICE",
-                Parameters = new List<string>() { "#mixitupapp" },
-                Tags = new Dictionary<string, string>()
+                Metadata = new MessageMetadata()
                 {
-                    { "badge-info", "subscriber/1" },
-                    { "badges", "subscriber/0" },
-                    { "color", "#00FF7F" },
-                    { "display-name", twitchUser.DisplayName },
-                    { "emotes", "" },
-                    { "flags", "" },
-                    { "id", "44cb7c41-ecf4-435c-98bd-1e2a891df7af" },
-                    { "login", twitchUser.Username },
-                    { "mod", "0" },
-                    { "msg-id", "submysterygift" },
-                    { "msg-param-mass-gift-count", "5" },
-                    { "msg-param-origin-id", "89 s82 s5f s60 s08 s2e s6d sc2 s76 s90 s45 sce s97 s71 s8f s25 s52 sac sd2 sf8" },
-                    { "msg-param-sender-count", "5" },
-                    { "msg-param-sub-plan", "1000" },
-                    { "room-id", ServiceManager.Get<TwitchSessionService>().User.id },
-                    { "subscriber", "1" },
-                    { "system-msg", twitchUser.DisplayName + " sis sgifting s5 sTier s1 sSubs sto s" + ServiceManager.Get<TwitchSessionService>().User.display_name + "'s scommunity! sThey've sgifted sa stotal sof s5 sin sthe schannel!" },
-                    { "tmi-sent-ts", "1594506772399" },
-                    { "user-id", twitchUser.ID },
-                    { "user-type", "" }
+                    SubscriptionType = "channel.chat.notification"
+                },
+                Payload = new NotificationMessagePayload()
+                {
+                    Event = new JObject(new ChatNotification()
+                    {
+                        notice_type = "community_sub_gift",
+
+                        broadcaster_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        broadcaster_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        broadcaster_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
+
+                        chatter_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
+
+                        community_sub_gift = new ChatNotificationCommunitySubGift()
+                        {
+                            id = communityGiftID,
+                            total = 5,
+                            sub_tier = "1000",
+                        }
+                    })
                 }
-            };
-            ServiceManager.Get<TwitchChatService>().UserClient_OnUserNoticeReceived(this, new ChatUserNoticePacketModel(chatRawPacket));
+            });
         }
 
-        private void Twitch100BitsCheer_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void Twitch100BitsCheer_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUsers().FirstOrDefault(u => u.ID != ChannelSession.User.ID && u.HasPlatformData(Base.Model.StreamingPlatformTypeEnum.Twitch));
             if (user == null)
@@ -163,20 +178,59 @@ namespace MixItUp.WPF.Controls.MainControls
 
             TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
 
-            ServiceManager.Get<TwitchPubSubService>().PubSub_OnBitsV2Received(this, new PubSubBitsEventV2Model()
+            await ServiceManager.Get<TwitchSession>().Client.ProcessMockNotification(new NotificationMessage()
             {
-                user_name = twitchUser.Username,
-                user_id = twitchUser.ID,
+                Metadata = new MessageMetadata()
+                {
+                    SubscriptionType = "channel.chat.message"
+                },
+                Payload = new NotificationMessagePayload()
+                {
+                    Event = new JObject(new ChatMessageNotification()
+                    {
+                        broadcaster_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        broadcaster_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        broadcaster_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
-                bits_used = 100,
-                total_bits_used = 1234,
+                        chatter_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
-                channel_id = ServiceManager.Get<TwitchSessionService>().User.id,
+                        message_id = Guid.NewGuid().ToString(),
+                        message = new ChatMessageNotificationMessage()
+                        {
+                            text = "This is a message",
+                            fragments = new List<ChatMessageNotificationFragment>()
+                            {
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "This"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "is"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "a"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "messge"
+                                },
+                            }
+                        },
 
-                message_id = Guid.NewGuid().ToString(),
-                chat_message = "This is a message",
-
-                time = DateTimeOffset.Now.ToString(),
+                        cheer = new ChatMessageNotificationCheer()
+                        { 
+                            bits = 1234
+                        },
+                    })
+                }
             });
         }
     }

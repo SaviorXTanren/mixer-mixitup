@@ -1,7 +1,10 @@
-﻿using MixItUp.Base.Model.Trovo.Category;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Trovo.Category;
 using MixItUp.Base.Model.Trovo.Channels;
 using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Model.Trovo.Users;
+using MixItUp.Base.Model.Twitch.Games;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -51,36 +54,53 @@ namespace MixItUp.Base.Services.Trovo.New
         public IDictionary<string, TrovoChatEmoteViewModel> GlobalEmotes { get { return globalEmotes; } }
         private Dictionary<string, TrovoChatEmoteViewModel> globalEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
 
-        public override string StreamerID { get { return Streamer?.userId; } }
-        public override string StreamerUsername { get { return Streamer?.userName; } }
-        public override string BotID { get { return Bot?.userId; } }
-        public override string BotUsername { get { return Bot?.userName; } }
-        public override string ChannelID { get { return Streamer?.channelId; } }
-        public override string ChannelLink { get { return string.Format("trovo.live/{0}", StreamerUsername?.ToLower()); } }
-
-        public PrivateUserModel Streamer { get; private set; }
-        public PrivateUserModel Bot { get; private set; }
-        public ChannelModel Channel { get; private set; }
+        public PrivateUserModel StreamerModel { get; private set; }
+        public PrivateUserModel BotModel { get; private set; }
+        public ChannelModel ChannelModel { get; private set; }
 
         public TrovoService StreamerService { get; private set; }
         public TrovoService BotService { get; private set; }
 
-        private TrovoClient Client;
+        public TrovoClient Client { get; private set; }
 
         public Dictionary<string, ChannelSubscriberModel> Subscribers { get; private set; } = new Dictionary<string, ChannelSubscriberModel>();
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        public override async Task RefreshDetails()
+        public override async Task<Result> RefreshDetails()
         {
             ChannelModel channel = await StreamerService.GetChannelByID(ChannelID);
-            if (channel != null)
+            if (channel == null)
             {
-                await this.UpdateChannelData(channel);
+                return new Result(Resources.TrovoFailedToGetChannelData);
             }
+
+            this.ChannelModel = channel;
+
+            this.IsLive = this.ChannelModel.is_live;
+
+            if (!string.Equals(this.StreamCategoryID, this.ChannelModel.category_id, StringComparison.OrdinalIgnoreCase))
+            {
+                IEnumerable<CategoryModel> categories = await this.StreamerService.SearchCategories(ChannelModel.category_name, maxResults: 10);
+                if (categories != null && categories.Count() > 0)
+                {
+                    CategoryModel category = categories.FirstOrDefault(c => string.Equals(c.id, ChannelModel.category_id, StringComparison.OrdinalIgnoreCase));
+                    if (category != null)
+                    {
+                        this.StreamCategoryImageURL = category.icon_url;
+                    }
+                }
+            }
+
+            this.StreamTitle = this.ChannelModel.live_title;
+            this.StreamCategoryID = this.ChannelModel.category_id;
+            this.StreamCategoryName = this.ChannelModel.category_name;
+            this.StreamViewerCount = (int)this.ChannelModel?.current_viewers;
+
+            return new Result();
         }
 
-        protected override async Task<Result> ConnectStreamer()
+        public override async Task<Result> ConnectStreamer()
         {
             Result result = await StreamerService.Connect();
             if (!result.Success)
@@ -88,18 +108,30 @@ namespace MixItUp.Base.Services.Trovo.New
                 return result;
             }
 
-            Streamer = await StreamerService.GetUser();
-            if (Streamer == null)
+            this.StreamerModel = await StreamerService.GetCurrentUser();
+            if (this.StreamerModel == null)
             {
                 return new Result(Resources.TrovoFailedToGetUserData);
             }
 
-            Channel = await StreamerService.GetChannelByID(ChannelID);
-            if (Channel == null)
+            this.StreamerID = this.StreamerModel?.userId;
+            this.StreamerUsername = this.StreamerModel?.userName;
+            this.StreamerAvatarURL = this.StreamerModel?.profilePic;
+
+            this.ChannelID = this.StreamerModel?.channelId;
+            this.ChannelLink = string.Format("trovo.live/{0}", StreamerUsername?.ToLower());
+
+            this.Streamer = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: this.StreamerID);
+            if (this.Streamer == null)
             {
-                return new Result(Resources.TrovoFailedToGetChannelData);
+                this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(this.StreamerModel));
             }
-            await this.UpdateChannelData(Channel);
+
+            result = await this.RefreshDetails();
+            if (!result.Success)
+            {
+                return result;
+            }
 
             string chatToken = await this.StreamerService.GetChatToken();
             if (string.IsNullOrEmpty(chatToken))
@@ -107,10 +139,10 @@ namespace MixItUp.Base.Services.Trovo.New
                 return new Result(Resources.TrovoChatConnectionCouldNotBeEstablished);
             }
 
-            result = await Client.Connect(chatToken);
+            result = await this.Client.Connect(chatToken);
             if (!result.Success)
             {
-                await Client.Disconnect();
+                await this.Client.Disconnect();
                 return result;
             }
 
@@ -131,7 +163,7 @@ namespace MixItUp.Base.Services.Trovo.New
 
         protected override async Task DisconnectStreamer()
         {
-            await Client.Disconnect();
+            await this.Client.Disconnect();
 
             if (this.cancellationTokenSource != null)
             {
@@ -139,7 +171,7 @@ namespace MixItUp.Base.Services.Trovo.New
             }
         }
 
-        protected override async Task<Result> ConnectBot()
+        public override async Task<Result> ConnectBot()
         {
             Result result = await BotService.Connect();
             if (!result.Success)
@@ -147,10 +179,20 @@ namespace MixItUp.Base.Services.Trovo.New
                 return result;
             }
 
-            Bot = await BotService.GetUser();
-            if (Bot == null)
+            this.BotModel = await BotService.GetCurrentUser();
+            if (this.BotModel == null)
             {
                 return new Result(Resources.TrovoFailedToGetUserData);
+            }
+
+            this.BotID = this.BotModel?.userId;
+            this.BotUsername = this.BotModel?.userName;
+            this.BotAvatarURL = this.BotModel.profilePic;
+
+            this.Bot = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: this.BotID);
+            if (this.Bot == null)
+            {
+                this.Bot = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(this.BotModel));
             }
 
             return new Result();
@@ -159,6 +201,26 @@ namespace MixItUp.Base.Services.Trovo.New
         protected override Task DisconnectBot()
         {
             return Task.CompletedTask;
+        }
+
+        public override async Task<Result> SetStreamTitle(string title)
+        {
+            return await ServiceManager.Get<TrovoSession>().StreamerService.UpdateChannel(ServiceManager.Get<TrovoSession>().ChannelID, title: title);
+        }
+
+        public override async Task<Result> SetStreamCategory(string category)
+        {
+            IEnumerable<CategoryModel> categories = await this.StreamerService.SearchCategories(category, maxResults: 10);
+            if (categories != null && categories.Count() > 0)
+            {
+                CategoryModel c = categories.FirstOrDefault();
+                if (c != null)
+                {
+                    return await this.StreamerService.UpdateChannel(this.ChannelID, categoryID: c?.id);
+                }
+            }
+
+            return new Result(success: false);
         }
 
         public override async Task SendMessage(string message, bool sendAsStreamer = false)
@@ -209,31 +271,6 @@ namespace MixItUp.Base.Services.Trovo.New
         public override async Task UnbanUser(UserV2ViewModel user)
         {
             await this.StreamerService.UnbanUser(this.ChannelID, user.Username);
-        }
-
-        private async Task UpdateChannelData(ChannelModel channel)
-        {
-            Channel = channel;
-
-            this.IsLive = Channel.is_live;
-
-            if (!string.Equals(this.StreamCategoryID, Channel.category_id, StringComparison.OrdinalIgnoreCase))
-            {
-                IEnumerable<CategoryModel> categories = await this.StreamerService.SearchCategories(Channel.category_name, maxResults: 10);
-                if (categories != null && categories.Count() > 0)
-                {
-                    CategoryModel category = categories.FirstOrDefault(c => string.Equals(c.id, Channel.category_id, StringComparison.OrdinalIgnoreCase));
-                    if (category != null)
-                    {
-                        this.StreamCategoryImageURL = category.icon_url;
-                    }
-                }
-            }
-
-            this.StreamTitle = Channel.live_title;
-            this.StreamCategoryID = Channel.category_id;
-            this.StreamCategoryName = Channel.category_name;
-            this.StreamViewerCount = (int)Channel?.current_viewers;
         }
 
         private async Task<Result> GetEmotes()

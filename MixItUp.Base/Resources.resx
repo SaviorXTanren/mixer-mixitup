@@ -10875,4 +10875,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
     <value>Failed to update video ID: {0}</value>
     <comment>{0} is the ID of the video</comment>
   </data>
+  <data name="TwitchFailedToGetChannelData" xml:space="preserve">
+    <value>Failed to get Twitch channel data</value>
+  </data>
 </root>

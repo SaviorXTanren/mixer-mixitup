@@ -14,6 +14,7 @@ namespace MixItUp.Base.Services
         public string AvatarURL { get; set; }
     }
 
+    [Obsolete]
     public interface IStreamingPlatformSessionService
     {
         bool IsConnected { get; }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mock
 {
+    [Obsolete]
     public class MockSessionService : IStreamingPlatformSessionService
     {
         public MockPlatformService UserConnection { get; private set; }

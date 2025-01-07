@@ -55,6 +55,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.SetUserProperties(user);
         }
 
+        [Obsolete]
         public TwitchUserPlatformV2Model(ChatMessagePacketModel message) : this(message.UserID, message.UserLogin, message.UserDisplayName)
         {
             this.SetUserProperties(message);
@@ -68,6 +69,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.AvatarLink = whisper.profile_image;
         }
 
+        [Obsolete]
         public TwitchUserPlatformV2Model(ChatUserNoticePacketModel notice)
              : this(notice.UserID.ToString(), !string.IsNullOrEmpty(notice.RaidUserLogin) ? notice.RaidUserLogin : notice.Login, !string.IsNullOrEmpty(notice.RaidUserDisplayName) ? notice.RaidUserDisplayName : notice.DisplayName)
         {
@@ -117,9 +119,9 @@ namespace MixItUp.Base.Model.User.Platform
         [Obsolete]
         public TwitchUserPlatformV2Model() : base() { }
 
-        public bool HasTwitchSubscriberBadge { get { return this.HasTwitchBadge("subscriber"); } }
+        public bool HasTwitchSubscriberBadge { get { return this.HasNewTwitchBadge("subscriber"); } }
 
-        public bool HasTwitchSubscriberFounderBadge { get { return this.HasTwitchBadge("founder"); } }
+        public bool HasTwitchSubscriberFounderBadge { get { return this.HasNewTwitchBadge("founder"); } }
 
         public bool IsTwitchSubscriber { get { return this.HasTwitchSubscriberBadge || this.HasTwitchSubscriberFounderBadge; } }
 
@@ -133,7 +135,7 @@ namespace MixItUp.Base.Model.User.Platform
                     this.SetUserProperties(user);
                 }
 
-                ChannelFollowerModel follow = await ServiceManager.Get<TwitchSession>().StreamerService.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSession>().Streamer, this.GetTwitchNewAPIUserModel());
+                ChannelFollowerModel follow = await ServiceManager.Get<TwitchSession>().StreamerService.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSession>().StreamerModel, this.GetTwitchNewAPIUserModel());
                 if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {
                     this.Roles.Add(UserRoleEnum.Follower);
@@ -148,9 +150,9 @@ namespace MixItUp.Base.Model.User.Platform
                     }
                 }
 
-                if (ServiceManager.Get<TwitchSession>().Streamer.IsAffiliate() || ServiceManager.Get<TwitchSession>().Streamer.IsPartner())
+                if (ServiceManager.Get<TwitchSession>().StreamerModel.IsAffiliate() || ServiceManager.Get<TwitchSession>().StreamerModel.IsPartner())
                 {
-                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSession>().StreamerService.GetBroadcasterSubscription(ServiceManager.Get<TwitchSession>().Streamer, this.ID);
+                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSession>().StreamerService.GetBroadcasterSubscription(ServiceManager.Get<TwitchSession>().StreamerModel, this.ID);
                     if (subscription != null)
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
@@ -177,21 +179,25 @@ namespace MixItUp.Base.Model.User.Platform
             };
         }
 
+        [Obsolete]
         public void SetUserProperties(ChatMessagePacketModel message)
         {
             this.SetUserProperties(message.UserDisplayName, message.BadgeDictionary, message.BadgeInfoDictionary, message.Color);
         }
 
+        [Obsolete]
         public void SetUserProperties(ChatUserStatePacketModel userState)
         {
             this.SetUserProperties(userState.UserDisplayName, userState.BadgeDictionary, userState.BadgeInfoDictionary, userState.Color);
         }
 
+        [Obsolete]
         public void SetUserProperties(ChatUserNoticePacketModel userNotice)
         {
             this.SetUserProperties(userNotice.UserDisplayName, userNotice.BadgeDictionary, userNotice.BadgeInfoDictionary, userNotice.Color);
         }
 
+        [Obsolete]
         private void SetUserProperties(string displayName, Dictionary<string, int> badges, Dictionary<string, int> badgeInfo, string color)
         {
             this.DisplayName = displayName;
@@ -202,7 +208,7 @@ namespace MixItUp.Base.Model.User.Platform
                 this.Color = color;
             }
 
-            if (string.Equals(this.ID, ServiceManager.Get<TwitchSessionService>().UserID)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
+            if (string.Equals(this.ID, ServiceManager.Get<TwitchSession>().Streamer)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
             if (this.Badges != null)
             {
                 if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
@@ -273,8 +279,8 @@ namespace MixItUp.Base.Model.User.Platform
             if (user.IsGlobalMod()) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }
             if (user.IsStaff()) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
 
-            if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("founder"); }
-            else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }
+            if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetNewTwitchBadgeURL("founder"); }
+            else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetNewTwitchBadgeURL("subscriber"); }
             else { this.SubscriberBadge = null; }
 
             if (ServiceManager.Get<TwitchSession>().ChannelEditors.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.TwitchChannelEditor); } else { this.Roles.Remove(UserRoleEnum.TwitchChannelEditor); }
@@ -364,6 +370,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.SpecialtyBadgeLink = this.SpecialtyBadge?.image_url_1x;
         }
 
+        [Obsolete]
         private int GetTwitchBadgeID(string name)
         {
             if (this.Badges != null && this.Badges.TryGetValue(name, out int version))
@@ -373,8 +380,10 @@ namespace MixItUp.Base.Model.User.Platform
             return -1;
         }
 
+        [Obsolete]
         private bool HasTwitchBadge(string name) { return this.GetTwitchBadgeID(name) >= 0; }
 
+        [Obsolete]
         private ChatBadgeModel GetTwitchBadgeURL(string name)
         {
             if (ServiceManager.Get<TwitchChatService>().ChatBadges.ContainsKey(name))

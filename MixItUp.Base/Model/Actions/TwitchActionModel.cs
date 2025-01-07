@@ -399,12 +399,12 @@ namespace MixItUp.Base.Model.Actions
                     UserModel targetChannel = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIUserByLogin(channelName);
                     if (targetChannel != null)
                     {
-                        await ServiceManager.Get<TwitchSession>().StreamerService.RaidChannel(ServiceManager.Get<TwitchSession>().Streamer, targetChannel);
+                        await ServiceManager.Get<TwitchSession>().StreamerService.RaidChannel(ServiceManager.Get<TwitchSession>().StreamerModel, targetChannel);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.RunAd)
                 {
-                    AdResponseModel response = await ServiceManager.Get<TwitchSession>().StreamerService.RunAd(ServiceManager.Get<TwitchSession>().Streamer, this.AdLength);
+                    AdResponseModel response = await ServiceManager.Get<TwitchSession>().StreamerService.RunAd(ServiceManager.Get<TwitchSession>().StreamerModel, this.AdLength);
                     if (response == null)
                     {
                         await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchAdUnableToRun, parameters);
@@ -433,7 +433,7 @@ namespace MixItUp.Base.Model.Actions
                         if (this.ActionType == TwitchActionType.VIPUser)
                         {
                             targetUser.Roles.Add(User.UserRoleEnum.TwitchVIP);
-                            await ServiceManager.Get<TwitchSession>().StreamerService.VIPUser(ServiceManager.Get<TwitchSession>().Streamer, twitchUser.ID);
+                            await ServiceManager.Get<TwitchSession>().StreamerService.VIPUser(ServiceManager.Get<TwitchSession>().StreamerModel, twitchUser.ID);
 
                             if (this.VIPUserAutomaticRemovalDurationSpan != null)
                             {
@@ -443,13 +443,13 @@ namespace MixItUp.Base.Model.Actions
                         else if (this.ActionType == TwitchActionType.UnVIPUser)
                         {
                             targetUser.Roles.Remove(User.UserRoleEnum.TwitchVIP);
-                            await ServiceManager.Get<TwitchSession>().StreamerService.UnVIPUser(ServiceManager.Get<TwitchSession>().Streamer, twitchUser.ID);
+                            await ServiceManager.Get<TwitchSession>().StreamerService.UnVIPUser(ServiceManager.Get<TwitchSession>().StreamerModel, twitchUser.ID);
                         }
                     }
                 }
                 else if (this.ActionType == TwitchActionType.Clip)
                 {
-                    ClipCreationModel clipCreation = await ServiceManager.Get<TwitchSession>().StreamerService.CreateClip(ServiceManager.Get<TwitchSession>().Streamer, this.ClipIncludeDelay);
+                    ClipCreationModel clipCreation = await ServiceManager.Get<TwitchSession>().StreamerService.CreateClip(ServiceManager.Get<TwitchSession>().StreamerModel, this.ClipIncludeDelay);
                     if (clipCreation != null)
                     {
                         for (int i = 0; i < 12; i++)
@@ -479,7 +479,7 @@ namespace MixItUp.Base.Model.Actions
                         return;
                     }
 
-                    CreatedStreamMarkerModel streamMarker = await ServiceManager.Get<TwitchSession>().StreamerService.CreateStreamMarker(ServiceManager.Get<TwitchSession>().Streamer, description);
+                    CreatedStreamMarkerModel streamMarker = await ServiceManager.Get<TwitchSession>().StreamerService.CreateStreamMarker(ServiceManager.Get<TwitchSession>().StreamerModel, description);
                     if (streamMarker == null)
                     {
                         await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters);
@@ -565,7 +565,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
 
-                    CustomChannelPointRewardModel reward = await ServiceManager.Get<TwitchSession>().StreamerService.UpdateCustomChannelPointReward(ServiceManager.Get<TwitchSession>().Streamer, this.ChannelPointRewardID, jobj);
+                    CustomChannelPointRewardModel reward = await ServiceManager.Get<TwitchSession>().StreamerService.UpdateCustomChannelPointReward(ServiceManager.Get<TwitchSession>().StreamerModel, this.ChannelPointRewardID, jobj);
                     if (reward == null)
                     {
                         await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchActionChannelPointRewardCouldNotBeUpdated, parameters);
@@ -609,7 +609,7 @@ namespace MixItUp.Base.Model.Actions
 
                             for (int i = 0; i < 5; i++)
                             {
-                                PollModel results = await ServiceManager.Get<TwitchSession>().StreamerService.GetPoll(ServiceManager.Get<TwitchSession>().Streamer, poll.id);
+                                PollModel results = await ServiceManager.Get<TwitchSession>().StreamerService.GetPoll(ServiceManager.Get<TwitchSession>().StreamerModel, poll.id);
                                 if (results != null)
                                 {
                                     if (string.Equals(results.status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
@@ -671,7 +671,7 @@ namespace MixItUp.Base.Model.Actions
                             {
                                 await Task.Delay(10000);
 
-                                PredictionModel results = await ServiceManager.Get<TwitchSession>().StreamerService.GetPrediction(ServiceManager.Get<TwitchSession>().Streamer, prediction.id);
+                                PredictionModel results = await ServiceManager.Get<TwitchSession>().StreamerService.GetPrediction(ServiceManager.Get<TwitchSession>().StreamerModel, prediction.id);
                                 if (results != null)
                                 {
                                     if (string.Equals(results.status, "RESOLVED", StringComparison.OrdinalIgnoreCase))
@@ -695,7 +695,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitchActionType.SetChatSettings)
                 {
-                    ChatSettingsModel settings = await ServiceManager.Get<TwitchSession>().StreamerService.GetChatSettings(ServiceManager.Get<TwitchSession>().Streamer);
+                    ChatSettingsModel settings = await ServiceManager.Get<TwitchSession>().StreamerService.GetChatSettings(ServiceManager.Get<TwitchSession>().StreamerModel);
                     if (settings != null)
                     {
                         if (this.ChatSettingsSlowModeDuration != null)
@@ -752,34 +752,34 @@ namespace MixItUp.Base.Model.Actions
                             }
                         }
 
-                        await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChatSettings(ServiceManager.Get<TwitchSession>().Streamer, settings);
+                        await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChatSettings(ServiceManager.Get<TwitchSession>().StreamerModel, settings);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.SetTitle)
                 {
                     string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
-                    await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChannelInformation(ServiceManager.Get<TwitchSession>().Streamer, title: text);
+                    await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChannelInformation(ServiceManager.Get<TwitchSession>().StreamerModel, title: text);
                 }
                 else if (this.ActionType == TwitchActionType.SetGame)
                 {
                     string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
-                    await ServiceManager.Get<TwitchSession>().StreamerService.SetGame(ServiceManager.Get<TwitchSession>().Streamer, text);
+                    await ServiceManager.Get<TwitchSession>().StreamerService.SetGame(ServiceManager.Get<TwitchSession>().StreamerModel, text);
                 }
                 else if (this.ActionType == TwitchActionType.SetCustomTags)
                 {
-                    await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChannelInformation(ServiceManager.Get<TwitchSession>().Streamer, tags: this.CustomTags);
+                    await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChannelInformation(ServiceManager.Get<TwitchSession>().StreamerModel, tags: this.CustomTags);
                 }
                 else if (this.ActionType == TwitchActionType.SendChatAnnouncement)
                 {
                     string text = await ReplaceStringWithSpecialModifiers(this.Message, parameters);
 
-                    if (SendAnnouncementAsStreamer || ServiceManager.Get<TwitchSession>().Bot == null)
+                    if (SendAnnouncementAsStreamer || ServiceManager.Get<TwitchSession>().BotModel == null)
                     {
-                        await ServiceManager.Get<TwitchSession>().StreamerService.SendChatAnnouncement(ServiceManager.Get<TwitchSession>().Streamer, ServiceManager.Get<TwitchSession>().Streamer, text, AnnouncementColorMap[Color]);
+                        await ServiceManager.Get<TwitchSession>().StreamerService.SendChatAnnouncement(ServiceManager.Get<TwitchSession>().StreamerModel, ServiceManager.Get<TwitchSession>().StreamerModel, text, AnnouncementColorMap[Color]);
                     }
                     else
                     {
-                        await ServiceManager.Get<TwitchSession>().BotService.SendChatAnnouncement(ServiceManager.Get<TwitchSession>().Streamer, ServiceManager.Get<TwitchSession>().Bot, text, AnnouncementColorMap[Color]);
+                        await ServiceManager.Get<TwitchSession>().BotService.SendChatAnnouncement(ServiceManager.Get<TwitchSession>().StreamerModel, ServiceManager.Get<TwitchSession>().BotModel, text, AnnouncementColorMap[Color]);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.SendShoutout)
@@ -799,7 +799,7 @@ namespace MixItUp.Base.Model.Actions
                         UserModel targetUser = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIUserByLogin(targetUsername);
                         if (targetUser != null)
                         {
-                            await ServiceManager.Get<TwitchSession>().StreamerService.SendShoutout(ServiceManager.Get<TwitchSession>().Streamer, targetUser);
+                            await ServiceManager.Get<TwitchSession>().StreamerService.SendShoutout(ServiceManager.Get<TwitchSession>().StreamerModel, targetUser);
                         }
                     }
                 }
@@ -817,11 +817,11 @@ namespace MixItUp.Base.Model.Actions
                         cclIdsToRemove = new List<string>(ServiceManager.Get<TwitchSession>().ContentClassificationLabels.Where(l => !this.ContentClassificationLabelIDs.Contains(l.id)).Select(l => l.id));
                     }
 
-                    await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChannelInformation(ServiceManager.Get<TwitchSession>().Streamer, cclIdsToAdd: cclIdsToAdd, cclIdsToRemove: cclIdsToRemove);
+                    await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChannelInformation(ServiceManager.Get<TwitchSession>().StreamerModel, cclIdsToAdd: cclIdsToAdd, cclIdsToRemove: cclIdsToRemove);
                 }
                 else if (this.ActionType == TwitchActionType.SnoozeNextAd)
                 {
-                    await ServiceManager.Get<TwitchSession>().StreamerService.SnoozeNextAd(ServiceManager.Get<TwitchSession>().Streamer);
+                    await ServiceManager.Get<TwitchSession>().StreamerService.SnoozeNextAd(ServiceManager.Get<TwitchSession>().StreamerModel);
                 }
             }
         }

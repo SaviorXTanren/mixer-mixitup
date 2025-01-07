@@ -56,9 +56,8 @@ namespace MixItUp.Base.ViewModel.Accounts
             }
         }
 
-        public StreamingPlatformAccountModel UserAccount { get; set; }
-        public string UserAccountUsername { get { return this.UserAccount?.Username; } }
-        public string UserAccountAvatar { get { return this.UserAccount?.AvatarURL; } }
+        public string UserAccountUsername { get; private set; }
+        public string UserAccountAvatar { get; private set; }
 
         public ICommand UserAccountCommand { get; set; }
         public string UserAccountButtonContent
@@ -80,11 +79,10 @@ namespace MixItUp.Base.ViewModel.Accounts
                 return string.Empty;
             }
         }
-        public bool IsUserAccountConnected { get { return StreamingPlatforms.GetPlatformSessionService(this.Platform).IsConnected; } }
+        public bool IsUserAccountConnected { get { return StreamingPlatforms.GetPlatformSession(this.Platform).IsConnected; } }
 
-        public StreamingPlatformAccountModel BotAccount { get; set; }
-        public string BotAccountUsername { get { return this.BotAccount?.Username; } }
-        public string BotAccountAvatar { get { return this.BotAccount?.AvatarURL; } }
+        public string BotAccountUsername { get; private set; }
+        public string BotAccountAvatar { get; private set; }
 
         public ICommand BotAccountCommand { get; set; }
         public string BotAccountButtonContent
@@ -106,45 +104,58 @@ namespace MixItUp.Base.ViewModel.Accounts
                 return string.Empty;
             }
         }
-        public bool IsBotAccountConnected { get { return StreamingPlatforms.GetPlatformSessionService(this.Platform).IsBotConnected; } }
+        public bool IsBotAccountConnected { get { return StreamingPlatforms.GetPlatformSession(this.Platform).IsBotConnected; } }
 
         public StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum platform)
         {
             this.Platform = platform;
 
-            if (this.IsUserAccountConnected)
+            StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(this.Platform);
+            if (session.IsConnected)
             {
-                this.UserAccount = StreamingPlatforms.GetPlatformSessionService(this.Platform).UserAccount;
+                this.UserAccountUsername = session.StreamerUsername;
+                this.UserAccountAvatar = session.StreamerAvatarURL;
             }
 
-            if (this.IsBotAccountConnected)
+            if (session.IsBotConnected)
             {
-                this.BotAccount = StreamingPlatforms.GetPlatformSessionService(this.Platform).BotAccount;
+                this.BotAccountUsername = session.BotUsername;
+                this.BotAccountAvatar = session.BotAvatarURL;
             }
 
             this.UserAccountCommand = this.CreateCommand(async () =>
             {
                 if (this.IsUserAccountConnected)
                 {
-                    await StreamingPlatforms.GetPlatformSessionService(this.Platform).DisconnectUser(ChannelSession.Settings);
-                    this.UserAccount = null;
-                    this.BotAccount = null;
+                    await StreamingPlatforms.GetPlatformSession(this.Platform).DisableStreamer();
+
+                    this.UserAccountUsername = null;
+                    this.UserAccountAvatar = null;
+
+                    this.BotAccountUsername = null;
+                    this.BotAccountAvatar = null;
                 }
                 else
                 {
-                    Result result = await StreamingPlatforms.GetPlatformSessionService(this.Platform).ConnectUser();
+                    Result result = await StreamingPlatforms.GetPlatformSession(this.Platform).ConnectStreamer();
                     if (result.Success)
                     {
-                        this.UserAccount = StreamingPlatforms.GetPlatformSessionService(this.Platform).UserAccount;
                         if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
                         {
                             ChannelSession.Settings.DefaultStreamingPlatform = this.Platform;
                         }
+
+                        this.UserAccountUsername = session.StreamerUsername;
+                        this.UserAccountAvatar = session.StreamerAvatarURL;
                     }
                     else
                     {
-                        this.UserAccount = null;
-                        this.BotAccount = null;
+                        this.UserAccountUsername = null;
+                        this.UserAccountAvatar = null;
+
+                        this.BotAccountUsername = null;
+                        this.BotAccountAvatar = null;
+
                         await DialogHelper.ShowMessage(result.Message);
                     }
                 }
@@ -155,28 +166,33 @@ namespace MixItUp.Base.ViewModel.Accounts
             {
                 if (this.IsBotAccountConnected)
                 {
-                    await StreamingPlatforms.GetPlatformSessionService(this.Platform).DisconnectBot(ChannelSession.Settings);
-                    this.BotAccount = null;
+                    await StreamingPlatforms.GetPlatformSession(this.Platform).DisableBot();
+
+                    this.BotAccountUsername = null;
+                    this.BotAccountAvatar = null;
                 }
                 else
                 {
-                    Result result = await StreamingPlatforms.GetPlatformSessionService(this.Platform).ConnectBot();
+                    Result result = await StreamingPlatforms.GetPlatformSession(this.Platform).ConnectBot();
                     if (result.Success)
                     {
-                        if (string.Equals(StreamingPlatforms.GetPlatformSessionService(this.Platform).UserID, StreamingPlatforms.GetPlatformSessionService(this.Platform).BotID, StringComparison.CurrentCultureIgnoreCase))
+                        if (string.Equals(StreamingPlatforms.GetPlatformSession(this.Platform).StreamerID, StreamingPlatforms.GetPlatformSession(this.Platform).BotID, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            await StreamingPlatforms.GetPlatformSessionService(this.Platform).DisconnectBot(ChannelSession.Settings);
+                            await StreamingPlatforms.GetPlatformSession(this.Platform).DisableBot();
                             result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
                         }
                         else
                         {
-                            this.BotAccount = StreamingPlatforms.GetPlatformSessionService(this.Platform).BotAccount;
+                            this.BotAccountUsername = session.BotUsername;
+                            this.BotAccountAvatar = session.BotAvatarURL;
                         }
                     }
 
                     if (!result.Success)
                     {
-                        this.BotAccount = null;
+                        this.BotAccountUsername = null;
+                        this.BotAccountAvatar = null;
+
                         await DialogHelper.ShowMessage(result.Message);
                     }
                 }

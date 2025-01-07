@@ -10,6 +10,7 @@ using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.Twitch.Streams;
 using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -113,24 +114,18 @@ namespace MixItUp.Base.Services.Twitch.New
         public override int MaxMessageLength { get { return 500; } }
 
         public HashSet<string> ChannelEditors { get; private set; } = new HashSet<string>();
-        public UserModel Streamer { get; set; }
-        public UserModel Bot { get; set; }
+        public UserModel StreamerModel { get; set; }
+        public UserModel BotModel { get; set; }
         public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
         public List<ChannelContentClassificationLabelModel> ContentClassificationLabels { get; private set; } = new List<ChannelContentClassificationLabelModel>();
         public AdScheduleModel AdSchedule { get; set; }
         public DateTimeOffset NextAdTimestamp { get; set; } = DateTimeOffset.MinValue;
 
-        public override string StreamerID { get { return this.Streamer?.id; } }
-        public override string StreamerUsername { get { return this.Streamer?.login; } }
-        public override string BotID { get { return this.Bot?.id; } }
-        public override string BotUsername { get { return this.Bot?.login; } }
-        public override string ChannelID { get { return this.Streamer?.id; } }
-        public override string ChannelLink { get { return string.Format("twitch.tv/{0}", this.StreamerUsername?.ToLower()); } }
-
         public TwitchService StreamerService { get; private set; }
         public TwitchService BotService { get; private set; }
-        private TwitchClient Client;
+
+        public TwitchClient Client { get; private set; }
 
         private List<string> emoteSetIDs = new List<string>();
 
@@ -148,31 +143,41 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private CancellationTokenSource cancellationTokenSource;
 
-        public override async Task RefreshDetails()
+        public override async Task<Result> RefreshDetails()
         {
-            StreamModel stream = await StreamerService.GetStream(Streamer);
+            ChannelInformationModel channel = await StreamerService.GetChannelInformation(StreamerModel);
+            if (channel == null)
+            {
+                return new Result(Resources.TwitchFailedToGetChannelData);
+            }
+
+            this.Channel = channel;
+
+            if (!string.Equals(this.StreamCategoryID, channel.game_id, StringComparison.OrdinalIgnoreCase))
+            {
+                GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
+                if (game != null)
+                {
+                    this.StreamCategoryImageURL = game.box_art_url;
+                }
+            }
+
+            this.StreamTitle = this.Channel.title;
+            this.StreamCategoryID = this.Channel.game_id;
+            this.StreamCategoryName = this.Channel.game_name;
+
+            StreamModel stream = await StreamerService.GetStream(StreamerModel);
             if (stream != null)
             {
-                if (!string.Equals(this.StreamCategoryID, stream.game_id, StringComparison.OrdinalIgnoreCase))
-                {
-                    GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
-                    if (game != null)
-                    {
-                        this.StreamCategoryImageURL = game.box_art_url;
-                    }
-                }
-
-                this.StreamTitle = stream.title;
-                this.StreamCategoryID = stream.game_id;
-                this.StreamCategoryName = stream.game_name;
-
                 this.Stream = stream;
 
                 this.StreamViewerCount = (int)this.Stream.viewer_count;
             }
+
+            return new Result();
         }
 
-        protected override async Task<Result> ConnectStreamer()
+        public override async Task<Result> ConnectStreamer()
         {
             Result result = await StreamerService.Connect();
             if (!result.Success)
@@ -180,16 +185,35 @@ namespace MixItUp.Base.Services.Twitch.New
                 return result;
             }
 
-            Streamer = await StreamerService.GetNewAPICurrentUser();
-            if (Streamer == null)
+            this.StreamerModel = await StreamerService.GetNewAPICurrentUser();
+            if (this.StreamerModel == null)
             {
                 return new Result(Resources.TwitchFailedToGetUserData);
             }
 
-            Channel = await StreamerService.GetChannelInformation(Streamer);
-            if (Channel == null)
+            this.Channel = await StreamerService.GetChannelInformation(StreamerModel);
+            if (this.Channel == null)
             {
                 return new Result(Resources.TwitchFailedToGetUserData);
+            }
+
+            this.StreamerID = this.StreamerModel?.id;
+            this.StreamerUsername = this.StreamerModel?.login;
+            this.StreamerAvatarURL = this.StreamerModel?.profile_image_url;
+
+            this.ChannelID = this.StreamerModel?.id;
+            this.ChannelLink = string.Format("twitch.tv/{0}", this.StreamerUsername?.ToLower());
+
+            this.Streamer = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: this.StreamerID);
+            if (this.Streamer == null)
+            {
+                this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(this.StreamerModel));
+            }
+
+            result = await this.RefreshDetails();
+            if (!result.Success)
+            {
+                return result;
             }
 
             result = await this.Client.Connect();
@@ -203,7 +227,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
             List<Task<IEnumerable<ChatEmoteModel>>> twitchEmoteTasks = new List<Task<IEnumerable<ChatEmoteModel>>>();
             twitchEmoteTasks.Add(this.StreamerService.GetGlobalEmotes());
-            twitchEmoteTasks.Add(this.StreamerService.GetChannelEmotes(this.Streamer));
+            twitchEmoteTasks.Add(this.StreamerService.GetChannelEmotes(this.StreamerModel));
             if (this.emoteSetIDs != null)
             {
                 twitchEmoteTasks.Add(this.StreamerService.GetEmoteSets(this.emoteSetIDs));
@@ -213,7 +237,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
             Task<IEnumerable<ChatBadgeSetModel>> globalChatBadgesTask = this.StreamerService.GetGlobalChatBadges();
             initializationTasks.Add(globalChatBadgesTask);
-            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = this.StreamerService.GetChannelChatBadges(this.Streamer);
+            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = this.StreamerService.GetChannelChatBadges(this.StreamerModel);
             initializationTasks.Add(channelChatBadgesTask);
 
             if (ChannelSession.Settings.ShowAlejoPronouns)
@@ -236,8 +260,11 @@ namespace MixItUp.Base.Services.Twitch.New
                 initializationTasks.Add(ServiceManager.Get<FrankerFaceZService>().DownloadTwitchFrankerFaceZEmotes(this.StreamerUsername));
             }
 
-            Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = this.StreamerService.GetBitsCheermotes(this.Streamer);
+            Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = this.StreamerService.GetBitsCheermotes(this.StreamerModel);
             initializationTasks.Add(cheermotesTask);
+
+            Task<IEnumerable<ChannelEditorUserModel>> channelEditorsTask = this.StreamerService.GetChannelEditors(this.StreamerModel);
+            initializationTasks.Add(channelEditorsTask);
 
             await Task.WhenAll(initializationTasks);
 
@@ -252,28 +279,45 @@ namespace MixItUp.Base.Services.Twitch.New
                 }
             }
 
-            foreach (ChatBadgeSetModel badgeSet in globalChatBadgesTask.Result)
+            if (globalChatBadgesTask.IsCompleted && globalChatBadgesTask.Result != null)
             {
-                this.chatBadges[badgeSet.set_id] = new Dictionary<string, ChatBadgeModel>();
-                foreach (ChatBadgeModel badge in badgeSet.versions)
+                foreach (ChatBadgeSetModel badgeSet in globalChatBadgesTask.Result)
                 {
-                    this.chatBadges[badgeSet.set_id][badge.id] = badge;
+                    this.chatBadges[badgeSet.set_id] = new Dictionary<string, ChatBadgeModel>();
+                    foreach (ChatBadgeModel badge in badgeSet.versions)
+                    {
+                        this.chatBadges[badgeSet.set_id][badge.id] = badge;
+                    }
                 }
             }
 
-            foreach (ChatBadgeSetModel badgeSet in channelChatBadgesTask.Result)
+            if (channelChatBadgesTask.IsCompleted && channelChatBadgesTask.Result != null)
             {
-                this.chatBadges[badgeSet.set_id] = new Dictionary<string, ChatBadgeModel>();
-                foreach (ChatBadgeModel badge in badgeSet.versions)
+                foreach (ChatBadgeSetModel badgeSet in channelChatBadgesTask.Result)
                 {
-                    this.chatBadges[badgeSet.set_id][badge.id] = badge;
+                    this.chatBadges[badgeSet.set_id] = new Dictionary<string, ChatBadgeModel>();
+                    foreach (ChatBadgeModel badge in badgeSet.versions)
+                    {
+                        this.chatBadges[badgeSet.set_id][badge.id] = badge;
+                    }
                 }
             }
 
-            List<TwitchBitsCheermoteViewModel> cheermotes = new List<TwitchBitsCheermoteViewModel>();
-            foreach (BitsCheermoteModel bitsCheermote in cheermotesTask.Result)
+            if (cheermotesTask.IsCompleted && cheermotesTask.Result != null)
             {
-                this.bitsCheermotes[bitsCheermote.prefix] = new TwitchBitsCheermoteViewModel(bitsCheermote);
+                List<TwitchBitsCheermoteViewModel> cheermotes = new List<TwitchBitsCheermoteViewModel>();
+                foreach (BitsCheermoteModel bitsCheermote in cheermotesTask.Result)
+                {
+                    this.bitsCheermotes[bitsCheermote.prefix] = new TwitchBitsCheermoteViewModel(bitsCheermote);
+                }
+            }
+
+            if (channelEditorsTask.IsCompleted && channelEditorsTask.Result != null)
+            {
+                foreach (ChannelEditorUserModel channelEditor in channelEditorsTask.Result)
+                {
+                    this.ChannelEditors.Add(channelEditor.user_id);
+                }
             }
 
             this.cancellationTokenSource = new CancellationTokenSource();
@@ -296,7 +340,7 @@ namespace MixItUp.Base.Services.Twitch.New
             await this.Client.Disconnect();
         }
 
-        protected override async Task<Result> ConnectBot()
+        public override async Task<Result> ConnectBot()
         {
             Result result = await BotService.Connect();
             if (!result.Success)
@@ -304,10 +348,20 @@ namespace MixItUp.Base.Services.Twitch.New
                 return result;
             }
 
-            Bot = await BotService.GetNewAPICurrentUser();
-            if (Bot == null)
+            this.BotModel = await BotService.GetNewAPICurrentUser();
+            if (this.BotModel == null)
             {
                 return new Result(Resources.TwitchFailedToGetUserData);
+            }
+
+            this.BotID = this.BotModel?.id;
+            this.BotUsername = this.BotModel?.login;
+            this.BotAvatarURL = this.BotModel?.profile_image_url;
+
+            this.Bot = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: this.BotID);
+            if (this.Bot == null)
+            {
+                this.Bot = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(this.BotModel));
             }
 
             return new Result();
@@ -316,6 +370,32 @@ namespace MixItUp.Base.Services.Twitch.New
         protected override Task DisconnectBot()
         {
             return Task.CompletedTask;
+        }
+
+        public override async Task<Result> SetStreamTitle(string title)
+        {
+            return await this.StreamerService.UpdateChannelInformation(this.StreamerModel, title: title);
+        }
+
+        public override async Task<Result> SetStreamCategory(string category)
+        {
+            GameModel game = null;
+            IEnumerable<GameModel> games = await this.StreamerService.GetNewAPIGamesByName(category);
+            if (games != null && games.Count() > 0)
+            {
+                game = games.FirstOrDefault(g => g.name.ToLower().Equals(category));
+                if (game == null)
+                {
+                    game = games.First();
+                }
+
+                if (game != null)
+                {
+                    return await this.StreamerService.UpdateChannelInformation(this.StreamerModel, gameID: game?.id);
+                }
+            }
+
+            return new Result(success: false);
         }
 
         public override async Task SendMessage(string message, bool sendAsStreamer = false)
@@ -339,11 +419,11 @@ namespace MixItUp.Base.Services.Twitch.New
             {
                 if (!sendAsStreamer && this.IsBotConnected)
                 {
-                    await this.BotService.SendChatMessage(this.Streamer, this.Bot, m, replyMessageID);
+                    await this.BotService.SendChatMessage(this.StreamerModel, this.BotModel, m, replyMessageID);
                 }
                 else
                 {
-                    await this.StreamerService.SendChatMessage(this.Streamer, this.Streamer, m, replyMessageID);
+                    await this.StreamerService.SendChatMessage(this.StreamerModel, this.StreamerModel, m, replyMessageID);
 
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(ChannelSession.User, message, replyMessageID));
                 }
@@ -352,48 +432,48 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public override async Task DeleteMessage(ChatMessageViewModel message)
         {
-            await this.StreamerService.DeleteChatMessage(this.Streamer, message.ID);
+            await this.StreamerService.DeleteChatMessage(this.StreamerModel, message.ID);
         }
 
         public override async Task ClearMessages()
         {
-            await this.StreamerService.ClearChat(this.Streamer);
+            await this.StreamerService.ClearChat(this.StreamerModel);
         }
 
         public override async Task TimeoutUser(UserV2ViewModel user, int durationInSeconds, string reason = null)
         {
-            await this.StreamerService.TimeoutUser(this.Streamer, user.PlatformID, durationInSeconds, reason);
+            await this.StreamerService.TimeoutUser(this.StreamerModel, user.PlatformID, durationInSeconds, reason);
         }
 
         public override async Task ModUser(UserV2ViewModel user)
         {
-            await this.StreamerService.ModUser(this.Streamer, user.PlatformID);
+            await this.StreamerService.ModUser(this.StreamerModel, user.PlatformID);
         }
 
         public override async Task UnmodUser(UserV2ViewModel user)
         {
-            await this.StreamerService.UnmodUser(this.Streamer, user.PlatformID);
+            await this.StreamerService.UnmodUser(this.StreamerModel, user.PlatformID);
         }
 
         public override async Task BanUser(UserV2ViewModel user, string reason = null)
         {
-            await this.StreamerService.BanUser(this.Streamer, user.PlatformID, reason);
+            await this.StreamerService.BanUser(this.StreamerModel, user.PlatformID, reason);
         }
 
         public override async Task UnbanUser(UserV2ViewModel user)
         {
-            await this.StreamerService.UnbanUser(this.Streamer, user.PlatformID);
+            await this.StreamerService.UnbanUser(this.StreamerModel, user.PlatformID);
         }
 
         public async Task SendWhisper(UserV2ViewModel user, string message, bool sendAsStreamer = false)
         {
             if (!sendAsStreamer || ServiceManager.Get<TwitchSession>().IsBotConnected)
             {
-                await ServiceManager.Get<TwitchSession>().BotService.SendWhisper(this.Bot, user.PlatformID, message);
+                await ServiceManager.Get<TwitchSession>().BotService.SendWhisper(this.BotModel, user.PlatformID, message);
             }
             else
             {
-                await ServiceManager.Get<TwitchSession>().StreamerService.SendWhisper(this.Streamer, user.PlatformID, message);
+                await ServiceManager.Get<TwitchSession>().StreamerService.SendWhisper(this.StreamerModel, user.PlatformID, message);
             }
         }
 
@@ -466,7 +546,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private async Task ChatterUpdateBackground(CancellationToken cancellationToken)
         {
-            IEnumerable<ChatterModel> chatterModels = await this.StreamerService.GetChatters(this.Streamer);
+            IEnumerable<ChatterModel> chatterModels = await this.StreamerService.GetChatters(this.StreamerModel);
 
             HashSet<string> chatters = (chatterModels != null) ? new HashSet<string>(chatterModels.Select(c => c.user_login)) : new HashSet<string>();
 

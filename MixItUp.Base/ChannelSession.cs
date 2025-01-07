@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Model.Twitch.Channels;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Model.Web;
 using MixItUp.Base.Services;
@@ -31,7 +30,28 @@ namespace MixItUp.Base
 
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
-        public static UserV2ViewModel User { get; private set; }
+        public static UserV2ViewModel User
+        {
+            get
+            {
+                StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(ChannelSession.Settings.DefaultStreamingPlatform);
+                if (session.IsConnected)
+                {
+                    return session.Streamer;
+                }
+
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+                {
+                    session = StreamingPlatforms.GetPlatformSession(platform);
+                    if (session.IsConnected)
+                    {
+                        return session.Streamer;
+                    }
+                }
+
+                return null;
+            }
+        }
 
         private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
         private static int sessionBackgroundTimer = 0;
@@ -158,10 +178,9 @@ namespace MixItUp.Base
             {
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSession(p).IsConnected)
                     {
-                        await StreamingPlatforms.GetPlatformSessionService(p).CloseUser();
-                        await StreamingPlatforms.GetPlatformSessionService(p).CloseBot();
+                        await StreamingPlatforms.GetPlatformSession(p).Disconnect();
                     }
                 });
             }
@@ -180,7 +199,7 @@ namespace MixItUp.Base
             {
                 if (settings.StreamingPlatformAuthentications.ContainsKey(p) && settings.StreamingPlatformAuthentications[p].IsEnabled)
                 {
-                    result.Combine(await StreamingPlatforms.GetPlatformSessionService(p).Connect(settings));
+                    result.Combine(await StreamingPlatforms.GetPlatformSession(p).Connect());
                 }
             });
 
@@ -206,13 +225,9 @@ namespace MixItUp.Base
                 ServiceManager.Get<ITelemetryService>().SetUserID(ChannelSession.Settings.TelemetryUserID);
 
                 Result result = new Result();
-                foreach (IStreamingPlatformSessionService streamingPlatformSessionService in ServiceManager.GetAll<IStreamingPlatformSessionService>())
+                foreach (StreamingPlatformSessionBase streamingPlatformSession in StreamingPlatforms.GetEnabledPlatformSessions())
                 {
-                    if (streamingPlatformSessionService.IsConnected)
-                    {
-                        result.Combine(await streamingPlatformSessionService.InitializeUser(ChannelSession.Settings));
-                        result.Combine(await streamingPlatformSessionService.InitializeBot(ChannelSession.Settings));
-                    }
+                    result.Combine(await streamingPlatformSession.Connect());
                 }
 
                 if (!result.Success)
@@ -220,21 +235,10 @@ namespace MixItUp.Base
                     return result;
                 }
 
-                foreach (IStreamingPlatformSessionService streamingPlatformSessionService in ServiceManager.GetAll<IStreamingPlatformSessionService>())
+                foreach (StreamingPlatformSessionBase streamingPlatformSession in StreamingPlatforms.GetConnectedPlatformSessions())
                 {
-                    if (streamingPlatformSessionService.IsConnected)
-                    {
-                        streamingPlatformSessionService.SaveSettings(ChannelSession.Settings);
-                    }
+                    streamingPlatformSession.SaveAuthenticationSettings();
                 }
-
-                StreamingPlatforms.ForEachPlatform(p =>
-                {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
-                    {
-                        StreamingPlatforms.GetPlatformSessionService(p).SaveSettings(ChannelSession.Settings);
-                    }
-                });
 
                 if (!StreamingPlatforms.SupportedPlatforms.Contains(ChannelSession.Settings.DefaultStreamingPlatform))
                 {
@@ -243,42 +247,13 @@ namespace MixItUp.Base
 
                 if (string.IsNullOrEmpty(ChannelSession.Settings.Name))
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
+                    if (StreamingPlatforms.GetPlatformSession(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
                     {
-                        ChannelSession.Settings.Name = StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).Username;
+                        ChannelSession.Settings.Name = StreamingPlatforms.GetPlatformSession(ChannelSession.Settings.DefaultStreamingPlatform).StreamerUsername;
                     }
                     else
                     {
                         ChannelSession.Settings.Name = "Test";
-                    }
-                }
-
-                if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
-                {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(ChannelSession.Settings.DefaultStreamingPlatform, platformID: StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).UserID);
-                }
-                if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().IsConnected)
-                {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: ServiceManager.Get<TwitchSessionService>().UserID);
-                    if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().User != null)
-                    {
-                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().User));
-                    }
-                }
-                if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().IsConnected)
-                {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: ServiceManager.Get<YouTubeSessionService>().UserID);
-                    if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().User != null)
-                    {
-                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
-                    }
-                }
-                if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)
-                {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: ServiceManager.Get<TrovoSessionService>().UserID);
-                    if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().User != null)
-                    {
-                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(ServiceManager.Get<TrovoSessionService>().User));
                     }
                 }
 
@@ -411,18 +386,6 @@ namespace MixItUp.Base
                     await ServiceManager.Get<CommandService>().Initialize();
                     await ServiceManager.Get<TimerService>().Initialize();
                     await ServiceManager.Get<ModerationService>().Initialize();
-
-                    if (ServiceManager.Get<TwitchSessionService>().IsConnected)
-                    {
-                        IEnumerable<ChannelEditorUserModel> channelEditors = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEditors(ServiceManager.Get<TwitchSessionService>().User);
-                        if (channelEditors != null)
-                        {
-                            foreach (ChannelEditorUserModel channelEditor in channelEditors)
-                            {
-                                ServiceManager.Get<TwitchSessionService>().ChannelEditors.Add(channelEditor.user_id);
-                            }
-                        }
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -499,10 +462,9 @@ namespace MixItUp.Base
 
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSession(p).IsConnected)
                     {
-                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshUser();
-                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
+                        await StreamingPlatforms.GetPlatformSession(p).RefreshDetails();
                     }
                 });
 

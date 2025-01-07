@@ -894,9 +894,9 @@ namespace MixItUp.Base.Model.Settings
 
             this.Version = SettingsV3Model.LatestVersion;
 
-            foreach (IStreamingPlatformSessionService sessionService in ServiceManager.GetAll<IStreamingPlatformSessionService>())
+            foreach (StreamingPlatformSessionBase session in StreamingPlatforms.GetPlatformSessions())
             {
-                sessionService.SaveSettings(this);
+                session.SaveAuthenticationSettings();
             }
 
             if (ServiceManager.Get<StreamlabsService>().IsConnected)

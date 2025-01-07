@@ -4,12 +4,12 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mock;
+using MixItUp.Base.Services.Mock.New;
 using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -158,7 +158,7 @@ namespace MixItUp.Base.Services
                     }
                     else if (platform == StreamingPlatformTypeEnum.Mock)
                     {
-                        await ServiceManager.Get<MockChatEventService>().SendMessage(message, sendAsStreamer);
+                        await ServiceManager.Get<MockSession>().SendMessage(message, sendAsStreamer);
                     }
                 }
             }
@@ -225,7 +225,7 @@ namespace MixItUp.Base.Services
                 }
                 else if (message.Platform == StreamingPlatformTypeEnum.Mock)
                 {
-                    await ServiceManager.Get<MockChatEventService>().DeleteMessage(message);
+                    await ServiceManager.Get<MockSession>().DeleteMessage(message);
                 }
             }
 
@@ -463,7 +463,7 @@ namespace MixItUp.Base.Services
                 bool showMessage = true;
                 if (message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (ChannelSession.Settings.HideBotMessages && StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                    if (ChannelSession.Settings.HideBotMessages && StreamingPlatforms.GetPlatformSession(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSession(message.Platform)?.BotID))
                     {
                         showMessage = false;
                     }
@@ -575,7 +575,7 @@ namespace MixItUp.Base.Services
                         {
                             this.userEntranceCommands.Add(message.User.ID);
 
-                            if (!ChannelSession.Settings.UserEntranceCommandsOnlyWhenLive || StreamingPlatforms.GetPlatformSessionService(message.User.Platform).IsLive)
+                            if (!ChannelSession.Settings.UserEntranceCommandsOnlyWhenLive || StreamingPlatforms.GetPlatformSession(message.User.Platform).IsLive)
                             {
                                 CommandModelBase customEntranceCommand = ChannelSession.Settings.GetCommand(message.User.EntranceCommandID);
                                 if (customEntranceCommand != null && customEntranceCommand.IsEnabled)
@@ -631,7 +631,7 @@ namespace MixItUp.Base.Services
 
                         if (ChannelSession.Settings.IgnoreBotAccountCommands && message.Platform != StreamingPlatformTypeEnum.None)
                         {
-                            if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                            if (StreamingPlatforms.GetPlatformSession(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSession(message.Platform)?.BotID))
                             {
                                 return;
                             }
@@ -828,7 +828,7 @@ namespace MixItUp.Base.Services
 
             StreamingPlatforms.ForEachPlatform(p =>
             {
-                liveStreams[p] = StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive;
+                liveStreams[p] = StreamingPlatforms.GetPlatformSession(p).IsConnected && StreamingPlatforms.GetPlatformSession(p).IsLive;
                 chatterCount[p] = 0;
 
                 Logger.Log(LogLevel.Debug, $"{p} Stream Status: {liveStreams[p]}");
@@ -861,7 +861,7 @@ namespace MixItUp.Base.Services
                 {
                     if (liveStreams[p])
                     {
-                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: p, amount: StreamingPlatforms.GetPlatformSessionService(p).ViewerCount);
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: p, amount: StreamingPlatforms.GetPlatformSession(p).StreamViewerCount);
                         ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Chatters, platform: p, amount: chatterCount[p]);
                     }
                 });

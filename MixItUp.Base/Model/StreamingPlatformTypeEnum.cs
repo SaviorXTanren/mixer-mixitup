@@ -1,10 +1,11 @@
 ﻿using MixItUp.Base.Services;
-using MixItUp.Base.Services.Mock;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.Mock.New;
+using MixItUp.Base.Services.Trovo.New;
+using MixItUp.Base.Services.Twitch.New;
+using MixItUp.Base.Services.YouTube.New;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model
@@ -57,17 +58,40 @@ namespace MixItUp.Base.Model
 
         public static bool ContainsPlatform(StreamingPlatformTypeEnum platform, StreamingPlatformTypeEnum check) { return (platform & check) == check; }
 
-        public static bool IsPlatformConnected(StreamingPlatformTypeEnum platform) { return StreamingPlatforms.GetPlatformSessionService(platform).IsConnected; }
-
-        public static IStreamingPlatformSessionService GetPlatformSessionService(StreamingPlatformTypeEnum platform)
+        public static IEnumerable<StreamingPlatformSessionBase> GetPlatformSessions()
         {
-            if (platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
-            else if (platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>(); }
-            else if (platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>(); }
-            else if (platform == StreamingPlatformTypeEnum.Mock) { return ServiceManager.Get<MockSessionService>(); }
+            return new List<StreamingPlatformSessionBase>()
+            {
+                ServiceManager.Get<TwitchSession>(),
+                ServiceManager.Get<YouTubeSession>(),
+                ServiceManager.Get<TrovoSession>(),
+                ServiceManager.Get<MockSession>()
+            };
+        }
+
+        public static bool IsPlatformEnabled(StreamingPlatformTypeEnum platform) { return StreamingPlatforms.GetPlatformSession(platform).IsEnabled; }
+
+        public static IEnumerable<StreamingPlatformSessionBase> GetEnabledPlatformSessions()
+        {
+            return StreamingPlatforms.GetPlatformSessions().Where(p => p.IsEnabled);
+        }
+
+        public static bool IsPlatformConnected(StreamingPlatformTypeEnum platform) { return StreamingPlatforms.GetPlatformSession(platform).IsConnected; }
+
+        public static IEnumerable<StreamingPlatformSessionBase> GetConnectedPlatformSessions()
+        {
+            return StreamingPlatforms.GetPlatformSessions().Where(p => p.IsConnected);
+        }
+
+        public static StreamingPlatformSessionBase GetPlatformSession(StreamingPlatformTypeEnum platform)
+        {
+            if (platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSession>(); }
+            else if (platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSession>(); }
+            else if (platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSession>(); }
+            else if (platform == StreamingPlatformTypeEnum.Mock) { return ServiceManager.Get<MockSession>(); }
             else if (platform == StreamingPlatformTypeEnum.All && ChannelSession.Settings != null)
             {
-                return StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform);
+                return StreamingPlatforms.GetPlatformSession(ChannelSession.Settings.DefaultStreamingPlatform);
             }
             return null;
         }
