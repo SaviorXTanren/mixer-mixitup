@@ -56,15 +56,33 @@ namespace MixItUp.Base.ViewModel.Accounts
             }
         }
 
-        public string UserAccountUsername { get; private set; }
-        public string UserAccountAvatar { get; private set; }
+        public string StreamerAccountUsername
+        {
+            get { return this.streamerAccountUsername; }
+            set
+            {
+                this.streamerAccountUsername = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string streamerAccountUsername;
+        public string StreamerAccountAvatar
+        {
+            get { return this.streamerAccountAvatar; }
+            set
+            {
+                this.streamerAccountAvatar = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string streamerAccountAvatar;
 
-        public ICommand UserAccountCommand { get; set; }
-        public string UserAccountButtonContent
+        public ICommand StreamerAccountCommand { get; set; }
+        public string StreamerAccountButtonContent
         {
             get
             {
-                if (this.IsUserAccountConnected)
+                if (this.IsStreamerAccountConnected)
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return MixItUp.Base.Resources.LogOutOfTwitch; }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return MixItUp.Base.Resources.LogOutOfYouTube; }
@@ -79,10 +97,28 @@ namespace MixItUp.Base.ViewModel.Accounts
                 return string.Empty;
             }
         }
-        public bool IsUserAccountConnected { get { return StreamingPlatforms.GetPlatformSession(this.Platform).IsConnected; } }
+        public bool IsStreamerAccountConnected { get { return this.session.IsConnected; } }
 
-        public string BotAccountUsername { get; private set; }
-        public string BotAccountAvatar { get; private set; }
+        public string BotAccountUsername
+        {
+            get { return this.botAccountUsername; }
+            set
+            {
+                this.botAccountUsername = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string botAccountUsername;
+        public string BotAccountAvatar
+        {
+            get { return this.botAccountAvatar; }
+            set
+            {
+                this.botAccountAvatar = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string botAccountAvatar;
 
         public ICommand BotAccountCommand { get; set; }
         public string BotAccountButtonContent
@@ -104,97 +140,119 @@ namespace MixItUp.Base.ViewModel.Accounts
                 return string.Empty;
             }
         }
-        public bool IsBotAccountConnected { get { return StreamingPlatforms.GetPlatformSession(this.Platform).IsBotConnected; } }
+        public bool IsBotAccountConnected { get { return this.session.IsBotConnected; } }
+
+        private StreamingPlatformSessionBase session;
 
         public StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum platform)
         {
             this.Platform = platform;
 
-            StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(this.Platform);
-            if (session.IsConnected)
+            this.session = StreamingPlatforms.GetPlatformSession(this.Platform);
+            if (this.session.IsConnected)
             {
-                this.UserAccountUsername = session.StreamerUsername;
-                this.UserAccountAvatar = session.StreamerAvatarURL;
+                this.StreamerAccountUsername = this.session.StreamerUsername;
+                this.StreamerAccountAvatar = this.session.StreamerAvatarURL;
             }
 
-            if (session.IsBotConnected)
+            if (this.session.IsBotConnected)
             {
-                this.BotAccountUsername = session.BotUsername;
-                this.BotAccountAvatar = session.BotAvatarURL;
+                this.BotAccountUsername = this.session.BotUsername;
+                this.BotAccountAvatar = this.session.BotAvatarURL;
             }
 
-            this.UserAccountCommand = this.CreateCommand(async () =>
+            this.StreamerAccountCommand = this.CreateCommand(async () =>
             {
-                if (this.IsUserAccountConnected)
+                try
                 {
-                    await StreamingPlatforms.GetPlatformSession(this.Platform).DisableStreamer();
-
-                    this.UserAccountUsername = null;
-                    this.UserAccountAvatar = null;
-
-                    this.BotAccountUsername = null;
-                    this.BotAccountAvatar = null;
-                }
-                else
-                {
-                    Result result = await StreamingPlatforms.GetPlatformSession(this.Platform).ConnectStreamer();
-                    if (result.Success)
+                    if (this.IsStreamerAccountConnected)
                     {
-                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
-                        {
-                            ChannelSession.Settings.DefaultStreamingPlatform = this.Platform;
-                        }
+                        await this.session.DisableStreamer();
 
-                        this.UserAccountUsername = session.StreamerUsername;
-                        this.UserAccountAvatar = session.StreamerAvatarURL;
-                    }
-                    else
-                    {
-                        this.UserAccountUsername = null;
-                        this.UserAccountAvatar = null;
+                        this.StreamerAccountUsername = null;
+                        this.StreamerAccountAvatar = null;
 
                         this.BotAccountUsername = null;
                         this.BotAccountAvatar = null;
-
-                        await DialogHelper.ShowMessage(result.Message);
                     }
+                    else
+                    {
+
+                        Result result = await this.session.ConnectStreamer();
+                        if (result.Success)
+                        {
+                            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
+                            {
+                                ChannelSession.Settings.DefaultStreamingPlatform = this.Platform;
+                            }
+
+                            this.StreamerAccountUsername = this.session.StreamerUsername;
+                            this.StreamerAccountAvatar = this.session.StreamerAvatarURL;
+                        }
+                        else
+                        {
+                            await this.session.DisableStreamer();
+                            await this.session.DisableBot();
+
+                            this.StreamerAccountUsername = null;
+                            this.StreamerAccountAvatar = null;
+
+                            this.BotAccountUsername = null;
+                            this.BotAccountAvatar = null;
+
+                            await DialogHelper.ShowMessage(result.Message);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
                 this.NotifyAllProperties();
             });
 
             this.BotAccountCommand = this.CreateCommand(async () =>
             {
-                if (this.IsBotAccountConnected)
+                try
                 {
-                    await StreamingPlatforms.GetPlatformSession(this.Platform).DisableBot();
-
-                    this.BotAccountUsername = null;
-                    this.BotAccountAvatar = null;
-                }
-                else
-                {
-                    Result result = await StreamingPlatforms.GetPlatformSession(this.Platform).ConnectBot();
-                    if (result.Success)
+                    if (this.IsBotAccountConnected)
                     {
-                        if (string.Equals(StreamingPlatforms.GetPlatformSession(this.Platform).StreamerID, StreamingPlatforms.GetPlatformSession(this.Platform).BotID, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            await StreamingPlatforms.GetPlatformSession(this.Platform).DisableBot();
-                            result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
-                        }
-                        else
-                        {
-                            this.BotAccountUsername = session.BotUsername;
-                            this.BotAccountAvatar = session.BotAvatarURL;
-                        }
-                    }
+                        await this.session.DisableBot();
 
-                    if (!result.Success)
-                    {
                         this.BotAccountUsername = null;
                         this.BotAccountAvatar = null;
-
-                        await DialogHelper.ShowMessage(result.Message);
                     }
+                    else
+                    {
+                        Result result = await this.session.ConnectBot();
+                        if (result.Success)
+                        {
+                            if (string.Equals(this.session.StreamerID, this.session.BotID, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                await this.session.DisableBot();
+                                result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
+                            }
+                            else
+                            {
+                                this.BotAccountUsername = this.session.BotUsername;
+                                this.BotAccountAvatar = this.session.BotAvatarURL;
+                            }
+                        }
+
+                        if (!result.Success)
+                        {
+                            await this.session.DisableBot();
+
+                            this.BotAccountUsername = null;
+                            this.BotAccountAvatar = null;
+
+                            await DialogHelper.ShowMessage(result.Message);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
                 this.NotifyAllProperties();
             });
@@ -202,17 +260,10 @@ namespace MixItUp.Base.ViewModel.Accounts
 
         private void NotifyAllProperties()
         {
-            this.NotifyPropertyChanged("UserAccountUsername");
-            this.NotifyPropertyChanged("UserAccountAvatar");
-            this.NotifyPropertyChanged("BotAccountUsername");
-            this.NotifyPropertyChanged("BotAccountAvatar");
-            this.NotifyPropertyChanged("IsUserAccountConnected");
-            this.NotifyPropertyChanged("IsUserAccountNotConnected");
-            this.NotifyPropertyChanged("UserAccountButtonContent");
-            this.NotifyPropertyChanged("CanConnectBotAccount");
-            this.NotifyPropertyChanged("IsBotAccountConnected");
-            this.NotifyPropertyChanged("IsBotAccountNotConnected");
-            this.NotifyPropertyChanged("BotAccountButtonContent");
+            this.NotifyPropertyChanged(nameof(IsStreamerAccountConnected));
+            this.NotifyPropertyChanged(nameof(StreamerAccountButtonContent));
+            this.NotifyPropertyChanged(nameof(IsBotAccountConnected));
+            this.NotifyPropertyChanged(nameof(BotAccountButtonContent));
         }
     }
 }

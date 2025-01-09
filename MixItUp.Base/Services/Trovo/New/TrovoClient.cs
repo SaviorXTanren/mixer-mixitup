@@ -40,17 +40,11 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public bool IsConnected { get { return webSocket != null && webSocket.IsOpen(); } }
 
-        private bool isFullClient;
-
-        public TrovoClient(bool isFullClient = false)
+        public TrovoClient()
         {
-            this.isFullClient = isFullClient;
-
             webSocket = new AdvancedClientWebSocket();
-            if (ChannelSession.AppSettings.DiagnosticLogging)
-            {
-                webSocket.PacketSent += WebSocket_PacketSent;
-            }
+
+            webSocket.PacketSent += WebSocket_PacketSent;
             webSocket.PacketReceived += UserWebSocket_PacketReceived;
             webSocket.Disconnected += WebSocket_Disconnected;
         }
@@ -69,17 +63,14 @@ namespace MixItUp.Base.Services.Trovo.New
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     AsyncRunner.RunAsyncBackground(BackgroundPing, cancellationTokenSource.Token);
 
-                    if (isFullClient)
-                    {
-                        AsyncRunner.RunAsyncBackground(ChatterJoinLeaveBackground, cancellationTokenSource.Token, 60000);
+                    AsyncRunner.RunAsyncBackground(ChatterJoinLeaveBackground, cancellationTokenSource.Token, 60000);
 
-                        AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                        {
-                            await Task.Delay(2000);
-                            processMessages = true;
-                        }, cancellationTokenSource.Token);
+                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                    {
+                        await Task.Delay(2000);
+                        processMessages = true;
+                    }, cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    }
 
                     return new Result();
                 }

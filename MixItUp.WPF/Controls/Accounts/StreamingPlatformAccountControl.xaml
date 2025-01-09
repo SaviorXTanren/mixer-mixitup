@@ -25,18 +25,18 @@
 
             <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Streamer}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
-            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsUserAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsStreamerAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{Binding UserAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" />
-                <TextBlock Grid.Column="2" Text="{Binding UserAccountUsername}" VerticalAlignment="Center" />
+                <Image Grid.Column="0" Source="{Binding StreamerAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" />
+                <TextBlock Grid.Column="2" Text="{Binding StreamerAccountUsername}" VerticalAlignment="Center" />
             </Grid>
 
-            <Button Grid.Column="1" Grid.Row="2" Command="{Binding UserAccountCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding LoginWithButtonColor}">
+            <Button Grid.Column="1" Grid.Row="2" Command="{Binding StreamerAccountCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding LoginWithButtonColor}">
                 <Grid HorizontalAlignment="Center" Margin="-5,0,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -46,7 +46,7 @@
 
                     <Image Grid.Column="0" Source="{Binding LoginWithButtonImage, TargetNullValue={x:Null}}" Margin="0,3" Height="23" />
 
-                    <TextBlock Grid.Column="2" Text="{Binding UserAccountButtonContent}" Foreground="{Binding LoginWithButtonTextForeground}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding StreamerAccountButtonContent}" Foreground="{Binding LoginWithButtonTextForeground}" VerticalAlignment="Center" />
                 </Grid>
             </Button>
 

@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Trovo.Category;
 using MixItUp.Base.Model.Trovo.Channels;
 using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Model.Trovo.Users;
-using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -19,7 +18,7 @@ namespace MixItUp.Base.Services.Trovo.New
 {
     public class TrovoSession : StreamingPlatformSessionBase
     {
-        public override IEnumerable<string> StreamerScopes { get; protected set; } = new List<string>()
+        public static readonly IEnumerable<string> StreamerScopes = new List<string>()
         {
             "chat_connect",
             "chat_send_self",
@@ -33,7 +32,7 @@ namespace MixItUp.Base.Services.Trovo.New
             "user_details_self",
         };
 
-        public override IEnumerable<string> BotScopes { get; protected set; } = new List<string>()
+        public static readonly IEnumerable<string> BotScopes = new List<string>()
         {
             "chat_connect",
             "chat_send_self",
@@ -44,6 +43,11 @@ namespace MixItUp.Base.Services.Trovo.New
         };
 
         public override int MaxMessageLength { get { return 500; } }
+
+        public TrovoService StreamerService { get; private set; } = new TrovoService(StreamerScopes);
+        public TrovoService BotService { get; private set; } = new TrovoService(BotScopes);
+
+        public TrovoClient Client { get; private set; } = new TrovoClient();
 
         public IDictionary<string, TrovoChatEmoteViewModel> ChannelEmotes { get { return channelEmotes; } }
         private Dictionary<string, TrovoChatEmoteViewModel> channelEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
@@ -57,11 +61,6 @@ namespace MixItUp.Base.Services.Trovo.New
         public PrivateUserModel StreamerModel { get; private set; }
         public PrivateUserModel BotModel { get; private set; }
         public ChannelModel ChannelModel { get; private set; }
-
-        public TrovoService StreamerService { get; private set; }
-        public TrovoService BotService { get; private set; }
-
-        public TrovoClient Client { get; private set; }
 
         public Dictionary<string, ChannelSubscriberModel> Subscribers { get; private set; } = new Dictionary<string, ChannelSubscriberModel>();
 
@@ -102,13 +101,13 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public override async Task<Result> ConnectStreamer()
         {
-            Result result = await StreamerService.Connect();
+            Result result = await this.StreamerService.Connect();
             if (!result.Success)
             {
                 return result;
             }
 
-            this.StreamerModel = await StreamerService.GetCurrentUser();
+            this.StreamerModel = await this.StreamerService.GetCurrentUser();
             if (this.StreamerModel == null)
             {
                 return new Result(Resources.TrovoFailedToGetUserData);
@@ -173,13 +172,13 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public override async Task<Result> ConnectBot()
         {
-            Result result = await BotService.Connect();
+            Result result = await this.BotService.Connect();
             if (!result.Success)
             {
                 return result;
             }
 
-            this.BotModel = await BotService.GetCurrentUser();
+            this.BotModel = await this.BotService.GetCurrentUser();
             if (this.BotModel == null)
             {
                 return new Result(Resources.TrovoFailedToGetUserData);

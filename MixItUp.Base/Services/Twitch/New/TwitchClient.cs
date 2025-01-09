@@ -1,4 +1,5 @@
 ﻿using Google.Apis.YouTube.v3.Data;
+using Google.Apis.YouTubePartner.v1.Data;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
@@ -296,10 +297,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             webSocket = new AdvancedClientWebSocket();
 
-            if (ChannelSession.AppSettings.DiagnosticLogging)
-            {
-                webSocket.PacketSent += WebSocket_PacketSent;
-            }
+            webSocket.PacketSent += WebSocket_PacketSent;
             webSocket.PacketReceived += UserWebSocket_PacketReceived;
             webSocket.Disconnected += WebSocket_Disconnected;
         }
@@ -354,17 +352,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
             foreach (string missingSub in missingSubs)
             {
-                if (string.Equals(missingSub, "channel.follow", StringComparison.OrdinalIgnoreCase))
-                {
-                    Dictionary<string, string> conditions = new Dictionary<string, string>
-                    {
-                        { "broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID },
-                        { "moderator_user_id", ServiceManager.Get<TwitchSession>().StreamerID }
-                    };
-
-                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub], conditions);
-                }
-                else if (missingSub.Equals("channel.raid", StringComparison.OrdinalIgnoreCase))
+                if (missingSub.Equals("channel.raid", StringComparison.OrdinalIgnoreCase))
                 {
                     await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
                         new Dictionary<string, string> { { "from_broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID } });
@@ -373,7 +361,31 @@ namespace MixItUp.Base.Services.Twitch.New
                 }
                 else
                 {
-                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub]);
+                    Dictionary<string, string> conditions = new Dictionary<string, string>
+                    {
+                        { "broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID }
+                    };
+
+                    switch (missingSub)
+                    {
+                        case "channel.follow":
+                        case "channel.moderate":
+                            conditions["moderator_user_id"] = ServiceManager.Get<TwitchSession>().StreamerID;
+                            break;
+
+                        case "channel.chat.message":
+                        case "channel.chat.message_delete":
+                        case "channel.chat.notification":
+                        case "channel.chat.user_message_hold":
+                        case "channel.chat.user_message_update":
+                        case "channel.chat.clear":
+                        case "channel.chat.clear_user_messages":
+                        case "user.whisper.message":
+                            conditions["user_id"] = ServiceManager.Get<TwitchSession>().StreamerID;
+                            break;
+                    }
+
+                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub], conditions);
                 }
             }
 

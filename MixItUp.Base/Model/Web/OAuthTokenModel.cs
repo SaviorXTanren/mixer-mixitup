@@ -17,13 +17,6 @@ namespace MixItUp.Base.Model.Web
         public string clientID { get; set; }
 
         /// <summary>
-        /// The authorization code sent when authenticating against the OAuth service.
-        /// </summary>
-        [Obsolete]
-        [DataMember]
-        public string authorizationCode { get; set; }
-
-        /// <summary>
         /// The token used for refreshing the authentication.
         /// </summary>
         [JsonProperty("refresh_token")]

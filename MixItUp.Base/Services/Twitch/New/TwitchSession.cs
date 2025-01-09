@@ -28,7 +28,7 @@ namespace MixItUp.Base.Services.Twitch.New
     {
         private const string SlashMeMessagePrefix = "/me";
 
-        public override IEnumerable<string> StreamerScopes { get; protected set; } = new List<string>()
+        public static readonly IEnumerable<string> StreamerScopes = new List<string>()
         {
             "bits:read",
 
@@ -94,7 +94,7 @@ namespace MixItUp.Base.Services.Twitch.New
             "whispers:edit",
         };
 
-        public override IEnumerable<string> BotScopes { get; protected set; } = new List<string>()
+        public static readonly IEnumerable<string> BotScopes = new List<string>()
         {
             "bits:read",
 
@@ -122,10 +122,10 @@ namespace MixItUp.Base.Services.Twitch.New
         public AdScheduleModel AdSchedule { get; set; }
         public DateTimeOffset NextAdTimestamp { get; set; } = DateTimeOffset.MinValue;
 
-        public TwitchService StreamerService { get; private set; }
-        public TwitchService BotService { get; private set; }
+        public TwitchService StreamerService { get; private set; } = new TwitchService(StreamerScopes);
+        public TwitchService BotService { get; private set; } = new TwitchService(BotScopes);
 
-        public TwitchClient Client { get; private set; }
+        public TwitchClient Client { get; private set; } = new TwitchClient();
 
         private List<string> emoteSetIDs = new List<string>();
 
@@ -179,19 +179,19 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public override async Task<Result> ConnectStreamer()
         {
-            Result result = await StreamerService.Connect();
+            Result result = await this.StreamerService.Connect();
             if (!result.Success)
             {
                 return result;
             }
 
-            this.StreamerModel = await StreamerService.GetNewAPICurrentUser();
+            this.StreamerModel = await this.StreamerService.GetNewAPICurrentUser();
             if (this.StreamerModel == null)
             {
                 return new Result(Resources.TwitchFailedToGetUserData);
             }
 
-            this.Channel = await StreamerService.GetChannelInformation(StreamerModel);
+            this.Channel = await this.StreamerService.GetChannelInformation(StreamerModel);
             if (this.Channel == null)
             {
                 return new Result(Resources.TwitchFailedToGetUserData);
@@ -342,13 +342,13 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public override async Task<Result> ConnectBot()
         {
-            Result result = await BotService.Connect();
+            Result result = await this.BotService.Connect();
             if (!result.Success)
             {
                 return result;
             }
 
-            this.BotModel = await BotService.GetNewAPICurrentUser();
+            this.BotModel = await this.BotService.GetNewAPICurrentUser();
             if (this.BotModel == null)
             {
                 return new Result(Resources.TwitchFailedToGetUserData);

@@ -11,10 +11,6 @@ namespace MixItUp.Base.Services.Mock.New
 {
     public class MockSession : StreamingPlatformSessionBase
     {
-        public override IEnumerable<string> StreamerScopes { get; protected set; } = new List<string>() { };
-
-        public override IEnumerable<string> BotScopes { get; protected set; } = new List<string>() { };
-
         public override int MaxMessageLength { get { return 500; } }
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);

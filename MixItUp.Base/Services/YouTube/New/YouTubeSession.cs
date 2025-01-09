@@ -32,7 +32,7 @@ namespace MixItUp.Base.Services.YouTube.New
         private const string MessageDeletedEventMessageType = "messageDeletedEvent";
         private const string UserBannedEventMessageType = "userBannedEvent";
 
-        public override IEnumerable<string> StreamerScopes { get; protected set; } = new List<string>()
+        public static readonly IEnumerable<string> StreamerScopes = new List<string>()
         {
             "email",
             "profile",
@@ -45,7 +45,7 @@ namespace MixItUp.Base.Services.YouTube.New
             "https://www.googleapis.com/auth/yt-analytics.readonly",
         };
 
-        public override IEnumerable<string> BotScopes { get; protected set; } = new List<string>()
+        public static readonly IEnumerable<string> BotScopes = new List<string>()
         {
             "email",
             "profile",
@@ -70,6 +70,9 @@ namespace MixItUp.Base.Services.YouTube.New
             }
         }
 
+        public YouTubeService StreamerService { get; private set; } = new YouTubeService(StreamerScopes);
+        public YouTubeService BotService { get; private set; } = new YouTubeService(BotScopes);
+
         public Channel StreamerModel { get; private set; }
         public Channel BotModel { get; private set; }
 
@@ -93,9 +96,6 @@ namespace MixItUp.Base.Services.YouTube.New
         public Dictionary<string, LiveBroadcast> ManualLiveBroadcasts { get; private set; } = new Dictionary<string, LiveBroadcast>();
 
         public Dictionary<string, Video> Videos { get; private set; } = new Dictionary<string, Video>();
-
-        public YouTubeService StreamerService { get; private set; }
-        public YouTubeService BotService { get; private set; }
 
         public IEnumerable<Model.YouTube.YouTubeChatEmoteModel> Emotes { get; private set; } = new List<Model.YouTube.YouTubeChatEmoteModel>();
         public Dictionary<string, YouTubeChatEmoteViewModel> EmoteDictionary { get; private set; } = new Dictionary<string, YouTubeChatEmoteViewModel>();
@@ -163,7 +163,7 @@ namespace MixItUp.Base.Services.YouTube.New
 
         public override async Task<Result> ConnectStreamer()
         {
-            Result result = await StreamerService.Connect();
+            Result result = await this.StreamerService.Connect();
             if (!result.Success)
             {
                 return result;
@@ -233,7 +233,7 @@ namespace MixItUp.Base.Services.YouTube.New
 
         public override async Task<Result> ConnectBot()
         {
-            Result result = await BotService.Connect();
+            Result result = await this.BotService.Connect();
             if (!result.Success)
             {
                 return result;
@@ -451,10 +451,7 @@ namespace MixItUp.Base.Services.YouTube.New
             {
                 try
                 {
-                    if (ChannelSession.AppSettings.DiagnosticLogging)
-                    {
-                        Logger.Log(LogLevel.Debug, string.Format("YouTube Chat Packet Received: {0}", JSONSerializerHelper.SerializeToString(liveChatMessage)));
-                    }
+                    Logger.Log(LogLevel.Debug, string.Format("YouTube Chat Packet Received: {0}", JSONSerializerHelper.SerializeToString(liveChatMessage)));
 
                     if (liveChatMessage.AuthorDetails?.ChannelId != null)
                     {
