@@ -1,6 +1,7 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Trovo.Chat;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -209,7 +210,7 @@ namespace MixItUp.Base.Model.Overlay
             await this.AddEvent(donation.User, nameof(this.Donations), this.DonationsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, donation.AmountText } });
         }
 
-        public override async void OnTwitchBits(object sender, TwitchBitsCheeredModel bitsCheered)
+        public override async void OnTwitchBits(object sender, TwitchBitsCheeredEventModel bitsCheered)
         {
             await this.AddEvent(bitsCheered.User, nameof(this.TwitchBits), this.TwitchBitsDetailsTemplate, new Dictionary<string, string>() { { DetailsAmountPropertyName, bitsCheered.Amount.ToString() } });
         }
@@ -315,7 +316,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.TwitchBits)
                 {
-                    this.OnTwitchBits(this, new TwitchBitsCheeredModel(ChannelSession.User, 100, new TwitchChatMessageViewModel(ChannelSession.User, "Hello World")));
+                    this.OnTwitchBits(this, new TwitchBitsCheeredEventModel(ChannelSession.User, 100, new TwitchChatMessageViewModel(ChannelSession.User, "Hello World")));
                     await Task.Delay(3000);
                 }
 

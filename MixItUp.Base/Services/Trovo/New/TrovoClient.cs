@@ -19,11 +19,13 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Trovo.New
 {
-    public class TrovoClient
+    public class TrovoClient : ServiceClientBase
     {
         public const string TrovoChatConnectionURL = "wss://open-chat.trovo.live/chat";
 
         private const string TreasureBoxUnleashedActivityTopic = "item_drop_box_unleash";
+
+        public string ChatToken { get; set; }
 
         private CancellationTokenSource cancellationTokenSource;
 
@@ -38,24 +40,29 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private HashSet<string> previousViewers = new HashSet<string>();
 
-        public bool IsConnected { get { return webSocket != null && webSocket.IsOpen(); } }
+        public override bool IsConnected { get { return webSocket != null && webSocket.IsOpen(); } }
 
         public TrovoClient()
         {
-            webSocket = new AdvancedClientWebSocket();
+            this.webSocket = new AdvancedClientWebSocket();
 
-            webSocket.PacketSent += WebSocket_PacketSent;
-            webSocket.PacketReceived += UserWebSocket_PacketReceived;
-            webSocket.Disconnected += WebSocket_Disconnected;
+            this.webSocket.PacketSent += WebSocket_PacketSent;
+            this.webSocket.PacketReceived += UserWebSocket_PacketReceived;
+            this.webSocket.Disconnected += WebSocket_Disconnected;
         }
 
-        public async Task<Result> Connect(string chatToken)
+        public override async Task<Result> Connect()
         {
             processMessages = false;
 
-            if (await webSocket.Connect(TrovoChatConnectionURL))
+            if (string.IsNullOrWhiteSpace(this.ChatToken))
             {
-                ChatPacketModel authReply = await SendAndListen(webSocket, new ChatPacketModel("AUTH", new JObject() { { "token", chatToken } }));
+                return new Result("No chat token set for Trovo client");
+            }
+
+            if (await this.webSocket.Connect(TrovoChatConnectionURL))
+            {
+                ChatPacketModel authReply = await SendAndListen(new ChatPacketModel("AUTH", new JObject() { { "token", this.ChatToken } }));
                 if (authReply != null && string.IsNullOrEmpty(authReply.error))
                 {
                     cancellationTokenSource = new CancellationTokenSource();
@@ -72,6 +79,8 @@ namespace MixItUp.Base.Services.Trovo.New
                     }, cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+                    ChannelSession.ReconnectionOccurred(Resources.TrovoUserChat);
+
                     return new Result();
                 }
             }
@@ -79,7 +88,7 @@ namespace MixItUp.Base.Services.Trovo.New
             return new Result(success: false);
         }
 
-        public async Task Disconnect()
+        public override async Task Disconnect()
         {
             if (cancellationTokenSource != null)
             {
@@ -89,20 +98,20 @@ namespace MixItUp.Base.Services.Trovo.New
 
             processMessages = false;
 
-            await webSocket.Disconnect();
+            await this.webSocket.Disconnect();
         }
 
-        public async Task<ChatPacketModel> Ping(AdvancedClientWebSocket webSocket)
+        public async Task<ChatPacketModel> Ping()
         {
-            return await SendAndListen(webSocket, new ChatPacketModel("PING"));
+            return await SendAndListen(new ChatPacketModel("PING"));
         }
 
-        private async Task<ChatPacketModel> SendAndListen(AdvancedClientWebSocket webSocket, ChatPacketModel packet)
+        private async Task<ChatPacketModel> SendAndListen(ChatPacketModel packet)
         {
             ChatPacketModel replyPacket = null;
-            replyIDListeners[packet.nonce] = null;
+            this.replyIDListeners[packet.nonce] = null;
 
-            await webSocket.Send(JSONSerializerHelper.SerializeToString(packet));
+            await this.webSocket.Send(JSONSerializerHelper.SerializeToString(packet));
 
             await AsyncRunner.WaitForSuccess(() =>
             {
@@ -125,7 +134,7 @@ namespace MixItUp.Base.Services.Trovo.New
                 int delay = 30;
                 try
                 {
-                    ChatPacketModel reply = await Ping(webSocket);
+                    ChatPacketModel reply = await this.Ping();
                     if (reply != null && reply.data != null && reply.data.ContainsKey("gap"))
                     {
                         int.TryParse(reply.data["gap"].ToString(), out delay);
@@ -498,6 +507,8 @@ namespace MixItUp.Base.Services.Trovo.New
         private void WebSocket_Disconnected(object sender, WebSocketCloseStatus closeStatus)
         {
             ChannelSession.DisconnectionOccurred(Resources.TrovoUserChat);
+
+            Task.Run(this.Reconnect);
         }
     }
 }

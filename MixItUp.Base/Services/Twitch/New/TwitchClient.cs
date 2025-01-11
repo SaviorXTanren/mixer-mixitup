@@ -1,9 +1,8 @@
-﻿using Google.Apis.YouTube.v3.Data;
-using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.Twitch.Channels;
 using MixItUp.Base.Model.Twitch.Clients.EventSub;
 using MixItUp.Base.Model.Twitch.EventSub;
@@ -25,188 +24,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Twitch.New
 {
-    public class TwitchSubEventModel
-    {
-        public const string PrimeSubPlan = "Prime";
-
-        public UserV2ViewModel User { get; set; }
-        public UserV2ViewModel Gifter { get; set; }
-
-        public int Tier { get; set; } = 1;
-        public string TierName { get; set; }
-
-        public string PlanName { get; set; }
-
-        public string Message { get; set; } = string.Empty;
-
-        public int Duration { get; set; }
-        public int Streak { get; set; }
-        public int Cumulative { get; set; }
-
-        public int SubPoints { get; set; }
-
-        public bool IsAnonymous { get; set; }
-        public bool IsPrime { get; set; }
-        public bool IsPrimeUpgrade { get; set; }
-        public bool IsGiftedUpgrade { get; set; }
-
-        public string CommunityGiftID { get; set; }
-
-        public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
-
-        public TwitchSubEventModel(UserV2ViewModel user, ChatNotification notification, UserV2ViewModel gifter = null)
-        {
-            this.User = user;
-            this.Gifter = gifter;
-
-            if (notification.NoticeType == ChatNotificationType.sub)
-            {
-                this.Tier = notification.sub.TierNumber;
-                this.SubPoints = notification.sub.SubPoints;
-                this.IsPrime = notification.sub.is_prime;
-            }
-            else if (notification.NoticeType == ChatNotificationType.resub)
-            {
-                this.Tier = notification.resub.TierNumber;
-                this.Duration = notification.resub.duration_months.GetValueOrDefault();
-                this.Streak = notification.resub.streak_months.GetValueOrDefault();
-                this.Cumulative = notification.resub.cumulative_months.GetValueOrDefault();
-                this.SubPoints = notification.resub.SubPoints;
-                this.IsPrime = notification.resub.is_prime;
-                this.IsAnonymous = notification.resub.gifter_is_anonymous;
-            }
-            else if (notification.NoticeType == ChatNotificationType.sub_gift)
-            {
-                this.Tier = notification.sub_gift.TierNumber;
-                this.Duration = notification.sub_gift.duration_months;
-                this.SubPoints = notification.sub_gift.SubPoints;
-                this.CommunityGiftID = notification.sub_gift.community_gift_id;
-                this.IsAnonymous = notification.chatter_is_anonymous;
-            }
-            else if (notification.NoticeType == ChatNotificationType.gift_paid_upgrade)
-            {
-                this.IsGiftedUpgrade = true;
-            }
-            else if (notification.NoticeType == ChatNotificationType.prime_paid_upgrade)
-            {
-                this.IsPrimeUpgrade = true;
-            }
-
-            // Shared
-            else if (notification.NoticeType == ChatNotificationType.shared_chat_sub)
-            {
-                this.Tier = notification.shared_chat_sub.TierNumber;
-                this.SubPoints = notification.shared_chat_sub.SubPoints;
-                this.IsPrime = notification.shared_chat_sub.is_prime;
-            }
-            else if (notification.NoticeType == ChatNotificationType.shared_chat_resub)
-            {
-                this.Tier = notification.shared_chat_resub.TierNumber;
-                this.Duration = notification.shared_chat_resub.duration_months.GetValueOrDefault();
-                this.Streak = notification.shared_chat_resub.streak_months.GetValueOrDefault();
-                this.Cumulative = notification.shared_chat_resub.cumulative_months.GetValueOrDefault();
-                this.SubPoints = notification.shared_chat_resub.SubPoints;
-                this.IsPrime = notification.shared_chat_resub.is_prime;
-                this.IsAnonymous = notification.shared_chat_resub.gifter_is_anonymous;
-            }
-            else if (notification.NoticeType == ChatNotificationType.shared_chat_sub_gift)
-            {
-                this.Tier = notification.shared_chat_sub_gift.TierNumber;
-                this.Duration = notification.shared_chat_sub_gift.duration_months;
-                this.SubPoints = notification.shared_chat_sub_gift.SubPoints;
-                this.CommunityGiftID = notification.shared_chat_sub_gift.community_gift_id;
-                this.IsAnonymous = notification.chatter_is_anonymous;
-            }
-            else if (notification.NoticeType == ChatNotificationType.shared_chat_pay_it_forward)
-            {
-                this.IsGiftedUpgrade = true;
-            }
-            else if (notification.NoticeType == ChatNotificationType.shared_chat_prime_paid_upgrade)
-            {
-                this.IsPrimeUpgrade = true;
-            }
-
-            this.SetTierName();
-        }
-
-        public void SetSubData(SubscriptionModel subData)
-        {
-            this.Tier = TwitchClient.GetSubTierNumberFromText(subData.tier);
-            this.SubPoints = TwitchClient.GetSubPoints(this.Tier);
-
-            this.SetTierName();
-        }
-
-        private void SetTierName()
-        {
-            if (this.IsPrime)
-            {
-                this.TierName = PrimeSubPlan;
-            }
-            else
-            {
-                this.TierName = $"{MixItUp.Base.Resources.Tier} {this.Tier}";
-            }
-            this.PlanName = this.TierName;
-        }
-    }
-
-    public class TwitchMassGiftedSubEventModel
-    {
-        public UserV2ViewModel Gifter { get; set; }
-
-        public string CommunityGiftID { get; set; }
-
-        public int TotalGifted { get; set; }
-
-        public int LifetimeGifted { get; set; }
-
-        public int Tier { get; set; }
-
-        public string TierName { get; set; }
-
-        public int TotalSubPoints { get; set; }
-
-        public bool IsAnonymous { get; set; }
-
-        public List<TwitchSubEventModel> Subs { get; set; } = new List<TwitchSubEventModel>();
-
-        public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
-
-        public TwitchMassGiftedSubEventModel(ChatNotificationCommunitySubGift communitySubGift, UserV2ViewModel gifter, bool isAnonymous)
-        {
-            this.Gifter = gifter;
-            this.CommunityGiftID = communitySubGift.id;
-
-            this.TotalGifted = communitySubGift.total;
-            this.LifetimeGifted = communitySubGift.cumulative_total.GetValueOrDefault();
-
-            this.Tier = communitySubGift.TierNumber;
-            this.TierName = this.TierName = $"{MixItUp.Base.Resources.Tier} {this.Tier}";
-
-            this.TotalSubPoints = communitySubGift.TotalSubPoints;
-
-            this.IsAnonymous = isAnonymous;
-        }
-    }
-
-    public class TwitchBitsCheeredModel
-    {
-        public UserV2ViewModel User { get; set; }
-
-        public int Amount { get; set; }
-
-        public TwitchChatMessageViewModel Message { get; set; }
-
-        public TwitchBitsCheeredModel(UserV2ViewModel user, int amount, TwitchChatMessageViewModel message)
-        {
-            this.User = user;
-            this.Amount = amount;
-            this.Message = message;
-        }
-    }
-
-    public class TwitchClient
+    public class TwitchClient : ServiceClientBase
     {
         public const string TwitchEventSubConnectionURL = "wss://eventsub.wss.twitch.tv/ws";
 
@@ -282,7 +100,7 @@ namespace MixItUp.Base.Services.Twitch.New
             { "channel.moderate", "2" },
         };
 
-        public bool IsConnected { get { return webSocket != null && webSocket.IsOpen() && this.eventSubSubscriptionsConnected; } }
+        public override bool IsConnected { get { return this.webSocket != null && this.webSocket.IsOpen() && this.eventSubSubscriptionsConnected; } }
 
         private AdvancedClientWebSocket webSocket;
 
@@ -295,16 +113,16 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public TwitchClient()
         {
-            webSocket = new AdvancedClientWebSocket();
+            this.webSocket = new AdvancedClientWebSocket();
 
-            webSocket.PacketSent += WebSocket_PacketSent;
-            webSocket.PacketReceived += UserWebSocket_PacketReceived;
-            webSocket.Disconnected += WebSocket_Disconnected;
+            this.webSocket.PacketSent += WebSocket_PacketSent;
+            this.webSocket.PacketReceived += UserWebSocket_PacketReceived;
+            this.webSocket.Disconnected += WebSocket_Disconnected;
         }
 
-        public async Task<Result> Connect()
+        public override async Task<Result> Connect()
         {
-            if (await webSocket.Connect(TwitchEventSubConnectionURL))
+            if (await this.webSocket.Connect(TwitchEventSubConnectionURL))
             {
                 await Task.Delay(2500);
 
@@ -312,6 +130,8 @@ namespace MixItUp.Base.Services.Twitch.New
                 {
                     if (this.eventSubSubscriptionsConnected)
                     {
+                        ChannelSession.ReconnectionOccurred(Resources.TwitchUserChat);
+
                         return new Result();
                     }
                     await Task.Delay(1000);
@@ -321,9 +141,9 @@ namespace MixItUp.Base.Services.Twitch.New
             return new Result(Resources.TwitchEventServiceFailedToConnectEventSub);
         }
 
-        public async Task Disconnect()
+        public override async Task Disconnect()
         {
-            await webSocket.Disconnect();
+            await this.webSocket.Disconnect();
         }
 
         public async Task ProcessMockNotification(NotificationMessage message)
@@ -1022,7 +842,7 @@ namespace MixItUp.Base.Services.Twitch.New
                     }
                 }
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchBitsCheered, user.FullDisplayName, bits), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
-                EventService.TwitchBitsCheeredOccurred(new TwitchBitsCheeredModel(user, bits, message));
+                EventService.TwitchBitsCheeredOccurred(new TwitchBitsCheeredEventModel(user, bits, message));
             }
         }
 
@@ -1069,7 +889,7 @@ namespace MixItUp.Base.Services.Twitch.New
             // Subs
             else if (notification.NoticeType == ChatNotificationType.sub)
             {
-                await this.ProcessSub(new TwitchSubEventModel(user, notification));
+                await this.ProcessSub(new TwitchSubcriptionEventModel(user, notification));
             }
             else if (notification.NoticeType == ChatNotificationType.resub)
             {
@@ -1089,11 +909,11 @@ namespace MixItUp.Base.Services.Twitch.New
                         }
                     }
 
-                    await this.ProcessSub(new TwitchSubEventModel(user, notification, gifter));
+                    await this.ProcessSub(new TwitchSubcriptionEventModel(user, notification, gifter));
                 }
                 else
                 {
-                    await this.ProcessSub(new TwitchSubEventModel(user, notification));
+                    await this.ProcessSub(new TwitchSubcriptionEventModel(user, notification));
                 }
             }
             else if (notification.NoticeType == ChatNotificationType.sub_gift)
@@ -1108,24 +928,24 @@ namespace MixItUp.Base.Services.Twitch.New
 
                 if (ChannelSession.Settings.MassGiftedSubsFilterAmount > 0)
                 {
-                    ServiceManager.Get<TwitchSession>().AddGiftedSub(new TwitchSubEventModel(user, notification, gifter));
+                    ServiceManager.Get<TwitchSession>().AddGiftedSub(new TwitchSubcriptionEventModel(user, notification, gifter));
                 }
                 else
                 {
-                    await this.ProcessSub(new TwitchSubEventModel(user, notification, gifter));
+                    await this.ProcessSub(new TwitchSubcriptionEventModel(user, notification, gifter));
                 }
             }
             else if (notification.NoticeType == ChatNotificationType.gift_paid_upgrade)
             {
-                await this.ProcessSub(new TwitchSubEventModel(user, notification));
+                await this.ProcessSub(new TwitchSubcriptionEventModel(user, notification));
             }
             else if (notification.NoticeType == ChatNotificationType.prime_paid_upgrade)
             {
-                await this.ProcessSub(new TwitchSubEventModel(user, notification));
+                await this.ProcessSub(new TwitchSubcriptionEventModel(user, notification));
             }
             else if (notification.NoticeType == ChatNotificationType.community_sub_gift)
             {
-                await ServiceManager.Get<TwitchSession>().AddMassGiftedSub(new TwitchMassGiftedSubEventModel(notification.community_sub_gift, user, notification.chatter_is_anonymous));
+                await ServiceManager.Get<TwitchSession>().AddMassGiftedSub(new TwitchMassGiftedSubcriptionsEventModel(notification.community_sub_gift, user, notification.chatter_is_anonymous));
             }
 
             // Shared
@@ -1303,7 +1123,7 @@ namespace MixItUp.Base.Services.Twitch.New
             }
         }
 
-        private async Task ProcessSub(TwitchSubEventModel subscription)
+        private async Task ProcessSub(TwitchSubcriptionEventModel subscription)
         {
             if (subscription.Duration > 0)
             {
@@ -1472,7 +1292,9 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private void WebSocket_Disconnected(object sender, WebSocketCloseStatus closeStatus)
         {
-            ChannelSession.DisconnectionOccurred(Resources.TrovoUserChat);
+            ChannelSession.DisconnectionOccurred(Resources.TwitchUserChat);
+
+            Task.Run(this.Reconnect);
         }
     }
 }

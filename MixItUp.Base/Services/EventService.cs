@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -227,8 +227,8 @@ namespace MixItUp.Base.Services
         public static event EventHandler<UserDonationModel> OnDonationOccurred = delegate { };
         public static void DonationOccurred(UserDonationModel donation) { OnDonationOccurred(null, donation); }
 
-        public static event EventHandler<TwitchBitsCheeredModel> OnTwitchBitsCheeredOccurred = delegate { };
-        public static void TwitchBitsCheeredOccurred(TwitchBitsCheeredModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
+        public static event EventHandler<TwitchBitsCheeredEventModel> OnTwitchBitsCheeredOccurred = delegate { };
+        public static void TwitchBitsCheeredOccurred(TwitchBitsCheeredEventModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
 
         public static event EventHandler<TrovoChatSpellViewModel> OnTrovoSpellCastOccurred = delegate { };
         public static void TrovoSpellCastOccurred(TrovoChatSpellViewModel spell) { OnTrovoSpellCastOccurred(null, spell); }

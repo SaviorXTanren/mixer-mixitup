@@ -9,6 +9,7 @@ using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -393,6 +394,40 @@ namespace MixItUp.Base.Services
                 BotID = this.BotID,
                 BotOAuthToken = this.BotOAuthToken,
             };
+        }
+    }
+
+    public abstract class ServiceClientBase
+    {
+        public abstract bool IsConnected { get; }
+
+        protected SemaphoreSlim reconnectSemaphore = new SemaphoreSlim(1);
+
+        public abstract Task<Result> Connect();
+
+        public abstract Task Disconnect();
+
+        public virtual async Task Reconnect()
+        {
+            await this.reconnectSemaphore.WaitAsync();
+
+            if (!this.IsConnected)
+            {
+                await this.Disconnect();
+
+                do
+                {
+                    await Task.Delay(2000);
+
+                    Result result = await this.Connect();
+                    if (!result.Success)
+                    {
+                        await this.Disconnect();
+                    }
+                } while (!this.IsConnected);
+            }
+
+            this.reconnectSemaphore.Release();
         }
     }
 }

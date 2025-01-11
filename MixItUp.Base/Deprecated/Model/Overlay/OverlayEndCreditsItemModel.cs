@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
@@ -489,7 +490,7 @@ namespace MixItUp.Base.Model.Overlay
             this.donations[donation.User.ID] += donation.Amount;
         }
 
-        private void GlobalEvents_OnBitsOccurred(object sender, TwitchBitsCheeredModel bits)
+        private void GlobalEvents_OnBitsOccurred(object sender, TwitchBitsCheeredEventModel bits)
         {
             if (!this.bits.ContainsKey(bits.User.ID))
             {

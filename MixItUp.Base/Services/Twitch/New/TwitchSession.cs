@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Twitch.Chat;
 using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.Twitch.Streams;
+using MixItUp.Base.Model.Twitch.Subscriptions;
 using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
@@ -143,8 +144,8 @@ namespace MixItUp.Base.Services.Twitch.New
         public IDictionary<string, TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes; } }
         private Dictionary<string, TwitchBitsCheermoteViewModel> bitsCheermotes = new Dictionary<string, TwitchBitsCheermoteViewModel>();
 
-        private List<TwitchSubEventModel> pendingGiftedSubs = new List<TwitchSubEventModel>();
-        private List<TwitchMassGiftedSubEventModel> pendingMassGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
+        private List<TwitchSubcriptionEventModel> pendingGiftedSubs = new List<TwitchSubcriptionEventModel>();
+        private List<TwitchMassGiftedSubcriptionsEventModel> pendingMassGiftedSubs = new List<TwitchMassGiftedSubcriptionsEventModel>();
 
         private CancellationTokenSource cancellationTokenSource;
 
@@ -518,7 +519,7 @@ namespace MixItUp.Base.Services.Twitch.New
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUpdated, parameters);
         }
 
-        public void AddGiftedSub(TwitchSubEventModel sub)
+        public void AddGiftedSub(TwitchSubcriptionEventModel sub)
         {
             lock (this.pendingGiftedSubs)
             {
@@ -526,7 +527,7 @@ namespace MixItUp.Base.Services.Twitch.New
             }
         }
 
-        public async Task AddMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSub)
+        public async Task AddMassGiftedSub(TwitchMassGiftedSubcriptionsEventModel massGiftedSub)
         {
             if (ChannelSession.Settings.MassGiftedSubsFilterAmount > 0)
             {
@@ -598,14 +599,14 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             if (ChannelSession.Settings.MassGiftedSubsFilterAmount > 0 && this.pendingGiftedSubs.Count > 0)
             {
-                List<TwitchSubEventModel> tempGiftedSubs = new List<TwitchSubEventModel>();
+                List<TwitchSubcriptionEventModel> tempGiftedSubs = new List<TwitchSubcriptionEventModel>();
                 lock (this.pendingGiftedSubs)
                 {
                     tempGiftedSubs.AddRange(this.pendingGiftedSubs.ToList().OrderBy(s => s.Processed));
                     this.pendingGiftedSubs.Clear();
                 }
 
-                List<TwitchMassGiftedSubEventModel> tempMassGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
+                List<TwitchMassGiftedSubcriptionsEventModel> tempMassGiftedSubs = new List<TwitchMassGiftedSubcriptionsEventModel>();
                 lock (this.pendingMassGiftedSubs)
                 {
                     tempMassGiftedSubs.AddRange(this.pendingMassGiftedSubs.ToList().OrderBy(s => s.Processed));
@@ -613,7 +614,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
                 foreach (var giftedSub in tempGiftedSubs)
                 {
-                    TwitchMassGiftedSubEventModel massGiftedSub = null;
+                    TwitchMassGiftedSubcriptionsEventModel massGiftedSub = null;
                     if (giftedSub.IsAnonymous || giftedSub.Gifter == null)
                     {
                         massGiftedSub = tempMassGiftedSubs.FirstOrDefault(ms => ms.IsAnonymous);
@@ -647,7 +648,7 @@ namespace MixItUp.Base.Services.Twitch.New
             }
         }
 
-        private async Task ProcessGiftedSub(TwitchSubEventModel giftedSubEvent, bool fireEventCommand = true)
+        private async Task ProcessGiftedSub(TwitchSubcriptionEventModel giftedSubEvent, bool fireEventCommand = true)
         {
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftedSubEvent.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.Duration;
@@ -689,7 +690,7 @@ namespace MixItUp.Base.Services.Twitch.New
             }
         }
 
-        private async Task ProcessMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent)
+        private async Task ProcessMassGiftedSub(TwitchMassGiftedSubcriptionsEventModel massGiftedSubEvent)
         {
             CommandParametersModel parameters = new CommandParametersModel(massGiftedSubEvent.Gifter, StreamingPlatformTypeEnum.Twitch);
             parameters.SpecialIdentifiers["subsgiftedamount"] = massGiftedSubEvent.TotalGifted.ToString();
@@ -703,7 +704,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 parameters.TargetUser = massGiftedSubEvent.Subs.First().User;
             }
 
-            foreach (TwitchSubEventModel sub in massGiftedSubEvent.Subs)
+            foreach (TwitchSubcriptionEventModel sub in massGiftedSubEvent.Subs)
             {
                 parameters.Arguments.Add(sub.User.Username);
             }
@@ -713,7 +714,7 @@ namespace MixItUp.Base.Services.Twitch.New
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(massGiftedSubEvent.Gifter, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGiftedTier, massGiftedSubEvent.Gifter.FullDisplayName, massGiftedSubEvent.TotalGifted, massGiftedSubEvent.TierName), ChannelSession.Settings.AlertMassGiftedSubColor));
 
             List<SubscriptionDetailsModel> subscriptions = new List<SubscriptionDetailsModel>();
-            foreach (TwitchSubEventModel sub in massGiftedSubEvent.Subs)
+            foreach (TwitchSubcriptionEventModel sub in massGiftedSubEvent.Subs)
             {
                 subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, sub.User, massGiftedSubEvent.Gifter, tier: massGiftedSubEvent.Tier));
             }

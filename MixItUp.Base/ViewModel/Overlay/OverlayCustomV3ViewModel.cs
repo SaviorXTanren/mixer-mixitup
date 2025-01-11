@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Trovo.Chat;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -345,7 +346,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
                 else if (type == OverlayCustomV3TestTypeEnum.TwitchBits)
                 {
-                    custom.OnTwitchBits(this, new TwitchBitsCheeredModel(ChannelSession.User, 100, new TwitchChatMessageViewModel(ChannelSession.User, "Hello World")));
+                    custom.OnTwitchBits(this, new TwitchBitsCheeredEventModel(ChannelSession.User, 100, new TwitchChatMessageViewModel(ChannelSession.User, "Hello World")));
                 }
                 else if (type == OverlayCustomV3TestTypeEnum.YouTubeSuperChat)
                 {

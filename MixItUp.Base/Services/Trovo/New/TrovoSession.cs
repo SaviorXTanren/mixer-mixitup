@@ -103,8 +103,9 @@ namespace MixItUp.Base.Services.Trovo.New
             {
                 return new Result(Resources.TrovoChatConnectionCouldNotBeEstablished);
             }
+            this.Client.ChatToken = chatToken;
 
-            result = await this.Client.Connect(chatToken);
+            result = await this.Client.Connect();
             if (!result.Success)
             {
                 await this.Client.Disconnect();
