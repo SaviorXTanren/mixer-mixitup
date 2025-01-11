@@ -149,7 +149,7 @@ namespace MixItUp.Base.Services
 
     public abstract class StreamingPlatformServiceBaseNew : OAuthServiceBase
     {
-        public StreamingPlatformTypeEnum Platform { get; }
+        public abstract StreamingPlatformTypeEnum Platform { get; }
 
         private IEnumerable<string> scopes;
 
@@ -170,11 +170,11 @@ namespace MixItUp.Base.Services
                 try
                 {
                     await this.RefreshOAuthToken();
+                    return new Result();
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    return new Result(ex);
                 }
             }
 
@@ -188,47 +188,8 @@ namespace MixItUp.Base.Services
 
         public override Task Disable()
         {
-            //StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
-            //if (authenticationSettings != null)
-            //{
-            //    authenticationSettings.ClearUserData();
-            //}
-
             return Task.CompletedTask;
         }
-
-        //public async Task<Result> ConnectBot()
-        //{
-        //    StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
-        //    if (authenticationSettings?.BotOAuthToken != null)
-        //    {
-        //        this.SetOAuthToken(authenticationSettings.UserOAuthToken);
-        //        await this.RefreshOAuthToken();
-        //    }
-        //    else
-        //    {
-        //        Result result = await this.ConnectWithAuthorization(this.BotScopes);
-        //        if (!result.Success)
-        //        {
-        //            return result;
-        //        }
-        //    }
-
-        //    return new Result();
-        //}
-
-        //public abstract Task DisconnectBot();
-
-        //public async Task DisableBot()
-        //{
-        //    await this.Disconnect();
-
-        //    StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
-        //    if (authenticationSettings != null)
-        //    {
-        //        authenticationSettings.ClearBotData();
-        //    }
-        //}
 
         public StreamingPlatformAuthenticationSettingsModel GetAuthenticationSettings()
         {
@@ -250,7 +211,7 @@ namespace MixItUp.Base.Services
 
         public abstract int MaxMessageLength { get; }
 
-        public StreamingPlatformTypeEnum Platform { get; }
+        public abstract StreamingPlatformTypeEnum Platform { get; }
 
         public UserV2ViewModel Streamer { get; protected set; }
         public string StreamerID { get; protected set; }
@@ -295,55 +256,42 @@ namespace MixItUp.Base.Services
         public bool IsConnected { get; private set; }
         public bool IsBotConnected { get; private set; }
 
-        protected OAuthTokenModel StreamerOAuthToken { get; }
-        protected OAuthTokenModel BotOAuthToken { get; }
+        protected abstract OAuthTokenModel StreamerOAuthToken { get; }
+        protected abstract OAuthTokenModel BotOAuthToken { get; }
 
         public StreamingPlatformSessionBase() { }
 
-        public async Task<Result> Connect()
+        public async Task<Result> ConnectStreamer()
         {
-            Result result = await this.ConnectStreamer();
-            if (!result.Success)
-            {
-                return result;
-            }
-            this.IsConnected = true;
+            Result result = await this.ConnectStreamerInternal();
 
-            if (this.IsBotEnabled)
+            this.IsConnected = result.Success;
+            if (result.Success)
             {
-                result = await this.ConnectBot();
-                if (result.Success)
-                {
-                    this.IsBotConnected = true;
-                }
-                else
-                {
-                    await DialogHelper.ShowFailedResult(result);
-                }
+                result = await this.RefreshDetails();
             }
 
-            return new Result();
+            if (result.Success)
+            {
+                this.SaveAuthenticationSettings();
+            }
+            else
+            {
+                await this.DisconnectStreamer();
+            }
+
+            return result;
         }
 
-        public async Task Disconnect()
+        public async Task DisconnectStreamer()
         {
-            await this.DisconnectStreamer();
             this.IsConnected = false;
-
-            if (this.IsBotEnabled)
-            {
-                await this.DisconnectBot();
-            }
-            this.IsBotConnected = false;
+            await this.DisconnectStreamerInternal();
         }
 
-        public abstract Task<Result> RefreshDetails();
-
-        public abstract Task<Result> ConnectStreamer();
-        protected abstract Task DisconnectStreamer();
         public async Task DisableStreamer()
         {
-            await this.Disconnect();
+            await this.DisconnectStreamer();
 
             if (ChannelSession.Settings.StreamingPlatformAuthentications.TryGetValue(this.Platform, out StreamingPlatformAuthenticationSettingsModel streamingPlatformAuth))
             {
@@ -351,8 +299,32 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public abstract Task<Result> ConnectBot();
-        protected abstract Task DisconnectBot();
+        protected abstract Task<Result> ConnectStreamerInternal();
+        protected abstract Task DisconnectStreamerInternal();
+
+        public async Task<Result> ConnectBot()
+        {
+            Result result = await this.ConnectBot();
+            this.IsBotConnected = result.Success;
+
+            if (result.Success)
+            {
+                this.SaveAuthenticationSettings();
+            }
+            else
+            {
+                await this.DisconnectBot();
+            }
+
+            return result;
+        }
+
+        public async Task DisconnectBot()
+        {
+            this.IsBotConnected = false;
+            await this.DisconnectBotInternal();
+        }
+
         public async Task DisableBot()
         {
             await this.DisconnectBot();
@@ -363,38 +335,10 @@ namespace MixItUp.Base.Services
             }
         }
 
-        //public async Task<Result> ConnectBot()
-        //{
-        //    StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
-        //    if (authenticationSettings?.BotOAuthToken != null)
-        //    {
-        //        this.SetOAuthToken(authenticationSettings.UserOAuthToken);
-        //        await this.RefreshOAuthToken();
-        //    }
-        //    else
-        //    {
-        //        Result result = await this.ConnectWithAuthorization(this.BotScopes);
-        //        if (!result.Success)
-        //        {
-        //            return result;
-        //        }
-        //    }
+        protected abstract Task<Result> ConnectBotInternal();
+        protected abstract Task DisconnectBotInternal();
 
-        //    return new Result();
-        //}
-
-        //public abstract Task DisconnectBot();
-
-        //public async Task DisableBot()
-        //{
-        //    await this.Disconnect();
-
-        //    StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
-        //    if (authenticationSettings != null)
-        //    {
-        //        authenticationSettings.ClearBotData();
-        //    }
-        //}
+        public abstract Task<Result> RefreshDetails();
 
         public abstract Task<Result> SetStreamTitle(string title);
 

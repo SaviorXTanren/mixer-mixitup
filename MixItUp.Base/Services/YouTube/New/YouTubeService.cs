@@ -42,6 +42,8 @@ namespace MixItUp.Base.Services.YouTube.New
         public override string ClientID { get { return "284178717531-kago2rk85ip02qb0vmlo8898m17s6oo8.apps.googleusercontent.com"; } }
         public override string ClientSecret { get { return ServiceManager.Get<SecretsService>().GetSecret("YouTubeSecret"); } }
 
+        public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.YouTube; } }
+
         public override bool IsConnected { get; protected set; }
 
         private UserCredential credential;

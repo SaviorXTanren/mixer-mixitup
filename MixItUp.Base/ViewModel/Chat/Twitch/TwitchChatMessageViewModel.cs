@@ -231,9 +231,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
             foreach (ChatMessageNotificationFragment fragment in message.fragments)
             {
+                this.AddStringMessagePart(fragment.text);
                 if (fragment.Type == ChatNotificationMessageFragmentType.text)
                 {
-                    this.AddStringMessagePart(fragment.text);
                     if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.ContainsKey(fragment.text))
                     {
                         this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<BetterTTVService>().BetterTTVEmotes[fragment.text];
@@ -243,9 +243,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                         this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes[fragment.text];
                     }
                 }
-                else if (fragment.Type == ChatNotificationMessageFragmentType.cheermote)
+                else if (fragment.Type == ChatNotificationMessageFragmentType.emote)
                 {
-                    this.AddStringMessagePart(fragment.text);
                     if (ServiceManager.Get<TwitchSession>().Emotes.ContainsKey(fragment.text))
                     {
                         this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchSession>().Emotes[fragment.text];
@@ -255,9 +254,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                         ServiceManager.Get<TwitchSession>().Emotes[fragment.text] = new TwitchChatEmoteViewModel(fragment.text, fragment.emote);
                     }
                 }
-                else if (fragment.Type == ChatNotificationMessageFragmentType.emote)
+                else if (fragment.Type == ChatNotificationMessageFragmentType.cheermote)
                 {
-                    this.AddStringMessagePart(fragment.text);
                     if (ServiceManager.Get<TwitchSession>().BitsCheermotes.TryGetValue(fragment.cheermote.prefix, out TwitchBitsCheermoteViewModel cheermote))
                     {
                         if (cheermote.Tiers.TryGetValue(fragment.cheermote.tier.ToString(), out TwitchBitsCheermoteTierViewModel tier))
@@ -269,7 +267,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                 }
                 else if (fragment.Type == ChatNotificationMessageFragmentType.mention)
                 {
-                    this.AddStringMessagePart(fragment.text);
+
                 }
             }
 

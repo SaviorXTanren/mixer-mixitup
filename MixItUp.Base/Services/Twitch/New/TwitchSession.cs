@@ -11,6 +11,7 @@ using MixItUp.Base.Model.Twitch.Streams;
 using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Model.Web;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -112,6 +113,7 @@ namespace MixItUp.Base.Services.Twitch.New
         };
 
         public override int MaxMessageLength { get { return 500; } }
+        public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Twitch; } }
 
         public HashSet<string> ChannelEditors { get; private set; } = new HashSet<string>();
         public UserModel StreamerModel { get; set; }
@@ -126,6 +128,9 @@ namespace MixItUp.Base.Services.Twitch.New
         public TwitchService BotService { get; private set; } = new TwitchService(BotScopes);
 
         public TwitchClient Client { get; private set; } = new TwitchClient();
+
+        protected override OAuthTokenModel StreamerOAuthToken { get { return this.StreamerService.GetOAuthTokenCopy(); } }
+        protected override OAuthTokenModel BotOAuthToken { get { return this.BotService.GetOAuthTokenCopy(); } }
 
         private List<string> emoteSetIDs = new List<string>();
 
@@ -143,41 +148,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private CancellationTokenSource cancellationTokenSource;
 
-        public override async Task<Result> RefreshDetails()
-        {
-            ChannelInformationModel channel = await StreamerService.GetChannelInformation(StreamerModel);
-            if (channel == null)
-            {
-                return new Result(Resources.TwitchFailedToGetChannelData);
-            }
-
-            this.Channel = channel;
-
-            if (!string.Equals(this.StreamCategoryID, channel.game_id, StringComparison.OrdinalIgnoreCase))
-            {
-                GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
-                if (game != null)
-                {
-                    this.StreamCategoryImageURL = game.box_art_url;
-                }
-            }
-
-            this.StreamTitle = this.Channel.title;
-            this.StreamCategoryID = this.Channel.game_id;
-            this.StreamCategoryName = this.Channel.game_name;
-
-            StreamModel stream = await StreamerService.GetStream(StreamerModel);
-            if (stream != null)
-            {
-                this.Stream = stream;
-
-                this.StreamViewerCount = (int)this.Stream.viewer_count;
-            }
-
-            return new Result();
-        }
-
-        public override async Task<Result> ConnectStreamer()
+        protected override async Task<Result> ConnectStreamerInternal()
         {
             Result result = await this.StreamerService.Connect();
             if (!result.Success)
@@ -208,12 +179,6 @@ namespace MixItUp.Base.Services.Twitch.New
             if (this.Streamer == null)
             {
                 this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(this.StreamerModel));
-            }
-
-            result = await this.RefreshDetails();
-            if (!result.Success)
-            {
-                return result;
             }
 
             result = await this.Client.Connect();
@@ -329,7 +294,7 @@ namespace MixItUp.Base.Services.Twitch.New
             return new Result();
         }
 
-        protected override async Task DisconnectStreamer()
+        protected override async Task DisconnectStreamerInternal()
         {
             if (this.cancellationTokenSource != null)
             {
@@ -340,7 +305,7 @@ namespace MixItUp.Base.Services.Twitch.New
             await this.Client.Disconnect();
         }
 
-        public override async Task<Result> ConnectBot()
+        protected override async Task<Result> ConnectBotInternal()
         {
             Result result = await this.BotService.Connect();
             if (!result.Success)
@@ -367,9 +332,46 @@ namespace MixItUp.Base.Services.Twitch.New
             return new Result();
         }
 
-        protected override Task DisconnectBot()
+        protected override Task DisconnectBotInternal()
         {
             return Task.CompletedTask;
+        }
+
+        public override async Task<Result> RefreshDetails()
+        {
+            ChannelInformationModel channel = await StreamerService.GetChannelInformation(StreamerModel);
+            if (channel == null)
+            {
+                return new Result(Resources.TwitchFailedToGetChannelData);
+            }
+
+            this.Channel = channel;
+
+            if (!string.Equals(this.StreamCategoryID, channel.game_id, StringComparison.OrdinalIgnoreCase))
+            {
+                GameModel game = await this.StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
+                if (game != null)
+                {
+                    string image = game.box_art_url;
+                    image = image.Replace("{width}", "264");
+                    image = image.Replace("{height}", "352");
+                    this.StreamCategoryImageURL = image;
+                }
+            }
+
+            this.StreamTitle = this.Channel.title;
+            this.StreamCategoryID = this.Channel.game_id;
+            this.StreamCategoryName = this.Channel.game_name;
+
+            StreamModel stream = await StreamerService.GetStream(StreamerModel);
+            if (stream != null)
+            {
+                this.Stream = stream;
+
+                this.StreamViewerCount = (int)this.Stream.viewer_count;
+            }
+
+            return new Result();
         }
 
         public override async Task<Result> SetStreamTitle(string title)
@@ -424,8 +426,6 @@ namespace MixItUp.Base.Services.Twitch.New
                 else
                 {
                     await this.StreamerService.SendChatMessage(this.StreamerModel, this.StreamerModel, m, replyMessageID);
-
-                    await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(ChannelSession.User, message, replyMessageID));
                 }
             }
         }
@@ -467,13 +467,13 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public async Task SendWhisper(UserV2ViewModel user, string message, bool sendAsStreamer = false)
         {
-            if (!sendAsStreamer || ServiceManager.Get<TwitchSession>().IsBotConnected)
+            if (!sendAsStreamer || this.IsBotConnected)
             {
-                await ServiceManager.Get<TwitchSession>().BotService.SendWhisper(this.BotModel, user.PlatformID, message);
+                await this.BotService.SendWhisper(this.BotModel, user.PlatformID, message);
             }
             else
             {
-                await ServiceManager.Get<TwitchSession>().StreamerService.SendWhisper(this.StreamerModel, user.PlatformID, message);
+                await this.StreamerService.SendWhisper(this.StreamerModel, user.PlatformID, message);
             }
         }
 
@@ -497,7 +497,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             if (!string.Equals(this.StreamCategoryID, update.category_id, StringComparison.OrdinalIgnoreCase))
             {
-                GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
+                GameModel game = await this.StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
                 if (game != null)
                 {
                     this.StreamCategoryImageURL = game.box_art_url;

@@ -531,27 +531,20 @@ namespace MixItUp.Base.Util
                     }
                 }
 
+                StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(platform);
+                if (session.IsConnected)
+                {
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", session.IsLive.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", session.StreamViewerCount.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", session.StreamTitle);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameid", session.StreamCategoryID);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", session.StreamCategoryName);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", session.StreamCategoryImageURL);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", session.StreamCategoryName);
+                }
+
                 if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TwitchSession>().IsLive.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSession>().Stream?.viewer_count.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSession>().Channel?.title);
-
-                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage"))
-                    {
-                        GameModel game = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(ServiceManager.Get<TwitchSession>().Channel?.game_id);
-                        if (game != null && !string.IsNullOrEmpty(game.box_art_url))
-                        {
-                            string image = game.box_art_url;
-                            image = image.Replace("{width}", "264");
-                            image = image.Replace("{height}", "352");
-                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", image);
-                        }
-                    }
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameid", ServiceManager.Get<TwitchSession>().Channel?.game_id);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", ServiceManager.Get<TwitchSession>().Channel?.game_name);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSession>().Channel?.game_name);
-
                     string thumbnail = ServiceManager.Get<TwitchSession>().Stream?.thumbnail_url;
                     if (!string.IsNullOrEmpty(thumbnail))
                     {
@@ -591,9 +584,7 @@ namespace MixItUp.Base.Util
                 {
                     LiveBroadcast broadcast = ServiceManager.Get<YouTubeSession>().LiveBroadcasts.Values.FirstOrDefault();
 
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", broadcast?.Snippet?.Title);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "description", broadcast?.Snippet?.Description);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<YouTubeSession>().IsLive.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<YouTubeSession>().StreamerModel.Statistics.SubscriberCount.GetValueOrDefault().ToString());
                     if (ServiceManager.Get<YouTubeSession>().IsLive)
                     {
@@ -603,12 +594,6 @@ namespace MixItUp.Base.Util
                 }
                 else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TrovoSession>().IsLive.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TrovoSession>().ChannelModel?.current_viewers.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TrovoSession>().ChannelModel?.live_title);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameid", ServiceManager.Get<TrovoSession>().ChannelModel?.category_id);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TrovoSession>().ChannelModel?.category_name);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", ServiceManager.Get<TrovoSession>().ChannelModel?.category_name);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TrovoSession>().ChannelModel?.followers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", ServiceManager.Get<TrovoSession>().ChannelModel?.subscriber_num.ToString());
                 }

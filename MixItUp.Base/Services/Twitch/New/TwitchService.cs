@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Trovo.Category;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Trovo.Category;
 using MixItUp.Base.Model.Twitch;
 using MixItUp.Base.Model.Twitch.Ads;
 using MixItUp.Base.Model.Twitch.Bits;
@@ -60,11 +61,12 @@ namespace MixItUp.Base.Services.Twitch.New
             return DateTimeOffset.MinValue;
         }
 
-        public override string ClientID { get { return "50ipfqzuqbv61wujxcm80zyzqwoqp1"; } }
+        public override string Name { get { return Resources.Twitch; } }
 
+        public override string ClientID { get { return "50ipfqzuqbv61wujxcm80zyzqwoqp1"; } }
         public override string ClientSecret { get { return ServiceManager.Get<SecretsService>().GetSecret("TwitchSecret"); } }
 
-        public override string Name { get { return Resources.Twitch; } }
+        public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Twitch; } }
 
         public override bool IsConnected { get; protected set; }
 
@@ -852,12 +854,13 @@ namespace MixItUp.Base.Services.Twitch.New
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
                 { "client_id", this.ClientID },
+                { "client_secret", this.ClientSecret },
                 { "refresh_token", this.OAuthToken.refreshToken },
                 { "grant_type", "refresh_token" },
             };
             FormUrlEncodedContent content = new FormUrlEncodedContent(parameters.AsEnumerable());
 
-            OAuthTokenModel newToken = await this.HttpClient.PostAsync<OAuthTokenModel>("oauth2/token?" + await content.ReadAsStringAsync());
+            OAuthTokenModel newToken = await this.HttpClient.PostAsync<OAuthTokenModel>("https://id.twitch.tv/oauth2/token?" + await content.ReadAsStringAsync());
             if (newToken != null)
             {
                 newToken.clientID = OAuthToken.clientID;

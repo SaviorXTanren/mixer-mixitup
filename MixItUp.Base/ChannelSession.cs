@@ -6,6 +6,7 @@ using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Model.Web;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Mock.New;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch;
@@ -71,6 +72,11 @@ namespace MixItUp.Base
         {
             ServiceManager.Add(new SecretsService());
 
+            ServiceManager.Add(new TwitchSession());
+            ServiceManager.Add(new YouTubeSession());
+            ServiceManager.Add(new TrovoSession());
+            ServiceManager.Add(new MockSession());
+
             ServiceManager.Add(new CommandService());
             ServiceManager.Add(new SettingsService());
             ServiceManager.Add(new MixItUpService());
@@ -123,26 +129,6 @@ namespace MixItUp.Base
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            //ServiceManager.Add(new TwitchSessionService());
-            //ServiceManager.Add(new TwitchChatService());
-            //ServiceManager.Add(new TwitchEventSubService());
-            //ServiceManager.Add(new TwitchPubSubService());
-            //ServiceManager.Add(new TwitchStatusService());
-
-            //ServiceManager.Add(new YouTubeSessionService());
-            //ServiceManager.Add(new YouTubeChatService());
-
-            //ServiceManager.Add(new TrovoSessionService());
-            //ServiceManager.Add(new TrovoChatEventService());
-
-
-
-            ServiceManager.Add(new TwitchSession());
-            ServiceManager.Add(new YouTubeSession());
-            ServiceManager.Add(new TrovoSession());
-
-
-
             try
             {
                 Type mixItUpSecretsType = Type.GetType("MixItUp.Base.MixItUpSecrets");
@@ -180,7 +166,8 @@ namespace MixItUp.Base
                 {
                     if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSession(p).IsConnected)
                     {
-                        await StreamingPlatforms.GetPlatformSession(p).Disconnect();
+                        await StreamingPlatforms.GetPlatformSession(p).DisconnectBot();
+                        await StreamingPlatforms.GetPlatformSession(p).DisconnectStreamer();
                     }
                 });
             }
@@ -195,17 +182,23 @@ namespace MixItUp.Base
         {
             Result result = new Result();
 
+            ChannelSession.Settings = settings;
+
             await StreamingPlatforms.ForEachPlatform(async (p) =>
             {
                 if (settings.StreamingPlatformAuthentications.ContainsKey(p) && settings.StreamingPlatformAuthentications[p].IsEnabled)
                 {
-                    result.Combine(await StreamingPlatforms.GetPlatformSession(p).Connect());
+                    result.Combine(await StreamingPlatforms.GetPlatformSession(p).ConnectStreamer());
+                    if (settings.StreamingPlatformAuthentications[p].IsBotEnabled)
+                    {
+                        result.Combine(await StreamingPlatforms.GetPlatformSession(p).ConnectBot());
+                    }
                 }
             });
 
-            if (result.Success)
+            if (!result.Success)
             {
-                ChannelSession.Settings = settings;
+                ChannelSession.Settings = null;
             }
             return result;
         }
@@ -223,17 +216,6 @@ namespace MixItUp.Base
 
                 await ServiceManager.Get<ITelemetryService>().Connect();
                 ServiceManager.Get<ITelemetryService>().SetUserID(ChannelSession.Settings.TelemetryUserID);
-
-                Result result = new Result();
-                foreach (StreamingPlatformSessionBase streamingPlatformSession in StreamingPlatforms.GetEnabledPlatformSessions())
-                {
-                    result.Combine(await streamingPlatformSession.Connect());
-                }
-
-                if (!result.Success)
-                {
-                    return result;
-                }
 
                 foreach (StreamingPlatformSessionBase streamingPlatformSession in StreamingPlatforms.GetConnectedPlatformSessions())
                 {
@@ -343,7 +325,7 @@ namespace MixItUp.Base
                             if (kvp.Value.Result != null && !kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
                                 Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.GetType().ToString());
-                                result = await kvp.Key.Connect();
+                                Result result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
                                     failedServices.Add(kvp.Key);

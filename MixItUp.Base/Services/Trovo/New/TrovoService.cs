@@ -50,6 +50,8 @@ namespace MixItUp.Base.Services.Trovo.New
         public override string ClientID { get { return "8FMjuk785AX4FMyrwPTU3B8vYvgHWN33"; } }
         public override string ClientSecret { get { return ServiceManager.Get<SecretsService>().GetSecret("TrovoSecret"); } }
 
+        public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Trovo; } }
+
         public override bool IsConnected { get; protected set; }
 
         public TrovoService(IEnumerable<string> scopes) : base(BaseAddressFormat, scopes) { }

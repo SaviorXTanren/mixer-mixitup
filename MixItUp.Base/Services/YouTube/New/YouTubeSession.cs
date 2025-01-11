@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Model.Web;
 using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -56,6 +57,7 @@ namespace MixItUp.Base.Services.YouTube.New
         };
 
         public override int MaxMessageLength { get { return 200; } }
+        public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.YouTube; } }
 
         public override string StreamLink
         {
@@ -103,6 +105,9 @@ namespace MixItUp.Base.Services.YouTube.New
         public List<MembershipsLevel> MembershipLevels { get; private set; } = new List<MembershipsLevel>();
         public bool HasMembershipCapabilities { get { return this.MembershipLevels.Count > 0; } }
 
+        protected override OAuthTokenModel StreamerOAuthToken { get { return this.StreamerService.GetOAuthTokenCopy(); } }
+        protected override OAuthTokenModel BotOAuthToken { get { return this.BotService.GetOAuthTokenCopy(); } }
+
         private string nextMessagesToken = null;
 
         private CancellationTokenSource messageBackgroundPollingTokenSource;
@@ -111,6 +116,102 @@ namespace MixItUp.Base.Services.YouTube.New
         private Dictionary<string, MixItUp.Base.Model.YouTube.YouTubeMembershipsGiftedModel> userGiftedMembershipDictionary = new Dictionary<string, MixItUp.Base.Model.YouTube.YouTubeMembershipsGiftedModel>();
 
         private DateTime launchDateTime = DateTime.Now;
+
+        protected override async Task<Result> ConnectStreamerInternal()
+        {
+            Result result = await this.StreamerService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            this.StreamerModel = await this.StreamerService.GetCurrentChannel();
+            if (this.StreamerModel == null)
+            {
+                return new Result(Resources.YouTubeFailedToGetUserData);
+            }
+
+            this.StreamerID = this.StreamerModel?.Id;
+            this.StreamerUsername = this.StreamerModel?.Snippet?.Title;
+            this.StreamerAvatarURL = this.StreamerModel?.Snippet?.Thumbnails?.Medium?.Url;
+
+            this.ChannelID = this.StreamerModel?.Id;
+            this.ChannelLink = this.StreamerModel?.Snippet?.CustomUrl;
+
+            this.Streamer = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: this.StreamerID);
+            if (this.Streamer == null)
+            {
+                this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(this.StreamerModel));
+            }
+
+            List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
+            platformServiceTasks.Add(this.SetChatEmotes());
+            platformServiceTasks.Add(this.SetMembershipLevels());
+
+            await Task.WhenAll(platformServiceTasks);
+
+            if (platformServiceTasks.Any(c => !c.Result.Success))
+            {
+                string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
+            }
+
+            this.messageBackgroundPollingTokenSource = new CancellationTokenSource();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(this.MessageBackgroundPolling, this.messageBackgroundPollingTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            return new Result();
+        }
+
+        protected override Task DisconnectStreamerInternal()
+        {
+            try
+            {
+                if (this.messageBackgroundPollingTokenSource != null)
+                {
+                    this.messageBackgroundPollingTokenSource.Cancel();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        protected override async Task<Result> ConnectBotInternal()
+        {
+            Result result = await this.BotService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            this.BotModel = await this.BotService.GetCurrentChannel();
+            if (this.BotModel == null)
+            {
+                return new Result(Resources.YouTubeFailedToGetUserData);
+            }
+
+            this.BotID = this.BotModel?.Id;
+            this.BotUsername = this.BotModel?.Snippet?.Title;
+            this.BotAvatarURL = this.BotModel?.Snippet?.Thumbnails?.Medium?.Url;
+
+            this.Bot = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: this.BotID);
+            if (this.Bot == null)
+            {
+                this.Bot = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(this.BotModel));
+            }
+
+            return new Result();
+        }
+
+        protected override Task DisconnectBotInternal()
+        {
+            return Task.CompletedTask;
+        }
 
         public override async Task<Result> RefreshDetails()
         {
@@ -159,108 +260,6 @@ namespace MixItUp.Base.Services.YouTube.New
             }
 
             return new Result();
-        }
-
-        public override async Task<Result> ConnectStreamer()
-        {
-            Result result = await this.StreamerService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            this.StreamerModel = await this.StreamerService.GetCurrentChannel();
-            if (this.StreamerModel == null)
-            {
-                return new Result(Resources.YouTubeFailedToGetUserData);
-            }
-
-            this.StreamerID = this.StreamerModel?.Id;
-            this.StreamerUsername = this.StreamerModel?.Snippet?.Title;
-            this.StreamerAvatarURL = this.StreamerModel?.Snippet?.Thumbnails?.Medium?.Url;
-
-            this.ChannelID = this.StreamerModel?.Id;
-            this.ChannelLink = this.StreamerModel?.Snippet?.CustomUrl;
-
-            this.Streamer = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: this.StreamerID);
-            if (this.Streamer == null)
-            {
-                this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(this.StreamerModel));
-            }
-
-            result = await this.RefreshDetails();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-            platformServiceTasks.Add(this.SetChatEmotes());
-            platformServiceTasks.Add(this.SetMembershipLevels());
-
-            await Task.WhenAll(platformServiceTasks);
-
-            if (platformServiceTasks.Any(c => !c.Result.Success))
-            {
-                string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
-            }
-
-            this.messageBackgroundPollingTokenSource = new CancellationTokenSource();
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(this.MessageBackgroundPolling, this.messageBackgroundPollingTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-            return new Result();
-        }
-
-        protected override Task DisconnectStreamer()
-        {
-            try
-            {
-                if (this.messageBackgroundPollingTokenSource != null)
-                {
-                    this.messageBackgroundPollingTokenSource.Cancel();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-
-            return Task.CompletedTask;
-        }
-
-        public override async Task<Result> ConnectBot()
-        {
-            Result result = await this.BotService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            this.BotModel = await this.BotService.GetCurrentChannel();
-            if (this.BotModel == null)
-            {
-                return new Result(Resources.YouTubeFailedToGetUserData);
-            }
-
-            this.BotID = this.BotModel?.Id;
-            this.BotUsername = this.BotModel?.Snippet?.Title;
-            this.BotAvatarURL = this.BotModel?.Snippet?.Thumbnails?.Medium?.Url;
-
-            this.Bot = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: this.BotID);
-            if (this.Bot == null)
-            {
-                this.Bot = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(this.BotModel));
-            }
-
-            return new Result();
-        }
-
-        protected override Task DisconnectBot()
-        {
-            return Task.CompletedTask;
         }
 
         public override async Task<Result> SetStreamTitle(string title)
@@ -340,9 +339,9 @@ namespace MixItUp.Base.Services.YouTube.New
         public async Task<Result> UpdateStreamTitleAndDescription(string title, string description)
         {
             Result result = new Result();
-            foreach (Video video in ServiceManager.Get<YouTubeSession>().Videos.Values.ToList())
+            foreach (Video video in this.Videos.Values.ToList())
             {
-                Video v = await ServiceManager.Get<YouTubeSession>().StreamerService.UpdateVideo(video, title: title, description: description);
+                Video v = await this.StreamerService.UpdateVideo(video, title: title, description: description);
                 if (v == null)
                 {
                     result.Append(string.Format(Resources.YouTubeFailedToUpdateVideoID, video.Id));
@@ -350,7 +349,7 @@ namespace MixItUp.Base.Services.YouTube.New
                 }
                 else
                 {
-                    ServiceManager.Get<YouTubeSession>().Videos[v.Id] = v;
+                    this.Videos[v.Id] = v;
                 }
             }
             return result;

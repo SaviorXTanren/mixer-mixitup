@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Trovo.Channels;
 using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Model.Trovo.Users;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Model.Web;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -43,6 +44,7 @@ namespace MixItUp.Base.Services.Trovo.New
         };
 
         public override int MaxMessageLength { get { return 500; } }
+        public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Trovo; } }
 
         public TrovoService StreamerService { get; private set; } = new TrovoService(StreamerScopes);
         public TrovoService BotService { get; private set; } = new TrovoService(BotScopes);
@@ -64,7 +66,107 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public Dictionary<string, ChannelSubscriberModel> Subscribers { get; private set; } = new Dictionary<string, ChannelSubscriberModel>();
 
+        protected override OAuthTokenModel StreamerOAuthToken { get { return this.StreamerService.GetOAuthTokenCopy(); } }
+        protected override OAuthTokenModel BotOAuthToken { get { return this.BotService.GetOAuthTokenCopy(); } }
+
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        protected override async Task<Result> ConnectStreamerInternal()
+        {
+            Result result = await this.StreamerService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            this.StreamerModel = await this.StreamerService.GetCurrentUser();
+            if (this.StreamerModel == null)
+            {
+                return new Result(Resources.TrovoFailedToGetUserData);
+            }
+
+            this.StreamerID = this.StreamerModel?.userId;
+            this.StreamerUsername = this.StreamerModel?.userName;
+            this.StreamerAvatarURL = this.StreamerModel?.profilePic;
+
+            this.ChannelID = this.StreamerModel?.channelId;
+            this.ChannelLink = string.Format("trovo.live/{0}", StreamerUsername?.ToLower());
+
+            this.Streamer = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: this.StreamerID);
+            if (this.Streamer == null)
+            {
+                this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(this.StreamerModel));
+            }
+
+            string chatToken = await this.StreamerService.GetChatToken();
+            if (string.IsNullOrEmpty(chatToken))
+            {
+                return new Result(Resources.TrovoChatConnectionCouldNotBeEstablished);
+            }
+
+            result = await this.Client.Connect(chatToken);
+            if (!result.Success)
+            {
+                await this.Client.Disconnect();
+                return result;
+            }
+
+            List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
+            platformServiceTasks.Add(this.GetEmotes());
+            platformServiceTasks.Add(this.GetSubscriberCache());
+
+            await Task.WhenAll(platformServiceTasks);
+
+            if (platformServiceTasks.Any(c => !c.Result.Success))
+            {
+                string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                return new Result(MixItUp.Base.Resources.TrovoFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
+            }
+
+            return new Result();
+        }
+
+        protected override async Task DisconnectStreamerInternal()
+        {
+            await this.Client.Disconnect();
+
+            if (this.cancellationTokenSource != null)
+            {
+                this.cancellationTokenSource.Cancel();
+            }
+        }
+
+        protected override async Task<Result> ConnectBotInternal()
+        {
+            Result result = await this.BotService.Connect();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            this.BotModel = await this.BotService.GetCurrentUser();
+            if (this.BotModel == null)
+            {
+                return new Result(Resources.TrovoFailedToGetUserData);
+            }
+
+            this.BotID = this.BotModel?.userId;
+            this.BotUsername = this.BotModel?.userName;
+            this.BotAvatarURL = this.BotModel.profilePic;
+
+            this.Bot = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: this.BotID);
+            if (this.Bot == null)
+            {
+                this.Bot = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(this.BotModel));
+            }
+
+            return new Result();
+        }
+
+        protected override Task DisconnectBotInternal()
+        {
+            return Task.CompletedTask;
+        }
 
         public override async Task<Result> RefreshDetails()
         {
@@ -99,112 +201,9 @@ namespace MixItUp.Base.Services.Trovo.New
             return new Result();
         }
 
-        public override async Task<Result> ConnectStreamer()
-        {
-            Result result = await this.StreamerService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            this.StreamerModel = await this.StreamerService.GetCurrentUser();
-            if (this.StreamerModel == null)
-            {
-                return new Result(Resources.TrovoFailedToGetUserData);
-            }
-
-            this.StreamerID = this.StreamerModel?.userId;
-            this.StreamerUsername = this.StreamerModel?.userName;
-            this.StreamerAvatarURL = this.StreamerModel?.profilePic;
-
-            this.ChannelID = this.StreamerModel?.channelId;
-            this.ChannelLink = string.Format("trovo.live/{0}", StreamerUsername?.ToLower());
-
-            this.Streamer = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: this.StreamerID);
-            if (this.Streamer == null)
-            {
-                this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(this.StreamerModel));
-            }
-
-            result = await this.RefreshDetails();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            string chatToken = await this.StreamerService.GetChatToken();
-            if (string.IsNullOrEmpty(chatToken))
-            {
-                return new Result(Resources.TrovoChatConnectionCouldNotBeEstablished);
-            }
-
-            result = await this.Client.Connect(chatToken);
-            if (!result.Success)
-            {
-                await this.Client.Disconnect();
-                return result;
-            }
-
-            List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-            platformServiceTasks.Add(this.GetEmotes());
-            platformServiceTasks.Add(this.GetSubscriberCache());
-
-            await Task.WhenAll(platformServiceTasks);
-
-            if (platformServiceTasks.Any(c => !c.Result.Success))
-            {
-                string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                return new Result(MixItUp.Base.Resources.TrovoFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
-            }
-
-            return new Result();
-        }
-
-        protected override async Task DisconnectStreamer()
-        {
-            await this.Client.Disconnect();
-
-            if (this.cancellationTokenSource != null)
-            {
-                this.cancellationTokenSource.Cancel();
-            }
-        }
-
-        public override async Task<Result> ConnectBot()
-        {
-            Result result = await this.BotService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            this.BotModel = await this.BotService.GetCurrentUser();
-            if (this.BotModel == null)
-            {
-                return new Result(Resources.TrovoFailedToGetUserData);
-            }
-
-            this.BotID = this.BotModel?.userId;
-            this.BotUsername = this.BotModel?.userName;
-            this.BotAvatarURL = this.BotModel.profilePic;
-
-            this.Bot = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: this.BotID);
-            if (this.Bot == null)
-            {
-                this.Bot = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(this.BotModel));
-            }
-
-            return new Result();
-        }
-
-        protected override Task DisconnectBot()
-        {
-            return Task.CompletedTask;
-        }
-
         public override async Task<Result> SetStreamTitle(string title)
         {
-            return await ServiceManager.Get<TrovoSession>().StreamerService.UpdateChannel(ServiceManager.Get<TrovoSession>().ChannelID, title: title);
+            return await this.StreamerService.UpdateChannel(this.ChannelID, title: title);
         }
 
         public override async Task<Result> SetStreamCategory(string category)

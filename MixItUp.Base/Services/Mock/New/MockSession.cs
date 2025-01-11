@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Web;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -12,17 +13,16 @@ namespace MixItUp.Base.Services.Mock.New
     public class MockSession : StreamingPlatformSessionBase
     {
         public override int MaxMessageLength { get { return 500; } }
+        public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Mock; } }
+
+        protected override OAuthTokenModel StreamerOAuthToken { get { return new OAuthTokenModel(); } }
+        protected override OAuthTokenModel BotOAuthToken { get { return new OAuthTokenModel(); } }
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
         private List<ChatMessageViewModel> messages = new List<ChatMessageViewModel>();
 
-        public override Task<Result> RefreshDetails()
-        {
-            return Task.FromResult(new Result());
-        }
-
-        public override Task<Result> ConnectStreamer()
+        protected override Task<Result> ConnectStreamerInternal()
         {
             this.StreamerID = "0";
             this.StreamerUsername = "Streamer";
@@ -35,12 +35,12 @@ namespace MixItUp.Base.Services.Mock.New
             return Task.FromResult(new Result());
         }
 
-        protected override Task DisconnectStreamer()
+        protected override Task DisconnectStreamerInternal()
         {
             return Task.CompletedTask;
         }
 
-        public override Task<Result> ConnectBot()
+        protected override Task<Result> ConnectBotInternal()
         {
             this.BotID = "1";
             this.BotUsername = "Bot";
@@ -50,9 +50,14 @@ namespace MixItUp.Base.Services.Mock.New
             return Task.FromResult(new Result());
         }
 
-        protected override Task DisconnectBot()
+        protected override Task DisconnectBotInternal()
         {
             return Task.CompletedTask;
+        }
+
+        public override Task<Result> RefreshDetails()
+        {
+            return Task.FromResult(new Result());
         }
 
         public override Task<Result> SetStreamTitle(string title)
