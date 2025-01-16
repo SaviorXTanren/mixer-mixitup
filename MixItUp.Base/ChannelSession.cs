@@ -2,16 +2,12 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Model.Web;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mock.New;
-using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Trovo.New;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.Twitch.New;
-using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -36,7 +32,7 @@ namespace MixItUp.Base
             get
             {
                 StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(ChannelSession.Settings.DefaultStreamingPlatform);
-                if (session.IsConnected)
+                if (session != null && session.IsConnected)
                 {
                     return session.Streamer;
                 }
@@ -44,7 +40,7 @@ namespace MixItUp.Base
                 foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
                 {
                     session = StreamingPlatforms.GetPlatformSession(platform);
-                    if (session.IsConnected)
+                    if (session != null && session.IsConnected)
                     {
                         return session.Streamer;
                     }
