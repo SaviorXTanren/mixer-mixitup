@@ -31,7 +31,9 @@ namespace MixItUp.Base.Services.YouTube.New
 
     public class YouTubeService : StreamingPlatformServiceBaseNew
     {
-        private const string OAuthBaseAddress = "https://accounts.google.com/o/oauth2/v2/auth";
+        private const string OAuthLoginBaseAddress = "https://accounts.google.com/o/oauth2/v2/auth";
+
+        private const string OAuthBaseAddress = "https://www.googleapis.com/oauth2/v4/token";
 
         private const string BaseAddressFormat = "https://www.googleapis.com/youtube/v3/";
 
@@ -75,9 +77,9 @@ namespace MixItUp.Base.Services.YouTube.New
             return new Result();
         }
 
-        public async Task SendMessage(LiveBroadcast broadcast, string message)
+        public async Task<LiveChatMessage> SendMessage(LiveBroadcast broadcast, string message)
         {
-            await AsyncRunner.RunAsync(async () =>
+            return await AsyncRunner.RunAsync(async () =>
             {
                 LiveChatMessage newMessage = new LiveChatMessage();
                 newMessage.Snippet = new LiveChatMessageSnippet();
@@ -91,6 +93,7 @@ namespace MixItUp.Base.Services.YouTube.New
 
                 LiveChatMessage liveChatMessage = await request.ExecuteAsync();
                 LogResponse(request, liveChatMessage);
+                return liveChatMessage;
             });
         }
 
@@ -264,13 +267,13 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task<IEnumerable<LiveBroadcast>> GetUpcomingBroadcasts()
+        public async Task<IEnumerable<LiveBroadcast>> GetNewestBroadcasts()
         {
             return await AsyncRunner.RunAsync(async () =>
             {
                 LiveBroadcastsResource.ListRequest request = this.GoogleYouTubeService.LiveBroadcasts.List("snippet,contentDetails,status");
                 request.BroadcastType = BroadcastTypeEnum.All;
-                request.BroadcastStatus = BroadcastStatusEnum.Upcoming;
+                request.Mine = true;
                 request.MaxResults = 10;
                 LogRequest(request);
 
@@ -397,29 +400,28 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task<Video> UpdateVideo(Video video, string title = null, string description = null, string categoryId = null)
+        public async Task<LiveBroadcast> UpdateVideo(LiveBroadcast broadcast, string title = null, string description = null)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
-                VideosResource.UpdateRequest request = this.GoogleYouTubeService.Videos.Update(new Video()
+                LiveBroadcastsResource.UpdateRequest request = this.GoogleYouTubeService.LiveBroadcasts.Update(new LiveBroadcast()
                 {
-                    Id = video.Id,
-                    Snippet = new VideoSnippet()
+                    Id = broadcast.Id,
+                    Snippet = new LiveBroadcastSnippet()
                     {
-                        Title = title ?? video.Snippet.Title,
-                        Description = description ?? video.Snippet.Description,
-                        CategoryId = categoryId ?? video.Snippet.CategoryId
+                        Title = title ?? broadcast.Snippet.Title,
+                        Description = description ?? broadcast.Snippet.Description
                     }
                 }, "snippet");
                 LogRequest(request);
 
-                Video response = await request.ExecuteAsync();
+                LiveBroadcast response = await request.ExecuteAsync();
                 LogResponse(request, response);
                 return response;
             });
         }
 
-        public async Task<IEnumerable<Subscription>> GetSubscribers(string channelID, int maxResults = 1) { return await this.GetSubscriptions(myRecentSubscribers: true, maxResults: maxResults); }
+        public async Task<IEnumerable<Subscription>> GetSubscribers(int maxResults = 1) { return await this.GetSubscriptions(myRecentSubscribers: true, maxResults: maxResults); }
 
         public async Task<Subscription> CheckIfSubscribed(string channelID, string userID)
         {
@@ -669,7 +671,7 @@ namespace MixItUp.Base.Services.YouTube.New
             }
 
             FormUrlEncodedContent content = new FormUrlEncodedContent(parameters.AsEnumerable());
-            return OAuthBaseAddress + "?" + await content.ReadAsStringAsync();
+            return OAuthLoginBaseAddress + "?" + await content.ReadAsStringAsync();
         }
 
         protected async override Task<OAuthTokenModel> RequestOAuthToken(string authorizationCode, IEnumerable<string> scopes, string state)

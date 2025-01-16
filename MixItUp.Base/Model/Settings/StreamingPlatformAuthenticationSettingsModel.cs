@@ -5,16 +5,6 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Settings
 {
-    public static class OAuthTokenModelExtensions
-    {
-        public static void ResetToken(this OAuthTokenModel token)
-        {
-            token.accessToken = string.Empty;
-            token.refreshToken = string.Empty;
-            token.expiresIn = 0;
-        }
-    }
-
     [DataContract]
     public class StreamingPlatformAuthenticationSettingsModel : IEquatable<StreamingPlatformAuthenticationSettingsModel>
     {

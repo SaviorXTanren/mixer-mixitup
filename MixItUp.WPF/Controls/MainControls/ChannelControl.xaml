@@ -148,7 +148,50 @@
 
                     <Grid Background="{StaticResource MaterialDesignBackground}">
                         <Grid Margin="10">
-                            <GroupBox Header="{x:Static resx:Resources.ChannelInfo}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <GroupBox Header="{x:Static resx:Resources.ActiveBroadcasts}" Grid.Row="0">
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <DataGrid Grid.Row="0" ItemsSource="{Binding ActiveBroadcasts}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Display}" IsReadOnly="True" Width="*" />
+                                            <DataGridTemplateColumn Header="{x:Static resx:Resources.Link}" IsReadOnly="True" Width="75">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Controls:IconButton Command="{Binding OpenStreamCommand}" Icon="Television" ToolTip="{x:Static resx:Resources.Link}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <ComboBox Grid.Column="0" DisplayMemberPath="Display" ItemsSource="{Binding UpcomingBroadcasts}" SelectedItem="{Binding SelectedUpcomingBroadcast}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Broadcasts}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                                        <Button Grid.Column="2" Content="{x:Static resx:Resources.Add}" Command="{Binding AddUpcomingBroadcast}" Width="100" />
+                                    </Grid>
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Header="{x:Static resx:Resources.StreamInfo}" Grid.Row="2">
                                 <Grid Margin="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />

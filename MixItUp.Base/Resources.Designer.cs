@@ -349,6 +349,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active Broadcasts.
+        /// </summary>
+        public static string ActiveBroadcasts {
+            get {
+                return ResourceManager.GetString("ActiveBroadcasts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active Image.
         /// </summary>
         public static string ActiveImage {
@@ -2218,6 +2227,15 @@ namespace MixItUp.Base {
         public static string Brightness {
             get {
                 return ResourceManager.GetString("Brightness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Broadcasts.
+        /// </summary>
+        public static string Broadcasts {
+            get {
+                return ResourceManager.GetString("Broadcasts", resourceCulture);
             }
         }
         

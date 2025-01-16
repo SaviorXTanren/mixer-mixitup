@@ -13,6 +13,7 @@ using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Twitch;
 using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -183,6 +184,61 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class YouTubeChannelControlViewModel : PlatformChannelControlViewModelBase
     {
+        public class LiveBroadcastViewModel : UIViewModelBase
+        {
+            public LiveBroadcast LiveBroadcast { get; set; }
+
+            public ICommand OpenStreamCommand { get; set; }
+
+            public LiveBroadcastViewModel(LiveBroadcast liveBroadcast)
+            {
+                this.LiveBroadcast = liveBroadcast;
+
+                this.OpenStreamCommand = this.CreateCommand(() =>
+                {
+                    ServiceManager.Get<IProcessService>().LaunchLink(this.StreamURL);
+                });
+            }
+
+            public string ID { get { return this.LiveBroadcast.Id; } }
+
+            public string Title { get { return this.LiveBroadcast.Snippet.Title; } }
+
+            public DateTimeOffset StartTime { get { return this.LiveBroadcast.Snippet.ActualStartTimeDateTimeOffset ?? this.LiveBroadcast.Snippet.ScheduledStartTimeDateTimeOffset.GetValueOrDefault(); } }
+
+            public string StreamURL { get { return this.LiveBroadcast.GetStreamURL(); } }
+
+            public string Display
+            {
+                get
+                {
+                    if (this.StartTime != DateTimeOffset.MinValue)
+                    {
+                        return $"{this.Title} - {this.StartTime.ToFriendlyDateString()}";
+                    }
+                    else
+                    {
+                        return this.Title;
+                    }
+                }
+            }
+        }
+
+        public ObservableCollection<LiveBroadcastViewModel> ActiveBroadcasts { get; set; } = new ObservableCollection<LiveBroadcastViewModel>();
+
+        public ObservableCollection<LiveBroadcastViewModel> UpcomingBroadcasts { get; set; } = new ObservableCollection<LiveBroadcastViewModel>();
+
+        public LiveBroadcastViewModel SelectedUpcomingBroadcast
+        {
+            get { return this.selectedUpcomingBroadcast; }
+            set
+            {
+                this.selectedUpcomingBroadcast = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private LiveBroadcastViewModel selectedUpcomingBroadcast;
+
         public string Description
         {
             get { return this.description; }
@@ -194,21 +250,60 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string description;
 
-        public YouTubeChannelControlViewModel() { this.Platform = StreamingPlatformTypeEnum.YouTube; }
+        public ICommand AddUpcomingBroadcast { get; set; }
+
+        public YouTubeChannelControlViewModel()
+        {
+            this.Platform = StreamingPlatformTypeEnum.YouTube;
+
+            this.AddUpcomingBroadcast = this.CreateCommand(() =>
+            {
+                if (this.SelectedUpcomingBroadcast == null)
+                {
+                    return;
+                }
+
+                ServiceManager.Get<YouTubeSession>().ManualLiveBroadcasts[this.SelectedUpcomingBroadcast.ID] = this.SelectedUpcomingBroadcast.LiveBroadcast;
+
+                this.UpcomingBroadcasts.Remove(this.SelectedUpcomingBroadcast);
+                this.SelectedUpcomingBroadcast = null;
+
+                this.RefreshActiveBroadcasts();
+            });
+        }
 
         protected override async Task OnOpenInternal()
         {
             await base.OnOpenInternal();
 
-            Video video = ServiceManager.Get<YouTubeSession>().Videos.Values.FirstOrDefault();
-            if (video != null)
+            this.RefreshActiveBroadcasts();
+
+            LiveBroadcast liveBroadcast = ServiceManager.Get<YouTubeSession>().LiveBroadcasts.Values.FirstOrDefault();
+            if (liveBroadcast != null)
             {
-                this.Title = video.Snippet.Title;
-                this.Description = video.Snippet.Description;
+                this.Title = liveBroadcast.Snippet.Title;
+                this.Description = liveBroadcast.Snippet.Description;
+            }
+
+            this.UpcomingBroadcasts.Clear();
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
+            {
+                foreach (LiveBroadcast broadcast in await ServiceManager.Get<YouTubeSession>().StreamerService.GetNewestBroadcasts())
+                {
+                    if (!ServiceManager.Get<YouTubeSession>().LiveBroadcasts.ContainsKey(broadcast.Id))
+                    {
+                        this.UpcomingBroadcasts.Add(new LiveBroadcastViewModel(broadcast));
+                    }
+                }
             }
         }
 
-        protected override Task RefreshChannelInformation() { return Task.CompletedTask; }
+        protected override Task RefreshChannelInformation()
+        {
+            this.RefreshActiveBroadcasts();
+
+            return Task.CompletedTask;
+        }
 
         protected override async Task<Result> UpdateChannelInformation()
         {
@@ -218,6 +313,22 @@ namespace MixItUp.Base.ViewModel.MainControls
         protected override Task SearchChannelsToRaid()
         {
             return Task.CompletedTask;
+        }
+
+        private void RefreshActiveBroadcasts()
+        {
+            try
+            {
+                this.ActiveBroadcasts.Clear();
+                foreach (LiveBroadcast broadcast in ServiceManager.Get<YouTubeSession>().LiveBroadcasts.Values.ToList())
+                {
+                    this.ActiveBroadcasts.Add(new LiveBroadcastViewModel(broadcast));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
     }
 

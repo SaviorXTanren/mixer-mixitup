@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Trovo.Category;
 using MixItUp.Base.Model.Twitch;
 using MixItUp.Base.Model.Twitch.Ads;
 using MixItUp.Base.Model.Twitch.Bits;

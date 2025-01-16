@@ -65,6 +65,14 @@ namespace MixItUp.Base.Model.Web
         public TimeSpan TimeUntilExpiration { get { return this.ExpirationDateTime - DateTimeOffset.Now; } }
         [JsonIgnore]
         public bool IsExpired { get { return this.ExpirationDateTime < DateTimeOffset.Now; } }
+
+        public void ResetToken()
+        {
+            this.accessToken = string.Empty;
+            this.refreshToken = string.Empty;
+            this.expiresIn = 0;
+            this.AcquiredDateTime = DateTimeOffset.MinValue;
+        }
     }
 }
 

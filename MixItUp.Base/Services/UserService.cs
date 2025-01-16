@@ -540,12 +540,12 @@ namespace MixItUp.Base.Services
                     this.displayUsers[user.SortableID] = user;
                 }
 
+                CommandParametersModel parameters = new CommandParametersModel(user);
                 if (user.OnlineViewingMinutes == 0)
                 {
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, parameters);
                 }
 
-                CommandParametersModel parameters = new CommandParametersModel(user);
                 if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters))
                 {
                     user.Model.TotalStreamsWatched++;

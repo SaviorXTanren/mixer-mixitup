@@ -10881,4 +10881,10 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="TwitchFailedToGetChannelData" xml:space="preserve">
     <value>Failed to get Twitch channel data</value>
   </data>
+  <data name="ActiveBroadcasts" xml:space="preserve">
+    <value>Active Broadcasts</value>
+  </data>
+  <data name="Broadcasts" xml:space="preserve">
+    <value>Broadcasts</value>
+  </data>
 </root>

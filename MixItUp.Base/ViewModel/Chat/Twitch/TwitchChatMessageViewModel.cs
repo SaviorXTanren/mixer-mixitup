@@ -5,7 +5,6 @@ using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.ViewModel.User;
 using System;
