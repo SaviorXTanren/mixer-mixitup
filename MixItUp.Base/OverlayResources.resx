@@ -530,6 +530,14 @@ function SubscriptionGifted(data)
     addToDiv("SubscriptionGifted");
 }
 
+function MassSubscriptionGifted(data)
+{
+    console.log("MassSubscriptionGifted");
+    console.log(data);
+    
+    addToDiv("MassSubscriptionGifted");
+}
+
 function Donation(data)
 {
     console.log("Donation");
@@ -2306,7 +2314,7 @@ function timerLoop()
     text = text.replace("hh", hours);
 
     let days = Math.floor(totalHours / 24);
-    text = text.replace("DD", hours);
+    text = text.replace("DD", days);
 
     document.getElementById("text").innerHTML = text;
     

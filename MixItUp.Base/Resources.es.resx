@@ -8744,7 +8744,7 @@ a través de Twitch, es una situación en la que "su kilometraje puede variar".<
     <value>Mix It Up Backup|*.miubackup|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="MixItUpCommandFileFormatFilter" xml:space="preserve">
-    <value>Comando Mezclar|*.miucomand|Todos los archivos (*.*)|*.*</value>
+    <value>Comando Mezclar|*.miucommand|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="SoundFileFormatFilter" xml:space="preserve">
     <value>Archivos de sonido|*.mp3;*.wav;*.flac;*.mp4;*.m4a;*.aac|Todos los archivos (*.*)|*.*</value>
