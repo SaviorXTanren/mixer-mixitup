@@ -10856,4 +10856,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="AmazonPollyPremiumVoiceSelectedWithoutCustomKey" xml:space="preserve">
     <value>ERROR: Unable to perform Amazon Polly TTS due to a premium voice selected without an AWS account connected</value>
   </data>
+  <data name="Nothing" xml:space="preserve">
+    <value>Nothing</value>
+  </data>
 </root>
