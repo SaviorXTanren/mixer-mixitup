@@ -32,7 +32,7 @@ namespace MixItUp.Base.Model.Twitch.Subscriptions
             this.Gifter = gifter;
             this.CommunityGiftID = communitySubGift.id;
 
-            this.TotalGifted = communitySubGift.total;
+            this.TotalGifted = communitySubGift.total.GetValueOrDefault();
             this.LifetimeGifted = communitySubGift.cumulative_total.GetValueOrDefault();
 
             this.Tier = communitySubGift.TierNumber;

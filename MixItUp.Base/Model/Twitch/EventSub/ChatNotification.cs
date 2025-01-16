@@ -92,9 +92,9 @@ namespace MixItUp.Base.Model.Twitch.EventSub
         public int? duration_months { get; set; }
         public int? streak_months { get; set; }
         public string sub_tier { get; set; }
-        public bool is_prime { get; set; }
-        public bool is_gift { get; set; }
-        public bool gifter_is_anonymous { get; set; }
+        public bool? is_prime { get; set; }
+        public bool? is_gift { get; set; }
+        public bool? gifter_is_anonymous { get; set; }
         public string gifter_user_id { get; set; }
         public string gifter_user_name { get; set; }
         public string gifter_user_login { get; set; }
@@ -106,8 +106,8 @@ namespace MixItUp.Base.Model.Twitch.EventSub
 
     public class ChatNotificationSubGift
     {
-        public int duration_months { get; set; }
-        public int cumulative_total { get; set; }
+        public int? duration_months { get; set; }
+        public int? cumulative_total { get; set; }
         public string recipient_user_id { get; set; }
         public string recipient_user_name { get; set; }
         public string recipient_user_login { get; set; }
@@ -122,18 +122,18 @@ namespace MixItUp.Base.Model.Twitch.EventSub
     public class ChatNotificationCommunitySubGift
     {
         public string id { get; set; }
-        public int total { get; set; }
+        public int? total { get; set; }
         public string sub_tier { get; set; }
         public int? cumulative_total { get; set; }
 
         public int TierNumber { get { return TwitchClient.GetSubTierNumberFromText(sub_tier); } }
 
-        public int TotalSubPoints { get { return TwitchClient.GetSubPoints(TierNumber) * this.total; } }
+        public int TotalSubPoints { get { return TwitchClient.GetSubPoints(TierNumber) * this.total.GetValueOrDefault(); } }
     }
 
     public class ChatNotificationGiftPaidUpgrade
     {
-        public bool gifter_is_anonymous { get; set; }
+        public bool? gifter_is_anonymous { get; set; }
         public string gifter_user_id { get; set; }
         public string gifter_user_name { get; set; }
         public string gifter_user_login { get; set; }
@@ -150,7 +150,7 @@ namespace MixItUp.Base.Model.Twitch.EventSub
 
     public class ChatNotificationPayItForward
     {
-        public bool gifter_is_anonymous { get; set; }
+        public bool? gifter_is_anonymous { get; set; }
         public string gifter_user_id { get; set; }
         public string gifter_user_name { get; set; }
         public string gifter_user_login { get; set; }
@@ -162,7 +162,7 @@ namespace MixItUp.Base.Model.Twitch.EventSub
         public string user_name { get; set; }
         public string user_login { get; set; }
         public string profile_image_url { get; set; }
-        public int viewer_count { get; set; }
+        public int? viewer_count { get; set; }
     }
 
     public class ChatNotificationAnnouncement
@@ -183,8 +183,8 @@ namespace MixItUp.Base.Model.Twitch.EventSub
 
     public class ChatNotificationCharityDonationAmount
     {
-        public int value { get; set; }
-        public int decimal_place { get; set; }
+        public int? value { get; set; }
+        public int? decimal_place { get; set; }
         public string currency { get; set; }
     }
 }

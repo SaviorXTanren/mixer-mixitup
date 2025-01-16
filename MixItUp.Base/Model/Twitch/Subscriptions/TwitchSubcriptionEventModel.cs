@@ -52,13 +52,13 @@ namespace MixItUp.Base.Model.Twitch.Subscriptions
                 this.Streak = notification.resub.streak_months.GetValueOrDefault();
                 this.Cumulative = notification.resub.cumulative_months.GetValueOrDefault();
                 this.SubPoints = notification.resub.SubPoints;
-                this.IsPrime = notification.resub.is_prime;
-                this.IsAnonymous = notification.resub.gifter_is_anonymous;
+                this.IsPrime = notification.resub.is_prime.GetValueOrDefault();
+                this.IsAnonymous = notification.resub.gifter_is_anonymous.GetValueOrDefault();
             }
             else if (notification.NoticeType == ChatNotificationType.sub_gift)
             {
                 this.Tier = notification.sub_gift.TierNumber;
-                this.Duration = notification.sub_gift.duration_months;
+                this.Duration = notification.sub_gift.duration_months.GetValueOrDefault();
                 this.SubPoints = notification.sub_gift.SubPoints;
                 this.CommunityGiftID = notification.sub_gift.community_gift_id;
                 this.IsAnonymous = notification.chatter_is_anonymous;
@@ -86,13 +86,13 @@ namespace MixItUp.Base.Model.Twitch.Subscriptions
                 this.Streak = notification.shared_chat_resub.streak_months.GetValueOrDefault();
                 this.Cumulative = notification.shared_chat_resub.cumulative_months.GetValueOrDefault();
                 this.SubPoints = notification.shared_chat_resub.SubPoints;
-                this.IsPrime = notification.shared_chat_resub.is_prime;
-                this.IsAnonymous = notification.shared_chat_resub.gifter_is_anonymous;
+                this.IsPrime = notification.shared_chat_resub.is_prime.GetValueOrDefault();
+                this.IsAnonymous = notification.shared_chat_resub.gifter_is_anonymous.GetValueOrDefault();
             }
             else if (notification.NoticeType == ChatNotificationType.shared_chat_sub_gift)
             {
                 this.Tier = notification.shared_chat_sub_gift.TierNumber;
-                this.Duration = notification.shared_chat_sub_gift.duration_months;
+                this.Duration = notification.shared_chat_sub_gift.duration_months.GetValueOrDefault();
                 this.SubPoints = notification.shared_chat_sub_gift.SubPoints;
                 this.CommunityGiftID = notification.shared_chat_sub_gift.community_gift_id;
                 this.IsAnonymous = notification.chatter_is_anonymous;

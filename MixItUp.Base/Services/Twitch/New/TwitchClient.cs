@@ -893,10 +893,10 @@ namespace MixItUp.Base.Services.Twitch.New
             }
             else if (notification.NoticeType == ChatNotificationType.resub)
             {
-                if (notification.resub.is_gift)
+                if (notification.resub.is_gift.GetValueOrDefault())
                 {
                     UserV2ViewModel gifter;
-                    if (notification.resub.gifter_is_anonymous)
+                    if (notification.resub.gifter_is_anonymous.GetValueOrDefault())
                     {
                         gifter = UserV2ViewModel.CreateUnassociated(Resources.AnAnonymousGifter);
                     }
