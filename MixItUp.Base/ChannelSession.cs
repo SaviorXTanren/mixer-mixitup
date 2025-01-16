@@ -46,7 +46,7 @@ namespace MixItUp.Base
                     }
                 }
 
-                return null;
+                return UserV2ViewModel.CreateUnassociated(Resources.Anonymous);
             }
         }
 
