@@ -248,7 +248,7 @@ namespace MixItUp.Base.Services
             {
                 if (message.User != null && message.User.ID == user.ID)
                 {
-                    await message.Delete(moderator, reason);
+                    await message.Delete(moderator, reason, triggerEventCommand: false);
 
                     if (ChannelSession.Settings.HideDeletedMessages)
                     {

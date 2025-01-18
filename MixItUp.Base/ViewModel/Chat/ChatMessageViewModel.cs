@@ -204,7 +204,7 @@ namespace MixItUp.Base.ViewModel.Chat
             return false;
         }
 
-        public async Task Delete(UserV2ViewModel moderator = null, string reason = null)
+        public async Task Delete(UserV2ViewModel moderator = null, string reason = null, bool triggerEventCommand = true)
         {
             try
             {
