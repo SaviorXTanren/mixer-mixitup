@@ -148,6 +148,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 text = "";
             }
+            text = text.Trim();
             text = text.Replace("*", ModerationService.WordWildcardRegex);
 
             list.Clear();
