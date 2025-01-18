@@ -425,6 +425,10 @@ namespace MixItUp.Base.Model.Overlay
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && subscription.Gifter != null)
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = subscription.Gifter.ID;
+                if (subscription.Gifter.IsUnassociated)
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserFallback = subscription.Gifter.Model;
+                }
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].Amount = 1;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter);
             }
@@ -447,9 +451,14 @@ namespace MixItUp.Base.Model.Overlay
                     await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.TotalSubscribers);
                 }
 
-                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && subscriptions.Last().Gifter != null)
+                UserV2ViewModel gifter = subscriptions.Last().Gifter;
+                if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && gifter != null)
                 {
-                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = subscriptions.Last().Gifter.ID;
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = gifter.ID;
+                    if (gifter.IsUnassociated)
+                    {
+                        this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserFallback = gifter.Model;
+                    }
                     this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].Amount = subscriptions.Count();
                     await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter);
                 }
