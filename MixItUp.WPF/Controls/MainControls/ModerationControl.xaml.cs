@@ -148,10 +148,11 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 text = "";
             }
+            text = text.Trim();
             text = text.Replace("*", ModerationService.WordWildcardRegex);
 
             list.Clear();
-            foreach (string split in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string split in text.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries))
             {
                 list.Add(split);
             }
