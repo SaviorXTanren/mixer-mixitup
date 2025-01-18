@@ -242,6 +242,24 @@ namespace MixItUp.Base.Services
             ChatService.ChatMessageDeleted(message.ID);
         }
 
+        public async Task MarkUserMessagesAsDeleted(UserV2ViewModel user, UserV2ViewModel moderator = null, string reason = null)
+        {
+            foreach (ChatMessageViewModel message in this.Messages.ToList())
+            {
+                if (message.User != null && message.User.ID == user.ID)
+                {
+                    await message.Delete(moderator, reason);
+
+                    if (ChannelSession.Settings.HideDeletedMessages)
+                    {
+                        await this.RemoveMessage(message);
+                    }
+
+                    ChatService.ChatMessageDeleted(message.ID);
+                }
+            }
+        }
+
         public async Task ClearMessages(StreamingPlatformTypeEnum platform)
         {
             if (platform == StreamingPlatformTypeEnum.All)

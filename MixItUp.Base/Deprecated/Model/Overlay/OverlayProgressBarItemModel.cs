@@ -142,7 +142,6 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
-                // TODO
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     this.CurrentAmount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);

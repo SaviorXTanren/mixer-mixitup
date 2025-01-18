@@ -25942,6 +25942,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Chat Cleared.
+        /// </summary>
+        public static string UserChatCleared {
+            get {
+                return ResourceManager.GetString("UserChatCleared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Data.
         /// </summary>
         public static string UserData {

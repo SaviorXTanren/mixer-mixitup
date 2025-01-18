@@ -158,8 +158,6 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.userSubDates.Clear();
 
-                // TODO
-
                 //foreach (UserSubscriptionModel subscriber in subscribers)
                 //{
                 //    UserV2ViewModel user = await UserV2ViewModel.Create(subscriber.user);
@@ -169,8 +167,6 @@ namespace MixItUp.Base.Model.Overlay
                 //        this.userSubDates[user.ID] = subDate.GetValueOrDefault();
                 //    }
                 //}
-
-                // TODO
 
                 await this.UpdateSubscribers();
 

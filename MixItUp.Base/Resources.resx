@@ -10887,4 +10887,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="Broadcasts" xml:space="preserve">
     <value>Broadcasts</value>
   </data>
+  <data name="UserChatCleared" xml:space="preserve">
+    <value>User Chat Cleared</value>
+  </data>
 </root>

@@ -1013,7 +1013,10 @@ namespace MixItUp.Base.Services.Twitch.New
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userClear));
             }
 
-            // TODO: Mark all message by user as deleted
+            if (user != null)
+            {
+                await ServiceManager.Get<ChatService>().MarkUserMessagesAsDeleted(user, reason: Resources.UserChatCleared);
+            }
         }
 
         private Task HandleSharedChatBegin(JObject payload)
@@ -1270,8 +1273,9 @@ namespace MixItUp.Base.Services.Twitch.New
                     }
                     else if (string.Equals(messageTypeString, "revocation", StringComparison.OrdinalIgnoreCase))
                     {
-                        // TODO: Disconnect and reconnect
-                        await this.Disconnect();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(this.Reconnect);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                     else if (string.Equals(messageTypeString, "notification", StringComparison.OrdinalIgnoreCase))
                     {
