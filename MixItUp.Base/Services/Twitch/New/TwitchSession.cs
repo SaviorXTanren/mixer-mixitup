@@ -338,6 +338,12 @@ namespace MixItUp.Base.Services.Twitch.New
             return Task.CompletedTask;
         }
 
+        public override async Task RefreshOAuthTokenIfCloseToExpiring()
+        {
+            await this.StreamerService.RefreshOAuthTokenIfCloseToExpiring();
+            await this.BotService.RefreshOAuthTokenIfCloseToExpiring();
+        }
+
         public override async Task<Result> RefreshDetails()
         {
             ChannelInformationModel channel = await StreamerService.GetChannelInformation(StreamerModel);

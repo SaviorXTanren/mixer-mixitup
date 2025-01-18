@@ -169,6 +169,12 @@ namespace MixItUp.Base.Services.Trovo.New
             return Task.CompletedTask;
         }
 
+        public override async Task RefreshOAuthTokenIfCloseToExpiring()
+        {
+            await this.StreamerService.RefreshOAuthTokenIfCloseToExpiring();
+            await this.BotService.RefreshOAuthTokenIfCloseToExpiring();
+        }
+
         public override async Task<Result> RefreshDetails()
         {
             ChannelModel channel = await StreamerService.GetChannelByID(ChannelID);

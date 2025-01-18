@@ -220,6 +220,12 @@ namespace MixItUp.Base.Services.YouTube.New
             return Task.CompletedTask;
         }
 
+        public override async Task RefreshOAuthTokenIfCloseToExpiring()
+        {
+            await this.StreamerService.RefreshOAuthTokenIfCloseToExpiring();
+            await this.BotService.RefreshOAuthTokenIfCloseToExpiring();
+        }
+
         public override async Task<Result> RefreshDetails()
         {
             IEnumerable<LiveBroadcast> broadcasts = await this.StreamerService.GetActiveBroadcasts();

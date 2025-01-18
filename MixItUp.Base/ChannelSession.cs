@@ -440,11 +440,22 @@ namespace MixItUp.Base
 
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSession(p).IsConnected)
+                    StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(p);
+                    if (session.IsConnected)
                     {
-                        await StreamingPlatforms.GetPlatformSession(p).RefreshDetails();
+                        await session.RefreshOAuthTokenIfCloseToExpiring();
+
+                        await session.RefreshDetails();
                     }
                 });
+
+                foreach (OAuthServiceBase oauthService in ServiceManager.GetAll<OAuthServiceBase>())
+                {
+                    if (oauthService.IsConnected)
+                    {
+                        await oauthService.RefreshOAuthTokenIfCloseToExpiring();
+                    }
+                }
 
                 if (sessionBackgroundTimer >= 5)
                 {

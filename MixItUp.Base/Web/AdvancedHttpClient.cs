@@ -1,15 +1,14 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MixItUp.Base.Model.Web;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using MixItUp.Base.Util;
-using MixItUp.Base.Model.Web;
-using Jace.Tokenizer;
 
 namespace MixItUp.Base.Web
 {
@@ -230,7 +229,6 @@ namespace MixItUp.Base.Web
         /// <returns>A type-casted object of the contents of the response</returns>
         public async Task PostAsync(string requestUri)
         {
-            this.LogRequest(requestUri);
             await this.PostAsync(requestUri, AdvancedHttpClient.CreateContentFromString(string.Empty));
         }
 
@@ -241,7 +239,6 @@ namespace MixItUp.Base.Web
         /// <returns>A type-casted object of the contents of the response</returns>
         public async Task<T> PostAsync<T>(string requestUri)
         {
-            this.LogRequest(requestUri);
             return await this.PostAsync<T>(requestUri, AdvancedHttpClient.CreateContentFromString(string.Empty));
         }
 
@@ -295,7 +292,6 @@ namespace MixItUp.Base.Web
         /// <returns>A type-casted object of the contents of the response</returns>
         public async Task<T> PutAsync<T>(string requestUri)
         {
-            this.LogRequest(requestUri);
             return await this.PutAsync<T>(requestUri, AdvancedHttpClient.CreateContentFromString(string.Empty));
         }
 

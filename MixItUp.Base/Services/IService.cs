@@ -69,6 +69,16 @@ namespace MixItUp.Base.Services
             this.HttpClient = new AdvancedHttpClient(baseAddress);
         }
 
+        public async Task RefreshOAuthTokenIfCloseToExpiring()
+        {
+            if (this.IsConnected && this.OAuthToken != null && this.OAuthToken.TimeUntilExpiration.TotalMinutes < 15)
+            {
+                Logger.Log(LogLevel.Debug, $"OAuth Token close to expiring for {this.Name}, refreshing now");
+
+                await this.RefreshOAuthToken();
+            }
+        }
+
         public virtual OAuthTokenModel GetOAuthTokenCopy()
         {
             if (this.OAuthToken != null)
@@ -171,6 +181,7 @@ namespace MixItUp.Base.Services
                 try
                 {
                     await this.RefreshOAuthToken();
+                    this.IsConnected = true;
                     return new Result();
                 }
                 catch (Exception ex)
@@ -179,16 +190,23 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            return await this.ConnectWithAuthorization(this.scopes);
+            Result result = await this.ConnectWithAuthorization(this.scopes);
+            if (result.Success)
+            {
+                this.IsConnected = true;
+            }
+            return result;
         }
 
         public override Task Disconnect()
         {
+            this.IsConnected = false;
             return Task.CompletedTask;
         }
 
         public override Task Disable()
         {
+            this.IsConnected = false;
             return Task.CompletedTask;
         }
 
@@ -338,6 +356,8 @@ namespace MixItUp.Base.Services
 
         protected abstract Task<Result> ConnectBotInternal();
         protected abstract Task DisconnectBotInternal();
+
+        public abstract Task RefreshOAuthTokenIfCloseToExpiring();
 
         public abstract Task<Result> RefreshDetails();
 

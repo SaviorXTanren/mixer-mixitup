@@ -55,6 +55,11 @@ namespace MixItUp.Base.Services.Mock.New
             return Task.CompletedTask;
         }
 
+        public override Task RefreshOAuthTokenIfCloseToExpiring()
+        {
+            return Task.CompletedTask;
+        }
+
         public override Task<Result> RefreshDetails()
         {
             return Task.FromResult(new Result());
