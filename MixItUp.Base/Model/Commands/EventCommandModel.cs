@@ -88,9 +88,22 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["usersubplan"] = "Tier 1";
                     specialIdentifiers["isanonymous"] = "false";
                     break;
-                case EventTypeEnum.TwitchChannelWatchStreak:
-                    specialIdentifiers["userwatchstreak"] = "5";
+
+                case EventTypeEnum.TwitchChannelHighlightedMessage:
+                    specialIdentifiers["message"] = "Test Message";
                     break;
+                case EventTypeEnum.TwitchChannelUserIntro:
+                    specialIdentifiers["message"] = "Test Message";
+                    break;
+                case EventTypeEnum.TwitchChannelPowerUpMessageEffect:
+                    specialIdentifiers["message"] = "Test Message";
+                    break;
+                case EventTypeEnum.TwitchChannelPowerUpGigantifiedEmote:
+                    specialIdentifiers["message"] = "LUL";
+                    specialIdentifiers["emotename"] = "LUL";
+                    specialIdentifiers["emoteurl"] = "https://static-cdn.jtvnw.net/emoticons/v2/425618/default/dark/4.0";
+                    break;
+
                 case EventTypeEnum.TwitchChannelBitsCheered:
                     specialIdentifiers["bitsamount"] = "10";
                     specialIdentifiers["bitslifetimeamount"] = "100";

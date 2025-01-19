@@ -177,8 +177,6 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public IEnumerable<ChatEmoteViewModelBase> EmotesOnlyContents { get { return this.MessageParts.Where(p => p is ChatEmoteViewModelBase).Select(p => p as ChatEmoteViewModelBase); } }
 
-        public virtual bool ContainsOnlyEmotes() { return false; }
-
         public virtual IEnumerable<string> ToArguments() { return CommandParametersModel.GenerateArguments(this.PlainTextMessage); }
 
         public async Task<bool> CheckForModeration()

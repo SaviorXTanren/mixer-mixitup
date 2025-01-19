@@ -81,6 +81,7 @@ namespace MixItUp.Base.Services.Twitch.New
             //{ "channel.subscription.message", null },
             //{ "channel.subscription.gift", null },
 
+            //{ "channel.channel_points_automatic_reward_redemption.add", null },
             { "channel.channel_points_custom_reward_redemption.add", null },
 
             { "channel.chat.message", null },
@@ -320,6 +321,9 @@ namespace MixItUp.Base.Services.Twitch.New
                     //    await HandleSubscriptionGift(message.Payload.Event);
                     //    break;
 
+                    case "channel.channel_points_automatic_reward_redemption.add":
+                        await HandleChannelPointAutomaticRewardRedemptionAdd(message.Payload.Event);
+                        break;
                     case "channel.channel_points_custom_reward_redemption.add":
                         await HandleChannelPointRewardAddCustomRedemption(message.Payload.Event);
                         break;
@@ -736,6 +740,32 @@ namespace MixItUp.Base.Services.Twitch.New
         //    }
         //}
 
+        private async Task HandleChannelPointAutomaticRewardRedemptionAdd(JObject payload)
+        {
+            ChannelPointAutomaticRewardRedemptionNotification redemption = payload.ToObject<ChannelPointAutomaticRewardRedemptionNotification>();
+
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: redemption.user_id);
+            if (user == null)
+            {
+                user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(redemption));
+            }
+
+            if (redemption.reward.Type == ChannelPointAutomaticRewardType.celebration)
+            {
+                //if (redemption.message?.emotes?.Count > 0 && ServiceManager.Get<TwitchSession>().Emotes.TryGetValue())
+                //{
+                //    string message = redemption.message.text ?? string.Empty;
+
+                //    CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch, CommandParametersModel.GenerateArguments(message));
+                //    parameters.SpecialIdentifiers["message"] = message;
+                //    parameters.SpecialIdentifiers["emotename"] = emote.Name;
+                //    parameters.SpecialIdentifiers["emoteurl"] = emote.OverlayAnimatedImageURL;
+
+                //    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelPowerUpCelebration, parameters);
+                //}
+            }
+        }
+
         private async Task HandleChannelPointRewardAddCustomRedemption(JObject payload)
         {
             ChannelPointRewardCustomRedemptionNotification redemption = payload.ToObject<ChannelPointRewardCustomRedemptionNotification>();
@@ -843,6 +873,37 @@ namespace MixItUp.Base.Services.Twitch.New
                 }
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchBitsCheered, user.FullDisplayName, bits), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
                 EventService.TwitchBitsCheeredOccurred(new TwitchBitsCheeredEventModel(user, bits, message));
+            }
+
+            if (messageNotification.MessageType != ChatNotificationMessageType.text)
+            {
+                CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch, message.ToArguments());
+                parameters.SpecialIdentifiers["messagenocheermotes"] = message.PlainTextMessageNoCheermotes;
+                parameters.SpecialIdentifiers["message"] = message.PlainTextMessage;
+
+                if (messageNotification.MessageType == ChatNotificationMessageType.user_intro)
+                {
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUserIntro, parameters);
+                }
+                else if (messageNotification.MessageType == ChatNotificationMessageType.power_ups_message_effect)
+                {
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelPowerUpMessageEffect, parameters);
+                }
+                else if (messageNotification.MessageType == ChatNotificationMessageType.power_ups_gigantified_emote)
+                {
+                    ChatEmoteViewModelBase emote = message.EmotesOnlyContents.FirstOrDefault();
+                    if (emote != null)
+                    {
+                        parameters.SpecialIdentifiers["emotename"] = emote.Name;
+                        parameters.SpecialIdentifiers["emoteurl"] = emote.OverlayAnimatedImageURL;
+
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelPowerUpGigantifiedEmote, parameters);
+                    }
+                }
+                else if (messageNotification.MessageType == ChatNotificationMessageType.channel_points_highlighted)
+                {
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHighlightedMessage, parameters);
+                }
             }
         }
 

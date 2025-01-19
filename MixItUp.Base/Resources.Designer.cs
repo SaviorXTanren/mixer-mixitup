@@ -24858,6 +24858,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Highlighted Message.
+        /// </summary>
+        public static string TwitchChannelHighlightedMessage {
+            get {
+                return ResourceManager.GetString("TwitchChannelHighlightedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Channel Hosted.
         /// </summary>
         public static string TwitchChannelHosted {
@@ -24975,6 +24984,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Power-Up Celebration.
+        /// </summary>
+        public static string TwitchChannelPowerUpCelebration {
+            get {
+                return ResourceManager.GetString("TwitchChannelPowerUpCelebration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Power-Up Gigantified Emote.
+        /// </summary>
+        public static string TwitchChannelPowerUpGigantifiedEmote {
+            get {
+                return ResourceManager.GetString("TwitchChannelPowerUpGigantifiedEmote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Power-Up Message Effect.
+        /// </summary>
+        public static string TwitchChannelPowerUpMessageEffect {
+            get {
+                return ResourceManager.GetString("TwitchChannelPowerUpMessageEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Channel Raided.
         /// </summary>
         public static string TwitchChannelRaided {
@@ -25043,6 +25079,15 @@ namespace MixItUp.Base {
         public static string TwitchChannelUpdated {
             get {
                 return ResourceManager.GetString("TwitchChannelUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel User Intro.
+        /// </summary>
+        public static string TwitchChannelUserIntro {
+            get {
+                return ResourceManager.GetString("TwitchChannelUserIntro", resourceCulture);
             }
         }
         

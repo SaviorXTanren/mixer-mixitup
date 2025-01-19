@@ -70,7 +70,13 @@ namespace MixItUp.Base.Services
         TwitchChannelSubscriptionGifted = 222,
         TwitchChannelMassSubscriptionsGifted = 223,
 
+        [Obsolete]
         TwitchChannelWatchStreak = 230,
+
+        TwitchChannelHighlightedMessage = 240,
+        TwitchChannelUserIntro = 241,
+        TwitchChannelPowerUpMessageEffect = 242,
+        TwitchChannelPowerUpGigantifiedEmote = 243,
 
         TwitchChannelAdUpcoming = 250,
         TwitchChannelAdStarted = 251,

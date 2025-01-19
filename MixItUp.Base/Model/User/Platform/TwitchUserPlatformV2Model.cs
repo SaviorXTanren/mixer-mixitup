@@ -88,6 +88,8 @@ namespace MixItUp.Base.Model.User.Platform
 
         public TwitchUserPlatformV2Model(UserSubscriptionGiftNotification subscriptionGift) : this(subscriptionGift.user_id, subscriptionGift.user_login, subscriptionGift.user_name) { }
 
+        public TwitchUserPlatformV2Model(ChannelPointAutomaticRewardRedemptionNotification redemption) : this(redemption.user_id, redemption.user_login, redemption.user_name) { }
+
         public TwitchUserPlatformV2Model(ChannelPointRewardCustomRedemptionNotification redemption) : this(redemption.user_id, redemption.user_login, redemption.user_name) { }
 
         public TwitchUserPlatformV2Model(ChatUserClearNotification userClear) : this(userClear.target_user_id, userClear.target_user_login, userClear.target_user_name) { }

@@ -10890,4 +10890,19 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="UserChatCleared" xml:space="preserve">
     <value>User Chat Cleared</value>
   </data>
+  <data name="TwitchChannelHighlightedMessage" xml:space="preserve">
+    <value>Twitch Channel Highlighted Message</value>
+  </data>
+  <data name="TwitchChannelPowerUpCelebration" xml:space="preserve">
+    <value>Twitch Channel Power-Up Celebration</value>
+  </data>
+  <data name="TwitchChannelPowerUpGigantifiedEmote" xml:space="preserve">
+    <value>Twitch Channel Power-Up Gigantified Emote</value>
+  </data>
+  <data name="TwitchChannelPowerUpMessageEffect" xml:space="preserve">
+    <value>Twitch Channel Power-Up Message Effect</value>
+  </data>
+  <data name="TwitchChannelUserIntro" xml:space="preserve">
+    <value>Twitch Channel User Intro</value>
+  </data>
 </root>
