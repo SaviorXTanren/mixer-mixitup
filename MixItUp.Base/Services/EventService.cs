@@ -77,6 +77,7 @@ namespace MixItUp.Base.Services
         TwitchChannelUserIntro = 241,
         TwitchChannelPowerUpMessageEffect = 242,
         TwitchChannelPowerUpGigantifiedEmote = 243,
+        TwitchChannelPowerUpCelebration = 244,
 
         TwitchChannelAdUpcoming = 250,
         TwitchChannelAdStarted = 251,

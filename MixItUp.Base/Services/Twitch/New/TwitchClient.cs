@@ -81,7 +81,7 @@ namespace MixItUp.Base.Services.Twitch.New
             //{ "channel.subscription.message", null },
             //{ "channel.subscription.gift", null },
 
-            //{ "channel.channel_points_automatic_reward_redemption.add", null },
+            { "channel.channel_points_automatic_reward_redemption.add", null },
             { "channel.channel_points_custom_reward_redemption.add", null },
 
             { "channel.chat.message", null },
@@ -752,17 +752,8 @@ namespace MixItUp.Base.Services.Twitch.New
 
             if (redemption.reward.Type == ChannelPointAutomaticRewardType.celebration)
             {
-                //if (redemption.message?.emotes?.Count > 0 && ServiceManager.Get<TwitchSession>().Emotes.TryGetValue())
-                //{
-                //    string message = redemption.message.text ?? string.Empty;
-
-                //    CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch, CommandParametersModel.GenerateArguments(message));
-                //    parameters.SpecialIdentifiers["message"] = message;
-                //    parameters.SpecialIdentifiers["emotename"] = emote.Name;
-                //    parameters.SpecialIdentifiers["emoteurl"] = emote.OverlayAnimatedImageURL;
-
-                //    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelPowerUpCelebration, parameters);
-                //}
+                CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelPowerUpCelebration, parameters);
             }
         }
 

@@ -167,6 +167,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelUserIntro));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelPowerUpMessageEffect));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelPowerUpGigantifiedEmote));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelPowerUpCelebration));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelBitsCheered));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelPointsRedeemed));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelCharityDonation));
