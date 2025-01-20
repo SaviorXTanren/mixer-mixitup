@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.Actions
                     process.StartInfo = new ProcessStartInfo()
                     {
                         FileName = ChannelSession.Settings.PythonExecutablePath,
-                        Arguments = "-u " + pythonFilePath,
+                        Arguments = $"-u \"{pythonFilePath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
