@@ -678,8 +678,8 @@ namespace MixItUp.Base.Services.YouTube.New
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
-                { "client_id", ClientID },
-                { "client_secret", ClientSecret },
+                { "client_id", this.ClientID },
+                { "client_secret", this.ClientSecret },
                 { "code", authorizationCode },
                 { "grant_type", "authorization_code" },
                 { "redirect_uri", LocalOAuthHttpListenerServer.REDIRECT_URL },
@@ -689,7 +689,7 @@ namespace MixItUp.Base.Services.YouTube.New
             OAuthTokenModel token = await this.HttpClient.PostAsync<OAuthTokenModel>(OAuthBaseAddress, new StringContent(await content.ReadAsStringAsync(), Encoding.UTF8, "application/x-www-form-urlencoded"));
             if (token != null)
             {
-                token.clientID = ClientID;
+                token.clientID = this.ClientID;
                 token.ScopeList = string.Join(",", scopes ?? new List<string>());
                 return token;
             }
@@ -700,8 +700,8 @@ namespace MixItUp.Base.Services.YouTube.New
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
-                { "client_id", ClientID },
-                //{ "client_secret", token.clientSecret },
+                { "client_id", this.ClientID },
+                { "client_secret", this.ClientSecret },
                 { "refresh_token", OAuthToken.refreshToken },
                 { "grant_type", "refresh_token" },
             };
@@ -710,7 +710,8 @@ namespace MixItUp.Base.Services.YouTube.New
             OAuthTokenModel newToken = await this.HttpClient.PostAsync<OAuthTokenModel>(OAuthBaseAddress, new StringContent(await content.ReadAsStringAsync(), Encoding.UTF8, "application/x-www-form-urlencoded"));
             if (newToken != null)
             {
-                newToken.clientID = OAuthToken.clientID;
+                newToken.clientID = this.ClientID;
+                newToken.refreshToken = OAuthToken.refreshToken;
                 newToken.ScopeList = OAuthToken.ScopeList;
                 OAuthToken = newToken;
 
@@ -723,7 +724,11 @@ namespace MixItUp.Base.Services.YouTube.New
             this.credential = new UserCredential(new GoogleAuthorizationCodeFlow(
                 new GoogleAuthorizationCodeFlow.Initializer
                 {
-                    ClientSecrets = new ClientSecrets() { ClientId = this.OAuthToken.clientID, ClientSecret = ServiceManager.Get<SecretsService>().GetSecret("YouTubeSecret") },
+                    ClientSecrets = new ClientSecrets()
+                    {
+                        ClientId = this.ClientID,
+                        ClientSecret = this.ClientSecret
+                    },
                 }),
                 "user",
                 new TokenResponse()
@@ -737,13 +742,13 @@ namespace MixItUp.Base.Services.YouTube.New
             this.GoogleYouTubeService = new Google.Apis.YouTube.v3.YouTubeService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = this.credential,
-                ApplicationName = this.OAuthToken.clientID
+                ApplicationName = this.ClientID
             });
 
             this.GoogleYouTubePartnerService = new YouTubePartnerService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = this.credential,
-                ApplicationName = this.OAuthToken.clientID
+                ApplicationName = this.ClientID
             });
         }
 

@@ -54,7 +54,21 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public override bool IsConnected { get; protected set; }
 
-        public TrovoService(IEnumerable<string> scopes) : base(BaseAddressFormat, scopes) { }
+        protected override OAuthTokenModel OAuthToken
+        {
+            get { return base.OAuthToken; }
+            set
+            {
+                base.OAuthToken = value;
+                this.HttpClient.SetAuthorization("OAuth", base.OAuthToken.accessToken);
+            }
+        }
+
+        public TrovoService(IEnumerable<string> scopes)
+            : base(BaseAddressFormat, scopes)
+        {
+            this.HttpClient.DefaultRequestHeaders.Add("Client-ID", this.ClientID);
+        }
 
         public async Task<PrivateUserModel> GetCurrentUser() { return await AsyncRunner.RunAsync(HttpClient.GetAsync<PrivateUserModel>("getuserinfo")); }
 

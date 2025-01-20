@@ -53,7 +53,7 @@ namespace MixItUp.Base.Services
 
         protected AdvancedHttpClient HttpClient { get; }
 
-        protected OAuthTokenModel OAuthToken
+        protected virtual OAuthTokenModel OAuthToken
         {
             get { return this.token; }
             set
