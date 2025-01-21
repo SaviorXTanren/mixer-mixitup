@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static Google.Apis.YouTube.v3.LiveBroadcastsResource.ListRequest;
 
@@ -64,9 +65,9 @@ namespace MixItUp.Base.Services.YouTube.New
 
         public YouTubeService(IEnumerable<string> scopes) : base(BaseAddressFormat, scopes) { }
 
-        public async override Task<Result> Connect()
+        public async override Task<Result> ManualConnect(CancellationToken cancellationToken)
         {
-            Result result = await base.Connect();
+            Result result = await base.ManualConnect(cancellationToken);
             if (!result.Success)
             {
                 return result;

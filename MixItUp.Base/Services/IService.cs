@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.Web;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -22,7 +21,9 @@ namespace MixItUp.Base.Services
 
         bool IsConnected { get; }
 
-        Task<Result> Connect();
+        Task<Result> AutomaticConnect();
+
+        Task<Result> ManualConnect(CancellationToken cancellationToken);
 
         Task Disconnect();
 
@@ -37,7 +38,9 @@ namespace MixItUp.Base.Services
 
         public abstract bool IsConnected { get; protected set; }
 
-        public abstract Task<Result> Connect();
+        public abstract Task<Result> AutomaticConnect();
+
+        public abstract Task<Result> ManualConnect(CancellationToken cancellationToken);
 
         public abstract Task Disconnect();
 
@@ -102,12 +105,12 @@ namespace MixItUp.Base.Services
 
         protected abstract Task RefreshOAuthToken();
 
-        protected async Task<Result> ConnectWithAuthorization(IEnumerable<string> scopes)
+        protected async Task<Result> ConnectWithAuthorization(IEnumerable<string> scopes, CancellationToken cancellationToken)
         {
             try
             {
                 string state = Guid.NewGuid().ToString();
-                string authorizationCode = await this.GetAuthorizationCode(scopes, state, forceApprovalPrompt: true);
+                string authorizationCode = await this.GetAuthorizationCode(scopes, state, cancellationToken, forceApprovalPrompt: true);
                 if (!string.IsNullOrEmpty(authorizationCode))
                 {
                     OAuthTokenModel token = await this.RequestOAuthToken(authorizationCode, scopes, state);
@@ -126,10 +129,10 @@ namespace MixItUp.Base.Services
             return new Result(success: false);
         }
 
-        protected async Task<string> GetAuthorizationCode(IEnumerable<string> scopes, string state, bool forceApprovalPrompt = false)
+        protected async Task<string> GetAuthorizationCode(IEnumerable<string> scopes, string state, CancellationToken cancellationToken, bool forceApprovalPrompt = false)
         {
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
-            return await oauthServer.GetAuthorizationCode(await this.GetAuthorizationCodeURL(scopes, state, forceApprovalPrompt));
+            return await oauthServer.GetAuthorizationCode(await this.GetAuthorizationCodeURL(scopes, state, forceApprovalPrompt), cancellationToken);
         }
 
         protected async Task<OAuthTokenModel> RequestWWWFormUrlEncodedOAuthToken(string endpoint, List<KeyValuePair<string, string>> bodyContent)
@@ -172,7 +175,7 @@ namespace MixItUp.Base.Services
             this.scopes = scopes;
         }
 
-        public async override Task<Result> Connect()
+        public async override Task<Result> AutomaticConnect()
         {
             StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
             if (authenticationSettings?.IsEnabled ?? false)
@@ -187,10 +190,15 @@ namespace MixItUp.Base.Services
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
+                    return new Result(ex);
                 }
             }
+            return new Result(success: false);
+        }
 
-            Result result = await this.ConnectWithAuthorization(this.scopes);
+        public async override Task<Result> ManualConnect(CancellationToken cancellationToken)
+        {
+            Result result = await this.ConnectWithAuthorization(this.scopes, cancellationToken);
             if (result.Success)
             {
                 this.IsConnected = true;
@@ -231,6 +239,9 @@ namespace MixItUp.Base.Services
         public abstract int MaxMessageLength { get; }
 
         public abstract StreamingPlatformTypeEnum Platform { get; }
+
+        public abstract OAuthServiceBase StreamerOAuthService { get; }
+        public abstract OAuthServiceBase BotOAuthService { get; }
 
         public UserV2ViewModel Streamer { get; protected set; }
         public string StreamerID { get; protected set; }
@@ -280,23 +291,43 @@ namespace MixItUp.Base.Services
 
         public StreamingPlatformSessionBase() { }
 
-        public async Task<Result> ConnectStreamer()
+        public async Task<Result> AutomaticConnectStreamer()
         {
-            Result result = await this.ConnectStreamerInternal();
+            Result result = await this.StreamerOAuthService.AutomaticConnect();
+            if (result.Success)
+            {
+                return await this.InitializeStreamer();
+            }
+            return result;
+        }
 
-            this.IsConnected = result.Success;
+        public async Task<Result> ManualConnectStreamer(CancellationToken cancellationToken, bool initialize = true)
+        {
+            Result result = await this.StreamerOAuthService.ManualConnect(cancellationToken);
+            if (!cancellationToken.IsCancellationRequested && result.Success && initialize)
+            {
+                return await this.InitializeStreamer();
+            }
+            return result;
+        }
+
+        public async Task<Result> InitializeStreamer()
+        {
+            Result result = await this.InitializeStreamerInternal();
+
             if (result.Success)
             {
                 result = await this.RefreshDetails();
-            }
 
-            if (result.Success)
-            {
-                this.SaveAuthenticationSettings();
-            }
-            else
-            {
-                await this.DisconnectStreamer();
+                this.IsConnected = result.Success;
+                if (result.Success)
+                {
+                    this.SaveAuthenticationSettings();
+                }
+                else
+                {
+                    await this.DisconnectStreamer();
+                }
             }
 
             return result;
@@ -316,16 +347,52 @@ namespace MixItUp.Base.Services
             {
                 streamingPlatformAuth.ClearUserData();
             }
+
+            this.Streamer = null;
+            this.StreamerID = null;
+            this.StreamerUsername = null;
+            this.StreamerAvatarURL = null;
+
+            this.ChannelID = null;
+            this.ChannelLink = null;
+
+            this.IsLive = false;
+            this.StreamTitle = null;
+            this.StreamCategoryID = null;
+            this.StreamCategoryName = null;
+            this.StreamCategoryImageURL = null;
+            this.StreamStart = DateTimeOffset.MinValue;
+            this.StreamViewerCount = 0;
         }
 
-        protected abstract Task<Result> ConnectStreamerInternal();
+        protected abstract Task<Result> InitializeStreamerInternal();
         protected abstract Task DisconnectStreamerInternal();
 
-        public async Task<Result> ConnectBot()
+        public async Task<Result> AutomaticConnectBot()
         {
-            Result result = await this.ConnectBot();
-            this.IsBotConnected = result.Success;
+            Result result = await this.BotOAuthService.AutomaticConnect();
+            if (result.Success)
+            {
+                return await this.InitializeBot();
+            }
+            return result;
+        }
 
+        public async Task<Result> ManualConnectBot(CancellationToken cancellationToken, bool initialize = true)
+        {
+            Result result = await this.BotOAuthService.ManualConnect(cancellationToken);
+            if (!cancellationToken.IsCancellationRequested && result.Success && initialize)
+            {
+                return await this.InitializeBot();
+            }
+            return result;
+        }
+
+        public async Task<Result> InitializeBot()
+        {
+            Result result = await this.InitializeBotInternal();
+
+            this.IsBotConnected = result.Success;
             if (result.Success)
             {
                 this.SaveAuthenticationSettings();
@@ -352,9 +419,14 @@ namespace MixItUp.Base.Services
             {
                 streamingPlatformAuth.ClearBotData();
             }
+
+            this.Bot = null;
+            this.BotID = null;
+            this.BotUsername = null;
+            this.BotAvatarURL = null;
         }
 
-        protected abstract Task<Result> ConnectBotInternal();
+        protected abstract Task<Result> InitializeBotInternal();
         protected abstract Task DisconnectBotInternal();
 
         public abstract Task RefreshOAuthTokenIfCloseToExpiring();

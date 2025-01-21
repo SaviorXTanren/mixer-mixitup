@@ -10905,4 +10905,10 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="TwitchChannelUserIntro" xml:space="preserve">
     <value>Twitch Channel User Intro</value>
   </data>
+  <data name="Mock" xml:space="preserve">
+    <value>Mock</value>
+  </data>
+  <data name="TheFollowingStreamingServicesMustBeManuallyReconnected" xml:space="preserve">
+    <value>The following streaming services were not able to be re-connected to and must manually be done from the Accounts page in Mix It Up:</value>
+  </data>
 </root>

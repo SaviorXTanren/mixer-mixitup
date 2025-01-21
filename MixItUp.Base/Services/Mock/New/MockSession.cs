@@ -15,6 +15,12 @@ namespace MixItUp.Base.Services.Mock.New
         public override int MaxMessageLength { get { return 500; } }
         public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Mock; } }
 
+        public override OAuthServiceBase StreamerOAuthService { get { return this.StreamerService; } }
+        public override OAuthServiceBase BotOAuthService { get { return this.BotService; } }
+
+        public MockService StreamerService { get; private set; } = new MockService();
+        public MockService BotService { get; private set; } = new MockService();
+
         protected override OAuthTokenModel StreamerOAuthToken { get { return new OAuthTokenModel(); } }
         protected override OAuthTokenModel BotOAuthToken { get { return new OAuthTokenModel(); } }
 
@@ -22,7 +28,7 @@ namespace MixItUp.Base.Services.Mock.New
 
         private List<ChatMessageViewModel> messages = new List<ChatMessageViewModel>();
 
-        protected override Task<Result> ConnectStreamerInternal()
+        protected override Task<Result> InitializeStreamerInternal()
         {
             this.StreamerID = "0";
             this.StreamerUsername = "Streamer";
@@ -40,7 +46,7 @@ namespace MixItUp.Base.Services.Mock.New
             return Task.CompletedTask;
         }
 
-        protected override Task<Result> ConnectBotInternal()
+        protected override Task<Result> InitializeBotInternal()
         {
             this.BotID = "1";
             this.BotUsername = "Bot";

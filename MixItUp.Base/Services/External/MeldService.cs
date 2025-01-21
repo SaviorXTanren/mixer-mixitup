@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -12,7 +13,12 @@ namespace MixItUp.Base.Services.External
 
         public override bool IsConnected { get; protected set; }
 
-        public override Task<Result> Connect()
+        public override Task<Result> AutomaticConnect()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<Result> ManualConnect(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

@@ -176,27 +176,82 @@ namespace MixItUp.Base
 
         public static async Task<Result> Connect(SettingsV3Model settings)
         {
-            Result result = new Result();
-
             ChannelSession.Settings = settings;
 
-            await StreamingPlatforms.ForEachPlatform(async (p) =>
+            List<Task<Result>> streamingPlatformTasks = new List<Task<Result>>();
+            StreamingPlatforms.ForEachPlatform((p) =>
             {
-                if (settings.StreamingPlatformAuthentications.ContainsKey(p) && settings.StreamingPlatformAuthentications[p].IsEnabled)
+                StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(p);
+                if (session.IsEnabled)
                 {
-                    result.Combine(await StreamingPlatforms.GetPlatformSession(p).ConnectStreamer());
-                    if (settings.StreamingPlatformAuthentications[p].IsBotEnabled)
+                    streamingPlatformTasks.Add(session.AutomaticConnectStreamer());
+                    if (session.IsBotEnabled)
                     {
-                        result.Combine(await StreamingPlatforms.GetPlatformSession(p).ConnectBot());
+                        streamingPlatformTasks.Add(session.AutomaticConnectBot());
                     }
                 }
             });
 
-            if (!result.Success)
+            await Task.WhenAll(streamingPlatformTasks);
+
+            if (streamingPlatformTasks.Any(r => r.Result.Success))
             {
-                ChannelSession.Settings = null;
+                return new Result();
             }
-            return result;
+
+            List<string> streamingPlatformsToBeManuallyReconnected = new List<string>();
+
+            foreach (StreamingPlatformSessionBase session in StreamingPlatforms.GetEnabledPlatformSessions())
+            {
+                if (session.IsEnabled && !session.IsConnected)
+                {
+                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    Task<Result> result = AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                    {
+                        return await session.ManualConnectStreamer(cancellationTokenSource.Token);
+                    }, cancellationTokenSource.Token);
+
+                    await Task.WhenAny(result, Task.Delay(60000));
+
+                    if (!result.IsCompleted || !result.Result.Success)
+                    {
+                        cancellationTokenSource.Cancel();
+                        streamingPlatformsToBeManuallyReconnected.Add(EnumLocalizationHelper.GetLocalizedName(session.Platform) + " - " + Resources.StreamerAccount);
+                    }
+                }
+
+                if (session.IsBotEnabled && session.IsBotConnected)
+                {
+                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    Task<Result> result = AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                    {
+                        return await session.ManualConnectBot(cancellationTokenSource.Token);
+                    }, cancellationTokenSource.Token);
+
+                    await Task.WhenAny(result, Task.Delay(60000));
+
+                    if (!result.IsCompleted || !result.Result.Success)
+                    {
+                        cancellationTokenSource.Cancel();
+                        streamingPlatformsToBeManuallyReconnected.Add(EnumLocalizationHelper.GetLocalizedName(session.Platform) + " - " + Resources.BotAccount);
+                    }
+                }
+            }
+
+            if (streamingPlatformsToBeManuallyReconnected.Count > 0)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine(Resources.TheFollowingStreamingServicesMustBeManuallyReconnected);
+                stringBuilder.AppendLine();
+                foreach (string service in streamingPlatformsToBeManuallyReconnected)
+                {
+                    stringBuilder.AppendLine(service);
+                }
+
+                await DialogHelper.ShowMessage(stringBuilder.ToString());
+            }
+
+            return new Result();
         }
 
         public static async Task<Result> InitializeSession()

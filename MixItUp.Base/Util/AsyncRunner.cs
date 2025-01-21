@@ -140,5 +140,19 @@ namespace MixItUp.Base.Util
                 await Task.Delay(100);
             }
         }
+
+        public static async Task<T> RunAsyncTimed<T>(Task<T> task, int timeoutInSeconds)
+        {
+            try
+            {
+                await Task.WhenAny(task, Task.Delay(timeoutInSeconds * 1000));
+                return task.Result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex, includeStackTrace: true);
+            }
+            return default(T);
+        }
     }
 }

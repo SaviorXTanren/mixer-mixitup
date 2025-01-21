@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Web
@@ -50,6 +51,29 @@ namespace MixItUp.Base.Web
                 ServiceManager.Get<IProcessService>().LaunchLink(authorizationURL);
 
                 while (string.IsNullOrWhiteSpace(this.authorizationCode))
+                {
+                    await Task.Delay(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+
+            this.Stop();
+
+            return this.authorizationCode;
+        }
+
+        public async Task<string> GetAuthorizationCode(string authorizationURL, CancellationToken cancellationToken)
+        {
+            try
+            {
+                this.Start(REDIRECT_URL);
+
+                ServiceManager.Get<IProcessService>().LaunchLink(authorizationURL);
+
+                while (!cancellationToken.IsCancellationRequested && string.IsNullOrWhiteSpace(this.authorizationCode))
                 {
                     await Task.Delay(1000);
                 }

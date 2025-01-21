@@ -46,6 +46,9 @@ namespace MixItUp.Base.Services.Trovo.New
         public override int MaxMessageLength { get { return 500; } }
         public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Trovo; } }
 
+        public override OAuthServiceBase StreamerOAuthService { get { return this.StreamerService; } }
+        public override OAuthServiceBase BotOAuthService { get { return this.BotService; } }
+
         public TrovoService StreamerService { get; private set; } = new TrovoService(StreamerScopes);
         public TrovoService BotService { get; private set; } = new TrovoService(BotScopes);
 
@@ -71,14 +74,8 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        protected override async Task<Result> ConnectStreamerInternal()
+        protected override async Task<Result> InitializeStreamerInternal()
         {
-            Result result = await this.StreamerService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
             this.StreamerModel = await this.StreamerService.GetCurrentUser();
             if (this.StreamerModel == null)
             {
@@ -105,7 +102,7 @@ namespace MixItUp.Base.Services.Trovo.New
             }
             this.Client.ChatToken = chatToken;
 
-            result = await this.Client.Connect();
+            Result result = await this.Client.Connect();
             if (!result.Success)
             {
                 await this.Client.Disconnect();
@@ -137,14 +134,8 @@ namespace MixItUp.Base.Services.Trovo.New
             }
         }
 
-        protected override async Task<Result> ConnectBotInternal()
+        protected override async Task<Result> InitializeBotInternal()
         {
-            Result result = await this.BotService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
             this.BotModel = await this.BotService.GetCurrentUser();
             if (this.BotModel == null)
             {

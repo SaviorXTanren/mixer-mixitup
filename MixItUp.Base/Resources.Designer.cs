@@ -13928,6 +13928,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mock.
+        /// </summary>
+        public static string Mock {
+            get {
+                return ResourceManager.GetString("Mock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mock Connection.
         /// </summary>
         public static string MockConnection {
@@ -23152,6 +23161,15 @@ namespace MixItUp.Base {
         public static string TheFollowingErrorsMustBeFixed {
             get {
                 return ResourceManager.GetString("TheFollowingErrorsMustBeFixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following streaming services were not able to be re-connected to and must manually be done from the Accounts page in Mix It Up:.
+        /// </summary>
+        public static string TheFollowingStreamingServicesMustBeManuallyReconnected {
+            get {
+                return ResourceManager.GetString("TheFollowingStreamingServicesMustBeManuallyReconnected", resourceCulture);
             }
         }
         

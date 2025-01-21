@@ -116,6 +116,9 @@ namespace MixItUp.Base.Services.Twitch.New
         public override int MaxMessageLength { get { return 500; } }
         public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Twitch; } }
 
+        public override OAuthServiceBase StreamerOAuthService { get { return this.StreamerService; } }
+        public override OAuthServiceBase BotOAuthService { get { return this.BotService; } }
+
         public HashSet<string> ChannelEditors { get; private set; } = new HashSet<string>();
         public UserModel StreamerModel { get; set; }
         public UserModel BotModel { get; set; }
@@ -149,14 +152,8 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private CancellationTokenSource cancellationTokenSource;
 
-        protected override async Task<Result> ConnectStreamerInternal()
+        protected override async Task<Result> InitializeStreamerInternal()
         {
-            Result result = await this.StreamerService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
             this.StreamerModel = await this.StreamerService.GetNewAPICurrentUser();
             if (this.StreamerModel == null)
             {
@@ -182,7 +179,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(this.StreamerModel));
             }
 
-            result = await this.Client.Connect();
+            Result result = await this.Client.Connect();
             if (!result.Success)
             {
                 await Client.Disconnect();
@@ -306,14 +303,8 @@ namespace MixItUp.Base.Services.Twitch.New
             await this.Client.Disconnect();
         }
 
-        protected override async Task<Result> ConnectBotInternal()
+        protected override async Task<Result> InitializeBotInternal()
         {
-            Result result = await this.BotService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
             this.BotModel = await this.BotService.GetNewAPICurrentUser();
             if (this.BotModel == null)
             {

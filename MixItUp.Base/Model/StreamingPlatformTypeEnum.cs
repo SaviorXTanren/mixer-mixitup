@@ -65,7 +65,7 @@ namespace MixItUp.Base.Model
                 ServiceManager.Get<TwitchSession>(),
                 ServiceManager.Get<YouTubeSession>(),
                 ServiceManager.Get<TrovoSession>(),
-                ServiceManager.Get<MockSession>()
+                //ServiceManager.Get<MockSession>()
             };
         }
 

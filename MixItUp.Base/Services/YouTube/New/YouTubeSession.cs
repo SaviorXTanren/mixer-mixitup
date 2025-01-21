@@ -77,6 +77,9 @@ namespace MixItUp.Base.Services.YouTube.New
             }
         }
 
+        public override OAuthServiceBase StreamerOAuthService { get { return this.StreamerService; } }
+        public override OAuthServiceBase BotOAuthService { get { return this.BotService; } }
+
         public YouTubeService StreamerService { get; private set; } = new YouTubeService(StreamerScopes);
         public YouTubeService BotService { get; private set; } = new YouTubeService(BotScopes);
 
@@ -124,14 +127,8 @@ namespace MixItUp.Base.Services.YouTube.New
 
         private HashSet<string> messageIDsToIgnore = new HashSet<string>();
 
-        protected override async Task<Result> ConnectStreamerInternal()
+        protected override async Task<Result> InitializeStreamerInternal()
         {
-            Result result = await this.StreamerService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
             this.StreamerModel = await this.StreamerService.GetCurrentChannel();
             if (this.StreamerModel == null)
             {
@@ -188,14 +185,8 @@ namespace MixItUp.Base.Services.YouTube.New
             return Task.CompletedTask;
         }
 
-        protected override async Task<Result> ConnectBotInternal()
+        protected override async Task<Result> InitializeBotInternal()
         {
-            Result result = await this.BotService.Connect();
-            if (!result.Success)
-            {
-                return result;
-            }
-
             this.BotModel = await this.BotService.GetCurrentChannel();
             if (this.BotModel == null)
             {

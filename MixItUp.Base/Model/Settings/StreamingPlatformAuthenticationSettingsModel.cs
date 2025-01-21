@@ -40,7 +40,6 @@ namespace MixItUp.Base.Model.Settings
             this.UserID = null;
             this.UserOAuthToken = null;
             this.ChannelID = null;
-            this.ClearBotData();
         }
 
         public void ClearBotData()
