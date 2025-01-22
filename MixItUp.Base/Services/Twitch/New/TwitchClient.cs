@@ -123,7 +123,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public override async Task<Result> Connect()
         {
-            if (await this.webSocket.Connect(TwitchEventSubConnectionURL))
+            if (await this.webSocket.Connect(TwitchEventSubConnectionURL, CancellationToken.None))
             {
                 await Task.Delay(2500);
 

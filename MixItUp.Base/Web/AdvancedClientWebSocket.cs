@@ -44,13 +44,13 @@ namespace MixItUp.Base.Web
         /// </summary>
         /// <param name="endpoint">The endpoint to connect to</param>
         /// <returns>Whether the connection was successful</returns>
-        public async Task<bool> Connect(string endpoint)
+        public virtual async Task<bool> Connect(string endpoint, CancellationToken cancellationToken)
         {
             try
             {
                 this.webSocket = new ClientWebSocket();
 
-                await this.webSocket.ConnectAsync(new Uri(endpoint), CancellationToken.None);
+                await this.webSocket.ConnectAsync(new Uri(endpoint), cancellationToken);
 
                 await Task.Delay(1000);
 
@@ -97,6 +97,16 @@ namespace MixItUp.Base.Web
             this.webSocket = null;
 
             return Task.FromResult(0);
+        }
+
+        /// <summary>
+        /// Sends a JSON-serializable packet to the connected web socket.
+        /// </summary>
+        /// <param name="packet">The packet to send</param>
+        /// <returns>A task for the sending of the packet</returns>
+        public async Task Send(object packet)
+        {
+            await this.Send(JSONSerializerHelper.SerializeToString(packet));
         }
 
         /// <summary>

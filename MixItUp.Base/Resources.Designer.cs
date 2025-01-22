@@ -13541,6 +13541,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Meld Studio.
+        /// </summary>
+        public static string MeldStudio {
+            get {
+                return ResourceManager.GetString("MeldStudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid websocket address must be specified for Meld Studio.
+        /// </summary>
+        public static string MeldStudioInvalidWebSocketAddress {
+            get {
+                return ResourceManager.GetString("MeldStudioInvalidWebSocketAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to connect to Meld Studio, please ensure the application is running.
+        /// </summary>
+        public static string MeldStudioUnableToConnect {
+            get {
+                return ResourceManager.GetString("MeldStudioUnableToConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Membership.
         /// </summary>
         public static string Membership {

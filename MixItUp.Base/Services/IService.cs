@@ -38,7 +38,7 @@ namespace MixItUp.Base.Services
 
         public abstract bool IsConnected { get; protected set; }
 
-        public abstract Task<Result> AutomaticConnect();
+        public virtual async Task<Result> AutomaticConnect() { return await this.ManualConnect(CancellationToken.None); }
 
         public abstract Task<Result> ManualConnect(CancellationToken cancellationToken);
 

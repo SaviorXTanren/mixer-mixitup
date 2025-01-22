@@ -590,6 +590,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string UberduckAPISecret { get; set; }
 
+        [DataMember]
+        public string MeldStudioWebSocketAddress { get; set; }
+
         #endregion Services
 
         #region Dashboard

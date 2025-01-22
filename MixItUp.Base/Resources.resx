@@ -10911,4 +10911,13 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="TheFollowingStreamingServicesMustBeManuallyReconnected" xml:space="preserve">
     <value>The following streaming services were not able to be re-connected to and must manually be done from the Accounts page in Mix It Up:</value>
   </data>
+  <data name="MeldStudioInvalidWebSocketAddress" xml:space="preserve">
+    <value>A valid websocket address must be specified for Meld Studio</value>
+  </data>
+  <data name="MeldStudioUnableToConnect" xml:space="preserve">
+    <value>Unable to connect to Meld Studio, please ensure the application is running</value>
+  </data>
+  <data name="MeldStudio" xml:space="preserve">
+    <value>Meld Studio</value>
+  </data>
 </root>

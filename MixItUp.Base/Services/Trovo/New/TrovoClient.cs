@@ -60,7 +60,7 @@ namespace MixItUp.Base.Services.Trovo.New
                 return new Result("No chat token set for Trovo client");
             }
 
-            if (await this.webSocket.Connect(TrovoChatConnectionURL))
+            if (await this.webSocket.Connect(TrovoChatConnectionURL, CancellationToken.None))
             {
                 ChatPacketModel authReply = await SendAndListen(new ChatPacketModel("AUTH", new JObject() { { "token", this.ChatToken } }));
                 if (authReply != null && string.IsNullOrEmpty(authReply.error))
