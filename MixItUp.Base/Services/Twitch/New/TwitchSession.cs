@@ -369,6 +369,48 @@ namespace MixItUp.Base.Services.Twitch.New
                 this.StreamViewerCount = (int)this.Stream.viewer_count;
             }
 
+            AdScheduleModel adSchedule = await this.StreamerService.GetAdSchedule(this.StreamerModel);
+            if (adSchedule != null)
+            {
+                this.AdSchedule = adSchedule;
+            }
+
+            if (this.AdSchedule != null)
+            {
+                DateTimeOffset nextAd = this.AdSchedule.NextAdTimestamp();
+                if (nextAd > this.NextAdTimestamp)
+                {
+                    int nextAdMinutes = this.AdSchedule.NextAdMinutesFromNow();
+                    if (nextAdMinutes <= ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount && nextAdMinutes > 0)
+                    {
+                        this.NextAdTimestamp = nextAd;
+
+                        Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                        eventCommandSpecialIdentifiers["adsnoozecount"] = this.AdSchedule.snooze_count.ToString();
+                        eventCommandSpecialIdentifiers["adnextduration"] = this.AdSchedule.duration.ToString();
+                        eventCommandSpecialIdentifiers["adnextminutes"] = nextAdMinutes.ToString();
+                        eventCommandSpecialIdentifiers["adnexttime"] = nextAd.ToFriendlyTimeString();
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdUpcoming, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
+                    }
+                }
+            }
+
+            foreach (var key in ChannelSession.Settings.TwitchVIPAutomaticRemovals.Keys.ToList())
+            {
+                if (ChannelSession.Settings.TwitchVIPAutomaticRemovals.TryGetValue(key, out DateTimeOffset removalTime) && removalTime < DateTimeOffset.Now)
+                {
+                    ChannelSession.Settings.TwitchVIPAutomaticRemovals.Remove(key);
+
+                    await this.StreamerService.UnVIPUser(this.StreamerModel, key);
+
+                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: key);
+                    if (user != null)
+                    {
+                        user.Roles.Remove(UserRoleEnum.TwitchVIP);
+                    }
+                }
+            }
+
             return new Result();
         }
 
