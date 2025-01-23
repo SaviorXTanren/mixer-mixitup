@@ -14864,6 +14864,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Connected.
+        /// </summary>
+        public static string NotConnected {
+            get {
+                return ResourceManager.GetString("NotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are not enough of this product for the amount of users participating.
         /// </summary>
         public static string NotEnoughRedemptionStoreProducts {

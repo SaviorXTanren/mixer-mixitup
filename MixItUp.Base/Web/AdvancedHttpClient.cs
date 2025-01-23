@@ -426,6 +426,11 @@ namespace MixItUp.Base.Web
             this.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, value);
         }
 
+        public void RemoveAuthorization()
+        {
+            this.DefaultRequestHeaders.Authorization = null;
+        }
+
         private void LogRequest(string requestUri, HttpContent content = null)
         {
             if (content != null)

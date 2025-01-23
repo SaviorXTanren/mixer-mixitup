@@ -12,7 +12,6 @@ using MixItUp.Base.Model.Twitch.Subscriptions;
 using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
-using MixItUp.Base.Model.Web;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -134,9 +133,6 @@ namespace MixItUp.Base.Services.Twitch.New
         public TwitchService BotService { get; private set; } = new TwitchService(BotScopes, isBotService: true);
 
         public TwitchClient Client { get; private set; } = new TwitchClient();
-
-        protected override OAuthTokenModel StreamerOAuthToken { get { return this.StreamerService.GetOAuthTokenCopy(); } }
-        protected override OAuthTokenModel BotOAuthToken { get { return this.BotService.GetOAuthTokenCopy(); } }
 
         private List<string> emoteSetIDs = new List<string>();
 

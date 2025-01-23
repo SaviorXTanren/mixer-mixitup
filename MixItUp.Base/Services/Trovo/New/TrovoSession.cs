@@ -69,9 +69,6 @@ namespace MixItUp.Base.Services.Trovo.New
 
         public Dictionary<string, ChannelSubscriberModel> Subscribers { get; private set; } = new Dictionary<string, ChannelSubscriberModel>();
 
-        protected override OAuthTokenModel StreamerOAuthToken { get { return this.StreamerService.GetOAuthTokenCopy(); } }
-        protected override OAuthTokenModel BotOAuthToken { get { return this.BotService.GetOAuthTokenCopy(); } }
-
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         protected override async Task<Result> InitializeStreamerInternal()

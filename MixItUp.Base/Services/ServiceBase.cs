@@ -13,24 +13,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IService
-    {
-        string Name { get; }
-
-        bool IsEnabled { get; }
-
-        bool IsConnected { get; }
-
-        Task<Result> AutomaticConnect();
-
-        Task<Result> ManualConnect(CancellationToken cancellationToken);
-
-        Task Disconnect();
-
-        Task Disable();
-    }
-
-    public abstract class ServiceBase : IService
+    public abstract class ServiceBase
     {
         public abstract string Name { get; }
 
@@ -38,9 +21,28 @@ namespace MixItUp.Base.Services
 
         public abstract bool IsConnected { get; protected set; }
 
-        public virtual async Task<Result> AutomaticConnect() { return await this.ManualConnect(CancellationToken.None); }
+        public abstract Task<Result> AutomaticConnect();
 
         public abstract Task<Result> ManualConnect(CancellationToken cancellationToken);
+
+        public async Task<Result> ManualConnectWithTimeout()
+        {
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+            Task<Result> result = AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+            {
+                return await this.ManualConnect(cancellationTokenSource.Token);
+            }, cancellationTokenSource.Token);
+
+            await Task.WhenAny(result, Task.Delay(60000));
+
+            if (!result.IsCompleted && !result.IsFaulted)
+            {
+                cancellationTokenSource.Cancel();
+            }
+
+            return result.Result;
+        }
 
         public abstract Task Disconnect();
 
@@ -62,7 +64,14 @@ namespace MixItUp.Base.Services
             set
             {
                 this.token = value;
-                this.HttpClient.SetBearerAuthorization(this.token);
+                if (value != null)
+                {
+                    this.HttpClient.SetBearerAuthorization(this.token);
+                }
+                else
+                {
+                    this.HttpClient.RemoveAuthorization();
+                }
             }
         }
         private OAuthTokenModel token;
@@ -70,6 +79,20 @@ namespace MixItUp.Base.Services
         public OAuthServiceBase(string baseAddress)
         {
             this.HttpClient = new AdvancedHttpClient(baseAddress);
+        }
+
+        public override Task Disconnect()
+        {
+            this.IsConnected = false;
+
+            return Task.CompletedTask;
+        }
+
+        public override async Task Disable()
+        {
+            await this.Disconnect();
+
+            this.OAuthToken = null;
         }
 
         public async Task RefreshOAuthTokenIfCloseToExpiring()
@@ -208,18 +231,6 @@ namespace MixItUp.Base.Services
             return result;
         }
 
-        public override Task Disconnect()
-        {
-            this.IsConnected = false;
-            return Task.CompletedTask;
-        }
-
-        public override Task Disable()
-        {
-            this.IsConnected = false;
-            return Task.CompletedTask;
-        }
-
         public StreamingPlatformAuthenticationSettingsModel GetAuthenticationSettings()
         {
             ChannelSession.Settings.StreamingPlatformAuthentications.TryGetValue(this.Platform, out StreamingPlatformAuthenticationSettingsModel authentication);
@@ -288,9 +299,6 @@ namespace MixItUp.Base.Services
         public bool IsConnected { get; private set; }
         public bool IsBotConnected { get; private set; }
 
-        protected abstract OAuthTokenModel StreamerOAuthToken { get; }
-        protected abstract OAuthTokenModel BotOAuthToken { get; }
-
         public StreamingPlatformSessionBase() { }
 
         public async Task<Result> AutomaticConnectStreamer()
@@ -307,6 +315,16 @@ namespace MixItUp.Base.Services
         {
             Result result = await this.StreamerOAuthService.ManualConnect(cancellationToken);
             if (!cancellationToken.IsCancellationRequested && result.Success && initialize)
+            {
+                return await this.InitializeStreamer();
+            }
+            return result;
+        }
+
+        public async Task<Result> ManualConnectStreamerWithTimeout(bool initialize = true)
+        {
+            Result result = await this.StreamerOAuthService.ManualConnectWithTimeout();
+            if (result.Success && initialize)
             {
                 return await this.InitializeStreamer();
             }
@@ -338,12 +356,17 @@ namespace MixItUp.Base.Services
         public async Task DisconnectStreamer()
         {
             this.IsConnected = false;
+
+            await this.StreamerOAuthService.Disconnect();
+
             await this.DisconnectStreamerInternal();
         }
 
         public async Task DisableStreamer()
         {
             await this.DisconnectStreamer();
+
+            await this.StreamerOAuthService.Disable();
 
             if (ChannelSession.Settings.StreamingPlatformAuthentications.TryGetValue(this.Platform, out StreamingPlatformAuthenticationSettingsModel streamingPlatformAuth))
             {
@@ -410,12 +433,17 @@ namespace MixItUp.Base.Services
         public async Task DisconnectBot()
         {
             this.IsBotConnected = false;
+
+            await this.BotOAuthService.Disconnect();
+
             await this.DisconnectBotInternal();
         }
 
         public async Task DisableBot()
         {
             await this.DisconnectBot();
+
+            await this.BotOAuthService.Disable();
 
             if (ChannelSession.Settings.StreamingPlatformAuthentications.TryGetValue(this.Platform, out StreamingPlatformAuthenticationSettingsModel streamingPlatformAuth))
             {
@@ -472,22 +500,29 @@ namespace MixItUp.Base.Services
 
         public StreamingPlatformAuthenticationSettingsModel GetAuthenticationSettings()
         {
-            ChannelSession.Settings.StreamingPlatformAuthentications.TryGetValue(this.Platform, out StreamingPlatformAuthenticationSettingsModel authentication);
-            return authentication;
+            if (ChannelSession.Settings != null)
+            {
+                ChannelSession.Settings.StreamingPlatformAuthentications.TryGetValue(this.Platform, out StreamingPlatformAuthenticationSettingsModel authentication);
+                return authentication;
+            }
+            return null;
         }
 
         public void SaveAuthenticationSettings()
         {
-            ChannelSession.Settings.StreamingPlatformAuthentications[this.Platform] = new StreamingPlatformAuthenticationSettingsModel(this.Platform)
+            if (ChannelSession.Settings != null)
             {
-                UserID = this.StreamerID,
-                UserOAuthToken = this.StreamerOAuthToken,
+                ChannelSession.Settings.StreamingPlatformAuthentications[this.Platform] = new StreamingPlatformAuthenticationSettingsModel(this.Platform)
+                {
+                    UserID = this.StreamerID,
+                    UserOAuthToken = this.StreamerOAuthService.GetOAuthTokenCopy(),
 
-                ChannelID = this.ChannelID,
+                    ChannelID = this.ChannelID,
 
-                BotID = this.BotID,
-                BotOAuthToken = this.BotOAuthToken,
-            };
+                    BotID = this.BotID,
+                    BotOAuthToken = this.BotOAuthService.GetOAuthTokenCopy(),
+                };
+            }
         }
     }
 

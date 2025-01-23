@@ -113,9 +113,6 @@ namespace MixItUp.Base.Services.YouTube.New
         public List<MembershipsLevel> MembershipLevels { get; private set; } = new List<MembershipsLevel>();
         public bool HasMembershipCapabilities { get { return this.MembershipLevels.Count > 0; } }
 
-        protected override OAuthTokenModel StreamerOAuthToken { get { return this.StreamerService.GetOAuthTokenCopy(); } }
-        protected override OAuthTokenModel BotOAuthToken { get { return this.BotService.GetOAuthTokenCopy(); } }
-
         private string nextMessagesToken = null;
 
         private CancellationTokenSource messageBackgroundPollingTokenSource;

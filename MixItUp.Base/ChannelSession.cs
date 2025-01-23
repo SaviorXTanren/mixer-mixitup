@@ -91,7 +91,6 @@ namespace MixItUp.Base
             ServiceManager.Add(new StreamlabsDesktopService());
             ServiceManager.Add(new XSplitService());
             ServiceManager.Add(new PolyPopService());
-
             ServiceManager.Add(new AlejoPronounsService());
             ServiceManager.Add(new BetterTTVService());
             ServiceManager.Add(new FrankerFaceZService());
@@ -114,6 +113,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new VTSPogService());
             ServiceManager.Add(new MtionStudioService());
             ServiceManager.Add(new TikTokTTSService());
+            ServiceManager.Add(new MeldStudioService());
 
             try
             {
@@ -200,31 +200,21 @@ namespace MixItUp.Base
 
             foreach (var streamerTask in streamerTasks)
             {
-                if (!streamerTask.Value.Result.Success)
+                if (streamerTask.Value.IsCompleted && !streamerTask.Value.Result.Success)
                 {
                     StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(streamerTask.Key);
 
-                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                    Task<Result> result = AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                    Result result = await session.ManualConnectStreamerWithTimeout();
+                    if (result != null && !result.Success)
                     {
-                        return await session.ManualConnectStreamer(cancellationTokenSource.Token);
-                    }, cancellationTokenSource.Token);
-
-                    await Task.WhenAny(result, Task.Delay(60000));
-
-                    if (!result.IsCompleted || !result.Result.Success)
-                    {
-                        cancellationTokenSource.Cancel();
                         streamingPlatformsToBeManuallyReconnected.Add(EnumLocalizationHelper.GetLocalizedName(session.Platform) + " - " + Resources.StreamerAccount);
-
-                        await session.DisableStreamer();
                     }
                 }
             }
 
             foreach (var botTask in botTasks)
             {
-                if (!botTask.Value.Result.Success)
+                if (botTask.Value.IsCompleted && !botTask.Value.Result.Success)
                 {
                     streamingPlatformsToBeManuallyReconnected.Add(EnumLocalizationHelper.GetLocalizedName(botTask.Key) + " - " + Resources.BotAccount);
 
@@ -295,12 +285,40 @@ namespace MixItUp.Base
                 await ServiceManager.Get<ChatService>().Initialize();
                 await ServiceManager.Get<EventService>().Initialize();
 
-                foreach (IService service in ServiceManager.GetAll<IService>())
+                Dictionary<ServiceBase, Task<Result>> serviceConnectionTasks = new Dictionary<ServiceBase, Task<Result>>();
+                foreach (ServiceBase service in ServiceManager.GetAll<ServiceBase>())
                 {
                     if (service.IsEnabled)
                     {
-                        await service.AutomaticConnect();
+                        serviceConnectionTasks[service] = service.AutomaticConnect();
                     }
+                }
+                await Task.WhenAll(serviceConnectionTasks.Values);
+
+                List<string> failedServiceNames = new List<string>();
+                foreach (var kvp in serviceConnectionTasks)
+                {
+                    if (!kvp.Value.IsCompleted || !kvp.Value.Result.Success)
+                    {
+                        if (kvp.Key is OAuthServiceBase)
+                        {
+                            Result result = await kvp.Key.ManualConnectWithTimeout();
+                            if (!result.Success)
+                            {
+                                failedServiceNames.Add(kvp.Key.Name);
+                            }
+                        }
+                    }
+                }
+
+                if (failedServiceNames.Count > 0)
+                {
+                    StringBuilder failedServiceNamesMessage = new StringBuilder();
+                    foreach (string failedServiceName in failedServiceNames)
+                    {
+                        failedServiceNamesMessage.AppendLine(" - " + failedServiceName);
+                    }
+                    await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.ConnectedServicesFailed, failedServiceNamesMessage.ToString()));
                 }
 
                 // Connect External Services

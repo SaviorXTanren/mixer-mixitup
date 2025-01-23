@@ -10920,4 +10920,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="MeldStudio" xml:space="preserve">
     <value>Meld Studio</value>
   </data>
+  <data name="NotConnected" xml:space="preserve">
+    <value>Not Connected</value>
+  </data>
 </root>

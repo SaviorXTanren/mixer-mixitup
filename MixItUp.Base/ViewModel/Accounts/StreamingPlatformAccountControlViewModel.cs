@@ -80,6 +80,7 @@ namespace MixItUp.Base.ViewModel.Accounts
             }
         }
 
+        public bool IsStreamerAccountEnabled { get { return this.session.IsEnabled; } }
         public bool IsStreamerAccountConnected { get { return this.session.IsConnected; } }
 
         public string StreamerAccountUsername
@@ -103,6 +104,7 @@ namespace MixItUp.Base.ViewModel.Accounts
         }
         private string streamerAccountAvatar;
 
+        public bool IsBotAccountEnabled { get { return this.session.IsBotEnabled; } }
         public bool IsBotAccountConnected { get { return this.session.IsBotConnected; } }
 
         public string BotAccountUsername
@@ -126,18 +128,18 @@ namespace MixItUp.Base.ViewModel.Accounts
         }
         private string botAccountAvatar;
 
-        public bool IsStreamerAccountLogInVisible { get { return !this.IsStreamerAccountConnected && this.streamerConnectTask == null; } }
+        public bool IsStreamerAccountLogInVisible { get { return !this.IsStreamerAccountEnabled && !this.IsStreamerAccountConnected && this.streamerConnectTask == null; } }
         public ICommand StreamerAccountLogInCommand { get; set; }
-        public bool IsStreamerAccountCancelVisible { get { return !this.IsStreamerAccountConnected && this.streamerConnectTask != null; } }
+        public bool IsStreamerAccountCancelVisible { get { return !this.IsStreamerAccountEnabled && !this.IsStreamerAccountConnected && this.streamerConnectTask != null; } }
         public ICommand StreamerAccountCancelCommand { get; set; }
-        public bool IsStreamerAccountLogoutVisible { get { return this.IsStreamerAccountConnected; } }
+        public bool IsStreamerAccountLogoutVisible { get { return this.IsStreamerAccountEnabled || this.IsStreamerAccountConnected; } }
         public ICommand StreamerAccountLogOutCommand { get; set; }
 
-        public bool IsBotAccountLogInVisible { get { return !this.IsBotAccountConnected && this.botConnectTask == null; } }
+        public bool IsBotAccountLogInVisible { get { return !this.IsBotAccountEnabled && !this.IsBotAccountConnected && this.botConnectTask == null; } }
         public ICommand BotAccountLogInCommand { get; set; }
-        public bool IsBotAccountCancelVisible { get { return !this.IsBotAccountConnected && this.botConnectTask != null; } }
+        public bool IsBotAccountCancelVisible { get { return !this.IsBotAccountEnabled && !this.IsBotAccountConnected && this.botConnectTask != null; } }
         public ICommand BotAccountCancelCommand { get; set; }
-        public bool IsBotAccountLogoutVisible { get { return this.IsBotAccountConnected; } }
+        public bool IsBotAccountLogoutVisible { get { return this.IsBotAccountEnabled || this.IsBotAccountConnected; } }
         public ICommand BotAccountLogOutCommand { get; set; }
 
         private StreamingPlatformSessionBase session;
@@ -153,16 +155,30 @@ namespace MixItUp.Base.ViewModel.Accounts
             this.Platform = platform;
 
             this.session = StreamingPlatforms.GetPlatformSession(this.Platform);
-            if (this.session.IsConnected)
+            if (this.session.IsEnabled)
             {
-                this.StreamerAccountUsername = this.session.StreamerUsername;
-                this.StreamerAccountAvatar = this.session.StreamerAvatarURL;
+                if (this.session.IsConnected)
+                {
+                    this.StreamerAccountUsername = this.session.StreamerUsername;
+                    this.StreamerAccountAvatar = this.session.StreamerAvatarURL;
+                }
+                else
+                {
+                    this.StreamerAccountUsername = Resources.Unknown;
+                }
             }
 
-            if (this.session.IsBotConnected)
+            if (this.session.IsBotEnabled)
             {
-                this.BotAccountUsername = this.session.BotUsername;
-                this.BotAccountAvatar = this.session.BotAvatarURL;
+                if (this.session.IsBotConnected)
+                {
+                    this.BotAccountUsername = this.session.BotUsername;
+                    this.BotAccountAvatar = this.session.BotAvatarURL;
+                }
+                else
+                {
+                    this.BotAccountUsername = Resources.Unknown;
+                }
             }
 
             this.StreamerAccountLogInCommand = this.CreateCommand(() =>

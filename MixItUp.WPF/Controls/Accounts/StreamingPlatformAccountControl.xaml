@@ -27,14 +27,14 @@
             
             <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Streamer}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
-            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsStreamerAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{Binding StreamerAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" />
+                <Image Grid.Column="0" Source="{Binding StreamerAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" Visibility="{Binding IsStreamerAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <TextBlock Grid.Column="2" Text="{Binding StreamerAccountUsername}" VerticalAlignment="Center" />
             </Grid>
 
@@ -74,14 +74,14 @@
 
             <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Bot}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
-            <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsBotAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{Binding BotAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" />
+                <Image Grid.Column="0" Source="{Binding BotAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" Visibility="{Binding IsStreamerAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <TextBlock Grid.Column="2" Text="{Binding BotAccountUsername}" VerticalAlignment="Center" />
             </Grid>
 
