@@ -71,6 +71,11 @@ namespace MixItUp.Base.Web
                 method = method,
                 args = new JArray(arguments)
             });
+
+            await this.Send(new QtWebSocketPacket()
+            {
+                type = QtWebSocketPacketType.idle,
+            });
         }
 
         public async Task Send(QtWebSocketPacket packet)
