@@ -109,6 +109,8 @@ namespace MixItUp.Base.Services.Twitch.New
 
             "user:edit",
 
+            "user:write:chat",
+
             "whispers:read",
             "whispers:edit",
         };
@@ -129,7 +131,7 @@ namespace MixItUp.Base.Services.Twitch.New
         public DateTimeOffset NextAdTimestamp { get; set; } = DateTimeOffset.MinValue;
 
         public TwitchService StreamerService { get; private set; } = new TwitchService(StreamerScopes);
-        public TwitchService BotService { get; private set; } = new TwitchService(BotScopes);
+        public TwitchService BotService { get; private set; } = new TwitchService(BotScopes, isBotService: true);
 
         public TwitchClient Client { get; private set; } = new TwitchClient();
 

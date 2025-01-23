@@ -63,7 +63,9 @@ namespace MixItUp.Base.Services.YouTube.New
 
         private SearchResult latestNonStreamVideo;
 
-        public YouTubeService(IEnumerable<string> scopes) : base(BaseAddressFormat, scopes) { }
+        public YouTubeService(IEnumerable<string> scopes, bool isBotService = false)
+            : base(BaseAddressFormat, scopes, isBotService)
+        { }
 
         public async override Task<Result> ManualConnect(CancellationToken cancellationToken)
         {

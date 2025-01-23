@@ -17,7 +17,7 @@ namespace MixItUp.Base.Services.Mock.New
 
         public override bool IsConnected { get; protected set; }
 
-        public MockService() : base("https://mixitupapp.com", new List<string>()) { }
+        public MockService(bool isBotService = false) : base("https://mixitupapp.com", new List<string>(), isBotService) { }
 
         protected override Task<string> GetAuthorizationCodeURL(IEnumerable<string> scopes, string state, bool forceApprovalPrompt = false)
         {

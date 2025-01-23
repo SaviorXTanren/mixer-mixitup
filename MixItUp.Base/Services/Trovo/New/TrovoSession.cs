@@ -50,7 +50,7 @@ namespace MixItUp.Base.Services.Trovo.New
         public override OAuthServiceBase BotOAuthService { get { return this.BotService; } }
 
         public TrovoService StreamerService { get; private set; } = new TrovoService(StreamerScopes);
-        public TrovoService BotService { get; private set; } = new TrovoService(BotScopes);
+        public TrovoService BotService { get; private set; } = new TrovoService(BotScopes, isBotService: true);
 
         public TrovoClient Client { get; private set; } = new TrovoClient();
 

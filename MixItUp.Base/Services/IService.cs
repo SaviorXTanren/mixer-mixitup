@@ -166,13 +166,15 @@ namespace MixItUp.Base.Services
         public abstract StreamingPlatformTypeEnum Platform { get; }
 
         private IEnumerable<string> scopes;
+        private bool isBotService;
 
         public override bool IsEnabled { get { return true; } }
 
-        public StreamingPlatformServiceBaseNew(string baseAddress, IEnumerable<string> scopes)
+        public StreamingPlatformServiceBaseNew(string baseAddress, IEnumerable<string> scopes, bool isBotService = false)
             : base(baseAddress)
         {
             this.scopes = scopes;
+            this.isBotService = isBotService;
         }
 
         public async override Task<Result> AutomaticConnect()
@@ -180,7 +182,7 @@ namespace MixItUp.Base.Services
             StreamingPlatformAuthenticationSettingsModel authenticationSettings = this.GetAuthenticationSettings();
             if (authenticationSettings?.IsEnabled ?? false)
             {
-                this.OAuthToken = authenticationSettings.UserOAuthToken;
+                this.OAuthToken = this.isBotService ? authenticationSettings.BotOAuthToken : authenticationSettings.UserOAuthToken;
                 try
                 {
                     await this.RefreshOAuthToken();

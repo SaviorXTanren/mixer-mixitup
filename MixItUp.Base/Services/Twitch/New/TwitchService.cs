@@ -69,8 +69,8 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public override bool IsConnected { get; protected set; }
 
-        public TwitchService(IEnumerable<string> scopes)
-            : base(BaseAddressFormat, scopes)
+        public TwitchService(IEnumerable<string> scopes, bool isBotService = false)
+            : base(BaseAddressFormat, scopes, isBotService)
         {
             this.HttpClient.AddHeader("Client-Id", this.ClientID);
         }

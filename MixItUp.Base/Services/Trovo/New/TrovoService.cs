@@ -64,8 +64,8 @@ namespace MixItUp.Base.Services.Trovo.New
             }
         }
 
-        public TrovoService(IEnumerable<string> scopes)
-            : base(BaseAddressFormat, scopes)
+        public TrovoService(IEnumerable<string> scopes, bool isBotService = false)
+            : base(BaseAddressFormat, scopes, isBotService)
         {
             this.HttpClient.DefaultRequestHeaders.Add("Client-ID", this.ClientID);
         }

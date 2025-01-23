@@ -19,7 +19,7 @@ namespace MixItUp.Base.Services.Mock.New
         public override OAuthServiceBase BotOAuthService { get { return this.BotService; } }
 
         public MockService StreamerService { get; private set; } = new MockService();
-        public MockService BotService { get; private set; } = new MockService();
+        public MockService BotService { get; private set; } = new MockService(isBotService: true);
 
         protected override OAuthTokenModel StreamerOAuthToken { get { return new OAuthTokenModel(); } }
         protected override OAuthTokenModel BotOAuthToken { get { return new OAuthTokenModel(); } }

@@ -178,33 +178,32 @@ namespace MixItUp.Base
         {
             ChannelSession.Settings = settings;
 
-            List<Task<Result>> streamingPlatformTasks = new List<Task<Result>>();
+            Dictionary<StreamingPlatformTypeEnum, Task<Result>> streamerTasks = new Dictionary<StreamingPlatformTypeEnum, Task<Result>>();
+            Dictionary<StreamingPlatformTypeEnum, Task<Result>> botTasks = new Dictionary<StreamingPlatformTypeEnum, Task<Result>>();
+
             StreamingPlatforms.ForEachPlatform((p) =>
             {
                 StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(p);
                 if (session.IsEnabled)
                 {
-                    streamingPlatformTasks.Add(session.AutomaticConnectStreamer());
+                    streamerTasks[session.Platform] = session.AutomaticConnectStreamer();
                     if (session.IsBotEnabled)
                     {
-                        streamingPlatformTasks.Add(session.AutomaticConnectBot());
+                        botTasks[session.Platform] = session.AutomaticConnectBot();
                     }
                 }
             });
 
-            await Task.WhenAll(streamingPlatformTasks);
-
-            if (streamingPlatformTasks.Any(r => r.Result.Success))
-            {
-                return new Result();
-            }
+            await Task.WhenAll(streamerTasks.Values.Concat(botTasks.Values));
 
             List<string> streamingPlatformsToBeManuallyReconnected = new List<string>();
 
-            foreach (StreamingPlatformSessionBase session in StreamingPlatforms.GetEnabledPlatformSessions())
+            foreach (var streamerTask in streamerTasks)
             {
-                if (session.IsEnabled && !session.IsConnected)
+                if (!streamerTask.Value.Result.Success)
                 {
+                    StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(streamerTask.Key);
+
                     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
                     Task<Result> result = AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                     {
@@ -217,24 +216,21 @@ namespace MixItUp.Base
                     {
                         cancellationTokenSource.Cancel();
                         streamingPlatformsToBeManuallyReconnected.Add(EnumLocalizationHelper.GetLocalizedName(session.Platform) + " - " + Resources.StreamerAccount);
+
+                        await session.DisableStreamer();
                     }
                 }
+            }
 
-                if (session.IsBotEnabled && session.IsBotConnected)
+            foreach (var botTask in botTasks)
+            {
+                if (!botTask.Value.Result.Success)
                 {
-                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                    Task<Result> result = AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                    {
-                        return await session.ManualConnectBot(cancellationTokenSource.Token);
-                    }, cancellationTokenSource.Token);
+                    streamingPlatformsToBeManuallyReconnected.Add(EnumLocalizationHelper.GetLocalizedName(botTask.Key) + " - " + Resources.BotAccount);
 
-                    await Task.WhenAny(result, Task.Delay(60000));
+                    StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(botTask.Key);
 
-                    if (!result.IsCompleted || !result.Result.Success)
-                    {
-                        cancellationTokenSource.Cancel();
-                        streamingPlatformsToBeManuallyReconnected.Add(EnumLocalizationHelper.GetLocalizedName(session.Platform) + " - " + Resources.BotAccount);
-                    }
+                    await session.DisableBot();
                 }
             }
 
@@ -298,6 +294,14 @@ namespace MixItUp.Base
 
                 await ServiceManager.Get<ChatService>().Initialize();
                 await ServiceManager.Get<EventService>().Initialize();
+
+                foreach (IService service in ServiceManager.GetAll<IService>())
+                {
+                    if (service.IsEnabled)
+                    {
+                        await service.AutomaticConnect();
+                    }
+                }
 
                 // Connect External Services
                 Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();

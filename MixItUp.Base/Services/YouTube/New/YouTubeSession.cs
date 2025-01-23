@@ -81,7 +81,7 @@ namespace MixItUp.Base.Services.YouTube.New
         public override OAuthServiceBase BotOAuthService { get { return this.BotService; } }
 
         public YouTubeService StreamerService { get; private set; } = new YouTubeService(StreamerScopes);
-        public YouTubeService BotService { get; private set; } = new YouTubeService(BotScopes);
+        public YouTubeService BotService { get; private set; } = new YouTubeService(BotScopes, isBotService: true);
 
         public Channel StreamerModel { get; private set; }
         public Channel BotModel { get; private set; }
