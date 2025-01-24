@@ -82,7 +82,7 @@ namespace MixItUp.Base.Web
         {
             packet.id = this.PacketID++;
 
-            await this.Send(packet);
+            await base.Send(packet);
         }
 
         public async Task<QtWebSocketPacket> SendAndReceive(QtWebSocketPacket packet)

@@ -61,6 +61,7 @@ namespace MixItUp.Base.Model.Actions
         Repeat,
         VTSPog,
         MtionStudio = 42,
+        MeldStudio,
     }
 
     [DataContract]

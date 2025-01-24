@@ -10923,4 +10923,58 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="NotConnected" xml:space="preserve">
     <value>Not Connected</value>
   </data>
+  <data name="WebSocketAddress" xml:space="preserve">
+    <value>WebSocket Address</value>
+  </data>
+  <data name="MeldStudioInfo" xml:space="preserve">
+    <value>Meld Studio connectivity allows you to control functionality in the Meld Studio software, such as changing the currently shown scene and showing/hiding layers. To connect to Meld Studio, please ensure the software is running before attempting to connect.</value>
+  </data>
+  <data name="MonitorUnmonitorAudioTrack" xml:space="preserve">
+    <value>Monitor/Unmonitor Audio Track</value>
+  </data>
+  <data name="MuteUnmuteAudioTrack" xml:space="preserve">
+    <value>Mute/Unmute Audio Track</value>
+  </data>
+  <data name="SetAudioTrackGain" xml:space="preserve">
+    <value>Set Audio Track Gain</value>
+  </data>
+  <data name="ShowHideEffect" xml:space="preserve">
+    <value>Show/Hide Effect</value>
+  </data>
+  <data name="ShowHideLayer" xml:space="preserve">
+    <value>Show/Hide Layer</value>
+  </data>
+  <data name="ShowScene" xml:space="preserve">
+    <value>Show Scene</value>
+  </data>
+  <data name="TakeScreenshot" xml:space="preserve">
+    <value>Take Screenshot</value>
+  </data>
+  <data name="MeldStudioActionMissingAudioTrackName" xml:space="preserve">
+    <value>Meld Studio Action: Missing Audio Track Name</value>
+  </data>
+  <data name="MeldStudioActionMissingEffectName" xml:space="preserve">
+    <value>Meld Studio Action: Missing Effect Name</value>
+  </data>
+  <data name="MeldStudioActionMissingLayerName" xml:space="preserve">
+    <value>Meld Studio Action: Missing Layer Name</value>
+  </data>
+  <data name="MeldStudioActionMissingSceneName" xml:space="preserve">
+    <value>Meld Studio Action: Missing Scene Name</value>
+  </data>
+  <data name="AudioTrackName" xml:space="preserve">
+    <value>Audio Track Name</value>
+  </data>
+  <data name="LayerName" xml:space="preserve">
+    <value>Layer Name</value>
+  </data>
+  <data name="Monitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>Record</value>
+  </data>
+  <data name="Stream" xml:space="preserve">
+    <value>Stream</value>
+  </data>
 </root>

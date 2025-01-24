@@ -526,6 +526,9 @@
     <Compile Include="Controls\Actions\LumiaStreamActionEditorControl.xaml.cs">
       <DependentUpon>LumiaStreamActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\MeldStudioActionEditorControl.xaml.cs">
+      <DependentUpon>MeldStudioActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ModerationActionEditorControl.xaml.cs">
       <DependentUpon>ModerationActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -924,6 +927,9 @@
     </Compile>
     <Compile Include="Controls\Services\AmazonPollyServiceControl.xaml.cs">
       <DependentUpon>AmazonPollyServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\MeldStudioServiceControl.xaml.cs">
+      <DependentUpon>MeldStudioServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\MicrosoftAzureSpeechServiceControl.xaml.cs">
       <DependentUpon>MicrosoftAzureSpeechServiceControl.xaml</DependentUpon>
@@ -1411,6 +1417,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\LumiaStreamActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\MeldStudioActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1935,6 +1945,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\AmazonPollyServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\MeldStudioServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1519,6 +1519,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Audio Track Name.
+        /// </summary>
+        public static string AudioTrackName {
+            get {
+                return ResourceManager.GetString("AudioTrackName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authorization Pin.
         /// </summary>
         public static string AuthorizationPin {
@@ -12567,6 +12576,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Layer Name.
+        /// </summary>
+        public static string LayerName {
+            get {
+                return ResourceManager.GetString("LayerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Layer Position.
         /// </summary>
         public static string LayerPosition {
@@ -13550,6 +13568,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Meld Studio Action: Missing Audio Track Name.
+        /// </summary>
+        public static string MeldStudioActionMissingAudioTrackName {
+            get {
+                return ResourceManager.GetString("MeldStudioActionMissingAudioTrackName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meld Studio Action: Missing Effect Name.
+        /// </summary>
+        public static string MeldStudioActionMissingEffectName {
+            get {
+                return ResourceManager.GetString("MeldStudioActionMissingEffectName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meld Studio Action: Missing Layer Name.
+        /// </summary>
+        public static string MeldStudioActionMissingLayerName {
+            get {
+                return ResourceManager.GetString("MeldStudioActionMissingLayerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meld Studio Action: Missing Scene Name.
+        /// </summary>
+        public static string MeldStudioActionMissingSceneName {
+            get {
+                return ResourceManager.GetString("MeldStudioActionMissingSceneName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meld Studio connectivity allows you to control functionality in the Meld Studio software, such as changing the currently shown scene and showing/hiding layers. To connect to Meld Studio, please ensure the software is running before attempting to connect..
+        /// </summary>
+        public static string MeldStudioInfo {
+            get {
+                return ResourceManager.GetString("MeldStudioInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid websocket address must be specified for Meld Studio.
         /// </summary>
         public static string MeldStudioInvalidWebSocketAddress {
@@ -14324,6 +14387,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Monitor.
+        /// </summary>
+        public static string Monitor {
+            get {
+                return ResourceManager.GetString("Monitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monitor/Unmonitor Audio Track.
+        /// </summary>
+        public static string MonitorUnmonitorAudioTrack {
+            get {
+                return ResourceManager.GetString("MonitorUnmonitorAudioTrack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Month.
         /// </summary>
         public static string Month {
@@ -14527,6 +14608,15 @@ namespace MixItUp.Base {
         public static string MuteSelf {
             get {
                 return ResourceManager.GetString("MuteSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mute/Unmute Audio Track.
+        /// </summary>
+        public static string MuteUnmuteAudioTrack {
+            get {
+                return ResourceManager.GetString("MuteUnmuteAudioTrack", resourceCulture);
             }
         }
         
@@ -18408,6 +18498,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Record.
+        /// </summary>
+        public static string Record {
+            get {
+                return ResourceManager.GetString("Record", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Red.
         /// </summary>
         public static string Red {
@@ -20460,6 +20559,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Audio Track Gain.
+        /// </summary>
+        public static string SetAudioTrackGain {
+            get {
+                return ResourceManager.GetString("SetAudioTrackGain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Chat Settings.
         /// </summary>
         public static string SetChatSettings {
@@ -20831,6 +20939,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show/Hide Effect.
+        /// </summary>
+        public static string ShowHideEffect {
+            get {
+                return ResourceManager.GetString("ShowHideEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show/Hide Layer.
+        /// </summary>
+        public static string ShowHideLayer {
+            get {
+                return ResourceManager.GetString("ShowHideLayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show/Hide Scene Component.
         /// </summary>
         public static string ShowHideSceneComponent {
@@ -20944,6 +21070,15 @@ namespace MixItUp.Base {
         public static string ShowRoleBadge {
             get {
                 return ResourceManager.GetString("ShowRoleBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Scene.
+        /// </summary>
+        public static string ShowScene {
+            get {
+                return ResourceManager.GetString("ShowScene", resourceCulture);
             }
         }
         
@@ -21775,6 +21910,15 @@ namespace MixItUp.Base {
         public static string StoreInMemory {
             get {
                 return ResourceManager.GetString("StoreInMemory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream.
+        /// </summary>
+        public static string Stream {
+            get {
+                return ResourceManager.GetString("Stream", resourceCulture);
             }
         }
         
@@ -22918,6 +23062,15 @@ namespace MixItUp.Base {
         public static string TagsHeader {
             get {
                 return ResourceManager.GetString("TagsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take Screenshot.
+        /// </summary>
+        public static string TakeScreenshot {
+            get {
+                return ResourceManager.GetString("TakeScreenshot", resourceCulture);
             }
         }
         
@@ -27447,6 +27600,15 @@ namespace MixItUp.Base {
         public static string WebRequestURL {
             get {
                 return ResourceManager.GetString("WebRequestURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WebSocket Address.
+        /// </summary>
+        public static string WebSocketAddress {
+            get {
+                return ResourceManager.GetString("WebSocketAddress", resourceCulture);
             }
         }
         

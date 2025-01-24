@@ -3,6 +3,7 @@ using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -73,8 +74,6 @@ namespace MixItUp.Base.Services.External
             this.websocket.QtPacketReceived += Websocket_QtPacketReceived;
         }
 
-        public override async Task<Result> AutomaticConnect() { return await this.ManualConnect(CancellationToken.None); }
-
         public override async Task<Result> ManualConnect(CancellationToken cancellationToken)
         {
             try
@@ -100,7 +99,7 @@ namespace MixItUp.Base.Services.External
                 JArray properties = (JArray)initPacket.data["meld"]["properties"];
 
                 this.isStreaming = properties[isStreamingPropertiesIndex][propertiesValueIndex].ToObject<bool>();
-                this.isStreaming = properties[isRecordingPropertiesIndex][propertiesValueIndex].ToObject<bool>();
+                this.isRecording = properties[isRecordingPropertiesIndex][propertiesValueIndex].ToObject<bool>();
 
                 this.RebuildItemCache(properties[sessionPropertiesIndex][propertiesValueIndex]["items"] as JObject);
 
@@ -142,6 +141,11 @@ namespace MixItUp.Base.Services.External
                 return;
             }
 
+            if (state == null)
+            {
+                this.isStreaming = !this.isStreaming;
+            }
+
             await this.websocket.InvokeMethod("meld", "toggleStream", new List<object>());
         }
 
@@ -150,6 +154,11 @@ namespace MixItUp.Base.Services.External
             if (state != null && state == this.isRecording)
             {
                 return;
+            }
+
+            if (state == null)
+            {
+                this.isRecording = !this.isRecording;
             }
 
             await this.websocket.InvokeMethod("meld", "toggleRecord", new List<object>());
@@ -182,6 +191,11 @@ namespace MixItUp.Base.Services.External
                         return;
                     }
 
+                    if (state == null)
+                    {
+                        layer.visible = !layer.visible;
+                    }
+
                     await this.websocket.InvokeMethod("meld", "toggleLayer", new List<object>() { scene.ID, layer.ID });
                 }
             }
@@ -203,6 +217,11 @@ namespace MixItUp.Base.Services.External
                             return;
                         }
 
+                        if (state == null)
+                        {
+                            effect.enabled = !effect.enabled;
+                        }
+
                         await this.websocket.InvokeMethod("meld", "toggleEffect", new List<object>() { scene.ID, layer.ID, effect.ID });
                     }
                 }
@@ -219,6 +238,11 @@ namespace MixItUp.Base.Services.External
                     return;
                 }
 
+                if (state == null)
+                {
+                    audioTrack.muted = !audioTrack.muted;
+                }
+
                 await this.websocket.InvokeMethod("meld", "toggleMute", new List<object>() { audioTrack.ID });
             }
         }
@@ -233,23 +257,37 @@ namespace MixItUp.Base.Services.External
                     return;
                 }
 
+                if (state == null)
+                {
+                    audioTrack.monitoring = !audioTrack.monitoring;
+                }
+
                 await this.websocket.InvokeMethod("meld", "toggleMonitor", new List<object>() { audioTrack.ID });
             }
         }
 
-        public async Task SetGain(string audioTrackName, double gain)
+        public async Task SetGain(string audioTrackName, int gain)
         {
             MeldStudioAudioTrackItem audioTrack = this.GetAudioTrack(audioTrackName);
             if (audioTrack != null)
             {
-                await this.websocket.InvokeMethod("meld", "setGain", new List<object>() { audioTrack.ID, gain });
+                double convertedGain = MathHelper.Clamp(gain, 0, 100) / 100.0;
+
+                await this.websocket.InvokeMethod("meld", "setGain", new List<object>() { audioTrack.ID, convertedGain });
             }
         }
 
         private MeldStudioSceneItem GetScene(string name)
         {
-            this.scenes.TryGetValue(name, out MeldStudioSceneItem result);
-            return result;
+            if (string.IsNullOrEmpty(name))
+            {
+                return this.scenes.FirstOrDefault(s => s.Value.current).Value;
+            }
+            else
+            {
+                this.scenes.TryGetValue(name, out MeldStudioSceneItem result);
+                return result;
+            }
         }
 
         private MeldStudioLayerItem GetLayer(MeldStudioSceneItem scene, string name)
