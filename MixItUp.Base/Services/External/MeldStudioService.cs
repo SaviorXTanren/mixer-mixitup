@@ -1,0 +1,411 @@
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.Web;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace MixItUp.Base.Services.External
+{
+    public class MeldStudioItem
+    {
+        public string ID { get; set; }
+        public string type { get; set; }
+        public string name { get; set; }
+        public string parent { get; set; }
+    }
+
+    public class MeldStudioSceneItem : MeldStudioItem
+    {
+        public bool current { get; set; }
+        public bool staged { get; set; }
+    }
+
+    public class MeldStudioLayerItem : MeldStudioItem
+    {
+        public int index { get; set; }
+        public bool visible { get; set; }
+    }
+
+    public class MeldStudioEffectItem : MeldStudioItem
+    {
+        public bool enabled { get; set; }
+    }
+
+    public class MeldStudioAudioTrackItem : MeldStudioItem
+    {
+        public bool monitoring { get; set; }
+        public bool muted { get; set; }
+    }
+
+    public class MeldStudioService : ServiceBase
+    {
+        private const int isStreamingPropertiesIndex = 1;
+        private const int isRecordingPropertiesIndex = 2;
+        private const int sessionPropertiesIndex = 3;
+
+        private const int propertiesValueIndex = 3;
+
+        private const string sceneItemType = "scene";
+        private const string layerItemType = "layer";
+        private const string effectItemType = "effect";
+        private const string trackItemType = "track";
+
+        public override string Name { get { return Resources.MeldStudio; } }
+
+        public override bool IsEnabled { get { return !string.IsNullOrWhiteSpace(ChannelSession.Settings.MeldStudioWebSocketAddress); } }
+
+        public override bool IsConnected { get; protected set; }
+
+        private QtClientWebSocket websocket = new QtClientWebSocket();
+
+        private bool? isStreaming;
+        private bool? isRecording;
+
+        private Dictionary<string, MeldStudioSceneItem> scenes = new Dictionary<string, MeldStudioSceneItem>();
+        private Dictionary<string, MeldStudioLayerItem> layers = new Dictionary<string, MeldStudioLayerItem>();
+        private Dictionary<string, MeldStudioEffectItem> effects = new Dictionary<string, MeldStudioEffectItem>();
+        private Dictionary<string, MeldStudioAudioTrackItem> audioTracks = new Dictionary<string, MeldStudioAudioTrackItem>();
+
+        public MeldStudioService()
+        {
+            this.websocket.QtPacketReceived += Websocket_QtPacketReceived;
+        }
+
+        public override async Task<Result> ManualConnect(CancellationToken cancellationToken)
+        {
+            try
+            {
+                this.ClearItemCache();
+
+                if (string.IsNullOrWhiteSpace(ChannelSession.Settings.MeldStudioWebSocketAddress))
+                {
+                    return new Result(Resources.MeldStudioInvalidWebSocketAddress);
+                }
+
+                if (!await this.websocket.Connect(ChannelSession.Settings.MeldStudioWebSocketAddress, cancellationToken))
+                {
+                    return new Result(Resources.MeldStudioUnableToConnect);
+                }
+
+                QtWebSocketPacket initPacket = await this.websocket.Init();
+                if (initPacket == null || initPacket.data == null)
+                {
+                    return new Result(Resources.MeldStudioUnableToConnect);
+                }
+
+                JArray properties = (JArray)initPacket.data["meld"]["properties"];
+
+                this.isStreaming = properties[isStreamingPropertiesIndex][propertiesValueIndex].ToObject<bool>();
+                this.isRecording = properties[isRecordingPropertiesIndex][propertiesValueIndex].ToObject<bool>();
+
+                this.RebuildItemCache(properties[sessionPropertiesIndex][propertiesValueIndex]["items"] as JObject);
+
+                if (this.scenes.Count == 0)
+                {
+                    return new Result(Resources.MeldStudioUnableToConnect);
+                }
+
+                this.IsConnected = true;
+                return new Result();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
+        }
+
+        public override async Task Disconnect()
+        {
+            await this.websocket.Disconnect();
+
+            this.ClearItemCache();
+
+            this.IsConnected = false;
+        }
+
+        public override async Task Disable()
+        {
+            await this.Disconnect();
+
+            ChannelSession.Settings.MeldStudioWebSocketAddress = null;
+        }
+
+        public async Task ChangeStreamState(bool? state)
+        {
+            if (state != null && state == this.isStreaming)
+            {
+                return;
+            }
+
+            if (state == null)
+            {
+                this.isStreaming = !this.isStreaming;
+            }
+
+            await this.websocket.InvokeMethod("meld", "toggleStream", new List<object>());
+        }
+
+        public async Task ChangeRecordState(bool? state)
+        {
+            if (state != null && state == this.isRecording)
+            {
+                return;
+            }
+
+            if (state == null)
+            {
+                this.isRecording = !this.isRecording;
+            }
+
+            await this.websocket.InvokeMethod("meld", "toggleRecord", new List<object>());
+        }
+
+        public async Task TakeScreenshot()
+        {
+            await this.websocket.InvokeMethod("meld", "sendEvent", new List<object>() { "co.meldstudio.events.screenshot" });
+        }
+
+        public async Task ShowScene(string sceneName)
+        {
+            MeldStudioSceneItem scene = this.GetScene(sceneName);
+            if (scene != null)
+            {
+                await this.websocket.InvokeMethod("meld", "showScene", new List<object>() { scene.ID });
+            }
+        }
+
+        public async Task ChangeLayerState(string sceneName, string layerName, bool? state)
+        {
+            MeldStudioSceneItem scene = this.GetScene(sceneName);
+            if (scene != null)
+            {
+                MeldStudioLayerItem layer = this.GetLayer(scene, layerName);
+                if (layer != null)
+                {
+                    if (state != null && state == layer.visible)
+                    {
+                        return;
+                    }
+
+                    if (state == null)
+                    {
+                        layer.visible = !layer.visible;
+                    }
+
+                    await this.websocket.InvokeMethod("meld", "toggleLayer", new List<object>() { scene.ID, layer.ID });
+                }
+            }
+        }
+
+        public async Task ChangeEffectState(string sceneName, string layerName, string effectName, bool? state)
+        {
+            MeldStudioSceneItem scene = this.GetScene(sceneName);
+            if (scene != null)
+            {
+                MeldStudioLayerItem layer = this.GetLayer(scene, layerName);
+                if (layer != null)
+                {
+                    MeldStudioEffectItem effect = this.GetEffect(layer, effectName);
+                    if (effect != null)
+                    {
+                        if (state != null && state == effect.enabled)
+                        {
+                            return;
+                        }
+
+                        if (state == null)
+                        {
+                            effect.enabled = !effect.enabled;
+                        }
+
+                        await this.websocket.InvokeMethod("meld", "toggleEffect", new List<object>() { scene.ID, layer.ID, effect.ID });
+                    }
+                }
+            }
+        }
+
+        public async Task ChangeMuteState(string audioTrackName, bool? state)
+        {
+            MeldStudioAudioTrackItem audioTrack = this.GetAudioTrack(audioTrackName);
+            if (audioTrack != null)
+            {
+                if (state != null && state == audioTrack.muted)
+                {
+                    return;
+                }
+
+                if (state == null)
+                {
+                    audioTrack.muted = !audioTrack.muted;
+                }
+
+                await this.websocket.InvokeMethod("meld", "toggleMute", new List<object>() { audioTrack.ID });
+            }
+        }
+
+        public async Task ChangeMonitorState(string audioTrackName, bool? state)
+        {
+            MeldStudioAudioTrackItem audioTrack = this.GetAudioTrack(audioTrackName);
+            if (audioTrack != null)
+            {
+                if (state != null && state == audioTrack.monitoring)
+                {
+                    return;
+                }
+
+                if (state == null)
+                {
+                    audioTrack.monitoring = !audioTrack.monitoring;
+                }
+
+                await this.websocket.InvokeMethod("meld", "toggleMonitor", new List<object>() { audioTrack.ID });
+            }
+        }
+
+        public async Task SetGain(string audioTrackName, int gain)
+        {
+            MeldStudioAudioTrackItem audioTrack = this.GetAudioTrack(audioTrackName);
+            if (audioTrack != null)
+            {
+                double convertedGain = MathHelper.Clamp(gain, 0, 100) / 100.0;
+
+                await this.websocket.InvokeMethod("meld", "setGain", new List<object>() { audioTrack.ID, convertedGain });
+            }
+        }
+
+        private MeldStudioSceneItem GetScene(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return this.scenes.FirstOrDefault(s => s.Value.current).Value;
+            }
+            else
+            {
+                this.scenes.TryGetValue(name, out MeldStudioSceneItem result);
+                return result;
+            }
+        }
+
+        private MeldStudioLayerItem GetLayer(MeldStudioSceneItem scene, string name)
+        {
+            this.layers.TryGetValue(this.GenerateParentIDNameKey(scene.ID, name), out MeldStudioLayerItem result);
+            return result;
+        }
+
+        private MeldStudioEffectItem GetEffect(MeldStudioLayerItem layer, string name)
+        {
+            this.effects.TryGetValue(this.GenerateParentIDNameKey(layer.ID, name), out MeldStudioEffectItem result);
+            return result;
+        }
+
+        private MeldStudioAudioTrackItem GetAudioTrack(string name)
+        {
+            this.audioTracks.TryGetValue(name, out MeldStudioAudioTrackItem result);
+            return result;
+        }
+
+        private void Websocket_QtPacketReceived(object sender, QtWebSocketPacket packet)
+        {
+            try
+            {
+                if (packet.id < 0)
+                {
+                    if (packet.type == QtWebSocketPacketType.propertyUpdate)
+                    {
+                        JArray updates = packet.data as JArray;
+                        foreach (var kvp in updates[0]["properties"] as JObject)
+                        {
+                            if (kvp.Key == isStreamingPropertiesIndex.ToString())
+                            {
+                                this.isStreaming = kvp.Value.ToObject<bool>();
+                            }
+                            else if (kvp.Key == isRecordingPropertiesIndex.ToString())
+                            {
+                                this.isRecording = kvp.Value.ToObject<bool>();
+                            }
+                            else if (kvp.Key == sessionPropertiesIndex.ToString())
+                            {
+                                this.RebuildItemCache(kvp.Value["items"] as JObject);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        private void RebuildItemCache(JObject itemsJObj)
+        {
+            Dictionary<string, MeldStudioSceneItem> scenes = new Dictionary<string, MeldStudioSceneItem>();
+            Dictionary<string, MeldStudioLayerItem> layers = new Dictionary<string, MeldStudioLayerItem>();
+            Dictionary<string, MeldStudioEffectItem> effects = new Dictionary<string, MeldStudioEffectItem>();
+            Dictionary<string, MeldStudioAudioTrackItem> audioTracks = new Dictionary<string, MeldStudioAudioTrackItem>();
+
+            foreach (var kvp in itemsJObj)
+            {
+                MeldStudioItem item = null;
+                switch (kvp.Value["type"].ToObject<string>())
+                {
+                    case sceneItemType:
+                        MeldStudioSceneItem scene = kvp.Value.ToObject<MeldStudioSceneItem>();
+                        scenes[scene.name] = scene;
+                        item = scene;
+                        break;
+                    case layerItemType:
+                        MeldStudioLayerItem layer = kvp.Value.ToObject<MeldStudioLayerItem>();
+                        layers[this.GenerateParentIDNameKey(layer)] = layer;
+                        item = layer;
+                        break;
+                    case effectItemType:
+                        MeldStudioEffectItem effect = kvp.Value.ToObject<MeldStudioEffectItem>();
+                        effects[this.GenerateParentIDNameKey(effect)] = effect;
+                        item = effect;
+                        break;
+                    case trackItemType:
+                        MeldStudioAudioTrackItem audioTrack = kvp.Value.ToObject<MeldStudioAudioTrackItem>();
+                        audioTracks[audioTrack.name] = audioTrack;
+                        item = audioTrack;
+                        break;
+                }
+
+                if (item != null)
+                {
+                    item.ID = kvp.Key;
+                }
+            }
+
+            this.scenes = scenes;
+            this.layers = layers;
+            this.effects = effects;
+            this.audioTracks = audioTracks;
+        }
+
+        private void ClearItemCache()
+        {
+            this.isStreaming = null;
+            this.isRecording = null;
+
+            this.scenes.Clear();
+            this.layers.Clear();
+            this.effects.Clear();
+            this.audioTracks.Clear();
+        }
+
+        private string GenerateParentIDNameKey(MeldStudioItem item)
+        {
+            return this.GenerateParentIDNameKey(item.parent, item.name);
+        }
+
+        private string GenerateParentIDNameKey(string parentID, string name)
+        {
+            return $"{parentID}|{name}";
+        }
+    }
+}

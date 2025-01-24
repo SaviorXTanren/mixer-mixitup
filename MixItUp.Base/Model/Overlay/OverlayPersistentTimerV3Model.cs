@@ -1,13 +1,14 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
-using System;
-using System.Threading;
 using System.Text.Json.Serialization;
-using MixItUp.Base.Util;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -17,7 +18,7 @@ namespace MixItUp.Base.Model.Overlay
         public const string SecondsProperty = "Seconds";
 
         public const string TimerSpecialIdentifierPrefix = "timer";
-        public const string TimerSecondsAddedSpecialIdentifierPrefix = TimerSpecialIdentifierPrefix + "secondsadded";
+        public const string TimerSecondsAdjustedSpecialIdentifierPrefix = TimerSpecialIdentifierPrefix + "secondsadjusted";
 
         public static readonly string DefaultHTML = OverlayResources.OverlayTimerDefaultHTML;
         public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
@@ -57,6 +58,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private bool paused;
 
+        [JsonIgnore]
+        private object amountLock = new object();
+
         public OverlayPersistentTimerV3Model() : base(OverlayItemV3Type.PersistentTimer) { }
 
         public override async Task Initialize()
@@ -91,6 +95,14 @@ namespace MixItUp.Base.Model.Overlay
             this.CurrentAmount = this.InitialAmount;
         }
 
+        public override void ImportReset()
+        {
+            base.ImportReset();
+
+            this.TimerAdjustedCommandID = Guid.Empty;
+            this.TimerCompletedCommandID = Guid.Empty;
+        }
+
         public override Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = base.GetGenerationProperties();
@@ -109,17 +121,26 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.paused || this.AllowAdjustmentWhilePaused)
             {
                 amount = Math.Round(amount);
-                if (this.MaxAmount > 0 && amount > 0)
+
+                Logger.Log(LogLevel.Debug, $"Processing timer amount - {amount}");
+
+                lock (amountLock)
                 {
-                    int previousAmount = this.CurrentAmount;
-                    this.CurrentAmount = Math.Min(this.CurrentAmount + (int)amount, this.MaxAmount);
-                    amount = this.CurrentAmount - previousAmount;
+                    if (this.MaxAmount > 0 && amount > 0)
+                    {
+                        int previousAmount = this.CurrentAmount;
+                        this.CurrentAmount = Math.Min(this.CurrentAmount + (int)amount, this.MaxAmount);
+                        amount = this.CurrentAmount - previousAmount;
+                    }
+                    else
+                    {
+                        this.CurrentAmount += (int)amount;
+                    }
+
+                    this.CurrentAmount = Math.Max(this.CurrentAmount, 1);
                 }
-                else
-                {
-                    this.CurrentAmount += (int)amount;
-                    this.CurrentAmount = Math.Max(this.CurrentAmount, 0);
-                }
+
+                Logger.Log(LogLevel.Debug, $"New timer amount - {this.CurrentAmount}");
 
                 if (amount != 0)
                 {
@@ -128,7 +149,7 @@ namespace MixItUp.Base.Model.Overlay
                     await this.CallFunction("adjustTime", properties);
 
                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                    specialIdentifiers[TimerSecondsAddedSpecialIdentifierPrefix] = amount.ToString();
+                    specialIdentifiers[TimerSecondsAdjustedSpecialIdentifierPrefix] = amount.ToString();
 
                     await ServiceManager.Get<CommandService>().Queue(this.TimerAdjustedCommandID, new CommandParametersModel(user, specialIdentifiers));
                 }
@@ -161,6 +182,10 @@ namespace MixItUp.Base.Model.Overlay
 
         private void StartBackgroundTimer()
         {
+            if (this.cancellationTokenSource != null)
+            {
+                this.cancellationTokenSource.Cancel();
+            }
             this.cancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             AsyncRunner.RunAsyncBackground(this.BackgroundTimer, this.cancellationTokenSource.Token);
@@ -173,15 +198,28 @@ namespace MixItUp.Base.Model.Overlay
             {
                 await Task.Delay(1000);
 
-                if (this.CurrentAmount > 0)
+                bool timerCompleted = false;
+                lock (amountLock)
                 {
-                    this.CurrentAmount--;
-                    if (this.CurrentAmount == 0)
+                    if (this.CurrentAmount > 0)
                     {
-                        await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
-                        if (this.DisableOnCompletion)
+                        this.CurrentAmount--;
+                        if (this.CurrentAmount == 0)
                         {
-                            await ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID).Disable();
+                            timerCompleted = true;
+                        }
+                    }
+                }
+
+                if (timerCompleted)
+                {
+                    await ServiceManager.Get<CommandService>().Queue(this.TimerCompletedCommandID);
+                    if (this.DisableOnCompletion)
+                    {
+                        OverlayWidgetV3Model widget = ServiceManager.Get<OverlayV3Service>().GetWidget(this.ID);
+                        if (widget != null)
+                        {
+                            await widget.Disable();
                         }
                     }
                 }

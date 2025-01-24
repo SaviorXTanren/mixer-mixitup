@@ -1,10 +1,14 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
+﻿using Google.Apis.YouTube.v3.Data;
+using Google.Apis.YouTubePartner.v1.Data;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
+using MixItUp.Base.Util;
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using static Google.Apis.Requests.BatchRequest;
 
 namespace MixItUp.Base.Model.Actions
 {
@@ -54,25 +58,26 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
                 if (this.ActionType == YouTubeActionType.SetTitleDescription)
                 {
-                    if (ServiceManager.Get<YouTubeSessionService>().IsLive && ServiceManager.Get<YouTubeSessionService>().Video != null)
+                    string title = await ReplaceStringWithSpecialModifiers(this.Title, parameters);
+                    string description = await ReplaceStringWithSpecialModifiers(this.Description, parameters);
+                    Result result = await ServiceManager.Get<YouTubeSession>().UpdateStreamTitleAndDescription(title: title, description: description);
+                    if (!result.Success)
                     {
-                        string title = await ReplaceStringWithSpecialModifiers(this.Title, parameters);
-                        string description = await ReplaceStringWithSpecialModifiers(this.Description, parameters);
-                        await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>().Video, title: title, description: description);
+                        await ServiceManager.Get<ChatService>().SendMessage(result.Message, parameters);
                     }
                 }
                 else if (this.ActionType == YouTubeActionType.RunAdBreak)
                 {
-                    if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                    foreach (LiveBroadcast broadcast in ServiceManager.Get<YouTubeSession>().LiveBroadcasts.Values.ToList())
                     {
-                        LiveCuepoint response = await ServiceManager.Get<YouTubeSessionService>().UserConnection.StartAdBreak(ServiceManager.Get<YouTubeSessionService>().Broadcast, this.Amount);
+                        LiveCuepoint response = await ServiceManager.Get<YouTubeSession>().StreamerService.StartAdBreak(broadcast, this.Amount);
                         if (response == null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouTubeActionUnableToRunAdBreak);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouTubeActionUnableToRunAdBreak, parameters);
                         }
                     }
                 }

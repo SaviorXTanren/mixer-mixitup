@@ -9,7 +9,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -788,7 +787,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 string statusChatText = string.Empty;
                 if (this.Currency.IsRank)
                 {
-                    statusChatText = string.Format(MixItUp.Base.Resources.ConsumablesCurrencyCommandDefault, this.Currency.UserRankNameSpecialIdentifier, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
+                    statusChatText = string.Format(MixItUp.Base.Resources.ConsumablesRankCommandDefault, this.Currency.UserRankNameSpecialIdentifier, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
                 }
                 else
                 {

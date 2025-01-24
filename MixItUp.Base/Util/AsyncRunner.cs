@@ -1,5 +1,4 @@
-﻿using StreamingClient.Base.Util;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,6 +42,19 @@ namespace MixItUp.Base.Util
             {
                 Logger.Log(ex, includeStackTrace: true);
             }
+        }
+
+        public static async Task<T> RunAsync<T>(Func<Task<T>> task)
+        {
+            try
+            {
+                return await task();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex, includeStackTrace: true);
+            }
+            return default(T);
         }
 
         public static Task<T> RunAsyncBackground<T>(Func<CancellationToken, T> action, CancellationToken token)
@@ -117,6 +129,15 @@ namespace MixItUp.Base.Util
                     catch (Exception ex) { Logger.Log(ex); }
                 }
             }, token);
+        }
+
+        public static async Task WaitForSuccess(Func<bool> valueToCheck, int secondsToWait = 15)
+        {
+            int loops = (secondsToWait * 1000) / 100;
+            for (int i = 0; i < loops && !valueToCheck(); i++)
+            {
+                await Task.Delay(100);
+            }
         }
     }
 }

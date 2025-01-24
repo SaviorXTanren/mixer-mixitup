@@ -273,6 +273,8 @@ namespace MixItUp.Base.Model.Currency
 
         public void SetAmount(UserV2ViewModel user, int amount)
         {
+            Logger.Log(LogLevel.Debug, $"Setting {amount} amount of {this.Name} for {user.ID}");
+
             RankModel prevRank = this.GetRank(user);
 
             user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
@@ -295,6 +297,8 @@ namespace MixItUp.Base.Model.Currency
 
         public void SetAmount(UserV2Model user, int amount)
         {
+            Logger.Log(LogLevel.Debug, $"Setting {amount} amount of {this.Name} for {user.ID}");
+
             RankModel prevRank = this.GetRank(user);
 
             user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);

@@ -15,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override Result Validate()
         {
-            if (string.IsNullOrWhiteSpace(this.Text))
+            if (string.IsNullOrEmpty(this.Text))
             {
                 return new Result(Resources.OverlayTextMissingText);
             }

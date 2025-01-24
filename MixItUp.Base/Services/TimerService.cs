@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,7 +118,7 @@ namespace MixItUp.Base.Services
                 bool isLive = false;
                 StreamingPlatforms.ForEachPlatform(p =>
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive)
+                    if (StreamingPlatforms.GetPlatformSession(p).IsConnected && StreamingPlatforms.GetPlatformSession(p).IsLive)
                     {
                         isLive = true;
                     }

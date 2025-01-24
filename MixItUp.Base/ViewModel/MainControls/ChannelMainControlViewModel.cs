@@ -1,24 +1,25 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Trovo.Category;
+using MixItUp.Base.Model.Trovo.Channels;
+using MixItUp.Base.Model.Twitch.Games;
+using MixItUp.Base.Model.Twitch.Streams;
+using MixItUp.Base.Model.Twitch.Teams;
+using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.Trovo.New;
+using MixItUp.Base.Services.Twitch.New;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Twitch;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Trovo.Base.Models.Channels;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.Games;
-using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Teams;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -46,11 +47,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private TwitchSearchFindChannelToRaidTypeEnum selectedSearchFindChannelToRaidOption;
 
-        public ChannelInformationModel ChannelInformation { get; private set; }
-
         public TwitchTagEditorViewModel TagEditor { get; set; } = new TwitchTagEditorViewModel();
-
-        private GameModel currentGame;
 
         public TwitchChannelControlViewModel() { this.Platform = StreamingPlatformTypeEnum.Twitch; }
 
@@ -65,48 +62,32 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override async Task<Result> UpdateChannelInformation()
         {
-            Result result = await base.UpdateChannelInformation();
-            if (!result.Success)
+            GameModel game = null;
+            IEnumerable<GameModel> games = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGamesByName(this.Category);
+            if (games != null && games.Count() > 0)
             {
-                return result;
+                game = games.FirstOrDefault(g => g.name.ToLower().Equals(this.Category));
+                if (game == null)
+                {
+                    game = games.First();
+                }
             }
 
-            if (!await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, tags: this.TagEditor.CustomTags.Select(t => t.Tag)))
-            {
-                return new Result(MixItUp.Base.Resources.TwitchFailedToUpdateCustomTags);
-            }
-
-            return new Result();
+            return await ServiceManager.Get<TwitchSession>().StreamerService.UpdateChannelInformation(ServiceManager.Get<TwitchSession>().StreamerModel,
+                title: this.Title,
+                gameID: game?.id,
+                tags: this.TagEditor.CustomTags.Select(t => t.Tag));
         }
 
         protected override async Task RefreshChannelInformation()
         {
-            this.ChannelInformation = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(ServiceManager.Get<TwitchSessionService>().User);
-            if (this.ChannelInformation != null)
+            await base.RefreshChannelInformation();
+
+            if (ServiceManager.Get<TwitchSession>().Channel.tags != null)
             {
-                if (!string.IsNullOrEmpty(this.ChannelInformation.title))
+                foreach (string tag in ServiceManager.Get<TwitchSession>().Channel.tags)
                 {
-                    this.Title = this.ChannelInformation.title;
-                }
-
-                if (!string.IsNullOrEmpty(this.ChannelInformation.game_id) && !string.IsNullOrEmpty(this.ChannelInformation.game_name))
-                {
-                    this.currentGame = new GameModel()
-                    {
-                        id = this.ChannelInformation.game_id,
-                        name = this.ChannelInformation.game_name
-                    };
-
-                    this.Category = this.currentGame.name;
-                }
-
-                this.TagEditor.ClearCustomTags();
-                if (this.ChannelInformation.tags != null)
-                {
-                    foreach (string tag in this.ChannelInformation.tags)
-                    {
-                        await this.TagEditor.AddCustomTag(tag);
-                    }
+                    await this.TagEditor.AddCustomTag(tag);
                 }
             }
         }
@@ -119,18 +100,18 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.Featured)
             {
-                foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTopStreams(10))
+                foreach (StreamModel stream in await ServiceManager.Get<TwitchSession>().StreamerService.GetTopStreams(10))
                 {
                     results.Add(new ChannelToRaidItemViewModel(stream));
                 }
             }
-            else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.SameCategory && this.currentGame != null)
+            else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.SameCategory && ServiceManager.Get<TwitchSession>().StreamCategoryID != null)
             {
-                IEnumerable<StreamModel> streams = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetGameStreams(this.currentGame.id, 10);
+                IEnumerable<StreamModel> streams = await ServiceManager.Get<TwitchSession>().StreamerService.GetGameStreams(ServiceManager.Get<TwitchSession>().StreamCategoryID, 10);
                 if (streams.Count() > 0)
                 {
                     Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
-                    foreach (GameModel game in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
+                    foreach (GameModel game in await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
                     {
                         games[game.id] = game;
                     }
@@ -141,13 +122,13 @@ namespace MixItUp.Base.ViewModel.MainControls
                     }
                 }
             }
-            else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.SameLanguage && this.ChannelInformation != null)
+            else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.SameLanguage && ServiceManager.Get<TwitchSession>().Channel != null)
             {
-                IEnumerable<StreamModel> streams = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetLanguageStreams(this.ChannelInformation.broadcaster_language, 10);
+                IEnumerable<StreamModel> streams = await ServiceManager.Get<TwitchSession>().StreamerService.GetLanguageStreams(ServiceManager.Get<TwitchSession>().Channel.broadcaster_language, 10);
                 if (streams.Count() > 0)
                 {
                     Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
-                    foreach (GameModel game in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
+                    foreach (GameModel game in await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
                     {
                         games[game.id] = game;
                     }
@@ -160,7 +141,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
             else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.FollowedChannels)
             {
-                foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowedStreams(ServiceManager.Get<TwitchSessionService>().User, 10))
+                foreach (StreamModel stream in await ServiceManager.Get<TwitchSession>().StreamerService.GetFollowedStreams(ServiceManager.Get<TwitchSession>().StreamerModel, 10))
                 {
                     results.Add(new ChannelToRaidItemViewModel(stream));
                 }
@@ -168,9 +149,9 @@ namespace MixItUp.Base.ViewModel.MainControls
             else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.TeamMembers)
             {
                 List<UserModel> users = new List<UserModel>();
-                foreach (TeamModel team in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelTeams(ServiceManager.Get<TwitchSessionService>().User))
+                foreach (TeamModel team in await ServiceManager.Get<TwitchSession>().StreamerService.GetChannelTeams(ServiceManager.Get<TwitchSession>().StreamerModel))
                 {
-                    TeamDetailsModel teamDetails = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTeam(team.id);
+                    TeamDetailsModel teamDetails = await ServiceManager.Get<TwitchSession>().StreamerService.GetTeam(team.id);
                     if (teamDetails != null && teamDetails.users != null)
                     {
                         foreach (TeamMemberModel user in teamDetails.users)
@@ -189,7 +170,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     foreach (var userBatch in users.Batch(20))
                     {
-                        foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreams(userBatch.Select(u => u.id)))
+                        foreach (StreamModel stream in await ServiceManager.Get<TwitchSession>().StreamerService.GetStreams(userBatch.Select(u => u.id)))
                         {
                             results.Add(new ChannelToRaidItemViewModel(stream));
                         }
@@ -203,6 +184,61 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class YouTubeChannelControlViewModel : PlatformChannelControlViewModelBase
     {
+        public class LiveBroadcastViewModel : UIViewModelBase
+        {
+            public LiveBroadcast LiveBroadcast { get; set; }
+
+            public ICommand OpenStreamCommand { get; set; }
+
+            public LiveBroadcastViewModel(LiveBroadcast liveBroadcast)
+            {
+                this.LiveBroadcast = liveBroadcast;
+
+                this.OpenStreamCommand = this.CreateCommand(() =>
+                {
+                    ServiceManager.Get<IProcessService>().LaunchLink(this.StreamURL);
+                });
+            }
+
+            public string ID { get { return this.LiveBroadcast.Id; } }
+
+            public string Title { get { return this.LiveBroadcast.Snippet.Title; } }
+
+            public DateTimeOffset StartTime { get { return this.LiveBroadcast.Snippet.ActualStartTimeDateTimeOffset ?? this.LiveBroadcast.Snippet.ScheduledStartTimeDateTimeOffset.GetValueOrDefault(); } }
+
+            public string StreamURL { get { return this.LiveBroadcast.GetStreamURL(); } }
+
+            public string Display
+            {
+                get
+                {
+                    if (this.StartTime != DateTimeOffset.MinValue)
+                    {
+                        return $"{this.Title} - {this.StartTime.ToFriendlyDateString()}";
+                    }
+                    else
+                    {
+                        return this.Title;
+                    }
+                }
+            }
+        }
+
+        public ObservableCollection<LiveBroadcastViewModel> ActiveBroadcasts { get; set; } = new ObservableCollection<LiveBroadcastViewModel>();
+
+        public ObservableCollection<LiveBroadcastViewModel> UpcomingBroadcasts { get; set; } = new ObservableCollection<LiveBroadcastViewModel>();
+
+        public LiveBroadcastViewModel SelectedUpcomingBroadcast
+        {
+            get { return this.selectedUpcomingBroadcast; }
+            set
+            {
+                this.selectedUpcomingBroadcast = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private LiveBroadcastViewModel selectedUpcomingBroadcast;
+
         public string Description
         {
             get { return this.description; }
@@ -214,48 +250,85 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string description;
 
-        public Video Video { get; private set; }
+        public ICommand AddUpcomingBroadcast { get; set; }
 
-        public YouTubeChannelControlViewModel() { this.Platform = StreamingPlatformTypeEnum.YouTube; }
+        public YouTubeChannelControlViewModel()
+        {
+            this.Platform = StreamingPlatformTypeEnum.YouTube;
+
+            this.AddUpcomingBroadcast = this.CreateCommand(() =>
+            {
+                if (this.SelectedUpcomingBroadcast == null)
+                {
+                    return;
+                }
+
+                ServiceManager.Get<YouTubeSession>().ManualLiveBroadcasts[this.SelectedUpcomingBroadcast.ID] = this.SelectedUpcomingBroadcast.LiveBroadcast;
+
+                this.UpcomingBroadcasts.Remove(this.SelectedUpcomingBroadcast);
+                this.SelectedUpcomingBroadcast = null;
+
+                this.RefreshActiveBroadcasts();
+            });
+        }
 
         protected override async Task OnOpenInternal()
         {
             await base.OnOpenInternal();
 
-            this.Video = ServiceManager.Get<YouTubeSessionService>().Video;
-            if (this.Video != null)
-            {
-                if (!string.IsNullOrEmpty(ServiceManager.Get<YouTubeSessionService>().Video.Snippet.Title))
-                {
-                    this.Title = ServiceManager.Get<YouTubeSessionService>().Video.Snippet.Title;
-                }
+            this.RefreshActiveBroadcasts();
 
-                if (!string.IsNullOrEmpty(ServiceManager.Get<YouTubeSessionService>().Video.Snippet.Description))
+            LiveBroadcast liveBroadcast = ServiceManager.Get<YouTubeSession>().LiveBroadcasts.Values.FirstOrDefault();
+            if (liveBroadcast != null)
+            {
+                this.Title = liveBroadcast.Snippet.Title;
+                this.Description = liveBroadcast.Snippet.Description;
+            }
+
+            this.UpcomingBroadcasts.Clear();
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
+            {
+                foreach (LiveBroadcast broadcast in await ServiceManager.Get<YouTubeSession>().StreamerService.GetNewestBroadcasts())
                 {
-                    this.Description = ServiceManager.Get<YouTubeSessionService>().Video.Snippet.Description;
+                    if (!ServiceManager.Get<YouTubeSession>().LiveBroadcasts.ContainsKey(broadcast.Id))
+                    {
+                        this.UpcomingBroadcasts.Add(new LiveBroadcastViewModel(broadcast));
+                    }
                 }
             }
         }
 
-        protected override Task RefreshChannelInformation() { return Task.CompletedTask; }
+        protected override Task RefreshChannelInformation()
+        {
+            this.RefreshActiveBroadcasts();
+
+            return Task.CompletedTask;
+        }
 
         protected override async Task<Result> UpdateChannelInformation()
         {
-            Video video = await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(this.Video, this.Title, this.Description);
-            if (video == null)
-            {
-                return new Result(MixItUp.Base.Resources.FailedToUpdateChannelInformation);
-            }
-
-            this.Video = video;
-            this.UpdateRecentData();
-
-            return new Result();
+            return await ServiceManager.Get<YouTubeSession>().UpdateStreamTitleAndDescription(this.Title, this.Description);
         }
 
         protected override Task SearchChannelsToRaid()
         {
             return Task.CompletedTask;
+        }
+
+        private void RefreshActiveBroadcasts()
+        {
+            try
+            {
+                this.ActiveBroadcasts.Clear();
+                foreach (LiveBroadcast broadcast in ServiceManager.Get<YouTubeSession>().LiveBroadcasts.Values.ToList())
+                {
+                    this.ActiveBroadcasts.Add(new LiveBroadcastViewModel(broadcast));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
     }
 
@@ -282,6 +355,19 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public TrovoChannelControlViewModel() { this.Platform = StreamingPlatformTypeEnum.Trovo; }
 
+        protected override async Task<Result> UpdateChannelInformation()
+        {
+            CategoryModel category = null;
+
+            IEnumerable<CategoryModel> categories = await ServiceManager.Get<TrovoSession>().StreamerService.SearchCategories(this.Category, maxResults: 10);
+            if (categories != null && categories.Count() > 0)
+            {
+                category = categories.FirstOrDefault();
+            }
+
+            return await ServiceManager.Get<TrovoSession>().StreamerService.UpdateChannel(ServiceManager.Get<TrovoSession>().ChannelID, title: this.Title, categoryID: category?.id);
+        }
+
         protected override async Task SearchChannelsToRaid()
         {
             this.ChannelsToRaid.Clear();
@@ -290,14 +376,14 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             if (this.SelectedSearchFindChannelToRaidOption == TrovoSearchFindChannelToRaidTypeEnum.Featured)
             {
-                foreach (TopChannelModel channel in await ServiceManager.Get<TrovoSessionService>().UserConnection.GetTopChannels(maxResults: 10))
+                foreach (TopChannelModel channel in await ServiceManager.Get<TrovoSession>().StreamerService.GetTopChannels(maxResults: 10))
                 {
                     results.Add(new ChannelToRaidItemViewModel(channel));
                 }
             }
             else if (this.SelectedSearchFindChannelToRaidOption == TrovoSearchFindChannelToRaidTypeEnum.SameCategory)
             {
-                foreach (TopChannelModel channel in await ServiceManager.Get<TrovoSessionService>().UserConnection.GetTopChannels(maxResults: 10, category: ServiceManager.Get<TrovoSessionService>().Channel.category_id))
+                foreach (TopChannelModel channel in await ServiceManager.Get<TrovoSession>().StreamerService.GetTopChannels(maxResults: 10, categoryID: ServiceManager.Get<TrovoSession>().ChannelModel.category_id))
                 {
                     results.Add(new ChannelToRaidItemViewModel(channel));
                 }
@@ -360,15 +446,15 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        UserModel targetChannel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(this.Name);
+                        UserModel targetChannel = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIUserByLogin(this.Name);
                         if (targetChannel != null)
                         {
-                            await ServiceManager.Get<TwitchSessionService>().UserConnection.RaidChannel(ServiceManager.Get<TwitchSessionService>().User, targetChannel);
+                            await ServiceManager.Get<TwitchSession>().StreamerService.RaidChannel(ServiceManager.Get<TwitchSession>().StreamerModel, targetChannel);
                         }
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
-                        await ServiceManager.Get<TrovoChatEventService>().HostUser(this.Name);
+                        await ServiceManager.Get<TrovoSession>().StreamerService.HostUser(ServiceManager.Get<TrovoSession>().ChannelID, this.Name);
                     }
                 });
             }
@@ -429,14 +515,20 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.UpdateChannelInformationCommand = this.CreateCommand(async () =>
             {
                 Result result = await this.UpdateChannelInformation();
-
-                await this.RefreshChannelInformation();
-
                 if (!result.Success)
                 {
-                    Logger.Log(LogLevel.Error, result.ToString());
-                    await DialogHelper.ShowFailedResult(result);
+                    StringBuilder str = new StringBuilder();
+                    str.AppendLine(MixItUp.Base.Resources.FailedToUpdateChannelInformation);
+                    str.AppendLine();
+                    str.Append(result.ToString());
+                    await DialogHelper.ShowMessage(str.ToString());
                 }
+                else
+                {
+                    this.UpdateRecentData();
+                }
+
+                await this.RefreshChannelInformation();
             });
 
             this.SearchChannelToRaidCommand = this.CreateCommand(async () =>
@@ -463,21 +555,15 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected virtual async Task RefreshChannelInformation()
         {
-            this.Title = await StreamingPlatforms.GetPlatformSessionService(this.Platform).GetTitle();
-            this.Category = await StreamingPlatforms.GetPlatformSessionService(this.Platform).GetGame();
+            StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(this.Platform);
+
+            await session.RefreshDetails();
+
+            this.Title = session.StreamTitle;
+            this.Category = session.StreamCategoryName;
         }
 
-        protected virtual async Task<Result> UpdateChannelInformation()
-        {
-            if (!await StreamingPlatforms.GetPlatformSessionService(this.Platform).SetTitle(this.Title) || !await StreamingPlatforms.GetPlatformSessionService(this.Platform).SetGame(this.Category))
-            {
-                return new Result(MixItUp.Base.Resources.FailedToUpdateChannelInformation);
-            }
-
-            this.UpdateRecentData();
-
-            return new Result();
-        }
+        protected abstract Task<Result> UpdateChannelInformation();
 
         protected void UpdateRecentData()
         {
@@ -507,11 +593,11 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public TrovoChannelControlViewModel Trovo { get; set; } = new TrovoChannelControlViewModel();
 
-        public bool IsTwitchConnected { get { return ServiceManager.Get<TwitchSessionService>().IsConnected; } }
+        public bool IsTwitchConnected { get { return ServiceManager.Get<TwitchSession>().IsConnected; } }
 
-        public bool IsYouTubeConnected { get { return ServiceManager.Get<YouTubeSessionService>().IsConnected; } }
+        public bool IsYouTubeConnected { get { return ServiceManager.Get<YouTubeSession>().IsConnected; } }
 
-        public bool IsTrovoConnected { get { return ServiceManager.Get<TrovoSessionService>().IsConnected; } }
+        public bool IsTrovoConnected { get { return ServiceManager.Get<TrovoSession>().IsConnected; } }
 
         public ChannelMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 

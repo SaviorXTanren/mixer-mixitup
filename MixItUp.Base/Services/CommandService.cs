@@ -1,9 +1,9 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +26,65 @@ namespace MixItUp.Base.Services
         private static readonly HashSet<ActionTypeEnum> VisualAudioActionTypes = new HashSet<ActionTypeEnum>()
         {
             ActionTypeEnum.Overlay, ActionTypeEnum.OvrStream, ActionTypeEnum.PolyPop, ActionTypeEnum.Sound, ActionTypeEnum.StreamingSoftware, ActionTypeEnum.TextToSpeech,
-            ActionTypeEnum.MusicPlayer, ActionTypeEnum.TITS, ActionTypeEnum.Voicemod, ActionTypeEnum.VTubeStudio
+            ActionTypeEnum.MusicPlayer, ActionTypeEnum.TITS, ActionTypeEnum.Voicemod, ActionTypeEnum.VTubeStudio, ActionTypeEnum.VTSPog, ActionTypeEnum.LumiaStream,
+            ActionTypeEnum.MtionStudio,
         };
+
+        public static HashSet<ActionTypeEnum> GetActionTypesForActions(IEnumerable<ActionModelBase> actions, HashSet<Guid> commandIDs = null)
+        {
+            HashSet<ActionTypeEnum> actionTypes = new HashSet<ActionTypeEnum>();
+
+            foreach (ActionModelBase action in actions)
+            {
+                if (action is GroupActionModel)
+                {
+                    GroupActionModel groupAction = (GroupActionModel)action;
+                    foreach (ActionTypeEnum a in GetActionTypesForActions(groupAction.Actions, commandIDs))
+                    {
+                        actionTypes.Add(a);
+                    }
+                }
+
+                if (action.Type == ActionTypeEnum.Command)
+                {
+                    CommandActionModel commandAction = (CommandActionModel)action;
+                    CommandModelBase subCommand = ChannelSession.Settings.GetCommand(commandAction.CommandID);
+                    if (subCommand != null)
+                    {
+                        foreach (ActionTypeEnum subActionType in subCommand.GetActionTypesInCommand(commandIDs))
+                        {
+                            actionTypes.Add(subActionType);
+                        }
+                    }
+                }
+                else if (action.Type == ActionTypeEnum.Overlay)
+                {
+                    OverlayActionModel overlayAction = (OverlayActionModel)action;
+                    if (overlayAction.OverlayItemV3 != null)
+                    {
+                        if (overlayAction.OverlayItemV3.Type == OverlayItemV3Type.Video || overlayAction.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
+                        {
+                            actionTypes.Add(ActionTypeEnum.Sound);
+                        }
+                    }
+                }
+                else if (action.Type == ActionTypeEnum.TextToSpeech)
+                {
+                    actionTypes.Add(ActionTypeEnum.Sound);
+                }
+                else if (action.Type == ActionTypeEnum.Overlay || action.Type == ActionTypeEnum.PolyPop || action.Type == ActionTypeEnum.StreamingSoftware)
+                {
+                    actionTypes.Add(ActionTypeEnum.Sound);
+                    actionTypes.Add(ActionTypeEnum.Overlay);
+                }
+                actionTypes.Add(action.Type);
+            }
+
+            actionTypes.Remove(ActionTypeEnum.Command);
+            actionTypes.Remove(ActionTypeEnum.Wait);
+
+            return actionTypes;
+        }
 
         public bool IsPaused { get; private set; }
 

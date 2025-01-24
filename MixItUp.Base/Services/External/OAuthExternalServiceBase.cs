@@ -1,12 +1,9 @@
-﻿using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Services;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
+﻿using MixItUp.Base.Model.Web;
+using MixItUp.Base.Util;
+using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -16,16 +13,6 @@ namespace MixItUp.Base.Services.External
         Task<Result> Connect(OAuthTokenModel token);
 
         OAuthTokenModel GetOAuthTokenCopy();
-    }
-
-    public static class AdvancedHttpClientExtensions
-    {
-        public static void SetBasicClientIDClientSecretAuthorizationHeader(this AdvancedHttpClient client, string clientID, string clientSecret)
-        {
-            string authorizationValue = string.Format("{0}:{1}", clientID, clientSecret);
-            byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
-        }
     }
 
     public abstract class OAuthExternalServiceBase : OAuthRestServiceBase, IOAuthExternalService, IDisposable
@@ -99,7 +86,6 @@ namespace MixItUp.Base.Services.External
                 return new OAuthTokenModel()
                 {
                     clientID = this.token.clientID,
-                    authorizationCode = this.token.authorizationCode,
                     refreshToken = this.token.refreshToken,
                     accessToken = this.token.accessToken,
                     expiresIn = this.token.expiresIn
@@ -114,15 +100,8 @@ namespace MixItUp.Base.Services.External
 
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress, int secondsToWait = 45)
         {
-            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
-            oauthServer.Start(listeningAddress);
-
-            ServiceManager.Get<IProcessService>().LaunchLink(oauthPageURL);
-
-            string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait);
-            oauthServer.Stop();
-
-            return authorizationCode;
+            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
+            return await oauthServer.GetAuthorizationCode(listeningAddress);
         }
 
         protected override string GetBaseAddress() { return this.baseAddress; }
@@ -149,7 +128,7 @@ namespace MixItUp.Base.Services.External
                 {
                     if (!string.IsNullOrEmpty(clientID) && !string.IsNullOrEmpty(clientSecret))
                     {
-                        client.SetBasicClientIDClientSecretAuthorizationHeader(clientID, clientSecret);
+                        client.SetEncodedBasicAuthorization(clientID, clientSecret);
                     }
 
                     using (var content = new FormUrlEncodedContent(bodyContent))

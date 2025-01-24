@@ -1,5 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
@@ -8,7 +7,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -173,7 +171,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public string AlejoPronoun { get { return ServiceManager.Get<AlejoPronounsService>().GetPronoun(this.Model.AlejoPronounID); } }
+        public string AlejoPronoun { get { return ServiceManager.Get<AlejoPronounsService>().GetPronoun(this.Model.AlejoPronounID, this.Model.AlejoAltPronounID); } }
 
         public bool IsFollower { get { return this.HasRole(UserRoleEnum.Follower) || this.HasRole(UserRoleEnum.YouTubeSubscriber); } }
         public bool IsRegular { get { return this.HasRole(UserRoleEnum.Regular); } }
@@ -192,7 +190,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public string PlatformImageURL { get { return StreamingPlatforms.GetPlatformImage(this.Platform); } }
 
-        public bool ShowPlatformImage { get { return ServiceManager.GetAll<IStreamingPlatformSessionService>().Count(s => s.IsConnected) > 1; } }
+        public bool ShowPlatformImage { get { return StreamingPlatforms.GetConnectedPlatformSessions().Count() > 1; } }
 
         public string PlatformBadgeLink
         {
@@ -432,6 +430,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public DateTimeOffset LastActivity { get { return this.Model.LastActivity; } }
+        public string LastActivityDateString { get { return this.LastActivity.ToFriendlyDateString(); } }
+        public string LastActivityAgeString { get { return this.LastActivity.GetAge(); } }
+        public int LastActivityDays { get { return this.LastActivity.TotalDaysFromNow(); } }
 
         public DateTimeOffset LastUpdated { get; private set; }
 
@@ -585,7 +586,12 @@ namespace MixItUp.Base.ViewModel.User
 
                             if (ChannelSession.Settings.ShowAlejoPronouns && this.Platform == StreamingPlatformTypeEnum.Twitch)
                             {
-                                this.Model.AlejoPronounID = await ServiceManager.Get<AlejoPronounsService>().GetPronounID(this.Username);
+                                AlejoUserPronoun pronouns = await ServiceManager.Get<AlejoPronounsService>().GetPronounData(this.Username);
+                                if (pronouns != null)
+                                {
+                                    this.Model.AlejoPronounID = pronouns.pronoun_id;
+                                    this.Model.AlejoAltPronounID = pronouns.alt_pronoun_id;
+                                }
                             }
 
                             this.RefreshPatreonProperties();

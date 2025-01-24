@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mock
 {
+    [Obsolete]
     public class MockChatEventService : StreamingPlatformServiceBase
     {
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);

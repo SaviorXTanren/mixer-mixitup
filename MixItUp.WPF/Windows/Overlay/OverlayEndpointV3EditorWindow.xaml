@@ -39,6 +39,18 @@
 
                 <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">
                     <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                        <TabItem Header="{x:Static resx:Resources.Head}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Style="{StaticResource DefaultBorder}">
+                                    <TextBox Text="{Binding Head}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="250" />
+                                </Border>
+                            </Grid>
+                        </TabItem>
+
                         <TabItem Header="{x:Static resx:Resources.HTML}">
                             <Grid>
                                 <Grid.ColumnDefinitions>

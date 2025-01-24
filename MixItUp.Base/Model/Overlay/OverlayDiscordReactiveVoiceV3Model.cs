@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;

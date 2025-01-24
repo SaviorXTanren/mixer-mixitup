@@ -1,13 +1,11 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
+using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,11 +75,20 @@ namespace MixItUp.Base.Services
         [DataMember]
         public string URL { get; set; }
         [DataMember]
+        public string HTML { get; set; }
+        [DataMember]
         public int Layer { get; set; }
 
         public OverlayItemDataV3Model(string id)
         {
             this.ID = id;
+            this.URL = $"/{OverlayV3HttpListenerServer.OverlayDataPrefix}/{this.ID}";
+        }
+
+        public OverlayItemDataV3Model(string id, string html)
+        {
+            this.ID = id;
+            this.HTML = html;
             this.URL = $"/{OverlayV3HttpListenerServer.OverlayDataPrefix}/{this.ID}";
         }
     }
@@ -277,6 +284,11 @@ namespace MixItUp.Base.Services
 
         public void ConnectOverlayEndpointService(OverlayEndpointV3Model overlayEndpoint)
         {
+            if (string.IsNullOrEmpty(overlayEndpoint.Head))
+            {
+                overlayEndpoint.Head = OverlayResources.OverlayEndpointDefaultHead;
+            }
+
             if (string.IsNullOrEmpty(overlayEndpoint.HTML))
             {
                 overlayEndpoint.HTML = OverlayResources.OverlayEndpointDefaultHTML;
@@ -401,8 +413,6 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
-                    html = this.LocalFilePropertyReplacement(html);
-
                     Logger.Log(LogLevel.Debug, $"Overlay - Setting HTML - {id} - {html}");
                     this.httpListenerServer.SetHTMLData(id, html);
                 }
@@ -520,8 +530,9 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
+                    html = ServiceManager.Get<OverlayV3Service>().LocalFilePropertyReplacement(html);
                     ServiceManager.Get<OverlayV3Service>().SetHTMLData(id, html);
-                    await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)
+                    await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id, html)
                     {
                         Layer = layer
                     }));
@@ -633,6 +644,11 @@ namespace MixItUp.Base.Services
         public void RefreshItemIFrameHTMLCache()
         {
             this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML;
+
+            this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, "AnimateCSS", OverlayResources.animateCSS);
+            this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, "WoahCSS", OverlayResources.WoahCSS);
+
+            this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.Head), this.Model.Head);
             this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.HTML), this.Model.HTML);
             this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.CSS), this.Model.CSS);
             this.itemIFrameHTML = OverlayV3Service.ReplaceProperty(this.itemIFrameHTML, nameof(this.Model.Javascript), this.Model.Javascript);

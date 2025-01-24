@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.API;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;

@@ -1,6 +1,8 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
@@ -133,7 +135,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual void OnDonation(object sender, UserDonationModel donation) { }
 
-        public virtual void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered) { }
+        public virtual void OnTwitchBits(object sender, TwitchBitsCheeredEventModel bitsCheered) { }
 
         public virtual void OnYouTubeSuperChat(object sender, YouTubeSuperChatViewModel superChat) { }
 
@@ -150,6 +152,7 @@ namespace MixItUp.Base.Model.Overlay
         private void RemoveEventHandlers()
         {
             ChatService.OnChatUserBanned -= OnChatUserBanned;
+            ChatService.OnChatUserTimedOut -= OnChatUserTimedOut;
             ChatService.OnChatMessageReceived -= OnChatMessageReceived;
             ChatService.OnChatMessageDeleted -= OnChatMessageDeleted;
             ChatService.OnChatCleared -= OnChatCleared;

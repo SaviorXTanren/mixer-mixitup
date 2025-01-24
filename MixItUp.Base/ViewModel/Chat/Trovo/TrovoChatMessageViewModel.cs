@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using Trovo.Base.Models.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Trovo
 {
@@ -43,17 +43,17 @@ namespace MixItUp.Base.ViewModel.Chat.Trovo
                 if (part.StartsWith(":"))
                 {
                     string emote = part.Substring(1);
-                    if (ServiceManager.Get<TrovoChatEventService>().ChannelEmotes.ContainsKey(emote))
+                    if (ServiceManager.Get<TrovoSession>().ChannelEmotes.ContainsKey(emote))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().ChannelEmotes[emote];
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoSession>().ChannelEmotes[emote];
                     }
-                    else if (ServiceManager.Get<TrovoChatEventService>().EventEmotes.ContainsKey(emote))
+                    else if (ServiceManager.Get<TrovoSession>().EventEmotes.ContainsKey(emote))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().EventEmotes[emote];
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoSession>().EventEmotes[emote];
                     }
-                    else if (ServiceManager.Get<TrovoChatEventService>().GlobalEmotes.ContainsKey(emote))
+                    else if (ServiceManager.Get<TrovoSession>().GlobalEmotes.ContainsKey(emote))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().GlobalEmotes[emote];
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoSession>().GlobalEmotes[emote];
                     }
                 }
             }

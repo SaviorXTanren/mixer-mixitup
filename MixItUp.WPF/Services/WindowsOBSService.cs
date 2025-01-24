@@ -3,12 +3,11 @@ using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using MixItUp.Base.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -965,7 +964,7 @@ namespace MixItUp.WPF.Services
         private async Task HandleHello(OBSMessageHello message)
         {
             OBSMessageIdentify identify = new OBSMessageIdentify();
-            if (message.Data.Authentication != null)
+            if (message != null && message.Data != null && message.Data.Authentication != null)
             {
                 // To generate the authentication string, follow these steps:
                 // Concatenate the websocket password with the salt provided by the server(password + salt)

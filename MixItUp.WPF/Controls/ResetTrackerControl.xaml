@@ -23,11 +23,13 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="40" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="40" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="Auto" />
@@ -42,10 +44,24 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Start}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-        <Controls:IconButton x:Name="DateButton" Grid.Column="6" Click="DateButton_Click" HorizontalAlignment="Center" Icon="Calendar" ToolTip="{x:Static resx:Resources.Date}" />
+        <Grid Grid.Column="4" Visibility="{Binding ShowDayOfTheWeekSelector, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ComboBox Grid.Column="2" Width="120" ItemsSource="{Binding DaysOfTheWeek}" SelectedItem="{Binding SelectedDayOfTheWeek}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DayOfTheWeek}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
 
-        <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Reset}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-        <TextBlock Grid.Column="10" VerticalAlignment="Center" Text="{Binding ResetDisplayText}"/>
+        <Grid Grid.Column="4" Visibility="{Binding ShowDayOfTheMonthSelector, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBox Grid.Column="0" Width="110" Text="{Binding DayOfTheMonth}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DayOfTheMonth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="0,10,0,0" Text="{Binding Source={x:Static resx:Resources.Reset}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+        <TextBlock Grid.Column="8" VerticalAlignment="Center" Margin="0,10,0,0" Text="{Binding ResetDisplayText}"/>
+
+        <TextBlock Grid.Column="10" VerticalAlignment="Center" Margin="0,10,0,0" Text="{Binding Source={x:Static resx:Resources.Next}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+        <TextBlock Grid.Column="12" VerticalAlignment="Center" Margin="0,10,0,0" Text="{Binding NextResetDisplayText}"/>
     </Grid>
 </UserControl>

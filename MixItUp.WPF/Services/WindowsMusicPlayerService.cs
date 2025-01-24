@@ -1,10 +1,10 @@
 ﻿using Id3;
 using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using NAudio.Wave;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -99,7 +99,7 @@ namespace MixItUp.WPF.Services
 
                     this.SongChanged.Invoke(this, new EventArgs());
 
-                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.MusicPlayerOnSongChangedCommandID, new CommandParametersModel());
+                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.MusicPlayerOnSongChangedCommandID, new CommandParametersModel(ChannelSession.User, platform: StreamingPlatformTypeEnum.All));
                 }
             }
         }

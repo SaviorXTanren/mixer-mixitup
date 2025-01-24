@@ -6,10 +6,8 @@ using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -125,6 +123,8 @@ namespace MixItUp.WPF.Controls.MainControls
                     OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(type);
                     window.Closed += Window_Closed;
                     window.Show();
+
+                    await Task.Delay(500);
                     window.Focus();
                 }
             });
@@ -140,7 +140,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     OverlayWidgetV3Model widget = await FileSerializerHelper.DeserializeFromFile<OverlayWidgetV3Model>(filepath);
                     if (widget != null)
                     {
-                        widget.Item.ID = Guid.NewGuid();
+                        widget.Item.ImportReset();
                         OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget);
                         window.Closed += Window_Closed;
                         window.Show();

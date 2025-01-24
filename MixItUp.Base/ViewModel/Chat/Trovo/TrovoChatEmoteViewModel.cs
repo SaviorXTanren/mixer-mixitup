@@ -1,4 +1,4 @@
-﻿using Trovo.Base.Models.Chat;
+﻿using MixItUp.Base.Model.Trovo.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Trovo
 {

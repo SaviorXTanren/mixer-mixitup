@@ -1,5 +1,4 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Services;
@@ -7,7 +6,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;

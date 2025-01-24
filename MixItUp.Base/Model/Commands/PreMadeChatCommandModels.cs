@@ -1,14 +1,12 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -169,10 +167,9 @@ namespace MixItUp.Base.Model.Commands
     {
         public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, new HashSet<string>() { "game", "category" }, 5, UserRoleEnum.User) { }
 
-        public static async Task<string> GetCurrentGameName(StreamingPlatformTypeEnum platform)
+        public static Task<string> GetCurrentGameName(StreamingPlatformTypeEnum platform)
         {
-            await StreamingPlatforms.GetPlatformSessionService(platform).RefreshChannel();
-            return await StreamingPlatforms.GetPlatformSessionService(platform).GetGame();
+            return Task.FromResult(StreamingPlatforms.GetPlatformSession(platform).StreamCategoryName);
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)
@@ -208,8 +205,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await StreamingPlatforms.GetPlatformSessionService(parameters.Platform).RefreshChannel();
-            string title = await StreamingPlatforms.GetPlatformSessionService(parameters.Platform).GetTitle();
+            string title = StreamingPlatforms.GetPlatformSession(parameters.Platform).StreamTitle;
             if (!string.IsNullOrEmpty(title))
             {
                 await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamTitleHeader + title, parameters);
@@ -223,10 +219,9 @@ namespace MixItUp.Base.Model.Commands
         {
             if (StreamingPlatforms.IsValidPlatform(platform))
             {
-                IStreamingPlatformSessionService platformService = StreamingPlatforms.GetPlatformSessionService(platform);
+                StreamingPlatformSessionBase platformService = StreamingPlatforms.GetPlatformSession(platform);
                 if (platformService.IsConnected)
                 {
-                    await platformService.RefreshChannel();
                     return platformService.StreamStart;
                 }
             }
@@ -699,10 +694,11 @@ namespace MixItUp.Base.Model.Commands
                 string name = string.Join(" ", parameters.Arguments);
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
+                    StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(p);
+                    if (session.IsConnected)
                     {
-                        await StreamingPlatforms.GetPlatformSessionService(p).SetTitle(name);
-                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
+                        await session.SetStreamTitle(name);
+                        await session.RefreshDetails();
                     }
                 });
                 await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TitleUpdatedHeader + name, parameters);
@@ -723,19 +719,19 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments).ToLower();
-                Dictionary<StreamingPlatformTypeEnum, bool> results = new Dictionary<StreamingPlatformTypeEnum, bool>();
+                Dictionary<StreamingPlatformTypeEnum, Result> results = new Dictionary<StreamingPlatformTypeEnum, Result>();
 
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    IStreamingPlatformSessionService session = StreamingPlatforms.GetPlatformSessionService(p);
+                    StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(p);
                     if (session.IsConnected)
                     {
-                        results[p] = await session.SetGame(name);
-                        await session.RefreshChannel();
+                        results[p] = await session.SetStreamCategory(name);
+                        await session.RefreshDetails();
                     }
                 });
 
-                if (results.Count > 0 && results.All(r => r.Value))
+                if (results.Count > 0 && results.All(r => r.Value.Success))
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.CategroryUpdatedHeader + name, parameters);
                 }
@@ -836,7 +832,7 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetUserTitleUsage, parameters);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandAddCommandUsage, parameters);
             }
         }
     }
@@ -961,7 +957,7 @@ namespace MixItUp.Base.Model.Commands
                 string platformName = parameters.Arguments.First();
                 StreamingPlatformTypeEnum platform = EnumHelper.GetEnumValueFromString<StreamingPlatformTypeEnum>(platformName);
                 
-                if (!StreamingPlatforms.SupportedPlatforms.Contains(platform) || platform == parameters.Platform || !StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
+                if (!StreamingPlatforms.SupportedPlatforms.Contains(platform) || platform == parameters.Platform || !StreamingPlatforms.GetPlatformSession(platform).IsConnected)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUnsupportedPlatform, platformName), parameters);
                     return;

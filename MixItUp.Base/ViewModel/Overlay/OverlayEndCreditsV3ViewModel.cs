@@ -6,7 +6,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -289,6 +288,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool runEndlessly;
 
+        public bool DontShowNoDataError
+        {
+            get { return this.dontShowNoDataError; }
+            set
+            {
+                this.dontShowNoDataError = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool dontShowNoDataError;
+
         public string BackgroundColor
         {
             get { return this.backgroundColor; }
@@ -372,6 +382,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.BackgroundColor = item.BackgroundColor;
             this.RunCreditsWhenVisible = item.RunCreditsWhenVisible;
             this.RunEndlessly = item.RunEndlessly;
+            this.DontShowNoDataError = item.DontShowNoDataError;
 
             this.StartedCommand = this.GetEmbeddedCommand(item.StartedCommandID, Resources.Started);
             this.EndedCommand = this.GetEmbeddedCommand(item.EndedCommandID, Resources.Ended);
@@ -467,6 +478,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             result.BackgroundColor = this.BackgroundColor;
             result.RunCreditsWhenVisible = this.RunCreditsWhenVisible;
             result.RunEndlessly = this.RunEndlessly;
+            result.DontShowNoDataError = this.DontShowNoDataError;
 
             foreach (OverlayEndCreditsSectionV3ViewModel section in this.Sections)
             {

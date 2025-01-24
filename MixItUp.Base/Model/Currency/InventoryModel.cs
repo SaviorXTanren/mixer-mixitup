@@ -5,7 +5,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -188,6 +187,9 @@ namespace MixItUp.Base.Model.Currency
         }
 
         [JsonIgnore]
+        public string UniqueItemsTotalSpecialIdentifier { get { return string.Format("{0}uniqueitemstotal", this.SpecialIdentifier); } }
+
+        [JsonIgnore]
         public string RandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.SpecialIdentifier); } }
 
         [JsonIgnore]
@@ -364,6 +366,8 @@ namespace MixItUp.Base.Model.Currency
 
         public void SetAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
+            Logger.Log(LogLevel.Debug, $"Setting {amount} amount of item {item.Name} of {this.Name} for {user.ID}");
+
             if (!user.InventoryAmounts.ContainsKey(this.ID))
             {
                 user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();

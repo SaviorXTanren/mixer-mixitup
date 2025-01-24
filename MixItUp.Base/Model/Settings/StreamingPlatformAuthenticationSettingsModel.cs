@@ -1,20 +1,10 @@
 ﻿using Newtonsoft.Json;
-using StreamingClient.Base.Model.OAuth;
+using MixItUp.Base.Model.Web;
 using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Settings
 {
-    public static class OAuthTokenModelExtensions
-    {
-        public static void ResetToken(this OAuthTokenModel token)
-        {
-            token.accessToken = string.Empty;
-            token.refreshToken = string.Empty;
-            token.expiresIn = 0;
-        }
-    }
-
     [DataContract]
     public class StreamingPlatformAuthenticationSettingsModel : IEquatable<StreamingPlatformAuthenticationSettingsModel>
     {
@@ -42,12 +32,14 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public bool IsEnabled { get { return this.UserOAuthToken != null; } }
 
+        [JsonIgnore]
+        public bool IsBotEnabled { get { return this.BotOAuthToken != null; } }
+
         public void ClearUserData()
         {
             this.UserID = null;
             this.UserOAuthToken = null;
             this.ChannelID = null;
-            this.ClearBotData();
         }
 
         public void ClearBotData()

@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
+using MixItUp.Base.Model.Web;
 using System;
 using System.Windows.Input;
 
@@ -41,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Services
                         Result result = await ServiceManager.Get<ITTSMonsterService>().Connect(new OAuthTokenModel()
                         {
                             clientID = splits[0],
-                            clientSecret = splits[1]
+                            //clientSecret = splits[1]
                         });
 
                         if (result.Success)

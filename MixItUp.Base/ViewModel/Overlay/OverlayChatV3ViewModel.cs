@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -11,6 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
+using MixItUp.Base.Services.YouTube.New;
+using MixItUp.Base.Services.Trovo.New;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -283,17 +291,35 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 if (platform == StreamingPlatformTypeEnum.Twitch)
                 {
-                    TwitchChatMessageViewModel message = new TwitchChatMessageViewModel(ChannelSession.User, "Hello World! This is a test message so you can see how chat looks Kappa");
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: ServiceManager.Get<TwitchSession>().StreamerID);
+                    if (user == null)
+                    {
+                        user = ChannelSession.User;
+                    }
+
+                    TwitchChatMessageViewModel message = new TwitchChatMessageViewModel(user, "Hello World! This is a test message from Twitch so you can see how chat looks Kappa");
                     await chat.AddMessage(message);
                 }
                 else if (platform == StreamingPlatformTypeEnum.YouTube)
                 {
-                    YouTubeChatMessageViewModel message = new YouTubeChatMessageViewModel(ChannelSession.User, "Hello World! This is a test message so you can see how chat looks :grinning_face:");
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: ServiceManager.Get<YouTubeSession>().StreamerID);
+                    if (user == null)
+                    {
+                        user = ChannelSession.User;
+                    }
+
+                    YouTubeChatMessageViewModel message = new YouTubeChatMessageViewModel(user, "Hello World! This is a test message from YouTube so you can see how chat looks :grinning_face:");
                     await chat.AddMessage(message);
                 }
                 else if (platform == StreamingPlatformTypeEnum.Trovo)
                 {
-                    TrovoChatMessageViewModel message = new TrovoChatMessageViewModel(ChannelSession.User, "Hello World! This is a test message so you can see how chat looks :smile");
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: ServiceManager.Get<TrovoSession>().StreamerID);
+                    if (user == null)
+                    {
+                        user = ChannelSession.User;
+                    }
+
+                    TrovoChatMessageViewModel message = new TrovoChatMessageViewModel(user, "Hello World! This is a test message from Trovo so you can see how chat looks :smile");
                     await chat.AddMessage(message);
                 }
                 else

@@ -1,13 +1,13 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Twitch.ChannelPoints;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.CreateChannelPointRewardCommand = this.CreateCommand(async () =>
             {
-                if (!ServiceManager.Get<TwitchSessionService>().IsConnected)
+                if (!ServiceManager.Get<TwitchSession>().IsConnected)
                 {
                     await DialogHelper.ShowMessage(MixItUp.Base.Resources.TwitchAccountMustBeConnectedToUseThisFeature);
                     return;
@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
                 if (!string.IsNullOrEmpty(name))
                 {
-                    Result<CustomChannelPointRewardModel> reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User, new UpdatableCustomChannelPointRewardModel()
+                    Result<CustomChannelPointRewardModel> reward = await ServiceManager.Get<TwitchSession>().StreamerService.CreateCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().StreamerModel, new UpdatableCustomChannelPointRewardModel()
                     {
                         title = name,
                         cost = 1,
@@ -77,9 +77,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ChannelPointsEditorCommand = this.CreateCommand(() =>
             {
-                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                if (ServiceManager.Get<TwitchSession>().IsConnected)
                 {
-                    ServiceManager.Get<IProcessService>().LaunchLink($"https://dashboard.twitch.tv/u/{ServiceManager.Get<TwitchSessionService>().Username}/viewer-rewards/channel-points");
+                    ServiceManager.Get<IProcessService>().LaunchLink($"https://dashboard.twitch.tv/u/{ServiceManager.Get<TwitchSession>().StreamerUsername}/viewer-rewards/channel-points");
                 }
             });
         }

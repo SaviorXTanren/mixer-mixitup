@@ -1,27 +1,25 @@
-﻿using Microsoft.AspNetCore.SignalR.Protocol;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Trovo.Chat;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services.Trovo.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Trovo.Base.Clients;
-using Trovo.Base.Models.Chat;
-using Trovo.Base.Models.Users;
 
 namespace MixItUp.Base.Services.Trovo
 {
+    [Obsolete]
     public class TrovoSubscriptionMessageModel
     {
         private const string SubscriptionRenewedMessageText = "has renewed subscription";
@@ -76,6 +74,7 @@ namespace MixItUp.Base.Services.Trovo
         }
     }
 
+    [Obsolete]
     public class TrovoChatEventService : StreamingPlatformServiceBase
     {
         private const string TreasureBoxUnleashedActivityTopic = "item_drop_box_unleash";

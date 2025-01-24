@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -87,7 +86,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+            if (ServiceManager.Get<TrovoSession>().IsConnected)
             {
                 string username = null;
                 if (!string.IsNullOrEmpty(this.Username))
@@ -104,51 +103,51 @@ namespace MixItUp.Base.Model.Actions
 
                 if (this.ActionType == TrovoActionType.Host)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().HostUser(username);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.HostUser(ServiceManager.Get<TrovoSession>().ChannelID, username);
                 }
                 else if (this.ActionType == TrovoActionType.EnableSlowMode)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().SlowMode(this.Amount);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.SlowMode(ServiceManager.Get<TrovoSession>().ChannelID, this.Amount);
                 }
                 else if (this.ActionType == TrovoActionType.DisableSlowMode)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().SlowMode(0);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.SlowMode(ServiceManager.Get<TrovoSession>().ChannelID, 0);
                 }
                 else if (this.ActionType == TrovoActionType.EnableFollowerMode)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().FollowersMode(enable: true);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.FollowersMode(ServiceManager.Get<TrovoSession>().ChannelID, enable: true);
                 }
                 else if (this.ActionType == TrovoActionType.DisableFollowerMode)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().FollowersMode(enable: false);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.FollowersMode(ServiceManager.Get<TrovoSession>().ChannelID, enable: false);
                 }
                 else if (this.ActionType == TrovoActionType.AddUserRole)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().AddRole(username, roleName);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.AddRole(ServiceManager.Get<TrovoSession>().ChannelID, username, roleName);
                 }
                 else if (this.ActionType == TrovoActionType.RemoveUserRole)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().RemoveRole(username, roleName);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.RemoveRole(ServiceManager.Get<TrovoSession>().ChannelID, username, roleName);
                 }
                 else if (this.ActionType == TrovoActionType.FastClip90Seconds)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().FastClip();
+                    await ServiceManager.Get<TrovoSession>().StreamerService.FastClip(ServiceManager.Get<TrovoSession>().ChannelID);
                 }
                 else if (this.ActionType == TrovoActionType.SetTitle)
                 {
-                    await ServiceManager.Get<TrovoSessionService>().SetTitle(text);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.UpdateChannel(ServiceManager.Get<TrovoSession>().ChannelID, title: text);
                 }
                 else if (this.ActionType == TrovoActionType.SetGame)
                 {
-                    await ServiceManager.Get<TrovoSessionService>().SetGame(text);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.SetGame(ServiceManager.Get<TrovoSession>().ChannelID, text);
                 }
                 else if (this.ActionType == TrovoActionType.EnableSubscriberMode)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().SubscriberMode(enable: true);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.SubscriberMode(ServiceManager.Get<TrovoSession>().ChannelID, enable: true);
                 }
                 else if (this.ActionType == TrovoActionType.DisableSubscriberMode)
                 {
-                    await ServiceManager.Get<TrovoChatEventService>().SubscriberMode(enable: false);
+                    await ServiceManager.Get<TrovoSession>().StreamerService.SubscriberMode(ServiceManager.Get<TrovoSession>().ChannelID, enable: false);
                 }
             }
         }

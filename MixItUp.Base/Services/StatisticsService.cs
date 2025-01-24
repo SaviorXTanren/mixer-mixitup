@@ -118,12 +118,13 @@ namespace MixItUp.Base.Services
 
         public StatisticsService() { }
 
-        public async Task Initialize()
+        public Task Initialize()
         {
             if (ChannelSession.IsDebug())
             {
-                await (new MockSessionService()).AddMockViewerStatistics();
+                //await (new MockSessionService()).AddMockViewerStatistics();
             }
+            return Task.CompletedTask;
         }
 
         public void LogEventStatistic(EventTypeEnum eventType, CommandParametersModel parameters)

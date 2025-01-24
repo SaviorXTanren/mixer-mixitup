@@ -6,6 +6,7 @@
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <GroupBox Grid.Row="2" Header="{Binding PlatformName}">
@@ -23,20 +24,22 @@
 
             <Image Source="{Binding PlatformImage, TargetNullValue={x:Null}}" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="75" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30,0,0,0" />
 
+            
+            
             <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Streamer}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
-            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsUserAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{Binding UserAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" />
-                <TextBlock Grid.Column="2" Text="{Binding UserAccountUsername}" VerticalAlignment="Center" />
+                <Image Grid.Column="0" Source="{Binding StreamerAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" Visibility="{Binding IsStreamerAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <TextBlock Grid.Column="2" Text="{Binding StreamerAccountUsername}" VerticalAlignment="Center" />
             </Grid>
 
-            <Button Grid.Column="1" Grid.Row="2" Command="{Binding UserAccountCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding LoginWithButtonColor}">
+            <Button Grid.Column="1" Grid.Row="2" Visibility="{Binding IsStreamerAccountLogInVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding StreamerAccountLogInCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding ButtonColor}">
                 <Grid HorizontalAlignment="Center" Margin="-5,0,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -44,26 +47,46 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="{Binding LoginWithButtonImage, TargetNullValue={x:Null}}" Margin="0,3" Height="23" />
+                    <Image Grid.Column="0" Source="{Binding ButtonImage, TargetNullValue={x:Null}}" Margin="0,3" Height="23" />
 
-                    <TextBlock Grid.Column="2" Text="{Binding UserAccountButtonContent}" Foreground="{Binding LoginWithButtonTextForeground}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding ButtonLoginText}" Foreground="{Binding ButtonTextForeground}" VerticalAlignment="Center" />
+                </Grid>
+            </Button>
+            <Button Grid.Column="1" Grid.Row="2" Visibility="{Binding IsStreamerAccountCancelVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding StreamerAccountCancelCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding ButtonColor}" MaterialDesign:ButtonProgressAssist.IsIndeterminate="True" MaterialDesign:ButtonProgressAssist.IsIndicatorVisible="True" MaterialDesign:ButtonProgressAssist.Value="-1">
+                <Grid HorizontalAlignment="Center">
+                    <TextBlock Grid.Column="2" Text="{x:Static resx:Resources.Cancel}" Foreground="{Binding ButtonTextForeground}" VerticalAlignment="Center" />
+                </Grid>
+            </Button>
+            <Button Grid.Column="1" Grid.Row="2" Visibility="{Binding IsStreamerAccountLogoutVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding StreamerAccountLogOutCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding ButtonColor}">
+                <Grid HorizontalAlignment="Center" Margin="-5,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Source="{Binding ButtonImage, TargetNullValue={x:Null}}" Margin="0,3" Height="23" />
+
+                    <TextBlock Grid.Column="2" Text="{Binding ButtonLogoutText}" Foreground="{Binding ButtonTextForeground}" VerticalAlignment="Center" />
                 </Grid>
             </Button>
 
-            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.BotAccount}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
-            <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsBotAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Bot}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+
+            <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{Binding BotAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" />
+                <Image Grid.Column="0" Source="{Binding BotAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" Visibility="{Binding IsStreamerAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <TextBlock Grid.Column="2" Text="{Binding BotAccountUsername}" VerticalAlignment="Center" />
             </Grid>
 
-            <Button Grid.Column="2" Grid.Row="2" Command="{Binding BotAccountCommand}" IsEnabled="{Binding IsUserAccountConnected}" MinWidth="90" Width="210" Height="40" Background="{Binding LoginWithButtonColor}">
+            <Button Grid.Column="2" Grid.Row="2" Visibility="{Binding IsBotAccountLoginVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding BotAccountLogInCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding ButtonColor}">
                 <Grid HorizontalAlignment="Center" Margin="-5,0,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -71,9 +94,27 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="{Binding LoginWithButtonImage, TargetNullValue={x:Null}}" Margin="0,3" Height="23" />
+                    <Image Grid.Column="0" Source="{Binding ButtonImage, TargetNullValue={x:Null}}" Margin="0,3" Height="23" />
 
-                    <TextBlock Grid.Column="2" Text="{Binding BotAccountButtonContent}" Foreground="{Binding LoginWithButtonTextForeground}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding ButtonLoginText}" Foreground="{Binding ButtonTextForeground}" VerticalAlignment="Center" />
+                </Grid>
+            </Button>
+            <Button Grid.Column="2" Grid.Row="2" Visibility="{Binding IsBotAccountCancelVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding BotAccountCancelCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding ButtonColor}" MaterialDesign:ButtonProgressAssist.IsIndeterminate="True" MaterialDesign:ButtonProgressAssist.IsIndicatorVisible="True" MaterialDesign:ButtonProgressAssist.Value="-1">
+                <Grid HorizontalAlignment="Center">
+                    <TextBlock Grid.Column="2" Text="{x:Static resx:Resources.Cancel}" Foreground="{Binding ButtonTextForeground}" VerticalAlignment="Center" />
+                </Grid>
+            </Button>
+            <Button Grid.Column="2" Grid.Row="2" Visibility="{Binding IsBotAccountLogoutVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding BotAccountLogOutCommand}" MinWidth="90" Width="210" Height="40" Background="{Binding ButtonColor}">
+                <Grid HorizontalAlignment="Center" Margin="-5,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Source="{Binding ButtonImage, TargetNullValue={x:Null}}" Margin="0,3" Height="23" />
+
+                    <TextBlock Grid.Column="2" Text="{Binding ButtonLogoutText}" Foreground="{Binding ButtonTextForeground}" VerticalAlignment="Center" />
                 </Grid>
             </Button>
         </Grid>

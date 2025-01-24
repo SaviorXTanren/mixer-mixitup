@@ -1,14 +1,15 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Twitch.Clients.Chat;
+using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
+using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.Clients.PubSub.Messages;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
@@ -36,6 +37,10 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
         public string PlainTextMessageNoCheermotes { get; set; }
 
+        public string UserBadges { get; set; }
+        public string UserBadgeInfo { get; set; }
+
+        [Obsolete]
         public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserV2ViewModel user)
             : base(message.ID, StreamingPlatformTypeEnum.Twitch, user)
         {
@@ -57,6 +62,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     }
                 }
             }
+
+            this.UserBadges = message.UserBadges;
+            this.UserBadgeInfo = message.UserBadgeInfo;
 
             this.HasBits = (int.TryParse(message.Bits, out int bits) && bits > 0);
             this.IsHighlightedMessage = message.RawPacket.Tags.ContainsKey(TagMessageID) && message.RawPacket.Tags[TagMessageID].Equals(MessageIDHighlightedMessage);
@@ -99,16 +107,65 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents((!string.IsNullOrEmpty(bitsCheer.chat_message)) ? bitsCheer.chat_message : string.Empty);
         }
 
+        public TwitchChatMessageViewModel(CheerNotification cheer, UserV2ViewModel user)
+            : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
+        {
+            this.HasBits = true;
+
+            this.ProcessMessageContents((!string.IsNullOrEmpty(cheer.message)) ? cheer.message : string.Empty);
+        }
+
         public TwitchChatMessageViewModel(ChatClearMessagePacketModel messageDeletion, UserV2ViewModel user)
             : base(messageDeletion.ID, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.ProcessMessageContents(messageDeletion.Message);
         }
 
-        public TwitchChatMessageViewModel(UserV2ViewModel user, string message, string replyMessageID = null)
+        public TwitchChatMessageViewModel(ChatMessageDeletedNotification messageDeleted, UserV2ViewModel user)
+            : base(messageDeleted.message_id, StreamingPlatformTypeEnum.Twitch, user)
+        {
+
+        }
+
+        public TwitchChatMessageViewModel(ChatMessageNotification notification, UserV2ViewModel user)
+            : base(notification.message_id, StreamingPlatformTypeEnum.Twitch, user)
+        {
+            this.HasBits = notification.cheer?.bits > 0;
+            this.IsHighlightedMessage =
+                notification.MessageType == ChatNotificationMessageType.power_ups_message_effect ||
+                notification.MessageType == ChatNotificationMessageType.channel_points_highlighted ||
+                notification.MessageType == ChatNotificationMessageType.user_intro;
+
+            this.ReplyThreadID = notification.reply?.parent_message_id;
+
+            this.ProcessMessageContents(notification.message);
+        }
+
+        public TwitchChatMessageViewModel(ChatNotification notification, UserV2ViewModel user)
+            : base(notification.message_id, StreamingPlatformTypeEnum.Twitch, user)
+        {
+            this.IsHighlightedMessage =
+                notification.NoticeType == ChatNotificationType.announcement ||
+                notification.NoticeType == ChatNotificationType.shared_chat_announcement;
+
+            this.ProcessMessageContents(notification.message);
+        }
+
+        public TwitchChatMessageViewModel(ModerationNotificationDelete notification, UserV2ViewModel user)
+            : base(notification.message_id, StreamingPlatformTypeEnum.Twitch, user)
+        {
+        }
+
+        public TwitchChatMessageViewModel(UserV2ViewModel user, string message, string replyMessageID = null, UserV2ViewModel recipient = null)
             : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.ReplyThreadID = replyMessageID;
+
+            if (recipient != null)
+            {
+                this.WhisperRecipient = recipient;
+                this.TargetUsername = recipient.Username;
+            }
 
             this.ProcessMessageContents(message);
         }
@@ -119,6 +176,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
             if (!string.IsNullOrEmpty(message))
             {
+                message = message.Trim();
                 string[] parts = message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string part in parts)
                 {
@@ -137,9 +195,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                         }
                     }
 
-                    if (ServiceManager.Get<TwitchChatService>().Emotes.ContainsKey(part))
+                    if (ServiceManager.Get<TwitchSession>().Emotes.ContainsKey(part))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().Emotes[part];
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchSession>().Emotes[part];
                     }
                     else if (messageEmotesCache.ContainsKey(part))
                     {
@@ -153,6 +211,62 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     {
                         this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes[part];
                     }
+                }
+            }
+
+            if (this.HasBits)
+            {
+                this.PlainTextMessageNoCheermotes = string.Join(" ", messageNoCheermotes);
+            }
+            else
+            {
+                this.PlainTextMessageNoCheermotes = this.PlainTextMessage;
+            }
+        }
+
+        private void ProcessMessageContents(ChatMessageNotificationMessage message)
+        {
+            List<string> messageNoCheermotes = new List<string>();
+
+            foreach (ChatMessageNotificationFragment fragment in message.fragments)
+            {
+                this.AddStringMessagePart(fragment.text);
+                if (fragment.Type == ChatNotificationMessageFragmentType.text)
+                {
+                    if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.ContainsKey(fragment.text))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<BetterTTVService>().BetterTTVEmotes[fragment.text];
+                    }
+                    else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes.ContainsKey(fragment.text))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes[fragment.text];
+                    }
+                }
+                else if (fragment.Type == ChatNotificationMessageFragmentType.emote)
+                {
+                    if (ServiceManager.Get<TwitchSession>().Emotes.ContainsKey(fragment.text))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchSession>().Emotes[fragment.text];
+                    }
+                    else
+                    {
+                        ServiceManager.Get<TwitchSession>().Emotes[fragment.text] = new TwitchChatEmoteViewModel(fragment.text, fragment.emote);
+                    }
+                }
+                else if (fragment.Type == ChatNotificationMessageFragmentType.cheermote)
+                {
+                    if (ServiceManager.Get<TwitchSession>().BitsCheermotes.TryGetValue(fragment.cheermote.prefix, out TwitchBitsCheermoteViewModel cheermote))
+                    {
+                        if (cheermote.Tiers.TryGetValue(fragment.cheermote.tier.ToString(), out TwitchBitsCheermoteTierViewModel tier))
+                        {
+                            TwitchBitsCheerViewModel bitCheermote = new TwitchBitsCheerViewModel(fragment.text, fragment.cheermote.bits, tier);
+                            this.MessageParts[this.MessageParts.Count - 1] = bitCheermote;
+                        }
+                    }
+                }
+                else if (fragment.Type == ChatNotificationMessageFragmentType.mention)
+                {
+
                 }
             }
 

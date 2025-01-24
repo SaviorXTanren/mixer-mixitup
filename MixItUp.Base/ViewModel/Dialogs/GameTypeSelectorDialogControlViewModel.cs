@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Dialogs

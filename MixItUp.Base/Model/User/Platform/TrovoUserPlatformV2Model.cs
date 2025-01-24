@@ -1,12 +1,12 @@
-﻿using MixItUp.Base.Services;
-using MixItUp.Base.Services.Trovo;
+﻿using MixItUp.Base.Model.Trovo.Channels;
+using MixItUp.Base.Model.Trovo.Chat;
+using MixItUp.Base.Model.Trovo.Users;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Trovo.New;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Trovo.Base.Models.Channels;
-using Trovo.Base.Models.Chat;
-using Trovo.Base.Models.Users;
 
 namespace MixItUp.Base.Model.User.Platform
 {
@@ -52,9 +52,9 @@ namespace MixItUp.Base.Model.User.Platform
 
         public override async Task Refresh()
         {
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+            if (ServiceManager.Get<TrovoSession>().IsConnected)
             {
-                UserModel user = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(this.Username);
+                UserModel user = await ServiceManager.Get<TrovoSession>().StreamerService.GetUserByName(this.Username);
                 if (user != null)
                 {
                     this.SetUserProperties(user);
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Model.User.Platform
                     if (rolesSet.Remove(ChatMessageModel.SubscriberRole))
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
-                        if (ServiceManager.Get<TrovoSessionService>().Subscribers.TryGetValue(this.ID, out ChannelSubscriberModel subscriber))
+                        if (ServiceManager.Get<TrovoSession>().Subscribers.TryGetValue(this.ID, out ChannelSubscriberModel subscriber))
                         {
                             if (int.TryParse(subscriber.sub_tier, out int subTier) && subTier > this.SubscriberTier)
                             {
@@ -99,7 +99,7 @@ namespace MixItUp.Base.Model.User.Platform
                             }
                             if (subscriber.sub_created_at != null)
                             {
-                                this.SubscribeDate = TrovoPlatformService.GetTrovoDateTime(subscriber.sub_created_at.GetValueOrDefault().ToString());
+                                this.SubscribeDate = TrovoService.GetTrovoDateTime(subscriber.sub_created_at.GetValueOrDefault().ToString());
                             }
                         }
                     }

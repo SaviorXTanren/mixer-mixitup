@@ -4,7 +4,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,6 +18,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleNumberSettingsOptionControlViewModel MassGiftedSubsFilterAmount { get; set; }
         public GenericToggleSettingsOptionControlViewModel UserEntranceCommandsOnlyWhenLive { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<CommandServiceLockTypeEnum> CommandLockSystem { get; set; }
+        public GenericToggleSettingsOptionControlViewModel AlwaysUseCommandLocksWhenTestingCommands { get; set; }
 
         public GenericComboBoxSettingsOptionControlViewModel<RequirementErrorCooldownTypeEnum> RequirementErrorsCooldownType { get; set; }
         public GenericNumberSettingsOptionControlViewModel RequirementErrorsCooldownAmount { get; set; }
@@ -47,6 +47,8 @@ namespace MixItUp.Base.ViewModel.Settings
                 ChannelSession.Settings.UserEntranceCommandsOnlyWhenLive, (value) => { ChannelSession.Settings.UserEntranceCommandsOnlyWhenLive = value; });
             this.CommandLockSystem = new GenericComboBoxSettingsOptionControlViewModel<CommandServiceLockTypeEnum>(MixItUp.Base.Resources.CommandLockSystem, EnumHelper.GetEnumList<CommandServiceLockTypeEnum>(),
                 ChannelSession.Settings.CommandServiceLockType, (value) => { ChannelSession.Settings.CommandServiceLockType = value; }, MixItUp.Base.Resources.CommandLockSystemTooltip);
+            this.AlwaysUseCommandLocksWhenTestingCommands = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.AlwaysUseCommandLocksWhenTestingCommands,
+                ChannelSession.Settings.AlwaysUseCommandLocksWhenTestingCommands, (value) => { ChannelSession.Settings.AlwaysUseCommandLocksWhenTestingCommands = value; });
 
             this.RequirementErrorsCooldownType = new GenericComboBoxSettingsOptionControlViewModel<RequirementErrorCooldownTypeEnum>(MixItUp.Base.Resources.RequirementErrorsCooldownType, EnumHelper.GetEnumList<RequirementErrorCooldownTypeEnum>(),
                 ChannelSession.Settings.RequirementErrorsCooldownType, (value) => { ChannelSession.Settings.RequirementErrorsCooldownType = value; }, MixItUp.Base.Resources.RequirementErrorsCooldownTypeTooltip);

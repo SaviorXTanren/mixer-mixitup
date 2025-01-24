@@ -6,9 +6,10 @@
         public virtual string Name { get; protected set; }
         public virtual string ImageURL { get; protected set; }
         public virtual string AnimatedImageURL { get; protected set; }
+        public virtual string OverlayAnimatedImageURL { get { return this.AnimatedImageURL; } protected set { } }
 
         public virtual bool IsAnimated { get; protected set; }
 
-        public string AnimatedOrStaticImageURL { get { return (this.IsAnimated && !string.IsNullOrEmpty(this.AnimatedImageURL)) ? this.AnimatedImageURL : this.ImageURL; } }
+        public string OverlayAnimatedOrStaticImageURL { get { return (this.IsAnimated && !string.IsNullOrEmpty(this.OverlayAnimatedImageURL)) ? this.OverlayAnimatedImageURL : this.ImageURL; } }
     }
 }

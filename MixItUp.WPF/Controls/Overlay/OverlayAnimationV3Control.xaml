@@ -46,6 +46,14 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
+            <ComboBox Grid.Column="4" ItemsSource="{Binding WoahCSSAnimations}" SelectedItem="{Binding SelectedWoahCSSAnimation}" Visibility="{Binding IsWoahCSSVisible, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Animation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
             <Controls:IconButton Grid.Column="6" Icon="Delete" Visibility="{Binding IsCustomizable, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding DeleteCommand}" />
         </Grid>
     </Border>

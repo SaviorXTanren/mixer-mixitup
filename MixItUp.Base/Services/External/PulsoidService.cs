@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -130,8 +129,6 @@ namespace MixItUp.Base.Services.External
                     this.token = await this.GetWWWFormUrlEncodedOAuthToken(PulsoidService.TokenUrl, body);
                     if (this.token != null)
                     {
-                        token.authorizationCode = authorizationCode;
-
                         if (!await this.ConnectWebSocket())
                         {
                             await this.Disconnect();

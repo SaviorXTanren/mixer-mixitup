@@ -1,10 +1,8 @@
 ﻿using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
@@ -91,12 +92,12 @@ namespace MixItUp.Base.ViewModel.Twitch
 
         public async Task LoadCurrentTags()
         {
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().Channel?.tags != null)
+            if (ServiceManager.Get<TwitchSession>().IsConnected && ServiceManager.Get<TwitchSession>().Channel?.tags != null)
             {
                 this.CustomTags.Clear();
                 this.NotifyPropertyChanged("CanAddMoreTags");
 
-                foreach (string tag in ServiceManager.Get<TwitchSessionService>().Channel.tags)
+                foreach (string tag in ServiceManager.Get<TwitchSession>().Channel.tags)
                 {
                     await this.AddCustomTag(tag);
                 }

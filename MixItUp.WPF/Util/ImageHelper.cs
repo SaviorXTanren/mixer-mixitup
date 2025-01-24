@@ -1,7 +1,7 @@
 ﻿using CacheManager.Core;
 using MixItUp.Base.Services;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
+using MixItUp.Base.Util;
+using MixItUp.Base.Web;
 using System;
 using System.IO;
 using System.Threading.Tasks;

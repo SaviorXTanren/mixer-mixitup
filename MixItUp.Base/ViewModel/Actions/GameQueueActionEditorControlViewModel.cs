@@ -2,7 +2,7 @@
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

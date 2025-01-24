@@ -56,6 +56,8 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public string WheelClickSoundFilePath { get; set; }
+        [DataMember]
+        public double WheelClickVolume { get; set; } = 1.0;
 
         [DataMember]
         public Guid DefaultOutcomeCommand { get; set; }
@@ -120,11 +122,28 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
+            if (string.Equals(this.Javascript, OverlayResources.OverlayWheelDefaultJavascriptOld, System.StringComparison.OrdinalIgnoreCase))
+            {
+                this.Javascript = OverlayResources.OverlayWheelDefaultJavascript;
+            }
+
             await base.Initialize();
 
             foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
             {
                 outcome.CurrentProbability = outcome.Probability;
+            }
+        }
+
+        public override void ImportReset()
+        {
+            base.ImportReset();
+
+            this.DefaultOutcomeCommand = Guid.Empty;
+
+            foreach (var outcome in this.Outcomes)
+            {
+                outcome.CommandID = Guid.Empty;
             }
         }
 
@@ -137,6 +156,7 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.OutcomeNames)] = this.OutcomeNames;
             properties[nameof(this.OutcomeColors)] = this.OutcomeColors;
             properties[nameof(this.WheelClickSoundURL)] = this.WheelClickSoundURL;
+            properties[nameof(this.WheelClickVolume)] = this.WheelClickVolume.ToString(CultureInfo.InvariantCulture);
 
             this.EntranceAnimation.AddAnimationProperties(properties, nameof(this.EntranceAnimation));
             this.OutcomeSelectedAnimation.AddAnimationProperties(properties, nameof(this.OutcomeSelectedAnimation));
@@ -178,7 +198,7 @@ namespace MixItUp.Base.Model.Overlay
                         outcome.CurrentProbability = outcome.Probability;
                     }
                 }
-                else
+                else if (this.winningOutcome.Modifier < 0)
                 {
                     foreach (OverlayWheelOutcomeV3Model outcome in this.Outcomes)
                     {

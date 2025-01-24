@@ -1,12 +1,13 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -258,13 +259,13 @@ namespace MixItUp.Base.Services.External
                 this.IsConnected = false;
                 await this.Disconnect();
 
-                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                if (ServiceManager.Get<TwitchSession>().IsConnected)
                 {
-                    this.id = await this.GetCrowdControlID(StreamingPlatformTypeEnum.Twitch.ToString(), ServiceManager.Get<TwitchSessionService>().UserID);
+                    this.id = await this.GetCrowdControlID(StreamingPlatformTypeEnum.Twitch.ToString(), ServiceManager.Get<TwitchSession>().StreamerID);
                 }
-                else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                else if (ServiceManager.Get<YouTubeSession>().IsConnected)
                 {
-                    this.id = await this.GetCrowdControlID(StreamingPlatformTypeEnum.YouTube.ToString(), ServiceManager.Get<YouTubeSessionService>().UserID);
+                    this.id = await this.GetCrowdControlID(StreamingPlatformTypeEnum.YouTube.ToString(), ServiceManager.Get<YouTubeSession>().StreamerID);
                 }
 
                 if (string.IsNullOrEmpty(this.id))

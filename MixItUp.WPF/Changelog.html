@@ -5,235 +5,135 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h3><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application. Due to the larger differences in how Overlays are now structured, there are some breaking changes with this update that are very important to note:</h3>
+        <h3 style="color: red;"><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application and includes some breaking changes. As such, we recommend NOT updating immediately before a stream and waiting until you have time to walkthrough all of the changes and ensure your Overlay setup and interactions are configured to your liking.</h3>
 
-        <h2 style="color: #2e6c80;">v1.1.0.1724:</h2>
+        <h2 style="color: #2e6c80;">v1.2.0.11-12:</h2>
         <ul>
-            <li>Adding detailed error messaging for Twitch Clips that are unable to be played due to newer format. Please up-vote the following User Voice to encourage Twitch to allow for this functionality: <a href="https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors">https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors</a></li>
-            <li>Fixing bug with Twitch Channel Watch Streak event command not properly using the user that triggered the notice</li>
-            <li>Removing auto-layer incrementing for Overlay items that have their layer set to 0</li>
+            <li>Adding support for Team Incentives and Team Milestones for DonorDrive. These are usable only while the "Include Team Donations / Events" option is toggled under Services -> DonorDrive</li>
+            <li>Fixing bug with Twitch Mass Gifted Sub event command not triggering if the Mass Gifted Subs Filter Amount setting is disabled</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v1.1.0.1723:</h2>
+        <h2 style="color: #2e6c80;">v1.2.0.0-1.2.0.10:</h2>
         <ul>
-            <li>Changing the Usernames To Ignore property for Chat Overlay Widgets to be multi-line instead of space-separated to support multi-word YouTube usernames</li>
-            <li>Fixing bug with some animations for Chat and Game Queue Overlay Widgets not being used correctly</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1722:</h2>
-        <ul>
-            <li>Adding support for adding dynamic animations to Overlay Action visuals <b>(REQUIRES RE-CREATING OVERLAY ACTION)</b></li>
-            <li>Adding support for reference local files within an Overlay Action or Widget's code:</li>
+            <li>Overlay v3 functionality updates:</li>
             <ul>
-                <li>By putting  {LocalFile:\\FILE_PATH}  in your HTML, CSS, or Javascript, the Overlay service will handle automatically translating this to a local URL reference</li>
-                <li>EX:  {LocalFile:\\C:\Foo\Bar.png}</li>
-                <li>EX:  &lt;img src="{LocalFile:\\C:\Foo\Bar.png}" /&gt;</li>
+                <li><span style="color: red;"><b><u>BREAKING CHANGES:</u></b></span></li>
+                <ul>
+                    <li>All Overlay Endpoints now share the same port number and instead have unique URLs associated with them. If you use more than 1 Overlay Endpoint, you will need to update the web browser sources in your streaming software to use the new URLs, which can be found under Settings -> Overlay.</li>
+                    <li>Overlay Widgets are now vastly more robust in the amount that can be customized for them. However, the differences in specific HTML formatting between old and new versions are incompatible and thus can not be directly migrated over. The vast majority of standard, drop-down or input values are converted over, but customized HTML can not be and is instead changed to the new format. All old customized HTML can be accessed from the Overlay Widgets page by editing the widget and clicking on the History button in the top-right corner of the window.</li>
+                    <li>Certain features and functionality have been removed due to their low usage and may be replaced in the future.</li>
+                    <li>The Web Page option has been removed due to low compatability with more websites, but web page can be added manually via the HTML option. Existing Web Page actions have been updated to this new setup via the HTML option.</li>
+                    <li>The Ticker Tape Overlay Widget has been removed and instead replaced with the comparable Label Overlay Widget. Due to their large differences, the Ticker Tape Overlay Widget was not migrated and must be manually re-created as a Label Overlay Widget.</li>
+                </ul>
+                <li>Overlay actions and widgets now have fully customizable HTML, CSS, and Javascript for users who are more adapt at web development</li>
+                <li>Global HTML, CSS, and Javascript customization options can be set for Overlay Endpoints that will be present in all Overlay Actions &amp; Overlay Widgets that use that Overlay Endpoint</li>
+                <li>Adding "Run Widget Function" option to Overlay Action to allow for dynamic function triggering in Overlay Widgets</li>
+                <li>Adding support for reference local files within an Overlay Action or Widget's code:</li>
+                <ul>
+                    <li>By putting  {LocalFile:\\FILE_PATH}  in your HTML, CSS, or Javascript, the Overlay service will handle automatically translating this to a local URL reference</li>
+                    <li>EX:  {LocalFile:\\C:\Foo\Bar.png}</li>
+                    <li>EX:  &lt;img src="{LocalFile:\\C:\Foo\Bar.png}" /&gt;</li>
+                </ul>
+                <li>New Overlay Action Options:</li>
+                <ul>
+                    <li>The Timer option allows for dynamic, non-interactable timers to be displayed on the Overlay</li>
+                    <li>The Twitch Clip option allows for the displaying of clips from a user stream. A known issue exists for some clips that been created witin the last month for users due to a major change Twitch performed in how clips are created and stored. Please up-vote the following User Voice to encourage Twitch to allow for this functionality: <a href="https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors">https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors</a></li>
+                    <li>The Emote Effect option allow for dynamic displaying of emotes, emoticons, and images in a visual animation such as explosions and rain</li>
+                    <li>Several new options have been added for dynamically interacting with various Overlay Widget types</li>
+                </ul>
+                <li>Overlay Actions Upgrades:</li>
+                <ul>
+                    <li>The Duration field for Overlay Actions now support Special Identifiers.</li>
+                    <li>Video and YouTube options now support not specifying a duration amount, which will play the entire length of the video</li>
+                    <li>New position option are available including the ability to have something display in a randomized location</li>
+                    <li>The same Overlay action will now no longer replace an old instance if it is still visible and instead will stack over it (EX: Triggering the same Overlay action 5 times in succession will now show 5 instances together rather than only 1).</li>
+                    <li>Image actions now can optionally use the native size of the image file instead of manually supplied a width and height if the fields are left blank.</li>
+                    <li>Overlay actions that use width and height now support size scaling if only a width or height is specified.</li>
+                    <li>Adding support for adding dynamic animations to Overlay Action visuals</li>
+                </ul>
+                <li>New Overlay Widgets:</li>
+                <ul>
+                    <li>Label Overlay Widget</li>
+                    <ul>
+                        <li>The Label Overlay Widget allows you to display persistent information for your stream that will automatically update as changes occur.</li>
+                        <li>Common examples are for showing the latest follower, subscriber, donation, etc.</li>
+                        <li>Labels can be set up to automatically rotate through a selection of different options or show the latest one that has been updated/</li>
+                    </ul>
+                    <li>Persistent Timer Overlay Widget:</li>
+                    <ul>
+                        <li>The Persistent Timer Overlay Widget is a combination of the previous Timer and Timer Train Overlay Widgets.</li>
+                        <li>A displayable timer can be shown on the Overlay that will gradually count down.</li>
+                        <li>Various options on the widget can be set to add seconds to the timer or seconds can be added dynamically via the Overlay Action -> Add To Persistent Timer.</li>
+                    </ul>
+                    <li>Wheel Overlay Widget:</li>
+                    <ul>
+                        <li>The Wheel Overlay Widget allows you to present a visual prize wheel to your stream with various outcomes that can be randomly selected</li>
+                        <li>In addition to setting the probability on each outcome, you can also set a positive or negative modifier on each outcome to adjust the probability of the outcome</li>
+                        <ul>
+                            <li>If any outcome with a negative modifier is selected, the probabilities for all outcomes are adjusted by their modifier amount</li>
+                            <li>If any outcome with a positive modifier is selected, all outcomes are reset to their initial probabilities</li>
+                        </ul>
+                        <li>Each outcome can have a customized command for it that will be triggered when the outcome is selected or the default outcome command will be triggered instead if the outcome-specific command has no actions in it</li>
+                        <li>The Wheel Overlay Widget can be triggered dynamically via the Overlay Action -> Spin Wheel</li>
+                    </ul>
+                    <li>Persistent Emote Effect Overlay Widget:</li>
+                    <ul>
+                        <li>The Emote Effect allows you to apply a visual animation to emotes that occur in chat and your commands</li>
+                        <li>This overlay widget will automatically trigger the emote effect for all emotes or emojis detected in chat messages in your stream</li>
+                        <li>You can specify how many are shown on screen for each emote that is detected to increase the effect</li>
+                        <li>Combos can be enabled to ensure the emote effect will only trigger if a specific emote is detected a certain amount of times in chat messages over a certain period of seconds</li>
+                        <li>Duplicate emotes can also be ignored within the same chat message</li>
+                    </ul>
+                    <li>Poll Overlay Widget:</li>
+                    <ul>
+                        <li>The Poll Overlay Widget allows you to display visual progress of various multi-answer question systems used in Mix It Up. The following are supported:</li>
+                        <ul>
+                            <li>Twitch Polls</li>
+                            <li>Twitch Predictions</li>
+                            <li>Mix It Up Bet Game</li>
+                            <li>Mix It Up Trivia Game</li>
+                        </ul>
+                    </ul>
+                    <li>Custom Overlay Widget type:</li>
+                    <ul>
+                        <li>Custom Overlay Widgets have no pre-baked functionality and instead expose dedicated Javascript functions for when various different events occur in your stream.</li>
+                        <li>These are useful for when you want to build a more specific type of Overlay visual that does not conform to one of the standard Overlay Widget types.</li>
+                    </ul>
+                </ul>
+                <li>Overlay Widgets Upgrades:</li>
+                <ul>
+                    <li>More detailed customization options are available for various widgets.</li>
+                    <li>A new Persistent Timer type is available which combines both of the features of the old Timer and Timer Train widgets.</li>
+                    <li>Overlay Widgets can now be directly assigned to a dedicated URL for that widget only.</li>
+                </ul>
+                <li>The Overlay as as service is now enabled by default for all new profiles.</li>
+                <li>All Overlay Endpoints now share the exact same port number and instead have a unique URL associated with them.</li>
+                <li>The Overlay port number can now be fully customized.</li>
             </ul>
-            <li>Fixing bug with Overlay Widgets not properly initializing on application launch</li>
-            <li>Adding $timersecondsadded Special Identifier to Time Adjusted sub-command for Persistent Timer Overlay Widget</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1721:</h2>
-        <ul>
-            <li>Adding new Custom Overlay Widget type:</li>
+            <li>Text to Speech Action updates:</li>
             <ul>
-                <li>Custom Overlay Widgets have no pre-baked functionality and instead expose dedicated Javascript functions for when various different events occur in your stream.</li>
-                <li>These are useful for when you want to build a more specific type of Overlay visual that does not conform to one of the standard Overlay Widget types.</li>
+                <li>Windows Text To Speech added as a provider, leveraging your natively installed text to speech languages on your Windows computer</li>
+                <li>TTS.Monster added as a provider, which can be enabled via the Services page after connecting your streaming account on their website: https://tts.monster/</li>
+                <li>Amazon Polly and Microsoft Azure Speech added as providers:</li>
+                <ul>
+                    <li>Amazon Polly &amp; Microsoft Azure Speech both leverage a payment model for usage of their service and as a result, we have implemented a cooldown usage to them currently of 1 each every 5 minutes. This cooldown amount may be decreased or increased over time depending on the usage and cost associated with supporting these services.</li>
+                    <li>Users can set up their own Amazon Web Services (AWS) or Microsoft Azure account account and connect it on the Services page to remove the cooldown effect, however the linked account will then be billed for all usage of the service for Text to Speech</li>
+                </ul>
+                <li>TikTok TTS added as a provider. This service is hosted by Weilbyte at <a href="https://tiktok-tts.weilbyte.dev">https://tiktok-tts.weilbyte.dev</a> and may experience outages due to use.</li>
+                <li>A new toggle option has been added that will block the Text to Speech action until the audio of the speech has completed for providers that support it.</li>
+                <li>Adding SSML text processing support for Amazon Polly, Microsoft Azure Speech, and Windows Text to Speech providers for Text to Speech Action</li>
             </ul>
-            <li>Adding "Run Widget Function" option to Overlay Action to allow trigger custom Javascript functions defined in any Overlay Widget</li>
-            <li>Updates to how scripts are run within the Script action:</li>
+            <li>The Script action has been added:</li>
             <ul>
-                <li>Javascript-based scripts will now run using the Mix It Up Overlay, allowing you to leverage external libraries by including them in the Overlay Endpoint via customization under Settings -> Overlay.</li>
+                <li>The Script action allows you to add code scripts to your commands that will be run when the action is triggered.</li>
+                <li>Scripts can be written in either C#, Python, or Javascript.</li>
+                <li>Special Identifier replacement is supported in the text of the script.</li>
+                <li>Any value returned from the script is stored in the Special Identifier "$scriptresult" which can be leveraged in subsequent action.</li>
+                <li>There is no unique functionality provided in the Script action to directly interact with Mix It Up, the Script action simply is a means to perform more complex logic in a simpler form for experience users. However, you are able to leverage the Mix It Up Developer API from inside your Script action to perform some operations within Mix It Up.</li>
+                <li>Javascript-based scripts will run using the Mix It Up Overlay, allowing you to leverage external libraries by including them in the Overlay Endpoint via customization under Settings -> Overlay.</li>
                 <li>Python-based scripts now require a local installation of Python on your PC by running directly via the Python interpreter. The Executable location for Python must be set under Settings -> Commands.</li>
             </ul>
-            <li>Adding $hypetrainlevel Special Identifier to Twitch Channel Hype Train Start event command</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1720:</h2>
-        <ul>
-            <li>Adding global HTML, CSS, and Javascript customization options for Overlay Endpoints that will be present in all Overlay Actions &amp; Overlay Widgets that use that Overlay Endpoint</li>
-            <li>Adding "Run Widget Function" option to Overlay Action to allow for dynamic function triggering in Overlay Widgets</li>
-            <li>Fixing bug with imported Overlay Widgets that were previously exported by the same user not properly working in all instances</li>
-            <li>Fixing bug with Persistent Timer options on Overlay Action not properly re-loading when editing an existing command</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1719:</h2>
-        <ul>
-            <li>Adding "Read Each Line From File" option to File Action to support repeated running of a set of actions against each line in a file</li>
-            <li>Fixing bug with crash resulting from opening a Video Overlay Widget</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1718:</h2>
-        <ul>
-            <li>Adding support for exporting and importing of Overlay Widgets</li>
-            <li>Goal Overlay Widget Improvements:</li>
-            <ul>
-                <li>Adding automatic reset options</li>
-                <li>Adding support for segment-specific commands that will trigger when the segment is completed</li>
-                <li>Adding support for the following Special Identifiers for all commands in Overlay Widget: $goaltotalamount, $goalprogressamount, $goalsegmentname, $goalsegmentamount</li>
-                <li>Adding support for the following Special Identifiers for segment completion commands in Overlay Widget: $goalnextsegmentname, $goalnextsegmentamount</li>
-                <li>Fixing bug with last segment of Goal Overlay Widget not triggering segment completion command</li>
-            </ul>
-            <li>Chat Overlay Widget Improvements <b>(REQUIRES RE-CREATING WIDGET)</b>:</li>
-            <ul>
-                <li>Adding option to hide all chat messages that start with "!"</li>
-                <li>Adding Alejo pronoun display support next to user information</li>
-            </ul>
-            <li>Timer Overlay Widget Improvements:</li>
-            <ul>
-                <li>Adding maximum amount option to allow capping of timer</li>
-                <li>Adding pause/unpause option for Timer Overlay Widgets to Overlay Action</li>
-                <li>Adding option to allow/disallow adjustment of timer while it is paused</li>
-            </ul>
-            <li>Label Overlay Widgets now support reading from a specified file and will automatically update the display when the contents of the file are changed</li>
-            <li>Fixing bug with End Credits Overlay Widget sometimes scrolling credits faster than intended <b>(REQUIRES RE-CREATING WIDGET)</b></li>
-            <li>YouTube option for Overlay Action now support processing Special Identifiers for start time</li>
-            <li>Video option for Overlay Action now support specifying a start time</li>
-            <li>Leaderboard Overlay Widget will now ignore user amounts of 0</li>
-            <li>Adding SSML text processing support for Amazon Polly, Microsoft Azure Speech, and Windows Text to Speech providers for Text to Speech Action</li>
-            <li>Adding "Is In" an "Is Not In" operators to Conditional Action for checking if a piece of text exists somewhere within a larger piece of text</li>
-            <li>Adding "Persist No Duplicates" option to Random Action to keep track of what actions have already been triggered to ensure no action is run more than once. Once all actions have been triggered once, tracking is reset again to once per action.</li>
-            <li>Removing check for duplicate user accounts in settings and now allowing for multiple profiles to be created with the same user account. Profiles can now be specifically named by visiting Settings -> General.</li>
-            <li>Fixing bug with Wheel Overlay Widget not properly loading for specific language locales</li>
-            <li>URL parameters set on an Overlay Endpoint web page URL will now be passed down into and available for use in Overlay Actions and Overlay Widgets for that Overlay Endpoint</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1717:</h2>
-        <ul>
-            <li>Adding the following new Text to Speech Providers: Amazon Polly, Microsoft Azure Speech, TikTok TTS</li>
-            <ul>
-                <li>Amazon Polly &amp; Microsoft Azure Speech both leverage a payment model for usage of their service and as a result, we have implemented a cooldown usage to them currently of 1 each every 5 minutes. This cooldown amount may be decreased or increased over time depending on the usage and cost associated with supporting these services.</li>
-                <li>Users can set up their own Amazon Web Services (AWS) or Microsoft Azure account account and connect it on the Services page to remove the cooldown effect, however the linked account will then be billed for all usage of the service for Text to Speech</li>
-            </ul>
-            <li>Adding $usernotes Special Identifier</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1716:</h2>
-        <ul>
-            <li>Fixing bug related to certain Overlay Widgets perform events multiple times on occassion</li>
-            <li>Adjusting Mix It Up update host &amp; detection method to improve reliability</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1714-1715:</h2>
-        <ul>
-            <li>Adding Poll Overlay Widget:</li>
-            <ul>
-                <li>The Poll Overlay Widget allows you to display visual progress of various multi-answer question systems used in Mix It Up. The following are supported:</li>
-                <ul>
-                    <li>Twitch Polls</li>
-                    <li>Twitch Predictions</li>
-                    <li>Mix It Up Bet Game</li>
-                    <li>Mix It Up Trivia Game</li>
-                </ul>
-            </ul>
-            <li>Adding support for automatic removal to VIP User option on the Twitch Action. This will remove VIP status from the user after the specified duration. This will only occur while Mix It Up is running and lapsed durations while Mix It Up is not running will be automatically handled when Mix It Up is next launched.</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1712-1713:</h2>
-        <ul>
-            <li>Fixing bug related to Overlay Widgets not internally enabling on launch</li>
-            <li>Fixing bug with live preview data forcefully overwriting saved data for End Credits Overlay Widget</li>
-            <li>Fixing bug with Wheel Overlay Widget not properly updating click sound file path to selected file</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1709-1711:</h2>
-        <ul>
-            <li>Adding Emote Effect option to Overlay Action &amp; Persistent Emote Effect Overlay Widget:</li>
-            <ul>
-                <li>The Emote Effect allows you to apply a visual animation to emotes that occur in chat and your commands</li>
-                <li>You can specify how many are shown on screen for each emote that is detected to increase the effect</li>
-                <li>Overlay Action Emote Effect option:</li>
-                <ul>
-                    <li>The Emote Text allows you to specify the specific emotes to use for the effect and can contain emotes, emoji, or image URLs; as well as Special Identifiers such as $message for Chat Commands</li>
-                    <li>In addition to specifying how many are shown for each emote detected, you can also set a maximum number that can be shown overall</li>
-                </ul>
-                <li>Persistent Emote Effect Overlay Widget:</li>
-                <ul>
-                    <li>This overlay widget will automatically trigger the emote effect for all emotes or emojis detected in chat messages in your stream</li>
-                    <li>Combos can be enabled to ensure the emote effect will only trigger if a specific emote is detected a certain amount of times in chat messages over a certain period of seconds</li>
-                    <li>Duplicate emotes can also be ignored within the same chat message</li>
-                </ul>
-            </ul>
-            <li>The following bug fixes have been made to specific Overlay Widget, which <b><u>REQUIRES RE-CREATING THEM</u></b> to get these bug fixes</li>
-            <ul>
-                <li>The End Credits Overlay Widget has been adjusted to prevent duplicate runs of it from triggering and show a smoothing crawl animation</li>
-                <li>The Chat Overlay Widget has been adjusted to prevent messages from stopping to appear after the default maximum shown has been reached</li>
-            </ul>
-            <li>Fixing bug related to Twitch Clips not playing properly via the Overlay Action</li>
-            <li>Fixing crash related to clearing chat on Twitch</li>
-            <li>Commands containing Overlay actions in them from Community Commands or manually imported will now have their actions automatically upgraded to the new Overlay format</li>
-            <li>Viewers who have linked their accounts in Mix It Up across different streaming platforms will now properly show both accounts on the Users page when they are watching from both and the correct account information will be returned for commands triggered from each platform</li>
-            <li>The Throw Item option on the Twitch Integrated Throwing System action now supports Special Identifiers for the amount to throw</li>
-            <li>Fixing bug with Tiltify service not properly handling team-based campaigns</li>
-            <li>Adding Change Folder option to the Music Player Action</li>
-            <li>The volume level of the default click sound for the Wheel Overlay Widget has been decreased</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1708:</h2>
-        <ul>
-            <li>Fixing bug related to Overlay Widgets not properly initializing on app launch if they are enabled, which could cause some Overlay Widgets to not set up their processes correctly (EX: The End Credits widget not properly starting to capture data to display when the end credits roll)</li>
-            <li>Adding Latest Feature Clip and Random Featured Clip options to Twitch Clip option for the Overlay Action</li>
-            <li>Adding support for full clip URLs on the Twitch Clip option for the Overlay Action</li>
-            <li>Adding option on Wheel Overlay Widget for automatic equal probability for all outcomes</li>
-            <li>Adding $streambosshealth Special Identifier for use within all Stream Boss sub-commands</li>
-            <li>Adding $streambossdamage and $streambosshealing Special Identifiers for use within the Damage/New Boss and Healing Stream Boss sub-commands respectively</li>
-            <li>Adding $gamequeueusersX Special Identifier to retrieve the top X many users in the Game Queue</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1707:</h2>
-        <ul>
-            <li>Adding Wheel Overlay Widget:</li>
-            <ul>
-                <li>The Wheel Overlay Widget allows you to present a visual prize wheel to your stream with various outcomes that can be randomly selected</li>
-                <li>In addition to setting the probability on each outcome, you can also set a positive or negative modifier on each outcome to adjust the probability of the outcome</li>
-                <ul>
-                    <li>If any outcome with a negative modifier is selected, the probabilities for all outcomes are adjusted by their modifier amount</li>
-                    <li>If any outcome with a positive modifier is selected, all outcomes are reset to their initial probabilities</li>
-                </ul>
-                <li>Each outcome can have a customized command for it that will be triggered when the outcome is selected or the default outcome command will be triggered instead if the outcome-specific command has no actions in it</li>
-                <li>The Wheel Overlay Widget can be triggered dynamically via the Overlay Action -> Spin Wheel</li>
-            </ul>
-            <li>Adding option to Goal Overlay Widget to display goal percentage and amounts as cumulative totals instead of individual segment amounts</li>
-            <li>The preview of an Overlay Widget will not automatically update when the position settings for it are changed</li>
-            <li>Adding $usersubpoints Special Identifier to the Twitch Channel Subscribed, Twitch Channel Resubscribed, and Twitch Channel Gifted Subscription event commands to indicate the amount of Twitch Sub Points gained for the channel from the subscription</li>
-            <li>Adding $substotalpoints Special Identifier to Twitch Channel Mass Gifted Subscriptions event command to indicate the total amount of Twitch Sub Points gained for the channel from all of the subscriptions gifted</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1706:</h2>
-        <ul>
-            <li>Fixing bug with Chat Overlay Widget javascript code to properly disable badges for users. <b><u>REQUIRES RE-CREATING CHAT OVERLAY WIDGET</u></b></li>
-            <li>Adding settings option to hide specific users messages from Chat view in Mix It Up</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1705:</h2>
-        <ul>
-            <li>Adding mtion studio service connectivity:</li>
-            <ul>
-                <li>mtion studio can be connected by visiting the Services page</li>
-                <li>mtion studio version 0.39.1 or higher is required for this integration</li>
-                <li>The mtion studio action allows you to run API Triggers within mtion studio and supply values for parameters to include when run</li>
-            </ul>
-            <li>Adding $youtubelatestvideoid, $youtubelatestvideotitle, and $youtubelatestvideourl Special Identifiers for the latest non-stream video on the connected YouTube channel</li>
-            <li>Adding HTML section type to End Credits Overlay Widget</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v1.1.0.1604:</h2>
-        <ul>
             <li>The VTS P.O.G. action has been added:</li>
             <ul>
                 <li>The VTS P.O.G. action allows you to interact with your instance of VTS P.O.G. to trigger functionality within the application</li>
@@ -246,66 +146,71 @@
                 <li>The Repeat action allows you to easily build a set of actions that will be repeatedly run in sequence based on the number of times you specify</li>
                 <li>The amount of times the Repeat action runs can either take a raw number or a Special Identifier that translated to a number</li>
             </ul>
-            <li>Adding $streamyoutubeid and $streamyoutubeurl Special Identifiers for the active YouTube Live stream</li>
-            <li>Adding starting amount property to Goal Overlay Widget</li>
-            <li>Fixing bug related to End Credits Overlay Widget not properly tracking data for the specified sections when the credits are triggered under normal circumstances</li>
-            <li>Fixing bug related to the audio of Overlay Videos &amp; YouTube not properly handling volume levels below 100% for certain user computer locales</li>
-            <li>Fixing bug related to Windows Text To Speech provider in the Text to Speech Action not properly playing over the Mix It Up Overlay when selected as the output audio device</li>
+            <li>The Group action has been added:</li>
+            <ul>
+                <li>The Group action allows to easily group together a set of actions under a single "parent" action</li>
+                <li>This can be useful in a few scenarios:</li>
+                <ul>
+                    <li>Within the Random action to have sets of actions occur randomly instead single actions</li>
+                    <li>Easily being able to enable/disable a set of action</li>
+                    <li>Logical display and organization</li>
+                </ul>
+            </ul>
+            <li>Adding the following YouTube-specific Special Identifiers</li>
+            <ul>
+                <li>$streamyoutubeid and $streamyoutubeurl Special Identifiers for the active YouTube Live stream</li>
+                <li>$youtubelatestvideoid, $youtubelatestvideotitle, and $youtubelatestvideourl Special Identifiers for the latest non-stream video on the connected YouTube channel</li>
+            </ul>
+            <li>Adding support for automatic removal to VIP User option on the Twitch Action. This will remove VIP status from the user after the specified duration. This will only occur while Mix It Up is running and lapsed durations while Mix It Up is not running will be automatically handled when Mix It Up is next launched.</li>
+            <li>Removing check for duplicate user accounts in settings and now allowing for multiple profiles to be created with the same user account. Profiles can now be specifically named by visiting Settings -> General.</li>
+            <li>Viewers who have linked their accounts in Mix It Up across different streaming platforms will now properly show both accounts on the Users page when they are watching from both and the correct account information will be returned for commands triggered from each platform</li>
+            <li>Adding "Persist No Duplicates" option to Random Action to keep track of what actions have already been triggered to ensure no action is run more than once. Once all actions have been triggered once, tracking is reset again to once per action.</li>
+            <li>Adding "Is In" an "Is Not In" operators to Conditional Action for checking if a piece of text exists somewhere within a larger piece of text</li>
+            <li>Adding "Read Each Line From File" option to File Action to support repeated running of a set of actions against each line in a file</li>
+            <li>The Throw Item option on the Twitch Integrated Throwing System action now supports Special Identifiers for the amount to throw</li>
+            <li>Adding Change Folder option to the Music Player Action</li>
+            <li>Adding settings option to hide specific users messages from Chat view in Mix It Up</li>
+            <li>Adding $usersubpoints Special Identifier to the Twitch Channel Subscribed, Twitch Channel Resubscribed, and Twitch Channel Gifted Subscription event commands to indicate the amount of Twitch Sub Points gained for the channel from the subscription</li>
+            <li>Adding $substotalpoints Special Identifier to Twitch Channel Mass Gifted Subscriptions event command to indicate the total amount of Twitch Sub Points gained for the channel from all of the subscriptions gifted</li>
+            <li>Adding $hypetrainlevel Special Identifier to Twitch Channel Hype Train Start event command</li>
+            <li>Adding $gamequeueusersX Special Identifier to retrieve the top X many users in the Game Queue</li>
+            <li>Adding $userlastseendays, $userlastseenage, and $userlastseendate Special Identifiers</li>
+            <li>Adding $____uniqueitemstotal Special Identifier for Inventories</li>
+            <li>Adding $usernotes Special Identifier</li>
+            <li>Adding option to command tester dialog for whether to use command locks or not when testing a command</li>
+            <li>Adjusting Mix It Up update host &amp; detection method to improve reliability</li>
+            <li>Fixing bug with Tiltify service not properly handling team-based campaigns</li>
+            <li>Fixing bug with BetterTTV animated emotes not doing animations on various Overlay types</li>
+            <li>Fixing bug with Height property not getting properly assigned for Stream Boss Overlay Widget</li>
+            <li>Fixing bug with End Credits Overlay Widget not properly processing Special Identifiers</li>
+            <li>Fixing bug with HTML Overlay Widgets not properly refreshing their contents. If you have modified the Javascript at all of an HTML Overlay Widget, please create a new version and copy over your specific changes to the new updates.</li>
+            <li>Adding "Random In", "Random Out", and "Random Visible" options for Overlay animations</li>
+            <li>Fixing bug with "Run Widget Function" option for Overlay Action not properly processing Special Identifiers for values</li>
+            <li>Updating Twitch Integrated Throwing System connection to background gather information to reduce loading times</li>
+            <li>Adding User property to data variable in the update(data) Javascript function for the Label Overlay Widget</li>
+            <li>Adding Followers and Subscribers types for Goal Overlay Widget to show automatic tracking of your current follower and subscriber amounts</li>
+            <li>Adding Latest Subscription Gifter type to Label Overlay Widget</li>
+            <li>Adding volume slider for wheel click sound to Wheel Overlay Widget</li>
+            <li>Reducing the amount of libraries and external dependencies loaded in for the Overlay to increase loading speed and reduce the chance of batched Overlay actions drifting</li>
+            <li>Adding the ability to custom the &le;head&gt; tag for an Overlay Endpoint</li>
+            <li>Changing Special Identifier for Time Adjusted sub-command on Persistent Timer Overlay Widget to be $timersecondsadjusted</li>
+            <li>Fixing bug with Twitch multi-gifted subs doubling the amount of subs added for various Overlay Widgets such as Goal and Persistent Timer</li>
+            <li>Adding error message for when the End Credits Overlay Widgets is triggered, but there is no captured data for it from when it was saved</li>
+            <li>Fixing bug related several Overlay Widgets not working properly due to bad merge of changes</li>
+            <li>Fixing bug with End Credits not showing data for Followers, Subscribers, and Moderators sections if there is not also a Chatters section added</li>
+            <li>Fixing bug with LocalFile:\\ replacement function for Overlays not working properly</li>
+            <li>Adding support for Woah.css animations for Overlay Actions and Widgets</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v1.1.0.1600-1603:</h2>
+        <h2 style="color: #2e6c80;">v1.1.0.17:</h2>
         <ul>
+            <li>Adding mtion studio service connectivity:</li>
             <ul>
-                <li>All Overlay Endpoints now share the same port number and instead have unique URLs associated with them. If you use more than 1 Overlay Endpoint, you will need to update the web browser sources in your streaming software to use the new URLs, which can be found under Settings -> Overlay.</li>
-                <li>Overlay Widgets are now vastly more robust in the amount that can be customized for them. However, the differences in specific HTML formatting between old and new versions are incompatible and thus can not be directly migrated over. The vast majority of standard, drop-down or input values are converted over, but customized HTML can not be and is instead changed to the new format. All old customized HTML can be accessed from the Overlay Widgets page by editing the widget and clicking on the History button in the top-right corner of the window.</li>
-                <li>Certain features and functionality have been removed due to their low usage and may be replaced in the future. This includes the Web Page option and the Ticker Tape option.</li>
+                <li>mtion studio can be connected by visiting the Services page</li>
+                <li>mtion studio version 0.39.1 or higher is required for this integration</li>
+                <li>The mtion studio action allows you to run API Triggers within mtion studio and supply values for parameters to include when run</li>
             </ul>
-            <br />
-            <br />
-            <li>Overlay v3 large-scale updates:</li>
-            <ul>
-                <li>Overlay actions and widgets now have fully customizable HTML, CSS, and Javascript for users who are more adapt at web development</li>
-                <li>Overlay Actions:</li>
-                <ul>
-                    <li>New basic options have been added for creating dynamic timers and showing a Twitch clip for a user</li>
-                    <li>The Duration field for Overlay Actions now support Special Identifiers.</li>
-                    <li>New position option are available including the ability to have something display in a randomized location</li>
-                    <li>The same Overlay action will now no longer replace an old instance if it is still visible and instead will stack over it (EX: Triggering the same Overlay action 5 times in succession will now show 5 instances together rather than only 1).</li>
-                    <li>Image actions now can optionally use the native size of the image file instead of manually supplied a width and height if the fields are left blank.</li>
-                    <li>Overlay actions that use width and height now support size scaling if only a width or height is specified.</li>
-                    <li>Video, YouTube, and Twitch Clip actions now support not specifying a duration amount and will automatically remove the content when it has finished.</li>
-                    <li>New options have been added to allow for direct integration with widgets, such as the ability to dynamically damage a Stream Boss, add to a goal, and add custom events to an event list.</li>
-                    <li>New options will be added in subsequent updates.</li>
-                </ul>
-                <li>Overlay Widgets:</li>
-                <ul>
-                    <li>More detailed customization options are available for various widgets.</li>
-                    <li>A new Persistent Timer type is available which combines both of the features of the old Timer and Timer Train widgets.</li>
-                    <li>A new Labels type is available for displaying persistent information for your stream that can automatically rotate with time or as changes occur.</li>
-                    <li>Overlay Widgets can now be directly assigned to a dedicated URL for that widget only.</li>
-                    <li>New Overlay Widgets will be added in subsequent updates.</li>
-                </ul>
-                <li>The Overlay as as service is now enabled by default for all new profiles.</li>
-                <li>All Overlay Endpoints now share the exact same port number and instead have a unique URL associated with them.</li>
-                <li>The Overlay port number can now be fully customized.</li>
-            </ul>
-            <li>Text to Speech Action updates:</li>
-            <ul>
-                <li>Windows Text To Speech added as a provider, leveraging your natively installed text to speech languages on your Windows computer</li>
-                <li>TTS.Monster added as a provider, which can be enabled via the Services page after connecting your streaming account on their website: https://tts.monster/</li>
-                <li>New TTS providers will be added in subsequent updates.</li>
-                <li>A new toggle option has been added that will block the Text to Speech action until the audio of the speech has completed for providers that support it.</li>
-            </ul>
-            <li>The Script action has been added:</li>
-            <ul>
-                <li>The Script action allows you to add code scripts to your commands that will be run when the action is triggered.</li>
-                <li>Scripts can be written in either C#, Python, or Javascript.</li>
-                <li>Special Identifier replacement is supported in the text of the script.</li>
-                <li>Any value returned from the script is stored in the Special Identifier "$scriptresult" which can be leveraged in subsequent action.</li>
-                <li>There is not unique functionality provided in the Script action to directly interact with Mix It Up, the Script action simply is a means to perform more complex logic in a simpler form for experience users. However, you are able to leverage the Mix It Up Developer API from inside your Script action to perform some operations within Mix It Up.</li>
-            </ul>
-            <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
         <h2 style="color: #2e6c80;">v1.1.0.16:</h2>

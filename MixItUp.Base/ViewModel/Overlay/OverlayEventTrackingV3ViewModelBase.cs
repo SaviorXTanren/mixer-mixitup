@@ -2,9 +2,9 @@
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using System;
 using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.ViewModel.Overlay
@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.RaidAmount + (this.RaidPerViewAmount * SampleIntegerAmount));
+                double total = this.RaidAmount + (this.RaidPerViewAmount * SampleIntegerAmount);
                 return $"{this.RaidAmount} + ({this.RaidPerViewAmount} * {SampleIntegerAmount} {Resources.Viewers}) = {total} {this.EquationUnits}";
             }
         }
@@ -175,7 +175,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.TwitchBitsAmount * SampleIntegerAmount);
+                double total = this.TwitchBitsAmount * SampleIntegerAmount;
                 return $"{this.TwitchBitsAmount} * {SampleIntegerAmount} {Resources.Bits} = {total} {this.EquationUnits}";
             }
         }
@@ -196,7 +196,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.YouTubeSuperChatAmount * SampleDecimalAmount);
+                double total = this.YouTubeSuperChatAmount * SampleDecimalAmount;
                 return $"{this.YouTubeSuperChatAmount} * {CurrencyHelper.ToCurrencyString(SampleDecimalAmount)} = {total} {this.EquationUnits}";
             }
         }
@@ -217,7 +217,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.TrovoElixirSpellAmount * SampleIntegerAmount);
+                double total = this.TrovoElixirSpellAmount * SampleIntegerAmount;
                 return $"{this.TrovoElixirSpellAmount} * {SampleIntegerAmount} {Resources.Elixir} = {total} {this.EquationUnits}";
             }
         }
@@ -238,7 +238,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             get
             {
-                int total = (int)Math.Round(this.DonationAmount * SampleDecimalAmount);
+                double total = this.DonationAmount * SampleDecimalAmount;
                 return $"{this.DonationAmount} * {CurrencyHelper.ToCurrencyString(SampleDecimalAmount)} = {total} {this.EquationUnits}";
             }
         }
@@ -246,9 +246,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayEventTrackingV3ViewModelBase(OverlayItemV3Type type)
             : base(type)
         {
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSessionService>().MembershipLevels)
+                foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSession>().MembershipLevels)
                 {
                     this.YouTubeMemberships.Add(new OverlayEventTrackingYouTubeMembershipViewModel(membershipsLevel.Snippet.LevelDetails.DisplayName, 0));
                 }
@@ -270,9 +270,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.TwitchSubscriptionTier3Amount = item.TwitchSubscriptionsAmount[3];
             this.TwitchBitsAmount = item.TwitchBitsAmount;
 
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSessionService>().MembershipLevels)
+                foreach (MembershipsLevel membershipsLevel in ServiceManager.Get<YouTubeSession>().MembershipLevels)
                 {
                     if (item.YouTubeMembershipsAmount.TryGetValue(membershipsLevel.Snippet.LevelDetails.DisplayName, out double damageAmount))
                     {

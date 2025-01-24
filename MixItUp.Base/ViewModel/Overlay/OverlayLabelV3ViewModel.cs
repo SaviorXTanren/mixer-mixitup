@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -98,6 +97,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayLabelDisplayV3TypeEnum.LatestTwitchBits:
                 case OverlayLabelDisplayV3TypeEnum.LatestTrovoElixir:
                 case OverlayLabelDisplayV3TypeEnum.LatestYouTubeSuperChat:
+                case OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter:
                     this.Format = OverlayLabelV3ViewModel.UsernameAmountItemTemplate;
                     break;
             }

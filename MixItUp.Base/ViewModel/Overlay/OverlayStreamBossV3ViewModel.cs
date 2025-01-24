@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
 
@@ -288,6 +287,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             OverlayStreamBossV3Model result = new OverlayStreamBossV3Model();
 
             this.AssignProperties(result);
+
+            result.Height = this.height;
 
             result.BorderColor = this.BorderColor;
             result.BackgroundColor = this.BackgroundColor;

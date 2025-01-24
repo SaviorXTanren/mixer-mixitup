@@ -3,7 +3,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System.IO;
 
 namespace MixItUp.Base.ViewModel.Settings

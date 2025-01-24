@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
@@ -126,11 +126,159 @@ namespace MixItUp.Base.Model.Overlay
         SlideOutLeft,
         SlideOutRight,
         SlideOutUp,
+
+        RandomIn = 1000,
+        RandomOut = 1001,
+        RandomVisible = 1002,
+    }
+
+    public enum OverlayWoahCSSAnimationType
+    {
+        None,
+
+        Random,
+
+        DealWithIt,
+
+        FlyIn,
+        FlyOut,
+
+        LeaveInStyle,
+
+        RotateComplex,
+        RotateComplexOut,
+
+        Spin3D,
+
+        Wowzors,
     }
 
     [DataContract]
     public class OverlayAnimationV3Model
     {
+        private static readonly List<OverlayAnimateCSSAnimationType> AnimateCSSRandomInAnimations = new List<OverlayAnimateCSSAnimationType>()
+        {
+            OverlayAnimateCSSAnimationType.BackInDown,
+            OverlayAnimateCSSAnimationType.BackInLeft,
+            OverlayAnimateCSSAnimationType.BackInRight,
+            OverlayAnimateCSSAnimationType.BackInUp,
+
+            OverlayAnimateCSSAnimationType.BounceIn,
+            OverlayAnimateCSSAnimationType.BounceInDown,
+            OverlayAnimateCSSAnimationType.BounceInLeft,
+            OverlayAnimateCSSAnimationType.BounceInRight,
+            OverlayAnimateCSSAnimationType.BounceInUp,
+
+            OverlayAnimateCSSAnimationType.FadeIn,
+            OverlayAnimateCSSAnimationType.FadeInDown,
+            OverlayAnimateCSSAnimationType.FadeInDownBig,
+            OverlayAnimateCSSAnimationType.FadeInLeft,
+            OverlayAnimateCSSAnimationType.FadeInLeftBig,
+            OverlayAnimateCSSAnimationType.FadeInRight,
+            OverlayAnimateCSSAnimationType.FadeInRightBig,
+            OverlayAnimateCSSAnimationType.FadeInUp,
+            OverlayAnimateCSSAnimationType.FadeInUpBig,
+            OverlayAnimateCSSAnimationType.FadeInTopLeft,
+            OverlayAnimateCSSAnimationType.FadeInTopRight,
+            OverlayAnimateCSSAnimationType.FadeInBottomLeft,
+            OverlayAnimateCSSAnimationType.FadeInBottomRight,
+
+            OverlayAnimateCSSAnimationType.FlipInX,
+            OverlayAnimateCSSAnimationType.FlipInY,
+
+            OverlayAnimateCSSAnimationType.LightSpeedInRight,
+            OverlayAnimateCSSAnimationType.LightSpeedInLeft,
+
+            OverlayAnimateCSSAnimationType.RotateIn,
+            OverlayAnimateCSSAnimationType.RotateInDownLeft,
+            OverlayAnimateCSSAnimationType.RotateInDownRight,
+            OverlayAnimateCSSAnimationType.RotateInUpLeft,
+            OverlayAnimateCSSAnimationType.RotateInUpRight,
+
+            OverlayAnimateCSSAnimationType.SlideInDown,
+            OverlayAnimateCSSAnimationType.SlideInLeft,
+            OverlayAnimateCSSAnimationType.SlideInRight,
+            OverlayAnimateCSSAnimationType.SlideInUp,
+
+            OverlayAnimateCSSAnimationType.ZoomIn,
+            OverlayAnimateCSSAnimationType.ZoomInDown,
+            OverlayAnimateCSSAnimationType.ZoomInLeft,
+            OverlayAnimateCSSAnimationType.ZoomInRight,
+            OverlayAnimateCSSAnimationType.ZoomInUp,
+        };
+
+        private static readonly List<OverlayAnimateCSSAnimationType> AnimateCSSRandomOutAnimations = new List<OverlayAnimateCSSAnimationType>()
+        {
+            OverlayAnimateCSSAnimationType.BackOutDown,
+            OverlayAnimateCSSAnimationType.BackOutLeft,
+            OverlayAnimateCSSAnimationType.BackOutRight,
+            OverlayAnimateCSSAnimationType.BackOutUp,
+
+            OverlayAnimateCSSAnimationType.BounceOut,
+            OverlayAnimateCSSAnimationType.BounceOutDown,
+            OverlayAnimateCSSAnimationType.BounceOutLeft,
+            OverlayAnimateCSSAnimationType.BounceOutRight,
+            OverlayAnimateCSSAnimationType.BounceOutUp,
+
+            OverlayAnimateCSSAnimationType.FadeOut,
+            OverlayAnimateCSSAnimationType.FadeOutDown,
+            OverlayAnimateCSSAnimationType.FadeOutDownBig,
+            OverlayAnimateCSSAnimationType.FadeOutLeft,
+            OverlayAnimateCSSAnimationType.FadeOutLeftBig,
+            OverlayAnimateCSSAnimationType.FadeOutRight,
+            OverlayAnimateCSSAnimationType.FadeOutRightBig,
+            OverlayAnimateCSSAnimationType.FadeOutUp,
+            OverlayAnimateCSSAnimationType.FadeOutUpBig,
+            OverlayAnimateCSSAnimationType.FadeOutTopLeft,
+            OverlayAnimateCSSAnimationType.FadeOutTopRight,
+            OverlayAnimateCSSAnimationType.FadeOutBottomLeft,
+            OverlayAnimateCSSAnimationType.FadeOutBottomRight,
+
+            OverlayAnimateCSSAnimationType.FlipOutX,
+            OverlayAnimateCSSAnimationType.FlipOutY,
+
+            OverlayAnimateCSSAnimationType.LightSpeedOutRight,
+            OverlayAnimateCSSAnimationType.LightSpeedOutLeft,
+
+            OverlayAnimateCSSAnimationType.RotateOut,
+            OverlayAnimateCSSAnimationType.RotateOutDownLeft,
+            OverlayAnimateCSSAnimationType.RotateOutDownRight,
+            OverlayAnimateCSSAnimationType.RotateOutUpLeft,
+            OverlayAnimateCSSAnimationType.RotateOutUpRight,
+
+            OverlayAnimateCSSAnimationType.SlideOutDown,
+            OverlayAnimateCSSAnimationType.SlideOutLeft,
+            OverlayAnimateCSSAnimationType.SlideOutRight,
+            OverlayAnimateCSSAnimationType.SlideOutUp,
+
+            OverlayAnimateCSSAnimationType.ZoomOut,
+            OverlayAnimateCSSAnimationType.ZoomOutDown,
+            OverlayAnimateCSSAnimationType.ZoomOutLeft,
+            OverlayAnimateCSSAnimationType.ZoomOutRight,
+            OverlayAnimateCSSAnimationType.ZoomOutUp,
+        };
+
+        private static readonly List<OverlayAnimateCSSAnimationType> AnimateCSSRandomVisibleAnimations = new List<OverlayAnimateCSSAnimationType>()
+        {
+            OverlayAnimateCSSAnimationType.Bounce,
+            OverlayAnimateCSSAnimationType.Flash,
+            OverlayAnimateCSSAnimationType.Pulse,
+            OverlayAnimateCSSAnimationType.RubberBand,
+            OverlayAnimateCSSAnimationType.ShakeX,
+            OverlayAnimateCSSAnimationType.ShakeY,
+            OverlayAnimateCSSAnimationType.HeadShake,
+            OverlayAnimateCSSAnimationType.Swing,
+            OverlayAnimateCSSAnimationType.Tada,
+            OverlayAnimateCSSAnimationType.Wobble,
+            OverlayAnimateCSSAnimationType.Jello,
+            OverlayAnimateCSSAnimationType.HeartBeat,
+            OverlayAnimateCSSAnimationType.Flip,
+            OverlayAnimateCSSAnimationType.Hinge,
+            OverlayAnimateCSSAnimationType.JackInTheBox,
+            OverlayAnimateCSSAnimationType.RollIn,
+            OverlayAnimateCSSAnimationType.RollOut,
+        };
+
         [DataMember]
         public double StartTime { get; set; }
 
@@ -150,6 +298,47 @@ namespace MixItUp.Base.Model.Overlay
                         HashSet<OverlayAnimateCSSAnimationType> values = new HashSet<OverlayAnimateCSSAnimationType>(EnumHelper.GetEnumList<OverlayAnimateCSSAnimationType>().ToList());
                         values.Remove(OverlayAnimateCSSAnimationType.None);
                         values.Remove(OverlayAnimateCSSAnimationType.Random);
+                        values.Remove(OverlayAnimateCSSAnimationType.RandomIn);
+                        values.Remove(OverlayAnimateCSSAnimationType.RandomOut);
+                        values.Remove(OverlayAnimateCSSAnimationType.RandomVisible);
+                        animation = values.Random();
+                    }
+                    else if (animation == OverlayAnimateCSSAnimationType.RandomIn)
+                    {
+                        animation = AnimateCSSRandomInAnimations.Random();
+                    }
+                    else if (animation == OverlayAnimateCSSAnimationType.RandomOut)
+                    {
+                        animation = AnimateCSSRandomOutAnimations.Random();
+                    }
+                    else if (animation == OverlayAnimateCSSAnimationType.RandomVisible)
+                    {
+                        animation = AnimateCSSRandomVisibleAnimations.Random();
+                    }
+
+                    string animationName = animation.ToString();
+                    return Char.ToLowerInvariant(animationName[0]) + animationName.Substring(1);
+                }
+                return string.Empty;
+            }
+        }
+
+        [DataMember]
+        public OverlayWoahCSSAnimationType WoahCSSAnimation { get; set; }
+        [JsonIgnore]
+        public string WoahCSSAnimationName
+        {
+            get
+            {
+                if (this.WoahCSSAnimation != OverlayWoahCSSAnimationType.None)
+                {
+                    OverlayWoahCSSAnimationType animation = this.WoahCSSAnimation;
+
+                    if (animation == OverlayWoahCSSAnimationType.Random)
+                    {
+                        HashSet<OverlayWoahCSSAnimationType> values = new HashSet<OverlayWoahCSSAnimationType>(EnumHelper.GetEnumList<OverlayWoahCSSAnimationType>().ToList());
+                        values.Remove(OverlayWoahCSSAnimationType.None);
+                        values.Remove(OverlayWoahCSSAnimationType.Random);
                         animation = values.Random();
                     }
 
@@ -169,6 +358,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     return "animate.css";
                 }
+                if (this.WoahCSSAnimation != OverlayWoahCSSAnimationType.None)
+                {
+                    return "Woah.css";
+                }
                 return null;
             }
         }
@@ -182,6 +375,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     return this.AnimateCSSAnimationName;
                 }
+                if (this.WoahCSSAnimation != OverlayWoahCSSAnimationType.None)
+                {
+                    return this.WoahCSSAnimationName;
+                }
                 return null;
             }
         }
@@ -190,7 +387,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             properties[$"{name}Framework"] = this.AnimationFramework;
             properties[$"{name}Name"] = this.AnimationName;
-            properties[$"{name}StartTime"] = this.StartTime;
+            properties[$"{name}StartTime"] = this.StartTime.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

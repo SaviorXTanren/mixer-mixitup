@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
@@ -181,9 +180,10 @@ namespace MixItUp.Base.Services.External
                     return new Result();
                 }
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception ex)
             {
-                if (!ChannelSession.IsElevated)
+                Logger.Log(ex);
+                if (ex is UnauthorizedAccessException && !ChannelSession.IsElevated)
                 {
                     return new Result(Resources.StreamlabsDesktopAdminMaybe);
                 }
@@ -449,7 +449,7 @@ namespace MixItUp.Base.Services.External
                 using (NamedPipeClientStream namedPipeClient = new NamedPipeClientStream(ConnectionString))
                 {
                     string requestString = requestJObj.ToString(Formatting.None);
-                    Logger.Log(requestString);
+                    Logger.Log("Streamlabs Desktop packet sent - " + requestString);
 
                     byte[] requestBytes = Encoding.UTF8.GetBytes(requestString);
 
@@ -489,7 +489,7 @@ namespace MixItUp.Base.Services.External
 
             if (result != null)
             {
-                Logger.Log(result.ToString());
+                Logger.Log("Streamlabs Desktop packet recieved - " + result.ToString());
             }
 
             return result;

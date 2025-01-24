@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -136,7 +138,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        public override async void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        public override async void OnTwitchBits(object sender, TwitchBitsCheeredEventModel bitsCheered)
         {
             await this.CallFunction("TwitchBits", new Dictionary<string, object>()
             {

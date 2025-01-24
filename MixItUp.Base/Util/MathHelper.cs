@@ -1,6 +1,6 @@
 ﻿using Jace;
 using MixItUp.Base.Model.Settings;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 using System;
 
 namespace MixItUp.Base.Util

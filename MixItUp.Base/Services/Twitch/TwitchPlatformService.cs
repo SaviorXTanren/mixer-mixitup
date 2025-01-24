@@ -1,31 +1,29 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Model.Twitch.Ads;
+using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.Twitch.ChannelPoints;
+using MixItUp.Base.Model.Twitch.Channels;
+using MixItUp.Base.Model.Twitch.Chat;
+using MixItUp.Base.Model.Twitch.Clips;
+using MixItUp.Base.Model.Twitch.Games;
+using MixItUp.Base.Model.Twitch.Polls;
+using MixItUp.Base.Model.Twitch.Predictions;
+using MixItUp.Base.Model.Twitch.Streams;
+using MixItUp.Base.Model.Twitch.Subscriptions;
+using MixItUp.Base.Model.Twitch.Teams;
+using MixItUp.Base.Model.Twitch.User;
+using MixItUp.Base.Model.Web;
+using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Twitch.Base;
-using Twitch.Base.Models.NewAPI.Ads;
-using Twitch.Base.Models.NewAPI.Bits;
-using Twitch.Base.Models.NewAPI.ChannelPoints;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.Chat;
-using Twitch.Base.Models.NewAPI.Clips;
-using Twitch.Base.Models.NewAPI.Games;
-using Twitch.Base.Models.NewAPI.Polls;
-using Twitch.Base.Models.NewAPI.Predictions;
-using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Subscriptions;
-using Twitch.Base.Models.NewAPI.Teams;
-using Twitch.Base.Models.NewAPI.Users;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    [Obsolete]
     public class TwitchPlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
@@ -144,7 +142,7 @@ namespace MixItUp.Base.Services.Twitch
             try
             {
                 TwitchConnection connection = await TwitchConnection.ConnectViaLocalhostOAuthBrowser(TwitchPlatformService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("TwitchSecret"),
-                    scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
+                    scopes, forceApprovalPrompt: true);
                 if (connection != null)
                 {
                     return new Result<TwitchPlatformService>(new TwitchPlatformService(connection));

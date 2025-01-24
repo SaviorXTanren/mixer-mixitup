@@ -5,15 +5,23 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.Twitch.Ads;
+using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.Twitch.Clips;
+using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.API;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Services.YouTube.New;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +29,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using Twitch.Base.Models.NewAPI.Ads;
-using Twitch.Base.Models.NewAPI.Bits;
-using Twitch.Base.Models.NewAPI.Clips;
-using Twitch.Base.Models.NewAPI.Games;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Util
 {
@@ -233,12 +236,14 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("dayoftheweek", DateTimeOffset.Now.DayOfWeek.ToString());
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
             this.ReplaceSpecialIdentifier("dateyear", DateTimeOffset.Now.ToString("yyyy"));
+            this.ReplaceSpecialIdentifier("datemonthname", DateTimeOffset.Now.ToString("MMMM"));
             this.ReplaceSpecialIdentifier("datemonth", DateTimeOffset.Now.ToString("MM"));
             this.ReplaceSpecialIdentifier("dateday", DateTimeOffset.Now.ToString("dd"));
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("timedigits", DateTimeOffset.Now.ToString("HHmm"));
             this.ReplaceSpecialIdentifier("timehour", DateTimeOffset.Now.ToString("HH"));
             this.ReplaceSpecialIdentifier("timeminute", DateTimeOffset.Now.ToString("mm"));
+            this.ReplaceSpecialIdentifier("timesecond", DateTimeOffset.Now.ToString("ss"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("linebreak", Environment.NewLine);
 
@@ -494,6 +499,8 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(MusicPlayerSpecialIdentifierHeader))
             {
+                this.ReplaceSpecialIdentifier(MusicPlayerSpecialIdentifierHeader + "state", ServiceManager.Get<IMusicPlayerService>().State.ToString());
+
                 MusicPlayerSong song = ServiceManager.Get<IMusicPlayerService>().CurrentSong;
                 if (song != null)
                 {
@@ -508,7 +515,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                 {
                     DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(parameters.Platform);
-                    Logger.ForceLog(LogLevel.Debug, $"Channel stream info: {JSONSerializerHelper.SerializeToString(ServiceManager.Get<TwitchSessionService>().Stream)} - {JSONSerializerHelper.SerializeToString(ServiceManager.Get<YouTubeSessionService>().Broadcast)} - {ServiceManager.Get<TrovoSessionService>().Channel}");
+                    Logger.ForceLog(LogLevel.Debug, $"Channel stream info: {JSONSerializerHelper.SerializeToString(ServiceManager.Get<TwitchSession>().Stream)} - {JSONSerializerHelper.SerializeToString(ServiceManager.Get<YouTubeSession>().LiveBroadcasts.Values.FirstOrDefault())} - {ServiceManager.Get<TrovoSession>().ChannelModel}");
                     if (startTime > DateTimeOffset.MinValue)
                     {
                         TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
@@ -524,28 +531,21 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(platform);
+                if (session.IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TwitchSessionService>().IsLive.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().Channel?.title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", session.IsLive.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", session.StreamViewerCount.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", session.StreamTitle);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameid", session.StreamCategoryID);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", session.StreamCategoryName);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", session.StreamCategoryImageURL);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", session.StreamCategoryName);
+                }
 
-                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage"))
-                    {
-                        GameModel game = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(ServiceManager.Get<TwitchSessionService>().Channel?.game_id);
-                        if (game != null && !string.IsNullOrEmpty(game.box_art_url))
-                        {
-                            string image = game.box_art_url;
-                            image = image.Replace("{width}", "264");
-                            image = image.Replace("{height}", "352");
-                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", image);
-                        }
-                    }
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameid", ServiceManager.Get<TwitchSessionService>().Channel?.game_id);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", ServiceManager.Get<TwitchSessionService>().Channel?.game_name);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().Channel?.game_name);
-
-                    string thumbnail = ServiceManager.Get<TwitchSessionService>().Stream?.thumbnail_url;
+                if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
+                {
+                    string thumbnail = ServiceManager.Get<TwitchSession>().Stream?.thumbnail_url;
                     if (!string.IsNullOrEmpty(thumbnail))
                     {
                         thumbnail = thumbnail.Replace("{width}", "1920");
@@ -555,53 +555,47 @@ namespace MixItUp.Base.Util
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
                     {
-                        long followCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
+                        long followCount = await ServiceManager.Get<TwitchSession>().StreamerService.GetFollowerCount(ServiceManager.Get<TwitchSession>().StreamerModel);
                         this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", followCount.ToString());
                     }
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount"))
                     {
-                        long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
+                        long subCount = await ServiceManager.Get<TwitchSession>().StreamerService.GetSubscriberCount(ServiceManager.Get<TwitchSession>().StreamerModel);
                         this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
                     }
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "subscriberpoints"))
                     {
-                        long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberPoints(ServiceManager.Get<TwitchSessionService>().User);
+                        long subCount = await ServiceManager.Get<TwitchSession>().StreamerService.GetSubscriberPoints(ServiceManager.Get<TwitchSession>().StreamerModel);
                         this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscriberpoints", subCount.ToString());
                     }
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags"))
                     {
-                        var tags = ServiceManager.Get<TwitchSessionService>().Channel?.tags;
+                        var tags = ServiceManager.Get<TwitchSession>().Channel?.tags;
                         if (tags != null && tags.Count() > 0)
                         {
                             this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags", string.Join(", ", tags));
                         }
                     }
                 }
-                else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Snippet?.Title);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "description", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Snippet?.Description);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<YouTubeSessionService>().IsLive.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<YouTubeSessionService>().User.Statistics.SubscriberCount.GetValueOrDefault().ToString());
-                    if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                    LiveBroadcast broadcast = ServiceManager.Get<YouTubeSession>().LiveBroadcasts.Values.FirstOrDefault();
+
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "description", broadcast?.Snippet?.Description);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<YouTubeSession>().StreamerModel.Statistics.SubscriberCount.GetValueOrDefault().ToString());
+                    if (ServiceManager.Get<YouTubeSession>().IsLive)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "youtubeid", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Id);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "youtubeurl", ServiceManager.Get<YouTubeSessionService>().StreamLink);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "youtubeid", broadcast?.Id);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "youtubeurl", ServiceManager.Get<YouTubeSession>().StreamLink);
                     }
                 }
-                else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TrovoSessionService>().IsLive.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TrovoSessionService>().Channel?.live_title);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameid", ServiceManager.Get<TrovoSessionService>().Channel?.category_id);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TrovoSessionService>().Channel?.category_name);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", ServiceManager.Get<TrovoSessionService>().Channel?.category_name);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TrovoSessionService>().Channel?.followers.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", ServiceManager.Get<TrovoSessionService>().Channel?.subscriber_num.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TrovoSession>().ChannelModel?.followers.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", ServiceManager.Get<TrovoSession>().ChannelModel?.subscriber_num.ToString());
                 }
 
                 this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ServiceManager.Get<UserService>().ActiveUserCount.ToString());
@@ -754,23 +748,23 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader))
+            if (ServiceManager.Get<TwitchSession>().IsConnected && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader))
             {
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subcount"))
                 {
-                    long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
+                    long subCount = await ServiceManager.Get<TwitchSession>().StreamerService.GetSubscriberCount(ServiceManager.Get<TwitchSession>().StreamerModel);
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subcount", subCount.ToString());
                 }
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subpoints"))
                 {
-                    long subPoints = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberPoints(ServiceManager.Get<TwitchSessionService>().User);
+                    long subPoints = await ServiceManager.Get<TwitchSession>().StreamerService.GetSubscriberPoints(ServiceManager.Get<TwitchSession>().StreamerModel);
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subpoints", subPoints.ToString());
                 }
 
-                if (ServiceManager.Get<TwitchSessionService>().AdSchedule != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "ad"))
+                if (ServiceManager.Get<TwitchSession>().AdSchedule != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "ad"))
                 {
-                    AdScheduleModel adSchedule = ServiceManager.Get<TwitchSessionService>().AdSchedule;
+                    AdScheduleModel adSchedule = ServiceManager.Get<TwitchSession>().AdSchedule;
                     DateTimeOffset nextAd = adSchedule.NextAdTimestamp();
                     int nextAdMinutes = adSchedule.NextAdMinutesFromNow();
                     
@@ -782,7 +776,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "cliprandom"))
                 {
-                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(ServiceManager.Get<TwitchSessionService>().User, maxResults: 100);
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSession>().StreamerService.GetClips(ServiceManager.Get<TwitchSession>().StreamerModel, maxResults: 100);
                     if (clips != null && clips.Count() > 0)
                     {
                         ClipModel randomClip = clips.Random();
@@ -791,11 +785,11 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader))
+            if (ServiceManager.Get<YouTubeSession>().IsConnected && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader))
             {
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestvideo"))
                 {
-                    SearchResult searchResult = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetLatestNonStreamVideo(ServiceManager.Get<YouTubeSessionService>().ChannelID);
+                    SearchResult searchResult = await ServiceManager.Get<YouTubeSession>().StreamerService.GetLatestNonStreamVideo(ServiceManager.Get<YouTubeSession>().ChannelID);
                     if (searchResult != null)
                     {
                         this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestvideoid", searchResult.Id.VideoId);
@@ -817,6 +811,11 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(inventory.RandomItemSpecialIdentifier))
                 {
                     this.ReplaceSpecialIdentifier(inventory.RandomItemSpecialIdentifier, inventory.Items.Values.Random().Name);
+                }
+
+                if (this.ContainsSpecialIdentifier(inventory.UniqueItemsTotalSpecialIdentifier))
+                {
+                    this.ReplaceSpecialIdentifier(inventory.UniqueItemsTotalSpecialIdentifier, inventory.Items.Count().ToString());
                 }
             }
 
@@ -962,8 +961,8 @@ namespace MixItUp.Base.Util
                         }
                         else
                         {
-                            this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, "Nothing");
-                            this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, "Nothing");
+                            this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, Resources.Nothing);
+                            this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, Resources.Nothing);
                         }
                     }
                 }
@@ -1016,6 +1015,9 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followdays", user.FollowDays.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followage", user.FollowAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followdate", user.FollowDateString);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "lastseendays", user.LastActivityDays.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "lastseenage", user.LastActivityAgeString);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "lastseendate", user.LastActivityDateString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subdays", user.SubscribeDays.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subage", user.SubscribeAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subdate", user.SubscribeDateString);
@@ -1066,22 +1068,22 @@ namespace MixItUp.Base.Util
                 string userStreamHeader = identifierHeader + UserSpecialIdentifierHeader + "stream";
                 if (this.ContainsSpecialIdentifier(userStreamHeader))
                 {
-                    if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
                     {
                         TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
                         if (twitchUser != null)
                         {
-                            Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchUser.ID);
+                            MixItUp.Base.Model.Twitch.User.UserModel tUser = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIUserByID(twitchUser.ID);
                             if (tUser != null)
                             {
-                                Task<Twitch.Base.Models.NewAPI.Channels.ChannelInformationModel> tChannel = ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
-                                Task<Twitch.Base.Models.NewAPI.Streams.StreamModel> stream = ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
+                                Task<MixItUp.Base.Model.Twitch.Channels.ChannelInformationModel> tChannel = ServiceManager.Get<TwitchSession>().StreamerService.GetChannelInformation(tUser);
+                                Task<MixItUp.Base.Model.Twitch.Streams.StreamModel> stream = ServiceManager.Get<TwitchSession>().StreamerService.GetStream(tUser);
 
                                 await Task.WhenAll(tChannel, stream);
 
                                 if (this.ContainsSpecialIdentifier(userStreamHeader + "gameimage"))
                                 {
-                                    Task<GameModel> game = ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(tChannel.Result?.game_id);
+                                    Task<GameModel> game = ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIGameByID(tChannel.Result?.game_id);
                                     this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", game.Result?.box_art_url);
                                 }
 
@@ -1092,27 +1094,27 @@ namespace MixItUp.Base.Util
                             }
                         }
                     }
-                    else if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                    else if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSession>().IsConnected)
                     {
                         YouTubeUserPlatformV2Model youtubeUser = user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube);
                         if (youtubeUser != null)
                         {
-                            Google.Apis.YouTube.v3.Data.Channel yChannel = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(youtubeUser.ID);
+                            Google.Apis.YouTube.v3.Data.Channel yChannel = await ServiceManager.Get<YouTubeSession>().StreamerService.GetChannelByID(youtubeUser.ID);
                             if (yChannel != null)
                             {
 
                             }
                         }
                     }
-                    else if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                    else if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSession>().IsConnected)
                     {
                         TrovoUserPlatformV2Model trovoUser = user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo);
                         if (trovoUser != null)
                         {
-                            Trovo.Base.Models.Users.UserModel tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(trovoUser.Username);
+                            MixItUp.Base.Model.Trovo.Users.UserModel tUser = await ServiceManager.Get<TrovoSession>().StreamerService.GetUserByName(trovoUser.Username);
                             if (tUser != null)
                             {
-                                Trovo.Base.Models.Channels.ChannelModel tChannel = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetChannelByID(tUser.channel_id);
+                                MixItUp.Base.Model.Trovo.Channels.ChannelModel tChannel = await ServiceManager.Get<TrovoSession>().StreamerService.GetChannelByID(tUser.channel_id);
 
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.live_title);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "gamename", tChannel?.category_name);
@@ -1138,12 +1140,12 @@ namespace MixItUp.Base.Util
 
         private async Task HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum period)
         {
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
+            if (ServiceManager.Get<TwitchSession>().IsConnected && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
             {
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower(), async (total) =>
                 {
                     string result = MixItUp.Base.Resources.NoUsersFound;
-                    BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, total);
+                    BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSession>().StreamerService.GetBitsLeaderboard(period, total);
                     if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
                     {
                         IEnumerable<BitsLeaderboardUserModel> users = leaderboard.users.OrderBy(l => l.rank);
@@ -1169,9 +1171,9 @@ namespace MixItUp.Base.Util
 
         private async Task HandleTopBitsCheered(BitsLeaderboardPeriodEnum period)
         {
-            if (ServiceManager.Get<TwitchSessionService>().UserConnection != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower()))
+            if (ServiceManager.Get<TwitchSession>().IsConnected && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower()))
             {
-                BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, 1);
+                BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSession>().StreamerService.GetBitsLeaderboard(period, 1);
                 if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
                 {
                     BitsLeaderboardUserModel bitsUser = leaderboard.users.OrderBy(u => u.rank).First();

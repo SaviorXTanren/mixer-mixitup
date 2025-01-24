@@ -10,6 +10,7 @@ namespace MixItUp.Base.ViewModel.Overlay
     public enum OverlayItemAnimationLibraryType
     {
         AnimateCSS,
+        WoahCSS,
     }
 
     public class OverlayAnimationV3ViewModel : UIViewModelBase
@@ -51,8 +52,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public string DisplayName { get { return Resources.ResourceManager.GetString(this.Name, Resources.Culture); } }
 
-        private static IEnumerable<OverlayAnimateCSSAnimationType> animateCSSAnimations = null;
-
         public IEnumerable<OverlayItemAnimationLibraryType> AnimationLibraries { get { return EnumLocalizationHelper.GetSortedEnumList<OverlayItemAnimationLibraryType>(); } }
 
         public OverlayItemAnimationLibraryType SelectedAnimationLibrary
@@ -63,8 +62,10 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.selectedAnimationLibrary = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(IsAnimateCSSVisible));
+                this.NotifyPropertyChanged(nameof(IsWoahCSSVisible));
 
                 this.SelectedAnimatedCSSAnimation = OverlayAnimateCSSAnimationType.None;
+                this.SelectedWoahCSSAnimation = OverlayWoahCSSAnimationType.None;
             }
         }
         private OverlayItemAnimationLibraryType selectedAnimationLibrary = OverlayItemAnimationLibraryType.AnimateCSS;
@@ -85,6 +86,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return OverlayAnimationV3ViewModel.animateCSSAnimations;
             }
         }
+        private static IEnumerable<OverlayAnimateCSSAnimationType> animateCSSAnimations = null;
 
         public OverlayAnimateCSSAnimationType SelectedAnimatedCSSAnimation
         {
@@ -96,6 +98,35 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private OverlayAnimateCSSAnimationType selectedAnimatedCSSAnimation;
+
+        public bool IsWoahCSSVisible { get { return this.SelectedAnimationLibrary == OverlayItemAnimationLibraryType.WoahCSS; } }
+
+        public IEnumerable<OverlayWoahCSSAnimationType> WoahCSSAnimations
+        {
+            get
+            {
+                if (OverlayAnimationV3ViewModel.woahCSSAnimations == null)
+                {
+                    List<OverlayWoahCSSAnimationType> animations = new List<OverlayWoahCSSAnimationType>(EnumLocalizationHelper.GetSortedEnumList<OverlayWoahCSSAnimationType>());
+                    animations.Remove(OverlayWoahCSSAnimationType.None);
+                    animations.Insert(0, OverlayWoahCSSAnimationType.None);
+                    OverlayAnimationV3ViewModel.woahCSSAnimations = animations;
+                }
+                return OverlayAnimationV3ViewModel.woahCSSAnimations;
+            }
+        }
+        private static IEnumerable<OverlayWoahCSSAnimationType> woahCSSAnimations = null;
+
+        public OverlayWoahCSSAnimationType SelectedWoahCSSAnimation
+        {
+            get { return this.selectedWoahCSSAnimation; }
+            set
+            {
+                this.selectedWoahCSSAnimation = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayWoahCSSAnimationType selectedWoahCSSAnimation;
 
         public ICommand DeleteCommand { get; set; }
         public event EventHandler OnDeleteRequested = delegate { };
@@ -120,11 +151,17 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.SelectedAnimationLibrary = OverlayItemAnimationLibraryType.AnimateCSS;
                     this.SelectedAnimatedCSSAnimation = animation.AnimateCSSAnimation;
                 }
+                else if (animation.WoahCSSAnimation != OverlayWoahCSSAnimationType.None)
+                {
+                    this.SelectedAnimationLibrary = OverlayItemAnimationLibraryType.WoahCSS;
+                    this.SelectedWoahCSSAnimation = animation.WoahCSSAnimation;
+                }
             }
             else
             {
                 this.SelectedAnimationLibrary = OverlayItemAnimationLibraryType.AnimateCSS;
                 this.SelectedAnimatedCSSAnimation = OverlayAnimateCSSAnimationType.None;
+                this.SelectedWoahCSSAnimation = OverlayWoahCSSAnimationType.None;
             }
 
             this.DeleteCommand = this.CreateCommand(() => this.OnDeleteRequested(this, new EventArgs()));
@@ -139,6 +176,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             if (this.IsAnimateCSSVisible && this.SelectedAnimatedCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
                 animation.AnimateCSSAnimation = this.SelectedAnimatedCSSAnimation;
+            }
+            else if (this.IsWoahCSSVisible && this.SelectedWoahCSSAnimation != OverlayWoahCSSAnimationType.None)
+            {
+                animation.WoahCSSAnimation = this.SelectedWoahCSSAnimation;
             }
 
             return animation;

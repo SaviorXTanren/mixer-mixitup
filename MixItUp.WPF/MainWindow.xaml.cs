@@ -8,7 +8,6 @@ using MixItUp.Base.ViewModel.CommunityCommands;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
-using StreamingClient.Base.Util;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;

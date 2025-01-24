@@ -1,22 +1,22 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.Twitch.Ads;
+using MixItUp.Base.Model.Twitch.Channels;
+using MixItUp.Base.Model.Twitch.Games;
+using MixItUp.Base.Model.Twitch.Streams;
+using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.Ads;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.Games;
-using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    [Obsolete]
     public class TwitchSessionService : IStreamingPlatformSessionService
     {
         public TwitchPlatformService UserConnection { get; private set; }
@@ -71,11 +71,11 @@ namespace MixItUp.Base.Services.Twitch
         {
             get
             {
-                return this.Stream != null;
+                return this.Stream != null || ServiceManager.Get<TwitchEventSubService>().StreamLiveStatus;
             }
         }
 
-        public int ViewerCount { get { return (int)this.Stream?.viewer_count; } }
+        public int ViewerCount { get { return (int)(this.Stream?.viewer_count ?? 0); } }
 
         public DateTimeOffset StreamStart
         {
@@ -382,30 +382,30 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.game_name);
                     }
+                }
 
-                    AdScheduleModel adSchedule = await this.UserConnection.GetAdSchedule(this.User);
-                    if (adSchedule != null)
-                    {
-                        this.AdSchedule = adSchedule;
-                    }
+                AdScheduleModel adSchedule = await this.UserConnection.GetAdSchedule(this.User);
+                if (adSchedule != null)
+                {
+                    this.AdSchedule = adSchedule;
+                }
 
-                    if (this.AdSchedule != null)
+                if (this.AdSchedule != null)
+                {
+                    DateTimeOffset nextAd = this.AdSchedule.NextAdTimestamp();
+                    if (nextAd > this.NextAdTimestamp)
                     {
-                        DateTimeOffset nextAd = this.AdSchedule.NextAdTimestamp();
-                        if (nextAd > this.NextAdTimestamp)
+                        int nextAdMinutes = this.AdSchedule.NextAdMinutesFromNow();
+                        if (nextAdMinutes <= ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount && nextAdMinutes > 0)
                         {
-                            int nextAdMinutes = this.AdSchedule.NextAdMinutesFromNow();
-                            if (nextAdMinutes <= ChannelSession.Settings.TwitchUpcomingAdCommandTriggerAmount && nextAdMinutes > 0)
-                            {
-                                this.NextAdTimestamp = nextAd;
+                            this.NextAdTimestamp = nextAd;
 
-                                Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
-                                eventCommandSpecialIdentifiers["adsnoozecount"] = this.AdSchedule.snooze_count.ToString();
-                                eventCommandSpecialIdentifiers["adnextduration"] = this.AdSchedule.duration.ToString();
-                                eventCommandSpecialIdentifiers["adnextminutes"] = nextAdMinutes.ToString();
-                                eventCommandSpecialIdentifiers["adnexttime"] = nextAd.ToFriendlyTimeString();
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdUpcoming, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
-                            }
+                            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                            eventCommandSpecialIdentifiers["adsnoozecount"] = this.AdSchedule.snooze_count.ToString();
+                            eventCommandSpecialIdentifiers["adnextduration"] = this.AdSchedule.duration.ToString();
+                            eventCommandSpecialIdentifiers["adnextminutes"] = nextAdMinutes.ToString();
+                            eventCommandSpecialIdentifiers["adnexttime"] = nextAd.ToFriendlyTimeString();
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelAdUpcoming, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
                         }
                     }
                 }
@@ -461,51 +461,6 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }
             return false;
-        }
-    }
-
-    public static class TwitchNewAPIUserModelExtensions
-    {
-        public static bool IsAffiliate(this UserModel twitchUser)
-        {
-            return string.Equals(twitchUser.broadcaster_type, "affiliate", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsPartner(this UserModel twitchUser)
-        {
-            return string.Equals(twitchUser.broadcaster_type, "partner", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsStaff(this UserModel twitchUser)
-        {
-            return string.Equals(twitchUser.type, "staff", StringComparison.OrdinalIgnoreCase) || string.Equals(twitchUser.type, "admin", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsGlobalMod(this UserModel twitchUser)
-        {
-            return string.Equals(twitchUser.type, "global_mod", StringComparison.OrdinalIgnoreCase);
-        }
-    }
-
-    public static class TwitchNewAPIAdScheduleExtensions
-    {
-        public static DateTimeOffset NextAdTimestamp(this AdScheduleModel schedule)
-        {
-            if (long.TryParse(schedule.next_ad_at, out long seconds) && seconds > 0)
-            {
-                return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
-            }
-            return DateTimeOffset.MinValue;
-        }
-
-        public static int NextAdMinutesFromNow(this AdScheduleModel schedule)
-        {
-            DateTimeOffset nextAd = schedule.NextAdTimestamp();
-            if (nextAd != DateTimeOffset.MinValue)
-            {
-                return (int)(nextAd - DateTimeOffset.Now).TotalMinutes;
-            }
-            return 0;
         }
     }
 }

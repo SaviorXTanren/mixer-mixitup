@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -90,9 +88,22 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["usersubplan"] = "Tier 1";
                     specialIdentifiers["isanonymous"] = "false";
                     break;
-                case EventTypeEnum.TwitchChannelWatchStreak:
-                    specialIdentifiers["userwatchstreak"] = "5";
+
+                case EventTypeEnum.TwitchChannelHighlightedMessage:
+                    specialIdentifiers["message"] = "Test Message";
                     break;
+                case EventTypeEnum.TwitchChannelUserIntro:
+                    specialIdentifiers["message"] = "Test Message";
+                    break;
+                case EventTypeEnum.TwitchChannelPowerUpMessageEffect:
+                    specialIdentifiers["message"] = "Test Message";
+                    break;
+                case EventTypeEnum.TwitchChannelPowerUpGigantifiedEmote:
+                    specialIdentifiers["message"] = "LUL";
+                    specialIdentifiers["emotename"] = "LUL";
+                    specialIdentifiers["emoteurl"] = "https://static-cdn.jtvnw.net/emoticons/v2/425618/default/dark/4.0";
+                    break;
+
                 case EventTypeEnum.TwitchChannelBitsCheered:
                     specialIdentifiers["bitsamount"] = "10";
                     specialIdentifiers["bitslifetimeamount"] = "100";
@@ -188,6 +199,7 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.TiltifyDonation:
                 case EventTypeEnum.DonorDriveDonation:
                 case EventTypeEnum.DonorDriveDonationIncentive:
+                case EventTypeEnum.DonorDriveDonationTeamIncentive:
                 case EventTypeEnum.TipeeeStreamDonation:
                 case EventTypeEnum.TreatStreamDonation:
                 case EventTypeEnum.RainmakerDonation:
@@ -247,6 +259,7 @@ namespace MixItUp.Base.Model.Commands
                     }
                     break;
                 case EventTypeEnum.DonorDriveDonationMilestone:
+                case EventTypeEnum.DonorDriveDonationTeamMilestone:
                     specialIdentifiers["donordrivemilestonedescription"] = "Milestone Description";
                     specialIdentifiers["donordrivemilestoneamountnumber"] = "12.34";
                     specialIdentifiers["donordrivemilestoneamount"] = "$12.34";

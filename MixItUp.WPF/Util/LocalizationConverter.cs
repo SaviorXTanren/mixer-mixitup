@@ -1,8 +1,7 @@
-﻿using StreamingClient.Base.Util;
+﻿using MixItUp.Base.Util;
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using MixItUp.Base.Util;
 
 namespace MixItUp.WPF.Util
 {

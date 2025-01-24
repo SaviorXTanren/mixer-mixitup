@@ -13,10 +13,13 @@ namespace MixItUp.Base.Model.Settings
         Spanish = 4,
         Japanese = 5,
         French = 6,
-        Portuguese = 7,
+        PortugueseBrazil = 7,
         Russian = 8,
         Ukrainian = 9,
         ChineseTraditional = 10,
+        PortuguesePortugal = 11,
+        Italian = 12,
+        Polish = 13,
 
         Pseudo = 99999,
     }
@@ -34,7 +37,10 @@ namespace MixItUp.Base.Model.Settings
             { LanguageOptions.Spanish, "es-ES" },
             { LanguageOptions.Japanese, "ja-JP" },
             { LanguageOptions.French, "fr-FR" },
-            { LanguageOptions.Portuguese, "pt-BR" },
+            { LanguageOptions.Italian, "it-IT" },
+            { LanguageOptions.Polish, "pl-PL" },
+            { LanguageOptions.PortugueseBrazil, "pt-BR" },
+            { LanguageOptions.PortuguesePortugal, "pt-PT" },
             { LanguageOptions.Russian, "ru-RU" },
             { LanguageOptions.Ukrainian, "uk-UA" },
 

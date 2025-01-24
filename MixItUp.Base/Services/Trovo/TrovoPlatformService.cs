@@ -1,18 +1,18 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Model.Trovo.Category;
+using MixItUp.Base.Model.Trovo.Channels;
+using MixItUp.Base.Model.Trovo.Chat;
+using MixItUp.Base.Model.Trovo.Users;
+using MixItUp.Base.Model.Web;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Trovo.API;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Trovo.Base;
-using Trovo.Base.Models.Category;
-using Trovo.Base.Models.Channels;
-using Trovo.Base.Models.Chat;
-using Trovo.Base.Models.Users;
 
 namespace MixItUp.Base.Services.Trovo
 {
+    [Obsolete]
     public class TrovoPlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "8FMjuk785AX4FMyrwPTU3B8vYvgHWN33";
@@ -47,7 +47,7 @@ namespace MixItUp.Base.Services.Trovo
             {
                 if (!string.IsNullOrEmpty(dateTime) && long.TryParse(dateTime, out long seconds))
                 {
-                    DateTimeOffset result = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
+                    DateTimeOffset result = DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
                     if (result > DateTimeOffset.MinValue)
                     {
                         return result;
@@ -101,7 +101,7 @@ namespace MixItUp.Base.Services.Trovo
         {
             try
             {
-                TrovoConnection connection = await TrovoConnection.ConnectViaLocalhostOAuthBrowser(TrovoPlatformService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("TrovoSecret"), scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
+                TrovoConnection connection = await TrovoConnection.ConnectViaLocalhostOAuthBrowser(TrovoPlatformService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("TrovoSecret"), scopes, forceApprovalPrompt: true);
                 if (connection != null)
                 {
                     return new Result<TrovoPlatformService>(new TrovoPlatformService(connection));

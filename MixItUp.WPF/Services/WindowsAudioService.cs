@@ -2,7 +2,6 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using NAudio.Wave;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -102,14 +101,24 @@ namespace MixItUp.WPF.Services
             if (overlay != null)
             {
                 Guid id = await overlay.PlayAudio(filePath, volume);
-                this.activeOverlaySounds.Add(id);
+                lock (this.activeOverlaySounds)
+                {
+                    this.activeOverlaySounds.Add(id);
+                }
 
                 if (waitForFinish)
                 {
+                    bool contains = false;
                     do
                     {
                         await Task.Delay(100);
-                    } while (this.activeOverlaySounds.Contains(id));
+
+                        lock (this.activeOverlaySounds)
+                        {
+                            contains = this.activeOverlaySounds.Contains(id);
+                        }
+
+                    } while (contains);
                 }
             }
         }
@@ -155,13 +164,20 @@ namespace MixItUp.WPF.Services
                 {
                     await overlay.Function(id.ToString(), "remove", new Dictionary<string, object>());
                 }
-                this.activeOverlaySounds.Clear();
+
+                lock (this.activeOverlaySounds)
+                {
+                    this.activeOverlaySounds.Clear();
+                }
             }
         }
 
         public void OverlaySoundFinished(Guid id)
         {
-            this.activeOverlaySounds.Remove(id);
+            lock (this.activeOverlaySounds)
+            {
+                this.activeOverlaySounds.Remove(id);
+            }
         }
 
         public IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false)

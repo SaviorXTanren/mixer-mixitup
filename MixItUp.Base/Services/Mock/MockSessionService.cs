@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.Web;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mock
 {
+    [Obsolete]
     public class MockSessionService : IStreamingPlatformSessionService
     {
         public MockPlatformService UserConnection { get; private set; }

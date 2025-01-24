@@ -1,7 +1,8 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -101,16 +102,33 @@ namespace MixItUp.Base.Model.Overlay
 
         public void Track(UserV2ViewModel user, double amount)
         {
-            if (!this.itemTracking.ContainsKey(user))
+            if (this.ShouldTrack(user))
             {
-                this.itemTracking[user] = 0;
+                if (!this.itemTracking.ContainsKey(user))
+                {
+                    this.itemTracking[user] = 0;
+                }
+                this.itemTracking[user] += amount;
+
+                Logger.Log(LogLevel.Debug, $"Tracking added for {user} to {this.itemTracking[user]} for {this.Name} End Credits section");
             }
-            this.itemTracking[user] += amount;
+            else
+            {
+                Logger.Log(LogLevel.Debug, $"No tracking {user} for {this.Name} End Credits section");
+            }
         }
 
         public void Track(UserV2ViewModel user, string text)
         {
-            this.customTracking.Add(new Tuple<UserV2ViewModel, string>(user, text));
+            if (this.ShouldTrack(user))
+            {
+                this.customTracking.Add(new Tuple<UserV2ViewModel, string>(user, text));
+                Logger.Log(LogLevel.Debug, $"Tracking added for {user} to {text} for {this.Name} End Credits section");
+            }
+            else
+            {
+                Logger.Log(LogLevel.Debug, $"No tracking {user} for {this.Name} End Credits section");
+            }
         }
 
         public void Untrack(UserV2ViewModel user)
@@ -154,7 +172,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.Type == OverlayEndCreditsSectionV3Type.CustomSection)
             {
-                foreach (var item in this.customTracking)
+                foreach (var item in this.customTracking.ToList())
                 {
                     string text = OverlayV3Service.ReplaceProperty(this.ItemTemplate, TextPropertyName, item.Item2);
                     if (SpecialIdentifierStringBuilder.ContainsSpecialIdentifiers(text))
@@ -166,7 +184,7 @@ namespace MixItUp.Base.Model.Overlay
                 return items;
             }
 
-            foreach (var item in this.itemTracking)
+            foreach (var item in this.itemTracking.ToList())
             {
                 string text = OverlayV3Service.ReplaceProperty(this.ItemTemplate, UsernamePropertyName, item.Key.DisplayName);
                 switch (this.Type)
@@ -184,12 +202,17 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (SpecialIdentifierStringBuilder.ContainsSpecialIdentifiers(text))
                 {
-                    await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(text, new CommandParametersModel(item.Key));
+                    text = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(text, new CommandParametersModel(item.Key));
                 }
 
                 items.Add(text);
             }
             return items.OrderBy(i => i);
+        }
+
+        private bool ShouldTrack(UserV2ViewModel user)
+        {
+            return !user.IsSpecialtyExcluded;
         }
     }
 
@@ -198,6 +221,14 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string EndCreditsStartedPacketType = "EndCreditsStarted";
         public const string EndCreditsCompletedPacketType = "EndCreditsCompleted";
+
+        private static readonly HashSet<OverlayEndCreditsSectionV3Type> AllChatterSectionTypes = new HashSet<OverlayEndCreditsSectionV3Type>()
+        {
+            OverlayEndCreditsSectionV3Type.Chatters,
+            OverlayEndCreditsSectionV3Type.Followers,
+            OverlayEndCreditsSectionV3Type.Subscribers,
+            OverlayEndCreditsSectionV3Type.Moderators
+        };
 
         private static readonly HashSet<OverlayEndCreditsSectionV3Type> AllSubscriberSectionTypes = new HashSet<OverlayEndCreditsSectionV3Type>()
         {
@@ -224,6 +255,8 @@ namespace MixItUp.Base.Model.Overlay
         public bool RunCreditsWhenVisible { get; set; }
         [DataMember]
         public bool RunEndlessly { get; set; }
+        [DataMember]
+        public bool DontShowNoDataError { get; set; }
 
         [DataMember]
         public List<OverlayEndCreditsSectionV3Model> Sections { get; set; } = new List<OverlayEndCreditsSectionV3Model>();
@@ -234,7 +267,7 @@ namespace MixItUp.Base.Model.Overlay
         public Guid EndedCommandID { get; set; }
 
         [DataMember]
-        public override bool Chatters { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Chatters); } set { } }
+        public override bool Chatters { get { return this.Sections.Any(s => OverlayEndCreditsV3Model.AllChatterSectionTypes.Contains(s.Type)); } set { } }
 
         [DataMember]
         public override bool Follows { get { return this.Sections.Any(s => s.Type == OverlayEndCreditsSectionV3Type.Followers || s.Type == OverlayEndCreditsSectionV3Type.NewFollowers); } set { } }
@@ -263,10 +296,25 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public string AnimationIterations { get { return this.RunEndlessly ? "Infinity" : "1"; } }
 
+        [JsonIgnore]
+        public override bool JQuery { get { return true; } }
+
         public OverlayEndCreditsV3Model() : base(OverlayItemV3Type.EndCredits) { }
 
         public override async Task Initialize()
         {
+            if (string.Equals(this.Javascript, OverlayResources.OverlayEndCreditsDefaultJavascriptOld, System.StringComparison.OrdinalIgnoreCase))
+            {
+                this.Javascript = OverlayResources.OverlayEndCreditsDefaultJavascript;
+            }
+
+            if (this.PositionType != OverlayPositionV3Type.Pixel || this.XPosition != 0 || this.YPosition != 0)
+            {
+                this.PositionType = OverlayPositionV3Type.Pixel;
+                this.XPosition = 0;
+                this.YPosition = 0;
+            }
+
             await base.Initialize();
 
             foreach (OverlayEndCreditsSectionV3Model section in Sections)
@@ -297,29 +345,33 @@ namespace MixItUp.Base.Model.Overlay
         {
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
             {
-                switch (section.Type)
+                if (section.Type == OverlayEndCreditsSectionV3Type.Chatters)
                 {
-                    case OverlayEndCreditsSectionV3Type.Chatters:
+                    section.Track(message.User);
+                }
+
+                if (section.Type == OverlayEndCreditsSectionV3Type.Followers)
+                {
+                    if (message.User.IsFollower)
+                    {
                         section.Track(message.User);
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Followers:
-                        if (message.User.IsFollower)
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Subscribers:
-                        if (message.User.IsSubscriber)
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
-                    case OverlayEndCreditsSectionV3Type.Moderators:
-                        if (message.User.HasRole(UserRoleEnum.Moderator))
-                        {
-                            section.Track(message.User);
-                        }
-                        break;
+                    }
+                }
+
+                if (section.Type == OverlayEndCreditsSectionV3Type.Subscribers)
+                {
+                    if (message.User.IsSubscriber)
+                    {
+                        section.Track(message.User);
+                    }
+                }
+
+                if (section.Type == OverlayEndCreditsSectionV3Type.Moderators)
+                {
+                    if (message.User.HasRole(UserRoleEnum.Moderator))
+                    {
+                        section.Track(message.User);
+                    }
                 }
             }
         }
@@ -425,7 +477,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public override void OnTwitchBits(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        public override void OnTwitchBits(object sender, TwitchBitsCheeredEventModel bitsCheered)
         {
             foreach (OverlayEndCreditsSectionV3Model section in this.Sections)
             {
@@ -547,13 +599,23 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
 
-            Dictionary<string, object> data = new Dictionary<string, object>();
-            data["Order"] = applicableSections.Select(s => s.ID);
-            data["Columns"] = applicableSections.ToDictionary(s => s.ID, s => s.Columns);
-            data["Types"] = applicableSections.ToDictionary(s => s.ID, s => s.Type.ToString());
-            data["Items"] = sectionItems;
+            if (applicableSections.Count > 0)
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                data["Order"] = applicableSections.Select(s => s.ID);
+                data["Columns"] = applicableSections.ToDictionary(s => s.ID, s => s.Columns);
+                data["Types"] = applicableSections.ToDictionary(s => s.ID, s => s.Type.ToString());
+                data["Items"] = sectionItems;
 
-            await this.CallFunction("startCredits", data);
+                await this.CallFunction("startCredits", data);
+            }
+            else
+            {
+                if (!this.DontShowNoDataError)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage(Resources.OverlayWidgetEndCreditsNoDataCurrentlyAvailable);
+                }
+            }
         }
 
         protected override async Task Loaded()

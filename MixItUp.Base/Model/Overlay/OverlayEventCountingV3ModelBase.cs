@@ -1,10 +1,11 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,6 +99,45 @@ namespace MixItUp.Base.Model.Overlay
             this.RemoveEventHandlers();
         }
 
+        public void EnableFollows()
+        {
+            this.RemoveEventHandlers();
+            EventService.OnFollowOccurred += EventService_OnFollowOccurred;
+        }
+
+        public void EnableSubscriptions()
+        {
+            this.RemoveEventHandlers();
+            EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
+            EventService.OnResubscribeOccurred += EventService_OnSubscribeOccurred;
+            EventService.OnSubscriptionGiftedOccurred += EventService_OnSubscribeOccurred;
+            EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
+        }
+
+        public void ClearAllAmountsToZero()
+        {
+            this.FollowAmount = 0;
+            this.RaidAmount = 0;
+            this.RaidPerViewAmount = 0;
+
+            for (int i = 0; i < this.TwitchSubscriptionsAmount.Count; i++)
+            {
+                this.TwitchSubscriptionsAmount[i] = 0;
+            }
+            this.TwitchBitsAmount = 0;
+
+            this.YouTubeMembershipsAmount.Clear();
+            this.YouTubeSuperChatAmount = 0;
+
+            for (int i = 0; i < this.TrovoSubscriptionsAmount.Count; i++)
+            {
+                this.TrovoSubscriptionsAmount[i] = 0;
+            }
+            this.TrovoElixirSpellAmount = 0;
+
+            this.DonationAmount = 0;
+        }
+
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
             Logger.Log(LogLevel.Debug, $"Processing follow for {this.ID} Overlay Widget");
@@ -177,7 +217,7 @@ namespace MixItUp.Base.Model.Overlay
             await this.ProcessEvent(donation.User, this.DonationAmount * donation.Amount);
         }
 
-        private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchUserBitsCheeredModel bitsCheered)
+        private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchBitsCheeredEventModel bitsCheered)
         {
             Logger.Log(LogLevel.Debug, $"Processing Twitch bits of {bitsCheered.Amount} for {this.ID} Overlay Widget");
             await this.ProcessEvent(bitsCheered.User, this.TwitchBitsAmount * bitsCheered.Amount);

@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
+using MixItUp.Base.Model.Web;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mock

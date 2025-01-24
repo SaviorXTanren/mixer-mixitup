@@ -4,7 +4,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,6 +85,15 @@ namespace MixItUp.Base.Services.External
             get
             {
                 StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("longmessage", StringComparison.OrdinalIgnoreCase));
+                return (field != null) ? field.value : string.Empty;
+            }
+        }
+
+        public string Rarity
+        {
+            get
+            {
+                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("rarity", StringComparison.OrdinalIgnoreCase));
                 return (field != null) ? field.value : string.Empty;
             }
         }
@@ -308,6 +316,7 @@ namespace MixItUp.Base.Services.External
                 specialIdentifiers["streamlootscardhasvideo"] = (!string.IsNullOrEmpty(card.videoUrl)).ToString();
                 specialIdentifiers["streamlootscardvideo"] = card.videoUrl;
                 specialIdentifiers["streamlootscardsound"] = card.soundUrl;
+                specialIdentifiers["streamlootscardrarity"] = card.data.Rarity;
                 specialIdentifiers["streamlootscardalertmessage"] = card.message;
 
                 string message = card.data.Message;

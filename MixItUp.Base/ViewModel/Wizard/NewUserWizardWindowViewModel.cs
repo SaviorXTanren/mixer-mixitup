@@ -4,7 +4,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Accounts;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -192,7 +191,7 @@ namespace MixItUp.Base.ViewModel.Wizard
                 }
                 else if (this.StreamerAccountsPageVisible)
                 {
-                    if (!this.Twitch.IsUserAccountConnected && !this.YouTube.IsUserAccountConnected && !this.Trovo.IsUserAccountConnected)
+                    if (!this.Twitch.IsStreamerAccountConnected && !this.YouTube.IsStreamerAccountConnected && !this.Trovo.IsStreamerAccountConnected)
                     {
                         this.StatusMessage = MixItUp.Base.Resources.NewUserWizardAtLeastOneAccountMustBeSignedIn;
                         return;

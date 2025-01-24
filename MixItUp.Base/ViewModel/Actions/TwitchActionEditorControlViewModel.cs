@@ -1,15 +1,15 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Twitch.ChannelPoints;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Twitch;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
@@ -891,9 +891,9 @@ namespace MixItUp.Base.ViewModel.Actions
             await this.TagEditor.OnOpen();
             await this.ContentClassificationLabelsEditor.OnOpen();
 
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User, managableRewardsOnly: true)).OrderBy(c => c.title))
+                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSession>().StreamerService.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().StreamerModel, managableRewardsOnly: true)).OrderBy(c => c.title))
                 {
                     this.ChannelPointRewards.Add(channelPoint);
                 }
@@ -910,9 +910,9 @@ namespace MixItUp.Base.ViewModel.Actions
                         await this.TagEditor.AddCustomTag(tag);
                     }
                 }
-                else if (ServiceManager.Get<TwitchSessionService>().Channel?.tags != null)
+                else if (ServiceManager.Get<TwitchSession>().Channel?.tags != null)
                 {
-                    foreach (string tag in ServiceManager.Get<TwitchSessionService>().Channel.tags)
+                    foreach (string tag in ServiceManager.Get<TwitchSession>().Channel.tags)
                     {
                         await this.TagEditor.AddCustomTag(tag);
                     }

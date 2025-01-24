@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -24,13 +25,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayPollOptionV3Model() { }
 
-        public OverlayPollOptionV3Model(TwitchPollEventModel.TwitchPollChoiceEventModel choice)
+        public OverlayPollOptionV3Model(PollNotificationChoice choice)
         {
             this.ID = choice.ID;
             this.Name = choice.Title;
         }
 
-        public OverlayPollOptionV3Model(TwitchPredictionEventModel.TwitchPredictionOutcomeEventModel outcome)
+        public OverlayPollOptionV3Model(PredictionNotificationOutcome outcome)
         {
             this.ID = outcome.ID;
             this.Name = outcome.Title;
@@ -142,13 +143,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayPollV3Model() : base(OverlayItemV3Type.Poll) { }
 
-        public async Task NewTwitchPoll(TwitchPollEventModel poll)
+        public async Task NewTwitchPoll(PollNotification poll)
         {
             int totalTime = (int)Math.Round((poll.EndsAt - poll.StartedAt).TotalSeconds);
             await this.NewPoll(poll.Title, totalTime, poll.Choices.Select(c => new OverlayPollOptionV3Model(c)));
         }
 
-        public async Task UpdateTwitchPoll(TwitchPollEventModel poll)
+        public async Task UpdateTwitchPoll(PollNotification poll)
         {
             foreach (var choice in poll.Choices)
             {
@@ -160,13 +161,13 @@ namespace MixItUp.Base.Model.Overlay
             await this.Update();
         }
 
-        public async Task NewTwitchPrediction(TwitchPredictionEventModel prediction)
+        public async Task NewTwitchPrediction(PredictionNotification prediction)
         {
             int totalTime = (int)Math.Round((prediction.LocksAt - prediction.StartedAt).TotalSeconds);
             await this.NewPoll(prediction.Title, totalTime, prediction.Outcomes.Select(o => new OverlayPollOptionV3Model(o)), hasChannelPoints: true);
         }
 
-        public async Task UpdateTwitchPrediction(TwitchPredictionEventModel prediction)
+        public async Task UpdateTwitchPrediction(PredictionNotification prediction)
         {
             foreach (var outcome in prediction.Outcomes)
             {

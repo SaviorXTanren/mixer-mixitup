@@ -35,11 +35,7 @@ namespace MixItUp.Base.Util
 
         public Result(string message, Exception exception)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(message);
-            stringBuilder.AppendLine();
-            stringBuilder.Append(exception.Message);
-            this.Message = stringBuilder.ToString();
+            this.Append(message);
             this.Exception = exception;
         }
 
@@ -74,6 +70,15 @@ namespace MixItUp.Base.Util
         }
 
         public override string ToString() { return (!string.IsNullOrEmpty(this.Message)) ? this.Message : string.Empty; }
+
+        public void Append(string message)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(this.Message);
+            stringBuilder.AppendLine();
+            stringBuilder.Append(message);
+            this.Message = stringBuilder.ToString();
+        }
     }
 
     public class Result<T> : Result

@@ -1,17 +1,17 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.Trovo.Category;
+using MixItUp.Base.Model.Trovo.Channels;
+using MixItUp.Base.Model.Trovo.Users;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Trovo.Base.Models.Category;
-using Trovo.Base.Models.Channels;
-using Trovo.Base.Models.Users;
 
 namespace MixItUp.Base.Services.Trovo
 {
+    [Obsolete]
     public class TrovoSessionService : IStreamingPlatformSessionService
     {
         public TrovoPlatformService UserConnection { get; private set; }

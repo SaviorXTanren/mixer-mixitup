@@ -1,10 +1,10 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Web;
+using MixItUp.Base.Util;
+using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -28,6 +28,10 @@ namespace MixItUp.Base.Services.External
         public string requestID { get; set; }
         public string messageType { get; set; }
         public JObject data { get; set; }
+
+        [Obsolete]
+        // Only for use with TITSItemListRequest request
+        public bool sendImage { get; set; }
 
         public TITSWebSocketRequestPacket() { }
 
@@ -62,24 +66,13 @@ namespace MixItUp.Base.Services.External
 
     public class TITSWebSocket : ClientWebSocketBase
     {
-        private Dictionary<string, TITSWebSocketResponsePacket> responses = new Dictionary<string, TITSWebSocketResponsePacket>();
+        public event EventHandler<TITSWebSocketResponsePacket> ResponseReceived = delegate { };
 
-        public async Task<TITSWebSocketResponsePacket> SendAndReceive(TITSWebSocketRequestPacket packet, int delaySeconds = 5)
+        public async Task Send(TITSWebSocketRequestPacket packet)
         {
             Logger.Log(LogLevel.Debug, "TITS Packet Sent - " + JSONSerializerHelper.SerializeToString(packet));
 
-            this.responses.Remove(packet.requestID);
-
             await this.Send(JSONSerializerHelper.SerializeToString(packet));
-
-            int cycles = delaySeconds * 10;
-            for (int i = 0; i < cycles && !this.responses.ContainsKey(packet.requestID); i++)
-            {
-                await Task.Delay(100);
-            }
-
-            this.responses.TryGetValue(packet.requestID, out TITSWebSocketResponsePacket response);
-            return response;
         }
 
         protected override Task ProcessReceivedPacket(string packet)
@@ -91,7 +84,7 @@ namespace MixItUp.Base.Services.External
                 TITSWebSocketResponsePacket response = JSONSerializerHelper.DeserializeFromString<TITSWebSocketResponsePacket>(packet);
                 if (response != null && !string.IsNullOrEmpty(response.requestID))
                 {
-                    this.responses[response.requestID] = response;
+                    this.ResponseReceived(this, response);
                 }
             }
             catch (Exception ex)
@@ -102,6 +95,9 @@ namespace MixItUp.Base.Services.External
         }
     }
 
+    /// <summary>
+    /// https://github.com/Remasuri/TITSAPI
+    /// </summary>
     public class TITSService : OAuthExternalServiceBase
     {
         public const int DefaultPortNumber = 42069;
@@ -109,21 +105,27 @@ namespace MixItUp.Base.Services.External
 
         private const string websocketAddress = "ws://localhost:";
 
-        public bool WebSocketConnected { get; private set; }
-
         private TITSWebSocket websocket = new TITSWebSocket();
 
+        public DateTimeOffset ItemsLastUpdated { get; private set; } = DateTimeOffset.MinValue;
         private IEnumerable<TITSItem> allItemsCache;
-        private DateTimeOffset allItemsCacheExpiration = DateTimeOffset.MinValue;
 
+        public DateTimeOffset TriggersLastUpdated { get; private set; } = DateTimeOffset.MinValue;
         private IEnumerable<TITSTrigger> allTriggersCache;
-        private DateTimeOffset allTriggersCacheExpiration = DateTimeOffset.MinValue;
 
-        public TITSService() : base(string.Empty) { }
+        private CancellationTokenSource backgroundRefreshCancellationTokenSource;
+
+        public TITSService()
+            : base(string.Empty)
+        {
+            this.websocket.ResponseReceived += Websocket_ResponseReceived;
+        }
 
         public override string Name { get { return MixItUp.Base.Resources.TwitchIntegratedThrowingSystem; } }
 
         public bool IsEnabled { get { return ChannelSession.Settings.TITSOAuthToken != null; } }
+
+        public bool IsWebSocketConnected { get { return this.websocket.IsOpen(); } }
 
         public override async Task<Result> Connect()
         {
@@ -131,6 +133,8 @@ namespace MixItUp.Base.Services.External
             {
                 if (await this.ConnectWebSocket())
                 {
+                    this.websocket.OnDisconnectOccurred -= Websocket_OnDisconnectOccurred;
+                    this.websocket.OnDisconnectOccurred += Websocket_OnDisconnectOccurred;
                     return await this.InitializeInternal();
                 }
             }
@@ -150,46 +154,48 @@ namespace MixItUp.Base.Services.External
         public override async Task Disconnect()
         {
             this.token = null;
-            this.WebSocketConnected = false;
 
             this.websocket.OnDisconnectOccurred -= Websocket_OnDisconnectOccurred;
+
+            if (this.backgroundRefreshCancellationTokenSource != null)
+            {
+                this.backgroundRefreshCancellationTokenSource.Cancel();
+                this.backgroundRefreshCancellationTokenSource = null;
+            }
+
             await this.websocket.Disconnect();
         }
 
-        public async Task<IEnumerable<TITSItem>> GetAllItems()
+        public async Task<bool> RequestAllItems()
         {
             try
             {
-                if (this.allItemsCacheExpiration <= DateTimeOffset.Now || this.allItemsCache == null)
+                if (this.websocket.IsOpen())
                 {
-                    TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSItemListRequest"));
-                    if (response != null && response.data != null && response.data.TryGetValue("items", out JToken items) && items is JArray)
-                    {
-                        List<TITSItem> results = new List<TITSItem>();
-                        foreach (TITSItem item in ((JArray)items).ToTypedArray<TITSItem>())
-                        {
-                            if (item != null)
-                            {
-                                results.Add(item);
-                            }
-                        }
-                        this.allItemsCache = results;
-                        this.allItemsCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
-                    }
-                    else
-                    {
-                        Logger.Log(LogLevel.Error, "TITS - No Response Packet Received - GetAllItems");
-                    }
-                }
+                    JObject data = new JObject();
+                    data["sendImage"] = false;
 
-                if (this.allItemsCache != null)
-                {
-                    return this.allItemsCache;
+#pragma warning disable CS0612 // Type or member is obsolete
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSItemListRequest", data)
+                    {
+                        sendImage = false
+                    });
+#pragma warning restore CS0612 // Type or member is obsolete
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
+            }
+            return false;
+        }
+
+        public IEnumerable<TITSItem> GetAllItems()
+        {
+            if (this.allItemsCache != null)
+            {
+                return this.allItemsCache;
             }
             return new List<TITSItem>();
         }
@@ -203,14 +209,9 @@ namespace MixItUp.Base.Services.External
 
             try
             {
-                TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSThrowItemsRequest", data));
-                if (response != null && response.data != null && response.data.ContainsKey("numberOfThrownItems"))
+                if (this.websocket.IsOpen())
                 {
-                    return true;
-                }
-                else
-                {
-                    Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - ThrowItem - {itemID}");
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSThrowItemsRequest", data));
                 }
             }
             catch (Exception ex)
@@ -221,14 +222,97 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task<IEnumerable<TITSTrigger>> GetAllTriggers()
+        public async Task<bool> RequestAllTriggers()
         {
             try
             {
-                if (this.allTriggersCacheExpiration <= DateTimeOffset.Now || this.allTriggersCache == null)
+                if (this.websocket.IsOpen())
                 {
-                    TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSTriggerListRequest"));
-                    if (response != null && response.data != null && response.data.TryGetValue("triggers", out JToken triggers) && triggers is JArray)
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSTriggerListRequest"));
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return false;
+        }
+
+        public IEnumerable<TITSTrigger> GetAllTriggers()
+        {
+            if (this.allTriggersCache != null)
+            {
+                return this.allTriggersCache;
+            }
+            return new List<TITSTrigger>();
+        }
+
+        public async Task ActivateTrigger(string triggerID)
+        {
+            JObject data = new JObject();
+            data["triggerID"] = triggerID;
+
+            try
+            {
+                if (this.websocket.IsOpen())
+                {
+                    await this.websocket.Send(new TITSWebSocketRequestPacket("TITSTriggerActivateRequest", data));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        protected override Task<Result> InitializeInternal()
+        {
+            this.token = new OAuthTokenModel();
+
+            this.backgroundRefreshCancellationTokenSource = new CancellationTokenSource();
+            AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+            {
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    await this.RequestAllItems();
+                    await this.RequestAllTriggers();
+                }
+            }, this.backgroundRefreshCancellationTokenSource.Token, 600000);
+
+            return Task.FromResult(new Result());
+        }
+
+        protected override Task RefreshOAuthToken() { return Task.CompletedTask; }
+
+        private async Task<bool> ConnectWebSocket()
+        {
+            return await this.websocket.Connect(websocketAddress + ChannelSession.Settings.TITSPortNumber + "/websocket");
+        }
+
+        private void Websocket_ResponseReceived(object sender, TITSWebSocketResponsePacket response)
+        {
+            if (response != null)
+            {
+                if (string.Equals(response.messageType, "TITSItemListResponse"))
+                {
+                    if (response.data != null && response.data.TryGetValue("items", out JToken items) && items is JArray)
+                    {
+                        List<TITSItem> results = new List<TITSItem>();
+                        foreach (TITSItem item in ((JArray)items).ToTypedArray<TITSItem>())
+                        {
+                            if (item != null)
+                            {
+                                results.Add(item);
+                            }
+                        }
+                        this.allItemsCache = results;
+                        this.ItemsLastUpdated = DateTimeOffset.Now;
+                    }
+                }
+                else if (string.Equals(response.messageType, "TITSTriggerListResponse"))
+                {
+                    if (response.data != null && response.data.TryGetValue("triggers", out JToken triggers) && triggers is JArray)
                     {
                         List<TITSTrigger> results = new List<TITSTrigger>();
                         foreach (TITSTrigger trigger in ((JArray)triggers).ToTypedArray<TITSTrigger>())
@@ -239,72 +323,10 @@ namespace MixItUp.Base.Services.External
                             }
                         }
                         this.allTriggersCache = results;
-                        this.allTriggersCacheExpiration = DateTimeOffset.Now.AddMinutes(MaxCacheDuration);
-                    }
-                    else
-                    {
-                        Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - GetAllTriggers");
+                        this.TriggersLastUpdated = DateTimeOffset.Now;
                     }
                 }
-
-                if (this.allTriggersCache != null)
-                {
-                    return this.allTriggersCache;
-                }
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            return new List<TITSTrigger>();
-        }
-
-        public async Task<bool> ActivateTrigger(string triggerID)
-        {
-            JObject data = new JObject();
-            data["triggerID"] = triggerID;
-
-            try
-            {
-                TITSWebSocketResponsePacket response = await this.websocket.SendAndReceive(new TITSWebSocketRequestPacket("TITSTriggerActivateRequest", data));
-                if (response != null && response.data != null && response.messageType.Equals("TITSTriggerActivateResponse"))
-                {
-                    return true;
-                }
-                else
-                {
-                    Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - ActivateTrigger - {triggerID}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-
-            return false;
-        }
-
-        public void ClearCaches()
-        {
-            this.allItemsCache = null;
-            this.allItemsCacheExpiration = DateTimeOffset.MinValue;
-
-            this.allTriggersCache = null;
-            this.allTriggersCacheExpiration = DateTimeOffset.MinValue;
-        }
-
-        protected override Task<Result> InitializeInternal()
-        {
-            this.token = new OAuthTokenModel();
-            return Task.FromResult(new Result());
-        }
-
-        protected override Task RefreshOAuthToken() { return Task.CompletedTask; }
-
-        private async Task<bool> ConnectWebSocket()
-        {
-            this.websocket.OnDisconnectOccurred -= Websocket_OnDisconnectOccurred;
-            return await this.websocket.Connect(websocketAddress + ChannelSession.Settings.TITSPortNumber + "/websocket");
         }
 
         private async void Websocket_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
@@ -318,7 +340,7 @@ namespace MixItUp.Base.Services.External
 
                 await Task.Delay(5000);
 
-                result = await this.InitializeInternal();
+                result = await this.Connect();
             }
             while (!result.Success);
 

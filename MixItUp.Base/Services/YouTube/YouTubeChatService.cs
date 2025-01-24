@@ -4,23 +4,22 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using YouTube.Base.Model;
 
 namespace MixItUp.Base.Services.YouTube
 {
     // https://stackoverflow.com/questions/64726611/how-to-get-a-list-of-youtube-channel-emojis
-
+    [Obsolete]
     public class YouTubeChatEmoteModel
     {
         public class YouTubeChatEmoteImageModel
@@ -40,6 +39,7 @@ namespace MixItUp.Base.Services.YouTube
         public YouTubeChatEmoteImageModel image { get; set; } = null;
     }
 
+    [Obsolete]
     public class YouTubeMembershipsGiftedModel
     {
         public UserV2ViewModel Gifter { get; private set; }
@@ -58,6 +58,7 @@ namespace MixItUp.Base.Services.YouTube
         }
     }
 
+    [Obsolete]
     public class YouTubeChatService : StreamingPlatformServiceBase
     {
         private const int MaxMessageLength = 200;
@@ -113,7 +114,7 @@ namespace MixItUp.Base.Services.YouTube
                                 {
                                     foreach (string shortcut in emote.shortcuts)
                                     {
-                                        this.EmoteDictionary[shortcut] = new YouTubeChatEmoteViewModel(emote);
+                                        //this.EmoteDictionary[shortcut] = new YouTubeChatEmoteViewModel(emote);
                                     }
                                 }
                             }

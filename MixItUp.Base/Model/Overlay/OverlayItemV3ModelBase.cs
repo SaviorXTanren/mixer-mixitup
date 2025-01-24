@@ -91,8 +91,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public abstract class OverlayItemV3ModelBase : OverlayOutputV3Model
     {
-        public const string MainDivElement = "document.getElementById('maindiv')";
-
         public const string InnerHTMLProperty = "InnerHTML";
 
         public const string UserProperty = "User";
@@ -168,6 +166,9 @@ namespace MixItUp.Base.Model.Overlay
         public string OldCustomHTML { get; set; }
 
         [JsonIgnore]
+        public virtual bool JQuery { get { return false; } }
+
+        [JsonIgnore]
         public bool PositionTypeIsPercentage { get { return this.PositionType == OverlayPositionV3Type.Simple || this.PositionType == OverlayPositionV3Type.Percentage; } }
         [JsonIgnore]
         public string PositionTypeUnit { get { return this.PositionTypeIsPercentage ? "%" : "px"; } }
@@ -213,6 +214,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task Reset() { return Task.CompletedTask; }
 
+        public virtual void ImportReset()
+        {
+            this.ID = Guid.NewGuid();
+        }
+
         public virtual Dictionary<string, object> GetGenerationProperties()
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
@@ -238,6 +244,8 @@ namespace MixItUp.Base.Model.Overlay
             properties[nameof(this.XTranslation)] = this.XTranslation;
             properties[nameof(this.YTranslation)] = this.YTranslation;
             properties[nameof(this.Layer)] = this.Layer;
+
+            properties[nameof(this.JQuery)] = this.JQuery ? "<script src=\"/scripts/jquery-3.6.0.min.js\"></script>" : string.Empty;
 
             properties[nameof(this.IsLivePreview)] = this.IsLivePreview.ToString().ToLower();
 

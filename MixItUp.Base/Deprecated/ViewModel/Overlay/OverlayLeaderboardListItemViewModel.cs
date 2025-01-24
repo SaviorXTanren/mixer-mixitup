@@ -1,12 +1,12 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {

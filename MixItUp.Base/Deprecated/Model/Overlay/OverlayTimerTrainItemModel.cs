@@ -1,12 +1,13 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -224,7 +225,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddSeconds(donation.Amount * this.DonationBonus); }
 
-        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e) { await this.AddSeconds(e.Amount * this.BitsBonus); }
+        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchBitsCheeredEventModel e) { await this.AddSeconds(e.Amount * this.BitsBonus); }
 
         private async Task AddSeconds(double seconds)
         {

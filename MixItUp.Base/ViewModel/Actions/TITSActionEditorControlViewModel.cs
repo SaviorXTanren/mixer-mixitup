@@ -2,7 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.TITS; } }
 
-        public bool TITSConnected { get { return ServiceManager.Get<TITSService>().IsConnected; } }
+        public bool TITSConnected { get { return ChannelSession.Settings.TITSOAuthToken != null || ServiceManager.Get<TITSService>().IsConnected; } }
         public bool TITSNotConnected { get { return !this.TITSConnected; } }
 
         public IEnumerable<TITSActionTypeEnum> ActionTypes { get { return EnumHelper.GetEnumList<TITSActionTypeEnum>(); } }
@@ -85,7 +85,29 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private TITSTrigger selectedTrigger;
 
-        public ICommand RefreshCacheCommand { get; set; }
+        public bool RefreshItemsCommandEnabled
+        {
+            get { return this.refreshItemsCommandEnabled; }
+            set
+            {
+                this.refreshItemsCommandEnabled = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool refreshItemsCommandEnabled = true;
+        public ICommand RefreshItemsCommand { get; set; }
+
+        public bool RefreshTriggersCommandEnabled
+        {
+            get { return this.refreshTriggersCommandEnabled; }
+            set
+            {
+                this.refreshTriggersCommandEnabled = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool refreshTriggersCommandEnabled = true;
+        public ICommand RefreshTriggersCommand { get; set; }
 
         private string throwItemID;
         private string triggerID;
@@ -148,54 +170,89 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnOpenInternal()
         {
-            this.RefreshCacheCommand = this.CreateCommand(async () =>
+            this.RefreshItemsCommand = this.CreateCommand(async () =>
             {
+                this.RefreshItemsCommandEnabled = false;
+
                 await this.TryConnectToTITS();
 
                 if (this.TITSConnected)
                 {
-                    ServiceManager.Get<TITSService>().ClearCaches();
+                    DateTimeOffset lastUpdated = ServiceManager.Get<TITSService>().ItemsLastUpdated;
+
+                    if (await ServiceManager.Get<TITSService>().RequestAllItems())
+                    {
+                        for (int i = 0; i < 60 && lastUpdated == ServiceManager.Get<TITSService>().ItemsLastUpdated; i++)
+                        {
+                            await Task.Delay(1000);
+                        }
+                    }
                 }
 
-                await this.LoadData();
+                this.LoadItems();
+
+                this.RefreshItemsCommandEnabled = true;
+            });
+
+            this.RefreshTriggersCommand = this.CreateCommand(async () =>
+            {
+                this.RefreshTriggersCommandEnabled = false;
+
+                await this.TryConnectToTITS();
+
+                if (this.TITSConnected)
+                {
+                    DateTimeOffset lastUpdated = ServiceManager.Get<TITSService>().TriggersLastUpdated;
+
+                    if (await ServiceManager.Get<TITSService>().RequestAllTriggers())
+                    {
+                        for (int i = 0; i < 60 && lastUpdated == ServiceManager.Get<TITSService>().TriggersLastUpdated; i++)
+                        {
+                            await Task.Delay(1000);
+                        }
+                    }
+                }
+
+                this.LoadTriggers();
+
+                this.RefreshTriggersCommandEnabled = true;
             });
 
             await this.TryConnectToTITS();
 
-            await this.LoadData();
+            this.LoadItems();
+            this.LoadTriggers();
 
             await base.OnOpenInternal();
         }
 
-        private async Task<bool> TryConnectToTITS()
+        private async Task TryConnectToTITS()
         {
-            if (ChannelSession.Settings.TITSOAuthToken != null && !this.TITSConnected)
+            if (this.TITSConnected && !ServiceManager.Get<TITSService>().IsWebSocketConnected)
             {
-                Result result = await ServiceManager.Get<TITSService>().Connect(ChannelSession.Settings.TITSOAuthToken);
-                return result.Success;
+                await ServiceManager.Get<TITSService>().Connect(ChannelSession.Settings.TITSOAuthToken);
             }
-            return false;
         }
 
-        private async Task LoadData()
+        private void LoadItems()
         {
             if (this.TITSConnected)
             {
-                foreach (TITSItem item in await ServiceManager.Get<TITSService>().GetAllItems())
-                {
-                    this.Items.Add(item);
-                }
+                this.Items.ClearAndAddRange(ServiceManager.Get<TITSService>().GetAllItems());
                 this.SelectedItem = this.selectedItem = this.Items.FirstOrDefault(i => string.Equals(i.ID, this.throwItemID));
 
                 if (this.Items.Count == 0)
                 {
                     Logger.Log(LogLevel.Error, "TITS Action - No items loaded");
                 }
+            }
+        }
 
-                foreach (TITSTrigger trigger in await ServiceManager.Get<TITSService>().GetAllTriggers())
-                {
-                    this.Triggers.Add(trigger);
-                }
+        private void LoadTriggers()
+        {
+            if (this.TITSConnected)
+            {
+                this.Triggers.ClearAndAddRange(ServiceManager.Get<TITSService>().GetAllTriggers());
                 this.SelectedTrigger = this.selectedTrigger = this.Triggers.FirstOrDefault(i => string.Equals(i.ID, this.triggerID));
 
                 if (this.Triggers.Count == 0)

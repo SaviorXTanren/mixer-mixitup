@@ -2,32 +2,30 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Model.Twitch.Channels;
+using MixItUp.Base.Model.Twitch.Clients.Chat;
+using MixItUp.Base.Model.Twitch.Clients.EventSub;
+using MixItUp.Base.Model.Twitch.Clients.PubSub;
+using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
+using MixItUp.Base.Model.Twitch.EventSub;
+using MixItUp.Base.Model.Twitch.Games;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using Twitch.Base.Clients;
-using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.Clients.EventSub;
-using Twitch.Base.Models.Clients.PubSub;
-using Twitch.Base.Models.Clients.PubSub.Messages;
-using Twitch.Base.Models.NewAPI.Channels;
-using Twitch.Base.Models.NewAPI.EventSub;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    [Obsolete]
     public class TwitchSubEventModel
     {
         public static int GetSubPoints(int tier)
@@ -81,6 +79,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchGiftedSubEventModel
     {
         public UserV2ViewModel Gifter { get; set; }
@@ -111,6 +110,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchMassGiftedSubEventModel
     {
         public const string AnonymousGiftedUserNoticeLogin = "ananonymousgifter";
@@ -144,6 +144,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchUserBitsCheeredModel
     {
         public UserV2ViewModel User { get; set; }
@@ -162,6 +163,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchWebhookUserFollowModel
     {
         public string ID { get; set; }
@@ -169,168 +171,7 @@ namespace MixItUp.Base.Services.Twitch
         public string DisplayName { get; set; }
     }
 
-    public class TwitchCharityDonationModel
-    {
-        public string UserID { get; set; }
-        public string Username { get; set; }
-        public string DisplayName { get; set; }
-
-        public string CharityName { get; set; }
-        public string CharityImage { get; set; }
-
-        public double Amount { get; set; }
-        public double AmountDecimalPlaces { get; set; }
-
-        public TwitchCharityDonationModel(JObject payload)
-        {
-            this.UserID = payload["user_id"].Value<string>();
-            this.Username = payload["user_login"].Value<string>();
-            this.DisplayName = payload["user_name"].Value<string>();
-
-            this.CharityName = payload["charity_name"].Value<string>();
-            this.CharityImage = payload["charity_logo"].Value<string>();
-
-            JObject donationAmountJObj = payload["amount"] as JObject;
-            if (donationAmountJObj != null)
-            {
-                this.Amount = donationAmountJObj["value"].Value<int>();
-                this.AmountDecimalPlaces = donationAmountJObj["decimal_places"].Value<int>();
-                if (this.AmountDecimalPlaces > 0)
-                {
-                    this.Amount = this.Amount / Math.Pow(10, this.AmountDecimalPlaces);
-                }
-            }
-        }
-
-        public UserDonationModel ToGenericDonation()
-        {
-            return new UserDonationModel()
-            {
-                Source = UserDonationSourceEnum.Twitch,
-                Platform = StreamingPlatformTypeEnum.Twitch,
-
-                ID = Guid.NewGuid().ToString(),
-                Username = this.Username,
-
-                Amount = this.Amount,
-
-                DateTime = DateTimeOffset.Now,
-            };
-        }
-    }
-
-    public class TwitchPollEventModel
-    {
-        public class TwitchPollChoiceEventModel
-        {
-            public string ID { get; set; }
-            public string Title { get; set; }
-            public int Votes { get; set; }
-        }
-
-        public string ID { get; set; }
-        public string Title { get; set; }
-        public List<TwitchPollChoiceEventModel> Choices { get; set; } = new List<TwitchPollChoiceEventModel>();
-        public DateTimeOffset StartedAt { get; set; }
-        public DateTimeOffset EndsAt { get; set; }
-
-        public TwitchPollEventModel(JObject payload)
-        {
-            this.ID = payload["id"].Value<string>();
-            this.Title = payload["title"].Value<string>();
-            this.StartedAt = TwitchPlatformService.GetTwitchDateTime(payload["started_at"].Value<string>());
-            if (payload.ContainsKey("ends_at"))
-            {
-                this.EndsAt = TwitchPlatformService.GetTwitchDateTime(payload["ends_at"].Value<string>());
-            }
-            else if (payload.ContainsKey("ended_at"))
-            {
-                this.EndsAt = TwitchPlatformService.GetTwitchDateTime(payload["ended_at"].Value<string>());
-            }
-
-            foreach (JObject choice in (JArray)payload["choices"])
-            {
-                int.TryParse(choice.GetValue("votes")?.Value<string>(), out int votes);
-
-                this.Choices.Add(new TwitchPollEventModel.TwitchPollChoiceEventModel()
-                {
-                    ID = choice["id"].Value<string>(),
-                    Title = choice["title"].Value<string>(),
-                    Votes = votes,
-                });
-            }
-        }
-    }
-
-    public class TwitchPredictionEventModel
-    {
-        public class TwitchPredictionOutcomeEventModel
-        {
-            public string ID { get; set; }
-            public string Title { get; set; }
-            public string Color { get; set; }
-            public int Users { get; set; }
-            public int ChannelPoints { get; set; }
-
-            public List<TwitchPredictionOutcomePredictorEventModel> TopPredictors { get; set; } = new List<TwitchPredictionOutcomePredictorEventModel>();
-        }
-
-        public class TwitchPredictionOutcomePredictorEventModel
-        {
-            public TwitchUserPlatformV2Model User { get; set; }
-            public int ChannelPointsUsed { get; set; }
-            public int ChannelPointsWon { get; set; }
-        }
-
-        public string ID { get; set; }
-        public string Title { get; set; }
-        public string WinningOutcomeID { get; set; }
-        public DateTimeOffset StartedAt { get; set; }
-        public DateTimeOffset LocksAt { get; set; }
-        public List<TwitchPredictionOutcomeEventModel> Outcomes { get; set; } = new List<TwitchPredictionOutcomeEventModel>();
-
-        public TwitchPredictionEventModel(JObject payload)
-        {
-            this.ID = payload["id"].Value<string>();
-            this.Title = payload["title"].Value<string>();
-
-            this.WinningOutcomeID = payload.GetValue("winning_outcome_id")?.Value<string>();
-
-            foreach (JObject oc in (JArray)payload["outcomes"])
-            {
-                int.TryParse(oc.GetValue("users")?.Value<string>(), out int users);
-                int.TryParse(oc.GetValue("channel_points")?.Value<string>(), out int channelPoints);
-
-                TwitchPredictionEventModel.TwitchPredictionOutcomeEventModel outcome = new TwitchPredictionEventModel.TwitchPredictionOutcomeEventModel()
-                {
-                    ID = oc["id"].Value<string>(),
-                    Title = oc["title"].Value<string>(),
-                    Color = oc["color"].Value<string>(),
-                    Users = users,
-                    ChannelPoints = channelPoints
-                };
-
-                this.Outcomes.Add(outcome);
-
-                if (oc.TryGetValue("top_predictors", out JToken topPredictors))
-                {
-                    foreach (JObject topPredictor in (JArray)topPredictors)
-                    {
-                        int.TryParse(topPredictor.GetValue("channel_points_used")?.Value<string>(), out int channelPointsUsed);
-                        int.TryParse(topPredictor.GetValue("channel_points_won")?.Value<string>(), out int channelPointsWon);
-
-                        outcome.TopPredictors.Add(new TwitchPredictionEventModel.TwitchPredictionOutcomePredictorEventModel()
-                        {
-                            User = new TwitchUserPlatformV2Model(topPredictor["user_id"].Value<string>(), topPredictor["user_login"].Value<string>(), topPredictor["user_name"].Value<string>()),
-                            ChannelPointsUsed = channelPointsUsed,
-                            ChannelPointsWon = channelPointsWon,
-                        });
-                    }
-                }
-            }
-        }
-    }
-
+    [Obsolete]
     public class TwitchEventSubService : StreamingPlatformServiceBase
     {
         private const string ChannelFollowEventSubSubscription = "channel.follow";
@@ -351,6 +192,8 @@ namespace MixItUp.Base.Services.Twitch
         public override string Name { get { return MixItUp.Base.Resources.TwitchEventSub; } }
 
         public bool IsConnected { get; private set; }
+
+        public bool StreamLiveStatus { get; private set; }
 
         public TwitchEventSubService() { }
 
@@ -708,11 +551,15 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task HandleOnline(JObject payload)
         {
+            Logger.Log(LogLevel.Debug, "Twitch Stream Online");
+            this.StreamLiveStatus = true;
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
 
         private async Task HandleOffline(JObject payload)
         {
+            Logger.Log(LogLevel.Debug, "Twitch Stream Offline");
+            this.StreamLiveStatus = false;
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
 
@@ -720,9 +567,13 @@ namespace MixItUp.Base.Services.Twitch
         {
             CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
 
+            string gameID = payload["category_id"].ToString();
+            GameModel game = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(gameID);
+
             parameters.SpecialIdentifiers["streamtitle"] = payload["title"].ToString();
-            parameters.SpecialIdentifiers["streamgameid"] = payload["category_id"].ToString();
-            parameters.SpecialIdentifiers["streamgame"] = payload["category_name"].ToString();
+            parameters.SpecialIdentifiers["streamgameid"] = gameID;
+            parameters.SpecialIdentifiers["streamgameimage"] = game?.box_art_url ?? string.Empty;
+            parameters.SpecialIdentifiers["streamgame"] = parameters.SpecialIdentifiers["streamgamename"] = payload["category_name"].ToString();
 
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUpdated, parameters);
         }
@@ -732,7 +583,7 @@ namespace MixItUp.Base.Services.Twitch
             IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPolls: true);
             if (widgets.Count() > 0)
             {
-                TwitchPollEventModel poll = new TwitchPollEventModel(payload);
+                PollNotification poll = new PollNotification(payload);
                 foreach (OverlayPollV3Model widget in widgets)
                 {
                     await widget.NewTwitchPoll(poll);
@@ -745,7 +596,7 @@ namespace MixItUp.Base.Services.Twitch
             IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPolls: true);
             if (widgets.Count() > 0)
             {
-                TwitchPollEventModel poll = new TwitchPollEventModel(payload);
+                PollNotification poll = new PollNotification(payload);
                 foreach (OverlayPollV3Model widget in widgets)
                 {
                     await widget.UpdateTwitchPoll(poll);
@@ -758,7 +609,7 @@ namespace MixItUp.Base.Services.Twitch
             IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPolls: true);
             if (widgets.Count() > 0)
             {
-                TwitchPollEventModel poll = new TwitchPollEventModel(payload);
+                PollNotification poll = new PollNotification(payload);
                 foreach (OverlayPollV3Model widget in widgets)
                 {
                     await widget.End(poll.Choices.OrderByDescending(c => c.Votes).First().ID);
@@ -771,7 +622,7 @@ namespace MixItUp.Base.Services.Twitch
             IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPredictions: true);
             if (widgets.Count() > 0)
             {
-                TwitchPredictionEventModel prediction = new TwitchPredictionEventModel(payload);
+                PredictionNotification prediction = new PredictionNotification(payload);
                 foreach (OverlayPollV3Model widget in widgets)
                 {
                     await widget.NewTwitchPrediction(prediction);
@@ -784,7 +635,7 @@ namespace MixItUp.Base.Services.Twitch
             IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPredictions: true);
             if (widgets.Count() > 0)
             {
-                TwitchPredictionEventModel prediction = new TwitchPredictionEventModel(payload);
+                PredictionNotification prediction = new PredictionNotification(payload);
                 foreach (OverlayPollV3Model widget in widgets)
                 {
                     await widget.UpdateTwitchPrediction(prediction);
@@ -792,9 +643,9 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task HandlePredictionLock(JObject payload)
+        private Task HandlePredictionLock(JObject payload)
         {
-
+            return Task.CompletedTask;
         }
 
         private async Task HandlePredictionEnd(JObject payload)
@@ -802,7 +653,7 @@ namespace MixItUp.Base.Services.Twitch
             IEnumerable<OverlayPollV3Model> widgets = OverlayPollV3Model.GetPollOverlayWidgets(forPredictions: true);
             if (widgets.Count() > 0)
             {
-                TwitchPredictionEventModel prediction = new TwitchPredictionEventModel(payload);
+                PredictionNotification prediction = new PredictionNotification(payload);
                 foreach (OverlayPollV3Model widget in widgets)
                 {
                     await widget.End(prediction.WinningOutcomeID);
@@ -894,7 +745,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task HandleCharityCampaignDonation(JObject payload)
         {
-            TwitchCharityDonationModel donation = new TwitchCharityDonationModel(payload);
+            CharityDonationNotification donation = new CharityDonationNotification(payload);
 
             Dictionary<string, string> additionalSpecialIdentifiers = new Dictionary<string, string>();
             additionalSpecialIdentifiers["charityname"] = donation.CharityName;
@@ -1059,6 +910,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    [Obsolete]
     public class TwitchPubSubService : StreamingPlatformServiceBase
     {
         public const string PrimeSubPlan = "Prime";
@@ -1407,7 +1259,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchBitsCheered, user.FullDisplayName, bitsCheered.Amount), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
-            EventService.TwitchBitsCheeredOccurred(bitsCheered);
+            //EventService.TwitchBitsCheeredOccurred(bitsCheered);
         }
 
         public async void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel packet)
@@ -1600,9 +1452,9 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelSubscriptionGifted, parameters);
 
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(giftedSubEvent.Gifter, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, giftedSubEvent.Gifter.FullDisplayName, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
-            }
 
-            EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Receiver, giftedSubEvent.Gifter, tier: giftedSubEvent.PlanTierNumber));
+                EventService.SubscriptionGiftedOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Receiver, giftedSubEvent.Gifter, tier: giftedSubEvent.PlanTierNumber));
+            }
         }
 
         private async Task ProcessMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent)
@@ -1613,6 +1465,11 @@ namespace MixItUp.Base.Services.Twitch
             parameters.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
             parameters.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
             parameters.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
+
+            if (massGiftedSubEvent.Subs.Count > 0)
+            {
+                parameters.TargetUser = massGiftedSubEvent.Subs.First().Receiver;
+            }
 
             foreach (TwitchGiftedSubEventModel sub in massGiftedSubEvent.Subs)
             {

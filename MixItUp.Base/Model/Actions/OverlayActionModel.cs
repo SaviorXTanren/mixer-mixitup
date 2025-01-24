@@ -5,6 +5,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -165,6 +166,13 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.OverlayItem != null)
+            {
+                SettingsV3Upgrader.UpdateActionsV7(ChannelSession.Settings, new List<ActionModelBase>() { this });
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
             if (this.WidgetID != Guid.Empty)
             {
                 OverlayWidgetV3Model widget = ChannelSession.Settings.OverlayWidgetsV3.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
@@ -268,7 +276,13 @@ namespace MixItUp.Base.Model.Actions
                     OverlayEndpointV3Service overlay = widget.GetOverlayEndpointService();
                     if (overlay != null)
                     {
-                        await overlay.Function(widget.ID.ToString(), this.RunWidgetFunctionName, this.RunWidgetFunctionParameters);
+                        Dictionary<string, object> functionParameters = new Dictionary<string, object>();
+                        foreach (var kvp in this.RunWidgetFunctionParameters)
+                        {
+                            functionParameters[kvp.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Value.ToString(), parameters);
+                        }
+
+                        await overlay.Function(widget.ID.ToString(), this.RunWidgetFunctionName, functionParameters);
                     }
                 }
             }
@@ -286,7 +300,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
 
-                    double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), out double duration);
+                    double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), NumberStyles.Any, CultureInfo.CurrentCulture, out double duration);
                     if (duration <= 0.0)
                     {
                         if (this.OverlayItemV3.Type != OverlayItemV3Type.Video && this.OverlayItemV3.Type != OverlayItemV3Type.YouTube &&
@@ -334,7 +348,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.CustomAnimations), string.Join(Environment.NewLine + Environment.NewLine, customAnimations));
 
-                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.Duration), duration.ToString(CultureInfo.InvariantCulture));
 
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
 

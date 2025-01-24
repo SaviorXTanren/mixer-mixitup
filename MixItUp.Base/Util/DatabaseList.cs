@@ -1,4 +1,4 @@
-﻿using StreamingClient.Base.Util;
+﻿using MixItUp.Base.Util;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.Util

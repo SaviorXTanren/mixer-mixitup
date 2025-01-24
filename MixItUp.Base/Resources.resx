@@ -10716,6 +10716,265 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
     <value>Watching Now</value>
   </data>
   <data name="TwitchClipNewerClipFormatUnsupported" xml:space="preserve">
-    <value>Unable to display clip due to newer format by Twitch. Please up-vote the following User Voice to encourage Twitch to allow this functionality for: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors</value>
+    <value>Unable to display clip due to newer format by Twitch. Please up-vote the following User Voice to encourage Twitch to allow for this functionality: https://twitch.uservoice.com/forums/310213-developers/suggestions/39228784-extend-clips-api-to-provide-the-mp4-url-so-editors</value>
+  </data>
+  <data name="Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Polish</value>
+  </data>
+  <data name="PortugueseBrazil" xml:space="preserve">
+    <value>Portuguese (Brazil)</value>
+  </data>
+  <data name="PortuguesePortugal" xml:space="preserve">
+    <value>Portuguese (Portugal)</value>
+  </data>
+  <data name="AddSegment" xml:space="preserve">
+    <value>Add Segment</value>
+  </data>
+  <data name="DayOfTheMonth" xml:space="preserve">
+    <value>Day of the Month</value>
+  </data>
+  <data name="DayOfTheWeek" xml:space="preserve">
+    <value>Day of the Week</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="OverlayGoalValidCounterMustBeSelected" xml:space="preserve">
+    <value>A valid counter must be selected</value>
+  </data>
+  <data name="UseCommandLocks" xml:space="preserve">
+    <value>Use Command Locks</value>
+  </data>
+  <data name="AlwaysUseCommandLocksWhenTestingCommands" xml:space="preserve">
+    <value>Always Use Command Locks When Testing Commands</value>
+  </data>
+  <data name="RandomIn" xml:space="preserve">
+    <value>Random In</value>
+  </data>
+  <data name="RandomOut" xml:space="preserve">
+    <value>Random Out</value>
+  </data>
+  <data name="RandomVisible" xml:space="preserve">
+    <value>Random Visible</value>
+  </data>
+  <data name="RefreshMayTakeUpTo1Minute" xml:space="preserve">
+    <value>Refresh (May take up to 1 minute)</value>
+  </data>
+  <data name="LatestSubscriptionGifter" xml:space="preserve">
+    <value>Latest Subscription Gifter</value>
+  </data>
+  <data name="Head" xml:space="preserve">
+    <value>Head</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsNoDataCurrentlyAvailable" xml:space="preserve">
+    <value>ERROR: End Credits Overlay Widget could not be run because there is not currently captured data from this session.</value>
+  </data>
+  <data name="DontShowNoDataError" xml:space="preserve">
+    <value>Don't Show "No Data" Error</value>
+  </data>
+  <data name="BlazingStar" xml:space="preserve">
+    <value>Blazing Star</value>
+  </data>
+  <data name="DealWithIt" xml:space="preserve">
+    <value>Deal With It</value>
+  </data>
+  <data name="FedoraTip" xml:space="preserve">
+    <value>Fedora Tip</value>
+  </data>
+  <data name="FlyIn" xml:space="preserve">
+    <value>Fly In</value>
+  </data>
+  <data name="FlyOut" xml:space="preserve">
+    <value>Fly Out</value>
+  </data>
+  <data name="LeaveInStyle" xml:space="preserve">
+    <value>Leave In Style</value>
+  </data>
+  <data name="RotateComplex" xml:space="preserve">
+    <value>Rotate Complex</value>
+  </data>
+  <data name="RotateComplexOut" xml:space="preserve">
+    <value>Rotate Complex Out</value>
+  </data>
+  <data name="ScaleOut" xml:space="preserve">
+    <value>Scale Out</value>
+  </data>
+  <data name="SimpleEntrance" xml:space="preserve">
+    <value>Simple Entrance</value>
+  </data>
+  <data name="Spin3D" xml:space="preserve">
+    <value>Spin 3D</value>
+  </data>
+  <data name="WoahCSS" xml:space="preserve">
+    <value>Woah.css</value>
+  </data>
+  <data name="Wowzors" xml:space="preserve">
+    <value>Wowzors</value>
+  </data>
+  <data name="DonorDriveDonationTeamIncentive" xml:space="preserve">
+    <value>Donor Drive Donation Team Incentive</value>
+  </data>
+  <data name="DonorDriveDonationTeamMilestone" xml:space="preserve">
+    <value>Donor Drive Donation Team Milestone</value>
+  </data>
+  <data name="DonorDriveIncludeTeamDonationsAndEvents" xml:space="preserve">
+    <value>Include Team Donations and Events</value>
+  </data>
+  <data name="Boolean" xml:space="preserve">
+    <value>Boolean</value>
+  </data>
+  <data name="DropDown" xml:space="preserve">
+    <value>Drop Down</value>
+  </data>
+  <data name="Checkbox" xml:space="preserve">
+    <value>Checkbox</value>
+  </data>
+  <data name="Font" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="AmazonPollyPremiumVoiceSelectedWithoutCustomKey" xml:space="preserve">
+    <value>ERROR: Unable to perform Amazon Polly TTS due to a premium voice selected without an AWS account connected</value>
+  </data>
+  <data name="Nothing" xml:space="preserve">
+    <value>Nothing</value>
+  </data>
+  <data name="AnAnonymousGifter" xml:space="preserve">
+    <value>An Anonymous Gifter</value>
+  </data>
+  <data name="FailedToRestoreSettings" xml:space="preserve">
+    <value>ERROR: Failed to restore settings file due to an error. Please try restarting your PC to ensure all files are not lock-protected and try again.</value>
+  </data>
+  <data name="FailedToDeleteSettings" xml:space="preserve">
+    <value>ERROR: Failed to delete settings file due to an error. Please try restarting your PC to ensure all files are not lock-protected and try again.</value>
+  </data>
+  <data name="TrovoFailedToGetSubscriberData" xml:space="preserve">
+    <value>Failed to get subscriber data</value>
+  </data>
+  <data name="TrovoFailedToGetEmoteData" xml:space="preserve">
+    <value>Failed to get emote data</value>
+  </data>
+  <data name="YouTubeFailedToUpdateVideoID" xml:space="preserve">
+    <value>Failed to update video ID: {0}</value>
+    <comment>{0} is the ID of the video</comment>
+  </data>
+  <data name="TwitchFailedToGetChannelData" xml:space="preserve">
+    <value>Failed to get Twitch channel data</value>
+  </data>
+  <data name="ActiveBroadcasts" xml:space="preserve">
+    <value>Active Broadcasts</value>
+  </data>
+  <data name="Broadcasts" xml:space="preserve">
+    <value>Broadcasts</value>
+  </data>
+  <data name="UserChatCleared" xml:space="preserve">
+    <value>User Chat Cleared</value>
+  </data>
+  <data name="TwitchChannelHighlightedMessage" xml:space="preserve">
+    <value>Twitch Channel Highlighted Message</value>
+  </data>
+  <data name="TwitchChannelPowerUpCelebration" xml:space="preserve">
+    <value>Twitch Channel Power-Up Celebration</value>
+  </data>
+  <data name="TwitchChannelPowerUpGigantifiedEmote" xml:space="preserve">
+    <value>Twitch Channel Power-Up Gigantified Emote</value>
+  </data>
+  <data name="TwitchChannelPowerUpMessageEffect" xml:space="preserve">
+    <value>Twitch Channel Power-Up Message Effect</value>
+  </data>
+  <data name="TwitchChannelUserIntro" xml:space="preserve">
+    <value>Twitch Channel User Intro</value>
+  </data>
+  <data name="Mock" xml:space="preserve">
+    <value>Mock</value>
+  </data>
+  <data name="TheFollowingStreamingServicesMustBeManuallyReconnected" xml:space="preserve">
+    <value>The following streaming services were not able to be re-connected to and must manually be done from the Accounts page in Mix It Up:</value>
+  </data>
+  <data name="MeldStudioInvalidWebSocketAddress" xml:space="preserve">
+    <value>A valid websocket address must be specified for Meld Studio</value>
+  </data>
+  <data name="MeldStudioUnableToConnect" xml:space="preserve">
+    <value>Unable to connect to Meld Studio, please ensure the application is running</value>
+  </data>
+  <data name="MeldStudio" xml:space="preserve">
+    <value>Meld Studio</value>
+  </data>
+  <data name="NotConnected" xml:space="preserve">
+    <value>Not Connected</value>
+  </data>
+  <data name="WebSocketAddress" xml:space="preserve">
+    <value>WebSocket Address</value>
+  </data>
+  <data name="MeldStudioInfo" xml:space="preserve">
+    <value>Meld Studio connectivity allows you to control functionality in the Meld Studio software, such as changing the currently shown scene and showing/hiding layers. To connect to Meld Studio, please ensure the software is running before attempting to connect.</value>
+  </data>
+  <data name="MonitorUnmonitorAudioTrack" xml:space="preserve">
+    <value>Monitor/Unmonitor Audio Track</value>
+  </data>
+  <data name="MuteUnmuteAudioTrack" xml:space="preserve">
+    <value>Mute/Unmute Audio Track</value>
+  </data>
+  <data name="SetAudioTrackGain" xml:space="preserve">
+    <value>Set Audio Track Gain</value>
+  </data>
+  <data name="ShowHideEffect" xml:space="preserve">
+    <value>Show/Hide Effect</value>
+  </data>
+  <data name="ShowHideLayer" xml:space="preserve">
+    <value>Show/Hide Layer</value>
+  </data>
+  <data name="ShowScene" xml:space="preserve">
+    <value>Show Scene</value>
+  </data>
+  <data name="TakeScreenshot" xml:space="preserve">
+    <value>Take Screenshot</value>
+  </data>
+  <data name="MeldStudioActionMissingAudioTrackName" xml:space="preserve">
+    <value>Meld Studio Action: Missing Audio Track Name</value>
+  </data>
+  <data name="MeldStudioActionMissingEffectName" xml:space="preserve">
+    <value>Meld Studio Action: Missing Effect Name</value>
+  </data>
+  <data name="MeldStudioActionMissingLayerName" xml:space="preserve">
+    <value>Meld Studio Action: Missing Layer Name</value>
+  </data>
+  <data name="MeldStudioActionMissingSceneName" xml:space="preserve">
+    <value>Meld Studio Action: Missing Scene Name</value>
+  </data>
+  <data name="AudioTrackName" xml:space="preserve">
+    <value>Audio Track Name</value>
+  </data>
+  <data name="LayerName" xml:space="preserve">
+    <value>Layer Name</value>
+  </data>
+  <data name="Monitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>Record</value>
+  </data>
+  <data name="Stream" xml:space="preserve">
+    <value>Stream</value>
   </data>
 </root>

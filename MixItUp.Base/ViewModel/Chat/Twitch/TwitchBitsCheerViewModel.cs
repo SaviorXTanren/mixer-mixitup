@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using System;
+using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
@@ -8,11 +9,11 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
     {
         public static TwitchBitsCheerViewModel GetBitCheermote(string part)
         {
-            foreach (TwitchBitsCheermoteViewModel cheermote in ServiceManager.Get<TwitchChatService>().BitsCheermotes)
+            foreach (var cheermote in ServiceManager.Get<TwitchSession>().BitsCheermotes.ToList())
             {
-                if (part.StartsWith(cheermote.ID, StringComparison.InvariantCultureIgnoreCase) && int.TryParse(part.ToLower().Replace(cheermote.ID.ToLower(), ""), out int amount) && amount > 0)
+                if (part.StartsWith(cheermote.Key, StringComparison.InvariantCultureIgnoreCase) && int.TryParse(part.ToLower().Replace(cheermote.Key.ToLower(), ""), out int amount) && amount > 0)
                 {
-                    TwitchBitsCheermoteTierViewModel tier = cheermote.GetAppropriateTier(amount);
+                    TwitchBitsCheermoteTierViewModel tier = cheermote.Value.GetAppropriateTier(amount);
                     if (tier != null)
                     {
                         return new TwitchBitsCheerViewModel(part, amount, tier);

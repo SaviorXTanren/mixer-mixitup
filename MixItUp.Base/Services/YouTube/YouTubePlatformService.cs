@@ -1,18 +1,18 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model.Web;
+using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.YouTube.API;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using YouTube.Base;
-using YouTube.Base.Model;
 
 namespace MixItUp.Base.Services.YouTube
 {
+    [Obsolete]
     public class YouTubePlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "284178717531-kago2rk85ip02qb0vmlo8898m17s6oo8.apps.googleusercontent.com";

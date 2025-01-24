@@ -1,14 +1,13 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Twitch.Bits;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +70,14 @@ namespace MixItUp.Base.Services
         TwitchChannelSubscriptionGifted = 222,
         TwitchChannelMassSubscriptionsGifted = 223,
 
+        [Obsolete]
         TwitchChannelWatchStreak = 230,
+
+        TwitchChannelHighlightedMessage = 240,
+        TwitchChannelUserIntro = 241,
+        TwitchChannelPowerUpMessageEffect = 242,
+        TwitchChannelPowerUpGigantifiedEmote = 243,
+        TwitchChannelPowerUpCelebration = 244,
 
         TwitchChannelAdUpcoming = 250,
         TwitchChannelAdStarted = 251,
@@ -144,6 +150,8 @@ namespace MixItUp.Base.Services
         DonorDriveDonation = 1030,
         DonorDriveDonationIncentive = 1031,
         DonorDriveDonationMilestone = 1032,
+        DonorDriveDonationTeamIncentive = 1033,
+        DonorDriveDonationTeamMilestone = 1034,
 
         TipeeeStreamDonation = 1040,
 
@@ -226,8 +234,8 @@ namespace MixItUp.Base.Services
         public static event EventHandler<UserDonationModel> OnDonationOccurred = delegate { };
         public static void DonationOccurred(UserDonationModel donation) { OnDonationOccurred(null, donation); }
 
-        public static event EventHandler<TwitchUserBitsCheeredModel> OnTwitchBitsCheeredOccurred = delegate { };
-        public static void TwitchBitsCheeredOccurred(TwitchUserBitsCheeredModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
+        public static event EventHandler<TwitchBitsCheeredEventModel> OnTwitchBitsCheeredOccurred = delegate { };
+        public static void TwitchBitsCheeredOccurred(TwitchBitsCheeredEventModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
 
         public static event EventHandler<TrovoChatSpellViewModel> OnTrovoSpellCastOccurred = delegate { };
         public static void TrovoSpellCastOccurred(TrovoChatSpellViewModel spell) { OnTrovoSpellCastOccurred(null, spell); }
@@ -320,6 +328,30 @@ namespace MixItUp.Base.Services
         {
             try
             {
+                switch (type)
+                {
+                    case EventTypeEnum.TwitchChannelFollowed:
+                    case EventTypeEnum.TrovoChannelFollowed:
+                        ChannelSession.Settings.LastFollowerUserID = parameters.User.ID;
+                        break;
+                    case EventTypeEnum.TwitchChannelSubscribed:
+                    case EventTypeEnum.YouTubeChannelNewMember:
+                    case EventTypeEnum.TrovoChannelSubscribed:
+                    case EventTypeEnum.TwitchChannelResubscribed:
+                    case EventTypeEnum.YouTubeChannelMemberMilestone:
+                    case EventTypeEnum.TrovoChannelResubscribed:
+                        ChannelSession.Settings.LastSubscriberUserID = parameters.User.ID;
+                        break;
+                    case EventTypeEnum.TwitchChannelSubscriptionGifted:
+                    case EventTypeEnum.YouTubeChannelMembershipGifted:
+                    case EventTypeEnum.TrovoChannelSubscriptionGifted:
+                        if (parameters.TargetUser != null)
+                        {
+                            ChannelSession.Settings.LastSubscriberUserID = parameters.TargetUser.ID;
+                        }
+                        break;
+                }
+
                 if (this.CanPerformEvent(type, parameters))
                 {
                     UserV2ViewModel user = parameters.User;

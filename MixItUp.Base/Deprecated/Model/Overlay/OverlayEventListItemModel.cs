@@ -1,11 +1,11 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Util;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -174,7 +174,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserV2ViewModel, int> purchase) { await this.AddEvent(purchase.Item1.DisplayName, string.Format(MixItUp.Base.Resources.StreamlootsPacksPurchasedAmount, purchase.Item2)); }
 
-        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e) { await this.AddEvent(e.User.DisplayName, string.Format(MixItUp.Base.Resources.TwitchBitsCheeredAmount, e.Amount)); }
+        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchBitsCheeredEventModel e) { await this.AddEvent(e.User.DisplayName, string.Format(MixItUp.Base.Resources.TwitchBitsCheeredAmount, e.Amount)); }
 
         private async Task AddEvent(string name, string details)
         {

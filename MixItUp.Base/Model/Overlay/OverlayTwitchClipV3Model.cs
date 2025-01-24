@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Twitch.Clips;
+using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,6 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.Clips;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -84,17 +85,17 @@ namespace MixItUp.Base.Model.Overlay
             this.ClipDuration = 0;
             this.ClipDirectLink = null;
 
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
                 string clipReferenceID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.ClipReferenceID, parameters);
 
-                Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = ServiceManager.Get<TwitchSessionService>().User;
+                UserModel twitchUser = ServiceManager.Get<TwitchSession>().StreamerModel;
                 if (!string.IsNullOrEmpty(clipReferenceID))
                 {
                     if (this.ClipType == OverlayTwitchClipV3ClipType.RandomClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestClip ||
                         this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
                     {
-                        twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(clipReferenceID);
+                        twitchUser = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIUserByLogin(clipReferenceID);
                         if (twitchUser == null)
                         {
                             // No valid user found, fail out and send an error message
@@ -107,22 +108,39 @@ namespace MixItUp.Base.Model.Overlay
                 ClipModel clip = null;
                 if (this.ClipType == OverlayTwitchClipV3ClipType.RandomClip || this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip)
                 {
-                    DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(30 + RandomHelper.GenerateRandomNumber(365)));
                     bool featured = this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip;
-                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, featured: featured, maxResults: 500);
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSession>().StreamerService.GetClips(twitchUser, featured: featured, maxResults: 500);
                     if (clips != null && clips.Count() > 0)
                     {
                         clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).Random();
                     }
+
+                    if (clip == null && this.ClipType == OverlayTwitchClipV3ClipType.RandomFeaturedClip)
+                    {
+                        clips = await ServiceManager.Get<TwitchSession>().StreamerService.GetClips(twitchUser, featured: false, maxResults: 500);
+                        if (clips != null && clips.Count() > 0)
+                        {
+                            clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).Random();
+                        }
+                    }
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.LatestClip || this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
                 {
-                    DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(30));
+                    DateTimeOffset startDate = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(365));
                     bool featured = this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip;
-                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: int.MaxValue);
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSession>().StreamerService.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: featured, maxResults: 500);
                     if (clips != null && clips.Count() > 0)
                     {
                         clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).OrderByDescending(c => c.created_at).FirstOrDefault();
+                    }
+
+                    if (clip == null && this.ClipType == OverlayTwitchClipV3ClipType.LatestFeaturedClip)
+                    {
+                        clips = await ServiceManager.Get<TwitchSession>().StreamerService.GetClips(twitchUser, startDate: startDate, endDate: DateTimeOffset.Now, featured: false, maxResults: 500);
+                        if (clips != null && clips.Count() > 0)
+                        {
+                            clip = clips.Where(c => c.thumbnail_url.Contains(ClipThumbnailURLPreviewSegment)).OrderByDescending(c => c.created_at).FirstOrDefault();
+                        }
                     }
                 }
                 else if (this.ClipType == OverlayTwitchClipV3ClipType.SpecificClip && !string.IsNullOrEmpty(clipReferenceID))
@@ -142,7 +160,7 @@ namespace MixItUp.Base.Model.Overlay
                         clipReferenceID = clipReferenceID.Substring(0, clipReferenceID.IndexOf("?"));
                     }
 
-                    clip = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClip(clipReferenceID);
+                    clip = await ServiceManager.Get<TwitchSession>().StreamerService.GetClip(clipReferenceID);
                 }
 
                 if (clip == null)

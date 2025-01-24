@@ -1,19 +1,21 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
+using MixItUp.Base.Model.Trovo.Chat;
+using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.Twitch.Clients.PubSub.Messages;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Twitch.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Trovo.Base.Models.Chat;
-using Twitch.Base.Models.Clients.PubSub.Messages;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -582,11 +584,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
                 else if (type == OverlayEventListV3TestTypeEnum.TwitchBits)
                 {
-                    eventList.OnTwitchBits(this, new TwitchUserBitsCheeredModel(ChannelSession.User, new PubSubBitsEventV2Model()
-                    {
-                        bits_used = 100,
-                        chat_message = "Hello World"
-                    }));
+                    eventList.OnTwitchBits(this, new TwitchBitsCheeredEventModel(ChannelSession.User, 100, new TwitchChatMessageViewModel(ChannelSession.User, "Hello World")));
                 }
                 else if (type == OverlayEventListV3TestTypeEnum.YouTubeSuperChat)
                 {

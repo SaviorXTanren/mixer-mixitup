@@ -1,4 +1,4 @@
-﻿using StreamingClient.Base.Util;
+﻿using MixItUp.Base.Util;
 using System;
 using System.Windows;
 using System.Windows.Data;

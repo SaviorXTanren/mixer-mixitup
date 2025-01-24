@@ -7,13 +7,12 @@ using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Web;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Dashboard;
 using Newtonsoft.Json;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +26,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV3Model
     {
-        public const int LatestVersion = 7;
+        public const int LatestVersion = 8;
 
         public const string SettingsDirectoryName = "Settings";
         public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
@@ -220,6 +219,8 @@ namespace MixItUp.Base.Model.Settings
         public bool UnlockAllCommands { get; set; }
         [DataMember]
         public CommandServiceLockTypeEnum CommandServiceLockType { get; set; } = CommandServiceLockTypeEnum.PerCommandType;
+        [DataMember]
+        public bool AlwaysUseCommandLocksWhenTestingCommands { get; set; }
         [DataMember]
         public int MassGiftedSubsFilterAmount { get; set; } = 1;
         [DataMember]
@@ -589,6 +590,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string UberduckAPISecret { get; set; }
 
+        [DataMember]
+        public string MeldStudioWebSocketAddress { get; set; }
+
         #endregion Services
 
         #region Dashboard
@@ -664,6 +668,11 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public Dictionary<string, object> LatestSpecialIdentifiersData { get; set; } = new Dictionary<string, object>();
+
+        [DataMember]
+        public Guid LastFollowerUserID { get; set; }
+        [DataMember]
+        public Guid LastSubscriberUserID { get; set; }
 
         [DataMember]
         public Dictionary<string, HotKeyConfiguration> HotKeys { get; set; } = new Dictionary<string, HotKeyConfiguration>();
@@ -888,9 +897,9 @@ namespace MixItUp.Base.Model.Settings
 
             this.Version = SettingsV3Model.LatestVersion;
 
-            foreach (IStreamingPlatformSessionService sessionService in ServiceManager.GetAll<IStreamingPlatformSessionService>())
+            foreach (StreamingPlatformSessionBase session in StreamingPlatforms.GetPlatformSessions())
             {
-                sessionService.SaveSettings(this);
+                session.SaveAuthenticationSettings();
             }
 
             if (ServiceManager.Get<StreamlabsService>().IsConnected)

@@ -1,10 +1,8 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -146,47 +144,7 @@ namespace MixItUp.Base.Model.Commands
             }
             commandIDs.Add(this.ID);
 
-            foreach (ActionModelBase action in this.Actions)
-            {
-                if (action.Type == ActionTypeEnum.Command)
-                {
-                    CommandActionModel commandAction = (CommandActionModel)action;
-                    CommandModelBase subCommand = ChannelSession.Settings.GetCommand(commandAction.CommandID);
-                    if (subCommand != null)
-                    {
-                        foreach (ActionTypeEnum subActionType in subCommand.GetActionTypesInCommand(commandIDs))
-                        {
-                            actionTypes.Add(subActionType);
-                        }
-                    }
-                }
-                else if (action.Type == ActionTypeEnum.Overlay)
-                {
-                    OverlayActionModel overlayAction = (OverlayActionModel)action;
-                    if (overlayAction.OverlayItemV3 != null)
-                    {
-                        if (overlayAction.OverlayItemV3.Type == OverlayItemV3Type.Video || overlayAction.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
-                        {
-                            actionTypes.Add(ActionTypeEnum.Sound);
-                        }
-                    }
-                }
-                else if (action.Type == ActionTypeEnum.TextToSpeech)
-                {
-                    actionTypes.Add(ActionTypeEnum.Sound);
-                }
-                else if (action.Type == ActionTypeEnum.Overlay || action.Type == ActionTypeEnum.PolyPop || action.Type == ActionTypeEnum.StreamingSoftware)
-                {
-                    actionTypes.Add(ActionTypeEnum.Sound);
-                    actionTypes.Add(ActionTypeEnum.Overlay);
-                }
-                actionTypes.Add(action.Type);
-            }
-
-            actionTypes.Remove(ActionTypeEnum.Command);
-            actionTypes.Remove(ActionTypeEnum.Wait);
-
-            return actionTypes;
+            return CommandService.GetActionTypesForActions(this.Actions, commandIDs);
         }
 
         public virtual Task<Result> CustomValidation(CommandParametersModel parameters) { return Task.FromResult(new Result()); }

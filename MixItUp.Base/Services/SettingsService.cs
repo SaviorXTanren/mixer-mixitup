@@ -1,15 +1,15 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Services.External;
+using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.Web;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,8 +17,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Services
 {
@@ -102,41 +100,59 @@ namespace MixItUp.Base.Services
 
             if (!string.IsNullOrEmpty(ChannelSession.AppSettings.SettingsRestoreFilePath))
             {
-                Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
-
-                if (ChannelSession.AppSettings.SettingsToReplaceDuringRestore != Guid.Empty)
+                try
                 {
-                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToReplaceDuringRestore));
+                    Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
+
+                    if (ChannelSession.AppSettings.SettingsToReplaceDuringRestore != Guid.Empty)
+                    {
+                        SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToReplaceDuringRestore));
+                        if (settings != null)
+                        {
+
+                                File.Delete(settings.SettingsFilePath);
+                                File.Delete(settings.DatabaseFilePath);
+
+                                // Adding delay to ensure the above files are actually deleted
+                                await Task.Delay(2000);
+
+                        }
+                    }
+
+                    await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.SettingsRestoreFilePath, SettingsV3Model.SettingsDirectoryName);
+
+                    ChannelSession.AppSettings.SettingsRestoreFilePath = null;
+                    ChannelSession.AppSettings.SettingsToReplaceDuringRestore = Guid.Empty;
+
+                    return await this.GetAllSettings();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                    await DialogHelper.ShowMessage(Resources.FailedToRestoreSettings);
+                }
+            }
+            else if (ChannelSession.AppSettings.SettingsToDelete != Guid.Empty)
+            {
+                try
+                {
+                    Logger.Log(LogLevel.Debug, "Settings deletion detected, starting deletion process");
+
+                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
+                    ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
+
                     if (settings != null)
                     {
                         File.Delete(settings.SettingsFilePath);
                         File.Delete(settings.DatabaseFilePath);
 
-                        // Adding delay to ensure the above files are actually deleted
-                        await Task.Delay(2000);
+                        return await this.GetAllSettings();
                     }
                 }
-
-                await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.SettingsRestoreFilePath, SettingsV3Model.SettingsDirectoryName);
-
-                ChannelSession.AppSettings.SettingsRestoreFilePath = null;
-                ChannelSession.AppSettings.SettingsToReplaceDuringRestore = Guid.Empty;
-
-                return await this.GetAllSettings();
-            }
-            else if (ChannelSession.AppSettings.SettingsToDelete != Guid.Empty)
-            {
-                Logger.Log(LogLevel.Debug, "Settings deletion detected, starting deletion process");
-
-                SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
-                ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
-
-                if (settings != null)
+                catch (Exception ex)
                 {
-                    File.Delete(settings.SettingsFilePath);
-                    File.Delete(settings.DatabaseFilePath);
-
-                    return await this.GetAllSettings();
+                    Logger.Log(ex);
+                    await DialogHelper.ShowMessage(Resources.FailedToDeleteSettings);
                 }
             }
 
@@ -166,8 +182,6 @@ namespace MixItUp.Base.Services
         {
             if (settings != null)
             {
-                Logger.ForceLog(LogLevel.Information, "Settings save operation started");
-
                 try
                 {
                     await semaphore.WaitAsync();
@@ -184,8 +198,6 @@ namespace MixItUp.Base.Services
                 {
                     semaphore.Release();
                 }
-
-                Logger.ForceLog(LogLevel.Information, "Settings save operation finished");
             }
         }
 
@@ -392,16 +404,39 @@ namespace MixItUp.Base.Services
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
                 await SettingsV3Upgrader.Version7Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version8Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
         }
 
+        public static async Task Version8Upgrade(int version, string filePath)
+        {
+            if (version < 8)
+            {
+                await ReplaceOAuthTokenModelClass(filePath);
+
+                SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+                await settings.Initialize();
+
+                await ServiceManager.Get<SettingsService>().Save(settings);
+            }
+        }
+
+        private static async Task ReplaceOAuthTokenModelClass(string filePath)
+        {
+            string settingsFileContents = await ServiceManager.Get<IFileService>().ReadFile(filePath);
+            settingsFileContents = settingsFileContents.Replace("StreamingClient.Base.Model.OAuth.OAuthTokenModel, StreamingClient.Base", "MixItUp.Base.Model.Web.OAuthTokenModel, MixItUp.Base");
+            await ServiceManager.Get<IFileService>().SaveFile(filePath, settingsFileContents);
+        }
+
         public static async Task Version7Upgrade(int version, string filePath)
         {
             if (version < 7)
             {
+                await ReplaceOAuthTokenModelClass(filePath);
+
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
@@ -432,6 +467,15 @@ namespace MixItUp.Base.Services
                             settings.Commands.ManualValueChanged(command.ID);
                         }
                     }
+                    else if (kvp.Value is GameCommandModelBase)
+                    {
+                        GameCommandModelBase command = (GameCommandModelBase)kvp.Value;
+                        foreach (CommandModelBase subCommand in command.GetInnerCommands())
+                        {
+                            UpdateActionsV7(settings, subCommand.Actions);
+                        }
+                        settings.Commands.ManualValueChanged(kvp.Key);
+                    }
 
                     if (UpdateActionsV7(settings, kvp.Value.Actions))
                     {
@@ -454,7 +498,7 @@ namespace MixItUp.Base.Services
                         newWidget.RefreshTime = widget.RefreshTime;
                     }
 
-                    OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(widget.Item);
+                    OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(widget.Item, settings);
                     if (item != null)
                     {
                         item.ID = widget.Item.ID;
@@ -462,6 +506,11 @@ namespace MixItUp.Base.Services
                         if (endpoint != null && endpoint.ID != Guid.Empty)
                         {
                             newWidget.Item.OverlayEndpointID = endpoint.ID;
+                        }
+
+                        if (newWidget.Type == OverlayItemV3Type.EndCredits)
+                        {
+                            newWidget.IsEnabled = true;
                         }
 
                         if (newWidget.Type == OverlayItemV3Type.Text)
@@ -551,7 +600,7 @@ namespace MixItUp.Base.Services
                             };
                         }
 
-                        OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem);
+                        OverlayItemV3ModelBase item = SettingsV3Upgrader.ConvertOldOverlayItem(action.OverlayItem, settings);
                         if (item != null)
                         {
                             action.OverlayItemV3 = item;
@@ -567,7 +616,7 @@ namespace MixItUp.Base.Services
                         OverlayWidgetModel widget = settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID == action.WidgetID);
                         if (widget != null)
                         {
-                            if (widget.Item.ItemType == OverlayItemModelTypeEnum.EndCredits)
+                            if (widget.Item.ItemType == OverlayItemModelTypeEnum.EndCredits && action.ShowWidget)
                             {
                                 action.EndCreditsID = action.WidgetID;
                                 action.WidgetID = Guid.Empty;
@@ -578,7 +627,7 @@ namespace MixItUp.Base.Services
                             OverlayWidgetV3Model widgetv3 = settings.OverlayWidgetsV3.FirstOrDefault(w => w.ID == action.WidgetID);
                             if (widget != null)
                             {
-                                if (widgetv3.Type == OverlayItemV3Type.EndCredits)
+                                if (widgetv3.Type == OverlayItemV3Type.EndCredits && action.ShowWidget)
                                 {
                                     action.EndCreditsID = action.WidgetID;
                                     action.WidgetID = Guid.Empty;
@@ -608,6 +657,7 @@ namespace MixItUp.Base.Services
                         if (conditionalAction.Clauses.Count == 0)
                         {
                             conditionalAction.Clauses.Add(new ConditionalClauseModel(ConditionalComparisionTypeEnum.Equals, "1", "1", null));
+                            updated = true;
                         }
                     }
                 }
@@ -626,8 +676,41 @@ namespace MixItUp.Base.Services
             return (int)settingsJObj["Version"];
         }
 
+        private static readonly Dictionary<string, string> HTMLColorSchemeDictionary = new Dictionary<string, string>()
+        {
+            { "#ffb300", "Amber" },
+            { "#000000", "Black" },
+            { "#2196f3", "Blue" },
+            { "#795548", "Brown" },
+            { "#00bcd4", "Cyan" },
+            { "#ff5722", "DeepOrange" },
+            { "#673ab7", "DeepPurple" },
+            { "#4caf50", "Green" },
+            { "#9e9e9e", "Grey" },
+            { "#3f51b5", "Indigo" },
+            { "#03a9f4", "LightBlue" },
+            { "#8bc34a", "LightGreen" },
+            { "#cddc39", "Lime" },
+            { "#ff9800", "Orange" },
+            { "#e91e63", "Pink" },
+            { "#9c27b0", "Purple" },
+            { "#f44336", "Red" },
+            { "#009688", "Teal" },
+            { "#ffffff", "White" },
+            { "#ffeb3b", "Yellow" },
+        };
+
+        private static string UpgradeOldOverlayColor(string oldFontColor)
+        {
+            if (!string.IsNullOrEmpty(oldFontColor) && HTMLColorSchemeDictionary.ContainsKey(oldFontColor))
+            {
+                return HTMLColorSchemeDictionary[oldFontColor];
+            }
+            return oldFontColor;
+        }
+
 #pragma warning disable CS0612 // Type or member is obsolete
-        private static OverlayItemV3ModelBase ConvertOldOverlayItem(OverlayItemModelBase item)
+        private static OverlayItemV3ModelBase ConvertOldOverlayItem(OverlayItemModelBase item, SettingsV3Model settings)
         {
             OverlayItemV3ViewModelBase vmResult = null;
             OverlayItemV3ModelBase result = null;
@@ -636,12 +719,14 @@ namespace MixItUp.Base.Services
                 OverlayChatMessagesListItemModel oldItem = (OverlayChatMessagesListItemModel)item;
                 OverlayChatV3ViewModel newItem = new OverlayChatV3ViewModel();
                 vmResult = newItem;
-                newItem.BackgroundColor = oldItem.BackgroundColor;
-                newItem.BorderColor = oldItem.BorderColor;
-                newItem.FontColor = oldItem.TextColor;
+
+                newItem.BackgroundColor = UpgradeOldOverlayColor(oldItem.BackgroundColor);
+                newItem.BorderColor = UpgradeOldOverlayColor(oldItem.BorderColor);
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
                 newItem.FontName = oldItem.TextFont;
                 newItem.FontSize = oldItem.Height;
                 newItem.MessageRemovalTime = oldItem.FadeOut;
+
                 newItem.MessageAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
                 newItem.MessageRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
                 result = newItem.GetItem();
@@ -652,14 +737,16 @@ namespace MixItUp.Base.Services
                 OverlayEndCreditsItemModel oldItem = (OverlayEndCreditsItemModel)item;
                 OverlayEndCreditsV3ViewModel newItem = new OverlayEndCreditsV3ViewModel();
                 vmResult = newItem;
-                newItem.BackgroundColor = oldItem.BackgroundColor;
-                newItem.Header.FontColor = oldItem.SectionTextColor;
+
+                newItem.BackgroundColor = UpgradeOldOverlayColor(oldItem.BackgroundColor);
+                newItem.Header.FontColor = UpgradeOldOverlayColor(oldItem.SectionTextColor);
                 newItem.Header.FontName = oldItem.SectionTextFont;
                 newItem.Header.FontSize = oldItem.SectionTextSize;
-                newItem.FontColor = oldItem.ItemTextColor;
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.ItemTextColor);
                 newItem.FontName = oldItem.ItemTextFont;
                 newItem.FontSize = oldItem.ItemTextSize;
                 newItem.SelectedScrollSpeed = EnumHelper.GetEnumValueFromString<OverlayEndCreditsSpeedV3TypeEnum>(oldItem.Speed.ToString());
+
                 foreach (var oldSection in oldItem.SectionTemplates)
                 {
                     OverlayEndCreditsSectionV3ViewModel newSection = new OverlayEndCreditsSectionV3ViewModel(newItem);
@@ -689,8 +776,9 @@ namespace MixItUp.Base.Services
                         case OverlayEndCreditsSectionTypeEnum.FreeFormHTML:
                         case OverlayEndCreditsSectionTypeEnum.FreeFormHTML2:
                         case OverlayEndCreditsSectionTypeEnum.FreeFormHTML3:
-                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.CustomSection;
-                            newSection.HTML = oldSection.Value.UserHTML;
+                            newSection.SelectedType = OverlayEndCreditsSectionV3Type.HTML;
+                            newSection.Name = oldSection.Value.SectionHTML;
+                            newSection.ItemTemplate = oldSection.Value.UserHTML;
                             break;
                         case OverlayEndCreditsSectionTypeEnum.Bits:
                             newSection.SelectedType = OverlayEndCreditsSectionV3Type.TwitchBits;
@@ -720,11 +808,17 @@ namespace MixItUp.Base.Services
                 OverlayEventListItemModel oldItem = (OverlayEventListItemModel)item;
                 OverlayEventListV3ViewModel newItem = new OverlayEventListV3ViewModel();
                 vmResult = newItem;
-                newItem.BackgroundColor = oldItem.BackgroundColor;
-                newItem.BorderColor = oldItem.BorderColor;
-                newItem.FontColor = oldItem.TextColor;
-                newItem.FontName = oldItem.TextFont;
+
                 newItem.TotalToShow = oldItem.TotalToShow;
+                newItem.BorderColor = UpgradeOldOverlayColor(oldItem.BorderColor);
+                newItem.BackgroundColor = UpgradeOldOverlayColor(oldItem.BackgroundColor);
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
+                newItem.FontName = oldItem.TextFont;
+                newItem.Header.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
+                newItem.Header.FontName = oldItem.TextFont;
+                newItem.Width = oldItem.Width.ToString();
+                newItem.Height = oldItem.Height.ToString();
+
                 newItem.AddToTop = true;
                 newItem.ItemAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
                 newItem.ItemRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
@@ -758,11 +852,15 @@ namespace MixItUp.Base.Services
                 OverlayGameQueueListItemModel oldItem = (OverlayGameQueueListItemModel)item;
                 OverlayGameQueueV3ViewModel newItem = new OverlayGameQueueV3ViewModel();
                 vmResult = newItem;
-                newItem.BackgroundColor = oldItem.BackgroundColor;
-                newItem.BorderColor = oldItem.BorderColor;
-                newItem.FontColor = oldItem.TextColor;
-                newItem.FontName = oldItem.TextFont;
+
                 newItem.TotalToShow = oldItem.TotalToShow;
+                newItem.BorderColor = UpgradeOldOverlayColor(oldItem.BorderColor);
+                newItem.BackgroundColor = UpgradeOldOverlayColor(oldItem.BackgroundColor);
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
+                newItem.FontName = oldItem.TextFont;
+                newItem.Width = oldItem.Width.ToString();
+                newItem.Height = oldItem.Height.ToString();
+
                 newItem.ItemAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
                 newItem.ItemRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
                 result = newItem.GetItem();
@@ -793,6 +891,17 @@ namespace MixItUp.Base.Services
                 OverlayLeaderboardListItemModel oldItem = (OverlayLeaderboardListItemModel)item;
                 OverlayLeaderboardV3ViewModel newItem = new OverlayLeaderboardV3ViewModel();
                 vmResult = newItem;
+
+                newItem.TotalToShow = oldItem.TotalToShow;
+                newItem.BorderColor = UpgradeOldOverlayColor(oldItem.BorderColor);
+                newItem.BackgroundColor = UpgradeOldOverlayColor(oldItem.BackgroundColor);
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
+                newItem.FontName = oldItem.TextFont;
+                newItem.Header.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
+                newItem.Header.FontName = oldItem.TextFont;
+                newItem.Width = oldItem.Width.ToString();
+                newItem.Height = oldItem.Height.ToString();
+
                 if (oldItem.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank && ChannelSession.Settings.Currency.TryGetValue(oldItem.CurrencyID, out CurrencyModel currency))
                 {
                     newItem.SelectedConsumable = currency;
@@ -814,6 +923,7 @@ namespace MixItUp.Base.Services
                 {
                     newItem.SelectedLeaderboardType = OverlayLeaderboardTypeV3Enum.ViewingTime;
                 }
+
                 newItem.ItemAddedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.EntranceAnimation.ToString());
                 newItem.ItemRemovedAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.Effects.ExitAnimation.ToString());
                 result = newItem.GetItem();
@@ -824,12 +934,14 @@ namespace MixItUp.Base.Services
                 OverlayProgressBarItemModel oldItem = (OverlayProgressBarItemModel)item;
                 OverlayGoalV3ViewModel newItem = new OverlayGoalV3ViewModel();
                 vmResult = newItem;
-                newItem.ProgressColor = oldItem.ProgressColor;
-                newItem.GoalColor = oldItem.BackgroundColor;
-                newItem.FontColor = oldItem.TextColor;
+
+                newItem.ProgressColor = UpgradeOldOverlayColor(oldItem.ProgressColor);
+                newItem.GoalColor = UpgradeOldOverlayColor(oldItem.BackgroundColor);
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
                 newItem.FontName = oldItem.TextFont;
                 newItem.Width = oldItem.Width.ToString();
                 newItem.Height = oldItem.Height.ToString();
+
                 if (oldItem.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
                 {
                     newItem.FollowAmount = 1;
@@ -855,10 +967,22 @@ namespace MixItUp.Base.Services
                 {
                     newItem.TwitchBitsAmount = 1;
                 }
+                else if (oldItem.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom)
+                {
+                    string counterName = oldItem.CurrentAmountCustom.Replace("$", string.Empty).ToLowerInvariant();
+                    if (settings.Counters.TryGetValue(counterName, out CounterModel counter))
+                    {
+                        newItem.SelectedGoalType = OverlayGoalV3Type.Counter;
+                        newItem.SelectedCounter = counter;
+                    }
+                }
+
+                newItem.Segments.Clear();
                 newItem.Segments.Add(new OverlayGoalSegmentV3ViewModel(newItem)
                 {
                     Amount = oldItem.GoalAmount
                 });
+
                 result = newItem.GetItem();
                 result.OldCustomHTML = oldItem.HTML;
                 ((OverlayGoalV3Model)result).TotalAmount = oldItem.CurrentAmount;
@@ -868,11 +992,13 @@ namespace MixItUp.Base.Services
                 OverlayStreamBossItemModel oldItem = (OverlayStreamBossItemModel)item;
                 OverlayStreamBossV3ViewModel newItem = new OverlayStreamBossV3ViewModel();
                 vmResult = newItem;
-                newItem.FontColor = oldItem.TextColor;
-                newItem.FontName = oldItem.TextFont;
-                newItem.BorderColor = oldItem.BorderColor;
-                newItem.HealthColor = oldItem.BackgroundColor;
-                newItem.DamageColor = oldItem.ProgressColor;
+                newItem.Height = oldItem.Height.ToString();
+                newItem.Width = oldItem.Width.ToString();
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
+                newItem.FontName = UpgradeOldOverlayColor(oldItem.TextFont);
+                newItem.BorderColor = UpgradeOldOverlayColor(oldItem.BorderColor);
+                newItem.HealthColor = UpgradeOldOverlayColor(oldItem.BackgroundColor);
+                newItem.DamageColor = UpgradeOldOverlayColor(oldItem.ProgressColor);
                 newItem.BaseHealth = oldItem.StartingHealth;
                 newItem.DamageOcurredAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.DamageAnimation.ToString());
                 newItem.NewBossAnimation.SelectedAnimatedCSSAnimation = EnumHelper.GetEnumValueFromString<OverlayAnimateCSSAnimationType>(oldItem.NewBossAnimation.ToString());
@@ -892,9 +1018,16 @@ namespace MixItUp.Base.Services
                 newItem.TwitchBitsAmount = oldItem.BitsBonus;
                 newItem.SelfHealingMultiplier = oldItem.HealingBonus;
                 newItem.OverkillBonusHealthMultiplier = oldItem.OverkillBonus;
+                newItem.KillBonusHealth = 0;
+                newItem.YouTubeSuperChatAmount = 0;
+                newItem.TrovoElixirSpellAmount = 0;
                 result = newItem.GetItem();
                 result.OldCustomHTML = oldItem.HTML;
-                ((OverlayStreamBossV3Model)result).CurrentHealth = oldItem.CurrentHealth;
+
+                if (oldItem.CurrentHealth > 0)
+                {
+                    ((OverlayStreamBossV3Model)result).CurrentHealth = oldItem.CurrentHealth;
+                }
                 ((OverlayStreamBossV3Model)result).CurrentBoss = oldItem.CurrentBossID;
                 ((OverlayStreamBossV3Model)result).NewBossCommandID = oldItem.StreamBossChangedCommandID;
             }
@@ -904,13 +1037,13 @@ namespace MixItUp.Base.Services
                 OverlayTextV3ViewModel newItem = new OverlayTextV3ViewModel();
                 vmResult = newItem;
                 newItem.Text = oldItem.Text;
-                newItem.FontColor = oldItem.Color;
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.Color);
                 newItem.FontName = oldItem.Font;
                 newItem.FontSize = oldItem.Size;
                 newItem.Bold = oldItem.Bold;
                 newItem.Underline = oldItem.Underline;
                 newItem.Italics = oldItem.Italic;
-                newItem.ShadowColor = oldItem.ShadowColor;
+                newItem.ShadowColor = UpgradeOldOverlayColor(oldItem.ShadowColor);
                 result = newItem.GetItem();
             }
             else if (item.ItemType == OverlayItemModelTypeEnum.Timer)
@@ -919,7 +1052,7 @@ namespace MixItUp.Base.Services
                 OverlayPersistentTimerV3ViewModel newItem = new OverlayPersistentTimerV3ViewModel();
                 vmResult = newItem;
                 newItem.InitialAmount = oldItem.TotalLength;
-                newItem.FontColor = oldItem.TextColor;
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
                 newItem.FontName = oldItem.TextFont;
                 newItem.FontSize = oldItem.TextSize;
                 result = newItem.GetItem();
@@ -930,7 +1063,7 @@ namespace MixItUp.Base.Services
                 OverlayTimerTrainItemModel oldItem = (OverlayTimerTrainItemModel)item;
                 OverlayPersistentTimerV3ViewModel newItem = new OverlayPersistentTimerV3ViewModel();
                 vmResult = newItem;
-                newItem.FontColor = oldItem.TextColor;
+                newItem.FontColor = UpgradeOldOverlayColor(oldItem.TextColor);
                 newItem.FontName = oldItem.TextFont;
                 newItem.FontSize = oldItem.TextSize;
                 newItem.FollowAmount = oldItem.FollowBonus;
@@ -966,15 +1099,10 @@ namespace MixItUp.Base.Services
                 OverlayWebPageItemModel oldItem = (OverlayWebPageItemModel)item;
                 OverlayHTMLV3ViewModel newItem = new OverlayHTMLV3ViewModel();
                 vmResult = newItem;
+
                 result = newItem.GetItem();
-                result.Javascript = "var iframe = document.createElement('iframe');" + Environment.NewLine +
-                    $"iframe.src = \"{oldItem.FilePath}\";" + Environment.NewLine +
-                    $"iframe.width = {oldItem.Width};" + Environment.NewLine +
-                    $"iframe.height = {oldItem.Height};" + Environment.NewLine +
-                    "iframe.frameBorder = 0;" + Environment.NewLine + Environment.NewLine +
-                    "const contentDiv = document.getElementById(\"contentdiv\");" + Environment.NewLine +
-                    "contentDiv.appendChild(iframe);" + Environment.NewLine +
-                    result.Javascript;
+
+                result.HTML = $"<iframe width={oldItem.Width} height={oldItem.Height} frameBorder=0 src=\"{oldItem.FilePath}\"></iframe>";
             }
             else if (item.ItemType == OverlayItemModelTypeEnum.YouTube)
             {
@@ -983,6 +1111,7 @@ namespace MixItUp.Base.Services
                 vmResult = newItem;
                 newItem.VideoID = oldItem.FilePath;
                 newItem.Volume = oldItem.Volume;
+                newItem.StartTime = oldItem.StartTime.ToString();
                 newItem.Width = oldItem.Width.ToString();
                 newItem.Height = oldItem.Height.ToString();
                 result = newItem.GetItem();
@@ -1004,6 +1133,7 @@ namespace MixItUp.Base.Services
                 result.Layer = item.Position.Layer;
                 result.XPosition = item.Position.Horizontal;
                 result.YPosition = item.Position.Vertical;
+
                 if (item.Position.PositionType == OverlayItemPositionType.Pixel)
                 {
                     result.PositionType = OverlayPositionV3Type.Pixel;

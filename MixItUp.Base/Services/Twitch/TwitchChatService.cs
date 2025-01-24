@@ -1,34 +1,33 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Twitch.Bits;
+using MixItUp.Base.Model.Twitch.Chat;
+using MixItUp.Base.Model.Twitch.Clients.Chat;
+using MixItUp.Base.Model.Twitch.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Twitch.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Util;
-using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Base.Clients;
-using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.NewAPI.Bits;
-using Twitch.Base.Models.NewAPI.Chat;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    [Obsolete]
     public class TwitchTMIChatModel
     {
         public long chatter_count { get; set; }
         public TwitchTMIChatGroupsModel chatters { get; set; } = new TwitchTMIChatGroupsModel();
     }
 
+    [Obsolete]
     public class TwitchTMIChatGroupsModel
     {
         public List<string> broadcaster { get; set; } = new List<string>();
@@ -40,6 +39,7 @@ namespace MixItUp.Base.Services.Twitch
         public List<string> viewers { get; set; } = new List<string>();
     }
 
+    [Obsolete]
     public class TwitchChatService : StreamingPlatformServiceBase
     {
         private const int MaxMessageLength = 500;
@@ -723,7 +723,7 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
+        public async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
         {
             try
             {

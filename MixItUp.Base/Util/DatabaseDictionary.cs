@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MixItUp.Base.Util
@@ -138,29 +139,41 @@ namespace MixItUp.Base.Util
 
         private void ValueAdded(K key)
         {
-            lock (valuesUpdateLock)
+            try
             {
-                this.addedValues.Add(key);
+                lock (valuesUpdateLock)
+                {
+                    this.addedValues.Add(key);
+                }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private void ValueChanged(K key)
         {
-            lock (valuesUpdateLock)
+            try
             {
-                if (this.ContainsKey(key))
+                lock (valuesUpdateLock)
                 {
-                    this.changedValues.Add(key);
+                    if (this.ContainsKey(key))
+                    {
+                        this.changedValues.Add(key);
+                    }
                 }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private void ValueRemoved(K key)
         {
-            lock (valuesUpdateLock)
+            try
             {
-                this.removedValues.Add(key);
+                lock (valuesUpdateLock)
+                {
+                    this.removedValues.Add(key);
+                }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }

@@ -58,8 +58,6 @@
 
                                         <Controls:IconButton x:Name="DisconnectionAlertButton" Icon="LanDisconnect" Visibility="Collapsed" Margin="0,0,5,0" />
 
-                                        <Controls:StreamingPlatformStatusAlertControl />
-
                                         <Controls:IconButton x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignRaisedButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" HorizontalAlignment="Center" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" Margin="5,0,0,0" />
 
                                         <Controls:IconButton x:Name="SettingsButton" Style="{StaticResource MaterialDesignRaisedButton}" Click="SettingsButton_Click" HorizontalAlignment="Center" Icon="Settings" ToolTip="{x:Static resx:Resources.Settings}" Margin="5,0,0,0" />

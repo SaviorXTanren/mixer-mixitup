@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Actions
                         if (!string.IsNullOrEmpty(this.TimeoutAmount))
                         {
                             string timeAmountString = await ReplaceStringWithSpecialModifiers(this.TimeoutAmount, parameters);
-                            if (uint.TryParse(timeAmountString, out uint timeAmount))
+                            if (int.TryParse(timeAmountString, out int timeAmount) && timeAmount > 0)
                             {
                                 await ServiceManager.Get<ChatService>().TimeoutUser(targetUser, timeAmount, moderationReason);
                             }
