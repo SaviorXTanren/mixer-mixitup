@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Services.Mock.New;
 using MixItUp.Base.Services.Trovo.New;
 using MixItUp.Base.Services.Twitch.New;

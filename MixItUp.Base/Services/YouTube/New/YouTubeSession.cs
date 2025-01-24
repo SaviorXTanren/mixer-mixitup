@@ -4,7 +4,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
-using MixItUp.Base.Model.Web;
 using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
