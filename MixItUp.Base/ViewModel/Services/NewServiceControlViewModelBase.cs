@@ -38,7 +38,7 @@ namespace MixItUp.Base.ViewModel.Services
                         try
                         {
                             Result result = await this.service.ManualConnect(this.connectCancellationTokenSource.Token);
-                            if (!result.Success)
+                            if (!result.Success || this.connectCancellationTokenSource.IsCancellationRequested)
                             {
                                 await this.service.Disable();
 

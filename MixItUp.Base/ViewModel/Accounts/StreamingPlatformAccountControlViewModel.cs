@@ -193,7 +193,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                         try
                         {
                             Result result = await this.session.ManualConnectStreamer(this.streamerConnectCancellationTokenSource.Token);
-                            if (result.Success)
+                            if (result.Success && !this.streamerConnectCancellationTokenSource.IsCancellationRequested)
                             {
                                 if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
                                 {
@@ -285,7 +285,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                         try
                         {
                             Result result = await this.session.ManualConnectBot(this.botConnectCancellationTokenSource.Token);
-                            if (result.Success)
+                            if (result.Success && !this.botConnectCancellationTokenSource.IsCancellationRequested)
                             {
                                 if (string.Equals(this.session.StreamerID, this.session.BotID, StringComparison.CurrentCultureIgnoreCase))
                                 {
