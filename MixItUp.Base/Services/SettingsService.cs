@@ -404,16 +404,39 @@ namespace MixItUp.Base.Services
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
                 await SettingsV3Upgrader.Version7Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version8Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
         }
 
+        public static async Task Version8Upgrade(int version, string filePath)
+        {
+            if (version < 8)
+            {
+                await ReplaceOAuthTokenModelClass(filePath);
+
+                SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+                await settings.Initialize();
+
+                await ServiceManager.Get<SettingsService>().Save(settings);
+            }
+        }
+
+        private static async Task ReplaceOAuthTokenModelClass(string filePath)
+        {
+            string settingsFileContents = await ServiceManager.Get<IFileService>().ReadFile(filePath);
+            settingsFileContents = settingsFileContents.Replace("StreamingClient.Base.Model.OAuth.OAuthTokenModel, StreamingClient.Base", "MixItUp.Base.Model.Web.OAuthTokenModel, MixItUp.Base");
+            await ServiceManager.Get<IFileService>().SaveFile(filePath, settingsFileContents);
+        }
+
         public static async Task Version7Upgrade(int version, string filePath)
         {
             if (version < 7)
             {
+                await ReplaceOAuthTokenModelClass(filePath);
+
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
