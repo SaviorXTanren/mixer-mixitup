@@ -693,7 +693,7 @@ namespace MixItUp.Base.Services.YouTube.New
             if (token != null)
             {
                 token.clientID = this.ClientID;
-                token.ScopeList = string.Join(",", scopes ?? new List<string>());
+                token.ScopeList = OAuthTokenModel.GenerateScopeList(scopes);
                 return token;
             }
             return null;

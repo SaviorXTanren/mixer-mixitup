@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Web
@@ -10,6 +11,8 @@ namespace MixItUp.Base.Model.Web
     [DataContract]
     public class OAuthTokenModel
     {
+        public static string GenerateScopeList(IEnumerable<string> scopes) { return string.Join(",", scopes ?? new List<string>()); }
+
         /// <summary>
         /// The ID of the client service.
         /// </summary>

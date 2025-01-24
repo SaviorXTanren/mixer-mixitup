@@ -611,7 +611,7 @@ namespace MixItUp.Base.Services.Trovo.New
             if (token != null)
             {
                 token.clientID = ClientID;
-                token.ScopeList = string.Join(",", scopes ?? new List<string>());
+                token.ScopeList = OAuthTokenModel.GenerateScopeList(scopes);
                 return token;
             }
             return null;

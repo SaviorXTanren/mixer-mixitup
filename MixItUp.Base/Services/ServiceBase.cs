@@ -208,6 +208,13 @@ namespace MixItUp.Base.Services
                 this.OAuthToken = this.isBotService ? authenticationSettings.BotOAuthToken : authenticationSettings.UserOAuthToken;
                 try
                 {
+                    string requestedScopes = OAuthTokenModel.GenerateScopeList(this.scopes);
+                    if (!string.Equals(requestedScopes, this.OAuthToken.ScopeList, StringComparison.Ordinal))
+                    {
+                        Logger.Log(LogLevel.Error, $"Scope list mis-match for {this.Name}, forcing manual connect");
+                        return new Result(success: false);
+                    }
+
                     await this.RefreshOAuthToken();
                     this.IsConnected = true;
                     return new Result();
