@@ -21,7 +21,7 @@ namespace MixItUp.Base.Services
 
         public abstract bool IsConnected { get; protected set; }
 
-        public abstract Task<Result> AutomaticConnect();
+        public virtual async Task<Result> AutomaticConnect() { return await this.ManualConnect(CancellationToken.None); }
 
         public abstract Task<Result> ManualConnect(CancellationToken cancellationToken);
 
@@ -311,20 +311,20 @@ namespace MixItUp.Base.Services
             return result;
         }
 
-        public async Task<Result> ManualConnectStreamer(CancellationToken cancellationToken, bool initialize = true)
+        public async Task<Result> ManualConnectStreamer(CancellationToken cancellationToken)
         {
             Result result = await this.StreamerOAuthService.ManualConnect(cancellationToken);
-            if (!cancellationToken.IsCancellationRequested && result.Success && initialize)
+            if (!cancellationToken.IsCancellationRequested && result.Success)
             {
                 return await this.InitializeStreamer();
             }
             return result;
         }
 
-        public async Task<Result> ManualConnectStreamerWithTimeout(bool initialize = true)
+        public async Task<Result> ManualConnectStreamerWithTimeout()
         {
             Result result = await this.StreamerOAuthService.ManualConnectWithTimeout();
-            if (result.Success && initialize)
+            if (result.Success)
             {
                 return await this.InitializeStreamer();
             }
@@ -403,10 +403,10 @@ namespace MixItUp.Base.Services
             return result;
         }
 
-        public async Task<Result> ManualConnectBot(CancellationToken cancellationToken, bool initialize = true)
+        public async Task<Result> ManualConnectBot(CancellationToken cancellationToken)
         {
             Result result = await this.BotOAuthService.ManualConnect(cancellationToken);
-            if (!cancellationToken.IsCancellationRequested && result.Success && initialize)
+            if (!cancellationToken.IsCancellationRequested && result.Success)
             {
                 return await this.InitializeBot();
             }

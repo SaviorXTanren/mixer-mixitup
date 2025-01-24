@@ -192,14 +192,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     {
                         try
                         {
-                            Result result = await this.session.ManualConnectStreamer(this.streamerConnectCancellationTokenSource.Token, initialize: false);
-                            if (result.Success)
-                            {
-                                DispatcherHelper.Dispatcher.Invoke(this.StartLoadingOperation);
-
-                                result = await this.session.InitializeStreamer();
-                            }
-
+                            Result result = await this.session.ManualConnectStreamer(this.streamerConnectCancellationTokenSource.Token);
                             if (result.Success)
                             {
                                 if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
@@ -234,8 +227,6 @@ namespace MixItUp.Base.ViewModel.Accounts
 
                         this.NotifyAllProperties();
 
-                        DispatcherHelper.Dispatcher.Invoke(this.EndLoadingOperation);
-
                     }, this.streamerConnectCancellationTokenSource.Token);
                 }
                 catch (Exception ex)
@@ -246,18 +237,20 @@ namespace MixItUp.Base.ViewModel.Accounts
                 this.NotifyAllProperties();
             });
 
-            this.StreamerAccountCancelCommand = this.CreateCommand(() =>
+            this.StreamerAccountCancelCommand = this.CreateCommand(async () =>
             {
                 try
                 {
                     this.streamerConnectCancellationTokenSource.Cancel();
+
+                    this.streamerConnectTask = null;
+
+                    await this.session.DisableStreamer();
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
                 }
-
-                this.streamerConnectTask = null;
 
                 this.NotifyAllProperties();
             });
@@ -291,14 +284,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     {
                         try
                         {
-                            Result result = await this.session.ManualConnectBot(this.botConnectCancellationTokenSource.Token, initialize: false);
-                            if (result.Success)
-                            {
-                                DispatcherHelper.Dispatcher.Invoke(this.StartLoadingOperation);
-
-                                result = await this.session.InitializeBot();
-                            }
-
+                            Result result = await this.session.ManualConnectBot(this.botConnectCancellationTokenSource.Token);
                             if (result.Success)
                             {
                                 if (string.Equals(this.session.StreamerID, this.session.BotID, StringComparison.CurrentCultureIgnoreCase))
@@ -330,8 +316,6 @@ namespace MixItUp.Base.ViewModel.Accounts
 
                         this.NotifyAllProperties();
 
-                        DispatcherHelper.Dispatcher.Invoke(this.EndLoadingOperation);
-
                     }, this.botConnectCancellationTokenSource.Token);
                 }
                 catch (Exception ex)
@@ -342,18 +326,20 @@ namespace MixItUp.Base.ViewModel.Accounts
                 this.NotifyAllProperties();
             });
 
-            this.BotAccountCancelCommand = this.CreateCommand(() =>
+            this.BotAccountCancelCommand = this.CreateCommand(async () =>
             {
                 try
                 {
                     this.botConnectCancellationTokenSource.Cancel();
+
+                    this.botConnectTask = null;
+
+                    await this.session.DisableBot();
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
                 }
-
-                this.botConnectTask = null;
 
                 this.NotifyAllProperties();
             });
