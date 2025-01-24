@@ -5,7 +5,32 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h3 style="color: red;"><b><u>IMPORTANT NOTE:</u></b> This update introduces large-scale changes to all Overlay functionality throughout the application and includes some breaking changes. As such, we recommend NOT updating immediately before a stream and waiting until you have time to walkthrough all of the changes and ensure your Overlay setup and interactions are configured to your liking.</h3>
+        <h2 style="color: #2e6c80;">v1.2.0.1201:</h2>
+        <ul>
+            <li><span style="color: red;"><b><u>BREAKING CHANGES:</u></b></span></li>
+            <ul>
+                <li>Due to changes with Twitch's new APIs and the up-coming shutdown of their old APIs, some functionality in Mix It Up that Twitch has not migrated to the new APIs yet will become unsupported until they have added them back. Below is a list of features that are no longer usable:</li>
+                <li>Twitch Channel Watch Streak event command is now disabled as user watch streak notifications are not sent out via the new Twitch APIs</li>
+                <li>$usersubplanname Special Identifier for Twitch subscription-based event commands will no longer be the customized name of a channel's sub plan and instead will be the standard name (EX: Tier 1) as the new Twitch APIs do not include that information</li>
+            </ul>
+            <li>Large-scale restructure and improvements to general Streaming Platform connectivity, allowing for easier connection &amp; disconnection of streaming platforms</li>
+            <li>New Twitch features:</li>
+            <ul>
+                <li>Event commands have been added for the following features: Highlighted Message, User Intro, Power-Up Message Effect, Power-Up Gigantified Emote, and Power-Up Celebration</li>
+            </ul>
+            <li>New YouTube features:</li>
+            <ul>
+                <li>Support for multiple, active live stream on the same YouTube account (EX: Regular stream &amp; short)</li>
+                <li>All currently tracked, active live streams are now displayed on the Channel page</li>
+                <li>The ability to manually connect to live streams if they are not automatically detected via the Channel page</li>
+            </ul>
+            <li>The Meld Studio action has been added:</li>
+            <ul>
+                <li>The Meld Studio action allows you control functionality within Meld Studio such as changing scenes, showing/hiding layers &amp; effects, and more</li>
+                <li>Meld Studio can be connected to by visiting the Services page of Mix It Up</li>
+            </ul>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
 
         <h2 style="color: #2e6c80;">v1.2.0.11-12:</h2>
         <ul>
