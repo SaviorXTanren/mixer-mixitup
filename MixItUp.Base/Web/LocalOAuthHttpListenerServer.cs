@@ -65,17 +65,22 @@ namespace MixItUp.Base.Web
             return this.authorizationCode;
         }
 
-        public async Task<string> GetAuthorizationCode(string authorizationURL, CancellationToken cancellationToken)
+        public async Task<Result<string>> GetAuthorizationCode(string authorizationURL, CancellationToken cancellationToken)
         {
             try
             {
-                this.Start(REDIRECT_URL);
-
-                ServiceManager.Get<IProcessService>().LaunchLink(authorizationURL);
-
-                while (!cancellationToken.IsCancellationRequested && string.IsNullOrWhiteSpace(this.authorizationCode))
+                if (this.Start(REDIRECT_URL))
                 {
-                    await Task.Delay(1000);
+                    ServiceManager.Get<IProcessService>().LaunchLink(authorizationURL);
+
+                    while (!cancellationToken.IsCancellationRequested && string.IsNullOrWhiteSpace(this.authorizationCode))
+                    {
+                        await Task.Delay(1000);
+                    }
+                }
+                else
+                {
+                    return new Result<string>(success: false, message: Resources.UnableToStartAuthenticationSession);
                 }
             }
             catch (Exception ex)
@@ -85,7 +90,10 @@ namespace MixItUp.Base.Web
 
             this.Stop();
 
-            return this.authorizationCode;
+            return new Result<string>(success: !string.IsNullOrWhiteSpace(this.authorizationCode), message: null)
+            {
+                Value = this.authorizationCode
+            };
         }
 
         /// <summary>

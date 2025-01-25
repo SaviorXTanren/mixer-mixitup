@@ -25794,6 +25794,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to start authentication to service, please ensure you do not already have an active authentication process underway with another service..
+        /// </summary>
+        public static string UnableToStartAuthenticationSession {
+            get {
+                return ResourceManager.GetString("UnableToStartAuthenticationSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unassigned.
         /// </summary>
         public static string Unassigned {
