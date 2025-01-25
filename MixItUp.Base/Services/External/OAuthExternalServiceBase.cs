@@ -4,6 +4,7 @@ using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -96,12 +97,26 @@ namespace MixItUp.Base.Services.External
 
         protected abstract Task<Result> InitializeInternal();
 
-        protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, int secondsToWait = 30) { return await this.ConnectViaOAuthRedirect(oauthPageURL, OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL); }
+        protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, int secondsToWait = 30) { return await this.ConnectViaOAuthRedirect(oauthPageURL, OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL, secondsToWait); }
 
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress, int secondsToWait = 45)
         {
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
-            return await oauthServer.GetAuthorizationCode(listeningAddress);
+
+            Task<string> authorizationCode = AsyncRunner.RunAsyncBackground(async (CancellationToken) =>
+            {
+                return await oauthServer.GetAuthorizationCode(listeningAddress);
+            }, CancellationToken.None);
+
+            for (int i = 0; i < secondsToWait; i++)
+            {
+                await Task.Delay(1000);
+                if (authorizationCode.IsCompleted && !string.IsNullOrEmpty(authorizationCode.Result))
+                {
+                    return authorizationCode.Result;
+                }
+            }
+            return null;
         }
 
         protected override string GetBaseAddress() { return this.baseAddress; }
