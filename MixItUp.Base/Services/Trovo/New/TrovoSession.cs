@@ -43,6 +43,26 @@ namespace MixItUp.Base.Services.Trovo.New
             "user_details_self",
         };
 
+        public static DateTimeOffset GetTrovoDateTime(string dateTime)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(dateTime) && long.TryParse(dateTime, out long seconds))
+                {
+                    DateTimeOffset result = DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
+                    if (result > DateTimeOffset.MinValue)
+                    {
+                        return result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"{dateTime} - {ex}");
+            }
+            return DateTimeOffset.MinValue;
+        }
+
         public override int MaxMessageLength { get { return 500; } }
         public override StreamingPlatformTypeEnum Platform { get { return StreamingPlatformTypeEnum.Trovo; } }
 
@@ -192,6 +212,7 @@ namespace MixItUp.Base.Services.Trovo.New
             this.StreamCategoryID = this.ChannelModel.category_id;
             this.StreamCategoryName = this.ChannelModel.category_name;
             this.StreamViewerCount = (int)this.ChannelModel?.current_viewers;
+            this.StreamStart = TrovoSession.GetTrovoDateTime(this.ChannelModel?.started_at);
 
             return new Result();
         }

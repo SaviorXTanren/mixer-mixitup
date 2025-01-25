@@ -42,6 +42,9 @@ namespace MixItUp.Base.Services.External
 
     public class MeldStudioService : ServiceBase
     {
+        public const int AudioTrackGainMinimum = -60;
+        public const int AudioTrackGainMaximum = 0;
+
         private const int isStreamingPropertiesIndex = 1;
         private const int isRecordingPropertiesIndex = 2;
         private const int sessionPropertiesIndex = 3;
@@ -266,14 +269,14 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        public async Task SetGain(string audioTrackName, int gain)
+        public async Task SetGain(string audioTrackName, int dB)
         {
             MeldStudioAudioTrackItem audioTrack = this.GetAudioTrack(audioTrackName);
             if (audioTrack != null)
             {
-                double convertedGain = MathHelper.Clamp(gain, 0, 100) / 100.0;
-
-                await this.websocket.InvokeMethod("meld", "setGain", new List<object>() { audioTrack.ID, convertedGain });
+                dB = MathHelper.Clamp(dB, AudioTrackGainMinimum, AudioTrackGainMaximum);
+                double gain = this.DBToGain(dB);
+                await this.websocket.InvokeMethod("meld", "setGain", new List<object>() { audioTrack.ID, gain });
             }
         }
 
@@ -406,6 +409,16 @@ namespace MixItUp.Base.Services.External
         private string GenerateParentIDNameKey(string parentID, string name)
         {
             return $"{parentID}|{name}";
+        }
+
+        private double DBToGain(double dB)
+        {
+            if (double.IsInfinity(dB) || dB < -60) dB = -60;
+            double gain = Math.Pow(10, dB / 20);
+
+            gain = gain <= 0.001 ? 0 : gain;
+            gain = gain > 1 ? 1 : gain;
+            return gain;
         }
     }
 }

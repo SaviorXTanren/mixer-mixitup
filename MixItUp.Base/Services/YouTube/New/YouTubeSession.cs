@@ -11,6 +11,7 @@ using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,32 @@ namespace MixItUp.Base.Services.YouTube.New
 
     public class YouTubeSession : StreamingPlatformSessionBase
     {
+        public static DateTimeOffset GetYouTubeDateTime(string dateTime)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(dateTime))
+                {
+                    if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (DateTimeOffset.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset startUTC))
+                        {
+                            return startUTC.ToCorrectLocalTime();
+                        }
+                    }
+                    else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
+                    {
+                        return new DateTimeOffset(start).ToCorrectLocalTime();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"{dateTime} - {ex}");
+            }
+            return DateTimeOffset.MinValue;
+        }
+
         private const int MinMessagePollingInterval = 5000;
         private const int MaxMessagePollingInterval = 10000;
 
@@ -251,12 +278,13 @@ namespace MixItUp.Base.Services.YouTube.New
 
             if (ChannelSession.User != null)
             {
-                if (this.LiveBroadcasts.Any(b => this.launchDateTime < b.Value.Snippet.ActualStartTimeDateTimeOffset.GetValueOrDefault()))
+                if (this.LiveBroadcasts.Any(b => this.launchDateTime < YouTubeSession.GetYouTubeDateTime(b.Value.Snippet.ActualStartTimeRaw)))
                 {
+                    this.StreamStart = DateTimeOffset.Now;
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
                 }
 
-                if (this.LiveBroadcasts.Any(b => this.launchDateTime < b.Value.Snippet.ActualEndTimeDateTimeOffset.GetValueOrDefault()))
+                if (this.LiveBroadcasts.Any(b => this.launchDateTime < YouTubeSession.GetYouTubeDateTime(b.Value.Snippet.ActualEndTimeRaw)))
                 {
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
                 }

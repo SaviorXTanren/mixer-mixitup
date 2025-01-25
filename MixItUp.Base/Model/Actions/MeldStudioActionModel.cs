@@ -15,7 +15,6 @@ namespace MixItUp.Base.Model.Actions
         ShowHideEffect,
         MuteUnmuteAudioTrack,
         MonitorUnmonitorAudioTrack,
-        [Obsolete]
         SetAudioTrackGain,
         TakeScreenshot,
         StartStopStream,
@@ -39,6 +38,9 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public bool? State { get; set; }
+
+        [DataMember]
+        public int AudioTrackGain { get; set; } = MeldStudioService.AudioTrackGainMaximum;
 
         public MeldStudioActionModel(MeldStudioActionTypeEnum actionType)
             : base(ActionTypeEnum.MeldStudio)
@@ -89,6 +91,11 @@ namespace MixItUp.Base.Model.Actions
                 {
                     string audioTrackName = await ReplaceStringWithSpecialModifiers(this.AudioTrackName, parameters);
                     await ServiceManager.Get<MeldStudioService>().ChangeMonitorState(audioTrackName, this.State);
+                }
+                else if (this.ActionType == MeldStudioActionTypeEnum.SetAudioTrackGain)
+                {
+                    string audioTrackName = await ReplaceStringWithSpecialModifiers(this.AudioTrackName, parameters);
+                    await ServiceManager.Get<MeldStudioService>().SetGain(audioTrackName, this.AudioTrackGain);
                 }
                 else if (this.ActionType == MeldStudioActionTypeEnum.TakeScreenshot)
                 {

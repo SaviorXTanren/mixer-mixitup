@@ -10980,4 +10980,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="UnableToStartAuthenticationSession" xml:space="preserve">
     <value>Unable to start authentication to service, please ensure you do not already have an active authentication process underway with another service.</value>
   </data>
+  <data name="Gain" xml:space="preserve">
+    <value>Gain</value>
+  </data>
 </root>

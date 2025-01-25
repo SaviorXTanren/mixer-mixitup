@@ -144,7 +144,7 @@ namespace MixItUp.Base.Services.External
                 this.voicesCache.Clear();
                 using (AdvancedHttpClient client = new AdvancedHttpClient("https://wutface.tts.monster/"))
                 {
-                    GetVoicesResponseModel response = await client.PostAsync<GetVoicesResponseModel>(string.Empty, AdvancedHttpClient.CreateContentFromObject(new GetVoicesRequestModel(this.token.clientID, null /*this.token.clientSecret*/)));
+                    GetVoicesResponseModel response = await client.PostAsync<GetVoicesResponseModel>(string.Empty, AdvancedHttpClient.CreateContentFromObject(new GetVoicesRequestModel(this.token.clientID, this.token.accessToken)));
                     if (response != null)
                     {
                         foreach (string voice in response.Voices)
@@ -178,7 +178,7 @@ namespace MixItUp.Base.Services.External
                 return new OAuthTokenModel()
                 {
                     clientID = this.token.clientID,
-                    //clientSecret = this.token.clientSecret,
+                    accessToken = this.token.accessToken,
                 };
             }
             return null;

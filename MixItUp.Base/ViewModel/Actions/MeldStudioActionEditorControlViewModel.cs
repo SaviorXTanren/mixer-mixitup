@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged(nameof(this.ShowHideEffect));
                 this.NotifyPropertyChanged(nameof(this.MuteUnmuteAudioTrack));
                 this.NotifyPropertyChanged(nameof(this.MonitorUnmonitorAudioTrack));
+                this.NotifyPropertyChanged(nameof(this.SetAudioTrackGain));
                 this.NotifyPropertyChanged(nameof(this.StartStopStream));
                 this.NotifyPropertyChanged(nameof(this.StartStopRecording));
             }
@@ -34,6 +36,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public bool ShowHideEffect { get { return this.SelectedActionType == MeldStudioActionTypeEnum.ShowHideEffect; } }
         public bool MuteUnmuteAudioTrack { get { return this.SelectedActionType == MeldStudioActionTypeEnum.MuteUnmuteAudioTrack; } }
         public bool MonitorUnmonitorAudioTrack { get { return this.SelectedActionType == MeldStudioActionTypeEnum.MonitorUnmonitorAudioTrack; } }
+        public bool SetAudioTrackGain { get { return this.SelectedActionType == MeldStudioActionTypeEnum.SetAudioTrackGain; } }
         public bool StartStopStream { get { return this.SelectedActionType == MeldStudioActionTypeEnum.StartStopStream; } }
         public bool StartStopRecording { get { return this.SelectedActionType == MeldStudioActionTypeEnum.StartStopRecording; } }
 
@@ -92,6 +95,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool? state = true;
 
+        public int AudioTrackGain
+        {
+            get { return this.audioTrackGain; }
+            set
+            {
+                this.audioTrackGain = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int audioTrackGain = MeldStudioService.AudioTrackGainMaximum;
+
         public MeldStudioActionEditorControlViewModel(MeldStudioActionModel action)
             : base(action)
         {
@@ -101,6 +115,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.EffectName = action.EffectName;
             this.AudioTrackName = action.AudioTrackName;
             this.State = action.State;
+            this.AudioTrackGain = action.AudioTrackGain;
         }
 
         public MeldStudioActionEditorControlViewModel() : base() { }
@@ -153,6 +168,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 EffectName = this.EffectName,
                 AudioTrackName = this.AudioTrackName,
                 State = this.State,
+                AudioTrackGain = this.AudioTrackGain,
             });
         }
     }

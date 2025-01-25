@@ -19,6 +19,10 @@ namespace MixItUp.Base.Model.Web
         [DataMember]
         public string clientID { get; set; }
 
+        [DataMember]
+        [Obsolete]
+        public string clientSecret { get; set; }
+
         /// <summary>
         /// The token used for refreshing the authentication.
         /// </summary>
