@@ -133,15 +133,17 @@ namespace MixItUp.Base.Services
             try
             {
                 string state = Guid.NewGuid().ToString();
-                string authorizationCode = await this.GetAuthorizationCode(scopes, state, cancellationToken, forceApprovalPrompt: true);
-                if (!string.IsNullOrEmpty(authorizationCode))
+                Result<string> authorizationCode = await this.GetAuthorizationCode(scopes, state, cancellationToken, forceApprovalPrompt: true);
+                if (!authorizationCode.Success || string.IsNullOrWhiteSpace(authorizationCode.Value))
                 {
-                    OAuthTokenModel token = await this.RequestOAuthToken(authorizationCode, scopes, state);
-                    if (token != null)
-                    {
-                        this.OAuthToken = token;
-                        return new Result();
-                    }
+                    return new Result(authorizationCode.Message);
+                }
+
+                OAuthTokenModel token = await this.RequestOAuthToken(authorizationCode.Value, scopes, state);
+                if (token != null)
+                {
+                    this.OAuthToken = token;
+                    return new Result();
                 }
             }
             catch (Exception ex)
@@ -152,7 +154,7 @@ namespace MixItUp.Base.Services
             return new Result(success: false);
         }
 
-        protected async Task<string> GetAuthorizationCode(IEnumerable<string> scopes, string state, CancellationToken cancellationToken, bool forceApprovalPrompt = false)
+        protected async Task<Result<string>> GetAuthorizationCode(IEnumerable<string> scopes, string state, CancellationToken cancellationToken, bool forceApprovalPrompt = false)
         {
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
             return await oauthServer.GetAuthorizationCode(await this.GetAuthorizationCodeURL(scopes, state, forceApprovalPrompt), cancellationToken);

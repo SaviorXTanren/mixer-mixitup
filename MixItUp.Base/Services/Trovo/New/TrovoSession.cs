@@ -37,7 +37,7 @@ namespace MixItUp.Base.Services.Trovo.New
         {
             "chat_connect",
             "chat_send_self",
-            "end_to_my_channel",
+            "send_to_my_channel",
             "manage_messages",
 
             "user_details_self",
