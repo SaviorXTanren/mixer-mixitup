@@ -420,6 +420,13 @@ namespace MixItUp.Base.Services
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
+                if (settings.TTSMonsterOAuthToken != null)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    settings.TTSMonsterOAuthToken.accessToken = settings.TTSMonsterOAuthToken.clientSecret;
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
         }
