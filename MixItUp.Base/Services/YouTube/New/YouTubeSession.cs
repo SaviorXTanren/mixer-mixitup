@@ -121,6 +121,9 @@ namespace MixItUp.Base.Services.YouTube.New
 
         private DateTime launchDateTime = DateTime.Now;
 
+        private SearchResult latestNonStreamVideo;
+        private SearchResult latestShort;
+
         private HashSet<string> messageIDsToIgnore = new HashSet<string>();
 
         protected override async Task<Result> InitializeStreamerInternal()
@@ -380,6 +383,47 @@ namespace MixItUp.Base.Services.YouTube.New
                 }
             }
             return result;
+        }
+
+        public async Task<SearchResult> GetLatestNonStreamVideo()
+        {
+            if (this.latestNonStreamVideo == null)
+            {
+                IEnumerable<SearchResult> searchResults = await this.StreamerService.GetLatestVideos(this.ChannelID);
+
+                HashSet<string> broadcastIDs = new HashSet<string>();
+                foreach (LiveBroadcast broadcast in await this.StreamerService.GetLatestBroadcasts())
+                {
+                    broadcastIDs.Add(broadcast.Id);
+                }
+
+                foreach (SearchResult searchResult in searchResults)
+                {
+                    if (!broadcastIDs.Contains(searchResult.Id.VideoId) && !await this.StreamerService.IsVideoShort(searchResult.Id.VideoId))
+                    {
+                        this.latestNonStreamVideo = searchResult;
+                        break;
+                    }
+                }
+            }
+            return this.latestNonStreamVideo;
+        }
+
+        public async Task<SearchResult> GetLatestShort()
+        {
+            if (this.latestShort == null)
+            {
+                IEnumerable<SearchResult> searchResults = await this.StreamerService.GetLatestVideos(this.ChannelID);
+                foreach (SearchResult searchResult in searchResults)
+                {
+                    if (await this.StreamerService.IsVideoShort(searchResult.Id.VideoId))
+                    {
+                        this.latestShort = searchResult;
+                        break;
+                    }
+                }
+            }
+            return this.latestShort;
         }
 
         private async Task<Result> SetChatEmotes()
