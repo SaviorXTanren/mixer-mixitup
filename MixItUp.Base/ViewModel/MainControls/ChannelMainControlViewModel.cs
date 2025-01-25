@@ -288,7 +288,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.UpcomingBroadcasts.Clear();
             if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                foreach (LiveBroadcast broadcast in await ServiceManager.Get<YouTubeSession>().StreamerService.GetNewestBroadcasts())
+                foreach (LiveBroadcast broadcast in await ServiceManager.Get<YouTubeSession>().StreamerService.GetLatestBroadcasts())
                 {
                     if (!ServiceManager.Get<YouTubeSession>().LiveBroadcasts.ContainsKey(broadcast.Id))
                     {

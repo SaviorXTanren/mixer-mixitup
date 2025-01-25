@@ -181,6 +181,21 @@ namespace MixItUp.Base.Web
         /// </summary>
         /// <param name="requestUri">The request URI to use</param>
         /// <returns>A response message of the request</returns>
+        public async Task<HttpResponseMessage> HeadAsync(string requestUri)
+        {
+            this.LogRequest(requestUri);
+            DateTimeOffset callStart = DateTimeOffset.Now;
+            HttpResponseMessage response = await base.SendAsync(new HttpRequestMessage(HttpMethod.Head, requestUri));
+            response.AddCallTimeHeaders(callStart, DateTimeOffset.Now);
+            this.CheckForRateLimiting(response);
+            return response;
+        }
+
+        /// <summary>
+        /// Performs a GET REST request using the provided request URI.
+        /// </summary>
+        /// <param name="requestUri">The request URI to use</param>
+        /// <returns>A response message of the request</returns>
         public new async Task<HttpResponseMessage> GetAsync(string requestUri)
         {
             this.LogRequest(requestUri);

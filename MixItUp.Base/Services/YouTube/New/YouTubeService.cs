@@ -17,6 +17,7 @@ using MixItUp.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -60,8 +61,6 @@ namespace MixItUp.Base.Services.YouTube.New
         /// The underlying YouTube Partner service from Google's .NET client library.
         /// </summary>
         private YouTubePartnerService GoogleYouTubePartnerService;
-
-        private SearchResult latestNonStreamVideo;
 
         public YouTubeService(IEnumerable<string> scopes, bool isBotService = false)
             : base(BaseAddressFormat, scopes, isBotService)
@@ -270,7 +269,7 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task<IEnumerable<LiveBroadcast>> GetNewestBroadcasts()
+        public async Task<IEnumerable<LiveBroadcast>> GetLatestBroadcasts()
         {
             return await AsyncRunner.RunAsync(async () =>
             {
@@ -343,23 +342,8 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task<SearchResult> GetLatestNonStreamVideo(string channelID)
+        public async Task<IEnumerable<SearchResult>> GetLatestVideos(string channelID, int maxResults = 20)
         {
-            if (this.latestNonStreamVideo == null)
-            {
-                IEnumerable<SearchResult> searchResults = await this.SearchVideos(channelID: channelID, liveType: SearchResource.ListRequest.EventTypeEnum.None, maxResults: 10);
-                this.latestNonStreamVideo = searchResults.FirstOrDefault(s => string.Equals(s.Snippet.LiveBroadcastContent, "none"));
-            }
-            return this.latestNonStreamVideo;
-        }
-
-        public async Task<IEnumerable<SearchResult>> SearchVideos(bool myVideos = false, string channelID = null, string keyword = null, SearchResource.ListRequest.EventTypeEnum liveType = SearchResource.ListRequest.EventTypeEnum.None, int maxResults = 1)
-        {
-            if (myVideos && !string.IsNullOrEmpty(channelID))
-            {
-                Validator.Validate(false, "Only myVideos or channelID can be set");
-            }
-
             return await AsyncRunner.RunAsync(async () =>
             {
                 List<SearchResult> results = new List<SearchResult>();
@@ -367,26 +351,9 @@ namespace MixItUp.Base.Services.YouTube.New
                 do
                 {
                     SearchResource.ListRequest request = this.GoogleYouTubeService.Search.List("snippet");
-                    if (myVideos)
-                    {
-                        request.ForMine = true;
-                    }
-                    else if (!string.IsNullOrEmpty(channelID))
-                    {
-                        request.ChannelId = channelID;
-                    }
-
-                    if (!string.IsNullOrEmpty(keyword))
-                    {
-                        request.Q = keyword;
-                    }
-
-                    if (liveType != SearchResource.ListRequest.EventTypeEnum.None)
-                    {
-                        request.EventType = liveType;
-                    }
-
+                    request.ChannelId = channelID;
                     request.Type = "video";
+                    request.EventType = SearchResource.ListRequest.EventTypeEnum.None;
                     request.Order = SearchResource.ListRequest.OrderEnum.Date;
                     request.MaxResults = Math.Min(maxResults, 50);
                     request.PageToken = pageToken;
@@ -400,6 +367,15 @@ namespace MixItUp.Base.Services.YouTube.New
 
                 } while (maxResults > 0 && !string.IsNullOrEmpty(pageToken));
                 return results;
+            });
+        }
+
+        public async Task<bool> IsVideoShort(string videoID)
+        {
+            return await AsyncRunner.RunAsync(async () =>
+            {
+                HttpResponseMessage response = await this.HttpClient.HeadAsync("https://www.youtube.com/shorts/" + videoID);
+                return response.StatusCode == HttpStatusCode.OK;
             });
         }
 

@@ -789,12 +789,23 @@ namespace MixItUp.Base.Util
             {
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestvideo"))
                 {
-                    SearchResult searchResult = await ServiceManager.Get<YouTubeSession>().StreamerService.GetLatestNonStreamVideo(ServiceManager.Get<YouTubeSession>().ChannelID);
+                    SearchResult searchResult = await ServiceManager.Get<YouTubeSession>().GetLatestNonStreamVideo();
                     if (searchResult != null)
                     {
                         this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestvideoid", searchResult.Id.VideoId);
                         this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestvideotitle", searchResult.Snippet.Title);
                         this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestvideourl", $"https://www.youtube.com/watch?v={searchResult.Id.VideoId}");
+                    }
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshort"))
+                {
+                    SearchResult searchResult = await ServiceManager.Get<YouTubeSession>().GetLatestShort();
+                    if (searchResult != null)
+                    {
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshortid", searchResult.Id.VideoId);
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshorttitle", searchResult.Snippet.Title);
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshorturl", $"https://www.youtube.com/shorts/{searchResult.Id.VideoId}");
                     }
                 }
             }
