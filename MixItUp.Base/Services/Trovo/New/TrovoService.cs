@@ -60,7 +60,14 @@ namespace MixItUp.Base.Services.Trovo.New
             set
             {
                 base.OAuthToken = value;
-                this.HttpClient.SetAuthorization("OAuth", base.OAuthToken.accessToken);
+                if (value != null)
+                {
+                    this.HttpClient.SetAuthorization("OAuth", base.OAuthToken.accessToken);
+                }
+                else
+                {
+                    this.HttpClient.RemoveAuthorization();
+                }
             }
         }
 
