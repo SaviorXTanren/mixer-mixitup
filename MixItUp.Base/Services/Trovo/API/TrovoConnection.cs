@@ -113,7 +113,7 @@ namespace MixItUp.Base.Services.Trovo.API
             string url = await TrovoConnection.GetAuthorizationCodeURLForOAuthBrowser(clientID, scopes, LocalOAuthHttpListenerServer.REDIRECT_URL, state, forceApprovalPrompt);
 
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
-            string authorizationCode = await oauthServer.GetAuthorizationCode(url);
+            string authorizationCode = await oauthServer.GetAuthorizationCode(url, 30);
 
             if (authorizationCode != null)
             {

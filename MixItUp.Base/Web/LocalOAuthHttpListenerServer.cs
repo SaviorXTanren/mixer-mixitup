@@ -42,17 +42,26 @@ namespace MixItUp.Base.Web
 
         public LocalOAuthHttpListenerServer() { }
 
-        public async Task<string> GetAuthorizationCode(string authorizationURL)
+        public async Task<string> GetAuthorizationCode(string authorizationURL, int secondsToWait)
         {
             try
             {
-                this.Start(REDIRECT_URL);
-
-                ServiceManager.Get<IProcessService>().LaunchLink(authorizationURL);
-
-                while (string.IsNullOrWhiteSpace(this.authorizationCode))
+                if (this.Start(REDIRECT_URL))
                 {
-                    await Task.Delay(1000);
+                    ServiceManager.Get<IProcessService>().LaunchLink(authorizationURL);
+
+                    for (int i = 0; i < secondsToWait; i++)
+                    {
+                        if (!string.IsNullOrEmpty(this.authorizationCode))
+                        {
+                            break;
+                        }
+                        await Task.Delay(1000);
+                    }
+                }
+                else
+                {
+                    return null;
                 }
             }
             catch (Exception ex)
