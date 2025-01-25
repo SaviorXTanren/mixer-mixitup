@@ -940,7 +940,7 @@ namespace MixItUp.Base.Services.External
             try
             {
                 DiscordOAuthServer oauthServer = new DiscordOAuthServer();
-                string authorizationCode = await oauthServer.GetAuthorizationCode(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
+                string authorizationCode = await oauthServer.GetAuthorizationCode(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions), 60);
 
                 if (!string.IsNullOrEmpty(authorizationCode))
                 {

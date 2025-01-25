@@ -388,7 +388,7 @@ namespace MixItUp.Base.Services.Twitch.API
             Validator.ValidateList(scopes, "scopes");
 
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
-            string authorizationCode = await oauthServer.GetAuthorizationCode(await TwitchConnection.GetAuthorizationCodeURLForOAuthBrowser(clientID, scopes, forceApprovalPrompt));
+            string authorizationCode = await oauthServer.GetAuthorizationCode(await TwitchConnection.GetAuthorizationCodeURLForOAuthBrowser(clientID, scopes, forceApprovalPrompt), 30);
 
             if (authorizationCode != null)
             {

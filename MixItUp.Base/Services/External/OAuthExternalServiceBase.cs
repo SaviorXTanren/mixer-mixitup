@@ -102,21 +102,7 @@ namespace MixItUp.Base.Services.External
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress, int secondsToWait = 45)
         {
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer();
-
-            Task<string> authorizationCode = AsyncRunner.RunAsyncBackground(async (CancellationToken) =>
-            {
-                return await oauthServer.GetAuthorizationCode(listeningAddress);
-            }, CancellationToken.None);
-
-            for (int i = 0; i < secondsToWait; i++)
-            {
-                await Task.Delay(1000);
-                if (authorizationCode.IsCompleted && !string.IsNullOrEmpty(authorizationCode.Result))
-                {
-                    return authorizationCode.Result;
-                }
-            }
-            return null;
+            return await oauthServer.GetAuthorizationCode(oauthPageURL, secondsToWait);
         }
 
         protected override string GetBaseAddress() { return this.baseAddress; }
