@@ -39,11 +39,11 @@ namespace MixItUp.Base.Model.User.Platform
         public Dictionary<string, ChatMessageNotificationBadge> NewBadges { get; set; } = new Dictionary<string, ChatMessageNotificationBadge>();
 
         [DataMember]
-        public ChatBadgeModel OldSubscriberBadge { get; set; }
+        public ChatBadgeModel NewSubscriberBadge { get; set; }
         [DataMember]
-        public ChatBadgeModel OldRoleBadge { get; set; }
+        public ChatBadgeModel NewRoleBadge { get; set; }
         [DataMember]
-        public ChatBadgeModel OldSpecialtyBadge { get; set; }
+        public ChatBadgeModel NewSpecialtyBadge { get; set; }
 
         [DataMember]
         public long TotalBitsCheered { get; set; }
@@ -228,19 +228,19 @@ namespace MixItUp.Base.Model.User.Platform
 
                 if (ServiceManager.Get<TwitchChatService>() != null)
                 {
-                    if (this.HasTwitchBadge("broadcaster")) { this.OldRoleBadge = this.GetTwitchBadgeURL("broadcaster"); }
-                    else if (this.HasTwitchBadge("staff")) { this.OldRoleBadge = this.GetTwitchBadgeURL("staff"); }
-                    else if (this.HasTwitchBadge("admin")) { this.OldRoleBadge = this.GetTwitchBadgeURL("admin"); }
-                    else if (this.HasTwitchBadge("extension")) { this.OldRoleBadge = this.GetTwitchBadgeURL("extension"); }
-                    else if (this.HasTwitchBadge("twitchbot")) { this.OldRoleBadge = this.GetTwitchBadgeURL("twitchbot"); }
-                    else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.OldRoleBadge = this.GetTwitchBadgeURL("moderator"); }
-                    else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.OldRoleBadge = this.GetTwitchBadgeURL("vip"); }
-                    else if (this.HasTwitchBadge("artist-badge")) { this.OldRoleBadge = this.GetTwitchBadgeURL("artist-badge"); }
-                    else { this.OldRoleBadge = null; }
+                    if (this.HasTwitchBadge("broadcaster")) { this.NewRoleBadge = this.GetTwitchBadgeURL("broadcaster"); }
+                    else if (this.HasTwitchBadge("staff")) { this.NewRoleBadge = this.GetTwitchBadgeURL("staff"); }
+                    else if (this.HasTwitchBadge("admin")) { this.NewRoleBadge = this.GetTwitchBadgeURL("admin"); }
+                    else if (this.HasTwitchBadge("extension")) { this.NewRoleBadge = this.GetTwitchBadgeURL("extension"); }
+                    else if (this.HasTwitchBadge("twitchbot")) { this.NewRoleBadge = this.GetTwitchBadgeURL("twitchbot"); }
+                    else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.NewRoleBadge = this.GetTwitchBadgeURL("moderator"); }
+                    else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.NewRoleBadge = this.GetTwitchBadgeURL("vip"); }
+                    else if (this.HasTwitchBadge("artist-badge")) { this.NewRoleBadge = this.GetTwitchBadgeURL("artist-badge"); }
+                    else { this.NewRoleBadge = null; }
 
-                    if (this.HasTwitchSubscriberFounderBadge) { this.OldSubscriberBadge = this.GetTwitchBadgeURL("founder"); }
-                    else if (this.HasTwitchSubscriberBadge) { this.OldSubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }
-                    else { this.OldSubscriberBadge = null; }
+                    if (this.HasTwitchSubscriberFounderBadge) { this.NewSubscriberBadge = this.GetTwitchBadgeURL("founder"); }
+                    else if (this.HasTwitchSubscriberBadge) { this.NewSubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }
+                    else { this.NewSubscriberBadge = null; }
 
                     this.NewSpecialtyBadge = null;
                     if (this.HasTwitchBadge("sub-gift-leader")) { this.NewSpecialtyBadge = this.GetTwitchBadgeURL("sub-gift-leader"); }
@@ -262,8 +262,8 @@ namespace MixItUp.Base.Model.User.Platform
                 }
             }
 
-            this.SubscriberBadgeLink = this.OldSubscriberBadge?.image_url_1x;
-            this.RoleBadgeLink = this.OldRoleBadge?.image_url_1x;
+            this.SubscriberBadgeLink = this.NewSubscriberBadge?.image_url_1x;
+            this.RoleBadgeLink = this.NewRoleBadge?.image_url_1x;
             this.SpecialtyBadgeLink = this.NewSpecialtyBadge?.image_url_1x;
         }
 
@@ -281,14 +281,14 @@ namespace MixItUp.Base.Model.User.Platform
             if (user.IsGlobalMod()) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }
             if (user.IsStaff()) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
 
-            if (this.HasTwitchSubscriberFounderBadge) { this.OldSubscriberBadge = this.GetNewTwitchBadgeURL("founder"); }
-            else if (this.HasTwitchSubscriberBadge) { this.OldSubscriberBadge = this.GetNewTwitchBadgeURL("subscriber"); }
-            else { this.OldSubscriberBadge = null; }
+            if (this.HasTwitchSubscriberFounderBadge) { this.NewSubscriberBadge = this.GetNewTwitchBadgeURL("founder"); }
+            else if (this.HasTwitchSubscriberBadge) { this.NewSubscriberBadge = this.GetNewTwitchBadgeURL("subscriber"); }
+            else { this.NewSubscriberBadge = null; }
 
             if (ServiceManager.Get<TwitchSession>().ChannelEditors.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.TwitchChannelEditor); } else { this.Roles.Remove(UserRoleEnum.TwitchChannelEditor); }
 
-            this.SubscriberBadgeLink = this.OldSubscriberBadge?.image_url_1x;
-            this.RoleBadgeLink = this.OldRoleBadge?.image_url_1x;
+            this.SubscriberBadgeLink = this.NewSubscriberBadge?.image_url_1x;
+            this.RoleBadgeLink = this.NewRoleBadge?.image_url_1x;
             this.SpecialtyBadgeLink = this.NewSpecialtyBadge?.image_url_1x;
         }
 
@@ -335,19 +335,19 @@ namespace MixItUp.Base.Model.User.Platform
             }
             if (this.HasNewTwitchBadge("vip")) { this.Roles.Add(UserRoleEnum.TwitchVIP); } else { this.Roles.Remove(UserRoleEnum.TwitchVIP); }
 
-            if (this.HasNewTwitchBadge("broadcaster")) { this.OldRoleBadge = this.GetNewTwitchBadgeURL("broadcaster"); }
-            else if (this.HasNewTwitchBadge("staff")) { this.OldRoleBadge = this.GetNewTwitchBadgeURL("staff"); }
-            else if (this.HasNewTwitchBadge("admin")) { this.OldRoleBadge = this.GetNewTwitchBadgeURL("admin"); }
-            else if (this.HasNewTwitchBadge("extension")) { this.OldRoleBadge = this.GetNewTwitchBadgeURL("extension"); }
-            else if (this.HasNewTwitchBadge("twitchbot")) { this.OldRoleBadge = this.GetNewTwitchBadgeURL("twitchbot"); }
-            else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.OldRoleBadge = this.GetNewTwitchBadgeURL("moderator"); }
-            else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.OldRoleBadge = this.GetNewTwitchBadgeURL("vip"); }
-            else if (this.HasNewTwitchBadge("artist-badge")) { this.OldRoleBadge = this.GetNewTwitchBadgeURL("artist-badge"); }
-            else { this.OldRoleBadge = null; }
+            if (this.HasNewTwitchBadge("broadcaster")) { this.NewRoleBadge = this.GetNewTwitchBadgeURL("broadcaster"); }
+            else if (this.HasNewTwitchBadge("staff")) { this.NewRoleBadge = this.GetNewTwitchBadgeURL("staff"); }
+            else if (this.HasNewTwitchBadge("admin")) { this.NewRoleBadge = this.GetNewTwitchBadgeURL("admin"); }
+            else if (this.HasNewTwitchBadge("extension")) { this.NewRoleBadge = this.GetNewTwitchBadgeURL("extension"); }
+            else if (this.HasNewTwitchBadge("twitchbot")) { this.NewRoleBadge = this.GetNewTwitchBadgeURL("twitchbot"); }
+            else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.NewRoleBadge = this.GetNewTwitchBadgeURL("moderator"); }
+            else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.NewRoleBadge = this.GetNewTwitchBadgeURL("vip"); }
+            else if (this.HasNewTwitchBadge("artist-badge")) { this.NewRoleBadge = this.GetNewTwitchBadgeURL("artist-badge"); }
+            else { this.NewRoleBadge = null; }
 
-            if (this.HasTwitchSubscriberFounderBadge) { this.OldSubscriberBadge = this.GetNewTwitchBadgeURL("founder"); }
-            else if (this.HasTwitchSubscriberBadge) { this.OldSubscriberBadge = this.GetNewTwitchBadgeURL("subscriber"); }
-            else { this.OldSubscriberBadge = null; }
+            if (this.HasTwitchSubscriberFounderBadge) { this.NewSubscriberBadge = this.GetNewTwitchBadgeURL("founder"); }
+            else if (this.HasTwitchSubscriberBadge) { this.NewSubscriberBadge = this.GetNewTwitchBadgeURL("subscriber"); }
+            else { this.NewSubscriberBadge = null; }
 
             this.NewSpecialtyBadge = null;
             if (this.HasNewTwitchBadge("sub-gift-leader")) { this.NewSpecialtyBadge = this.GetNewTwitchBadgeURL("sub-gift-leader"); }
@@ -367,8 +367,8 @@ namespace MixItUp.Base.Model.User.Platform
                 }
             }
 
-            this.SubscriberBadgeLink = this.OldSubscriberBadge?.image_url_1x;
-            this.RoleBadgeLink = this.OldRoleBadge?.image_url_1x;
+            this.SubscriberBadgeLink = this.NewSubscriberBadge?.image_url_1x;
+            this.RoleBadgeLink = this.NewRoleBadge?.image_url_1x;
             this.SpecialtyBadgeLink = this.NewSpecialtyBadge?.image_url_1x;
         }
 
