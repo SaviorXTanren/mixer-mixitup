@@ -238,8 +238,6 @@ namespace MixItUp.Base.ViewModel.Chat
 
         protected internal virtual void AddStringMessagePart(string str)
         {
-            str = str.Trim();
-
             this.MessageParts.Add(str);
             if (string.IsNullOrEmpty(this.PlainTextMessage))
             {
