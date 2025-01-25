@@ -42,6 +42,9 @@ namespace MixItUp.Base.Services.External
 
     public class MeldStudioService : ServiceBase
     {
+        public const int AudioTrackGainMinimum = -60;
+        public const int AudioTrackGainMaximum = 0;
+
         private const int isStreamingPropertiesIndex = 1;
         private const int isRecordingPropertiesIndex = 2;
         private const int sessionPropertiesIndex = 3;
@@ -266,14 +269,18 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        public async Task SetGain(string audioTrackName, int gain)
+        public async Task SetGain(string audioTrackName, int dB)
         {
             MeldStudioAudioTrackItem audioTrack = this.GetAudioTrack(audioTrackName);
             if (audioTrack != null)
             {
-                double convertedGain = MathHelper.Clamp(gain, 0, 100) / 100.0;
+                dB = MathHelper.Clamp(dB, AudioTrackGainMinimum, AudioTrackGainMaximum);
 
-                await this.websocket.InvokeMethod("meld", "setGain", new List<object>() { audioTrack.ID, convertedGain });
+                double gain = Math.Pow(10, dB / 20);
+                gain = Math.Round(gain, 3);
+                gain = MathHelper.Clamp(gain, 0.0, 1.0);
+
+                await this.websocket.InvokeMethod("meld", "setGain", new List<object>() { audioTrack.ID, gain });
             }
         }
 

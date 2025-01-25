@@ -124,6 +124,21 @@
             <CheckBox Grid.Column="4" IsChecked="{Binding State}" IsThreeState="True" VerticalAlignment="Center"/>
         </Grid>
 
+        <Grid Grid.Row="2" Visibility="{Binding SetAudioTrackGain, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Text="{Binding AudioTrackName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioTrackName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Gain}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <Slider Grid.Column="4" Value="{Binding AudioTrackGain}" VerticalAlignment="Center" Width="150" Minimum="-60" Maximum="0" Style="{StaticResource MaterialDesignDiscreteSlider}" />
+        </Grid>
+
         <Grid Grid.Row="2" Visibility="{Binding StartStopStream, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
