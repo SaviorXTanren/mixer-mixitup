@@ -312,35 +312,59 @@ namespace MixItUp.Base.Services
 
         public async Task<Result> AutomaticConnectStreamer()
         {
-            Result result = await this.StreamerOAuthService.AutomaticConnect();
-            if (result.Success)
+            try
             {
-                return await this.InitializeStreamer();
+                Result result = await this.StreamerOAuthService.AutomaticConnect();
+                if (result.Success)
+                {
+                    return await this.InitializeStreamer();
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
         }
 
         public async Task<Result> ManualConnectStreamer(CancellationToken cancellationToken)
         {
-            Result result = await this.StreamerOAuthService.ManualConnect(cancellationToken);
-            if (!cancellationToken.IsCancellationRequested && result.Success)
+            try
             {
-                return await this.InitializeStreamer();
+                Result result = await this.StreamerOAuthService.ManualConnect(cancellationToken);
+                if (!cancellationToken.IsCancellationRequested && result.Success)
+                {
+                    return await this.InitializeStreamer();
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
         }
 
         public async Task<Result> ManualConnectStreamerWithTimeout()
         {
-            Result result = await this.StreamerOAuthService.ManualConnectWithTimeout();
-            if (result.Success)
+            try
             {
-                return await this.InitializeStreamer();
+                Result result = await this.StreamerOAuthService.ManualConnectWithTimeout();
+                if (result.Success)
+                {
+                    return await this.InitializeStreamer();
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
         }
 
-        public async Task<Result> InitializeStreamer()
+        protected async Task<Result> InitializeStreamer()
         {
             Result result = await this.InitializeStreamerInternal();
 
@@ -404,25 +428,41 @@ namespace MixItUp.Base.Services
 
         public async Task<Result> AutomaticConnectBot()
         {
-            Result result = await this.BotOAuthService.AutomaticConnect();
-            if (result.Success)
+            try
             {
-                return await this.InitializeBot();
+                Result result = await this.BotOAuthService.AutomaticConnect();
+                if (result.Success)
+                {
+                    return await this.InitializeBot();
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
         }
 
         public async Task<Result> ManualConnectBot(CancellationToken cancellationToken)
         {
-            Result result = await this.BotOAuthService.ManualConnect(cancellationToken);
-            if (!cancellationToken.IsCancellationRequested && result.Success)
+            try
             {
-                return await this.InitializeBot();
+                Result result = await this.BotOAuthService.ManualConnect(cancellationToken);
+                if (!cancellationToken.IsCancellationRequested && result.Success)
+                {
+                    return await this.InitializeBot();
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
         }
 
-        public async Task<Result> InitializeBot()
+        protected async Task<Result> InitializeBot()
         {
             Result result = await this.InitializeBotInternal();
 
