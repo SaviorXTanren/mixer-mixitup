@@ -15,7 +15,6 @@ namespace MixItUp.Base.Model.Actions
         ShowHideEffect,
         MuteUnmuteAudioTrack,
         MonitorUnmonitorAudioTrack,
-        [Obsolete]
         SetAudioTrackGain,
         TakeScreenshot,
         StartStopStream,

@@ -275,11 +275,7 @@ namespace MixItUp.Base.Services.External
             if (audioTrack != null)
             {
                 dB = MathHelper.Clamp(dB, AudioTrackGainMinimum, AudioTrackGainMaximum);
-
-                double gain = Math.Pow(10, dB / 20);
-                gain = Math.Round(gain, 3);
-                gain = MathHelper.Clamp(gain, 0.0, 1.0);
-
+                double gain = this.DBToGain(dB);
                 await this.websocket.InvokeMethod("meld", "setGain", new List<object>() { audioTrack.ID, gain });
             }
         }
@@ -413,6 +409,16 @@ namespace MixItUp.Base.Services.External
         private string GenerateParentIDNameKey(string parentID, string name)
         {
             return $"{parentID}|{name}";
+        }
+
+        private double DBToGain(double dB)
+        {
+            if (double.IsInfinity(dB) || dB < -60) dB = -60;
+            double gain = Math.Pow(10, dB / 20);
+
+            gain = gain <= 0.001 ? 0 : gain;
+            gain = gain > 1 ? 1 : gain;
+            return gain;
         }
     }
 }
