@@ -198,6 +198,10 @@ namespace MixItUp.Base.Services.External
                     {
                         layer.visible = !layer.visible;
                     }
+                    else
+                    {
+                        layer.visible = state.GetValueOrDefault();
+                    }
 
                     await this.websocket.InvokeMethod("meld", "toggleLayer", new List<object>() { scene.ID, layer.ID });
                 }
@@ -224,6 +228,10 @@ namespace MixItUp.Base.Services.External
                         {
                             effect.enabled = !effect.enabled;
                         }
+                        else
+                        {
+                            effect.enabled = state.GetValueOrDefault();
+                        }
 
                         await this.websocket.InvokeMethod("meld", "toggleEffect", new List<object>() { scene.ID, layer.ID, effect.ID });
                     }
@@ -245,6 +253,10 @@ namespace MixItUp.Base.Services.External
                 {
                     audioTrack.muted = !audioTrack.muted;
                 }
+                else
+                {
+                    audioTrack.muted = state.GetValueOrDefault();
+                }
 
                 await this.websocket.InvokeMethod("meld", "toggleMute", new List<object>() { audioTrack.ID });
             }
@@ -263,6 +275,10 @@ namespace MixItUp.Base.Services.External
                 if (state == null)
                 {
                     audioTrack.monitoring = !audioTrack.monitoring;
+                }
+                else
+                {
+                    audioTrack.monitoring |= state.GetValueOrDefault();
                 }
 
                 await this.websocket.InvokeMethod("meld", "toggleMonitor", new List<object>() { audioTrack.ID });
