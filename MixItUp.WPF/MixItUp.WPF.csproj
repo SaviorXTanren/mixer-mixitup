@@ -847,6 +847,9 @@
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\OnOffToggleDropDownControl.xaml.cs">
+      <DependentUpon>OnOffToggleDropDownControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayChatV3Control.xaml.cs">
       <DependentUpon>OverlayChatV3Control.xaml</DependentUpon>
     </Compile>
@@ -1837,6 +1840,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\UsersControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\OnOffToggleDropDownControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -15325,6 +15325,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Off.
+        /// </summary>
+        public static string Off {
+            get {
+                return ResourceManager.GetString("Off", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Offline Rate.
         /// </summary>
         public static string OfflineRate {
@@ -15366,6 +15375,15 @@ namespace MixItUp.Base {
         public static string OldHTMLCopiedToClipboard {
             get {
                 return ResourceManager.GetString("OldHTMLCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On.
+        /// </summary>
+        public static string On {
+            get {
+                return ResourceManager.GetString("On", resourceCulture);
             }
         }
         
@@ -23926,6 +23944,15 @@ namespace MixItUp.Base {
         public static string TITSTrigger {
             get {
                 return ResourceManager.GetString("TITSTrigger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle.
+        /// </summary>
+        public static string Toggle {
+            get {
+                return ResourceManager.GetString("Toggle", resourceCulture);
             }
         }
         
