@@ -10983,4 +10983,10 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="Gain" xml:space="preserve">
     <value>Gain</value>
   </data>
+  <data name="YouTubeAccountNotEnabledForLiveStreaming" xml:space="preserve">
+    <value>YouTube account is not enabled for live streaming access.</value>
+  </data>
+  <data name="YouTubeFailedToGetChannelData" xml:space="preserve">
+    <value>Failed to get YouTube channel data. Please ensure that the account you are signing in with has a YouTube channel created for it.</value>
+  </data>
 </root>

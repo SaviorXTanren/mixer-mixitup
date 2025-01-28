@@ -28193,6 +28193,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to YouTube account is not enabled for live streaming access..
+        /// </summary>
+        public static string YouTubeAccountNotEnabledForLiveStreaming {
+            get {
+                return ResourceManager.GetString("YouTubeAccountNotEnabledForLiveStreaming", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to YouTube Action: A valid amount must be specified.
         /// </summary>
         public static string YouTubeActionMissingAmount {
@@ -28342,6 +28351,15 @@ namespace MixItUp.Base {
         public static string YouTubeFailedToGetBotData {
             get {
                 return ResourceManager.GetString("YouTubeFailedToGetBotData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get YouTube channel data. Please ensure that the account you are signing in with has a YouTube channel created for it..
+        /// </summary>
+        public static string YouTubeFailedToGetChannelData {
+            get {
+                return ResourceManager.GetString("YouTubeFailedToGetChannelData", resourceCulture);
             }
         }
         

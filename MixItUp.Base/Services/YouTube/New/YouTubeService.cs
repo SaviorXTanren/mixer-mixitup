@@ -1,4 +1,5 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using Google;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Requests;
@@ -251,6 +252,36 @@ namespace MixItUp.Base.Services.YouTube.New
                 }
                 return null;
             });
+        }
+
+        public async Task<Result> ValidateAccountIsEnabledForLiveStreaming()
+        {
+            try
+            {
+                LiveBroadcastsResource.ListRequest request = this.GoogleYouTubeService.LiveBroadcasts.List("snippet,contentDetails,status");
+                request.BroadcastType = BroadcastTypeEnum.All;
+                request.Mine = true;
+                request.MaxResults = 10;
+                LogRequest(request);
+
+                LiveBroadcastListResponse response = await request.ExecuteAsync();
+                return new Result();
+            }
+            catch (GoogleApiException gex)
+            {
+                if (gex.HttpStatusCode == HttpStatusCode.Forbidden)
+                {
+                    return new Result(Resources.YouTubeAccountNotEnabledForLiveStreaming);
+                }
+                else
+                {
+                    return new Result(gex);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result(ex);
+            }
         }
 
         public async Task<IEnumerable<LiveBroadcast>> GetActiveBroadcasts()
