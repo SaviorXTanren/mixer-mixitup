@@ -1,4 +1,5 @@
-﻿using Google.Apis.YouTube.v3.Data;
+﻿using Google;
+using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
@@ -13,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -158,7 +160,7 @@ namespace MixItUp.Base.Services.YouTube.New
             this.StreamerModel = await this.StreamerService.GetCurrentChannel();
             if (this.StreamerModel == null)
             {
-                return new Result(Resources.YouTubeFailedToGetUserData);
+                return new Result(Resources.YouTubeFailedToGetChannelData);
             }
 
             this.StreamerID = this.StreamerModel?.Id;
@@ -177,6 +179,7 @@ namespace MixItUp.Base.Services.YouTube.New
             List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
             platformServiceTasks.Add(this.SetChatEmotes());
             platformServiceTasks.Add(this.SetMembershipLevels());
+            platformServiceTasks.Add(this.StreamerService.ValidateAccountIsEnabledForLiveStreaming());
 
             await Task.WhenAll(platformServiceTasks);
 
@@ -216,7 +219,7 @@ namespace MixItUp.Base.Services.YouTube.New
             this.BotModel = await this.BotService.GetCurrentChannel();
             if (this.BotModel == null)
             {
-                return new Result(Resources.YouTubeFailedToGetUserData);
+                return new Result(Resources.YouTubeFailedToGetChannelData);
             }
 
             this.BotID = this.BotModel?.Id;

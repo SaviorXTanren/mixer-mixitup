@@ -248,14 +248,11 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                 else if (fragment.Type == ChatNotificationMessageFragmentType.emote)
                 {
                     this.AddStringMessagePart(fragment.text);
-                    if (ServiceManager.Get<TwitchSession>().Emotes.ContainsKey(fragment.text))
-                    {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchSession>().Emotes[fragment.text];
-                    }
-                    else
+                    if (!ServiceManager.Get<TwitchSession>().Emotes.ContainsKey(fragment.text))
                     {
                         ServiceManager.Get<TwitchSession>().Emotes[fragment.text] = new TwitchChatEmoteViewModel(fragment.text, fragment.emote);
                     }
+                    this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchSession>().Emotes[fragment.text];
                 }
                 else if (fragment.Type == ChatNotificationMessageFragmentType.cheermote)
                 {

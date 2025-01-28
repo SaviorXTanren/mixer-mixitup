@@ -46,16 +46,13 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Text="{Binding SceneName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Grid.Column="2" Text="{Binding LayerName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LayerName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="6" IsChecked="{Binding State}" IsThreeState="True" VerticalAlignment="Center"/>
+            <Controls:OnOffToggleDropDownControl Grid.Column="4" DisplayName="{x:Static resx:Resources.Visible}" Value="{Binding State}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowHideEffect, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -83,14 +80,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBox Grid.Column="0" Text="{Binding EffectName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EffectName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-                <CheckBox Grid.Column="4" IsChecked="{Binding State}" IsThreeState="True" VerticalAlignment="Center"/>
+                <Controls:OnOffToggleDropDownControl Grid.Column="2" DisplayName="{x:Static resx:Resources.Visible}" Value="{Binding State}" />
             </Grid>
         </Grid>
 
@@ -99,14 +93,11 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Text="{Binding AudioTrackName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioTrackName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Mute}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="4" IsChecked="{Binding State}" IsThreeState="True" VerticalAlignment="Center"/>
+            <Controls:OnOffToggleDropDownControl Grid.Column="2" DisplayName="{x:Static resx:Resources.Mute}" Value="{Binding State}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding MonitorUnmonitorAudioTrack, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -114,14 +105,11 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Text="{Binding AudioTrackName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioTrackName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Monitor}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="4" IsChecked="{Binding State}" IsThreeState="True" VerticalAlignment="Center"/>
+            <Controls:OnOffToggleDropDownControl Grid.Column="2" DisplayName="{x:Static resx:Resources.Monitor}" Value="{Binding State}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding SetAudioTrackGain, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -140,25 +128,11 @@
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding StartStopStream, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Stream}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="2" IsChecked="{Binding State}" IsThreeState="True" VerticalAlignment="Center"/>
+            <Controls:OnOffToggleDropDownControl DisplayName="{x:Static resx:Resources.Stream}" Value="{Binding State}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding StartStopRecording, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Record}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <CheckBox Grid.Column="2" IsChecked="{Binding State}" IsThreeState="True" VerticalAlignment="Center"/>
+            <Controls:OnOffToggleDropDownControl DisplayName="{x:Static resx:Resources.Record}" Value="{Binding State}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

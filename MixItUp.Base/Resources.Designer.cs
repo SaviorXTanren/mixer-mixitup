@@ -15325,6 +15325,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Off.
+        /// </summary>
+        public static string Off {
+            get {
+                return ResourceManager.GetString("Off", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Offline Rate.
         /// </summary>
         public static string OfflineRate {
@@ -15366,6 +15375,15 @@ namespace MixItUp.Base {
         public static string OldHTMLCopiedToClipboard {
             get {
                 return ResourceManager.GetString("OldHTMLCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On.
+        /// </summary>
+        public static string On {
+            get {
+                return ResourceManager.GetString("On", resourceCulture);
             }
         }
         
@@ -23930,6 +23948,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Toggle.
+        /// </summary>
+        public static string Toggle {
+            get {
+                return ResourceManager.GetString("Toggle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Toggle Command.
         /// </summary>
         public static string ToggleCommand {
@@ -28193,6 +28220,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to YouTube account is not enabled for live streaming access..
+        /// </summary>
+        public static string YouTubeAccountNotEnabledForLiveStreaming {
+            get {
+                return ResourceManager.GetString("YouTubeAccountNotEnabledForLiveStreaming", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to YouTube Action: A valid amount must be specified.
         /// </summary>
         public static string YouTubeActionMissingAmount {
@@ -28342,6 +28378,15 @@ namespace MixItUp.Base {
         public static string YouTubeFailedToGetBotData {
             get {
                 return ResourceManager.GetString("YouTubeFailedToGetBotData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get YouTube channel data. Please ensure that the account you are signing in with has a YouTube channel created for it..
+        /// </summary>
+        public static string YouTubeFailedToGetChannelData {
+            get {
+                return ResourceManager.GetString("YouTubeFailedToGetChannelData", resourceCulture);
             }
         }
         
