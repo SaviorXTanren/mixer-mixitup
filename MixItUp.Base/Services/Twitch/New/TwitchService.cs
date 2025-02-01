@@ -558,10 +558,12 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public async Task<IEnumerable<CustomChannelPointRewardModel>> GetCustomChannelPointRewards(UserModel broadcaster, bool managableRewardsOnly = false)
         {
-            return await AsyncRunner.RunAsync(async () =>
+            IEnumerable<CustomChannelPointRewardModel> results = await AsyncRunner.RunAsync(async () =>
             {
                 return await this.GetPagedDataResultAsync<CustomChannelPointRewardModel>("channel_points/custom_rewards?broadcaster_id=" + broadcaster.id + "&only_manageable_rewards=" + managableRewardsOnly, maxResults: int.MaxValue);
             });
+
+            return results ?? new List<CustomChannelPointRewardModel>();
         }
 
         public async Task<CustomChannelPointRewardModel> UpdateCustomChannelPointReward(UserModel broadcaster, Guid rewardID, JObject updatableFields)

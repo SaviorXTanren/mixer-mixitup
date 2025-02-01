@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Twitch.ChannelPoints;
+using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.Twitch.New;
@@ -70,18 +71,22 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSession>().StreamerService.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().StreamerModel)).OrderBy(c => c.title))
+                IEnumerable<CustomChannelPointRewardModel> rewards = await ServiceManager.Get<TwitchSession>().StreamerService.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().StreamerModel);
+                if (rewards != null && rewards.Count() > 0)
                 {
-                    this.ChannelPointRewards.Add(channelPoint);
-                }
+                    foreach (CustomChannelPointRewardModel channelPoint in rewards.OrderBy(c => c.title))
+                    {
+                        this.ChannelPointRewards.Add(channelPoint);
+                    }
 
-                if (this.existingChannelPointRewardID != Guid.Empty)
-                {
-                    this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
-                }
-                else if (!string.IsNullOrEmpty(this.Name))
-                {
-                    this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.title.Equals(this.Name));
+                    if (this.existingChannelPointRewardID != Guid.Empty)
+                    {
+                        this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+                    }
+                    else if (!string.IsNullOrEmpty(this.Name))
+                    {
+                        this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.title.Equals(this.Name));
+                    }
                 }
             }
             await base.OnOpenInternal();

@@ -893,14 +893,18 @@ namespace MixItUp.Base.ViewModel.Actions
 
             if (ServiceManager.Get<TwitchSession>().IsConnected)
             {
-                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSession>().StreamerService.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().StreamerModel, managableRewardsOnly: true)).OrderBy(c => c.title))
+                IEnumerable<CustomChannelPointRewardModel> rewards = await ServiceManager.Get<TwitchSession>().StreamerService.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSession>().StreamerModel, managableRewardsOnly: true);
+                if (rewards != null && rewards.Count() > 0)
                 {
-                    this.ChannelPointRewards.Add(channelPoint);
-                }
+                    foreach (CustomChannelPointRewardModel channelPoint in rewards.OrderBy(c => c.title))
+                    {
+                        this.ChannelPointRewards.Add(channelPoint);
+                    }
 
-                if (this.ShowUpdateChannelPointRewardGrid)
-                {
-                    this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+                    if (this.ShowUpdateChannelPointRewardGrid)
+                    {
+                        this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+                    }
                 }
 
                 if (this.existingTags != null)
