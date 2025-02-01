@@ -22,7 +22,11 @@
 
         <Button x:Name="TwitchTier1Sub" Click="TriggerTwitchTier1Sub_Click">Twitch Tier 1 Sub</Button>
 
+        <Button x:Name="Twitch1GiftedTier1Sub" Click="Twitch1GiftedTier1Sub_Click">Twitch 1 Gifted Tier 1 Sub</Button>
+
         <Button x:Name="Twitch5GiftedTier1Sub" Click="Twitch5GiftedTier1Sub_Click">Twitch 5 Gifted Tier 1 Sub</Button>
+
+        <Button x:Name="TwitchAnon5GiftedTier1Sub" Click="TwitchAnon5GiftedTier1Sub_Click">Twitch Anon 5 Gifted Tier 1 Sub</Button>
 
         <Button x:Name="Twitch100BitsCheer" Click="Twitch100BitsCheer_Click">Twitch 100 Bits Cheer</Button>
 

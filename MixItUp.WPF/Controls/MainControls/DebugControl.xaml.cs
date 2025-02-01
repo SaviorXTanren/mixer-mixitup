@@ -68,7 +68,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 },
                 Payload = new NotificationMessagePayload()
                 {
-                    Event = new JObject(new ChatNotification()
+                    Event = JObject.FromObject(new ChatNotification()
                     {
                         notice_type = "sub",
 
@@ -83,6 +83,50 @@ namespace MixItUp.WPF.Controls.MainControls
                         sub = new ChatNotificationSub()
                         {
                             sub_tier = "1000"
+                        }
+                    })
+                }
+            });
+        }
+
+        private async void Twitch1GiftedTier1Sub_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUsers().FirstOrDefault(u => u.ID != ChannelSession.User.ID && u.HasPlatformData(Base.Model.StreamingPlatformTypeEnum.Twitch));
+            if (user == null)
+            {
+                user = ChannelSession.User;
+            }
+
+            TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
+
+            await ServiceManager.Get<TwitchSession>().Client.ProcessMockNotification(new NotificationMessage()
+            {
+                Metadata = new MessageMetadata()
+                {
+                    SubscriptionType = "channel.chat.notification"
+                },
+                Payload = new NotificationMessagePayload()
+                {
+                    Event = JObject.FromObject(new ChatNotification()
+                    {
+                        notice_type = "sub_gift",
+
+                        broadcaster_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        broadcaster_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        broadcaster_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
+
+                        chatter_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
+
+                        sub_gift = new ChatNotificationSubGift()
+                        {
+                            sub_tier = "1000",
+                            duration_months = 1,
+
+                            recipient_user_id = twitchUser.ID,
+                            recipient_user_login = twitchUser.Username,
+                            recipient_user_name = twitchUser.DisplayName
                         }
                     })
                 }
@@ -110,7 +154,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     },
                     Payload = new NotificationMessagePayload()
                     {
-                        Event = new JObject(new ChatNotification()
+                        Event = JObject.FromObject(new ChatNotification()
                         {
                             notice_type = "sub_gift",
 
@@ -145,7 +189,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 },
                 Payload = new NotificationMessagePayload()
                 {
-                    Event = new JObject(new ChatNotification()
+                    Event = JObject.FromObject(new ChatNotification()
                     {
                         notice_type = "community_sub_gift",
 
@@ -156,6 +200,82 @@ namespace MixItUp.WPF.Controls.MainControls
                         chatter_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
                         chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
                         chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
+
+                        community_sub_gift = new ChatNotificationCommunitySubGift()
+                        {
+                            id = communityGiftID,
+                            total = 5,
+                            sub_tier = "1000",
+                        }
+                    })
+                }
+            });
+        }
+
+
+        private async void TwitchAnon5GiftedTier1Sub_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUsers().FirstOrDefault(u => u.ID != ChannelSession.User.ID && u.HasPlatformData(Base.Model.StreamingPlatformTypeEnum.Twitch));
+            if (user == null)
+            {
+                user = ChannelSession.User;
+            }
+
+            TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
+
+            string communityGiftID = Guid.NewGuid().ToString();
+            for (int i = 0; i < 5; i++)
+            {
+                await ServiceManager.Get<TwitchSession>().Client.ProcessMockNotification(new NotificationMessage()
+                {
+                    Metadata = new MessageMetadata()
+                    {
+                        SubscriptionType = "channel.chat.notification"
+                    },
+                    Payload = new NotificationMessagePayload()
+                    {
+                        Event = JObject.FromObject(new ChatNotification()
+                        {
+                            notice_type = "sub_gift",
+
+                            broadcaster_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                            broadcaster_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                            broadcaster_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
+
+                            chatter_is_anonymous = true,
+
+                            sub_gift = new ChatNotificationSubGift()
+                            {
+                                sub_tier = "1000",
+                                duration_months = 1,
+                                community_gift_id = communityGiftID,
+
+                                recipient_user_id = twitchUser.ID,
+                                recipient_user_login = twitchUser.Username,
+                                recipient_user_name = twitchUser.DisplayName
+                            }
+                        })
+                    }
+                });
+            }
+
+            await ServiceManager.Get<TwitchSession>().Client.ProcessMockNotification(new NotificationMessage()
+            {
+                Metadata = new MessageMetadata()
+                {
+                    SubscriptionType = "channel.chat.notification"
+                },
+                Payload = new NotificationMessagePayload()
+                {
+                    Event = JObject.FromObject(new ChatNotification()
+                    {
+                        notice_type = "community_sub_gift",
+
+                        broadcaster_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
+                        broadcaster_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
+                        broadcaster_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
+
+                        chatter_is_anonymous = true,
 
                         community_sub_gift = new ChatNotificationCommunitySubGift()
                         {
@@ -186,7 +306,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 },
                 Payload = new NotificationMessagePayload()
                 {
-                    Event = new JObject(new ChatMessageNotification()
+                    Event = JObject.FromObject(new ChatMessageNotification()
                     {
                         broadcaster_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
                         broadcaster_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
@@ -226,7 +346,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         },
 
                         cheer = new ChatMessageNotificationCheer()
-                        { 
+                        {
                             bits = 1234
                         },
                     })
