@@ -652,13 +652,13 @@ namespace MixItUp.Base.Services.Twitch.New
                 foreach (var giftedSub in tempGiftedSubs)
                 {
                     TwitchMassGiftedSubcriptionsEventModel massGiftedSub = null;
-                    if (giftedSub.IsAnonymous || giftedSub.Gifter == null)
+                    if (giftedSub.IsAnonymous || string.IsNullOrEmpty(giftedSub.CommunityGiftID))
                     {
                         massGiftedSub = tempMassGiftedSubs.FirstOrDefault(ms => ms.IsAnonymous);
                     }
                     else
                     {
-                        massGiftedSub = tempMassGiftedSubs.FirstOrDefault(ms => ms.Gifter.ID == giftedSub.Gifter.ID);
+                        massGiftedSub = tempMassGiftedSubs.FirstOrDefault(ms => string.Equals(ms.CommunityGiftID, giftedSub.CommunityGiftID));
                     }
 
                     if (massGiftedSub != null)
