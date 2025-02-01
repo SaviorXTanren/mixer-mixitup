@@ -130,6 +130,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public TwitchChatMessageViewModel(ChatMessageNotification notification, UserV2ViewModel user)
             : base(notification.message_id, StreamingPlatformTypeEnum.Twitch, user)
         {
+            this.IsInUsersChannel = string.IsNullOrEmpty(notification.source_broadcaster_user_id) || string.Equals(ServiceManager.Get<TwitchSession>().ChannelID, notification.source_broadcaster_user_id);
+
             this.HasBits = notification.cheer?.bits > 0;
             this.IsHighlightedMessage =
                 notification.MessageType == ChatNotificationMessageType.power_ups_message_effect ||
@@ -144,6 +146,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public TwitchChatMessageViewModel(ChatNotification notification, UserV2ViewModel user)
             : base(notification.message_id, StreamingPlatformTypeEnum.Twitch, user)
         {
+            this.IsInUsersChannel = string.IsNullOrEmpty(notification.source_broadcaster_user_id) || string.Equals(ServiceManager.Get<TwitchSession>().ChannelID, notification.source_broadcaster_user_id);
+
             this.IsHighlightedMessage =
                 notification.NoticeType == ChatNotificationType.announcement ||
                 notification.NoticeType == ChatNotificationType.shared_chat_announcement;
