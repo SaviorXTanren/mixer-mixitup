@@ -74,6 +74,14 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public string FilePath { get; set; }
+
+        public void ResetData()
+        {
+            this.UserID = Guid.Empty;
+            this.UserFallback = null;
+            this.Amount = 0;
+            this.AmountText = string.Empty;
+        }
     }
 
     [DataContract]
@@ -424,11 +432,16 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && subscription.Gifter != null)
             {
-                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = subscription.Gifter.ID;
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].ResetData();
                 if (subscription.Gifter.IsUnassociated)
                 {
                     this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserFallback = subscription.Gifter.Model;
                 }
+                else
+                {
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = subscription.Gifter.ID;
+                }
+
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].Amount = 1;
                 await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter);
             }
@@ -454,11 +467,16 @@ namespace MixItUp.Base.Model.Overlay
                 UserV2ViewModel gifter = subscriptions.Last().Gifter;
                 if (this.IsDisplayEnabled(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter) && gifter != null)
                 {
-                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = gifter.ID;
+                    this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].ResetData();
                     if (gifter.IsUnassociated)
                     {
                         this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserFallback = gifter.Model;
                     }
+                    else
+                    {
+                        this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].UserID = gifter.ID;
+                    }
+
                     this.Displays[OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter].Amount = subscriptions.Count();
                     await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestSubscriptionGifter);
                 }
@@ -467,15 +485,17 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnDonationOccurred(object sender, UserDonationModel donation)
         {
-            this.Displays[OverlayLabelDisplayV3TypeEnum.LatestDonation].UserID = donation.User.ID;
+            this.Displays[OverlayLabelDisplayV3TypeEnum.LatestDonation].ResetData();
+
             if (donation.IsAnonymous || donation.User.IsUnassociated)
             {
                 this.Displays[OverlayLabelDisplayV3TypeEnum.LatestDonation].UserFallback = donation.User.Model;
             }
             else
             {
-                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestDonation].UserFallback = null;
+                this.Displays[OverlayLabelDisplayV3TypeEnum.LatestDonation].UserID = donation.User.ID;
             }
+
             this.Displays[OverlayLabelDisplayV3TypeEnum.LatestDonation].Amount = donation.Amount;
             await this.SendUpdate(OverlayLabelDisplayV3TypeEnum.LatestDonation);
         }
