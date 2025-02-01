@@ -1088,7 +1088,7 @@ namespace MixItUp.Base.Util
                             if (tUser != null)
                             {
                                 Task<MixItUp.Base.Model.Twitch.Channels.ChannelInformationModel> tChannel = ServiceManager.Get<TwitchSession>().StreamerService.GetChannelInformation(tUser);
-                                Task<MixItUp.Base.Model.Twitch.Streams.StreamModel> stream = ServiceManager.Get<TwitchSession>().StreamerService.GetStream(tUser);
+                                Task<MixItUp.Base.Model.Twitch.Streams.StreamModel> stream = ServiceManager.Get<TwitchSession>().StreamerService.GetLatestStream(tUser);
 
                                 await Task.WhenAll(tChannel, stream);
 

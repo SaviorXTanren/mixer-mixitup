@@ -402,11 +402,20 @@ namespace MixItUp.Base.Services.Twitch.New
             });
         }
 
-        public async Task<StreamModel> GetStream(UserModel user)
+        public async Task<StreamModel> GetLatestStream(UserModel user)
         {
             return await AsyncRunner.RunAsync(async () =>
             {
                 IEnumerable<StreamModel> streams = await this.GetPagedDataResultAsync<StreamModel>($"streams?user_id={user.id}", 1);
+                return streams?.FirstOrDefault();
+            });
+        }
+
+        public async Task<StreamModel> GetActiveStream(UserModel user)
+        {
+            return await AsyncRunner.RunAsync(async () =>
+            {
+                IEnumerable<StreamModel> streams = await this.GetPagedDataResultAsync<StreamModel>($"streams?user_id={user.id}&type=live", 1);
                 return streams?.FirstOrDefault();
             });
         }

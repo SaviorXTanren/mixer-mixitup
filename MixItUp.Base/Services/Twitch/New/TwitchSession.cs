@@ -359,10 +359,12 @@ namespace MixItUp.Base.Services.Twitch.New
             this.StreamCategoryID = this.Channel.game_id;
             this.StreamCategoryName = this.Channel.game_name;
 
-            StreamModel stream = await StreamerService.GetStream(StreamerModel);
+            StreamModel stream = await StreamerService.GetActiveStream(StreamerModel);
             if (stream != null)
             {
                 this.Stream = stream;
+
+                this.IsLive = true;
 
                 this.StreamViewerCount = (int)this.Stream.viewer_count;
             }
