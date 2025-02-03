@@ -347,7 +347,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
             if (!string.Equals(this.StreamCategoryID, channel.game_id, StringComparison.OrdinalIgnoreCase))
             {
-                GameModel game = await this.StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
+                GameModel game = await this.StreamerService.GetNewAPIGameByID(channel.game_id);
                 if (game != null)
                 {
                     string image = game.box_art_url;
@@ -539,7 +539,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             if (!string.Equals(this.StreamCategoryID, update.category_id, StringComparison.OrdinalIgnoreCase))
             {
-                GameModel game = await this.StreamerService.GetNewAPIGameByID(this.StreamCategoryID);
+                GameModel game = await this.StreamerService.GetNewAPIGameByID(update.category_id);
                 if (game != null)
                 {
                     this.StreamCategoryImageURL = game.box_art_url;
