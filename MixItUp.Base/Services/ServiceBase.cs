@@ -214,7 +214,7 @@ namespace MixItUp.Base.Services
                     if (!string.Equals(requestedScopes, this.OAuthToken.ScopeList, StringComparison.Ordinal))
                     {
                         Logger.Log(LogLevel.Error, $"Scope list mis-match for {this.Name}, forcing manual connect");
-                        return new Result(success: false);
+                        return new Result(success: false, Resources.NewAuthorizationScopesRequired);
                     }
 
                     await this.RefreshOAuthToken();

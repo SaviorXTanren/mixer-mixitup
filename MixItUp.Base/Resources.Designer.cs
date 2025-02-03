@@ -14711,6 +14711,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New authorization scopes are required and the service must be re-connected manually.
+        /// </summary>
+        public static string NewAuthorizationScopesRequired {
+            get {
+                return ResourceManager.GetString("NewAuthorizationScopesRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Boss.
         /// </summary>
         public static string NewBoss {

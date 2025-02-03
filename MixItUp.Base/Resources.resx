@@ -10998,4 +10998,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="Toggle" xml:space="preserve">
     <value>Toggle</value>
   </data>
+  <data name="NewAuthorizationScopesRequired" xml:space="preserve">
+    <value>New authorization scopes are required and the service must be re-connected manually</value>
+  </data>
 </root>
