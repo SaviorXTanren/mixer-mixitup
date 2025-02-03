@@ -241,13 +241,13 @@ namespace MixItUp.Base.Services.Trovo.New
         {
             foreach (string m in this.SplitLargeMessage(message))
             {
-                if (!sendAsStreamer && this.IsBotConnected)
+                if (sendAsStreamer || !this.IsBotConnected)
                 {
-                    await this.BotService.SendMessage(m, this.ChannelID);
+                    await this.StreamerService.SendMessage(m);
                 }
                 else
                 {
-                    await this.StreamerService.SendMessage(m);
+                    await this.BotService.SendMessage(m, this.ChannelID);
                 }
             }
         }

@@ -315,13 +315,13 @@ namespace MixItUp.Base.Services.YouTube.New
                 foreach (LiveBroadcast broadcast in this.LiveBroadcasts.Values.ToList())
                 {
                     LiveChatMessage resultMessage = null;
-                    if (!sendAsStreamer && this.IsBotConnected)
+                    if (sendAsStreamer || !this.IsBotConnected)
                     {
-                        resultMessage = await this.BotService.SendMessage(broadcast, m);
+                        resultMessage = await this.StreamerService.SendMessage(broadcast, m);
                     }
                     else
                     {
-                        resultMessage = await this.StreamerService.SendMessage(broadcast, m);
+                        resultMessage = await this.BotService.SendMessage(broadcast, m);
                     }
 
                     if (resultMessage != null)

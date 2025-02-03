@@ -108,6 +108,8 @@ namespace MixItUp.Base.Services.Twitch.New
 
             "user:edit",
 
+            "user:manage:whispers",
+
             "user:write:chat",
 
             "whispers:read",
@@ -459,13 +461,13 @@ namespace MixItUp.Base.Services.Twitch.New
 
             foreach (string m in this.SplitLargeMessage(message))
             {
-                if (!sendAsStreamer && this.IsBotConnected)
+                if (sendAsStreamer || !this.IsBotConnected)
                 {
-                    await this.BotService.SendChatMessage(this.StreamerModel, this.BotModel, m, replyMessageID);
+                    await this.StreamerService.SendChatMessage(this.StreamerModel, this.StreamerModel, m, replyMessageID);
                 }
                 else
                 {
-                    await this.StreamerService.SendChatMessage(this.StreamerModel, this.StreamerModel, m, replyMessageID);
+                    await this.BotService.SendChatMessage(this.StreamerModel, this.BotModel, m, replyMessageID);
                 }
             }
         }
@@ -507,13 +509,13 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public async Task SendWhisper(UserV2ViewModel user, string message, bool sendAsStreamer = false)
         {
-            if (!sendAsStreamer || this.IsBotConnected)
+            if (sendAsStreamer || !this.IsBotConnected)
             {
-                await this.BotService.SendWhisper(this.BotModel, user.PlatformID, message);
+                await this.StreamerService.SendWhisper(this.StreamerModel, user.PlatformID, message);
             }
             else
             {
-                await this.StreamerService.SendWhisper(this.StreamerModel, user.PlatformID, message);
+                await this.BotService.SendWhisper(this.BotModel, user.PlatformID, message);
             }
         }
 
