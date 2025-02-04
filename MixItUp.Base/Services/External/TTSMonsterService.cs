@@ -195,7 +195,7 @@ namespace MixItUp.Base.Services.External
                     client.Timeout = new TimeSpan(0, 0, 10);
 
                     JObject content = new JObject();
-                    content["data"] = JObject.FromObject(new GenerateTTSRequestModel(this.token.clientID, null /*this.token.clientSecret*/, voice, text));
+                    content["data"] = JObject.FromObject(new GenerateTTSRequestModel(this.token.clientID, this.token.accessToken, voice, text));
                     GenerateTTSResponseModel response = await client.PostAsync<GenerateTTSResponseModel>("generateTTS", AdvancedHttpClient.CreateContentFromObject(content));
                     if (response != null && response.status == 200)
                     {
