@@ -165,7 +165,10 @@ namespace MixItUp.Base.Services
 
         public Task<Result> Enable()
         {
-            ChannelSession.Settings.EnableOverlay = true;
+            if (ChannelSession.Settings != null)
+            {
+                ChannelSession.Settings.EnableOverlay = true;
+            }
             return Task.FromResult(new Result());
         }
 

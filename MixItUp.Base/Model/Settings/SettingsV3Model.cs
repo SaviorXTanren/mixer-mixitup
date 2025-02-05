@@ -1214,6 +1214,8 @@ namespace MixItUp.Base.Model.Settings
                 });
 
                 await ServiceManager.Get<OverlayV3Service>().Enable();
+
+                this.EnableOverlay = true;
             }
 
             if (this.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
