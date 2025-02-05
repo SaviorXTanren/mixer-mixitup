@@ -72,7 +72,7 @@ namespace MixItUp.Base.Services
                 {
                     actionTypes.Add(ActionTypeEnum.Sound);
                 }
-                else if (action.Type == ActionTypeEnum.Overlay || action.Type == ActionTypeEnum.PolyPop || action.Type == ActionTypeEnum.StreamingSoftware)
+                else if (action.Type == ActionTypeEnum.PolyPop || action.Type == ActionTypeEnum.StreamingSoftware || action.Type == ActionTypeEnum.MeldStudio)
                 {
                     actionTypes.Add(ActionTypeEnum.Sound);
                     actionTypes.Add(ActionTypeEnum.Overlay);
