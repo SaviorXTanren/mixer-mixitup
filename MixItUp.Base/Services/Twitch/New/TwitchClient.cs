@@ -806,7 +806,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             ChatMessageNotification messageNotification = payload.ToObject<ChatMessageNotification>();
 
-            Logger.ForceLog(LogLevel.Debug, "Twitch Chat Message Received: " + JSONSerializerHelper.SerializeToString(messageNotification));
+            Logger.Log(LogLevel.Debug, "Twitch Chat Message Received: " + JSONSerializerHelper.SerializeToString(messageNotification));
 
             UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: messageNotification.chatter_user_id);
             if (user == null)
@@ -915,7 +915,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             ChatNotification notification = payload.ToObject<ChatNotification>();
 
-            Logger.ForceLog(LogLevel.Debug, "Twitch Chat Message Received: " + JSONSerializerHelper.SerializeToString(notification));
+            Logger.Log(LogLevel.Debug, "Twitch Chat Message Received: " + JSONSerializerHelper.SerializeToString(notification));
 
             UserV2ViewModel user;
             if (notification.chatter_is_anonymous)
