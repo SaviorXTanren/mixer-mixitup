@@ -47,6 +47,7 @@ namespace MixItUp.Base.Util
         public const string ArgSpecialIdentifierHeader = "arg";
         public const string ArgDelimitedSpecialIdentifierHeader = ArgSpecialIdentifierHeader + "delimited";
         public const string StreamerSpecialIdentifierHeader = "streamer";
+        public const string BotSpecialIdentifierHeader = "bot";
         public const string TargetSpecialIdentifierHeader = "target";
 
         public const string RandomSpecialIdentifierHeader = "random";
@@ -671,6 +672,11 @@ namespace MixItUp.Base.Util
             if (this.ContainsSpecialIdentifier(StreamerSpecialIdentifierHeader))
             {
                 await this.HandleUserSpecialIdentifiers(ChannelSession.User, StreamerSpecialIdentifierHeader);
+            }
+
+            if (this.ContainsSpecialIdentifier(BotSpecialIdentifierHeader))
+            {
+                await this.HandleUserSpecialIdentifiers(ChannelSession.Bot, BotSpecialIdentifierHeader);
             }
 
             if (this.ContainsSpecialIdentifier(OverlayStreamBossV3Model.StreamBossSpecialIdentifierPrefix))

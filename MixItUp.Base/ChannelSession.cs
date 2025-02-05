@@ -50,6 +50,29 @@ namespace MixItUp.Base
             }
         }
 
+        public static UserV2ViewModel Bot
+        {
+            get
+            {
+                StreamingPlatformSessionBase session = StreamingPlatforms.GetPlatformSession(ChannelSession.Settings.DefaultStreamingPlatform);
+                if (session != null && session.IsConnected)
+                {
+                    return session.Bot;
+                }
+
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+                {
+                    session = StreamingPlatforms.GetPlatformSession(platform);
+                    if (session != null && session.IsConnected)
+                    {
+                        return session.Bot;
+                    }
+                }
+
+                return null;
+            }
+        }
+
         private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
         private static int sessionBackgroundTimer = 0;
 
