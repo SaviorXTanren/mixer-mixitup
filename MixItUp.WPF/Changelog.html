@@ -5,14 +5,17 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h2 style="color: #2e6c80;">v1.3.0.0-1.3.0.1:</h2>
+        <h2 style="color: #2e6c80;">v1.3.0.0-1.3.0.2:</h2>
         <ul>
             <li><span style="color: red;"><b><u>BREAKING CHANGES:</u></b></span></li>
             <ul>
                 <li>New authentication data is needed for all Twitch &amp; YouTube accounts. Streamer accounts will be prompted to re-authenticate to Twitch &amp; YouTube when logging in, while bot accounts for Twitch &amp; YouTube will need to be manually re-connected on the Accounts page</li>
                 <li>Due to changes with Twitch's new APIs and the up-coming shutdown of their old APIs, some functionality in Mix It Up that Twitch has not migrated to the new APIs yet will become unsupported until they have added them back. Below is a list of features that are no longer usable:</li>
-                <li>Twitch Channel Watch Streak event command is now disabled as user watch streak notifications are not sent out via the new Twitch APIs</li>
-                <li>$usersubplanname Special Identifier for Twitch subscription-based event commands will no longer be the customized name of a channel's sub plan and instead will be the standard name (EX: Tier 1) as the new Twitch APIs do not include that information</li>
+                <ul>
+                    <li>Twitch Channel Watch Streak event command is now disabled as user watch streak notifications are not sent out via the new Twitch APIs</li>
+                    <li>$usersubplanname Special Identifier for Twitch subscription-based event commands will no longer be the customized name of a channel's sub plan and instead will be the standard name (EX: Tier 1) as the new Twitch APIs do not include that information</li>
+                    <li>Changes to how Twitch bot accounts send messages &amp; whispers in chat no longer require an active connection to your channel, which also means bot accounts no longer process <b>UNIQUE</b> data sent to them. The only feature this applied to was processing whispers sent directly to bot accounts, which is now currently not supported. If there is enough demand for this feature, we will investigate adding support for it in the future.</li>
+                </ul>
             </ul>
             <li>Large-scale restructure and improvements to general Streaming Platform connectivity, allowing for easier connection &amp; disconnection of streaming platforms</li>
             <li>New Twitch features:</li>
@@ -31,6 +34,8 @@
                 <li>The Meld Studio action allows you control functionality within Meld Studio such as changing scenes, showing/hiding layers &amp; effects, and more</li>
                 <li>Meld Studio can be connected to by visiting the Services page of Mix It Up</li>
             </ul>
+            <li>Fixing bug with Text to Speech actions not working correctly when used with TTS.Monster</li>
+            <li>Fixing bug with $streamgameimage not properly working for Twitch accounts</li>
             <li>Fixing bug with chat messages &amp; whispers not working correctly in some cases when a bot account is signed in. This requires users to re-connect their bot account manually on the Accounts page.</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
