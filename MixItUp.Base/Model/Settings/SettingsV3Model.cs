@@ -107,6 +107,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel PixelChatOAuthToken { get; set; }
         [DataMember]
+        [Obsolete]
         public OAuthTokenModel VTubeStudioOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel InfiniteAlbumOAuthToken { get; set; }
@@ -548,7 +549,9 @@ namespace MixItUp.Base.Model.Settings
         public List<SerialDeviceModel> SerialDevices { get; set; } = new List<SerialDeviceModel>();
 
         [DataMember]
-        public int VTubeStudioPortNumber { get; set; } = VTubeStudioService.DefaultPortNumber;
+        public int VTubeStudioPortNumber { get; set; }
+        [DataMember]
+        public Dictionary<Guid, VTubeStudioConnectionModel> VTubeStudioConnections { get; set; } = new Dictionary<Guid, VTubeStudioConnectionModel>();
 
         [DataMember]
         public int TITSPortNumber { get; set; } = TITSService.DefaultPortNumber;

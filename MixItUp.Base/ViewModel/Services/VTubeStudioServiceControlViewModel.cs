@@ -7,6 +7,8 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class VTubeStudioServiceControlViewModel : ServiceControlViewModelBase
     {
+        public const string DefaultConnectionAddress = "ws://localhost:8001";
+
         public int PortNumber
         {
             get { return this.portNumber; }
