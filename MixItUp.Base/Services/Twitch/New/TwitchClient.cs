@@ -908,7 +908,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(messageDeleted));
             }
 
-            await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(messageDeleted, user), externalDeletion: true);
+            await ServiceManager.Get<ChatService>().DeleteMessage(messageDeleted.message_id);
         }
 
         private async Task HandleChatNotification(JObject payload)
@@ -1125,7 +1125,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 {
                     user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(moderation.delete));
                 }
-                await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(moderation.delete, user), externalDeletion: true);
+                await ServiceManager.Get<ChatService>().DeleteMessage(moderation.delete.message_id);
             }
             else if (moderation.ActionType == ModerationNotificationActionType.timeout)
             {
