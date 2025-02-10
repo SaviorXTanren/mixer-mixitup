@@ -369,18 +369,30 @@ namespace MixItUp.Installer
                 url = "https://api.mixitupapp.com/api/updates/test";
             }
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.Timeout = new TimeSpan(0, 0, 5);
-
-                HttpResponseMessage response = await client.GetAsync(url);
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    string responseString = await response.Content.ReadAsStringAsync();
-                    JObject jobj = JObject.Parse(responseString);
-                    return jobj.ToObject<MixItUpUpdateModel>();
+                    client.Timeout = new TimeSpan(0, 0, 5);
+
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseString = await response.Content.ReadAsStringAsync();
+                        JObject jobj = JObject.Parse(responseString);
+                        return jobj.ToObject<MixItUpUpdateModel>();
+                    }
+                    else
+                    {
+                        this.WriteToLogFile($"{url} - {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                this.WriteToLogFile(ex.ToString());
+            }
+
             return null;
         }
 
@@ -402,7 +414,6 @@ namespace MixItUp.Installer
 
             string url = $"https://raw.githubusercontent.com/mixitupapp/mixitupdesktop-data/main/Updates/{type}.json";
 
-            Exception updateException = null;
             for (int i = 0; i < 3; i++)
             {
                 try
@@ -422,17 +433,16 @@ namespace MixItUp.Installer
                                 return new MixItUpUpdateModel(update);
                             }
                         }
+                        else
+                        {
+                            this.WriteToLogFile($"{url} - {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    updateException = ex;
+                    this.WriteToLogFile(ex.ToString());
                 }
-            }
-
-            if (updateException != null)
-            {
-                throw updateException;
             }
 
             return null;
