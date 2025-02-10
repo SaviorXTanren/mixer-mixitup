@@ -205,6 +205,9 @@ namespace MixItUp.Base.Model.Currency
         public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
 
         [JsonIgnore]
+        public string UserUniqueItemsTotalSpecialIdentifier { get { return string.Format("{0}uniqueitemstotal", this.UserAmountSpecialIdentifierHeader); } }
+
+        [JsonIgnore]
         public CommandModelBase ItemsBoughtCommand
         {
             get { return ChannelSession.Settings.GetCommand(this.ItemsBoughtCommandID); }

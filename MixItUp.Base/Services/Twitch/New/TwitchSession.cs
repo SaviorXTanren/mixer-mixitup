@@ -692,7 +692,7 @@ namespace MixItUp.Base.Services.Twitch.New
         private async Task ProcessGiftedSub(TwitchSubcriptionEventModel giftedSubEvent, bool fireEventCommand = true)
         {
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftedSubEvent.User.ID;
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.Duration;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.Cumulative;
 
             giftedSubEvent.User.Roles.Add(UserRoleEnum.Subscriber);
             giftedSubEvent.User.SubscribeDate = DateTimeOffset.Now;

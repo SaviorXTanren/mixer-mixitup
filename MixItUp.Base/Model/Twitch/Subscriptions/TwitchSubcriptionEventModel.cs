@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Twitch.EventSub;
 using MixItUp.Base.Services.Twitch.New;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using System;
 
@@ -17,7 +18,7 @@ namespace MixItUp.Base.Model.Twitch.Subscriptions
 
         public string PlanName { get; set; }
 
-        public string Message { get; set; } = string.Empty;
+        public TwitchChatMessageViewModel Message { get; set; }
 
         public int Duration { get; set; }
         public int Streak { get; set; }
@@ -38,6 +39,8 @@ namespace MixItUp.Base.Model.Twitch.Subscriptions
         {
             this.User = user;
             this.Gifter = gifter;
+
+            this.Message = new TwitchChatMessageViewModel(notification, user);
 
             if (notification.NoticeType == ChatNotificationType.sub)
             {

@@ -231,14 +231,14 @@ namespace MixItUp.Base.Services
             if (!message.IsDeleted)
             {
                 await message.Delete();
-            }
 
-            if (ChannelSession.Settings.HideDeletedMessages)
-            {
-                await this.RemoveMessage(message);
-            }
+                if (ChannelSession.Settings.HideDeletedMessages)
+                {
+                    await this.RemoveMessage(message);
+                }
 
-            ChatService.ChatMessageDeleted(message.ID);
+                ChatService.ChatMessageDeleted(message.ID);
+            }
         }
 
         public async Task MarkUserMessagesAsDeleted(UserV2ViewModel user, UserV2ViewModel moderator = null, string reason = null)

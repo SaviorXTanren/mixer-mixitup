@@ -131,7 +131,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 {
                     if (this.eventSubSubscriptionsConnected)
                     {
-                        ChannelSession.ReconnectionOccurred(Resources.TwitchUserChat);
+                        ChannelSession.ReconnectionOccurred(Resources.TwitchClient);
 
                         return new Result();
                     }
@@ -908,7 +908,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(messageDeleted));
             }
 
-            await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(messageDeleted, user), externalDeletion: true);
+            await ServiceManager.Get<ChatService>().DeleteMessage(messageDeleted.message_id);
         }
 
         private async Task HandleChatNotification(JObject payload)
@@ -1125,7 +1125,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 {
                     user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(moderation.delete));
                 }
-                await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(moderation.delete, user), externalDeletion: true);
+                await ServiceManager.Get<ChatService>().DeleteMessage(moderation.delete.message_id);
             }
             else if (moderation.ActionType == ModerationNotificationActionType.timeout)
             {
@@ -1183,18 +1183,18 @@ namespace MixItUp.Base.Services.Twitch.New
             if (subscription.Duration > 0)
             {
                 subscription.User.Roles.Add(UserRoleEnum.Subscriber);
-                subscription.User.SubscribeDate = DateTimeOffset.Now.SubtractMonths(subscription.Duration - 1);
+                subscription.User.SubscribeDate = DateTimeOffset.Now.SubtractMonths(subscription.Cumulative - 1);
                 subscription.User.SubscriberTier = subscription.Tier;
 
-                CommandParametersModel parameters = new CommandParametersModel(subscription.User, new List<string>(subscription.Message.Split(new char[] { ' ' })));
-                parameters.SpecialIdentifiers["message"] = subscription.Message;
-                parameters.SpecialIdentifiers["usersubmonths"] = subscription.Duration.ToString();
+                CommandParametersModel parameters = new CommandParametersModel(subscription.User, subscription.Message.ToArguments());
+                parameters.SpecialIdentifiers["message"] = subscription.Message.PlainTextMessage;
+                parameters.SpecialIdentifiers["usersubmonths"] = subscription.Cumulative.ToString();
                 parameters.SpecialIdentifiers["usersubplanname"] = subscription.TierName;
                 parameters.SpecialIdentifiers["usersubplan"] = subscription.TierName;
                 parameters.SpecialIdentifiers["usersubpoints"] = subscription.SubPoints.ToString();
                 parameters.SpecialIdentifiers["usersubstreak"] = subscription.Streak.ToString();
 
-                string moderation = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(subscription.User, subscription.Message);
+                string moderation = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(subscription.User, subscription.Message.PlainTextMessage);
                 if (!string.IsNullOrEmpty(moderation))
                 {
                     parameters.SpecialIdentifiers["message"] = moderation;
@@ -1203,11 +1203,11 @@ namespace MixItUp.Base.Services.Twitch.New
                 if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelResubscribed, parameters))
                 {
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = subscription.User.ID;
-                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subscription.Duration;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subscription.Cumulative;
 
-                    if (subscription.Duration >= subscription.User.TotalMonthsSubbed)
+                    if (subscription.Cumulative >= subscription.User.TotalMonthsSubbed)
                     {
-                        subscription.User.TotalMonthsSubbed = subscription.Duration;
+                        subscription.User.TotalMonthsSubbed = subscription.Cumulative;
                     }
                     else
                     {
@@ -1228,8 +1228,8 @@ namespace MixItUp.Base.Services.Twitch.New
                     }
                 }
 
-                EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, subscription.User, months: subscription.Duration, tier: subscription.Tier));
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subscription.User, string.Format(MixItUp.Base.Resources.AlertResubscribedTier, subscription.User.FullDisplayName, subscription.Duration, subscription.TierName), ChannelSession.Settings.AlertSubColor));
+                EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, subscription.User, months: subscription.Cumulative, tier: subscription.Tier));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subscription.User, string.Format(MixItUp.Base.Resources.AlertResubscribedTier, subscription.User.FullDisplayName, subscription.Cumulative, subscription.TierName), ChannelSession.Settings.AlertSubColor));
             }
             else
             {
@@ -1248,7 +1248,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 subscription.User.SubscribeDate = DateTimeOffset.Now;
                 subscription.User.SubscriberTier = subscription.Tier;
 
-                parameters.SpecialIdentifiers["message"] = subscription.Message;
+                parameters.SpecialIdentifiers["message"] = subscription.Message.PlainTextMessage;
                 parameters.SpecialIdentifiers["usersubplanname"] = subscription.PlanName;
                 parameters.SpecialIdentifiers["usersubplan"] = subscription.TierName;
                 parameters.SpecialIdentifiers["usersubpoints"] = subscription.SubPoints.ToString();
@@ -1348,7 +1348,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private void WebSocket_Disconnected(object sender, WebSocketCloseStatus closeStatus)
         {
-            ChannelSession.DisconnectionOccurred(Resources.TwitchUserChat);
+            ChannelSession.DisconnectionOccurred(Resources.TwitchClient);
 
             Task.Run(this.Reconnect);
         }
