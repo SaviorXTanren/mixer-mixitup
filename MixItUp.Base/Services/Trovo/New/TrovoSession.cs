@@ -91,7 +91,7 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        protected override async Task<Result> InitializeStreamerInternal()
+        protected override async Task<Result> InitializeStreamerInternal(CancellationToken cancellationToken)
         {
             this.StreamerModel = await this.StreamerService.GetCurrentUser();
             if (this.StreamerModel == null)
@@ -119,7 +119,7 @@ namespace MixItUp.Base.Services.Trovo.New
             }
             this.Client.ChatToken = chatToken;
 
-            Result result = await this.Client.Connect();
+            Result result = await this.Client.Connect(cancellationToken);
             if (!result.Success)
             {
                 await this.Client.Disconnect();
@@ -151,7 +151,7 @@ namespace MixItUp.Base.Services.Trovo.New
             }
         }
 
-        protected override async Task<Result> InitializeBotInternal()
+        protected override async Task<Result> InitializeBotInternal(CancellationToken cancellationToken)
         {
             this.BotModel = await this.BotService.GetCurrentUser();
             if (this.BotModel == null)

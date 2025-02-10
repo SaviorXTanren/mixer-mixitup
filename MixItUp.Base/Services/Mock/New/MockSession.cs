@@ -25,7 +25,7 @@ namespace MixItUp.Base.Services.Mock.New
 
         private List<ChatMessageViewModel> messages = new List<ChatMessageViewModel>();
 
-        protected override Task<Result> InitializeStreamerInternal()
+        protected override Task<Result> InitializeStreamerInternal(CancellationToken cancellationToken)
         {
             this.StreamerID = "0";
             this.StreamerUsername = "Streamer";
@@ -43,7 +43,7 @@ namespace MixItUp.Base.Services.Mock.New
             return Task.CompletedTask;
         }
 
-        protected override Task<Result> InitializeBotInternal()
+        protected override Task<Result> InitializeBotInternal(CancellationToken cancellationToken)
         {
             this.BotID = "1";
             this.BotUsername = "Bot";

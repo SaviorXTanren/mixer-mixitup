@@ -51,7 +51,7 @@ namespace MixItUp.Base.Services.Trovo.New
             this.webSocket.Disconnected += WebSocket_Disconnected;
         }
 
-        public override async Task<Result> Connect()
+        public override async Task<Result> Connect(CancellationToken cancellationToken)
         {
             processMessages = false;
 
@@ -60,7 +60,7 @@ namespace MixItUp.Base.Services.Trovo.New
                 return new Result("No chat token set for Trovo client");
             }
 
-            if (await this.webSocket.Connect(TrovoChatConnectionURL, CancellationToken.None))
+            if (await this.webSocket.Connect(TrovoChatConnectionURL, cancellationToken))
             {
                 ChatPacketModel authReply = await SendAndListen(new ChatPacketModel("AUTH", new JObject() { { "token", this.ChatToken } }));
                 if (authReply != null && string.IsNullOrEmpty(authReply.error))
@@ -72,7 +72,7 @@ namespace MixItUp.Base.Services.Trovo.New
 
                     AsyncRunner.RunAsyncBackground(ChatterJoinLeaveBackground, cancellationTokenSource.Token, 60000);
 
-                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                    AsyncRunner.RunAsyncBackground(async (ct) =>
                     {
                         await Task.Delay(2000);
                         processMessages = true;

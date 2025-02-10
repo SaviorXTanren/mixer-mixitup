@@ -121,9 +121,9 @@ namespace MixItUp.Base.Services.Twitch.New
             this.webSocket.Disconnected += WebSocket_Disconnected;
         }
 
-        public override async Task<Result> Connect()
+        public override async Task<Result> Connect(CancellationToken cancellationToken)
         {
-            if (await this.webSocket.Connect(TwitchEventSubConnectionURL, CancellationToken.None))
+            if (await this.webSocket.Connect(TwitchEventSubConnectionURL, cancellationToken))
             {
                 await Task.Delay(2500);
 

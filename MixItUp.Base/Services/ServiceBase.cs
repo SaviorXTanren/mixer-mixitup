@@ -317,7 +317,7 @@ namespace MixItUp.Base.Services
                 Result result = await this.StreamerOAuthService.AutomaticConnect();
                 if (result.Success)
                 {
-                    return await this.InitializeStreamer();
+                    return await this.InitializeStreamer(CancellationToken.None);
                 }
                 return result;
             }
@@ -335,7 +335,7 @@ namespace MixItUp.Base.Services
                 Result result = await this.StreamerOAuthService.ManualConnect(cancellationToken);
                 if (!cancellationToken.IsCancellationRequested && result.Success)
                 {
-                    return await this.InitializeStreamer();
+                    return await this.InitializeStreamer(cancellationToken);
                 }
                 return result;
             }
@@ -353,7 +353,7 @@ namespace MixItUp.Base.Services
                 Result result = await this.StreamerOAuthService.ManualConnectWithTimeout();
                 if (result.Success)
                 {
-                    return await this.InitializeStreamer();
+                    return await this.InitializeStreamer(CancellationToken.None);
                 }
                 return result;
             }
@@ -364,9 +364,9 @@ namespace MixItUp.Base.Services
             }
         }
 
-        protected async Task<Result> InitializeStreamer()
+        protected async Task<Result> InitializeStreamer(CancellationToken cancellationToken)
         {
-            Result result = await this.InitializeStreamerInternal();
+            Result result = await this.InitializeStreamerInternal(cancellationToken);
 
             if (result.Success)
             {
@@ -423,7 +423,7 @@ namespace MixItUp.Base.Services
             this.StreamViewerCount = 0;
         }
 
-        protected abstract Task<Result> InitializeStreamerInternal();
+        protected abstract Task<Result> InitializeStreamerInternal(CancellationToken cancellationToken);
         protected abstract Task DisconnectStreamerInternal();
 
         public async Task<Result> AutomaticConnectBot()
@@ -433,7 +433,7 @@ namespace MixItUp.Base.Services
                 Result result = await this.BotOAuthService.AutomaticConnect();
                 if (result.Success)
                 {
-                    return await this.InitializeBot();
+                    return await this.InitializeBot(CancellationToken.None);
                 }
                 return result;
             }
@@ -451,7 +451,7 @@ namespace MixItUp.Base.Services
                 Result result = await this.BotOAuthService.ManualConnect(cancellationToken);
                 if (!cancellationToken.IsCancellationRequested && result.Success)
                 {
-                    return await this.InitializeBot();
+                    return await this.InitializeBot(cancellationToken);
                 }
                 return result;
             }
@@ -462,9 +462,9 @@ namespace MixItUp.Base.Services
             }
         }
 
-        protected async Task<Result> InitializeBot()
+        protected async Task<Result> InitializeBot(CancellationToken cancellationToken)
         {
-            Result result = await this.InitializeBotInternal();
+            Result result = await this.InitializeBotInternal(cancellationToken);
 
             this.IsBotConnected = result.Success;
             if (result.Success)
@@ -505,7 +505,7 @@ namespace MixItUp.Base.Services
             this.BotAvatarURL = null;
         }
 
-        protected abstract Task<Result> InitializeBotInternal();
+        protected abstract Task<Result> InitializeBotInternal(CancellationToken cancellationToken);
         protected abstract Task DisconnectBotInternal();
 
         public abstract Task RefreshOAuthTokenIfCloseToExpiring();
@@ -581,7 +581,7 @@ namespace MixItUp.Base.Services
 
         protected SemaphoreSlim reconnectSemaphore = new SemaphoreSlim(1);
 
-        public abstract Task<Result> Connect();
+        public abstract Task<Result> Connect(CancellationToken cancellationToken);
 
         public abstract Task Disconnect();
 
@@ -597,7 +597,7 @@ namespace MixItUp.Base.Services
                 {
                     await Task.Delay(2000);
 
-                    Result result = await this.Connect();
+                    Result result = await this.Connect(CancellationToken.None);
                     if (!result.Success)
                     {
                         await this.Disconnect();

@@ -155,7 +155,7 @@ namespace MixItUp.Base.Services.YouTube.New
 
         private HashSet<string> messageIDsToIgnore = new HashSet<string>();
 
-        protected override async Task<Result> InitializeStreamerInternal()
+        protected override async Task<Result> InitializeStreamerInternal(CancellationToken cancellationToken)
         {
             this.StreamerModel = await this.StreamerService.GetCurrentChannel();
             if (this.StreamerModel == null)
@@ -214,7 +214,7 @@ namespace MixItUp.Base.Services.YouTube.New
             return Task.CompletedTask;
         }
 
-        protected override async Task<Result> InitializeBotInternal()
+        protected override async Task<Result> InitializeBotInternal(CancellationToken cancellationToken)
         {
             this.BotModel = await this.BotService.GetCurrentChannel();
             if (this.BotModel == null)

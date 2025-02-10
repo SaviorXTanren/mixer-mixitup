@@ -152,7 +152,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private CancellationTokenSource cancellationTokenSource;
 
-        protected override async Task<Result> InitializeStreamerInternal()
+        protected override async Task<Result> InitializeStreamerInternal(CancellationToken cancellationToken)
         {
             this.StreamerModel = await this.StreamerService.GetNewAPICurrentUser();
             if (this.StreamerModel == null)
@@ -179,7 +179,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 this.Streamer = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(this.StreamerModel));
             }
 
-            Result result = await this.Client.Connect();
+            Result result = await this.Client.Connect(cancellationToken);
             if (!result.Success)
             {
                 await Client.Disconnect();
@@ -303,7 +303,7 @@ namespace MixItUp.Base.Services.Twitch.New
             await this.Client.Disconnect();
         }
 
-        protected override async Task<Result> InitializeBotInternal()
+        protected override async Task<Result> InitializeBotInternal(CancellationToken cancellationToken)
         {
             this.BotModel = await this.BotService.GetNewAPICurrentUser();
             if (this.BotModel == null)
