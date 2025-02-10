@@ -11001,4 +11001,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="NewAuthorizationScopesRequired" xml:space="preserve">
     <value>New authorization scopes are required and the service must be re-connected manually</value>
   </data>
+  <data name="TwitchClient" xml:space="preserve">
+    <value>Twitch Client</value>
+  </data>
 </root>

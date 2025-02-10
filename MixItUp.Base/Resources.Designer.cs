@@ -25362,6 +25362,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Client.
+        /// </summary>
+        public static string TwitchClient {
+            get {
+                return ResourceManager.GetString("TwitchClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Clip.
         /// </summary>
         public static string TwitchClip {

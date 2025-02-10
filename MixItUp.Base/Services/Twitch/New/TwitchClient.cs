@@ -131,7 +131,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 {
                     if (this.eventSubSubscriptionsConnected)
                     {
-                        ChannelSession.ReconnectionOccurred(Resources.TwitchUserChat);
+                        ChannelSession.ReconnectionOccurred(Resources.TwitchClient);
 
                         return new Result();
                     }
@@ -1348,7 +1348,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private void WebSocket_Disconnected(object sender, WebSocketCloseStatus closeStatus)
         {
-            ChannelSession.DisconnectionOccurred(Resources.TwitchUserChat);
+            ChannelSession.DisconnectionOccurred(Resources.TwitchClient);
 
             Task.Run(this.Reconnect);
         }
