@@ -949,10 +949,6 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.PixelChatOAuthToken = ServiceManager.Get<PixelChatService>().GetOAuthTokenCopy();
             }
-            if (ServiceManager.Get<VTubeStudioService>().IsConnected)
-            {
-                this.VTubeStudioOAuthToken = ServiceManager.Get<VTubeStudioService>().GetOAuthTokenCopy();
-            }
             if (ServiceManager.Get<InfiniteAlbumService>().IsConnected)
             {
                 this.InfiniteAlbumOAuthToken = ServiceManager.Get<InfiniteAlbumService>().GetOAuthTokenCopy();

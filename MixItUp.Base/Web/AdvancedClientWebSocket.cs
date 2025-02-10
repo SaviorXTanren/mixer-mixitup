@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Util;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.WebSockets;
@@ -16,8 +15,6 @@ namespace MixItUp.Base.Web
         /// The base buffer size for websocket buffers.
         /// </summary>
         protected const int BUFFER_SIZE = 1000000;
-
-        public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Invoked when a packet is sent.
