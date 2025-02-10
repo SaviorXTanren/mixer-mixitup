@@ -48,12 +48,15 @@ namespace MixItUp.Base.Services
                 if (action.Type == ActionTypeEnum.Command)
                 {
                     CommandActionModel commandAction = (CommandActionModel)action;
-                    CommandModelBase subCommand = ChannelSession.Settings.GetCommand(commandAction.CommandID);
-                    if (subCommand != null)
+                    if (commandAction.WaitForCommandToFinish)
                     {
-                        foreach (ActionTypeEnum subActionType in subCommand.GetActionTypesInCommand(commandIDs))
+                        CommandModelBase subCommand = ChannelSession.Settings.GetCommand(commandAction.CommandID);
+                        if (subCommand != null)
                         {
-                            actionTypes.Add(subActionType);
+                            foreach (ActionTypeEnum subActionType in subCommand.GetActionTypesInCommand(commandIDs))
+                            {
+                                actionTypes.Add(subActionType);
+                            }
                         }
                     }
                 }
