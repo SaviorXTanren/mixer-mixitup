@@ -229,6 +229,8 @@ namespace MixItUp.Installer
             {
                 try
                 {
+                    File.Delete(InstallerLogFileName);
+
                     if (!this.IsUpdate || await this.WaitForMixItUpToClose())
                     {
                         MixItUpUpdateModel update = await this.GetUpdateData();
@@ -611,7 +613,7 @@ namespace MixItUp.Installer
 
         private void WriteToLogFile(string text)
         {
-            File.WriteAllText(InstallerLogFileName, text);
+            File.AppendAllText(InstallerLogFileName, text + Environment.NewLine + Environment.NewLine);
         }
     }
 }
