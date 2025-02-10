@@ -1186,15 +1186,15 @@ namespace MixItUp.Base.Services.Twitch.New
                 subscription.User.SubscribeDate = DateTimeOffset.Now.SubtractMonths(subscription.Cumulative - 1);
                 subscription.User.SubscriberTier = subscription.Tier;
 
-                CommandParametersModel parameters = new CommandParametersModel(subscription.User, new List<string>(subscription.Message.Split(new char[] { ' ' })));
-                parameters.SpecialIdentifiers["message"] = subscription.Message;
+                CommandParametersModel parameters = new CommandParametersModel(subscription.User, subscription.Message.ToArguments());
+                parameters.SpecialIdentifiers["message"] = subscription.Message.PlainTextMessage;
                 parameters.SpecialIdentifiers["usersubmonths"] = subscription.Cumulative.ToString();
                 parameters.SpecialIdentifiers["usersubplanname"] = subscription.TierName;
                 parameters.SpecialIdentifiers["usersubplan"] = subscription.TierName;
                 parameters.SpecialIdentifiers["usersubpoints"] = subscription.SubPoints.ToString();
                 parameters.SpecialIdentifiers["usersubstreak"] = subscription.Streak.ToString();
 
-                string moderation = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(subscription.User, subscription.Message);
+                string moderation = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(subscription.User, subscription.Message.PlainTextMessage);
                 if (!string.IsNullOrEmpty(moderation))
                 {
                     parameters.SpecialIdentifiers["message"] = moderation;
@@ -1248,7 +1248,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 subscription.User.SubscribeDate = DateTimeOffset.Now;
                 subscription.User.SubscriberTier = subscription.Tier;
 
-                parameters.SpecialIdentifiers["message"] = subscription.Message;
+                parameters.SpecialIdentifiers["message"] = subscription.Message.PlainTextMessage;
                 parameters.SpecialIdentifiers["usersubplanname"] = subscription.PlanName;
                 parameters.SpecialIdentifiers["usersubplan"] = subscription.TierName;
                 parameters.SpecialIdentifiers["usersubpoints"] = subscription.SubPoints.ToString();
