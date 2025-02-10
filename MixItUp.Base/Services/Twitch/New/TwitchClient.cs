@@ -1183,12 +1183,12 @@ namespace MixItUp.Base.Services.Twitch.New
             if (subscription.Duration > 0)
             {
                 subscription.User.Roles.Add(UserRoleEnum.Subscriber);
-                subscription.User.SubscribeDate = DateTimeOffset.Now.SubtractMonths(subscription.Duration - 1);
+                subscription.User.SubscribeDate = DateTimeOffset.Now.SubtractMonths(subscription.Cumulative - 1);
                 subscription.User.SubscriberTier = subscription.Tier;
 
                 CommandParametersModel parameters = new CommandParametersModel(subscription.User, new List<string>(subscription.Message.Split(new char[] { ' ' })));
                 parameters.SpecialIdentifiers["message"] = subscription.Message;
-                parameters.SpecialIdentifiers["usersubmonths"] = subscription.Duration.ToString();
+                parameters.SpecialIdentifiers["usersubmonths"] = subscription.Cumulative.ToString();
                 parameters.SpecialIdentifiers["usersubplanname"] = subscription.TierName;
                 parameters.SpecialIdentifiers["usersubplan"] = subscription.TierName;
                 parameters.SpecialIdentifiers["usersubpoints"] = subscription.SubPoints.ToString();
@@ -1203,11 +1203,11 @@ namespace MixItUp.Base.Services.Twitch.New
                 if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelResubscribed, parameters))
                 {
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = subscription.User.ID;
-                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subscription.Duration;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subscription.Cumulative;
 
-                    if (subscription.Duration >= subscription.User.TotalMonthsSubbed)
+                    if (subscription.Cumulative >= subscription.User.TotalMonthsSubbed)
                     {
-                        subscription.User.TotalMonthsSubbed = subscription.Duration;
+                        subscription.User.TotalMonthsSubbed = subscription.Cumulative;
                     }
                     else
                     {
@@ -1228,8 +1228,8 @@ namespace MixItUp.Base.Services.Twitch.New
                     }
                 }
 
-                EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, subscription.User, months: subscription.Duration, tier: subscription.Tier));
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subscription.User, string.Format(MixItUp.Base.Resources.AlertResubscribedTier, subscription.User.FullDisplayName, subscription.Duration, subscription.TierName), ChannelSession.Settings.AlertSubColor));
+                EventService.ResubscribeOccurred(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, subscription.User, months: subscription.Cumulative, tier: subscription.Tier));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subscription.User, string.Format(MixItUp.Base.Resources.AlertResubscribedTier, subscription.User.FullDisplayName, subscription.Cumulative, subscription.TierName), ChannelSession.Settings.AlertSubColor));
             }
             else
             {
