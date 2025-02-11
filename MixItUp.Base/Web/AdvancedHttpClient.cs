@@ -183,7 +183,7 @@ namespace MixItUp.Base.Web
         /// <returns>A response message of the request</returns>
         public async Task<HttpResponseMessage> HeadAsync(string requestUri)
         {
-            this.LogRequest(requestUri);
+            this.LogRequest("HEAD", requestUri);
             DateTimeOffset callStart = DateTimeOffset.Now;
             HttpResponseMessage response = await base.SendAsync(new HttpRequestMessage(HttpMethod.Head, requestUri));
             response.AddCallTimeHeaders(callStart, DateTimeOffset.Now);
@@ -198,7 +198,7 @@ namespace MixItUp.Base.Web
         /// <returns>A response message of the request</returns>
         public new async Task<HttpResponseMessage> GetAsync(string requestUri)
         {
-            this.LogRequest(requestUri);
+            this.LogRequest("GET", requestUri);
             DateTimeOffset callStart = DateTimeOffset.Now;
             HttpResponseMessage response = await base.GetAsync(requestUri);
             response.AddCallTimeHeaders(callStart, DateTimeOffset.Now);
@@ -265,7 +265,7 @@ namespace MixItUp.Base.Web
         /// <returns>A response message of the request</returns>
         public new async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content)
         {
-            this.LogRequest(requestUri, content);
+            this.LogRequest("PUT", requestUri, content);
             DateTimeOffset callStart = DateTimeOffset.Now;
             HttpResponseMessage response = await base.PostAsync(requestUri, content);
             response.AddCallTimeHeaders(callStart, DateTimeOffset.Now);
@@ -318,7 +318,7 @@ namespace MixItUp.Base.Web
         /// <returns>A response message of the request</returns>
         public new async Task<HttpResponseMessage> PutAsync(string requestUri, HttpContent content)
         {
-            this.LogRequest(requestUri, content);
+            this.LogRequest("PUT", requestUri, content);
             DateTimeOffset callStart = DateTimeOffset.Now;
             HttpResponseMessage response = await base.PutAsync(requestUri, content);
             response.AddCallTimeHeaders(callStart, DateTimeOffset.Now);
@@ -347,7 +347,7 @@ namespace MixItUp.Base.Web
         {
             HttpMethod method = new HttpMethod("PATCH");
             HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = content };
-            this.LogRequest(requestUri, content);
+            this.LogRequest("PATCH", requestUri, content);
             DateTimeOffset callStart = DateTimeOffset.Now;
             HttpResponseMessage response = await base.SendAsync(request);
             response.AddCallTimeHeaders(callStart, DateTimeOffset.Now);
@@ -398,7 +398,7 @@ namespace MixItUp.Base.Web
         /// <returns>A response message of the request</returns>
         public async Task<HttpResponseMessage> DeleteAsyncWithResponse(string requestUri, HttpContent content = null)
         {
-            this.LogRequest(requestUri);
+            this.LogRequest("DELETE", requestUri, content);
             if (content != null)
             {
                 HttpMethod method = new HttpMethod("DELETE");
@@ -446,19 +446,19 @@ namespace MixItUp.Base.Web
             this.DefaultRequestHeaders.Authorization = null;
         }
 
-        private void LogRequest(string requestUri, HttpContent content = null)
+        private void LogRequest(string method, string requestUri, HttpContent content = null)
         {
             if (content != null)
             {
                 try
                 {
-                    Logger.Log(LogLevel.Debug, string.Format("Rest API Request Sent: {0} - {1}", requestUri, content.ReadAsStringAsync().Result));
+                    Logger.Log(LogLevel.Debug, string.Format("Rest API Request Sent: {0} - {1} - {2}", method, requestUri, content.ReadAsStringAsync().Result));
                 }
                 catch (Exception) { }
             }
             else
             {
-                Logger.Log(LogLevel.Debug, string.Format("Rest API Request Sent: {0}", requestUri));
+                Logger.Log(LogLevel.Debug, string.Format("Rest API Request Sent: {0} - {1}", method, requestUri));
             }
         }
 
