@@ -42,10 +42,7 @@ namespace MixItUp.Base.Services.External
                 PulsoidHeartRate packet = JSONSerializerHelper.DeserializeFromString<PulsoidHeartRate>(packetJSON);
                 if (packet != null)
                 {
-                    if (ChannelSession.IsDebug())
-                    {
-                        Logger.Log("Pulsoid Service - Heart Rate Received: " + JSONSerializerHelper.SerializeToString(packet.data));
-                    }
+                    Logger.Log("Pulsoid Service - Heart Rate Received: " + JSONSerializerHelper.SerializeToString(packet.data));
 
                     if (ChannelSession.Settings.PulsoidCommandHeartRateRangeTriggers.Count > 0 && this.LastHeartRate != null)
                     {

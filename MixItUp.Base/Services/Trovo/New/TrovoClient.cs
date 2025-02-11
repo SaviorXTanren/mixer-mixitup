@@ -206,10 +206,7 @@ namespace MixItUp.Base.Services.Trovo.New
 
         private async void UserWebSocket_PacketReceived(object sender, string packet)
         {
-            if (ChannelSession.IsDebug())
-            {
-                Logger.Log(LogLevel.Debug, "Trovo Chat Packet Received: " + packet);
-            }
+            Logger.Log(LogLevel.Debug, "Trovo Chat Packet Received: " + packet);
 
             ChatPacketModel response = JSONSerializerHelper.DeserializeFromString<ChatPacketModel>(packet);
             if (response != null && !string.IsNullOrEmpty(response.type))
