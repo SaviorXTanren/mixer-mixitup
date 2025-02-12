@@ -151,7 +151,7 @@ namespace MixItUp.Base.Services.YouTube.New
         private DateTime launchDateTime = DateTime.Now;
 
         private SearchResult latestNonStreamVideo;
-        private SearchResult latestShort;
+        private Video latestShort;
 
         private HashSet<string> messageIDsToIgnore = new HashSet<string>();
 
@@ -420,7 +420,7 @@ namespace MixItUp.Base.Services.YouTube.New
         {
             if (this.latestNonStreamVideo == null)
             {
-                IEnumerable<SearchResult> searchResults = await this.StreamerService.GetLatestVideos(this.ChannelID);
+                IEnumerable<SearchResult> searchResults = await this.StreamerService.GetLatestVideos(this.ChannelID, maxResults: 100);
 
                 HashSet<string> broadcastIDs = new HashSet<string>();
                 foreach (LiveBroadcast broadcast in await this.StreamerService.GetLatestBroadcasts())
@@ -428,9 +428,11 @@ namespace MixItUp.Base.Services.YouTube.New
                     broadcastIDs.Add(broadcast.Id);
                 }
 
+                IEnumerable<string> shortIDs = await this.StreamerService.GetLatestShortIDs(this.ChannelID);
+
                 foreach (SearchResult searchResult in searchResults)
                 {
-                    if (!broadcastIDs.Contains(searchResult.Id.VideoId) && !await this.StreamerService.IsVideoShort(searchResult.Id.VideoId))
+                    if (!broadcastIDs.Contains(searchResult.Id.VideoId) && !shortIDs.Contains(searchResult.Id.VideoId))
                     {
                         this.latestNonStreamVideo = searchResult;
                         break;
@@ -440,16 +442,17 @@ namespace MixItUp.Base.Services.YouTube.New
             return this.latestNonStreamVideo;
         }
 
-        public async Task<SearchResult> GetLatestShort()
+        public async Task<Video> GetLatestShort()
         {
             if (this.latestShort == null)
             {
-                IEnumerable<SearchResult> searchResults = await this.StreamerService.GetLatestVideos(this.ChannelID);
-                foreach (SearchResult searchResult in searchResults)
+                IEnumerable<string> shortIDs = await this.StreamerService.GetLatestShortIDs(this.ChannelID);
+                foreach (string shortID in shortIDs)
                 {
-                    if (await this.StreamerService.IsVideoShort(searchResult.Id.VideoId))
+                    IEnumerable<Video> video = await this.StreamerService.GetVideosByID(new List<string>() { shortID });
+                    if (video != null && video.Count() > 0)
                     {
-                        this.latestShort = searchResult;
+                        this.latestShort = video.First();
                         break;
                     }
                 }

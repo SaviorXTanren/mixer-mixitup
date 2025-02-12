@@ -15,12 +15,14 @@ using MixItUp.Base.Model.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.Web;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using static Google.Apis.YouTube.v3.LiveBroadcastsResource.ListRequest;
@@ -39,6 +41,8 @@ namespace MixItUp.Base.Services.YouTube.New
         private const string OAuthBaseAddress = "https://www.googleapis.com/oauth2/v4/token";
 
         private const string BaseAddressFormat = "https://www.googleapis.com/youtube/v3/";
+
+        private const string VideoIDShortsDataRegexPattern = "\\\"videoId\\\":\\\"\\w+\\\"";
 
         private static readonly IgnorePropertiesResolver requestPropertiesToIgnore = new IgnorePropertiesResolver(new List<string>() { "Service" });
 
@@ -364,7 +368,7 @@ namespace MixItUp.Base.Services.YouTube.New
                 VideosResource.ListRequest request = this.GoogleYouTubeService.Videos.List(parts);
                 request.MaxResults = ids.Count();
                 request.Id = new List<string>(ids);
-                LogRequest(request);
+                LogRequest(request); 
 
                 VideoListResponse response = await request.ExecuteAsync();
                 LogResponse(request, response);
@@ -401,12 +405,33 @@ namespace MixItUp.Base.Services.YouTube.New
             });
         }
 
-        public async Task<bool> IsVideoShort(string videoID)
+        public async Task<IEnumerable<string>> GetLatestShortIDs(string channelID)
         {
+            channelID = "UCgLbxi89b8NvLevVp2ypbRA";
+
+
             return await AsyncRunner.RunAsync(async () =>
             {
-                HttpResponseMessage response = await this.HttpClient.HeadAsync("https://www.youtube.com/shorts/" + videoID);
-                return response.StatusCode == HttpStatusCode.OK;
+                List<string> results = new List<string>();
+
+                string response = await this.HttpClient.GetStringAsync($"https://www.youtube.com/channel/{channelID}/shorts");
+                if (!string.IsNullOrEmpty(response))
+                {
+                    MatchCollection matches = Regex.Matches(response, VideoIDShortsDataRegexPattern);
+                    foreach (Match match in matches)
+                    {
+                        JObject jobj = JObject.Parse($"{{{match.Value}}}");
+                        if (jobj.TryGetValue("videoId", out JToken value))
+                        {
+                            string videoID = value.ToString();
+                            if (!results.Contains(videoID))
+                            {
+                                results.Add(videoID);
+                            }
+                        }
+                    }
+                }
+                return results;
             });
         }
 

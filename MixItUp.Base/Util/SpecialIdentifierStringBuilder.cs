@@ -801,12 +801,12 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshort"))
                 {
-                    SearchResult searchResult = await ServiceManager.Get<YouTubeSession>().GetLatestShort();
-                    if (searchResult != null)
+                    Video video = await ServiceManager.Get<YouTubeSession>().GetLatestShort();
+                    if (video != null)
                     {
-                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshortid", searchResult.Id.VideoId);
-                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshorttitle", searchResult.Snippet.Title);
-                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshorturl", $"https://www.youtube.com/shorts/{searchResult.Id.VideoId}");
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshortid", video.Id);
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshorttitle", video.Snippet.Title);
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.YouTubeSpecialIdentifierHeader + "latestshorturl", $"https://www.youtube.com/shorts/{video.Id}");
                     }
                 }
             }
