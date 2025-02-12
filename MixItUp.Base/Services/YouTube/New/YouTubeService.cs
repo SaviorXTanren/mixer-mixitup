@@ -439,13 +439,17 @@ namespace MixItUp.Base.Services.YouTube.New
         {
             return await AsyncRunner.RunAsync(async () =>
             {
+                broadcast.Snippet.Title = title;
+                broadcast.Snippet.Description = description;
+
                 LiveBroadcastsResource.UpdateRequest request = this.GoogleYouTubeService.LiveBroadcasts.Update(new LiveBroadcast()
                 {
                     Id = broadcast.Id,
                     Snippet = new LiveBroadcastSnippet()
                     {
                         Title = title ?? broadcast.Snippet.Title,
-                        Description = description ?? broadcast.Snippet.Description
+                        Description = description ?? broadcast.Snippet.Description,
+                        ScheduledStartTimeDateTimeOffset = broadcast.Snippet.ScheduledStartTimeDateTimeOffset,
                     }
                 }, "snippet");
                 LogRequest(request);
