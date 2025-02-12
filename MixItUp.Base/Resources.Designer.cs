@@ -18543,6 +18543,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Record Clip.
+        /// </summary>
+        public static string RecordClip {
+            get {
+                return ResourceManager.GetString("RecordClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Red.
         /// </summary>
         public static string Red {

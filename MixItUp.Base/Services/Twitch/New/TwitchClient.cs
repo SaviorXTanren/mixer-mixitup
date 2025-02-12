@@ -101,6 +101,17 @@ namespace MixItUp.Base.Services.Twitch.New
             { "channel.moderate", "2" },
         };
 
+        private static readonly HashSet<string> BadSubscriptionStatuses = new HashSet<string>()
+        {
+            "webhook_callback_verification_failed",
+            "notification_failures_exceeded",
+            "authorization_revoked",
+            "moderator_removed",
+            "user_removed",
+            "version_removed",
+
+        };
+
         public override bool IsConnected { get { return this.webSocket != null && this.webSocket.IsOpen() && this.eventSubSubscriptionsConnected; } }
 
         private AdvancedClientWebSocket webSocket;
@@ -1299,10 +1310,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             try
             {
-                if (ChannelSession.IsDebug())
-                {
-                    Logger.Log(LogLevel.Debug, "Twitch EventSub Packet Received: " + packet);
-                }
+                Logger.Log(LogLevel.Debug, "Twitch EventSub Packet Received: " + packet);
 
                 if (!string.IsNullOrEmpty(packet))
                 {

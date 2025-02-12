@@ -106,7 +106,6 @@ namespace MixItUp.Base.Model.Commands
 
                 case EventTypeEnum.TwitchChannelBitsCheered:
                     specialIdentifiers["bitsamount"] = "10";
-                    specialIdentifiers["bitslifetimeamount"] = "100";
                     specialIdentifiers["messagenocheermotes"] = "Test Message";
                     specialIdentifiers["message"] = "Test Message";
                     specialIdentifiers["isanonymous"] = "false";

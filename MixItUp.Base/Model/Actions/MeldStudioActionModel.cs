@@ -19,6 +19,7 @@ namespace MixItUp.Base.Model.Actions
         TakeScreenshot,
         StartStopStream,
         StartStopRecording,
+        RecordClip,
     }
 
     [DataContract]
@@ -100,6 +101,10 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == MeldStudioActionTypeEnum.TakeScreenshot)
                 {
                     await ServiceManager.Get<MeldStudioService>().TakeScreenshot();
+                }
+                else if (this.ActionType == MeldStudioActionTypeEnum.RecordClip)
+                {
+                    await ServiceManager.Get<MeldStudioService>().RecordClip();
                 }
                 else if (this.ActionType == MeldStudioActionTypeEnum.StartStopStream)
                 {
