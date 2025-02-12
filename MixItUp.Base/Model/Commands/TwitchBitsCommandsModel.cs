@@ -12,7 +12,6 @@ namespace MixItUp.Base.Model.Commands
             return new Dictionary<string, string>()
             {
                 { "bitsamount", "10" },
-                { "bitslifetimeamount", "100" },
                 { "messagenocheermotes", "Test Message" },
                 { "message", "Test Message" },
                 { "isanonymous", "false" }
