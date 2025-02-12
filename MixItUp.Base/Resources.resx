@@ -11004,4 +11004,7 @@ We have detected that you have more than 1 Overlay Endpoint created, meaning the
   <data name="TwitchClient" xml:space="preserve">
     <value>Twitch Client</value>
   </data>
+  <data name="RecordClip" xml:space="preserve">
+    <value>Record Clip</value>
+  </data>
 </root>

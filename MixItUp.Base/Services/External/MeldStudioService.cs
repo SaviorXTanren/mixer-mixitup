@@ -45,9 +45,10 @@ namespace MixItUp.Base.Services.External
         public const int AudioTrackGainMinimum = -60;
         public const int AudioTrackGainMaximum = 0;
 
-        private const int isStreamingPropertiesIndex = 1;
-        private const int isRecordingPropertiesIndex = 2;
-        private const int sessionPropertiesIndex = 3;
+        private const int versionPropertiesIndex = 1;
+        private const int isStreamingPropertiesIndex = 2;
+        private const int isRecordingPropertiesIndex = 3;
+        private const int sessionPropertiesIndex = 4;
 
         private const int propertiesValueIndex = 3;
 
@@ -169,7 +170,12 @@ namespace MixItUp.Base.Services.External
 
         public async Task TakeScreenshot()
         {
-            await this.websocket.InvokeMethod("meld", "sendEvent", new List<object>() { "co.meldstudio.events.screenshot" });
+            await this.websocket.InvokeMethod("meld", "sendCommand", new List<object>() { "meld.screenshot" });
+        }
+
+        public async Task RecordClip()
+        {
+            await this.websocket.InvokeMethod("meld", "sendCommand", new List<object>() { "meld.recordClip" });
         }
 
         public async Task ShowScene(string sceneName)
