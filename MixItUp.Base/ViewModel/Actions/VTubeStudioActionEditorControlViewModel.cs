@@ -5,6 +5,7 @@ using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -14,6 +15,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.VTubeStudio; } }
 
+        public bool VTubeStudioEnabled { get { return ServiceManager.Get<VTubeStudioService>().IsEnabled; } }
         public bool VTubeStudioConnected { get { return ServiceManager.Get<VTubeStudioService>().IsConnected; } }
         public bool VTubeStudioNotConnected { get { return !this.VTubeStudioConnected; } }
 
@@ -32,6 +34,19 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private VTubeStudioActionTypeEnum selectedActionType;
+
+        public IEnumerable<VTubeStudioConnectionModel> Connections { get { return ChannelSession.Settings.VTubeStudioConnections.Values.ToList(); } }
+
+        public VTubeStudioConnectionModel SelectedConnection
+        {
+            get { return this.selectedConnection; }
+            set
+            {
+                this.selectedConnection = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private VTubeStudioConnectionModel selectedConnection;
 
         public bool ShowLoadModelGrid { get { return this.SelectedActionType == VTubeStudioActionTypeEnum.LoadModel; } }
 
@@ -145,15 +160,28 @@ namespace MixItUp.Base.ViewModel.Actions
         private VTubeStudioHotKey selectedHotKey;
 
         private string modelID;
+        private string modelName;
+
         private string hotKeyID;
+        private string hotKeyName;
 
         public VTubeStudioActionEditorControlViewModel(VTubeStudioActionModel action)
             : base(action)
         {
             this.SelectedActionType = action.ActionType;
+
+            this.SelectedConnection = this.Connections.FirstOrDefault(c => c.ID == action.ID);
+            if (this.SelectedConnection == null)
+            {
+                this.SelectedConnection = this.Connections.FirstOrDefault();
+            }
+
             if (this.ShowLoadModelGrid)
             {
+#pragma warning disable CS0612 // Type or member is obsolete
                 this.modelID = action.ModelID;
+#pragma warning restore CS0612 // Type or member is obsolete
+                this.modelName = action.ModelName;
             }
             else if (this.ShowMoveModelGrid)
             {
@@ -166,12 +194,20 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowRunHotKeyGrid)
             {
+#pragma warning disable CS0612 // Type or member is obsolete
                 this.modelID = action.ModelID;
                 this.hotKeyID = action.HotKeyID;
+#pragma warning restore CS0612 // Type or member is obsolete
+                this.modelName = action.ModelName;
+                this.hotKeyName = action.HotKeyName;
             }
         }
 
-        public VTubeStudioActionEditorControlViewModel() : base() { }
+        public VTubeStudioActionEditorControlViewModel()
+            : base()
+        {
+            this.SelectedConnection = this.Connections.FirstOrDefault();
+        }
 
         public override Task<Result> Validate()
         {
@@ -214,17 +250,33 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (this.ShowLoadModelGrid)
+            if (this.SelectedConnection != null)
             {
-                return Task.FromResult<ActionModelBase>(VTubeStudioActionModel.CreateForModelLoad(this.SelectedModel?.modelID ?? this.modelID));
-            }
-            else if (this.ShowMoveModelGrid)
-            {
-                return Task.FromResult<ActionModelBase>(VTubeStudioActionModel.CreateForMoveModel(this.TimeInSeconds, this.RelativeToModel, this.MovementX, this.MovementY, this.Rotation, this.Size));
-            }
-            else if (this.ShowRunHotKeyGrid)
-            {
-                return Task.FromResult<ActionModelBase>(VTubeStudioActionModel.CreateForRunHotKey(this.SelectedModel?.modelID ?? this.modelID, this.SelectedHotKey?.hotkeyID ?? this.hotKeyID));
+                VTubeStudioActionModel action = new VTubeStudioActionModel(this.SelectedActionType)
+                {
+                    ConnectionID = this.SelectedConnection.ID,
+                };
+
+                if (this.ShowLoadModelGrid)
+                {
+                    action.ModelName = this.SelectedModel?.modelName ?? this.modelName;
+                }
+                else if (this.ShowMoveModelGrid)
+                {
+                    action.MovementTimeInSeconds = this.TimeInSeconds;
+                    action.MovementRelative = this.RelativeToModel;
+                    action.MovementX = this.MovementX;
+                    action.MovementY = this.MovementY;
+                    action.Rotation = this.Rotation;
+                    action.Size = this.Size;
+                }
+                else if (this.ShowRunHotKeyGrid)
+                {
+                    action.ModelName = this.SelectedModel?.modelName ?? this.modelName;
+                    action.HotKeyName = this.SelectedHotKey?.name ?? this.hotKeyName;
+                }
+
+                return Task.FromResult<ActionModelBase>(action);
             }
             return Task.FromResult<ActionModelBase>(null);
         }
@@ -233,9 +285,9 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.GetCurrentModelMovementCommand = this.CreateCommand(async () =>
             {
-                if (this.VTubeStudioConnected)
+                if (this.VTubeStudioConnected && this.SelectedConnection != null)
                 {
-                    VTubeStudioModel model = await ServiceManager.Get<VTubeStudioService>().GetCurrentModel();
+                    VTubeStudioModel model = await ServiceManager.Get<VTubeStudioService>().GetCurrentModel(this.SelectedConnection.ID);
                     if (model != null && model.modelPosition != null)
                     {
                         this.MovementX = model.modelPosition.positionX;
@@ -267,9 +319,9 @@ namespace MixItUp.Base.ViewModel.Actions
 
         private async Task<bool> TryConnectToVTubeStudio()
         {
-            if (ChannelSession.Settings.VTubeStudioOAuthToken != null && !this.VTubeStudioConnected)
+            if (this.VTubeStudioEnabled && !this.VTubeStudioConnected && this.SelectedConnection != null)
             {
-                Result result = await ServiceManager.Get<VTubeStudioService>().Connect(ChannelSession.Settings.VTubeStudioOAuthToken);
+                Result result = await ServiceManager.Get<VTubeStudioService>().ConnectClient(this.SelectedConnection.ID, CancellationToken.None);
                 return result.Success;
             }
             return false;
@@ -277,10 +329,10 @@ namespace MixItUp.Base.ViewModel.Actions
 
         private async Task LoadData()
         {
-            if (this.VTubeStudioConnected)
+            if (this.VTubeStudioConnected && this.SelectedConnection != null)
             {
                 this.Models.Clear();
-                foreach (VTubeStudioModel model in await ServiceManager.Get<VTubeStudioService>().GetAllModels())
+                foreach (VTubeStudioModel model in await ServiceManager.Get<VTubeStudioService>().GetAllModels(this.SelectedConnection.ID))
                 {
                     this.Models.Add(model);
                 }
@@ -296,9 +348,9 @@ namespace MixItUp.Base.ViewModel.Actions
             this.HotKeys.Clear();
             this.SelectedHotKey = null;
 
-            if (this.SelectedModel != null)
+            if (this.SelectedConnection != null && this.SelectedModel != null)
             {
-                foreach (VTubeStudioHotKey hotKey in await ServiceManager.Get<VTubeStudioService>().GetHotKeys(this.SelectedModel.modelID))
+                foreach (VTubeStudioHotKey hotKey in await ServiceManager.Get<VTubeStudioService>().GetHotKeys(this.SelectedConnection.ID, this.SelectedModel.modelID))
                 {
                     this.HotKeys.Add(hotKey);
                 }

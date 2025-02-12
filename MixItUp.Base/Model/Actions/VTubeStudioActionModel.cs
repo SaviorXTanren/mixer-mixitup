@@ -2,7 +2,6 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -21,23 +20,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class VTubeStudioActionModel : ActionModelBase
     {
-        public static VTubeStudioActionModel CreateForModelLoad(string modelID) { return new VTubeStudioActionModel(VTubeStudioActionTypeEnum.LoadModel) { ModelID = modelID }; }
-
-        public static VTubeStudioActionModel CreateForMoveModel(double timeInSeconds, bool relative, double? x, double? y, double? rotation, double? size)
-        {
-            return new VTubeStudioActionModel(VTubeStudioActionTypeEnum.MoveModel)
-            {
-                MovementTimeInSeconds = timeInSeconds,
-                MovementRelative = relative,
-                MovementX = x,
-                MovementY = y,
-                Rotation = rotation,
-                Size = size,
-            };
-        }
-
-        public static VTubeStudioActionModel CreateForRunHotKey(string modelID, string hotKeyID) { return new VTubeStudioActionModel(VTubeStudioActionTypeEnum.RunHotKey) { ModelID = modelID, HotKeyID = hotKeyID }; }
-
         [DataMember]
         public VTubeStudioActionTypeEnum ActionType { get; set; }
 

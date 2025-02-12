@@ -19,7 +19,7 @@
             <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.VTubeStudioInfo}"/>
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.VTubeStudioInfo}" />
 
         <Grid Grid.Column="2" Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.RowDefinitions>
