@@ -452,13 +452,13 @@ namespace MixItUp.Base.Web
             {
                 try
                 {
-                    Logger.Log(LogLevel.Debug, string.Format("Rest API Request Sent: {0} - {1} - {2}", method, requestUri, content.ReadAsStringAsync().Result));
+                    Logger.Log(LogLevel.Debug, $"Rest API Request Sent: {method} - {requestUri} - {content.ReadAsStringAsync().Result}");
                 }
                 catch (Exception) { }
             }
             else
             {
-                Logger.Log(LogLevel.Debug, string.Format("Rest API Request Sent: {0} - {1}", method, requestUri));
+                Logger.Log(LogLevel.Debug, $"Rest API Request Sent: {method} - {requestUri}");
             }
         }
 

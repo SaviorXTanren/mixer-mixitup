@@ -102,7 +102,7 @@ namespace MixItUp.Base.Util
             if (response.IsSuccessStatusCode)
             {
                 string result = await response.Content.ReadAsStringAsync();
-                Logger.Log(LogLevel.Debug, string.Format("Rest API Request Complete: {0} - {1} - {2}" + Environment.NewLine + "{3}", response.RequestMessage.RequestUri, response.StatusCode, response.GetCallLength(), result));
+                Logger.Log(LogLevel.Debug, $"Rest API Request Complete: {response.RequestMessage.Method.Method} - {response.RequestMessage.RequestUri} - {response.StatusCode} - {response.GetCallLength()}{Environment.NewLine}{result}");
                 return result;
             }
             else if (throwExceptionOnFailure)
