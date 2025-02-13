@@ -209,6 +209,11 @@ namespace MixItUp.Base.Services.External
                                 string.Equals(c.PackID, effect.gamePack.gamePackID, StringComparison.OrdinalIgnoreCase) &&
                                 string.Equals(c.EffectID, effect.effect.effectID, StringComparison.OrdinalIgnoreCase));
 
+                            if (effect.quantity == 0)
+                            {
+                                effect.quantity = 1;
+                            }
+
                             for (int i = 0; i < effect.quantity; i++)
                             {
                                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.CrowdControlEffectRedeemed, parameters);
