@@ -80,6 +80,35 @@ namespace MixItUp.WPF.Controls.MainControls
                         chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
                         chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
+                        message_id = Guid.NewGuid().ToString(),
+                        message = new ChatMessageNotificationMessage()
+                        {
+                            text = "This is a message",
+                            fragments = new List<ChatMessageNotificationFragment>()
+                            {
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "This"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "is"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "a"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "messge"
+                                },
+                            }
+                        },
+
                         sub = new ChatNotificationSub()
                         {
                             sub_tier = "1000"
@@ -118,6 +147,35 @@ namespace MixItUp.WPF.Controls.MainControls
                         chatter_user_id = ServiceManager.Get<TwitchSession>().StreamerModel.id,
                         chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
                         chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
+
+                        message_id = Guid.NewGuid().ToString(),
+                        message = new ChatMessageNotificationMessage()
+                        {
+                            text = "This is a message",
+                            fragments = new List<ChatMessageNotificationFragment>()
+                            {
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "This"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "is"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "a"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "messge"
+                                },
+                            }
+                        },
 
                         sub_gift = new ChatNotificationSubGift()
                         {
@@ -166,6 +224,35 @@ namespace MixItUp.WPF.Controls.MainControls
                             chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
                             chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
+                            message_id = Guid.NewGuid().ToString(),
+                            message = new ChatMessageNotificationMessage()
+                            {
+                                text = "This is a message",
+                                fragments = new List<ChatMessageNotificationFragment>()
+                            {
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "This"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "is"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "a"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "messge"
+                                },
+                            }
+                            },
+
                             sub_gift = new ChatNotificationSubGift()
                             {
                                 sub_tier = "1000",
@@ -201,10 +288,40 @@ namespace MixItUp.WPF.Controls.MainControls
                         chatter_user_login = ServiceManager.Get<TwitchSession>().StreamerModel.login,
                         chatter_user_name = ServiceManager.Get<TwitchSession>().StreamerModel.display_name,
 
+                        message_id = Guid.NewGuid().ToString(),
+                        message = new ChatMessageNotificationMessage()
+                        {
+                            text = "This is a message",
+                            fragments = new List<ChatMessageNotificationFragment>()
+                            {
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "This"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "is"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "a"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "messge"
+                                },
+                            }
+                        },
+
                         community_sub_gift = new ChatNotificationCommunitySubGift()
                         {
                             id = communityGiftID,
                             total = 5,
+                            cumulative_total = 200,
                             sub_tier = "1000",
                         }
                     })
@@ -244,6 +361,35 @@ namespace MixItUp.WPF.Controls.MainControls
 
                             chatter_is_anonymous = true,
 
+                            message_id = Guid.NewGuid().ToString(),
+                            message = new ChatMessageNotificationMessage()
+                            {
+                                text = "This is a message",
+                                fragments = new List<ChatMessageNotificationFragment>()
+                            {
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "This"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "is"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "a"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "messge"
+                                },
+                            }
+                            },
+
                             sub_gift = new ChatNotificationSubGift()
                             {
                                 sub_tier = "1000",
@@ -277,10 +423,40 @@ namespace MixItUp.WPF.Controls.MainControls
 
                         chatter_is_anonymous = true,
 
+                        message_id = Guid.NewGuid().ToString(),
+                        message = new ChatMessageNotificationMessage()
+                        {
+                            text = "This is a message",
+                            fragments = new List<ChatMessageNotificationFragment>()
+                            {
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "This"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "is"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "a"
+                                },
+                                new ChatMessageNotificationFragment()
+                                {
+                                    type = "text",
+                                    text = "messge"
+                                },
+                            }
+                        },
+
                         community_sub_gift = new ChatNotificationCommunitySubGift()
                         {
                             id = communityGiftID,
                             total = 5,
+                            cumulative_total = 200,
                             sub_tier = "1000",
                         }
                     })
