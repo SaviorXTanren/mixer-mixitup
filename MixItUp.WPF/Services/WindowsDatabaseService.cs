@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Services
 
         public async Task Read(string databaseFilePath, string commandString, Dictionary<string, object> parameters, Action<Dictionary<string, object>> processRow)
         {
-            string parameterString = parameters != null ? string.Join(" - ", parameters.Select(p => $"{{{p.Key} - {p.Value}}}")) : string.Empty;
+            string parameterString = parameters != null ? string.Join(" = ", parameters.Select(p => $"{{{p.Key} - {p.Value}}}")) : string.Empty;
             Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0} - {1}", commandString, parameterString));
 
             await this.EstablishConnection(databaseFilePath, (connection) =>
