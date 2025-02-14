@@ -2,11 +2,8 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
-using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Trovo.New;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.Twitch.New;
-using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Services.YouTube.New;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;

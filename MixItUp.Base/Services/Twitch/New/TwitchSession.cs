@@ -405,7 +405,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
                     await this.StreamerService.UnVIPUser(this.StreamerModel, key);
 
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: key);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: key);
                     if (user != null)
                     {
                         user.Roles.Remove(UserRoleEnum.TwitchVIP);

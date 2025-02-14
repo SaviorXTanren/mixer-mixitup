@@ -479,7 +479,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 // The streamer was raided by a channel
                 if (string.Equals(toId, ServiceManager.Get<TwitchSession>().StreamerID, StringComparison.OrdinalIgnoreCase))
                 {
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: fromId, platformUsername: fromUsername);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: fromId, platformUsername: fromUsername);
                     if (user == null)
                     {
                         user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(fromId, fromUsername, fromDisplayName));
@@ -709,7 +709,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             string from_id = payload["from_user_id"].Value<string>();
 
-            UserV2ViewModel from = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: from_id);
+            UserV2ViewModel from = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: from_id);
             if (from == null)
             {
                 string from_username = payload["from_user_login"].Value<string>();
@@ -719,7 +719,7 @@ namespace MixItUp.Base.Services.Twitch.New
             }
 
             string to_id = payload["to_user_id"].Value<string>();
-            UserV2ViewModel to = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: to_id);
+            UserV2ViewModel to = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: to_id);
 
             string message = payload["whisper"]["text"].Value<string>();
 
@@ -756,7 +756,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             ChannelPointAutomaticRewardRedemptionNotification redemption = payload.ToObject<ChannelPointAutomaticRewardRedemptionNotification>();
 
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: redemption.user_id);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: redemption.user_id);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(redemption));
@@ -779,7 +779,7 @@ namespace MixItUp.Base.Services.Twitch.New
             }
             channelPointRewardRedeemsCache.Add(redemption.id);
 
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: redemption.user_id);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: redemption.user_id);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(redemption));
@@ -820,7 +820,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
             Logger.Log(LogLevel.Debug, "Twitch Chat Message Received: " + JSONSerializerHelper.SerializeToString(messageNotification));
 
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: messageNotification.chatter_user_id);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: messageNotification.chatter_user_id);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(messageNotification));
@@ -914,7 +914,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             ChatMessageDeletedNotification messageDeleted = payload.ToObject<ChatMessageDeletedNotification>();
 
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: messageDeleted.target_user_id);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: messageDeleted.target_user_id);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(messageDeleted));
@@ -1071,7 +1071,7 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             ChatUserClearNotification userClear = payload.ToObject<ChatUserClearNotification>();
 
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userClear.target_user_id);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: userClear.target_user_id);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userClear));
