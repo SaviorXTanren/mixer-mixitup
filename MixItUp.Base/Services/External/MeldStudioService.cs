@@ -45,11 +45,13 @@ namespace MixItUp.Base.Services.External
         public const int AudioTrackGainMinimum = -60;
         public const int AudioTrackGainMaximum = 0;
 
-        private const int versionPropertiesIndex = 1;
-        private const int isStreamingPropertiesIndex = 2;
-        private const int isRecordingPropertiesIndex = 3;
-        private const int sessionPropertiesIndex = 4;
+        private const string versionPropertyName = "version";
+        private const string isStreamingPropertyName = "isStreaming";
+        private const string isRecordingPropertyName = "isRecording";
+        private const string sessionPropertyName = "session";
 
+        private const int propertiesIndexNumberIndex = 0;
+        private const int propertiesNameIndex = 1;
         private const int propertiesValueIndex = 3;
 
         private const string sceneItemType = "scene";
@@ -65,6 +67,12 @@ namespace MixItUp.Base.Services.External
 
         private QtClientWebSocket websocket = new QtClientWebSocket();
 
+        private int versionIndex = 0;
+        private int isStreamingIndex = 0;
+        private int isRecordingIndex = 0;
+        private int sessionIndex = 0;
+
+        private int version;
         private bool? isStreaming;
         private bool? isRecording;
 
@@ -102,10 +110,33 @@ namespace MixItUp.Base.Services.External
 
                 JArray properties = (JArray)initPacket.data["meld"]["properties"];
 
-                this.isStreaming = properties[isStreamingPropertiesIndex][propertiesValueIndex].ToObject<bool>();
-                this.isRecording = properties[isRecordingPropertiesIndex][propertiesValueIndex].ToObject<bool>();
+                JArray version = this.GetPropertyJArrayValues(properties, versionPropertyName);
+                if (version != null)
+                {
+                    this.versionIndex = version[propertiesIndexNumberIndex].ToObject<int>();
+                    this.version = version[propertiesValueIndex].ToObject<int>();
+                }
 
-                this.RebuildItemCache(properties[sessionPropertiesIndex][propertiesValueIndex]["items"] as JObject);
+                JArray isStreaming = this.GetPropertyJArrayValues(properties, isStreamingPropertyName);
+                if (isStreaming != null)
+                {
+                    this.isStreamingIndex = isStreaming[propertiesIndexNumberIndex].ToObject<int>();
+                    this.isStreaming = isStreaming[propertiesValueIndex].ToObject<bool>();
+                }
+
+                JArray isRecording = this.GetPropertyJArrayValues(properties, isRecordingPropertyName);
+                if (isRecording != null)
+                {
+                    this.isRecordingIndex = isRecording[propertiesIndexNumberIndex].ToObject<int>();
+                    this.isRecording = isRecording[propertiesValueIndex].ToObject<bool>();
+                }
+
+                JArray session = this.GetPropertyJArrayValues(properties, sessionPropertyName);
+                if (session != null)
+                {
+                    this.sessionIndex = session[propertiesIndexNumberIndex].ToObject<int>();
+                    this.RebuildItemCache(session[propertiesValueIndex]["items"] as JObject);
+                }
 
                 if (this.scenes.Count == 0)
                 {
@@ -344,15 +375,15 @@ namespace MixItUp.Base.Services.External
                         JArray updates = packet.data as JArray;
                         foreach (var kvp in updates[0]["properties"] as JObject)
                         {
-                            if (kvp.Key == isStreamingPropertiesIndex.ToString())
+                            if (kvp.Key == this.isStreamingIndex.ToString())
                             {
                                 this.isStreaming = kvp.Value.ToObject<bool>();
                             }
-                            else if (kvp.Key == isRecordingPropertiesIndex.ToString())
+                            else if (kvp.Key == this.isRecordingIndex.ToString())
                             {
                                 this.isRecording = kvp.Value.ToObject<bool>();
                             }
-                            else if (kvp.Key == sessionPropertiesIndex.ToString())
+                            else if (kvp.Key == this.sessionIndex.ToString())
                             {
                                 this.RebuildItemCache(kvp.Value["items"] as JObject);
                             }
@@ -441,6 +472,21 @@ namespace MixItUp.Base.Services.External
             gain = gain <= 0.001 ? 0 : gain;
             gain = gain > 1 ? 1 : gain;
             return gain;
+        }
+
+        private JArray GetPropertyJArrayValues(JArray properties, string name)
+        {
+            foreach (JArray prop in properties)
+            {
+                if (prop.Count() > propertiesValueIndex)
+                {
+                    if (string.Equals(prop[propertiesNameIndex].ToString(), name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return prop;
+                    }
+                }
+            }
+            return null;
         }
     }
 }
