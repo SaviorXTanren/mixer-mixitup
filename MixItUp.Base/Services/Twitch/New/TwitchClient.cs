@@ -101,17 +101,6 @@ namespace MixItUp.Base.Services.Twitch.New
             { "channel.moderate", "2" },
         };
 
-        private static readonly HashSet<string> BadSubscriptionStatuses = new HashSet<string>()
-        {
-            "webhook_callback_verification_failed",
-            "notification_failures_exceeded",
-            "authorization_revoked",
-            "moderator_removed",
-            "user_removed",
-            "version_removed",
-
-        };
-
         public override bool IsConnected { get { return this.webSocket != null && this.webSocket.IsOpen() && this.eventSubSubscriptionsConnected; } }
 
         private AdvancedClientWebSocket webSocket;
@@ -134,7 +123,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public override async Task<Result> Connect()
         {
-            if (await this.webSocket.Connect(TwitchEventSubConnectionURL, CancellationToken.None))
+            if (await this.webSocket.Connect(TwitchEventSubConnectionURL + "?keepalive_timeout_seconds=120", CancellationToken.None))
             {
                 await Task.Delay(2500);
 
@@ -163,75 +152,87 @@ namespace MixItUp.Base.Services.Twitch.New
             await this.ProcessNotification(message);
         }
 
-        private async Task ProcessSessionWelcome(WelcomeMessage message)
+        private Task ProcessSessionWelcome(WelcomeMessage message)
         {
-            IEnumerable<EventSubSubscriptionModel> allSubs = await ServiceManager.Get<TwitchSession>().StreamerService.GetEventSubSubscriptions();
-
-            HashSet<string> missingSubs = new HashSet<string>(DesiredSubscriptionsAndVersions.Keys, StringComparer.OrdinalIgnoreCase);
-            foreach (EventSubSubscriptionModel sub in allSubs)
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
             {
-                if (DesiredSubscriptionsAndVersions.ContainsKey(sub.type) && string.Equals(sub.status, "connected", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Sub exists and is connected, remove from missing
-                    missingSubs.Remove(sub.type);
-                }
-                else
-                {
-                    // Got a sub we don't want, delete
-                    await ServiceManager.Get<TwitchSession>().StreamerService.DeleteEventSubSubscription(sub.id);
-                }
-            }
+                IEnumerable<EventSubSubscriptionModel> allSubs = await ServiceManager.Get<TwitchSession>().StreamerService.GetEventSubSubscriptions();
 
-            foreach (string missingSub in missingSubs)
-            {
-                if (missingSub.Equals("channel.raid", StringComparison.OrdinalIgnoreCase))
+                List<Task> subscriptionDeletionTasks = new List<Task>();
+
+                HashSet<string> missingSubs = new HashSet<string>(DesiredSubscriptionsAndVersions.Keys, StringComparer.OrdinalIgnoreCase);
+                foreach (EventSubSubscriptionModel sub in allSubs)
                 {
-                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
-                        new Dictionary<string, string> { { "from_broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID } });
-                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
-                        new Dictionary<string, string> { { "to_broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID } });
-                }
-                else
-                {
-                    Dictionary<string, string> conditions = new Dictionary<string, string>
+                    if (DesiredSubscriptionsAndVersions.ContainsKey(sub.type) && string.Equals(sub.status, "connected", StringComparison.OrdinalIgnoreCase))
                     {
-                        { "broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID }
-                    };
-
-                    switch (missingSub)
-                    {
-                        case "channel.follow":
-                        case "channel.moderate":
-                            conditions["moderator_user_id"] = ServiceManager.Get<TwitchSession>().StreamerID;
-                            break;
-
-                        case "channel.chat.message":
-                        case "channel.chat.message_delete":
-                        case "channel.chat.notification":
-                        case "channel.chat.user_message_hold":
-                        case "channel.chat.user_message_update":
-                        case "channel.chat.clear":
-                        case "channel.chat.clear_user_messages":
-                        case "user.whisper.message":
-                            conditions["user_id"] = ServiceManager.Get<TwitchSession>().StreamerID;
-                            break;
+                        // Sub exists and is connected, remove from missing
+                        missingSubs.Remove(sub.type);
                     }
-
-                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub], conditions);
+                    else
+                    {
+                        // Got a sub we don't want, delete
+                        subscriptionDeletionTasks.Add(ServiceManager.Get<TwitchSession>().StreamerService.DeleteEventSubSubscription(sub.id));
+                    }
                 }
-            }
+                await Task.WhenAll(subscriptionDeletionTasks);
+
+                List<Task> subscriptionRegisterTasks = new List<Task>();
+                foreach (string missingSub in missingSubs)
+                {
+                    if (missingSub.Equals("channel.raid", StringComparison.OrdinalIgnoreCase))
+                    {
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
+                            new Dictionary<string, string> { { "from_broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID } });
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
+                            new Dictionary<string, string> { { "to_broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID } });
+                    }
+                    else
+                    {
+                        Dictionary<string, string> conditions = new Dictionary<string, string>
+                        {
+                            { "broadcaster_user_id", ServiceManager.Get<TwitchSession>().StreamerID }
+                        };
+
+                        switch (missingSub)
+                        {
+                            case "channel.follow":
+                            case "channel.moderate":
+                                conditions["moderator_user_id"] = ServiceManager.Get<TwitchSession>().StreamerID;
+                                break;
+
+                            case "channel.chat.message":
+                            case "channel.chat.message_delete":
+                            case "channel.chat.notification":
+                            case "channel.chat.user_message_hold":
+                            case "channel.chat.user_message_update":
+                            case "channel.chat.clear":
+                            case "channel.chat.clear_user_messages":
+                            case "user.whisper.message":
+                                conditions["user_id"] = ServiceManager.Get<TwitchSession>().StreamerID;
+                                break;
+                        }
+
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub], conditions);
+                    }
+                }
+                await Task.WhenAll(subscriptionRegisterTasks);
+
+                IEnumerable<ChannelFollowerModel> followers = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIFollowers(ServiceManager.Get<TwitchSession>().StreamerModel, maxResults: 100);
+                if (followers != null)
+                {
+                    this.followCache.Clear();
+                    foreach (ChannelFollowerModel follow in followers)
+                    {
+                        this.followCache.Add(follow.user_id);
+                    }
+                }
+            }, CancellationToken.None);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             this.eventSubSubscriptionsConnected = true;
 
-            IEnumerable<ChannelFollowerModel> followers = await ServiceManager.Get<TwitchSession>().StreamerService.GetNewAPIFollowers(ServiceManager.Get<TwitchSession>().StreamerModel, maxResults: 100);
-            if (followers != null)
-            {
-                this.followCache.Clear();
-                foreach (ChannelFollowerModel follow in followers)
-                {
-                    this.followCache.Add(follow.user_id);
-                }
-            }
+            return Task.CompletedTask;
         }
 
         private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null, Dictionary<string, string> conditions = null)
