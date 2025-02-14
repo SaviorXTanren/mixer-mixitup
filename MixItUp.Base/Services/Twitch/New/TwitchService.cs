@@ -502,8 +502,23 @@ namespace MixItUp.Base.Services.Twitch.New
         {
             return await AsyncRunner.RunAsync(async () =>
             {
+                DateTimeOffset pstDateTimeOffset = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(-8));
+                if (period == BitsLeaderboardPeriodEnum.Week)
+                {
+                    pstDateTimeOffset = pstDateTimeOffset.AddDays(-7);
+                }
+                else if (period == BitsLeaderboardPeriodEnum.Month)
+                {
+                    pstDateTimeOffset = pstDateTimeOffset.AddMonths(-1);
+                }
+                else if (period == BitsLeaderboardPeriodEnum.Year)
+                {
+                    pstDateTimeOffset = pstDateTimeOffset.AddYears(-1);
+                }
+
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters.Add("period", period.ToString().ToLower());
+                parameters.Add("started_at", pstDateTimeOffset.ToRFC3339String());
                 parameters.Add("count", count.ToString());
 
                 string parameterString = string.Join("&", parameters.Select(kvp => kvp.Key + "=" + kvp.Value));
