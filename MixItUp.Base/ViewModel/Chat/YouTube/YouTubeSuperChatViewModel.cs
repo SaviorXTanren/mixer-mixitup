@@ -52,8 +52,10 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
             this.Message = sticker.SuperStickerMetadata.AltText;
         }
 
-        public void SetCommandParameterSpecialIdentifiers(CommandParametersModel parameters)
+        public void SetCommandParameterData(CommandParametersModel parameters)
         {
+            parameters.SetArguments(this.Message);
+
             parameters.SpecialIdentifiers["amountnumberdigits"] = ((int)this.Amount * 100).ToString();
             parameters.SpecialIdentifiers["amountnumber"] = this.Amount.ToString();
             parameters.SpecialIdentifiers["amount"] = this.AmountDisplay;

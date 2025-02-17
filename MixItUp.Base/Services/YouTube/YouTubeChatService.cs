@@ -554,7 +554,7 @@ namespace MixItUp.Base.Services.YouTube
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = superChat.AmountDisplay;
 
                             CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
-                            superChat.SetCommandParameterSpecialIdentifiers(parameters);
+                            superChat.SetCommandParameterData(parameters);
 
                             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                             {
@@ -578,7 +578,7 @@ namespace MixItUp.Base.Services.YouTube
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = superChat.AmountDisplay;
 
                             CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
-                            superChat.SetCommandParameterSpecialIdentifiers(parameters);
+                            superChat.SetCommandParameterData(parameters);
 
                             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                             {

@@ -119,6 +119,14 @@ namespace MixItUp.Base.Model.Commands
 
         public bool IsTargetUserSelf { get { return this.TargetUser == this.User; } }
 
+        public void SetArguments(string arguments)
+        {
+            if (!string.IsNullOrEmpty(arguments))
+            {
+                this.SetArguments(arguments.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            }
+        }
+
         public void SetArguments(IEnumerable<string> arguments)
         {
             this.Arguments = new List<string>(arguments);
