@@ -138,6 +138,8 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private List<string> emoteSetIDs = new List<string>();
 
+        private int noValidStreamCount = 0;
+
         public IDictionary<string, TwitchChatEmoteViewModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, TwitchChatEmoteViewModel> emotes = new Dictionary<string, TwitchChatEmoteViewModel>();
 
@@ -364,11 +366,25 @@ namespace MixItUp.Base.Services.Twitch.New
             StreamModel stream = await StreamerService.GetActiveStream(StreamerModel);
             if (stream != null)
             {
+                this.noValidStreamCount = 0;
+
                 this.Stream = stream;
 
                 this.IsLive = true;
 
                 this.StreamViewerCount = (int)this.Stream.viewer_count;
+            }
+            else
+            {
+                this.noValidStreamCount++;
+                if (this.noValidStreamCount >= 5)
+                {
+                    this.IsLive = false;
+
+                    this.Stream = null;
+
+                    this.StreamViewerCount = 0;
+                }
             }
 
             AdScheduleModel adSchedule = await this.StreamerService.GetAdSchedule(this.StreamerModel);
