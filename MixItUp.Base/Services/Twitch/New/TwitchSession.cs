@@ -352,10 +352,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 GameModel game = await this.StreamerService.GetNewAPIGameByID(channel.game_id);
                 if (game != null)
                 {
-                    string image = game.box_art_url;
-                    image = image.Replace("{width}", "264");
-                    image = image.Replace("{height}", "352");
-                    this.StreamCategoryImageURL = image;
+                    this.SetCategoryImageURL(game);
                 }
             }
 
@@ -558,7 +555,7 @@ namespace MixItUp.Base.Services.Twitch.New
                 GameModel game = await this.StreamerService.GetNewAPIGameByID(update.category_id);
                 if (game != null)
                 {
-                    this.StreamCategoryImageURL = game.box_art_url;
+                    this.SetCategoryImageURL(game);
                 }
             }
 
@@ -776,6 +773,14 @@ namespace MixItUp.Base.Services.Twitch.New
                 subscriptions.Add(new SubscriptionDetailsModel(StreamingPlatformTypeEnum.Twitch, sub.User, massGiftedSubEvent.Gifter, tier: massGiftedSubEvent.Tier));
             }
             EventService.MassSubscriptionsGiftedOccurred(subscriptions);
+        }
+
+        private void SetCategoryImageURL(GameModel game)
+        {
+            string image = game.box_art_url;
+            image = image.Replace("{width}", "264");
+            image = image.Replace("{height}", "352");
+            this.StreamCategoryImageURL = image;
         }
     }
 }
