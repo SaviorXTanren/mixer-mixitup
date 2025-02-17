@@ -516,7 +516,18 @@ namespace MixItUp.Base.Services
             }
             if (ServiceManager.Get<YouTubeSession>().IsConnected)
             {
-                login.YouTubeOAuthToken = ServiceManager.Get<YouTubeSession>()?.StreamerService?.GetOAuthTokenCopy();
+                OAuthTokenModel token = ServiceManager.Get<YouTubeSession>()?.StreamerService?.GetOAuthTokenCopy();
+
+                login.YouTubeOAuthToken = new StreamingClient.Base.Model.OAuth.OAuthTokenModel()
+                {
+                    clientID = ServiceManager.Get<YouTubeSession>().StreamerOAuthService.ClientID,
+                    clientSecret = ServiceManager.Get<YouTubeSession>().StreamerOAuthService.ClientSecret,
+
+                    accessToken = token.accessToken,
+                    refreshToken = token.refreshToken,
+
+                    expiresIn = token.expiresIn,
+                };
             }
             if (ServiceManager.Get<TrovoSession>().IsConnected)
             {
