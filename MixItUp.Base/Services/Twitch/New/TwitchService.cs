@@ -498,6 +498,23 @@ namespace MixItUp.Base.Services.Twitch.New
             });
         }
 
+        public async Task<long> GetUserLifetimeBits(string user_id)
+        {
+            return await AsyncRunner.RunAsync(async () =>
+            {
+                JObject jobj = await this.HttpClient.GetJObjectAsync($"bits/leaderboard?user_id={user_id}&count=1&period=all");
+                if (jobj != null)
+                {
+                    IEnumerable<BitsLeaderboardUserModel> bitsUsers = ((JArray)jobj["data"]).ToTypedArray<BitsLeaderboardUserModel>();
+                    if (bitsUsers != null && bitsUsers.Count() > 0)
+                    {
+                        return bitsUsers.First().score;
+                    }
+                }
+                return 0;
+            });
+        }
+
         public async Task<BitsLeaderboardModel> GetBitsLeaderboard(BitsLeaderboardPeriodEnum period, int count)
         {
             return await AsyncRunner.RunAsync(async () =>

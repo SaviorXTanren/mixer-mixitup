@@ -1063,6 +1063,13 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", pUser?.ID);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchcolor", pUser?.Color);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalbitscheered", pUser?.TotalBitsCheered.ToString());
+
+                    if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "bitslifetimeamount") &&
+                        user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSession>().IsConnected)
+                    {
+                        long amount = await ServiceManager.Get<TwitchSession>().StreamerService.GetUserLifetimeBits(user.PlatformID);
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "bitslifetimeamount", amount.ToString());
+                    }
                 }
 
                 if (user.HasPlatformData(StreamingPlatformTypeEnum.YouTube))
