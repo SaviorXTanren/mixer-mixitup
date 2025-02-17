@@ -459,73 +459,65 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private async Task HandleRaid(JObject payload)
         {
-            try
+            string fromId = payload.GetValueOrDefault<string>("from_broadcaster_user_id", string.Empty);
+            string fromUsername = payload.GetValueOrDefault<string>("from_broadcaster_user_login", string.Empty);
+            string fromDisplayName = payload.GetValueOrDefault<string>("from_broadcaster_user_name", string.Empty);
+
+            string toId = payload.GetValueOrDefault<string>("to_broadcaster_user_id", string.Empty);
+            string toUsername = payload.GetValueOrDefault<string>("to_broadcaster_user_login", string.Empty);
+
+            int viewers = payload.GetValueOrDefault<int>("viewers", 0);
+
+            if (string.IsNullOrEmpty(fromId) || string.IsNullOrEmpty(toId))
             {
-                string fromId = payload.GetValueOrDefault<string>("from_broadcaster_user_id", string.Empty);
-                string fromUsername = payload.GetValueOrDefault<string>("from_broadcaster_user_login", string.Empty);
-                string fromDisplayName = payload.GetValueOrDefault<string>("from_broadcaster_user_name", string.Empty);
+                // Invalid raid event, ignore
+                return;
+            }
 
-                string toId = payload.GetValueOrDefault<string>("to_broadcaster_user_id", string.Empty);
-                string toUsername = payload.GetValueOrDefault<string>("to_broadcaster_user_login", string.Empty);
-
-                int viewers = payload.GetValueOrDefault<int>("viewers", 0);
-
-                if (string.IsNullOrEmpty(fromId) || string.IsNullOrEmpty(toId))
+            // The streamer was raided by a channel
+            if (string.Equals(toId, ServiceManager.Get<TwitchSession>().StreamerID, StringComparison.OrdinalIgnoreCase))
+            {
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: fromId, platformUsername: fromUsername);
+                if (user == null)
                 {
-                    // Invalid raid event, ignore
-                    return;
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(fromId, fromUsername, fromDisplayName));
                 }
 
-                // The streamer was raided by a channel
-                if (string.Equals(toId, ServiceManager.Get<TwitchSession>().StreamerID, StringComparison.OrdinalIgnoreCase))
+                CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
+                parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();
+                parameters.SpecialIdentifiers["raidviewercount"] = viewers.ToString();
+
+                if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters))
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: fromId, platformUsername: fromUsername);
-                    if (user == null)
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = viewers;
+
+                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
                     {
-                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(fromId, fromUsername, fromDisplayName));
+                        currency.AddAmount(user, currency.OnHostBonus);
                     }
 
-                    CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
-                    parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();
-                    parameters.SpecialIdentifiers["raidviewercount"] = viewers.ToString();
-
-                    if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters))
+                    foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                     {
-                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
-                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = viewers;
-
-                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+                        if (user.MeetsRole(streamPass.UserPermission))
                         {
-                            currency.AddAmount(user, currency.OnHostBonus);
+                            streamPass.AddAmount(user, streamPass.HostBonus);
                         }
-
-                        foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                        {
-                            if (user.MeetsRole(streamPass.UserPermission))
-                            {
-                                streamPass.AddAmount(user, streamPass.HostBonus);
-                            }
-                        }
-
-                        EventService.RaidOccurred(user, viewers);
-
-                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.FullDisplayName, viewers), ChannelSession.Settings.AlertRaidColor));
                     }
-                }
-                // The streamer is raiding another channel
-                else if (string.Equals(fromId, ServiceManager.Get<TwitchSession>().StreamerID, StringComparison.OrdinalIgnoreCase))
-                {
-                    CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch, new List<string>() { toUsername });
-                    parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();
-                    parameters.SpecialIdentifiers["raidviewercount"] = viewers.ToString();
 
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelOutgoingRaidCompleted, parameters);
+                    EventService.RaidOccurred(user, viewers);
+
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.FullDisplayName, viewers), ChannelSession.Settings.AlertRaidColor));
                 }
             }
-            catch (Exception ex)
+            // The streamer is raiding another channel
+            else if (string.Equals(fromId, ServiceManager.Get<TwitchSession>().StreamerID, StringComparison.OrdinalIgnoreCase))
             {
-                Logger.Log(ex);
-                Logger.ForceLog(LogLevel.Error, "Bad raid data: " + payload);
+                CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch, new List<string>() { toUsername });
+                parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();
+                parameters.SpecialIdentifiers["raidviewercount"] = viewers.ToString();
+
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelOutgoingRaidCompleted, parameters);
             }
         }
 
@@ -1051,13 +1043,13 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private Task HandleChatMessageHeld(JObject payload)
         {
-            Logger.ForceLog(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
+            Logger.Log(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
             return Task.CompletedTask;
         }
 
         private Task HandleChatMessageHoldUpdate(JObject payload)
         {
-            Logger.ForceLog(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
+            Logger.Log(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
             return Task.CompletedTask;
         }
 
@@ -1085,19 +1077,19 @@ namespace MixItUp.Base.Services.Twitch.New
 
         private Task HandleSharedChatBegin(JObject payload)
         {
-            Logger.ForceLog(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
+            Logger.Log(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
             return Task.CompletedTask;
         }
 
         private Task HandleSharedChatUpdate(JObject payload)
         {
-            Logger.ForceLog(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
+            Logger.Log(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
             return Task.CompletedTask;
         }
 
         private Task HandleSharedChatEnd(JObject payload)
         {
-            Logger.ForceLog(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
+            Logger.Log(LogLevel.Debug, "Packet Received: " + JSONSerializerHelper.SerializeToString(payload));
             return Task.CompletedTask;
         }
 
