@@ -332,14 +332,30 @@ namespace MixItUp.Base.Services.YouTube.New
                     if (!processedMessage)
                     {
                         processedMessage = true;
-                        resultMessage.AuthorDetails = new LiveChatMessageAuthorDetails()
+
+                        if (sendAsStreamer || !this.IsBotConnected)
                         {
-                            ChannelId = this.ChannelID,
-                            ChannelUrl = this.ChannelLink,
-                            DisplayName = this.Streamer.DisplayName,
-                            IsChatOwner = true,
-                            ProfileImageUrl = this.StreamerAvatarURL,
-                        };
+                            resultMessage.AuthorDetails = new LiveChatMessageAuthorDetails()
+                            {
+                                ChannelId = this.ChannelID,
+                                ChannelUrl = this.ChannelLink,
+                                DisplayName = this.Streamer.DisplayName,
+                                IsChatOwner = true,
+                                ProfileImageUrl = this.StreamerAvatarURL,
+                            };
+                        }
+                        else
+                        {
+                            resultMessage.AuthorDetails = new LiveChatMessageAuthorDetails()
+                            {
+                                ChannelId = this.BotModel?.Id,
+                                ChannelUrl = this.BotModel?.Snippet?.CustomUrl,
+                                DisplayName = this.Bot.DisplayName,
+                                IsChatOwner = true,
+                                ProfileImageUrl = this.BotAvatarURL,
+                            };
+                        }
+
                         messagesToProcess.Add(resultMessage);
                     }
                 }
