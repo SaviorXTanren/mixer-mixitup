@@ -812,6 +812,8 @@ namespace MixItUp.WPF.Services
         {
             try
             {
+                Logger.Log(LogLevel.Debug, $"OBS Studio packet received: " + packet);
+
                 OBSMessage message = JSONSerializerHelper.DeserializeFromString<OBSMessage>(packet);
                 switch (message.OpCode)
                 {
