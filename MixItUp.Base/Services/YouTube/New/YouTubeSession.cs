@@ -1,5 +1,4 @@
-﻿using Google;
-using Google.Apis.YouTube.v3.Data;
+﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
@@ -12,9 +11,7 @@ using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,28 +26,7 @@ namespace MixItUp.Base.Services.YouTube.New
     {
         public static DateTimeOffset GetYouTubeDateTime(string dateTime)
         {
-            try
-            {
-                if (!string.IsNullOrEmpty(dateTime))
-                {
-                    if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        if (DateTimeOffset.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset startUTC))
-                        {
-                            return startUTC.ToCorrectLocalTime();
-                        }
-                    }
-                    else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
-                    {
-                        return new DateTimeOffset(start).ToCorrectLocalTime();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"{dateTime} - {ex}");
-            }
-            return DateTimeOffset.MinValue;
+            return DateTimeOffsetExtensions.FromGeneralString(dateTime);
         }
 
         private const int MinMessagePollingInterval = 5000;

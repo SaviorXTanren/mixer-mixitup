@@ -215,7 +215,7 @@ namespace MixItUp.Base.ViewModel.Quotes
                                 DateTimeOffset dateTime = DateTimeOffset.MinValue;
                                 if (this.columnDictionary[MixItUp.Base.Resources.DateTime].ArrayNumber >= 0)
                                 {
-                                    DateTimeOffset.TryParse(line[this.columnDictionary[MixItUp.Base.Resources.DateTime].ArrayNumber], out dateTime);
+                                    dateTime = DateTimeOffsetExtensions.FromGeneralString(line[this.columnDictionary[MixItUp.Base.Resources.DateTime].ArrayNumber]);
                                 }
 
                                 string gameName = null;

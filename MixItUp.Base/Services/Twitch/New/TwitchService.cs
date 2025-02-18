@@ -20,7 +20,6 @@ using MixItUp.Base.Web;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -36,28 +35,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public static DateTimeOffset GetTwitchDateTime(string dateTime)
         {
-            try
-            {
-                if (!string.IsNullOrEmpty(dateTime))
-                {
-                    if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        if (DateTimeOffset.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset startUTC))
-                        {
-                            return startUTC.ToCorrectLocalTime();
-                        }
-                    }
-                    else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
-                    {
-                        return new DateTimeOffset(start).ToCorrectLocalTime();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"{dateTime} - {ex}");
-            }
-            return DateTimeOffset.MinValue;
+            return DateTimeOffsetExtensions.FromGeneralString(dateTime);
         }
 
         public override string Name { get { return Resources.Twitch; } }

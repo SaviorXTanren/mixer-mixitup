@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -91,6 +92,8 @@ namespace MixItUp.Base.Services.External
         [DataMember]
         public string cause_id { get; set; }
         [DataMember]
+        public string created_at { get; set; }
+        [DataMember]
         public string completed_at { get; set; }
         [DataMember]
         public string donor_name { get; set; }
@@ -103,17 +106,7 @@ namespace MixItUp.Base.Services.External
         public double Amount { get { return TiltifyService.GetValueFromTiltifyJObject(this.amount); } }
 
         [JsonIgnore]
-        public DateTimeOffset Timestamp
-        {
-            get
-            {
-                if (DateTimeOffset.TryParse(this.completed_at, out DateTimeOffset value))
-                {
-                    return value;
-                }
-                return DateTimeOffset.MinValue;
-            }
-        }
+        public DateTimeOffset Timestamp { get { return DateTimeOffsetExtensions.FromGeneralString(this.completed_at); } }
 
         public UserDonationModel ToGenericDonation()
         {

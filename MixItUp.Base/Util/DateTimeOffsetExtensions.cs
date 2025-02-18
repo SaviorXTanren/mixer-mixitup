@@ -27,6 +27,32 @@ namespace MixItUp.Base.Util
         /// <returns>The equivalent DateTimeOffset</returns>
         public static DateTimeOffset FromUTCISO8601String(string dateTime) { return DateTimeOffset.Parse(dateTime).ToOffset(DateTimeOffset.Now.Offset); }
 
+        public static DateTimeOffset FromGeneralString(string dateTime)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(dateTime))
+                {
+                    if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (DateTimeOffset.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset valueUTC))
+                        {
+                            return valueUTC.ToCorrectLocalTime();
+                        }
+                    }
+                    else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime value))
+                    {
+                        return new DateTimeOffset(value).ToCorrectLocalTime();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return DateTimeOffset.MinValue;
+        }
+
         /// <summary>
         /// Creates an ISO 8601 string.
         /// </summary>
