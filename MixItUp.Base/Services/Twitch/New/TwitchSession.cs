@@ -374,7 +374,7 @@ namespace MixItUp.Base.Services.Twitch.New
             else
             {
                 this.noValidStreamCount++;
-                if (this.noValidStreamCount >= 5)
+                if (this.noValidStreamCount >= 3)
                 {
                     this.IsLive = false;
 
@@ -542,8 +542,11 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public async Task StreamOffline()
         {
-            this.IsLive = true;
+            this.IsLive = false;
             this.StreamStart = DateTimeOffset.MinValue;
+            this.StreamViewerCount = 0;
+
+            this.Stream = null;
 
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
