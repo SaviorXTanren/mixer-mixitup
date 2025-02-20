@@ -339,7 +339,7 @@ namespace MixItUp.Base.Services.Twitch.New
 
         public override async Task<Result> RefreshDetails()
         {
-            ChannelInformationModel channel = await StreamerService.GetChannelInformation(StreamerModel);
+            ChannelInformationModel channel = await StreamerService.GetChannelInformation(this.StreamerModel);
             if (channel == null)
             {
                 return new Result(Resources.TwitchFailedToGetChannelData);
@@ -360,15 +360,14 @@ namespace MixItUp.Base.Services.Twitch.New
             this.StreamCategoryID = this.Channel.game_id;
             this.StreamCategoryName = this.Channel.game_name;
 
-            StreamModel stream = await StreamerService.GetActiveStream(StreamerModel);
+            StreamModel stream = await StreamerService.GetActiveStream(this.StreamerModel);
             if (stream != null)
             {
                 this.noValidStreamCount = 0;
 
-                this.Stream = stream;
-
                 this.IsLive = true;
-
+                this.Stream = stream;
+                this.StreamStart = TwitchService.GetTwitchDateTime(this.Stream.started_at);
                 this.StreamViewerCount = (int)this.Stream.viewer_count;
             }
             else
@@ -377,9 +376,8 @@ namespace MixItUp.Base.Services.Twitch.New
                 if (this.noValidStreamCount >= 3)
                 {
                     this.IsLive = false;
-
                     this.Stream = null;
-
+                    this.StreamStart = DateTimeOffset.MinValue;
                     this.StreamViewerCount = 0;
                 }
             }
@@ -543,10 +541,9 @@ namespace MixItUp.Base.Services.Twitch.New
         public async Task StreamOffline()
         {
             this.IsLive = false;
+            this.Stream = null;
             this.StreamStart = DateTimeOffset.MinValue;
             this.StreamViewerCount = 0;
-
-            this.Stream = null;
 
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
