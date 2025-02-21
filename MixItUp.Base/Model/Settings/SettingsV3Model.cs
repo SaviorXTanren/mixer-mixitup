@@ -728,7 +728,8 @@ namespace MixItUp.Base.Model.Settings
 
             await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
             {
-                this.Quotes.Add(new UserQuoteModel(Convert.ToInt32(data["ID"]), data["Quote"].ToString(), DateTimeOffsetExtensions.FromGeneralString((string)data["DateTime"]), data["GameName"].ToString()));
+                DateTimeOffset.TryParse((string)data["DateTime"], out DateTimeOffset dateTime);
+                this.Quotes.Add(new UserQuoteModel(Convert.ToInt32(data["ID"]), data["Quote"].ToString(), dateTime, data["GameName"].ToString()));
             });
             this.Quotes.ClearTracking();
 
