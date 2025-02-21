@@ -181,10 +181,12 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["usersubplan"] = "Plan Name";
                     break;
                 case EventTypeEnum.YouTubeChannelSuperChat:
+                    specialIdentifiers["amountnumberdigits"] = "123";
                     specialIdentifiers["amountnumber"] = "1.23";
                     specialIdentifiers["amount"] = "$1.23";
                     specialIdentifiers["tier"] = "1";
                     specialIdentifiers["message"] = "Test Message";
+                    specialIdentifiers["currencytype"] = "USD";
                     break;
 
                 // Chat
